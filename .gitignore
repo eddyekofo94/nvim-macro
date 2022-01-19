@@ -3,5 +3,6 @@
 !.git/
 !.gitignore
 
-# ignore `packer_compiled.lua`
+# ignore `packer_compiled.lua` and 'spell/'
 plugin/
+spell/
