@@ -4,6 +4,7 @@
 local o = vim.o
 local g = vim.g
 local lsp = vim.lsp
+local execute = vim.cmd
 
 -- Appearance & behavior
 o.eb = false
@@ -13,8 +14,17 @@ o.number = true
 o.ruler = true
 o.scrolloff = 8
 o.wrap = false
-o.termguicolors = true
-o.colorcolumn = '80'
+o.termguicolors = false     -- Default GUI colors are too vivid
+execute                     -- Underline bad spellings
+[[
+hi clear SpellBad
+hi SpellBad cterm=underline
+]]
+execute
+[[
+highlight OverLength ctermfg=red guibg=#592929
+match OverLength /\%81v.*/
+]]
 o.updatetime = 100  -- (ms)
 
 -- Indentation settings
