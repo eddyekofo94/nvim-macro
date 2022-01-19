@@ -55,5 +55,5 @@ map('i', '<M-k>', '<up>', {noremap = true})
 map('i', '<M-l>', '<right>', {noremap = true})
 
 -- Patch for pairing
-local pair_available, _ = pcall(vim.cmd, [[source utils/pair.vim]])
-if not pair_available then return print('[general]: pairing patch not available') end
+local pair_available, _ = pcall(vim.cmd, [[source lua/utils/pair.vim]])
+if not pair_available then print('[general]: pairing patch not available') end
