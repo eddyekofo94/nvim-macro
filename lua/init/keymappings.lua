@@ -8,6 +8,7 @@
 
 local map = vim.api.nvim_set_keymap
 local g = vim.g
+local execute = vim.cmd
 
 -- Map leader key to space
 map('n', '<Space>', '', {})
@@ -41,12 +42,13 @@ map('n', '<M-,>', '<C-w><', {noremap = true})
 map('n', '<M-.>', '<C-w>>', {noremap = true})
 map('n', '<M-v>', ':vsplit<CR>', {noremap = true, silent = true})
 map('n', '<M-x>', ':split<CR>', {noremap = true, silent = true})
-map('n', '<M-q>', '<C-w>c', {noremap = true})   -- Close current window
+map('n', '<M-q>', '<C-w>c', {noremap = true})   -- Quit current window
 map('n', '<M-o>', '<C-w>o', {noremap = true})   -- Close all other windows
 
+-- Multi-buffer operations
 map('n', '<Tab>', ':bn<CR>', {noremap = true, silent = true})
 map('n', '<S-Tab>', ':bp<CR>', {noremap = true, silent = true})
-map('n', 'c<Tab>', ':bd<CR>', {noremap = true})
+map('n', '<M-c>', ':bd<CR>', {noremap = true})  -- Close current buffer
 
 -- Moving in insert mode
 map('i', '<M-h>', '<left>', {noremap = true})
@@ -55,5 +57,51 @@ map('i', '<M-k>', '<up>', {noremap = true})
 map('i', '<M-l>', '<right>', {noremap = true})
 
 -- Patch for pairing
-local pair_available, _ = pcall(vim.cmd, [[source lua/utils/pair.vim]])
-if not pair_available then print('[general]: pairing patch not available') end
+execute
+[[
+inoremap (                      ()<left>
+inoremap [                      []<left>
+inoremap {                      {}<left>
+inoremap "                      ""<left>
+inoremap '                      ''<left>
+inoremap `                      ``<left>
+
+" Auto indentation in paired brackets/parenthesis/tags, etc.
+inoremap <CR>                   <C-r>=PairedIndent()<CR>
+
+" Auto delete paired brackets/paranthesis/tags, etc.
+inoremap <BackSpace>            <C-r>=PairedDelete()<CR>
+
+"" Functions:
+func PairedIndent ()
+    let c = getline('.')[col('.') - 1]
+    let p = getline('.')[col('.') - 2]
+    if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p || 
+        \'>' == c && '<' == p || '"' == c && '"' == p || "'" == c && '"' == p
+        return "\<cr>\<esc>O"
+    endif
+    if ')' == c || ']' == c || '}' == c || '>' == c || '"' == c || "'" == c
+        let command = printf("\<esc>di%si\<cr>\<esc>Pli\<cr>\<esc>k>>A", c)
+        return command
+    endif
+    return "\<cr>"
+endfunc
+
+func PairedDelete ()
+    let c = getline('.')[col('.') - 1]
+    let p = getline('.')[col('.') - 2]
+    if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p || 
+        \'>' == c && '<' == p || '"' == c && '"' == p || "'" == c && "'" == p
+        return "\<backspace>\<delete>"
+    endif
+    return "\<backspace>"
+endfunc
+
+" func PairedJmpOut ()
+"   let c = getline('.')[col('.') - 1]
+"   if ')' == c || ']' == c || '}' == c || '>' == c || '"' == c || "'" == c
+"       return "\<esc>la"
+"   endif
+"   return "\t"
+" endfunc
+]]
