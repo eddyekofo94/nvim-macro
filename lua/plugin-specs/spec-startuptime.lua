@@ -1,1 +1,4 @@
-return { 'tweekmonster/startuptime.vim' }
+return {
+  'tweekmonster/startuptime.vim',
+  cmd = 'StartupTime'
+}

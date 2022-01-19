@@ -15,13 +15,13 @@ local get = require('utils/get')
 
 return require('packer').startup({
   function(use)
-      use(get.spec('packer'))   -- Packer manages itself
+      use(get.spec('packer'))           -- Packer manages itself
 
       -- Appearance
       use(get.spec('nvim-treesitter'))
 
       -- Tools
-      use(get.spec('startuptime'))
+      use(get.spec('startuptime'))      -- Tools to test startuptime
   end,
 
   config = {
