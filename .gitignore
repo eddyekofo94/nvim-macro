@@ -1,0 +1,7 @@
+# ignore all hidden files and directories except `.git` and `.gitignore`
+.*
+!.git/
+!.gitignore
+
+# ignore `packer_compiled.lua`
+plugin/
