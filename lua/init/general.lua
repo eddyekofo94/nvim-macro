@@ -26,6 +26,11 @@ highlight OverLength ctermfg=red guibg=#592929
 match OverLength /\%81v.*/
 ]]
 execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
+execute                     -- Underline trailing white spaces
+[[
+highlight TrailingWhitespace cterm=underline guibg=#ddc7a1
+match TrailingWhitespace /\s\+$/
+]]
 o.updatetime = 100  -- (ms)
 
 -- Indentation settings
@@ -45,6 +50,7 @@ o.smartcase = true
 o.spell = true
 g.spelllang = {en, cjk}
 o.spellsuggest = 'best, 9'
+o.spellcapcheck = ''
 
 
 -- Lsp options
