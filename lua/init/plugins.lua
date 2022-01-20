@@ -18,7 +18,7 @@ return require('packer').startup({
       use(get.spec('packer'))           -- Packer manages itself
 
       -- Appearance
-      -- use(get.spec('nvim-treesitter'))
+      use(get.spec('nvim-treesitter'))
 
       -- Editing
       use(get.spec('nvim-cmp'))

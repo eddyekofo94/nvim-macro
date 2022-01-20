@@ -4,7 +4,6 @@ local spec = {
   'nvim-treesitter/nvim-treesitter',
   run = ':TSUpdate',
   requires = get.spec('nvim-ts-rainbow'),
-  after = 'nvim-ts-rainbow',
   config = get.config('nvim-treesitter')
 }
 
