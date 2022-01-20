@@ -2,7 +2,8 @@ local get = require('utils/get')
 
 return {
   'hrsh7th/nvim-cmp',
-  event = { 'BufEnter', 'CmdLineEnter' },
+  event = { 'InsertEnter', 'CmdLineEnter' },
+  ft = get.ft_list(require('utils/langs')),
   config = get.config('nvim-cmp'),
   requires = {
     get.spec('cmp-nvim-lsp'), get.spec('cmp-buffer'), get.spec('cmp-path'),

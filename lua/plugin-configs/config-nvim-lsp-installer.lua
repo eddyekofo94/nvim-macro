@@ -51,7 +51,6 @@ for _, server_name in pairs(ensure_installed) do
       requested_server:install()
     end
     requested_server:on_ready(function()
-      local opts = get.lsp_server_config(server_name)
       requested_server:setup {
         on_attach = on_attach,
         capabilities = capabilities,
