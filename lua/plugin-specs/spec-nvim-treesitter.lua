@@ -1,13 +1,11 @@
 local get = require('utils/get')
 
 local spec = {
-  get.spec('nvim-ts-rainbow'),
-  {
-    'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate',
-    after = 'nvim-ts-rainbow',
-    config = get.config('nvim-treesitter')
-  }
+  'nvim-treesitter/nvim-treesitter',
+  run = ':TSUpdate',
+  requires = get.spec('nvim-ts-rainbow'),
+  after = 'nvim-ts-rainbow',
+  config = get.config('nvim-treesitter')
 }
 
 return spec
