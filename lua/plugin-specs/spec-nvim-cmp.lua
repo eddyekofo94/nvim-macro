@@ -4,7 +4,7 @@ return {
   get.spec('lspkind-nvim'),
   {
     'hrsh7th/nvim-cmp',
-    event = 'BufEnter',
+    event = { 'BufEnter', 'CmdLineEnter' },
     config = get.config('nvim-cmp'),
     requires = {
       get.spec('cmp-nvim-lsp'), get.spec('cmp-buffer'), get.spec('cmp-path'),
