@@ -48,7 +48,7 @@ map('n', '<M-o>', '<C-w>o', {noremap = true})   -- Close all other windows
 -- Multi-buffer operations
 map('n', '<Tab>', ':bn<CR>', {noremap = true, silent = true})
 map('n', '<S-Tab>', ':bp<CR>', {noremap = true, silent = true})
-map('n', '<M-c>', ':bd<CR>', {noremap = true})  -- Close current buffer
+map('n', '<M-d>', ':bd<CR>', {noremap = true})  -- Delete current buffer
 
 -- Moving in insert mode
 map('i', '<M-h>', '<left>', {noremap = true})
