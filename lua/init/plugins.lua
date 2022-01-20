@@ -19,6 +19,7 @@ return require('packer').startup({
 
       -- Appearance
       use(get.spec('nvim-treesitter'))
+      use(get.spec('srcery-vim'))       -- Color scheme
 
       -- Editing
       use(get.spec('nvim-cmp'))
@@ -36,7 +37,12 @@ return require('packer').startup({
     display = {
       open_fn = function()
         return require('packer.util').float({ border = 'rounded' })
-      end
+      end,
+      working_sym = '',
+      error_sym = '',
+      done_sym = '',
+      removed_sym = '',
+      moved_sym = ''
     }
   }
 })
