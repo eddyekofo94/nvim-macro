@@ -25,6 +25,7 @@ execute
 highlight OverLength ctermfg=red guibg=#592929
 match OverLength /\%81v.*/
 ]]
+execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
 o.updatetime = 100  -- (ms)
 
 -- Indentation settings

@@ -1,1 +1,1 @@
-return { 'hrsh7th/cmp-nvim-lsp', event = 'InsertEnter' }
+return { 'hrsh7th/cmp-nvim-lsp' }

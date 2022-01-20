@@ -5,7 +5,7 @@ return {
   get.spec('cmp-nvim-lsp'),
   {
     'neovim/nvim-lspconfig',
-    -- ft = get.ft_list(langs),
+    ft = get.ft_list(langs),
     after = 'cmp-nvim-lsp'
   }
 }
