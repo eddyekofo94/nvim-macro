@@ -38,11 +38,11 @@ return require('packer').startup({
       open_fn = function()
         return require('packer.util').float({ border = 'rounded' })
       end,
-      working_sym = '',
+      working_sym = '',
       error_sym = '',
       done_sym = '',
       removed_sym = '',
-      moved_sym = ''
+      moved_sym = 'ﰲ'
     }
   }
 })

@@ -15,7 +15,8 @@ cmp.setup({
                 vsnip = '[VSNIP]',
                 calc = '[CALC]',
                 spell = '[SPELL]',
-                emoji = '[EMOJI]'
+                emoji = '[EMOJI]',
+                cmdline = '[CMD]'
             }
         }
     },
