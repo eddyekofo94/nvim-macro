@@ -2,6 +2,10 @@ local get = require('utils/get')
 local langs = require('utils/langs')
 local ensure_installed = get.lsp_server_list(langs)
 
+-- Ensure `cmp-nvim-lsp` and and `nvim-lspconfig` are loaded
+vim.cmd [[ :packadd cmp-nvim-lsp ]]
+vim.cmd [[ :packadd nvim-lspconfig ]]
+
 -------------------------- on_attach function begins ---------------------------
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer

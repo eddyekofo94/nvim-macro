@@ -1,3 +1,5 @@
+vim.cmd [[ :packadd lspkind-nvim ]]     -- Ensure that lspkind icon is loaded
+
 local cmp = require "cmp"
 local lspkind = require("lspkind")
 
@@ -10,7 +12,7 @@ cmp.setup({
                 buffer = '[BUFFER]',
                 nvim_lsp = '[LSP]',
                 path = '[PATH]',
-                vsnip = '[SNIP]',
+                vsnip = '[VSNIP]',
                 calc = '[CALC]',
                 spell = '[SPELL]',
                 emoji = '[EMOJI]'
