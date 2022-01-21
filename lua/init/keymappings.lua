@@ -69,21 +69,23 @@ inoremap `                      ``<left>
 " Auto indentation in paired brackets/parenthesis/tags, etc.
 inoremap <CR>                   <C-r>=PairedIndent()<CR>
 
-" Auto delete paired brackets/paranthesis/tags, etc.
+" Auto delete paired brackets/parenthesis/tags, etc.
 inoremap <BackSpace>            <C-r>=PairedDelete()<CR>
+
+inoremap <Space>                <C-r>=PairedSpace()<CR>
 
 "" Functions:
 func PairedIndent ()
     let c = getline('.')[col('.') - 1]
     let p = getline('.')[col('.') - 2]
-    if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p || 
-        \'>' == c && '<' == p || '"' == c && '"' == p || "'" == c && '"' == p
+    if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p ||
+        \"'" == c && '"' == p || '`' == c && '`' == p
         return "\<cr>\<esc>O"
     endif
-    if ')' == c || ']' == c || '}' == c || '>' == c || '"' == c || "'" == c
-        let command = printf("\<esc>di%si\<cr>\<esc>Pli\<cr>\<esc>k>>A", c)
-        return command
-    endif
+"    if ')' == c || ']' == c || '}' == c || '"' == c || "'" == c || '`' == c
+"        let command = printf("\<esc>di%si\<cr>\<esc>Pli\<cr>\<esc>k>>A", c)
+"        return command
+"    endif
     return "\<cr>"
 endfunc
 
@@ -91,10 +93,28 @@ func PairedDelete ()
     let c = getline('.')[col('.') - 1]
     let p = getline('.')[col('.') - 2]
     if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p || 
-        \'>' == c && '<' == p || '"' == c && '"' == p || "'" == c && "'" == p
+        \'>' == c && '<' == p || '"' == c && '"' == p || "'" == c && "'" == p ||
+        \'`' == c && '`' == p
+        return "\<backspace>\<delete>"
+    endif
+    let pp = getline('.')[col('.') - 3]
+    let s = getline('.')[col('.')]
+    if ' ' == p && ' ' == c &&
+        \(')' == s && '(' == pp || ']' == s && '[' == pp || '}' == s && '{' == pp || 
+        \'>' == s && '<' == pp || '"' == s && '"' == pp || "'" == s && "'" == pp ||
+        \'`' == s && '`' == pp)
         return "\<backspace>\<delete>"
     endif
     return "\<backspace>"
+endfunc
+
+func PairedSpace ()
+    let c = getline('.')[col('.') - 1]
+    let p = getline('.')[col('.') - 2]
+    if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p
+        return "\<space>\<space>\<left>"
+    endif
+    return "\<space>"
 endfunc
 
 " func PairedJmpOut ()
