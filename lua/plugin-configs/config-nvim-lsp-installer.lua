@@ -2,6 +2,17 @@ local get = require('utils/get')
 local langs = require('utils/langs')
 local ensure_installed = get.lsp_server_list(langs)
 
+-- Config for `nvim-lsp-installer`
+require('nvim-lsp-installer').settings({
+  ui = {
+    icons = {
+      server_installed = '',
+      server_pending = '',
+      server_uninstalled = ''
+    }
+  }
+})
+
 -- Ensure `cmp-nvim-lsp` and and `nvim-lspconfig` are loaded
 vim.cmd [[ :packadd cmp-nvim-lsp ]]
 vim.cmd [[ :packadd nvim-lspconfig ]]
