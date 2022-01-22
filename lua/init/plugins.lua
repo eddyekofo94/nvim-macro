@@ -23,6 +23,7 @@ return require('packer').startup({
 
       -- Editing
       use(get.spec('nvim-cmp'))
+      use(get.spec('vim-easymotion'))
 
       -- LSP
       use(get.spec('nvim-lsp-installer'))
