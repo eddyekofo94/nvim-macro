@@ -25,7 +25,7 @@ map('n', 'yA', 'ggyG', {noremap = true})
 map('n', 'dA', 'ggdG', {noremap = true})
 map('n', 'cA', 'ggcG', {noremap = true})
 -- Visual select all
-map('v', 'A', '<esc>ggvG', {noremap = true})
+map('n', 'VA', '<esc>ggVG', {noremap = true})
 
 -- Multi-window operations
 map('n', '<M-w>', '<C-w><C-w>', {noremap = true})

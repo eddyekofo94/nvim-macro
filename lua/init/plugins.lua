@@ -23,7 +23,8 @@ return require('packer').startup({
 
       -- Editing
       use(get.spec('nvim-cmp'))
-      use(get.spec('vim-easymotion'))
+      use(get.spec('vim-easymotion'))   -- Moving around like magic!
+      use(get.spec('vsc-vim-easymotion'))   -- Easymotion for vscode-neovim
 
       -- LSP
       use(get.spec('nvim-lsp-installer'))
