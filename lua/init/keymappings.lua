@@ -65,6 +65,8 @@ inoremap {                      {}<left>
 inoremap "                      ""<left>
 inoremap '                      ''<left>
 inoremap `                      ``<left>
+" For c struct definition
+inoremap ;                      <C-r>=CStructDef()<CR>
 
 " Auto indentation in paired brackets/parenthesis/tags, etc.
 inoremap <CR>                   <C-r>=PairedIndent()<CR>
@@ -92,13 +94,18 @@ endfunc
 func PairedDelete ()
     let c = getline('.')[col('.') - 1]
     let p = getline('.')[col('.') - 2]
+    let pp = getline('.')[col('.') - 3]
+    let s = getline('.')[col('.')]
     if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p || 
         \'>' == c && '<' == p || '"' == c && '"' == p || "'" == c && "'" == p ||
         \'`' == c && '`' == p
-        return "\<backspace>\<delete>"
+        if ';' != s
+            return "\<backspace>\<delete>"
+        endif
+        if ';' == s
+            return "\<backspace>\<delete>\<delete>"
+        endif
     endif
-    let pp = getline('.')[col('.') - 3]
-    let s = getline('.')[col('.')]
     if ' ' == p && ' ' == c &&
         \(')' == s && '(' == pp || ']' == s && '[' == pp || '}' == s && '{' == pp || 
         \'>' == s && '<' == pp || '"' == s && '"' == pp || "'" == s && "'" == pp ||
@@ -117,11 +124,12 @@ func PairedSpace ()
     return "\<space>"
 endfunc
 
-" func PairedJmpOut ()
-"   let c = getline('.')[col('.') - 1]
-"   if ')' == c || ']' == c || '}' == c || '>' == c || '"' == c || "'" == c
-"       return "\<esc>la"
-"   endif
-"   return "\t"
-" endfunc
+func CStructDef ()
+    let c = getline('.')[col('.') - 1]
+    let p = getline('.')[col('.') - 2]
+    if '}' == c && '{' == p
+        return "\<right>;\<left>\<left>"
+    endif
+    return ";"
+endfunc
 ]]
