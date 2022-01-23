@@ -11,6 +11,14 @@ if fn.empty(fn.glob(install_path)) > 0 then
     execute 'packadd packer.nvim'
 end
 
+--------------------------------------------------------------------------------
+-- Extra settings for `impatient.nvim` -----------------------------------------
+pcall(require, 'impatient')             -- BOOST THE LOADING PROCESS!!!
+pcall(require, 'compile/packer_compiled') -- Also include `packer_compiled.lua`
+                                           -- into optimization
+-- End -------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
 local get = require('utils/get')
 
 return require('packer').startup({
@@ -34,10 +42,13 @@ return require('packer').startup({
 
       -- Tools
       use(get.spec('startuptime'))      -- Tools to test startuptime
+      use(get.spec('impatient'))        -- Speed up lua `require()`
+      use(get.spec('nvim-colorizer'))   -- Show inline RGB colors
   end,
 
   config = {
     clone_timeout = 300,
+    compile_path = fn.stdpath('config') .. '/lua/compile/packer_compiled.lua',
     opt_default = false,
     display = {
       open_fn = function()

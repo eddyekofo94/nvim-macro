@@ -14,7 +14,7 @@ o.number = true
 o.ruler = true
 o.scrolloff = 8
 o.wrap = false
-o.termguicolors = false     -- Default GUI colors are too vivid
+o.termguicolors = true      -- Default GUI colors are too vivid
 execute                     -- Underline bad spellings
 [[
 hi clear SpellBad
@@ -22,15 +22,15 @@ hi SpellBad cterm=undercurl
 ]]
 execute
 [[
-highlight OverLength ctermfg=red guibg=#592929
+highlight OverLength ctermfg=red guifg=#ea255c
 match OverLength /\%81v.*/
 ]]
-execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
-execute                     -- Underline trailing white spaces
-[[
-highlight TrailingWhiteSpace cterm=underline guibg=#ddc7a1
-match TrailingWhiteSpace /\s\+$/
-]]
+-- execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
+-- execute                     -- Underline trailing white spaces
+-- [[
+-- highlight TrailingWhiteSpace cterm=underline guibg=#ddc7a1
+-- match TrailingWhiteSpace /\s\+$/
+-- ]]
 o.updatetime = 100  -- (ms)
 o.swapfile = false
 
