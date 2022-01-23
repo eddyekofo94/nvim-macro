@@ -29,6 +29,9 @@ return require('packer').startup({
       -- LSP
       use(get.spec('nvim-lsp-installer'))
 
+      -- Navigation
+      use(get.spec('alpha-nvim'))       -- Greeting page
+
       -- Tools
       use(get.spec('startuptime'))      -- Tools to test startuptime
   end,
