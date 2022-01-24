@@ -1,4 +1,5 @@
 vim.cmd [[ :packadd lspkind-nvim ]]     -- Ensure that lspkind icon is loaded
+vim.cmd [[ :packadd cmp-under-comparator ]]
 
 local cmp = require "cmp"
 local lspkind = require("lspkind")
@@ -45,6 +46,14 @@ cmp.setup({
         {name = "nvim_lsp"}, {name = "buffer", keyword_length = 5},
         {name = "vsnip"}, {name = "calc"}, {name = "emoji"}, {name = "spell"},
         {name = "path"}
+    },
+    sorting = {
+        comparators = {
+            cmp.config.compare.offset, cmp.config.compare.exact,
+            cmp.config.compare.score, require 'cmp-under-comparator'.under,
+            cmp.config.compare.kind, cmp.config.compare.sort_text,
+            cmp.config.compare.length, cmp.config.compare.order
+        }
     }
 })
 

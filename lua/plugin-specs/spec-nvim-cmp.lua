@@ -8,7 +8,7 @@ return {
     get.spec('cmp-nvim-lsp'), get.spec('cmp-buffer'), get.spec('cmp-path'),
     get.spec('cmp-vsnip'), get.spec('vim-vsnip'), get.spec('cmp-calc'),
     get.spec('cmp-cmdline'), get.spec('cmp-emoji'), get.spec('cmp-spell'),
-    get.spec('lspkind-nvim'),
+    get.spec('cmp-under-comparator'), get.spec('lspkind-nvim')
   },
-  after = 'lspkind-nvim'
+  after = { 'lspkind-nvim', 'cmp-under-comparator' }
 }
