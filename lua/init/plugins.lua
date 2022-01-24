@@ -33,6 +33,8 @@ return require('packer').startup({
       use(get.spec('nvim-cmp'))
       use(get.spec('vim-easymotion'))   -- Moving around like magic!
       use(get.spec('vsc-vim-easymotion'))   -- Easymotion for vscode-neovim
+      use(get.spec('vim-surround'))
+      use(get.spec('vim-commentary'))
 
       -- LSP
       use(get.spec('nvim-lsp-installer'))
