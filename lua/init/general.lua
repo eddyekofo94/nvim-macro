@@ -25,6 +25,7 @@ execute
 highlight OverLength ctermfg=red guifg=#ea255c
 match OverLength /\%81v.*/
 ]]
+execute [[ set signcolumn=auto:1-3 ]]   -- For gitgutter & LSP diagnostic
 -- execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
 -- execute                     -- Underline trailing white spaces
 -- [[

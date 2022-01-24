@@ -1,5 +1,8 @@
 local map = vim.api.nvim_set_keymap
 
+-- Ensure that the git signs will not be covered by multiple LSP diagnostics
+vim.g.gitgutter_sign_allow_clobber = 1
+
 vim.g.gitgutter_max_signs = 512
 local opts = {}
 map('n', ']h', '<Plug>(GitGutterNextHunk)', opts)
