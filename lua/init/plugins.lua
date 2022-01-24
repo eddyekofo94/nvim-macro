@@ -43,6 +43,7 @@ return require('packer').startup({
       use(get.spec('barbar'))           -- Buffer line
 
       -- Tools
+      use(get.spec('vim-gitgutter'))
       use(get.spec('startuptime'))      -- Tools to test startuptime
       use(get.spec('impatient'))        -- Speed up lua `require()`
       use(get.spec('nvim-colorizer'))   -- Show inline RGB colors
