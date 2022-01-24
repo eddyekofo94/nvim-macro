@@ -40,6 +40,7 @@ return require('packer').startup({
       -- Navigation
       use(get.spec('alpha-nvim'))       -- Greeting page
       use(get.spec('nvim-tree'))        -- File tree
+      use(get.spec('barbar'))           -- Buffer line
 
       -- Tools
       use(get.spec('startuptime'))      -- Tools to test startuptime
