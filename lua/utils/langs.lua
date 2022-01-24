@@ -55,7 +55,7 @@ langs.markdown = {
 langs.python = {
   ts = 'python',
   ft = 'python',
-  lsp_server = 'pyright'
+  lsp_server = 'pylsp'
 }
 
 langs.vim = {
