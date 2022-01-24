@@ -39,6 +39,7 @@ return require('packer').startup({
 
       -- Navigation
       use(get.spec('alpha-nvim'))       -- Greeting page
+      use(get.spec('nvim-tree'))        -- File tree
 
       -- Tools
       use(get.spec('startuptime'))      -- Tools to test startuptime
@@ -57,7 +58,7 @@ return require('packer').startup({
       working_sym = '',
       error_sym = '',
       done_sym = '',
-      removed_sym = '',
+      removed_sym = '﫧',
       moved_sym = 'ﰲ'
     }
   }
