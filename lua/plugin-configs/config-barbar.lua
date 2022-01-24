@@ -29,9 +29,10 @@ map('n', '<M-a>', ':BufferCloseAllButCurrent<CR>', opts)
 -- Magic buffer-picking mode
 map('n', '<M-p>', ':BufferPick<CR>', opts)
 -- Sort automatically by...
-map('n', '<Space>bb', ':BufferOrderByBufferNumber<CR>', opts)
-map('n', '<Space>bd', ':BufferOrderByDirectory<CR>', opts)
-map('n', '<Space>bl', ':BufferOrderByLanguage<CR>', opts)
+map('n', '<Leader>bb', ':BufferOrderByBufferNumber<CR>', opts)
+map('n', '<Leader>bd', ':BufferOrderByDirectory<CR>', opts)
+map('n', '<Leader>bl', ':BufferOrderByLanguage<CR>', opts)
 
 -- Other:
 -- :BarbarEnable - enables barbar (enabled by default)
+-- :BarbarDisable - very bad command, should never be used
