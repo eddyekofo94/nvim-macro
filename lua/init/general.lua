@@ -54,12 +54,6 @@ g.spelllang = {en, cjk}
 o.spellsuggest = 'best, 9'
 o.spellcapcheck = ''
 o.spelloptions = 'camel'
--- Excludes characters that are in the parenthesis
--- and are preceded by a capitalized letter
-execute [[ syn match myExCapitalWords +\<\w*[A-Z]\S*\>+ contains=@NoSpell ]]
--- Exclude capitalized words and capitalized words + 's'
-execute [[ syn match myExCapitalWords +\<[A-Z]\w*\>+ contains=@NoSpell ]]
-execute [[ syn match myExCapitalWords +\<\w*[A-Z]\K*\>\|'s+ contains=@NoSpell ]]
 
 
 -- LSP options
