@@ -1,4 +1,4 @@
 return {
   'tpope/vim-repeat',
-  event = 'InsertEnter'
+  event = 'BufEnter'
 }

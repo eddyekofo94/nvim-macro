@@ -7,9 +7,9 @@ vim.g.gitgutter_max_signs = 512
 local opts = {}
 map('n', ']h', '<Plug>(GitGutterNextHunk)', opts)
 map('n', '[h', '<Plug>(GitGutterPrevHunk)', opts)
-map('n', 'ggs', '<Plug>(GitGutterStageHunk)', opts)
-map('n', 'ggu', '<Plug>(GitGutterUndoHunk)', opts)
-map('n', 'ggv', '<Plug>(GitGutterPreviewHunk)', opts)
+map('n', '<Leader>gs', '<Plug>(GitGutterStageHunk)', opts)
+map('n', '<Leader>gu', '<Plug>(GitGutterUndoHunk)', opts)
+map('n', '<Leader>gv', '<Plug>(GitGutterPreviewHunk)', opts)
 -- Text obj in hunk
 map('o', 'ih', '<Plug>(GitGutterTextObjectInnerPending)', opts)
 map('x', 'ih', '<Plug>(GitGutterTextObjectInnerVisual', opts)
