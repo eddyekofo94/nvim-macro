@@ -66,6 +66,9 @@ end
 --   ]]
 -- end
 
+-- Autosave on focus change
+vim.cmd [[ autocmd BufLeave,FocusLost * silent! wall ]]
+
 -- End of Appearance & Behaviour -----------------------------------------------
 --------------------------------------------------------------------------------
 
