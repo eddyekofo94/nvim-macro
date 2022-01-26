@@ -95,7 +95,7 @@ o.smartcase = true
 --------------------------------------------------------------------------------
 -- Spell check (terrible, looking for alternatives...) -------------------------
 o.spell = true
-g.spelllang = {en, cjk}
+execute [[ set spelllang=en,cjk ]]
 o.spellsuggest = 'best, 9'
 o.spellcapcheck = ''
 o.spelloptions = 'camel'
