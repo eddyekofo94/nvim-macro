@@ -21,21 +21,27 @@ g.nvim_tree_icons = {
     deleted = 'D 﫧',
     untracked = 'U ',
     ignored = 'i '
+  },
+  lsp = {
+    error = '',
+    warn = '',
+    hint = '',
+    info = ''
   }
 }
 
 local tree_cb = require 'nvim-tree.config'.nvim_tree_callback
 require 'nvim-tree'.setup {
   width = 28,
-  auto_close = true,
+  auto_close = false,
   view = {
     auto_resize = true,
     mappings = {
       list = {
-        { key = {"<CR>", "o",
-          "<2-LeftMouse>"},             cb = tree_cb("edit") },
-        { key = {"<2-RightMouse>",
-          "<C-]>"},                     cb = tree_cb("cd") },
+        { key = {'<CR>', 'o',
+          '<2-LeftMouse>'},             cb = tree_cb('edit') },
+        { key = {'<2-RightMouse>',
+          '<C-]>'},                     cb = tree_cb('cd') },
         { key = '<C-[>',                cb = tree_cb('dir_up') },
         { key = '<M-v>',                cb = tree_cb('vsplit') },
         { key = '<M-x>',                cb = tree_cb('split') },

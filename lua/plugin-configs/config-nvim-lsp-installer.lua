@@ -2,6 +2,9 @@ local get = require('utils/get')
 local langs = require('utils/langs')
 local ensure_installed = get.lsp_server_list(langs)
 
+--------------------------------------------------------------------------------
+-- LSP UI configs --------------------------------------------------------------
+
 -- Config for `nvim-lsp-installer`
 require('nvim-lsp-installer').settings({
   ui = {
@@ -13,9 +16,85 @@ require('nvim-lsp-installer').settings({
   }
 })
 
--- Ensure `cmp-nvim-lsp` and and `nvim-lspconfig` are loaded
-vim.cmd [[ :packadd cmp-nvim-lsp ]]
-vim.cmd [[ :packadd nvim-lspconfig ]]
+-- LSP diagnostic signs
+local signs = { Error = '', Warn = '', Hint = '', Info = '' }
+for type, icon in pairs(signs) do
+  local hl = 'DiagnosticSign' .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    -- Enable underline, use default values
+    underline = true,
+    -- Enable virtual text, override spacing to 4
+    virtual_text = {
+      spacing = 4,
+      prefix = ''
+    }
+  }
+)
+
+-- Floating window borders
+vim.cmd [[autocmd ColorScheme * highlight NormalFloat guibg=#1f2335]]
+vim.cmd [[autocmd ColorScheme * highlight FloatBorder guifg=white guibg=#1f2335]]
+local border = {
+      {'┌', 'FloatBorder'},
+      {'─', 'FloatBorder'},
+      {'┐', 'FloatBorder'},
+      {'│', 'FloatBorder'},
+      {'┘', 'FloatBorder'},
+      {'─', 'FloatBorder'},
+      {'└', 'FloatBorder'},
+      {'│', 'FloatBorder'},
+}
+-- To override globally
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  opts = opts or {}
+  opts.border = opts.border or border
+  return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end
+require 'lspconfig'.myservertwo.setup {}
+
+-- Show diagnostics automatically in hover
+vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]]
+
+-- Goto definition in split window
+local function goto_definition(split_cmd)
+  local util = vim.lsp.util
+  local log = require("vim.lsp.log")
+  local api = vim.api
+  -- note, this handler style is for neovim 0.5.1/0.6, if on 0.5, call with function(_, method, result)
+  local handler = function(_, result, ctx)
+    if result == nil or vim.tbl_isempty(result) then
+      local _ = log.info() and log.info(ctx.method, "No location found")
+      return nil
+    end
+    if split_cmd then
+      vim.cmd(split_cmd)
+    end
+    if vim.tbl_islist(result) then
+      util.jump_to_location(result[1])
+      if #result > 1 then
+        util.set_qflist(util.locations_to_items(result))
+        api.nvim_command("copen")
+        api.nvim_command("wincmd p")
+      end
+    else
+      util.jump_to_location(result)
+    end
+  end
+  return handler
+end
+vim.lsp.handlers["textDocument/definition"] = goto_definition('vsplit')
+
+-- End of LSP UI configs -------------------------------------------------------
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+-- Pass config table to each LSP server: ---------------------------------------
 
 -------------------------- on_attach function begins ---------------------------
 -- Use an on_attach function to only map the following keys
@@ -31,8 +110,8 @@ local on_attach =
     -- Mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     local opts = { noremap=true }
-    buf_set_keymap('n', '<Leader>ld', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-    buf_set_keymap('n', '<Leader>lD', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    buf_set_keymap('n', '<Leader>lD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+    buf_set_keymap('n', '<Leader>ld', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
     buf_set_keymap('n', '<Leader>lh', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
     buf_set_keymap('n', '<Leader>li', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
     buf_set_keymap('n', '<Leader>ls', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
@@ -51,6 +130,9 @@ local on_attach =
   end
 --------------------------- on_attach function ends ----------------------------
 
+-- Ensure `cmp-nvim-lsp` and `nvim-lspconfig` are loaded
+vim.cmd [[ packadd cmp-nvim-lsp ]]
+vim.cmd [[ packadd nvim-lspconfig ]]
 
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -77,3 +159,6 @@ for _, server_name in pairs(ensure_installed) do
     print('[lsp-installer]: server ' .. server_name .. ' not available')
   end
 end
+
+-- Passed config table to each LSP server --------------------------------------
+--------------------------------------------------------------------------------
