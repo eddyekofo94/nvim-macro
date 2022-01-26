@@ -1,5 +1,4 @@
--- vim.cmd('source lua/init/general.vim')
-pcall(require, 'init/plugins')
-pcall(require, 'init/keymappings')
+pcall(require, 'impatient')
 pcall(require, 'init/general')
-pcall(require, 'init/autocmd')
+pcall(require, 'init/keymappings')
+pcall(require, 'init/plugins')
