@@ -18,14 +18,14 @@ o.termguicolors = true      -- Default GUI colors are too vivid
 execute                     -- Underline bad spellings
 [[
 hi clear SpellBad
-hi SpellBad cterm=undercurl
+hi SpellBad cterm=undercurl, gui=undercurl
 ]]
 execute
 [[
-highlight OverLength ctermfg=red guifg=#ea255c
+highlight OverLength ctermfg=red guifg=#9e1e00
 match OverLength /\%81v.*/
 ]]
-execute [[ set signcolumn=auto:1-3 ]]   -- For gitgutter & LSP diagnostic
+execute [[ set signcolumn=auto:1-2 ]]   -- For gitgutter & LSP diagnostic
 -- execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
 -- execute                     -- Underline trailing white spaces
 -- [[
