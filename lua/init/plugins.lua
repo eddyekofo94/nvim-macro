@@ -11,16 +11,17 @@ if fn.empty(fn.glob(install_path)) > 0 then
     execute 'packadd packer.nvim'
 end
 
---------------------------------------------------------------------------------
--- Extra settings for `impatient.nvim` -----------------------------------------
-pcall(require, 'impatient')             -- BOOST THE LOADING PROCESS!!!
-pcall(require, 'compile/packer_compiled') -- Also include `packer_compiled.lua`
-                                           -- into optimization
--- End -------------------------------------------------------------------------
---------------------------------------------------------------------------------
+-- `PackerSync` on save of `plugins.lua`
+vim.cmd [[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerSync
+  augroup end
+]]
+
+pcall(require, 'compile/packer_compiled')
 
 local get = require('utils/get')
-
 return require('packer').startup({
   function(use)
       use(get.spec('packer'))           -- Packer manages itself
