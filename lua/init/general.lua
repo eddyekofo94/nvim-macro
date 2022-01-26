@@ -23,40 +23,23 @@ execute                     -- Underline bad spellings
 hi clear SpellBad
 hi SpellBad cterm=undercurl, gui=undercurl
 ]]
-execute
+execute                     -- Define autocmd to override colorscheme settings
 [[
 augroup SpellBadStyle
   autocmd!
-  au BufEnter * hi clear SpellBad
-  au BufEnter * hi SpellBad cterm=undercurl, gui=undercurl
+  au ColorScheme * hi clear SpellBad
+  au ColorScheme * hi SpellBad cterm=undercurl, gui=undercurl
 augroup END
 ]]
-
-execute
-[[
-highlight OverLength ctermfg=red guifg=#9e1e00
-match OverLength /\%81v.*/
-]]
-execute
-[[
-autogroup
-  autocmd!
-  au BufEnter * highlight OverLength ctermfg=red guifg=#9e1e00
-  au BufEnter * match OverLength /\%81v.*/
-augroup END
-]]
-
 
 execute [[ set signcolumn=auto:1-2 ]]   -- For gitgutter & LSP diagnostic
--- execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
--- execute                     -- Underline trailing white spaces
--- [[
--- highlight TrailingWhiteSpace cterm=underline guibg=#ddc7a1
--- match TrailingWhiteSpace /\s\+$/
--- ]]
+
+execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
+
 o.updatetime = 100  -- (ms)
 o.swapfile = false
--- Border style of floating windows
+
+-- Default border style of floating windows
 local border = {
       {'┌', 'FloatBorder'},
       {'─', 'FloatBorder'},
@@ -116,17 +99,6 @@ g.spelllang = {en, cjk}
 o.spellsuggest = 'best, 9'
 o.spellcapcheck = ''
 o.spelloptions = 'camel'
-execute
-[[
-augroup SpellSetttings
-  autocmd!
-  au VimEnter * set spell=true
-  au VimEnter * set spellang=en,cjk
-  au VimEnter * set spellsuggest=best,9
-  au VimEnter * set spellcapcheck=''
-  au VimEnter * set spelloptions=camel
-augroup END
-]]
 
 -- Excludes characters that are in the parenthesis
 -- and are preceded by a capitalized letter
@@ -135,7 +107,7 @@ execute [[ autocmd VimEnter * syn match myExCapitalWords +\<\w*[A-Z]\S*\>+ conta
 execute [[ autocmd VimEnter * syn match myExCapitalWords +\<[A-Z]\w*\>+ contains=@NoSpell ]]
 execute [[ autocmd VimEnter * syn match myExCapitalWords +\<\w*[A-Z]\K*\>\|'s+ contains=@NoSpell ]]
 
--- End of Spell check ---------------------------------------------------------
+-- End of Spell check ----------------------------------------------------------
 --------------------------------------------------------------------------------
 
 
