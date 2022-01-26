@@ -20,3 +20,7 @@ hi DiagnosticVirtualTextWarn guifg=#BC8F3F ctermfg=137 guibg=NONE ctermbg=NONE g
 hi DiagnosticVirtualTextHint guifg=#847B73 ctermfg=8 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 hi DiagnosticVirtualTextInfo guifg=#787882 ctermfg=243 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 ]]
+
+-- Colorize borders
+vim.cmd [[highlight NormalFloat guibg=#1f2335]]
+vim.cmd [[highlight FloatBorder guifg=#ff761a guibg=#1f2335]]

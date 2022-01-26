@@ -35,28 +35,6 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 
--- Floating window borders
-vim.cmd [[autocmd ColorScheme * highlight NormalFloat guibg=#1f2335]]
-vim.cmd [[autocmd ColorScheme * highlight FloatBorder guifg=white guibg=#1f2335]]
-local border = {
-      {'┌', 'FloatBorder'},
-      {'─', 'FloatBorder'},
-      {'┐', 'FloatBorder'},
-      {'│', 'FloatBorder'},
-      {'┘', 'FloatBorder'},
-      {'─', 'FloatBorder'},
-      {'└', 'FloatBorder'},
-      {'│', 'FloatBorder'},
-}
--- To override globally
-local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-  opts = opts or {}
-  opts.border = opts.border or border
-  return orig_util_open_floating_preview(contents, syntax, opts, ...)
-end
-require 'lspconfig'.myservertwo.setup {}
-
 -- Show diagnostics automatically in hover
 vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
