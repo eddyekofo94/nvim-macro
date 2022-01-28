@@ -3,6 +3,9 @@ local langs = require('utils/langs')
 
 return {
   'williamboman/nvim-lsp-installer',
+
+  -- Use double border instead of rounded border (unluckily, lsp-installer has not provided a config option for this...)
+  run = "sed -i -e 's/border = \"rounded\",*/border = \"double\",/' ~/.local/share/nvim/site/pack/packer/opt/nvim-lsp-installer/lua/nvim-lsp-installer/ui/display.lua",
   ft = get.ft_list(langs),
   cmd = {
       'LspInstallInfo', 'LspInstall', 'LspUninstall', 'LspUninstallAll',
