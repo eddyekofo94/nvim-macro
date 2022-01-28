@@ -23,4 +23,4 @@ hi DiagnosticVirtualTextInfo guifg=#787882 ctermfg=243 guibg=NONE ctermbg=NONE g
 
 -- Colorize borders
 vim.cmd [[highlight NormalFloat guibg=NONE ctermbg=NONE]]
-vim.cmd [[highlight FloatBorder guifg=#ff761a guibg=#1f2335, ctermfg=1, ctermbg=0]]
+vim.cmd [[highlight FloatBorder guifg=#ff761a guibg=NONE ctermfg=1 ctermbg=NONE]]

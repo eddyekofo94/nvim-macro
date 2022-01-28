@@ -25,9 +25,10 @@ map('n', '<M-p>', ':BufferPin<CR>', opts)
 -- Wipeout buffer
 -- map('n', '???', ':BufferWipeout<CR>', opts)
 -- Close commands
-map('n', '<M-a>', ':BufferCloseAllButCurrent<CR>', opts)
--- map('n', '???', ':BufferCloseBuffersLeft<CR>', opts)
--- map('n', '???', ':BufferCloseBuffersRight<CR>', opts)
+map('n', '<M-~>', ':BufferCloseAllButPinned<CR>', opts)
+map('n', '<M-`>', ':BufferCloseAllButCurrent<CR>', opts)
+map('n', '<M-^>', ':BufferCloseBuffersLeft<CR>', opts)
+map('n', '<M-$>', ':BufferCloseBuffersRight<CR>', opts)
 -- Magic buffer-picking mode
 map('n', '<M-s>', ':BufferPick<CR>', opts)
 -- Sort automatically by...
