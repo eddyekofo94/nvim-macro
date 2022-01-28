@@ -54,6 +54,11 @@ cmp.setup({
             cmp.config.compare.kind, cmp.config.compare.sort_text,
             cmp.config.compare.length, cmp.config.compare.order
         }
+    },
+    -- cmp floating window border
+    documentation = {
+      border = 'single',
+      winhighlight = 'NormalFloat:NormalFloat,FloatBorder:FloatBorder'
     }
 })
 
