@@ -19,15 +19,10 @@ o.termguicolors = true      -- Default GUI colors are too vivid
 
 execute                     -- Underline bad spellings
 [[
-hi clear SpellBad
-hi SpellBad cterm=undercurl, gui=undercurl
-]]
-execute                     -- Define autocmd to override colorscheme settings
-[[
 augroup SpellBadStyle
   autocmd!
-  au ColorScheme * hi clear SpellBad
-  au ColorScheme * hi SpellBad cterm=undercurl, gui=undercurl
+  au ColorScheme,VimEnter * hi clear SpellBad
+  au ColorScheme,VimEnter * hi SpellBad cterm=undercurl, gui=undercurl
 augroup END
 ]]
 
@@ -40,14 +35,22 @@ o.swapfile = false
 
 -- Default border style of floating windows
 local border = {
-      {'┌', 'FloatBorder'},
-      {'─', 'FloatBorder'},
-      {'┐', 'FloatBorder'},
-      {'│', 'FloatBorder'},
-      {'┘', 'FloatBorder'},
-      {'─', 'FloatBorder'},
-      {'└', 'FloatBorder'},
-      {'│', 'FloatBorder'},
+  {'┌', 'FloatBorder'},
+  {'─', 'FloatBorder'},
+  {'┐', 'FloatBorder'},
+  {'│', 'FloatBorder'},
+  {'┘', 'FloatBorder'},
+  {'─', 'FloatBorder'},
+  {'└', 'FloatBorder'},
+  {'│', 'FloatBorder'},
+  -- {'╭', 'FloatBorder'},
+  -- {'─', 'FloatBorder'},
+  -- {'╮', 'FloatBorder'},
+  -- {'│', 'FloatBorder'},
+  -- {'╯', 'FloatBorder'},
+  -- {'─', 'FloatBorder'},
+  -- {'╰', 'FloatBorder'},
+  -- {'│', 'FloatBorder'},
 }
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
