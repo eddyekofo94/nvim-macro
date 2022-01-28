@@ -5,7 +5,7 @@ local ensure_installed = get.lsp_server_list(langs)
 --------------------------------------------------------------------------------
 -- LSP UI configs --------------------------------------------------------------
 
--- Config for `nvim-lsp-installer`
+-- Config for `nvim-lsp-installer` icons
 require('nvim-lsp-installer').settings({
   ui = {
     icons = {
@@ -15,6 +15,14 @@ require('nvim-lsp-installer').settings({
     }
   }
 })
+
+-- Customize LSP floating window border
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  opts = opts or {}
+  opts.border = opts.border or 'single'
+  return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end
 
 -- LSP diagnostic signs
 local signs = { Error = '', Warn = '', Hint = '', Info = '' }

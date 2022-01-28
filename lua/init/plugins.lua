@@ -24,32 +24,34 @@ pcall(require, 'compile/packer_compiled')
 local get = require('utils/get')
 return require('packer').startup({
   function(use)
-      use(get.spec('packer'))           -- Packer manages itself
+    use(get.spec('packer'))             -- Packer manages itself
 
-      -- Appearance
-      use(get.spec('nvim-treesitter'))
-      use(get.spec('falcon'))           -- Color scheme
+    -- Appearance
+    use(get.spec('nvim-treesitter'))
+    use(get.spec('falcon'))             -- Color scheme
 
-      -- Editing
-      use(get.spec('nvim-cmp'))
-      use(get.spec('vim-easymotion'))   -- Moving around like magic!
-      use(get.spec('vsc-vim-easymotion'))   -- Easymotion for vscode-neovim
-      use(get.spec('vim-surround'))
-      use(get.spec('vim-commentary'))
+    -- Editing
+    use(get.spec('nvim-cmp'))
+    use(get.spec('vim-easymotion'))     -- Moving around like magic!
+    use(get.spec('vsc-vim-easymotion')) -- Easymotion for vscode-neovim
+    use(get.spec('vim-surround'))
+    use(get.spec('vim-commentary'))
 
-      -- LSP
-      use(get.spec('nvim-lsp-installer'))
+    -- LSP
+    use(get.spec('nvim-lsp-installer'))
 
-      -- Navigation
-      use(get.spec('alpha-nvim'))       -- Greeting page
-      use(get.spec('nvim-tree'))        -- File tree
-      use(get.spec('barbar'))           -- Buffer line
+    -- Navigation
+    use(get.spec('alpha-nvim'))         -- Greeting page
+    use(get.spec('nvim-tree'))          -- File tree
+    use(get.spec('barbar'))             -- Buffer line
 
-      -- Tools
-      use(get.spec('vim-gitgutter'))
-      use(get.spec('startuptime'))      -- Tools to test startuptime
-      use(get.spec('impatient'))        -- Speed up lua `require()`
-      use(get.spec('nvim-colorizer'))   -- Show inline RGB colors
+    -- Git
+    use(get.spec('vim-gitgutter'))
+
+    -- Tools
+    use(get.spec('startuptime'))        -- Tools to test startuptime
+    use(get.spec('impatient'))          -- Speed up lua `require()`
+    use(get.spec('nvim-colorizer'))     -- Show inline RGB colors
   end,
 
   config = {
@@ -58,7 +60,7 @@ return require('packer').startup({
     opt_default = false,
     display = {
       open_fn = function()
-        return require('packer.util').float()
+        return require('packer.util').float({ border = 'double' })
       end,
       working_sym = '',
       error_sym = '',

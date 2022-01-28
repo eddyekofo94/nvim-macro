@@ -2,7 +2,6 @@
 -- OPTIONS --------------------------------------------------------------------
 -------------------------------------------------------------------------------
 local o = vim.o
-local lsp = vim.lsp
 local execute = vim.cmd
 
 
@@ -19,15 +18,10 @@ o.termguicolors = true      -- Default GUI colors are too vivid
 
 execute                     -- Underline bad spellings
 [[
-hi clear SpellBad
-hi SpellBad cterm=undercurl, gui=undercurl
-]]
-execute                     -- Define autocmd to override colorscheme settings
-[[
 augroup SpellBadStyle
   autocmd!
-  au ColorScheme * hi clear SpellBad
-  au ColorScheme * hi SpellBad cterm=undercurl, gui=undercurl
+  au ColorScheme,VimEnter * hi clear SpellBad
+  au ColorScheme,VimEnter * hi SpellBad cterm=undercurl, gui=undercurl
 augroup END
 ]]
 
@@ -37,24 +31,6 @@ execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
 
 o.updatetime = 100  -- (ms)
 o.swapfile = false
-
--- Default border style of floating windows
-local border = {
-      {'┌', 'FloatBorder'},
-      {'─', 'FloatBorder'},
-      {'┐', 'FloatBorder'},
-      {'│', 'FloatBorder'},
-      {'┘', 'FloatBorder'},
-      {'─', 'FloatBorder'},
-      {'└', 'FloatBorder'},
-      {'│', 'FloatBorder'},
-}
-local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-  opts = opts or {}
-  opts.border = opts.border or border
-  return orig_util_open_floating_preview(contents, syntax, opts, ...)
-end
 
 -- -- Communication between Neovim in WSL & system clipboard
 -- if vim.fn.has('wsl') then
@@ -67,8 +43,7 @@ end
 -- end
 
 -- Autosave on focus change
-vim.cmd [[ autocmd BufLeave,FocusLost * silent! wall ]]
-
+execute [[ autocmd BufLeave,WinLeave,FocusLost * silent! wall ]]
 -- End of Appearance & Behaviour -----------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -108,21 +83,5 @@ execute [[ autocmd VimEnter * syn match myExCapitalWords +\<\w*[A-Z]\S*\>+ conta
 -- Exclude capitalized words and capitalized words + 's'
 execute [[ autocmd VimEnter * syn match myExCapitalWords +\<[A-Z]\w*\>+ contains=@NoSpell ]]
 execute [[ autocmd VimEnter * syn match myExCapitalWords +\<\w*[A-Z]\K*\>\|'s+ contains=@NoSpell ]]
-
 -- End of Spell check ----------------------------------------------------------
---------------------------------------------------------------------------------
-
-
---------------------------------------------------------------------------------
--- LSP options -----------------------------------------------------------------
-lsp.handlers["textDocument/publishDiagnostics"] =
-  lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-    -- Disable underline, it's very annoying
-    underline = false,
-    -- Enable virtual text, override spacing to 4
-    virtual_text = {spacing = 4},
-    signs = true,
-    update_in_insert = false
-  })
--- End of LSP options ----------------------------------------------------------
 --------------------------------------------------------------------------------
