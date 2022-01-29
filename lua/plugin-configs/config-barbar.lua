@@ -1,6 +1,16 @@
 local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 
+-- -- Trying to resize offset of barbar automatically when size of 'nvim-tree' is changed
+-- -- But `WinResized` or `WinLayoutChanged` has not be implemented yet
+-- execute
+-- [[
+--   augroup TreeSetBarBar
+--     autocmd!
+--     autocmd WinResized,WinLayoutChanged * lua require('bufferline.state').set_offset(vim.fn.winwidth(require('nvim-tree.view').get_winnr())+1)
+--   augroup END
+-- ]]
+
 -- Move to previous/next
 map('n', '<S-Tab>', ':BufferPrevious<CR>', opts)
 map('n', '<Tab>', ':BufferNext<CR>', opts)
@@ -66,8 +76,8 @@ vim.g.bufferline = {
   icon_custom_colors = false,
 
   -- Configure icons on the bufferline.
-  icon_separator_active = '▎',
-  icon_separator_inactive = '▎',
+  icon_separator_active = '',
+  icon_separator_inactive = '',
   icon_close_tab = '',
   icon_close_tab_modified = '',
   icon_pinned = '車',

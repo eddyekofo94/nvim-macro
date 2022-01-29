@@ -1,13 +1,22 @@
 local execute = vim.cmd
-execute(':command TC NvimTreeClipboard')
-execute(':command TQ NvimTreeClose')
-execute(':command TFF NvimTreeFindFile')
-execute(':command TFFT NvimTreeFindFileToggle')
-execute(':command TF NvimTreeFocus')
-execute(':command TO NvimTreeOpen')
-execute(':command TR NvimTreeRefresh')
-execute(':command TS NvimTreeResize')
-execute(':command TT NvimTreeToggle')
+execute
+[[ command TC lua require('nvim-tree.actions.copy-paste').print_clipboard() ]]
+execute
+[[ command TQ lua require('utils.integration').tree_set_barbar.close() ]]
+execute
+[[ command TFF lua require('utils.integration').tree_set_barbar.find_file(true) ]]
+execute
+[[ command TFFT lua require('utils.integration').tree_set_barbar.toggle(true) ]]
+execute
+[[ command TF lua require('utils.integration').tree_set_barbar.focus() ]]
+execute
+[[ command TO lua require('utils.integration').tree_set_barbar.open() ]]
+execute
+[[ command TR lua require('nvim-tree.lib').refresh_tree() ]]
+execute
+[[ command -nargs=1 TS lua require('utils.integration').tree_set_barbar.resize(<args>) ]]
+execute
+[[ command TT lua require('utils.integration').tree_set_barbar.toggle(false) ]]
 
 local g = vim.g
 g.nvim_tree_highlight_opened_files = 2
@@ -32,8 +41,6 @@ g.nvim_tree_icons = {
 
 local tree_cb = require 'nvim-tree.config'.nvim_tree_callback
 require 'nvim-tree'.setup {
-  width = 28,
-  auto_close = false,
   view = {
     auto_resize = true,
     mappings = {
