@@ -42,7 +42,7 @@ map('n', '<M-,>', '<C-w><', {noremap = true})
 map('n', '<M-.>', '<C-w>>', {noremap = true})
 map('n', '<M-v>', ':vsplit<CR>', {noremap = true, silent = true})
 map('n', '<M-x>', ':split<CR>', {noremap = true, silent = true})
-map('n', '<M-q>', '<C-w>c', {noremap = true})   -- Quit current window
+map('n', '<M-c>', '<C-w>c', {noremap = true})   -- Close current window
 map('n', '<M-o>', '<C-w>o', {noremap = true})   -- Close all other windows
 
 -- Multi-buffer operations
