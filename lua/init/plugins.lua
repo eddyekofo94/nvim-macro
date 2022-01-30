@@ -46,7 +46,7 @@ return require('packer').startup({
     use(get.spec('barbar'))             -- Buffer line
 
     -- Git
-    use(get.spec('vim-gitgutter'))
+    use(get.spec('gitsigns'))
 
     -- Tools
     use(get.spec('startuptime'))        -- Tools to test startuptime
