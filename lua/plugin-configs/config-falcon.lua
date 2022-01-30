@@ -24,3 +24,16 @@ hi DiagnosticVirtualTextInfo guifg=#787882 ctermfg=243 guibg=NONE ctermbg=NONE g
 -- Colorize borders
 vim.cmd [[highlight NormalFloat guibg=NONE ctermbg=NONE]]
 vim.cmd [[highlight FloatBorder guifg=#ff761a guibg=NONE ctermfg=1 ctermbg=NONE]]
+
+-- Override barbar default highlight
+vim.cmd
+[[
+hi BufferCurrent guifg=#EFEFEF ctermfg=white guibg=NONE ctermbg=NONE
+hi BufferCurrentMod guifg=#FF761A ctermfg=brown guibg=NONE ctermbg=NONE
+hi BufferVisible guifg=#EFEFEF ctermfg=white guibg=#212127
+hi BufferVisibleMod guifg=#FF761A ctermfg=brown guibg=#212127
+hi BufferVisibleSign guibg=#212127
+hi BufferVisibleTarget guibg=#212127
+hi BufferVisibleIndex guibg=#212127
+hi BufferInactiveMod guifg=#911E00 ctermfg=red
+]]
