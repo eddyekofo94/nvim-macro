@@ -35,8 +35,7 @@ map('n', '<M-p>', ':BufferPin<CR>', opts)
 -- Wipeout buffer
 -- map('n', '???', ':BufferWipeout<CR>', opts)
 -- Close commands
-map('n', '<M-~>', ':BufferCloseAllButPinned<CR>', opts)
-map('n', '<M-`>', ':BufferCloseAllButCurrent<CR>', opts)
+map('n', '<M-D>', ':BufferCloseAllButCurrentOrPinned<CR>', opts)
 map('n', '<M-^>', ':BufferCloseBuffersLeft<CR>', opts)
 map('n', '<M-$>', ':BufferCloseBuffersRight<CR>', opts)
 -- Magic buffer-picking mode
