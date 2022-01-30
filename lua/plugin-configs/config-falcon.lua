@@ -37,3 +37,10 @@ hi BufferVisibleTarget guibg=#212127
 hi BufferVisibleIndex guibg=#212127
 hi BufferInactiveMod guifg=#911E00 ctermfg=red
 ]]
+
+-- Override highlight color for git change (`gitsigns.nvim`)
+vim.cmd [[ hi GitSignsChange guifg=#AA00F5 ctermfg=darkmagenta ]]
+
+-- Override highlight for `nvim-tree`
+vim.cmd [[ hi NvimTreeGitDirty guifg=#AA00F5 ctermfg=darkmagenta ]]
+vim.cmd [[ hi NvimTreeOpenedFile guifg=#EFEFEF gui=NONE ctermfg=white cterm=NONE ]]
