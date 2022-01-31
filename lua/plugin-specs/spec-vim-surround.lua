@@ -1,6 +1,5 @@
 return {
   'tpope/vim-surround',
-  event = 'BufEnter',
   -- To repeat surrounding operations
   requires = require('utils/get').spec('vim-repeat')
 }
