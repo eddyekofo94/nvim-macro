@@ -18,8 +18,8 @@ execute
 execute
 [[ command TT lua require('utils.integration').tree_set_barbar.toggle(false) ]]
 
--- Refresh tree after opening a file to update the color of the open file
-execute [[ autocmd BufAdd * lua require('nvim-tree.lib').refresh_tree() ]]
+-- Refresh tree after opening new file or write to files
+execute [[ autocmd BufEnter,BufAdd,BufWritePost * lua require('nvim-tree.lib').refresh_tree() ]]
 
 local g = vim.g
 g.nvim_tree_highlight_opened_files = 2
