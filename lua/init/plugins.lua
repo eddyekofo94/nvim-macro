@@ -48,6 +48,9 @@ return require('packer').startup({
     -- Git
     use(get.spec('gitsigns'))
 
+    -- Notes
+    use(get.spec('markdown-preview'))
+
     -- Tools
     use(get.spec('startuptime'))        -- Tools to test startuptime
     use(get.spec('impatient'))          -- Speed up lua `require()`
