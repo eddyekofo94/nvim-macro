@@ -1,4 +1,1 @@
-return {
-  'tpope/vim-repeat',
-  event = 'BufEnter'
-}
+return 'tpope/vim-repeat'

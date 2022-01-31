@@ -6,6 +6,5 @@ return {
     get.spec('plenary'),
     get.spec('vim-repeat')
   },
-  event = 'BufWinEnter',
   config = get.config('gitsigns')
 }

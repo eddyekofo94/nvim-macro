@@ -61,6 +61,7 @@ return require('packer').startup({
     clone_timeout = 300,
     compile_path = fn.stdpath('config') .. '/lua/compile/packer_compiled.lua',
     opt_default = false,
+    transitive_opt = true,
     display = {
       open_fn = function()
         return require('packer.util').float({ border = 'double' })
