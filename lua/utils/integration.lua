@@ -10,7 +10,7 @@ integration.tree_set_barbar = {
       tree.open()
     end
     if bb_ready and tree_view_ready then
-      bb_st.set_offset(tree_view.View.width + 1, 'NvimTree')
+      bb_st.set_offset(tree_view.View.width , 'NvimTree')
     end
   end,
 
@@ -33,7 +33,7 @@ integration.tree_set_barbar = {
       tree.toggle(find_file)
     end
     if bb_ready and tree_view_ready and tree_view.win_open() then
-      bb_st.set_offset(tree_view.View.width + 1, 'NvimTree')
+      bb_st.set_offset(tree_view.View.width , 'NvimTree')
     elseif bb_ready and tree_view_ready and not tree_view.win_open() then
       bb_st.set_offset(0)
     end
@@ -47,7 +47,7 @@ integration.tree_set_barbar = {
       tree.focus()
     end
     if bb_ready and tree_view_ready then
-      bb_st.set_offset(tree_view.View.width + 1, 'NvimTree')
+      bb_st.set_offset(tree_view.View.width , 'NvimTree')
     end
   end,
 
@@ -59,7 +59,7 @@ integration.tree_set_barbar = {
       tree.resize(size)
     end
     if tree_view_ready and tree_view.win_open() and bb_ready then
-      bb_st.set_offset(tree_view.View.width + 1, 'NvimTree')
+      bb_st.set_offset(tree_view.View.width , 'NvimTree')
     end
   end,
 
@@ -71,7 +71,7 @@ integration.tree_set_barbar = {
       tree.find_file(with_open)
     end
     if with_open and bb_ready and tree_view_ready and tree_view.win_open() then
-      bb_st.set_offset(tree_view.View.width + 1, 'NvimTree')
+      bb_st.set_offset(tree_view.View.width , 'NvimTree')
     end
   end,
 }
