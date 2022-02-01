@@ -25,6 +25,24 @@ hi DiagnosticVirtualTextInfo guifg=#787882 ctermfg=243 guibg=NONE ctermbg=NONE g
 vim.cmd [[highlight NormalFloat guibg=NONE ctermbg=NONE]]
 vim.cmd [[highlight FloatBorder guifg=#ff761a guibg=NONE ctermfg=1 ctermbg=NONE]]
 
+-- Colorscheme for telescope
+vim.cmd
+[[
+hi TelescopeBorder ctermfg=1 ctermbg=NONE guifg=#FF761A guibg=NONE
+hi TelescopeNormal ctermbg=NONE guibg=NONE
+hi TelescopePreviewNormal ctermbg=NONE guibg=NONE
+hi TelescopeResultNormal ctermbg=NONE guibg=NONE
+hi TelescopeTitle ctermbg=NONE guibg=NONE
+hi TelescopePreviewTitle ctermbg=NONE guibg=NONE
+hi TelescopeResultTitle ctermbg=NONE guibg=NONE
+hi TelescopeMatching ctermfg=green ctermbg=NONE guifg=#7FBF00 guibg=NONE
+hi TelescopePromptPrefix ctermbg=NONE guibg=NONE
+hi TelescopeSelection ctermbg=NONE guibg=NONE
+hi TelescopeSelectionCaret ctermbg=NONE guibg=NONE
+hi TelescopeMultiSelection ctermbg=NONE guibg=NONE
+hi TelescopeMultiIcon ctermbg=NONE guibg=NONE
+]]
+
 -- Override barbar default highlight
 vim.cmd
 [[
