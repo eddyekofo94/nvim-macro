@@ -44,6 +44,7 @@ return require('packer').startup({
     use(get.spec('alpha-nvim'))         -- Greeting page
     use(get.spec('nvim-tree'))          -- File tree
     use(get.spec('barbar'))             -- Buffer line
+    use(get.spec('telescope'))
 
     -- Git
     use(get.spec('vim-gitgutter'))
