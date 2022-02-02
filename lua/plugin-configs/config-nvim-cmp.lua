@@ -4,6 +4,10 @@ vim.cmd [[ :packadd cmp-under-comparator ]]
 local cmp = require "cmp"
 local lspkind = require("lspkind")
 
+local feedkey = function(key, mode)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+end
+
 cmp.setup({
     formatting = {
         format = lspkind.cmp_format {
@@ -28,14 +32,33 @@ cmp.setup({
         end
     },
     mapping = {
-        ["<S-Tab>"] = cmp.mapping.select_prev_item(),
-        ["<Tab>"] = cmp.mapping.select_next_item(),
+        ["<S-Tab>"] = cmp.mapping(function()
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+                feedkey("<Plug>(vsnip-jump-prev)", "")
+            end
+        end, { "i", "s" }),
+        ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            elseif vim.fn["vsnip#available"](1) == 1 then
+                feedkey("<Plug>(vsnip-expand-or-jump)", "")
+            else
+                fallback()  -- The fallback function sends a already mapped key,
+            end             -- in this case, it's probably `<Tab>`.
+        end, { "i", "s" }),
         ["<C-p>"] = cmp.mapping.select_prev_item(),
         ["<C-n>"] = cmp.mapping.select_next_item(),
         ["<C-u>"] = cmp.mapping.scroll_docs(-4),
         ["<C-d>"] = cmp.mapping.scroll_docs(4),
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<M-;>"] = cmp.mapping.close(),
+        ["<M-;>"] = cmp.mapping(function()
+            if cmp.visible() then
+                cmp.close()
+            else
+                cmp.complete()
+            end
+        end, { "i", "s" } ),
         ["<esc>"] = cmp.mapping.abort(),
         ["<CR>"] = cmp.mapping.confirm {
             behavior = cmp.ConfirmBehavior.Replace,
