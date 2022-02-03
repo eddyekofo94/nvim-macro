@@ -62,3 +62,6 @@ vim.cmd [[ hi GitSignsChange guifg=#AA00F5 ctermfg=darkmagenta ]]
 -- Override highlight for `nvim-tree`
 vim.cmd [[ hi NvimTreeGitDirty guifg=#AA00F5 ctermfg=darkmagenta ]]
 vim.cmd [[ hi NvimTreeOpenedFile guifg=#EFEFEF gui=NONE ctermfg=white cterm=NONE ]]
+
+-- For `trouble`
+vim.cmd [[ hi TroubleFoldIcon guibg=NONE ctermbg=NONE ]]
