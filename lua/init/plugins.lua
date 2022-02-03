@@ -39,6 +39,7 @@ return require('packer').startup({
 
     -- LSP
     use(get.spec('nvim-lsp-installer'))
+    use(get.spec('trouble'))            -- Show diagnostics, references, etc
 
     -- Navigation
     use(get.spec('alpha-nvim'))         -- Greeting page

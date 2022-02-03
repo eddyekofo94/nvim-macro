@@ -84,5 +84,15 @@ require 'nvim-tree'.setup {
         { key = 'g?',                    cb = tree_cb('toggle_help') },
       }
     }
-  }
+  },
+  diagnostics = {
+    enable = true,
+    show_on_dirs = true,
+    icons = {
+      error = '',
+      warning = '',
+      hint = '',
+      info = ''
+    }
+  },
 }
