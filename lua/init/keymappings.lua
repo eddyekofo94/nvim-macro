@@ -45,6 +45,11 @@ map('n', '<M-x>', ':split<CR>', {noremap = true, silent = true})
 map('n', '<M-c>', '<C-w>c', {noremap = true})   -- Close current window
 map('n', '<M-C>', '<C-w>o', {noremap = true})   -- Close all other windows
 
+-- Close all floating windows
+map('n','<M-;>',
+    "<cmd>lua require('utils/actions').win.close_all_floatings()<CR>",
+    {noremap = true, silent = true})
+
 -- Multi-buffer operations
 map('n', '<Tab>', ':bn<CR>', {noremap = true, silent = true})
 map('n', '<S-Tab>', ':bp<CR>', {noremap = true, silent = true})

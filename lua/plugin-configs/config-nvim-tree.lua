@@ -2,21 +2,21 @@ local execute = vim.cmd
 execute
 [[ command TC lua require('nvim-tree.actions.copy-paste').print_clipboard() ]]
 execute
-[[ command TQ lua require('utils.integration').tree_set_barbar.close() ]]
+[[ command TQ lua require('utils.actions').tree_set_barbar.close() ]]
 execute
-[[ command TFF lua require('utils.integration').tree_set_barbar.find_file(true) ]]
+[[ command TFF lua require('utils.actions').tree_set_barbar.find_file(true) ]]
 execute
-[[ command TFFT lua require('utils.integration').tree_set_barbar.toggle(true) ]]
+[[ command TFFT lua require('utils.actions').tree_set_barbar.toggle(true) ]]
 execute
-[[ command TF lua require('utils.integration').tree_set_barbar.focus() ]]
+[[ command TF lua require('utils.actions').tree_set_barbar.focus() ]]
 execute
-[[ command TO lua require('utils.integration').tree_set_barbar.open() ]]
+[[ command TO lua require('utils.actions').tree_set_barbar.open() ]]
 execute
 [[ command TR lua require('nvim-tree.lib').refresh_tree() ]]
 execute
-[[ command -nargs=1 TS lua require('utils.integration').tree_set_barbar.resize(<args>) ]]
+[[ command -nargs=1 TS lua require('utils.actions').tree_set_barbar.resize(<args>) ]]
 execute
-[[ command TT lua require('utils.integration').tree_set_barbar.toggle(false) ]]
+[[ command TT lua require('utils.actions').tree_set_barbar.toggle(false) ]]
 
 -- Refresh tree after opening new file or write to files
 execute [[ autocmd BufEnter,BufAdd,BufWritePost * lua require('nvim-tree.lib').refresh_tree() ]]
