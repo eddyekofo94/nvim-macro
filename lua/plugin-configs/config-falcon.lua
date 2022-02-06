@@ -65,3 +65,11 @@ vim.cmd [[ hi NvimTreeOpenedFile guifg=#EFEFEF gui=NONE ctermfg=white cterm=NONE
 
 -- For `trouble`
 vim.cmd [[ hi TroubleFoldIcon guibg=NONE ctermbg=NONE ]]
+
+-- Highlight current line number
+vim.cmd
+[[
+  highlight CursorLineNr cterm=NONE ctermbg=NONE ctermfg=white gui=NONE guibg=NONE guifg=#EFEFEF 
+  set cursorline
+  set cursorlineopt=number
+ ]]
