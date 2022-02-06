@@ -1,5 +1,5 @@
 local get = require('utils/get')
-local langs = require('utils/langs')
+local langs = require('utils/shared').langs
 local ensure_installed = get.lsp_server_list(langs)
 
 --------------------------------------------------------------------------------
