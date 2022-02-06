@@ -37,6 +37,7 @@ return require('packer').startup({
     use(get.spec('vsc-vim-easymotion')) -- Easymotion for vscode-neovim
     use(get.spec('vim-surround'))
     use(get.spec('vim-commentary'))
+    use(get.spec('vim-sleuth'))         -- Auto detect indentation
 
     -- LSP
     use(get.spec('nvim-lsp-installer'))

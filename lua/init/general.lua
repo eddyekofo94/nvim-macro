@@ -25,8 +25,6 @@ augroup SpellBadStyle
 augroup END
 ]]
 
-execute [[ set fillchars-=vert:\| | set fillchars+=vert:\▎ ]]
-
 execute [[ set signcolumn=auto:1-2 ]]   -- For gitgutter & LSP diagnostic
 
 execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
