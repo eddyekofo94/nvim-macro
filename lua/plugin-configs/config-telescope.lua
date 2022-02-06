@@ -9,7 +9,7 @@ local telescope = require('telescope')
 
 telescope.setup{
   defaults = {
-    borderchars = require('utils/shared').borders.single,
+    borderchars = require('utils/shared').borders.double_header,
     mappings = {
       i = {
         ['<C-n>'] = require('telescope.actions').move_selection_next,
