@@ -89,10 +89,10 @@ func PairedIndent ()
         \"'" == c && '"' == p || '`' == c && '`' == p
         return "\<cr>\<esc>O"
     endif
-"    if ')' == c || ']' == c || '}' == c || '"' == c || "'" == c || '`' == c
-"        let command = printf("\<esc>di%si\<cr>\<esc>Pli\<cr>\<esc>k>>A", c)
-"        return command
-"    endif
+    if ')' == c || ']' == c || '}' == c
+        let command = printf("\<esc>di%si\<cr>\<esc>Pli\<cr>\<esc>k>>A", c)
+        return command
+    endif
     return "\<cr>"
 endfunc
 
