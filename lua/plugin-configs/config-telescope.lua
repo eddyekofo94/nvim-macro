@@ -1,6 +1,9 @@
 local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 map('n', '<Leader>ff', [[<cmd>lua require('telescope.builtin').find_files()<CR>]], opts)
+map('n', '<Leader>fof', [[<cmd>lua require('telescope.builtin').oldfiles()<CR>]], opts)
+map('n', '<Leader>f:', [[<cmd>lua require('telescope.builtin').commands()<CR>]], opts)
+map('n', '<Leader>foc', [[<cmd>lua require('telescope.builtin').command_history()<CR>]], opts)
 map('n', '<Leader>fg', [[<cmd>lua require('telescope.builtin').live_grep()<CR>]], opts)
 map('n', '<Leader>fw', [[<cmd>lua require('telescope.builtin').grep_string()<CR>]], opts)
 map('n', '<Leader>fh', [[<cmd>lua require('telescope.builtin').help_tags()<CR>]], opts)
@@ -60,6 +63,7 @@ telescope.setup{
         ['q'] = require('telescope.actions').close,
         ['<esc>'] = require('telescope.actions').close,
         ['<M-;>'] = require('telescope.actions').close,
+        ['<M-c>'] = require('telescope.actions').close,
         ['<CR>'] = require('telescope.actions').select_default,
         ['<M-x>'] = require('telescope.actions').select_horizontal,
         ['<M-v>'] = require('telescope.actions').select_vertical,
