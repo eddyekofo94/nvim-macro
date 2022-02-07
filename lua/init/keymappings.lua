@@ -20,12 +20,12 @@ map('i', 'jj', '<esc>', {noremap = true})
 -- Exit from term mode
 map('t', '<esc>', '<C-\\><C-n>', {noremap = true})
 
--- Yank/delete/change all
-map('n', 'yA', 'ggyG', {noremap = true})
-map('n', 'dA', 'ggdG', {noremap = true})
-map('n', 'cA', 'ggcG', {noremap = true})
+-- Yank/delete/change current buffer
+map('n', 'y%', 'ggyG', {noremap = true})
+map('n', 'd%', 'ggdG', {noremap = true})
+map('n', 'c%', 'ggcG', {noremap = true})
 -- Visual select all
-map('n', 'VA', '<esc>ggVG', {noremap = true})
+map('n', 'V%', 'ggVG', {noremap = true})
 
 -- Multi-window operations
 map('n', '<M-w>', '<C-w><C-w>', {noremap = true})
