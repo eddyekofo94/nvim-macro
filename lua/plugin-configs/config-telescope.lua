@@ -2,8 +2,22 @@ local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 map('n', '<Leader>ff', [[<cmd>lua require('telescope.builtin').find_files()<CR>]], opts)
 map('n', '<Leader>fg', [[<cmd>lua require('telescope.builtin').live_grep()<CR>]], opts)
-map('n', '<Leader>fb', [[<cmd>lua require('telescope.builtin').buffers()<CR>]], opts)
+map('n', '<Leader>fw', [[<cmd>lua require('telescope.builtin').grep_string()<CR>]], opts)
 map('n', '<Leader>fh', [[<cmd>lua require('telescope.builtin').help_tags()<CR>]], opts)
+map('n', '<Leader>fm', [[<cmd>lua require('telescope.builtin').marks()<CR>]], opts)
+map('n', '<Leader>fq', [[<cmd>lua require('telescope.builtin').quickfix()<CR>]], opts)
+map('n', '<Leader>fll', [[<cmd>lua require('telescope.builtin').locklist()<CR>]], opts)
+map('n', '<Leader>fT', [[<cmd>lua require('telescope.builtin').tags()<CR>]], opts)
+map('n', '<Leader>fbl', [[<cmd>lua require('telescope.builtin').buffers()<CR>]], opts)
+map('n', '<Leader>fbf', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>]], opts)
+map('n', '<Leader>fbT', [[<cmd>lua require('telescope.builtin').current_buffer_tags()<CR>]], opts)
+map('n', '<Leader>fr', [[<cmd>lua require('telescope.builtin').lsp_references()<CR>]], opts)
+map('n', '<Leader>fc', [[<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>]], opts)
+map('n', '<Leader>fe', [[<cmd>lua require('telescope.builtin').diagnostics()<CR>]], opts)
+map('n', '<Leader>fd', [[<cmd>lua require('telescope.builtin').lsp_definitions()<CR>]], opts)
+map('n', '<Leader>ft', [[<cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>]], opts)
+map('n', '<Leader>fi', [[<cmd>lua require('telescope.builtin').lsp_implementations()<CR>]], opts)
+map('n', '<Leader>fp', [[<cmd>lua require('telescope.builtin').treesitter()<CR>]], opts)
 
 local telescope = require('telescope')
 
