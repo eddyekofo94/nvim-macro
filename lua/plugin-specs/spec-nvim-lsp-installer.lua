@@ -11,7 +11,11 @@ return {
       'LspInstallInfo', 'LspInstall', 'LspUninstall', 'LspUninstallAll',
       'LspInstallLog', 'LspPrintInstalled'
   },
-  requires = { get.spec('cmp-nvim-lsp'), get.spec('nvim-lspconfig') },
+  requires = {
+    get.spec('cmp-nvim-lsp'),
+    get.spec('nvim-lspconfig'),
+    get.spec('trouble')
+  },
 
   -- This option does not load `nvim-lspconfig` or `cmp-nvim-lsp` automatically
   -- when `nvim-lsp-installer` is loaded by cmd or ft, so I add `packadd`

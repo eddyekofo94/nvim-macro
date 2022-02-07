@@ -95,7 +95,7 @@ local on_attach =
 
     -- Mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
-    local opts = { noremap=true }
+    local opts = { noremap=true, silent = true }
     buf_set_keymap('n', '<Leader>lD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
     buf_set_keymap('n', '<Leader>ld', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
     buf_set_keymap('n', '<Leader>lh', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -107,11 +107,13 @@ local on_attach =
     buf_set_keymap('n', '<Leader>lt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
     buf_set_keymap('n', '<Leader>lR', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
     buf_set_keymap('n', '<Leader>lc', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-    buf_set_keymap('n', '<Leader>lr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+    buf_set_keymap('n', '<Leader>lr', '<cmd>TroubleToggle lsp_references<CR>', opts)
+    buf_set_keymap('n', '<Leader>lq', '<cmd>TroubleToggle quickfix<CR>', opts)
     buf_set_keymap('n', '<Leader>le', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+    buf_set_keymap('n', '<Leader>lE', '<cmd>TroubleToggle workspace_diagnostics<CR>', opts)
     buf_set_keymap('n', '[e', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
     buf_set_keymap('n', ']e', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-    buf_set_keymap('n', '<leader>ll', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+    buf_set_keymap('n', '<leader>ll', '<cmd>TroubleToggle loclist<CR>', opts)
     buf_set_keymap('n', '<leader>l=', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
   end
 --------------------------- on_attach function ends ----------------------------
