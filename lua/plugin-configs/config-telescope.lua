@@ -24,6 +24,8 @@ local telescope = require('telescope')
 telescope.setup{
   defaults = {
     borderchars = require('utils/shared').borders.double_header,
+    file_ignore_patterns = { '.git/', '%.pdf', '%.o', '%.zip' },
+    preview = { filesize_limit = 5 },
     mappings = {
       i = {
         ['<C-n>'] = require('telescope.actions').move_selection_next,
@@ -57,6 +59,7 @@ telescope.setup{
       n = {
         ['q'] = require('telescope.actions').close,
         ['<esc>'] = require('telescope.actions').close,
+        ['<M-;>'] = require('telescope.actions').close,
         ['<CR>'] = require('telescope.actions').select_default,
         ['<M-x>'] = require('telescope.actions').select_horizontal,
         ['<M-v>'] = require('telescope.actions').select_vertical,
