@@ -32,7 +32,6 @@ execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
 o.updatetime = 100  -- (ms)
 o.swapfile = false
 
--- -- Communication between Neovim in WSL & system clipboard
 -- if vim.fn.has('wsl') then
 --   execute [[
 --     augroup Yank
