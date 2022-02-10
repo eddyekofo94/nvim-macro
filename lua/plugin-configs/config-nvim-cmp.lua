@@ -8,24 +8,36 @@ local feedkey = function(key, mode)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
+lspkind.init({
+    symbol_map = {
+        Field = "",
+        Property = "",
+        Text = "",
+        Enum = "",
+        EnumMember = "",
+        TypeParameter = "𝙏",
+        Class = ""
+    }
+})
+
 cmp.setup({
     formatting = {
+        fields = { "kind", "abbr", "menu" },
         format = lspkind.cmp_format {
             with_text = false,
             maxwidth = 50,
-            menu = {
-                buffer = '[BUFFER]',
-                nvim_lsp = '[LSP]',
-                path = '[PATH]',
-                vsnip = '[VSNIP]',
-                calc = '[CALC]',
-                spell = '[SPELL]',
-                emoji = '[EMOJI]',
-                cmdline = '[CMD]'
-            }
+            before = function (entry, vim_item)
+                vim_item.menu = "[" .. string.upper(entry.source.name) .. "]"
+                if entry.source.name == 'emoji' then
+                    vim_item.kind = ""    -- Do not show kind icon for emoji
+                else
+                    vim_item.abbr = " " .. vim_item.word
+                end
+                return vim_item
+            end
         }
     },
-    experimental = {native_menu = true, ghost_text = true},
+    experimental = {native_menu = false, ghost_text = true},
     snippet = {
         expand = function(args)
             vim.fn["vsnip#anonymous"](args.body)
@@ -50,8 +62,12 @@ cmp.setup({
         end, { "i", "s" }),
         ["<C-p>"] = cmp.mapping.select_prev_item(),
         ["<C-n>"] = cmp.mapping.select_next_item(),
+        ["<C-b>"] = cmp.mapping.scroll_docs(-8),
+        ["<C-f>"] = cmp.mapping.scroll_docs(8),
         ["<C-u>"] = cmp.mapping.scroll_docs(-4),
         ["<C-d>"] = cmp.mapping.scroll_docs(4),
+        ["<C-e>"] = cmp.mapping.scroll_docs(-1),
+        ["<C-y>"] = cmp.mapping.scroll_docs(1),
         ["<M-;>"] = cmp.mapping(function()
             if cmp.visible() then
                 cmp.close()
@@ -66,9 +82,10 @@ cmp.setup({
         },
     },
     sources = {
-        {name = "nvim_lsp"}, {name = "buffer", keyword_length = 5},
-        {name = "vsnip"}, {name = "calc"}, {name = "emoji"}, {name = "spell"},
-        {name = "path"}
+        {name = "nvim_lsp"}, {name = "path"},
+        {name = "spell", max_item_count = 5},
+        {name = "buffer", max_item_count = 10},
+        {name = "vsnip"}, {name = "calc"}, {name = "emoji"}
     },
     sorting = {
         comparators = {

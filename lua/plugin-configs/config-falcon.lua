@@ -21,14 +21,52 @@ hi DiagnosticVirtualTextHint guifg=#847B73 ctermfg=8 guibg=NONE ctermbg=NONE gui
 hi DiagnosticVirtualTextInfo guifg=#787882 ctermfg=243 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 ]]
 
+-- Do not display cmp fuzzy-finding matches in italic
+vim.cmd [[ hi CmpItemAbbrMatchFuzzy cterm=NONE gui=NONE ]]
+
+-- Highlights for cmp kind icons
+vim.cmd
+[[
+hi      CmpItemKindText        ctermfg=243 guifg=#99A4BC
+hi link CmpItemKindMethod      Function
+hi link CmpItemKindFunction    Function
+hi link CmpItemKindConstructor TSConstructor
+hi      CmpItemKindField       ctermfg=97  guifg=#BB99E3
+hi      CmpItemKindProperty    ctermfg=97  guifg=#BB99E3
+hi      CmpItemKindVariable    ctermfg=248 guifg=#5C9EA1
+hi      CmpItemKindReference   ctermfg=248 guifg=#5C9EA1
+hi      CmpItemKindModule      ctermfg=92  guifg=#635196
+hi      CmpItemKindEnum        ctermfg=209 guifg=#B24D36
+hi      CmpItemKindEnumMember  ctermfg=209 guifg=#B24D36
+hi link CmpItemKindKeyword     Operator
+hi link CmpItemKindOperator    Operator
+hi      CmpItemKindSnippet     ctermfg=7   guifg=#C1E587
+hi      CmpItemKindColor       ctermfg=199 guifg=#F0989A
+hi      CmpItemKindConstant    ctermfg=137 guifg=#FFE8C8
+hi      CmpItemKindValue       ctermfg=15  guifg=#EFEFEF
+hi      CmpItemKindClass       ctermfg=68  guifg=#7295F5
+hi      CmpItemKindStruct      ctermfg=68  guifg=#7295F5
+hi      CmpItemKindEvent       ctermfg=67  guifg=#FFC552
+hi      CmpItemKindInterface   ctermfg=67  guifg=#BFDAFF
+]]
+
+-- Highlights for popup menu sidebar
+vim.cmd
+[[
+hi PmenuSbar  ctermbg=235 guibg=#202038
+hi PmenuThumb ctermbg=208 guibg=#FF761A
+hi PmenuSel   ctermbg=235 guibg=#202038 ctermfg=15 guifg=#DFDFE5
+]]
+
+
 -- Colorize borders
 vim.cmd [[highlight NormalFloat guibg=NONE ctermbg=NONE]]
-vim.cmd [[highlight FloatBorder guifg=#ff761a guibg=NONE ctermfg=1 ctermbg=NONE]]
+vim.cmd [[highlight FloatBorder guifg=#FF761A guibg=NONE ctermfg=208 ctermbg=NONE]]
 
 -- Colorscheme for telescope
 vim.cmd
 [[
-hi TelescopeBorder ctermfg=1 ctermbg=NONE guifg=#FF761A guibg=NONE
+hi TelescopeBorder ctermfg=208 ctermbg=NONE guifg=#FF761A guibg=NONE
 hi TelescopeNormal ctermbg=NONE guibg=NONE
 hi TelescopePreviewNormal ctermbg=NONE guibg=NONE
 hi TelescopeResultNormal ctermbg=NONE guibg=NONE
@@ -47,9 +85,9 @@ hi TelescopeMultiIcon ctermbg=NONE guibg=NONE
 vim.cmd
 [[
 hi BufferCurrent guifg=#EFEFEF ctermfg=white guibg=NONE ctermbg=NONE
-hi BufferCurrentMod guifg=#FF761A ctermfg=brown guibg=NONE ctermbg=NONE
+hi BufferCurrentMod guifg=#FF761A ctermfg=208 guibg=NONE ctermbg=NONE
 hi BufferVisible guifg=#EFEFEF ctermfg=white guibg=#212127
-hi BufferVisibleMod guifg=#FF761A ctermfg=brown guibg=#212127
+hi BufferVisibleMod guifg=#FF761A ctermfg=208 guibg=#212127
 hi BufferVisibleSign guibg=#212127
 hi BufferVisibleTarget guibg=#212127
 hi BufferVisibleIndex guibg=#212127
