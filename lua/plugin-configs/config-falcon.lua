@@ -48,6 +48,8 @@ hi      CmpItemKindClass       ctermfg=68  guifg=#7295F5
 hi      CmpItemKindStruct      ctermfg=68  guifg=#7295F5
 hi      CmpItemKindEvent       ctermfg=67  guifg=#FFC552
 hi      CmpItemKindInterface   ctermfg=67  guifg=#BFDAFF
+hi link CmpItemKindFile        DevIconDefault
+hi link CmpItemKindFolder      NvimTreeFolderName
 ]]
 
 -- Highlights for popup menu sidebar

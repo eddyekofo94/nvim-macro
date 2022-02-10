@@ -1,41 +1,61 @@
-vim.cmd [[ :packadd lspkind-nvim ]]     -- Ensure that lspkind icon is loaded
 vim.cmd [[ :packadd cmp-under-comparator ]]
-
 local cmp = require "cmp"
-local lspkind = require("lspkind")
 
 local feedkey = function(key, mode)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
-lspkind.init({
-    symbol_map = {
-        Field = "",
-        Property = "",
-        Text = "",
-        Enum = "",
-        EnumMember = "",
-        TypeParameter = "𝙏",
-        Class = ""
-    }
-})
+local sym_map = {
+    Field = "",
+    Property = "",
+    Text = "",
+    Enum = "",
+    EnumMember = "",
+    TypeParameter = "",
+    Class = "",
+    Method = "",
+    Function = "",
+    Constructor = "",
+    Interface = "",
+    Module = "",
+    Unit = "塞",
+    Value = "",
+    Keyword = "",
+    Snippet = "",
+    Color = "",
+    Variable = "",
+    File = "",
+    Reference = "",
+    Folder = "",
+    Constant = "",
+    Struct = "פּ",
+    Event = "",
+    Operator = "",
+}
 
 cmp.setup({
     formatting = {
         fields = { "kind", "abbr", "menu" },
-        format = lspkind.cmp_format {
-            with_text = false,
-            maxwidth = 50,
-            before = function (entry, vim_item)
-                vim_item.menu = "[" .. string.upper(entry.source.name) .. "]"
-                if entry.source.name == 'emoji' then
-                    vim_item.kind = ""    -- Do not show kind icon for emoji
-                else
-                    vim_item.abbr = " " .. vim_item.word
-                end
-                return vim_item
+        format = function (entry, vim_item)
+            vim_item.menu = "[" .. string.upper(entry.source.name) .. "]"
+            -- Do not show kind icon for emoji
+            if entry.source.name == "emoji" then
+                vim_item.kind = ""
+            -- Use a terminal icon for completions from cmp-cmdline
+            elseif entry.source.name == "cmdline" then
+                vim_item.kind = " "
+            else
+                vim_item.kind = string.format("%s ", sym_map[vim_item.kind])
             end
-        }
+            -- Max word length visible
+            if #(vim_item.abbr) > 30 then
+                vim_item.abbr = string.sub(vim_item.abbr, 1, 18)
+                                .. "···"
+                                .. string.sub(vim_item.abbr, -9, -1)
+            end
+
+            return vim_item
+        end
     },
     experimental = {native_menu = false, ghost_text = true},
     snippet = {
@@ -66,8 +86,8 @@ cmp.setup({
         ["<C-f>"] = cmp.mapping.scroll_docs(8),
         ["<C-u>"] = cmp.mapping.scroll_docs(-4),
         ["<C-d>"] = cmp.mapping.scroll_docs(4),
-        ["<C-e>"] = cmp.mapping.scroll_docs(-1),
-        ["<C-y>"] = cmp.mapping.scroll_docs(1),
+        ["<C-y>"] = cmp.mapping.scroll_docs(-1),
+        ["<C-e>"] = cmp.mapping.scroll_docs(1),
         ["<M-;>"] = cmp.mapping(function()
             if cmp.visible() then
                 cmp.close()
