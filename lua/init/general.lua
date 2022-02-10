@@ -15,6 +15,10 @@ o.ruler = true
 o.scrolloff = 8
 o.wrap = false
 o.termguicolors = true      -- Default GUI colors are too vivid
+o.pumheight = 16
+
+-- Disable number and relativenumber in the built-in terminal
+execute [[ autocmd TermOpen * setlocal nonumber norelativenumber ]]
 
 execute                     -- Underline bad spellings
 [[
@@ -43,6 +47,14 @@ o.swapfile = false
 
 -- Autosave on focus change
 execute [[ autocmd BufLeave,WinLeave,FocusLost * silent! wall ]]
+
+-- Last-position-jump
+execute
+[[
+  autocmd BufRead * autocmd FileType <buffer> ++once
+    \ if &ft !~# 'commit\|rebase' && line("'\"") > 1
+    \ && line("'\"") <= line("$") | exe 'normal! g`"' | endif
+]]
 -- End of Appearance & Behaviour -----------------------------------------------
 --------------------------------------------------------------------------------
 
