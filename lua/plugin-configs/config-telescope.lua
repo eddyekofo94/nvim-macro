@@ -14,13 +14,15 @@ map('n', '<Leader>fT', [[<cmd>lua require('telescope.builtin').tags()<CR>]], opt
 map('n', '<Leader>fbl', [[<cmd>lua require('telescope.builtin').buffers()<CR>]], opts)
 map('n', '<Leader>fbf', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>]], opts)
 map('n', '<Leader>fbT', [[<cmd>lua require('telescope.builtin').current_buffer_tags()<CR>]], opts)
-map('n', '<Leader>fr', [[<cmd>lua require('telescope.builtin').lsp_references()<CR>]], opts)
+map('n', '<Leader>fR', [[<cmd>lua require('telescope.builtin').lsp_references()<CR>]], opts)
 map('n', '<Leader>fc', [[<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>]], opts)
 map('n', '<Leader>fe', [[<cmd>lua require('telescope.builtin').diagnostics()<CR>]], opts)
 map('n', '<Leader>fd', [[<cmd>lua require('telescope.builtin').lsp_definitions()<CR>]], opts)
 map('n', '<Leader>ft', [[<cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>]], opts)
 map('n', '<Leader>fi', [[<cmd>lua require('telescope.builtin').lsp_implementations()<CR>]], opts)
 map('n', '<Leader>fp', [[<cmd>lua require('telescope.builtin').treesitter()<CR>]], opts)
+map('n', '<Leader>fs', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
+map('n', '<Leader>fS', [[<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>]], opts)
 
 local telescope = require('telescope')
 

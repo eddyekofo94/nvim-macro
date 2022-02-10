@@ -9,7 +9,7 @@ return {
     '<Leader>fq', '<Leader>fll', '<Leader>fT', '<Leader>fbl',
     '<Leader>fbf', '<Leader>fbT', '<Leader>fr', '<Leader>fc',
     '<Leader>fe', '<Leader>fd', '<Leader>ft', '<Leader>fi',
-    '<Leader>fp'
+    '<Leader>fp', '<Leader>fs', '<Leader>fS'
   },
   requires = {
     get.spec('plenary'),
