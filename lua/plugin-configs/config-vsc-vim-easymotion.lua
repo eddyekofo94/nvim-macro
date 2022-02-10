@@ -11,5 +11,5 @@ execute('nmap <Leader><Leader>j <Plug>(easymotion-j)')
 execute('nmap <Leader><Leader>k <Plug>(easymotion-k)')
 execute('nmap <Leader><Leader>l <Plug>(easymotion-lineforward)')
 g.EasyMotion_startofline = 0    -- keep cursor column when JK motion execute
-execute('nmap / <Plug>(easymotion-sn)')
-execute('nmap / <Plug>(easymotion-tn)')
+execute('nmap <Leader><Leader>/ <Plug>(easymotion-sn)')
+execute('nmap <Leader><Leader>/ <Plug>(easymotion-tn)')
