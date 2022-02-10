@@ -18,7 +18,7 @@ g.mapleader = ' '
 map('i', 'jj', '<esc>', {noremap = true})
 
 -- Exit from term mode
-map('t', '<esc>', '<C-\\><C-n>', {noremap = true})
+map('t', '<C-\\><C-\\>', '<C-\\><C-n>', {noremap = true})
 
 -- Yank/delete/change current buffer
 map('n', 'y%', 'ggyG', {noremap = true})
