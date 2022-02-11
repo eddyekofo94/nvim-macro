@@ -21,11 +21,11 @@ map('i', 'jj', '<esc>', {noremap = true})
 map('t', '<C-\\><C-\\>', '<C-\\><C-n>', {noremap = true})
 
 -- Yank/delete/change current buffer
-map('n', 'y%', 'ggyG', {noremap = true})
-map('n', 'd%', 'ggdG', {noremap = true})
-map('n', 'c%', 'ggcG', {noremap = true})
+map('n', 'yi%', [[m'ggyG'']], {noremap = true})
+map('n', 'di%', 'ggdG', {noremap = true})
+map('n', 'ci%', 'ggcG', {noremap = true})
 -- Visual select all
-map('n', 'V%', 'ggVG', {noremap = true})
+map('n', 'Vi%', 'ggVG', {noremap = true})
 
 -- Multi-window operations
 map('n', '<M-w>', '<C-w><C-w>', {noremap = true})
@@ -59,6 +59,7 @@ map('n','<M-;>',
 map('n', '<Tab>', ':bn<CR>', {noremap = true, silent = true})
 map('n', '<S-Tab>', ':bp<CR>', {noremap = true, silent = true})
 map('n', '<M-d>', ':bd<CR>', {noremap = true})  -- Delete current buffer
+map('n', '<Leader>p', '<C-^>', {noremap = true})
 
 -- Moving in insert mode
 map('i', '<M-h>', '<left>', {noremap = true})
@@ -76,15 +77,15 @@ inoremap "                      ""<left>
 inoremap '                      ''<left>
 inoremap `                      ``<left>
 " For c struct definition
-inoremap ;                      <C-r>=CStructDef()<CR>
+inoremap <silent>;              <C-r>=CStructDef()<CR>
 
 " Auto indentation in paired brackets/parenthesis/tags, etc.
-inoremap <CR>                   <C-r>=PairedIndent()<CR>
+inoremap <silent><CR>           <C-r>=PairedIndent()<CR>
 
 " Auto delete paired brackets/parenthesis/tags, etc.
-inoremap <BackSpace>            <C-r>=PairedDelete()<CR>
+inoremap <silent><BackSpace>    <C-r>=PairedDelete()<CR>
 
-inoremap <Space>                <C-r>=PairedSpace()<CR>
+inoremap <silent><Space>        <C-r>=PairedSpace()<CR>
 
 "" Functions:
 func PairedIndent ()
@@ -112,8 +113,10 @@ func PairedDelete ()
         if ';' != s
             return "\<backspace>\<delete>"
         endif
-        if ';' == s
+        if ';' == s && 'c' == &filetype
             return "\<backspace>\<delete>\<delete>"
+        elseif ';' == s && 'c' != &filetype
+            return "\<backspace>\<delete>"
         endif
     endif
     if ' ' == p && ' ' == c &&
@@ -137,7 +140,7 @@ endfunc
 func CStructDef ()
     let c = getline('.')[col('.') - 1]
     let p = getline('.')[col('.') - 2]
-    if '}' == c && '{' == p
+    if '}' == c && '{' == p && 'c' == &filetype
         return "\<right>;\<left>\<left>"
     endif
     return ";"
