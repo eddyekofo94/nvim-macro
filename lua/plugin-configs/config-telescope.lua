@@ -29,6 +29,11 @@ local telescope = require('telescope')
 telescope.setup{
   defaults = {
     borderchars = require('utils/shared').borders.double_header,
+    layout_config = {
+      horizontal = { prompt_position = 'top' },
+      vertical = { prompt_position = 'top' }
+    },
+    sorting_strategy = 'ascending',
     file_ignore_patterns = { '.git/', '%.pdf', '%.o', '%.zip' },
     preview = { filesize_limit = 5 },
     mappings = {
