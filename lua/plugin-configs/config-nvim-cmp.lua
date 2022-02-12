@@ -50,7 +50,7 @@ cmp.setup({
             -- Max word length visible
             if #(vim_item.abbr) > 30 then
                 vim_item.abbr = string.sub(vim_item.abbr, 1, 18)
-                                .. "···"
+                                .. "..."
                                 .. string.sub(vim_item.abbr, -9, -1)
             end
 

@@ -65,6 +65,8 @@ hi PmenuSel   ctermbg=235 guibg=#202038 ctermfg=15 guifg=#DFDFE5
 vim.cmd [[highlight NormalFloat guibg=NONE ctermbg=NONE]]
 vim.cmd [[highlight FloatBorder guifg=#FF761A guibg=NONE ctermfg=208 ctermbg=NONE]]
 
+vim.cmd [[ highlight Search cterm=bold ctermfg=0 ctermbg=153 gui=bold guifg=#020221 guibg=#BFDAFF ]]
+
 -- Colorscheme for telescope
 vim.cmd
 [[
@@ -74,6 +76,7 @@ hi TelescopePreviewNormal ctermbg=NONE guibg=NONE
 hi TelescopeResultNormal ctermbg=NONE guibg=NONE
 hi TelescopeTitle ctermbg=NONE guibg=NONE
 hi TelescopePreviewTitle ctermbg=NONE guibg=NONE
+hi link TelescopePreviewMatch Search
 hi TelescopeResultTitle ctermbg=NONE guibg=NONE
 hi TelescopeMatching ctermfg=green ctermbg=NONE guifg=#7FBF00 guibg=NONE
 hi TelescopePromptPrefix ctermbg=NONE guibg=NONE
