@@ -44,6 +44,8 @@ cmp.setup({
             -- Use a terminal icon for completions from cmp-cmdline
             elseif entry.source.name == "cmdline" then
                 vim_item.kind = " "
+            elseif entry.source.name == "calc" then
+                vim_item.kind = " "
             else
                 vim_item.kind = string.format("%s ", sym_map[vim_item.kind])
             end
