@@ -33,8 +33,8 @@ hi link CmpItemKindFunction    Function
 hi link CmpItemKindConstructor TSConstructor
 hi      CmpItemKindField       ctermfg=97  guifg=#BB99E3
 hi      CmpItemKindProperty    ctermfg=97  guifg=#BB99E3
-hi      CmpItemKindVariable    ctermfg=248 guifg=#5C9EA1
-hi      CmpItemKindReference   ctermfg=248 guifg=#5C9EA1
+hi      CmpItemKindVariable    ctermfg=152 guifg=#5C9EA1
+hi      CmpItemKindReference   ctermfg=152 guifg=#5C9EA1
 hi      CmpItemKindModule      ctermfg=92  guifg=#635196
 hi      CmpItemKindEnum        ctermfg=209 guifg=#B24D36
 hi      CmpItemKindEnumMember  ctermfg=209 guifg=#B24D36
@@ -78,7 +78,7 @@ hi TelescopeTitle ctermbg=NONE guibg=NONE
 hi TelescopePreviewTitle ctermbg=NONE guibg=NONE
 hi link TelescopePreviewMatch Search
 hi TelescopeResultTitle ctermbg=NONE guibg=NONE
-hi TelescopeMatching ctermfg=green ctermbg=NONE guifg=#7FBF00 guibg=NONE
+hi TelescopeMatching  ctermbg=NONE guibg=NONE
 hi TelescopePromptPrefix ctermbg=NONE guibg=NONE
 hi TelescopeSelection ctermbg=NONE guibg=NONE
 hi TelescopeSelectionCaret ctermbg=NONE guibg=NONE
@@ -96,11 +96,28 @@ hi BufferVisibleMod guifg=#FF761A ctermfg=208 guibg=#212127
 hi BufferVisibleSign guibg=#212127
 hi BufferVisibleTarget guibg=#212127
 hi BufferVisibleIndex guibg=#212127
-hi BufferInactiveMod guifg=#911E00 ctermfg=red
+hi BufferInactiveMod guifg=#911E00 ctermfg=88
 ]]
 
 -- Override highlight color for git change (`gitsigns.nvim`)
 vim.cmd [[ hi GitSignsChange guifg=#AA00F5 ctermfg=darkmagenta ]]
+vim.cmd
+[[
+hi clear DiffAdd
+hi clear DiffText
+hi clear DiffChange
+hi clear DiffDelete
+hi       DiffAdd          guifg=#85AB3B ctermfg=71
+hi       DiffText         guifg=#85AB3B ctermfg=71
+hi       DiffChange       guifg=#A149BD ctermfg=darkmagenta
+hi       DiffDelete       guifg=#911E00 ctermfg=88
+hi link  GitSignsAddLn    DiffAdd
+hi link  GitSignsAddNr    DiffAdd
+hi link  GitSignsChangeLn DiffChange
+hi link  GitSignsChangeNr DiffChange
+hi link  GitSignsDeleteLn DiffDelete
+hi link  GitSignsDeleteNr DiffDelete
+]]
 
 -- Override highlight for `nvim-tree`
 vim.cmd [[ hi NvimTreeGitDirty guifg=#AA00F5 ctermfg=darkmagenta ]]
@@ -115,4 +132,7 @@ vim.cmd
   highlight CursorLineNr cterm=NONE ctermbg=NONE ctermfg=white gui=NONE guibg=NONE guifg=#EFEFEF 
   set cursorline
   set cursorlineopt=number
- ]]
+]]
+
+vim.cmd [[ hi EasyMotionMoveHL ctermfg=221 guifg=#FFC552 ]]
+vim.cmd [[ hi EasyMotionIncSearch ctermfg=221 guifg=#FFC552 ]]
