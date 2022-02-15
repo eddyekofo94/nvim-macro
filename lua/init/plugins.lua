@@ -42,6 +42,9 @@ return require('packer').startup({
     -- LSP
     use(get.spec('nvim-lsp-installer'))
 
+    -- Integration
+    use(get.spec('toggleterm'))
+
     -- Navigation
     use(get.spec('alpha-nvim'))         -- Greeting page
     use(get.spec('nvim-tree'))          -- File tree

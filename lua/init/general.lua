@@ -29,6 +29,8 @@ augroup SpellBadStyle
 augroup END
 ]]
 
+execute [[ autocmd TermOpen * setlocal nospell | startinsert ]]
+
 execute [[ set signcolumn=auto:1-2 ]]   -- For gitgutter & LSP diagnostic
 
 execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
