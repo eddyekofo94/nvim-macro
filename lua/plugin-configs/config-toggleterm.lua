@@ -10,6 +10,14 @@ require('toggleterm').setup{
   start_in_insert = false,
   shade_terminals = false,
   open_mapping = [[<C-\>]],
+  on_open = function(term)
+    vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>',
+                                {noremap = true, silent = true})
+    vim.api.nvim_buf_set_keymap(term.bufnr, 'n', '<esc>', '<cmd>close<CR>',
+                                {noremap = true, silent = true})
+    vim.api.nvim_buf_set_keymap(term.bufnr, 'n', '<C-\\>', '<cmd>close<CR>',
+                                {noremap = true, silent = true})
+  end,
   terminal_mappings = true, -- whether or not the open mapping applies in the opened terminals
   persist_size = true,
   direction = 'horizontal'
