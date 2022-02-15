@@ -1,22 +1,96 @@
 local execute = vim.cmd
+
+function Open()
+  local bb_ready, bb_st = pcall(require, 'bufferline.state')
+  local tree_ready, tree = pcall(require, 'nvim-tree')
+  local tree_view_ready, tree_view = pcall(require, 'nvim-tree.view')
+  if tree_ready then
+    tree.open()
+  end
+  if bb_ready and tree_view_ready then
+    bb_st.set_offset(tree_view.View.width , 'NvimTree')
+  end
+end
+
+function Close()
+  local bb_ready, bb_st = pcall(require, 'bufferline.state')
+  local tree_ready, tree = pcall(require, 'nvim-tree')
+  if tree_ready then
+    tree.close()
+  end
+  if bb_ready then
+    bb_st.set_offset(0)
+  end
+end
+
+function Toggle(find_file)
+  local bb_ready, bb_st = pcall(require, 'bufferline.state')
+  local tree_ready, tree = pcall(require, 'nvim-tree')
+  local tree_view_ready, tree_view = pcall(require, 'nvim-tree.view')
+  if tree_ready then
+    tree.toggle(find_file)
+  end
+  if bb_ready and tree_view_ready and tree_view.win_open() then
+    bb_st.set_offset(tree_view.View.width , 'NvimTree')
+  elseif bb_ready and tree_view_ready and not tree_view.win_open() then
+    bb_st.set_offset(0)
+  end
+end
+
+function Focus()
+  local bb_ready, bb_st = pcall(require, 'bufferline.state')
+  local tree_ready, tree = pcall(require, 'nvim-tree')
+  local tree_view_ready, tree_view = pcall(require, 'nvim-tree.view')
+  if tree_ready then
+    tree.focus()
+  end
+  if bb_ready and tree_view_ready then
+    bb_st.set_offset(tree_view.View.width , 'NvimTree')
+  end
+end
+
+function Resize(size)
+  local bb_ready, bb_st = pcall(require, 'bufferline.state')
+  local tree_ready, tree = pcall(require, 'nvim-tree')
+  local tree_view_ready, tree_view = pcall(require, 'nvim-tree.view')
+  if tree_ready then
+    tree.resize(size)
+  end
+  if tree_view_ready and tree_view.win_open() and bb_ready then
+    bb_st.set_offset(tree_view.View.width , 'NvimTree')
+  end
+end
+
+function Find_file(with_open)
+  local bb_ready, bb_st = pcall(require, 'bufferline.state')
+  local tree_ready, tree = pcall(require, 'nvim-tree')
+  local tree_view_ready, tree_view = pcall(require, 'nvim-tree.view')
+  if tree_ready then
+    tree.find_file(with_open)
+  end
+  if with_open and bb_ready and tree_view_ready and tree_view.win_open() then
+    bb_st.set_offset(tree_view.View.width , 'NvimTree')
+  end
+end
+
 execute
 [[ command TC lua require('nvim-tree.actions.copy-paste').print_clipboard() ]]
 execute
-[[ command TQ lua require('utils.actions').tree_set_barbar.close() ]]
+[[ command TQ lua Close()<CR> ]]
 execute
-[[ command TFF lua require('utils.actions').tree_set_barbar.find_file(true) ]]
+[[ command TFF lua Find_file(true)<CR> ]]
 execute
-[[ command TFFT lua require('utils.actions').tree_set_barbar.toggle(true) ]]
+[[ command TFFT lua Toggle(true)<CR> ]]
 execute
-[[ command TF lua require('utils.actions').tree_set_barbar.focus() ]]
+[[ command TF lua Focus()<CR> ]]
 execute
-[[ command TO lua require('utils.actions').tree_set_barbar.open() ]]
+[[ command TO lua Open()<CR> ]]
 execute
-[[ command TR lua require('nvim-tree.lib').refresh_tree() ]]
+[[ command TR lua Refresh()<CR> ]]
 execute
-[[ command -nargs=1 TS lua require('utils.actions').tree_set_barbar.resize(<args>) ]]
+[[ command -nargs=1 TS lua Resize(<args>) ]]
 execute
-[[ command TT lua require('utils.actions').tree_set_barbar.toggle(false) ]]
+[[ command TT lua Toggle(false) ]]
 
 -- Refresh tree after opening new file or write to files
 execute [[ autocmd BufEnter,BufAdd,BufWritePost * lua require('nvim-tree.lib').refresh_tree() ]]
