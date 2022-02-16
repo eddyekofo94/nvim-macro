@@ -19,7 +19,7 @@ require('toggleterm').setup{
                                 {noremap = true, silent = true})
   end,
   terminal_mappings = true, -- whether or not the open mapping applies in the opened terminals
-  persist_size = true,
+  persist_size = false,
   direction = 'horizontal'
 }
 
