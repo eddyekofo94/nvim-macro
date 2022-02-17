@@ -11,7 +11,7 @@ execute(':command TR NvimTreeRefresh')
 execute(':command TS NvimTreeResize')
 
 -- Refresh tree after opening new file or write to files
-execute [[ autocmd BufEnter,BufAdd,BufWritePost * lua require('nvim-tree.lib').refresh_tree() ]]
+execute [[ autocmd BufEnter,BufAdd,BufWritePost,BufNew,BufLeave * lua require('nvim-tree.lib').refresh_tree() ]]
 
 local g = vim.g
 g.nvim_tree_highlight_opened_files = 2
