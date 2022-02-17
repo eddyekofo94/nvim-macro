@@ -35,7 +35,7 @@ execute [[ set signcolumn=auto:1-2 ]]   -- For gitgutter & LSP diagnostic
 
 execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
 
-o.updatetime = 100  -- (ms)
+o.updatetime = 10   -- (ms)
 o.swapfile = false
 
 -- if vim.fn.has('wsl') then
