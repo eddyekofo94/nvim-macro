@@ -34,7 +34,10 @@ require 'nvim-treesitter.configs'.setup {
     enable = true,
     extended_mode = true,
     max_file_lines = 1024
-  }
+  },
+
+  -- nvim-ts-context-commentstring
+  context_commentstring = { enable = true }
 }
 
 -- Automatically install parser for new filetype (with confirmation)
