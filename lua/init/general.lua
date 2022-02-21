@@ -18,7 +18,7 @@ o.termguicolors = true      -- Default GUI colors are too vivid
 o.pumheight = 16
 
 -- Disable number and relativenumber in the built-in terminal
-execute [[ autocmd TermOpen * setlocal nonumber norelativenumber ]]
+execute [[ autocmd TermOpen * setlocal nospell nonumber norelativenumber ]]
 
 execute                     -- Underline bad spellings
 [[
@@ -28,8 +28,6 @@ augroup SpellBadStyle
   au ColorScheme,VimEnter * hi SpellBad cterm=undercurl, gui=undercurl
 augroup END
 ]]
-
-execute [[ autocmd TermOpen * setlocal nospell | startinsert ]]
 
 execute [[ set signcolumn=auto:1-2 ]]   -- For gitgutter & LSP diagnostic
 
