@@ -108,9 +108,9 @@ hi clear DiffText
 hi clear DiffChange
 hi clear DiffDelete
 hi       DiffAdd          guifg=#85AB3B ctermfg=71
-hi       DiffText         guifg=#85AB3B ctermfg=71
-hi       DiffChange       guifg=#A149BD ctermfg=darkmagenta
-hi       DiffDelete       guifg=#911E00 ctermfg=88
+hi       DiffText         guifg=#BB99E3  ctermfg=97
+hi       DiffChange       guifg=#AA00F5 ctermfg=darkmagenta
+hi       DiffDelete       ctermfg=202 guifg=#FF3600
 hi link  GitSignsAddLn    DiffAdd
 hi link  GitSignsAddNr    DiffAdd
 hi link  GitSignsChangeLn DiffChange

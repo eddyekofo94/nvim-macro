@@ -20,6 +20,10 @@ map('i', 'jj', '<esc>', {noremap = true})
 -- Exit from term mode
 map('t', '<C-\\><C-\\>', '<C-\\><C-n>', {noremap = true})
 
+-- Toggle hlsearch
+map('n', '\\', '<cmd> set hlsearch! <CR>', {noremap = true})
+map('n', '/', '<cmd> set hlsearch <CR> /', {noremap = true})
+
 -- Yank/delete/change current buffer
 map('n', 'yi%', [[m'ggyG'']], {noremap = true})
 map('n', 'di%', 'ggdG', {noremap = true})

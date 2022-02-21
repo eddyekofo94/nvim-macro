@@ -120,7 +120,7 @@ cmp.setup({
     -- cmp floating window border
     documentation = {
       border = 'single',
-      winhighlight = 'NormalFloat:NormalFloat,FloatBorder:FloatBorder'
+      winhighlight = 'FloatBorder:FloatBorder'
     }
 })
 
