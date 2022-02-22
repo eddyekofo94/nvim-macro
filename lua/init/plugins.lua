@@ -57,7 +57,6 @@ return require('packer').startup({
     use(get.spec('markdown-preview'))
 
     -- Tools
-    use(get.spec('startuptime'))        -- Tools to test startuptime
     use(get.spec('impatient'))          -- Speed up lua `require()`
     use(get.spec('nvim-colorizer'))     -- Show inline RGB colors
   end,

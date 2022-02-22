@@ -19,7 +19,7 @@ o.pumheight = 16
 
 execute
 [[
-  set list listchars=tab:·─,extends:→,precedes:←,lead:·,nbsp:·,trail:·
+  set list listchars=tab:*─,extends:►,precedes:◄,lead:·,nbsp:·,trail:·
 ]]
 
 -- Disable number and relativenumber in the built-in terminal
