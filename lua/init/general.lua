@@ -17,6 +17,11 @@ o.wrap = false
 o.termguicolors = true      -- Default GUI colors are too vivid
 o.pumheight = 16
 
+execute
+[[
+  set list listchars=tab:·─,extends:→,precedes:←,lead:·,nbsp:·,trail:·
+]]
+
 -- Disable number and relativenumber in the built-in terminal
 execute [[ autocmd TermOpen * setlocal nospell nonumber norelativenumber ]]
 
@@ -28,6 +33,8 @@ augroup SpellBadStyle
   au ColorScheme,VimEnter * hi SpellBad cterm=undercurl, gui=undercurl
 augroup END
 ]]
+
+execute [[ autocmd InsertEnter,TermEnter * set nohlsearch ]]
 
 execute [[ set signcolumn=auto:1-2 ]]   -- For gitgutter & LSP diagnostic
 
@@ -87,12 +94,5 @@ execute [[ set spelllang=en,cjk ]]
 o.spellsuggest = 'best, 9'
 o.spellcapcheck = ''
 o.spelloptions = 'camel'
-
--- Excludes characters that are in the parenthesis
--- and are preceded by a capitalized letter
-execute [[ autocmd VimEnter * syn match myExCapitalWords +\<\w*[A-Z]\S*\>+ contains=@NoSpell ]]
--- Exclude capitalized words and capitalized words + 's'
-execute [[ autocmd VimEnter * syn match myExCapitalWords +\<[A-Z]\w*\>+ contains=@NoSpell ]]
-execute [[ autocmd VimEnter * syn match myExCapitalWords +\<\w*[A-Z]\K*\>\|'s+ contains=@NoSpell ]]
 -- End of Spell check ----------------------------------------------------------
 --------------------------------------------------------------------------------

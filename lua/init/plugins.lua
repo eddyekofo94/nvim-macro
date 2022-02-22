@@ -29,7 +29,6 @@ return require('packer').startup({
     -- Appearance
     use(get.spec('nvim-treesitter'))
     use(get.spec('falcon'))             -- Color scheme
-    use(get.spec('indent-blankline'))
 
     -- Editing
     use(get.spec('nvim-cmp'))
