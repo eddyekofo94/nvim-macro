@@ -16,7 +16,7 @@ map('n', '<S-Tab>', ':BufferPrevious<CR>', opts)
 map('n', '<Tab>', ':BufferNext<CR>', opts)
 -- Re-order to previous/next
 map('n', '<M-<>', ':BufferMovePrevious<CR>', opts)
-map('n', '<M->>', ' :BufferMoveNext<CR>', opts)
+map('n', '<M->>', ':BufferMoveNext<CR>', opts)
 -- Goto buffer in position...
 map('n', '<M-1>', ':BufferGoto 1<CR>', opts)
 map('n', '<M-2>', ':BufferGoto 2<CR>', opts)
