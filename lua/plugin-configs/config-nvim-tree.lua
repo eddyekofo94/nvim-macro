@@ -27,10 +27,10 @@ g.nvim_tree_icons = {
     ignored = 'i '
   },
   lsp = {
-    error = '',
-    warn = '',
-    hint = '',
-    info = ''
+    error = ' ',   -- xf659
+    warn = ' ',    -- xf529
+    info = ' ',    -- xf7fc
+    hint = ' ',    -- xf835
   }
 }
 
@@ -54,10 +54,10 @@ require 'nvim-tree'.setup {
     enable = true,
     show_on_dirs = true,
     icons = {
-      error = '',
-      warning = '',
-      hint = '',
-      info = ''
-    }
-  },
+    error = ' ',   -- xf659
+    warning = ' ', -- xf529
+    info = ' ',    -- xf7fc
+    hint = ' ',    -- xf835
+    },
+  }
 }

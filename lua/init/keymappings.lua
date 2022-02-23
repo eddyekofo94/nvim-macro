@@ -24,13 +24,6 @@ map('t', '<C-\\><C-\\>', '<C-\\><C-n>', {noremap = true})
 map('n', '\\', '<cmd> set hlsearch! <CR>', {noremap = true})
 map('n', '/', '<cmd> set hlsearch <CR> /', {noremap = true})
 
--- Yank/delete/change current buffer
-map('n', 'yi%', [[m'ggyG'']], {noremap = true})
-map('n', 'di%', 'ggdG', {noremap = true})
-map('n', 'ci%', 'ggcG', {noremap = true})
--- Visual select all
-map('n', 'Vi%', 'ggVG', {noremap = true})
-
 -- Multi-window operations
 map('n', '<M-w>', '<C-w><C-w>', {noremap = true})
 map('n', '<M-h>', '<C-w><C-h>', {noremap = true})

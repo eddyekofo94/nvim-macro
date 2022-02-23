@@ -25,7 +25,12 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
 end
 
 -- LSP diagnostic signs
-local signs = { Error = '', Warn = '', Hint = '', Info = '' }
+local signs = {
+  Error = ' ', -- xf659
+  Warn = ' ',  -- xf529
+  Info = ' ',  -- xf7fc
+  Hint = ' ',  -- xf835
+ }
 for type, icon in pairs(signs) do
   local hl = 'DiagnosticSign' .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
