@@ -1,4 +1,4 @@
 return {
-  'fenetikm/falcon',
-  config = require('utils/get').config('falcon')
+  'Bekaboo/falcon',
+  config = vim.cmd [[colorscheme falcon]]
 }

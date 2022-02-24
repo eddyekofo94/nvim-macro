@@ -16,10 +16,19 @@ o.scrolloff = 8
 o.wrap = false
 o.termguicolors = true      -- Default GUI colors are too vivid
 o.pumheight = 16
+o.cursorline = true
+o.cursorlineopt = 'number'
 
 execute
 [[
   set list listchars=tab:→\ ,extends:►,precedes:◄,nbsp:␣,trail:·,multispace:•···
+]]
+
+execute [[
+  au BufWinEnter * call matchadd('Conceal', '^\(\t*\zs\ [ ]\@!\)\+', 0, -1, {'conceal': '·'}) |
+                 \ call matchadd('Conceal', '\zs\ [ ]\@!\ze\t\+', 0, -1, {'conceal': '·'}) |
+                 \ call matchadd('Conceal', '\t\+\zs\ [ ]\@!', 0, -1, {'conceal': '·'}) |
+                 \ set conceallevel=2 concealcursor=nic
 ]]
 
 -- Disable number and relativenumber in the built-in terminal
