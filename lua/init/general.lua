@@ -25,10 +25,10 @@ execute
 ]]
 
 execute [[
-  au BufWinEnter * call matchadd('Conceal', '^\(\t*\zs\ [ ]\@!\)\+', 0, -1, {'conceal': '·'}) |
-                 \ call matchadd('Conceal', '\zs\ [ ]\@!\ze\t\+', 0, -1, {'conceal': '·'}) |
-                 \ call matchadd('Conceal', '\t\+\zs\ [ ]\@!', 0, -1, {'conceal': '·'}) |
-                 \ set conceallevel=2 concealcursor=nic
+  au WinEnter * call matchadd('Conceal', '^\(\t*\zs\ [ ]\@!\)\+', 0, -1, {'conceal': '·'}) |
+              \ call matchadd('Conceal', '\zs\ [ ]\@!\ze\t\+', 0, -1, {'conceal': '·'}) |
+              \ call matchadd('Conceal', '\t\+\zs\ [ ]\@!', 0, -1, {'conceal': '·'}) |
+              \ set conceallevel=2 concealcursor=nic
 ]]
 
 -- Disable number and relativenumber in the built-in terminal
