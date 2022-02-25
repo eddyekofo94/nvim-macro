@@ -21,14 +21,21 @@ o.cursorlineopt = 'number'
 
 execute
 [[
-  set list listchars=tab:→\ ,extends:►,precedes:◄,nbsp:␣,trail:·,multispace:•···
+  set list listchars=tab:→\ ,
+          \extends:►,
+          \precedes:◄,
+          \nbsp:⌴,
+          \trail:·,
+          \lead:·,
+          \multispace:·
 ]]
 
+-- Extra settings to show spaces hiding in tabs
 execute [[
-  au WinEnter * call matchadd('Conceal', '^\(\t*\zs\ [ ]\@!\)\+', 0, -1, {'conceal': '·'}) |
-              \ call matchadd('Conceal', '\zs\ [ ]\@!\ze\t\+', 0, -1, {'conceal': '·'}) |
-              \ call matchadd('Conceal', '\t\+\zs\ [ ]\@!', 0, -1, {'conceal': '·'}) |
-              \ set conceallevel=2 concealcursor=nic
+  au BufWinEnter,WinEnter *
+    \ call matchadd('Conceal', '\zs\ [ ]\@!\ze\t\+', 0, -1, {'conceal': '·'}) |
+    \ call matchadd('Conceal', '\t\+\zs\ [ ]\@!', 0, -1, {'conceal': '·'}) |
+    \ set conceallevel=2 concealcursor=nic
 ]]
 
 -- Disable number and relativenumber in the built-in terminal
