@@ -32,7 +32,7 @@ execute
 
 -- Extra settings to show spaces hiding in tabs
 execute [[
-  au BufWinEnter,WinEnter *
+  au VimEnter,WinNew *
     \ call matchadd('Conceal', '\zs\ [ ]\@!\ze\t\+', 0, -1, {'conceal': '·'}) |
     \ call matchadd('Conceal', '\t\+\zs\ [ ]\@!', 0, -1, {'conceal': '·'}) |
     \ set conceallevel=2 concealcursor=nic
