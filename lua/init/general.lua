@@ -54,8 +54,6 @@ execute [[ autocmd InsertEnter,TermEnter * set nohlsearch ]]
 
 execute [[ set signcolumn=auto:1-2 ]]   -- For gitgutter & LSP diagnostic
 
-execute [[ highlight Pmenu ctermbg=gray guibg=gray ]]
-
 o.updatetime = 10   -- (ms)
 o.swapfile = false
 
@@ -69,7 +67,7 @@ o.swapfile = false
 -- end
 
 -- Autosave on focus change
-execute [[ autocmd BufLeave,WinLeave,FocusLost * silent! wall ]]
+execute [[ autocmd BufLeave,WinLeave,FocusLost * nested silent! wall ]]
 
 -- Last-position-jump
 execute

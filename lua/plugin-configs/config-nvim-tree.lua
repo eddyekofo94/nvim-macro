@@ -10,27 +10,18 @@ execute(':command TO NvimTreeOpen')
 execute(':command TR NvimTreeRefresh')
 execute(':command TS NvimTreeResize')
 
--- Refresh tree after opening new file or write to files
-execute [[ autocmd BufEnter,BufAdd,BufWritePost,BufNew,BufLeave * lua require('nvim-tree.lib').refresh_tree() ]]
-
 local g = vim.g
 g.nvim_tree_highlight_opened_files = 2
 g.nvim_tree_indent_markers = 1
 g.nvim_tree_icons = {
   git = {
-    unstaged = 'M ',
-    staged = 'S ',
-    unmerged = 'C ',
-    renamed = 'R ﰲ',
-    deleted = 'D 﫧',
-    untracked = 'U ',
-    ignored = 'i '
-  },
-  lsp = {
-    error = ' ',   -- xf659
-    warn = ' ',    -- xf529
-    info = ' ',    -- xf7fc
-    hint = ' ',    -- xf835
+    unstaged = '',
+    staged = '',
+    unmerged = '',
+    renamed = 'ﰲ',
+    deleted = '',
+    untracked = '',
+    ignored = ''
   }
 }
 

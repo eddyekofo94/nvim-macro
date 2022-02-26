@@ -11,6 +11,18 @@ local opts = { noremap = true, silent = true }
 --   augroup END
 -- ]]
 
+BarbarShift = function ()
+   local bb_ready, bb_st = pcall(require, 'bufferline.state')
+   local tree_view_ready, tree_view = pcall(require, 'nvim-tree.view')
+   if bb_ready and tree_view_ready and tree_view.is_visible() then
+     bb_st.set_offset(tree_view.View.width, 'NvimTree')
+   elseif bb_ready then
+     bb_st.set_offset(0)
+   end
+ end
+
+vim.cmd [[ autocmd BufEnter * lua BarbarShift() ]]
+
 -- Move to previous/next
 map('n', '<S-Tab>', ':BufferPrevious<CR>', opts)
 map('n', '<Tab>', ':BufferNext<CR>', opts)
@@ -107,19 +119,6 @@ vim.g.bufferline = {
   -- where X is the buffer number. But only a static string is accepted here.
   no_name_title = nil
 }
-
- BarbarShift = function ()
-   local bb_ready, bb_st = pcall(require, 'bufferline.state')
-   local tree_view_ready, tree_view = pcall(require, 'nvim-tree.view')
-   if bb_ready and tree_view_ready and tree_view.is_visible() then
-     bb_st.set_offset(tree_view.View.width, 'NvimTree')
-   elseif bb_ready then
-     bb_st.set_offset(0)
-   end
- end
-
- -- Closing nvim-tree window does not make is_visible() 'false' instantly 🤷
- vim.cmd [[ autocmd BufWinEnter,CursorHold * lua BarbarShift() ]]
 
 -- Other:
 -- :BarbarEnable - enables barbar (enabled by default)
