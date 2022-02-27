@@ -69,6 +69,15 @@ o.swapfile = false
 -- Autosave on focus change
 execute [[ autocmd BufLeave,WinLeave,FocusLost * nested silent! wall ]]
 
+-- Jump to last accessed window on closing the current one
+LastWinJump = function ()
+  if vim.fn.mode() == 'n' then
+    vim.cmd [[ wincmd p ]]
+  end
+end
+
+execute [[ autocmd WinClosed * lua LastWinJump() ]]
+
 -- Last-position-jump
 execute
 [[
