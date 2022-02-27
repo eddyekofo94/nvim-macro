@@ -117,10 +117,10 @@ cmp.setup({
             cmp.config.compare.length, cmp.config.compare.order
         }
     },
-    -- cmp floating window border
-    documentation = {
-      border = 'single',
-      winhighlight = 'FloatBorder:FloatBorder'
+    -- cmp floating window config
+    window = {
+        completion = { border = 'single' },
+        documentation = { border = 'single' }
     }
 })
 
@@ -129,5 +129,9 @@ cmp.setup.cmdline("/", {sources = {{name = "buffer"}}})
 
 -- Use cmdline & path source for ':'.
 cmp.setup.cmdline(":", {
-    sources = cmp.config.sources({{name = "path"}}, {{name = "cmdline"}})
+    sources = {
+        {name = "path"},
+        -- Do not show completion for words starting with '!' (huge lag, why?)
+        {name = "cmdline", keyword_pattern = [[\!\@<!\w*]]},
+    }
 })

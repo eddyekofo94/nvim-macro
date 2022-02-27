@@ -2,6 +2,7 @@ local get = require('utils/get')
 
 return {
   'hrsh7th/nvim-cmp',
+  branch = 'dev',
   event = { 'InsertEnter', 'CmdLineEnter' },
   config = get.config('nvim-cmp'),
   requires = {
