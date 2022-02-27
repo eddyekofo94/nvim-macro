@@ -82,17 +82,13 @@ WinCloseJmp = function ()
   end
 
   -- Loop through all windows to check if the previous one has been closed
-  local prev_win_closed = true
   for winnr=1,vim.fn.winnr('$') do
     if vim.fn.win_getid(winnr) == vim.t.winid_rec.prev then
-      prev_win_closed = false
-      break
+      return        -- Return if previous window is not closed
     end
   end
 
-  if prev_win_closed then
-    vim.cmd [[ wincmd p ]]
-  end
+  vim.cmd [[ wincmd p ]]
 end
 
 execute [[ autocmd VimEnter,WinEnter * lua WinCloseJmp() ]]
