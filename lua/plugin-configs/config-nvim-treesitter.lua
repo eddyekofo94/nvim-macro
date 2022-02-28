@@ -37,7 +37,27 @@ require 'nvim-treesitter.configs'.setup {
   },
 
   -- nvim-ts-context-commentstring
-  context_commentstring = { enable = true }
+  context_commentstring = { enable = true },
+
+  -- nvim-treesitter-textobjects
+  require'nvim-treesitter.configs'.setup {
+    textobjects = {
+      select = {
+        enable = true,
+
+        -- Automatically jump forward to textobj, similar to targets.vim
+        lookahead = true,
+
+        keymaps = {
+          -- You can use the capture groups defined in textobjects.scm
+          ["af"] = "@function.outer",
+          ["if"] = "@function.inner",
+          ["ac"] = "@class.outer",
+          ["ic"] = "@class.inner",
+        }
+      }
+    }
+  }
 }
 
 -- Automatically install parser for new filetype (with confirmation)
