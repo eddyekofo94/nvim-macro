@@ -21,8 +21,13 @@ map('i', 'jj', '<esc>', {noremap = true})
 map('t', '<C-\\><C-\\>', '<C-\\><C-n>', {noremap = true})
 
 -- Toggle hlsearch
-map('n', '\\', '<cmd> set hlsearch! <CR>', {noremap = true})
-map('n', '/', '<cmd> set hlsearch <CR> /', {noremap = true})
+map('n', '\\', '<cmd>set hlsearch!<CR>', {noremap = true})
+map('n', '/', '<cmd>set hlsearch<CR>/', {noremap = true})
+map('n', '?', '<cmd>set hlsearch<CR>?', {noremap = true})
+map('n', '*', '<cmd>set hlsearch<CR>*', {noremap = true})
+map('n', '#', '<cmd>set hlsearch<CR>#', {noremap = true})
+map('n', 'g*', '<cmd>set hlsearch<CR>g*', {noremap = true})
+map('n', 'g#', '<cmd>set hlsearch<CR>g#', {noremap = true})
 
 -- Multi-window operations
 map('n', '<M-w>', '<C-w><C-w>', {noremap = true})
@@ -71,7 +76,6 @@ end
 map('n', '<Tab>', ':bn<CR>', {noremap = true, silent = true})
 map('n', '<S-Tab>', ':bp<CR>', {noremap = true, silent = true})
 map('n', '<M-d>', ':bd<CR>', {noremap = true})  -- Delete current buffer
-map('n', '<Leader>p', '<C-^>', {noremap = true})
 
 -- Moving in insert mode
 map('i', '<M-h>', '<left>', {noremap = true})

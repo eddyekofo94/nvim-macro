@@ -50,7 +50,7 @@ augroup SpellBadStyle
 augroup END
 ]]
 
-execute [[ autocmd InsertEnter,TermEnter * set nohlsearch ]]
+execute [[ autocmd InsertEnter * set nohlsearch ]]
 
 execute [[ set signcolumn=auto:1-2 ]]   -- For gitgutter & LSP diagnostic
 
