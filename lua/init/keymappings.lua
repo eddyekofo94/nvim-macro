@@ -84,82 +84,82 @@ map('i', '<M-j>', '<down>', {noremap = true})
 map('i', '<M-k>', '<up>', {noremap = true})
 map('i', '<M-l>', '<right>', {noremap = true})
 
--- Patch for pairing
-execute
-[[
-inoremap (                      ()<left>
-inoremap [                      []<left>
-inoremap {                      {}<left>
-inoremap "                      ""<left>
-inoremap '                      ''<left>
-inoremap `                      ``<left>
-" For c struct definition
-inoremap <silent>;              <C-r>=CStructDef()<CR>
+-- -- Patch for pairing
+-- execute
+-- [[
+-- inoremap (                      ()<left>
+-- inoremap [                      []<left>
+-- inoremap {                      {}<left>
+-- inoremap "                      ""<left>
+-- inoremap '                      ''<left>
+-- inoremap `                      ``<left>
+-- " For c struct definition
+-- inoremap <silent>;              <C-r>=CStructDef()<CR>
 
-" Auto indentation in paired brackets/parenthesis/tags, etc.
-inoremap <silent><CR>           <C-r>=PairedIndent()<CR>
+-- " Auto indentation in paired brackets/parenthesis/tags, etc.
+-- inoremap <silent><CR>           <C-r>=PairedIndent()<CR>
 
-" Auto delete paired brackets/parenthesis/tags, etc.
-inoremap <silent><BackSpace>    <C-r>=PairedDelete()<CR>
+-- " Auto delete paired brackets/parenthesis/tags, etc.
+-- inoremap <silent><BackSpace>    <C-r>=PairedDelete()<CR>
 
-inoremap <silent><Space>        <C-r>=PairedSpace()<CR>
+-- inoremap <silent><Space>        <C-r>=PairedSpace()<CR>
 
-"" Functions:
-func PairedIndent ()
-    let c = getline('.')[col('.') - 1]
-    let p = getline('.')[col('.') - 2]
-    if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p ||
-        \"'" == c && '"' == p || '`' == c && '`' == p
-        return "\<cr>\<esc>O"
-    endif
-    if ')' == c || ']' == c || '}' == c
-        let command = printf("\<esc>di%si\<cr>\<esc>Pli\<cr>\<esc>k>>A", c)
-        return command
-    endif
-    return "\<cr>"
-endfunc
+-- "" Functions:
+-- func PairedIndent ()
+--     let c = getline('.')[col('.') - 1]
+--     let p = getline('.')[col('.') - 2]
+--     if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p ||
+--         \"'" == c && '"' == p || '`' == c && '`' == p
+--         return "\<cr>\<esc>O"
+--     endif
+--     if ')' == c || ']' == c || '}' == c
+--         let command = printf("\<esc>di%si\<cr>\<esc>Pli\<cr>\<esc>k>>A", c)
+--         return command
+--     endif
+--     return "\<cr>"
+-- endfunc
 
-func PairedDelete ()
-    let c = getline('.')[col('.') - 1]
-    let p = getline('.')[col('.') - 2]
-    let pp = getline('.')[col('.') - 3]
-    let s = getline('.')[col('.')]
-    if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p || 
-        \'>' == c && '<' == p || '"' == c && '"' == p || "'" == c && "'" == p ||
-        \'`' == c && '`' == p
-        if ';' != s
-            return "\<backspace>\<delete>"
-        endif
-        if ';' == s && 'c' == &filetype
-            return "\<backspace>\<delete>\<delete>"
-        elseif ';' == s && 'c' != &filetype
-            return "\<backspace>\<delete>"
-        endif
-    endif
-    if ' ' == p && ' ' == c &&
-        \(')' == s && '(' == pp || ']' == s && '[' == pp || '}' == s && '{' == pp || 
-        \'>' == s && '<' == pp || '"' == s && '"' == pp || "'" == s && "'" == pp ||
-        \'`' == s && '`' == pp)
-        return "\<backspace>\<delete>"
-    endif
-    return "\<backspace>"
-endfunc
+-- func PairedDelete ()
+--     let c = getline('.')[col('.') - 1]
+--     let p = getline('.')[col('.') - 2]
+--     let pp = getline('.')[col('.') - 3]
+--     let s = getline('.')[col('.')]
+--     if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p || 
+--         \'>' == c && '<' == p || '"' == c && '"' == p || "'" == c && "'" == p ||
+--         \'`' == c && '`' == p
+--         if ';' != s
+--             return "\<backspace>\<delete>"
+--         endif
+--         if ';' == s && 'c' == &filetype
+--             return "\<backspace>\<delete>\<delete>"
+--         elseif ';' == s && 'c' != &filetype
+--             return "\<backspace>\<delete>"
+--         endif
+--     endif
+--     if ' ' == p && ' ' == c &&
+--         \(')' == s && '(' == pp || ']' == s && '[' == pp || '}' == s && '{' == pp || 
+--         \'>' == s && '<' == pp || '"' == s && '"' == pp || "'" == s && "'" == pp ||
+--         \'`' == s && '`' == pp)
+--         return "\<backspace>\<delete>"
+--     endif
+--     return "\<backspace>"
+-- endfunc
 
-func PairedSpace ()
-    let c = getline('.')[col('.') - 1]
-    let p = getline('.')[col('.') - 2]
-    if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p
-        return "\<space>\<space>\<left>"
-    endif
-    return "\<space>"
-endfunc
+-- func PairedSpace ()
+--     let c = getline('.')[col('.') - 1]
+--     let p = getline('.')[col('.') - 2]
+--     if ')' == c && '(' == p || ']' == c && '[' == p || '}' == c && '{' == p
+--         return "\<space>\<space>\<left>"
+--     endif
+--     return "\<space>"
+-- endfunc
 
-func CStructDef ()
-    let c = getline('.')[col('.') - 1]
-    let p = getline('.')[col('.') - 2]
-    if '}' == c && '{' == p && 'c' == &filetype
-        return "\<right>;\<left>\<left>"
-    endif
-    return ";"
-endfunc
-]]
+-- func CStructDef ()
+--     let c = getline('.')[col('.') - 1]
+--     let p = getline('.')[col('.') - 2]
+--     if '}' == c && '{' == p && 'c' == &filetype
+--         return "\<right>;\<left>\<left>"
+--     endif
+--     return ";"
+-- endfunc
+-- ]]
