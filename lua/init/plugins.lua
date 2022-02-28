@@ -12,12 +12,13 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 -- `PackerSync` on save of `plugins.lua`
-vim.cmd [[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerSync
-  augroup end
-]]
+-- vim.cmd [[
+--    use(get.spec('vim-easymotion'))     -- Moving around like magic!
+--   augroup packer_user_config
+--     autocmd!
+--     autocmd BufWritePost plugins.lua source <afile> | PackerSync
+--   augroup end
+-- ]]
 
 pcall(require, 'compile/packer_compiled')
 
@@ -32,7 +33,6 @@ return require('packer').startup({
 
     -- Editing
     use(get.spec('nvim-cmp'))
-    use(get.spec('vim-easymotion'))     -- Moving around like magic!
     use(get.spec('vsc-vim-easymotion')) -- Easymotion for vscode-neovim
     use(get.spec('vim-surround'))
     use(get.spec('vim-commentary'))
