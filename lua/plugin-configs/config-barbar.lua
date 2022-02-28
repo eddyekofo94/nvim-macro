@@ -43,7 +43,7 @@ map('n', '<M-$>', ':BufferLast<CR>', opts)
 -- Delete buffer
 map('n', '<M-d>', ':BufferClose<CR>', opts) -- Similar but better than `:bd`
 -- Pin/Unpin buffer
-map('n', '<M-p>', ':BufferPin<CR>', opts)
+map('n', '<M-P>', ':BufferPin<CR>', opts)
 -- Wipeout buffer
 -- map('n', '???', ':BufferWipeout<CR>', opts)
 -- Close commands

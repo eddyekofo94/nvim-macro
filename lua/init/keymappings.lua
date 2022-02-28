@@ -47,6 +47,7 @@ map('n', '<M-_>', '<C-w>_', {noremap = true})
 map('n', '<M-|>', '<C-w>|', {noremap = true})
 map('n', '<M-,>', '<C-w><', {noremap = true})
 map('n', '<M-.>', '<C-w>>', {noremap = true})
+map('n', '<M-p>', '<C-w>p', {noremap = true})
 map('n', '<M-v>', ':vsplit<CR>', {noremap = true, silent = true})
 map('n', '<M-x>', ':split<CR>', {noremap = true, silent = true})
 map('n', '<M-c>', '<C-w>c', {noremap = true})   -- Close current window
