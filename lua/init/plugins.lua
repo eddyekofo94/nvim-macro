@@ -38,6 +38,7 @@ return require('packer').startup({
     use(get.spec('vim-commentary'))
     use(get.spec('vim-sleuth'))         -- Auto detect indentation
     use(get.spec('nvim-autopairs'))
+    use(get.spec('undotree'))
 
     -- LSP
     use(get.spec('nvim-lsp-installer'))

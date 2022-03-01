@@ -18,6 +18,7 @@ o.termguicolors = true      -- Default GUI colors are too vivid
 o.pumheight = 16
 o.cursorline = true
 o.cursorlineopt = 'number'
+o.undofile = true
 
 execute
 [[
