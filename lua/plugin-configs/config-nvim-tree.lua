@@ -1,14 +1,14 @@
-local execute = vim.cmd
+local map = vim.api.nvim_set_keymap
 
-execute(':command TT NvimTreeToggle')
-execute(':command TC NvimTreeClipboard')
-execute(':command TQ NvimTreeClose')
-execute(':command TFF NvimTreeFindFile')
-execute(':command TFFT NvimTreeFindFileToggle')
-execute(':command TF NvimTreeFocus')
-execute(':command TO NvimTreeOpen')
-execute(':command TR NvimTreeRefresh')
-execute(':command TS NvimTreeResize')
+map('n', '<Leader>tt', '<cmd>NvimTreeToggle<CR>', {noremap = true})
+map('n', '<Leader>tc', '<cmd>NvimTreeClipboard<CR>', {noremap = true})
+map('n', '<Leader>tq', '<cmd>NvimTreeClose<CR>', {noremap = true})
+map('n', '<Leader>tff', '<cmd>NvimTreeFindFile<CR>', {noremap = true})
+map('n', '<Leader>tft', '<cmd>NvimTreeFindFileToggle<CR>', {noremap = true})
+map('n', '<Leader>tF', '<cmd>NvimTreeFocus<CR>', {noremap = true})
+map('n', '<Leader>to', '<cmd>NvimTreeOpen<CR>', {noremap = true})
+map('n', '<Leader>tr', '<cmd>NvimTreeRefresh<CR>', {noremap = true})
+map('n', '<Leader>ts', '<cmd>NvimTreeResize<CR>', {noremap = true})
 
 local g = vim.g
 g.nvim_tree_highlight_opened_files = 2
