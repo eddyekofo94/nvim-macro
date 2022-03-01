@@ -72,7 +72,7 @@ cmp.setup({
             elseif vim.fn["vsnip#jumpable"](-1) == 1 then
                 feedkey("<Plug>(vsnip-jump-prev)", "")
             end
-        end, { "i", "s" }),
+        end, { "i", "c" }),
         ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
@@ -81,7 +81,7 @@ cmp.setup({
             else
                 fallback()  -- The fallback function sends a already mapped key,
             end             -- in this case, it's probably `<Tab>`.
-        end, { "i", "s" }),
+        end, { "i", "c" }),
         ["<C-p>"] = cmp.mapping.select_prev_item(),
         ["<C-n>"] = cmp.mapping.select_next_item(),
         ["<C-b>"] = cmp.mapping.scroll_docs(-8),
@@ -96,12 +96,18 @@ cmp.setup({
             else
                 cmp.complete()
             end
-        end, { "i", "s" } ),
-        ["<esc>"] = cmp.mapping.abort(),
+        end, { "i", "c" } ),
+        ["<esc>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.abort()
+            else
+                fallback()
+            end
+        end, { "i", "c" }),
         ["<CR>"] = cmp.mapping.confirm {
             behavior = cmp.ConfirmBehavior.Replace,
             select = false
-        },
+        }
     },
     sources = {
         {name = "nvim_lsp"}, {name = "path"},

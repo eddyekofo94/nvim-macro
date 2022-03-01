@@ -4,12 +4,11 @@ return {
   'nvim-telescope/telescope.nvim',
   cmd = 'Telescope',
   keys = {
-    '<Leader>ff', '<Leader>fof',  '<Leader>f:',  '<Leader>foc',
-    '<Leader>fg', '<Leader>fw', '<Leader>fh', '<Leader>fm',
-    '<Leader>fq', '<Leader>fll', '<Leader>fT', '<Leader>fbl',
-    '<Leader>fbf', '<Leader>fbT', '<Leader>fr', '<Leader>fc',
-    '<Leader>fe', '<Leader>fd', '<Leader>ft', '<Leader>fi',
-    '<Leader>fp', '<Leader>fs', '<Leader>fS'
+    '<Leader>F', '<Leader>ff', '<Leader>fof', '<Leader>f;',
+    '<Leader>f*', '<Leader>fh', '<Leader>fm', '<Leader>fc',
+    '<Leader>fl', '<Leader>fbf', '<Leader>fR', '<Leader>fa',
+    '<Leader>fe', '<Leader>fd', '<Leader>ftd', '<Leader>fi',
+    '<Leader>fp', '<Leader>fs', '<Leader>fS', '<Leader>fg'
   },
   requires = {
     get.spec('plenary'),
