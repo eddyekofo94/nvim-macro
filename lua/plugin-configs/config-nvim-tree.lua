@@ -1,14 +1,12 @@
 local map = vim.api.nvim_set_keymap
 
-map('n', '<Leader>tt', '<cmd>NvimTreeToggle<CR>', {noremap = true})
-map('n', '<Leader>tc', '<cmd>NvimTreeClipboard<CR>', {noremap = true})
-map('n', '<Leader>tq', '<cmd>NvimTreeClose<CR>', {noremap = true})
-map('n', '<Leader>tff', '<cmd>NvimTreeFindFile<CR>', {noremap = true})
-map('n', '<Leader>tft', '<cmd>NvimTreeFindFileToggle<CR>', {noremap = true})
-map('n', '<Leader>tF', '<cmd>NvimTreeFocus<CR>', {noremap = true})
-map('n', '<Leader>to', '<cmd>NvimTreeOpen<CR>', {noremap = true})
-map('n', '<Leader>tr', '<cmd>NvimTreeRefresh<CR>', {noremap = true})
-map('n', '<Leader>ts', '<cmd>NvimTreeResize<CR>', {noremap = true})
+map('n', '<Leader>tt', [[<cmd>lua require('nvim-tree').toggle(false, false)<CR>]], {noremap = true})
+map('n', '<Leader>tc', [[<cmd>lua require('nvim-tree.actions.copy-paste').print_clipboard()<CR>]], {noremap = true})
+map('n', '<Leader>tq', [[<cmd>lua require('nvim-tree.view').close()<CR>]], {noremap = true})
+map('n', '<Leader>tff', [[<cmd>lua require('nvim-tree').find_file(true)<CR>]], {noremap = true})
+map('n', '<Leader>tft', [[<cmd>lua require('nvim-tree').toggle(true, false)<CR>]], {noremap = true})
+map('n', '<Leader>to', [[<cmd>lua require('nvim-tree').open()<CR> ]], {noremap = true})
+map('n', '<Leader>tr', [[<cm>lua require('nvim-tree.actions.reloaders').reload_explorer()]], {noremap = true})
 
 local g = vim.g
 g.nvim_tree_highlight_opened_files = 2

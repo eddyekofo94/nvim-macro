@@ -7,8 +7,7 @@ return {
     'NvimTreeFocus', 'NvimTreeOpen', 'NvimTreeToggle',
   },
   keys = {
-    '<Leader>tt', '<Leader>tff', '<Leader>tft',
-    '<Leader>tF', '<Leader>to'
+    '<Leader>tt', '<Leader>tff', '<Leader>tft', '<Leader>to'
   },
   requires = get.spec('nvim-web-devicons'),
   config = get.config('nvim-tree')
