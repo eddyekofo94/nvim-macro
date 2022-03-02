@@ -14,7 +14,6 @@ return {
   requires = {
     get.spec('cmp-nvim-lsp'),
     get.spec('nvim-lspconfig'),
-    get.spec('trouble')
   },
 
   -- This option does not load `nvim-lspconfig` or `cmp-nvim-lsp` automatically
