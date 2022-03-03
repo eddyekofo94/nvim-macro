@@ -8,7 +8,6 @@
 
 local map = vim.api.nvim_set_keymap
 local g = vim.g
-local execute = vim.cmd
 
 -- Map leader key to space
 map('n', '<Space>', '', {})

@@ -23,8 +23,8 @@ require('toggleterm').setup{
   direction = 'float',
   float_opts = {
     border = { '╒', '═', '╕', '│', '╛', '═', '╘', '│' },
-    width = 148,
-    height = 40
+    width = 120,
+    height = 32
   }
 }
 
@@ -36,8 +36,8 @@ local lazygit = Terminal:new({
   direction = 'float',
   float_opts = {
     border = { '╒', '═', '╕', '│', '╛', '═', '╘', '│' },
-    width = 148,
-    height = 40
+    width = 120,
+    height = 32
   },
   -- function to run on opening the terminal
   on_open = function(term)
