@@ -17,7 +17,7 @@ g.mapleader = ' '
 map('i', 'jj', '<esc>', {noremap = true})
 
 -- Exit from term mode
-map('t', '<C-\\><C-\\>', '<C-\\><C-n>', {noremap = true})
+map('t', '\\<C-\\>', '<C-\\><C-n>', {noremap = true})
 
 -- Toggle hlsearch
 map('n', '\\', '<cmd>set hlsearch!<CR>', {noremap = true})
@@ -27,6 +27,8 @@ map('n', '*', '<cmd>set hlsearch<CR>*', {noremap = true})
 map('n', '#', '<cmd>set hlsearch<CR>#', {noremap = true})
 map('n', 'g*', '<cmd>set hlsearch<CR>g*', {noremap = true})
 map('n', 'g#', '<cmd>set hlsearch<CR>g#', {noremap = true})
+map('n', 'n', '<cmd>set hlsearch<CR>g#', {noremap = true})
+map('n', 'N', '<cmd>set hlsearch<CR>g#', {noremap = true})
 
 -- Multi-window operations
 map('n', '<M-w>', '<C-w><C-w>', {noremap = true})

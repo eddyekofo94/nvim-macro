@@ -40,7 +40,7 @@ execute [[
 ]]
 
 -- Disable number and relativenumber in the built-in terminal
-execute [[ autocmd TermOpen * setlocal nospell nonumber norelativenumber ]]
+execute [[ autocmd TermOpen * setlocal nospell nonumber norelativenumber scrolloff=0 ]]
 
 execute                     -- Underline bad spellings
 [[
