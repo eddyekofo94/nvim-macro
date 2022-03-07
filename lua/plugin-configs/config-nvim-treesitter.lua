@@ -37,7 +37,53 @@ require 'nvim-treesitter.configs'.setup {
   },
 
   -- nvim-ts-context-commentstring
-  context_commentstring = { enable = true }
+  context_commentstring = { enable = true },
+
+  -- nvim-treesitter-textobjects
+  require'nvim-treesitter.configs'.setup {
+    textobjects = {
+      select = {
+        enable = true,
+
+        -- Automatically jump forward to textobj, similar to targets.vim
+        lookahead = true,
+
+        keymaps = {
+          -- You can use the capture groups defined in textobjects.scm
+          ['am'] = '@function.outer',
+          ['im'] = '@function.inner',
+          ['al'] = '@loop.outer',
+          ['il'] = '@loop.inner',
+          ['ac'] = '@class.outer',
+          ['ic'] = '@class.inner',
+          ['ip'] = '@parameter.inner',
+          ['ap'] = '@parameter.outer',
+          ['a/'] = '@comment.outer',
+          ['a*'] = '@comment.outer'
+        },
+        move = {
+          enable = true,
+          set_jumps = true, -- whether to set jumps in the jumplist
+          goto_next_start = {
+            [']m'] = '@function.outer',
+            [']]'] = '@class.outer',
+          },
+          goto_next_end = {
+            [']M'] = '@function.outer',
+            [']['] = '@class.outer',
+          },
+          goto_previous_start = {
+            ['[m'] = '@function.outer',
+            ['[['] = '@class.outer',
+          },
+          goto_previous_end = {
+            ['[M'] = '@function.outer',
+            ['[]'] = '@class.outer',
+          }
+        }
+      }
+    }
+  }
 }
 
 -- Automatically install parser for new filetype (with confirmation)
@@ -45,14 +91,14 @@ require 'nvim-treesitter.configs'.setup {
 -- https://github.com/nvim-treesitter/nvim-treesitter/issues/2108
 -- local ask_install = {}
 -- function _G.ensure_treesitter_language_installed()
---   local parsers = require "nvim-treesitter.parsers"
+--   local parsers = require 'nvim-treesitter.parsers'
 --   local lang = parsers.get_buf_lang()
 --   if parsers.get_parser_configs()[lang] and not parsers.has_parser(lang) and ask_install[lang] ~= false then
 --     vim.schedule_wrap(function()
---       vim.ui.select({"yes", "no"}, { prompt = "Install tree-sitter parsers for " .. lang .. "?" }, function(item)
---         if item == "yes" then
---           vim.cmd("TSInstall " .. lang)
---         elseif item == "no" then
+--       vim.ui.select({'yes', 'no'}, { prompt = 'Install tree-sitter parsers for ' .. lang .. '?' }, function(item)
+--         if item == 'yes' then
+--           vim.cmd('TSInstall ' .. lang)
+--         elseif item == 'no' then
 --           ask_install[lang] = false
 --         end
 --       end)
@@ -66,7 +112,7 @@ function _G.ensure_treesitter_language_installed()
   local lang = parsers.get_buf_lang()
   if parsers.get_parser_configs()[lang] and not parsers.has_parser(lang) then
     vim.schedule_wrap(function()
-    vim.cmd("TSInstall "..lang)
+    vim.cmd('TSInstall '..lang)
     end)()
   end
 end
