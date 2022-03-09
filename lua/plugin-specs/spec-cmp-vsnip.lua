@@ -1,1 +1,1 @@
-return { 'hrsh7th/cmp-vsnip', event = { 'InsertEnter', 'CmdLineEnter' } }
+return { 'hrsh7th/cmp-vsnip', event = { 'InsertEnter', 'CmdlineEnter' } }

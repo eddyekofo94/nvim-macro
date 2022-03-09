@@ -1,4 +1,4 @@
 return {
    'hrsh7th/cmp-buffer',
-   event = { 'InsertEnter', 'CmdLineEnter' }
+   event = { 'InsertEnter', 'CmdlineEnter' }
  }

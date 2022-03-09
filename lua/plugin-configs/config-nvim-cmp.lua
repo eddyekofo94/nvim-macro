@@ -1,4 +1,3 @@
-vim.cmd [[ :packadd cmp-under-comparator ]]
 local cmp = require 'cmp'
 
 local feedkey = function(key, mode)
@@ -117,8 +116,8 @@ cmp.setup({
   },
   sorting = {
     comparators = {
+      cmp.config.compare.score,
       cmp.config.compare.offset, cmp.config.compare.exact,
-      cmp.config.compare.score, require 'cmp-under-comparator'.under,
       cmp.config.compare.kind, cmp.config.compare.sort_text,
       cmp.config.compare.length, cmp.config.compare.order
     }

@@ -1,1 +1,1 @@
-return { 'hrsh7th/cmp-path', event = { 'InsertEnter', 'CmdLineEnter' } }
+return { 'hrsh7th/cmp-path', event = { 'InsertEnter', 'CmdlineEnter' } }
