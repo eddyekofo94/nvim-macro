@@ -27,8 +27,8 @@ map('n', '*', '<cmd>set hlsearch<CR>*', {noremap = true})
 map('n', '#', '<cmd>set hlsearch<CR>#', {noremap = true})
 map('n', 'g*', '<cmd>set hlsearch<CR>g*', {noremap = true})
 map('n', 'g#', '<cmd>set hlsearch<CR>g#', {noremap = true})
-map('n', 'n', '<cmd>set hlsearch<CR>g#', {noremap = true})
-map('n', 'N', '<cmd>set hlsearch<CR>g#', {noremap = true})
+map('n', 'n', '<cmd>set hlsearch<CR>n', {noremap = true})
+map('n', 'N', '<cmd>set hlsearch<CR>N', {noremap = true})
 
 -- Multi-window operations
 map('n', '<M-w>', '<C-w><C-w>', {noremap = true})
