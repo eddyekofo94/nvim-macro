@@ -47,16 +47,40 @@ require 'nvim-treesitter.configs'.setup {
         lookahead = false, -- Automatically jump forward to textobj
         keymaps = {
           -- You can use the capture groups defined in textobjects.scm
-          ['af'] = '@function.outer',
-          ['if'] = '@function.inner',
+          ['am'] = '@function.outer',
+          ['im'] = '@function.inner',
           ['al'] = '@loop.outer',
           ['il'] = '@loop.inner',
           ['ac'] = '@class.outer',
           ['ic'] = '@class.inner',
-          ['i,'] = '@parameter.inner',
-          ['a,'] = '@parameter.outer',
+          ['ia'] = '@parameter.inner',
+          ['aa'] = '@parameter.outer',
           ['a/'] = '@comment.outer',
           ['a*'] = '@comment.outer'
+        }
+      },
+      move = {
+        enable = true,
+        set_jumps = true, -- whether to set jumps in the jumplist
+        goto_next_start = {
+          ["]m"] = "@function.outer",
+          ["]]"] = "@class.outer",
+          ["]a"] = "@parameter.outer"
+        },
+        goto_next_end = {
+          ["]M"] = "@function.outer",
+          ["]["] = "@class.outer",
+          ["]A"] = "@parameter.outer"
+        },
+        goto_previous_start = {
+          ["[m"] = "@function.outer",
+          ["[["] = "@class.outer",
+          ["]a"] = "@parameter.outer"
+        },
+        goto_previous_end = {
+          ["[M"] = "@function.outer",
+          ["[]"] = "@class.outer",
+          ["]A"] = "@parameter.outer"
         }
       }
     }
