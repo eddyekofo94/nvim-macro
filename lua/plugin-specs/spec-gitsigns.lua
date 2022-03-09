@@ -1,4 +1,4 @@
-local get = require('utils/get')
+local get = require('utils.get')
 
 return {
   'lewis6991/gitsigns.nvim',

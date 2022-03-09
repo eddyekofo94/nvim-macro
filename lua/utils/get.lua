@@ -22,7 +22,7 @@ function get.lsp_server_config (name)
   end
 end
 
--- Get treesitter parser list from utils/shared.langs
+-- Get treesitter parser list from utils.shared.langs
 function get.ts_list (langs)
   local ts_list = {}
   for lang, _ in pairs(langs) do
@@ -31,7 +31,7 @@ function get.ts_list (langs)
   return ts_list
 end
 
--- Get filetype list from utils/shared.langs
+-- Get filetype list from utils.shared.langs
 function get.ft_list (langs)
   local ft_list = {}
   for lang, _ in pairs(langs) do
@@ -40,7 +40,7 @@ function get.ft_list (langs)
   return ft_list
 end
 
--- Get lsp-server list from utils/shared.langs
+-- Get lsp-server list from utils.shared.langs
 function get.lsp_server_list (langs)
   local server_list = {}
   for lang, _ in pairs(langs) do

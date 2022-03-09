@@ -1,5 +1,5 @@
-local get = require('utils/get')
-local langs = require('utils/shared').langs
+local get = require('utils.get')
+local langs = require('utils.shared').langs
 
 require 'nvim-treesitter.configs'.setup {
   -- One of 'all', 'maintained' (parsers with maintainers),

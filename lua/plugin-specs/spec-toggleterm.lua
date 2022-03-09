@@ -4,6 +4,6 @@ return {
   cmd = { 'ToggleTerm', 'ToggleTermToggleAdd', 'TermExec', 'Git',
           'ToggleTermFloat', 'ToggleTermHorizontal',
           'ToggleTermVertical', 'ToggleTermTab'},
-  config = require('utils/get').config('toggleterm')
+  config = require('utils.get').config('toggleterm')
 }
 

@@ -22,7 +22,7 @@ end
 
 pcall(require, 'compile/packer_compiled')
 
-local get = require('utils/get')
+local get = require('utils.get')
 return require('packer').startup({
   function(use)
     use(get.spec('packer'))             -- Packer manages itself
