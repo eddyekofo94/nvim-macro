@@ -23,19 +23,20 @@ g.nvim_tree_icons = {
   }
 }
 
-local tree_cb = require 'nvim-tree.config'.nvim_tree_callback
 require 'nvim-tree'.setup {
   view = {
     auto_resize = true,
     mappings = {
       list = {
-        { key = '<C-[>',                cb = tree_cb('dir_up') },
-        { key = '<M-v>',                cb = tree_cb('vsplit') },
-        { key = '<M-x>',                cb = tree_cb('split') },
-        { key = '<M-t>',                cb = tree_cb('tabnew') },
-        { key = '{',                    cb = tree_cb('first_sibling') },
-        { key = '}',                    cb = tree_cb('last_sibling') },
-        { key = 'X',                    cb = tree_cb('remove') },
+        { key = '<C-[>',                action = 'dir_up' },
+        { key = '<M-v>',                action = 'vsplit' },
+        { key = '<M-x>',                action = 'split' },
+        { key = '<M-t>',                action = 'tabnew' },
+        { key = '{',                    action = 'first_sibling' },
+        { key = '}',                    action = 'last_sibling' },
+        { key = 'X',                    action = 'remove' },
+        { key = 'W',                    action = '' },
+        { key = 'zM',                   action = 'collapse_all' },
       }
     }
   },
