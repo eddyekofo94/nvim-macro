@@ -34,7 +34,7 @@ highlight link AerialArrayIcon          CmpItemKindDefault
 highlight link AerialBooleanIcon        Boolean
 highlight link AerialClassIcon          CmpItemKindClassDefault
 highlight link AerialConstantIcon       CmpItemKindConstantDefault
-highlight link AerialConstructorIcon    Special
+highlight link AerialConstructorIcon    CmpItemKindDefault
 highlight link AerialEnumIcon           CmpItemKindEnumDefault
 highlight link AerialEnumMemberIcon     CmpItemKindEnumMemberDefault
 highlight link AerialEventIcon          CmpItemKindEventDefault
