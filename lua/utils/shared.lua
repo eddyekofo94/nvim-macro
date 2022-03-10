@@ -27,4 +27,35 @@ M.borders = {
   vintage = { '-', '|', '-', '|', '+', '+', '+', '+' }
 }
 
+M.icons = {
+  Field = '',
+  Property = '',
+  Text = '',
+  String = '',
+  Enum = '',
+  EnumMember = '',
+  TypeParameter = '',
+  Class = '',
+  Method = '',
+  Function = '',
+  Constructor = '',
+  Interface = '',
+  Module = '',
+  Package = '',
+  Unit = '塞',
+  Value = '',
+  Keyword = '',
+  Snippet = '',
+  Color = '',
+  Variable = '',
+  File = '',
+  Reference = '',
+  Folder = '',
+  Constant = '',
+  Struct = 'פּ',
+  Event = '',
+  Operator = '',
+  Collapsed   = ""
+}
+
 return M

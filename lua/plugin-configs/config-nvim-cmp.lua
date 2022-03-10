@@ -4,33 +4,7 @@ local feedkey = function(key, mode)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
-local sym_map = {
-  Field = '',
-  Property = '',
-  Text = '',
-  Enum = '',
-  EnumMember = '',
-  TypeParameter = '',
-  Class = '',
-  Method = '',
-  Function = '',
-  Constructor = '',
-  Interface = '',
-  Module = '',
-  Unit = '塞',
-  Value = '',
-  Keyword = '',
-  Snippet = '',
-  Color = '',
-  Variable = '',
-  File = '',
-  Reference = '',
-  Folder = '',
-  Constant = '',
-  Struct = 'פּ',
-  Event = '',
-  Operator = '',
-}
+local sym_map = require('utils.shared').icons
 
 cmp.setup({
   formatting = {

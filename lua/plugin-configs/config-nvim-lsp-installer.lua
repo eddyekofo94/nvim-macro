@@ -118,6 +118,12 @@ local on_attach =
     buf_set_keymap('n', ']e', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
     buf_set_keymap('n', '<leader>ll', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
     buf_set_keymap('n', '<leader>l=', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+    -- aerial's on_attach function for showing code outline
+    local aerial_ready, aerial = pcall(require, 'aerial')
+    if aerial_ready then
+      aerial.on_attach(client, bufnr)
+    end
   end
 --------------------------- on_attach function ends ----------------------------
 

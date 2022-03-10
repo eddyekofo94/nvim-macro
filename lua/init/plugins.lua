@@ -52,6 +52,7 @@ return require('packer').startup({
     use(get.spec('nvim-tree'))          -- File tree
     use(get.spec('barbar'))             -- Buffer line
     use(get.spec('telescope'))
+    use(get.spec('aerial'))
 
     -- Git
     use(get.spec('gitsigns'))
