@@ -1,12 +1,12 @@
-local get = {}
+local M = {}
 
-function get.config (name)
-  return("require 'plugin-configs/config-" .. name .. "'")
+function M.config (name)
+  return("require 'plugin-configs." .. name .. "'")
 end
 
-function get.spec (name)
+function M.spec (name)
   local status, spec
-    = pcall(require, 'plugin-specs/spec-' .. name)
+    = pcall(require, 'plugin-specs.' .. name)
   if not status then
     print('Error: cannot get plugin-spec: ' .. name)
     return {}
@@ -14,16 +14,16 @@ function get.spec (name)
   return spec
 end
 
-function get.lsp_server_config (name)
+function M.lsp_server_config (name)
   local status, server_config =
-    pcall(require, 'lsp-server-configs/serverconfig-' .. name)
+    pcall(require, 'lsp-server-configs/' .. name)
   if not status then return {}
   else return server_config
   end
 end
 
 -- Get treesitter parser list from utils.shared.langs
-function get.ts_list (langs)
+function M.ts_list (langs)
   local ts_list = {}
   for lang, _ in pairs(langs) do
     table.insert(ts_list, langs[lang].ts)
@@ -32,7 +32,7 @@ function get.ts_list (langs)
 end
 
 -- Get filetype list from utils.shared.langs
-function get.ft_list (langs)
+function M.ft_list (langs)
   local ft_list = {}
   for lang, _ in pairs(langs) do
     table.insert(ft_list, langs[lang].ft)
@@ -41,7 +41,7 @@ function get.ft_list (langs)
 end
 
 -- Get lsp-server list from utils.shared.langs
-function get.lsp_server_list (langs)
+function M.lsp_server_list (langs)
   local server_list = {}
   for lang, _ in pairs(langs) do
     table.insert(server_list, langs[lang].lsp_server)
@@ -49,4 +49,4 @@ function get.lsp_server_list (langs)
   return server_list
 end
 
-return get
+return M
