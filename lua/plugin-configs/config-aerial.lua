@@ -42,7 +42,7 @@ require('aerial').setup({
 
   on_attach = function ()
     local opt = { noremap = true }
-    vim.api.nvim_set_keymap('n', '<leader>aa', '<cmd>AerialToggle!<CR>', opt)
+    vim.api.nvim_set_keymap('n', '<leader>aa', '<cmd>AerialToggle<CR>', opt)
     vim.api.nvim_set_keymap('n', '<leader>ao', '<cmd>AerialOpen<CR>', opt)
     vim.api.nvim_set_keymap('n', '<leader>aq', '<cmd>AerialClose<CR>', opt)
   end,
