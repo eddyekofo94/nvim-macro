@@ -40,11 +40,11 @@ require('aerial').setup({
     filetypes = { 'aerial', 'NvimTree', 'help', 'alpha', 'undotree', 'TelescopePrompt' },
   },
 
-  on_attach = function (bufnr)
+  on_attach = function ()
     local opt = { noremap = true }
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>aa', '<cmd>AerialToggle!<CR>', opt)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ao', '<cmd>AerialOpen<CR>', opt)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>aq', '<cmd>AerialClose<CR>', opt)
+    vim.api.nvim_set_keymap('n', '<leader>aa', '<cmd>AerialToggle!<CR>', opt)
+    vim.api.nvim_set_keymap('n', '<leader>ao', '<cmd>AerialOpen<CR>', opt)
+    vim.api.nvim_set_keymap('n', '<leader>aq', '<cmd>AerialClose<CR>', opt)
   end,
 
   -- When you fold code with za, zo, or zc, update the aerial tree as well.
