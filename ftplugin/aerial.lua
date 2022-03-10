@@ -3,7 +3,7 @@ local opt = { noremap = true }
 
 vim.cmd [[ setlocal nospell scrolloff=0 ]]
 
-bufmap(0, 'n', '?', [['<cmd>lua require'aerial.bindings.show()<CR>]], opt)
+bufmap(0, 'n', 'g?', [['<cmd>lua require'aerial.bindings.show()<CR>]], opt)
 bufmap(0, 'n', '<CR>', [[<cmd>lua require'aerial'.select()<CR>]], opt)
 bufmap(0, 'n', '<M-v>', [[<cmd>lua require'aerial'.select({split='v'})<CR>]], opt)
 bufmap(0, 'n', '<M-x>', [[<cmd>lua require'aerial'.select({split='h'})<CR>]], opt)
