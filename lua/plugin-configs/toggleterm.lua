@@ -22,7 +22,7 @@ require('toggleterm').setup{
   persist_size = false,
   direction = 'float',
   float_opts = {
-    border = { '╒', '═', '╕', '│', '╛', '═', '╘', '│' },
+    border = require('utils.shared').borders.double_horizontal_clc,
     width = 120,
     height = 32
   }
@@ -35,7 +35,7 @@ local lazygit = Terminal:new({
   dir = 'git_dir',
   direction = 'float',
   float_opts = {
-    border = { '╒', '═', '╕', '│', '╛', '═', '╘', '│' },
+    border = require('utils.shared').borders.double_horizontal_clc,
     width = 120,
     height = 32
   },
