@@ -41,6 +41,7 @@ return require('packer').startup({
     use(get.spec('undotree'))
 
     -- LSP
+    use(get.spec('nvim-lspconfig'))
     use(get.spec('nvim-lsp-installer'))
 
     -- Integration

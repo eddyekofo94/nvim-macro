@@ -121,10 +121,6 @@ local on_attach =
   end
 --------------------------- on_attach function ends ----------------------------
 
--- Ensure `cmp-nvim-lsp` and `nvim-lspconfig` are loaded
-vim.cmd [[ packadd cmp-nvim-lsp ]]
-vim.cmd [[ packadd nvim-lspconfig ]]
-
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
