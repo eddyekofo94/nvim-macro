@@ -69,6 +69,7 @@ require('gitsigns').setup {
 
     -- Text object
     map({'o', 'x'}, 'ic', ':<C-U>Gitsigns select_hunk<CR>')
+    map({'o', 'x'}, 'ac', ':<C-U>Gitsigns select_hunk<CR>')
   end
 
   -- on_attach = function(bufnr)
