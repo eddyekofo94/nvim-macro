@@ -3,7 +3,10 @@ local opt = { noremap = true }
 
 vim.wo.spell = false
 
-bufmap(0, 'n', 'g?', [['<cmd>lua require'aerial.bindings.show()<CR>]], opt)
+bufmap(0, 'n', '<leader>aa', '<cmd>AerialToggle<CR>', opt)
+bufmap(0, 'n', '<leader>ao', '<cmd>AerialOpen<CR>', opt)
+bufmap(0, 'n', '<leader>aq', '<cmd>AerialClose<CR>', opt)
+bufmap(0, 'n', 'g?', [['<cmd>lua require'aerial'.bindings.show()<CR>]], opt)
 bufmap(0, 'n', '<CR>', [[<cmd>lua require'aerial'.select()<CR>]], opt)
 bufmap(0, 'n', '<M-v>', [[<cmd>lua require'aerial'.select({split='v'})<CR>]], opt)
 bufmap(0, 'n', '<M-x>', [[<cmd>lua require'aerial'.select({split='h'})<CR>]], opt)
