@@ -1,3 +1,33 @@
+vim.cmd [[
+highlight link AerialLine Cursorline
+highlight link AerialArrayIcon          CmpItemKindDefault
+highlight link AerialBooleanIcon        Boolean
+highlight link AerialClassIcon          CmpItemKindClassDefault
+highlight link AerialConstantIcon       CmpItemKindConstantDefault
+highlight link AerialConstructorIcon    CmpItemKindDefault
+highlight link AerialEnumIcon           CmpItemKindEnumDefault
+highlight link AerialEnumMemberIcon     CmpItemKindEnumMemberDefault
+highlight link AerialEventIcon          CmpItemKindEventDefault
+highlight link AerialFieldIcon          CmpItemKindFieldDefault
+highlight link AerialFileIcon           CmpItemKindFileDefault
+highlight link AerialFunctionIcon       CmpItemKindFunctionDefault
+highlight link AerialInterfaceIcon      CmpItemKindInterfaceDefault
+highlight link AerialKeyIcon            CmpItemKindKeywordDefault
+highlight link AerialMethodIcon         CmpItemKindMethodDefault
+highlight link AerialModuleIcon         CmpItemKindModuleDefault
+highlight link AerialNamespaceIcon      CmpItemKindDefault
+highlight link AerialNullIcon           Boolean
+highlight link AerialNumberIcon         CmpItemKindValueDefault
+highlight link AerialObjectIcon         CmpItemKindDefault
+highlight link AerialOperatorIcon       CmpItemKindOperatorDefault
+highlight link AerialPackageIcon        CmpItemKindModuleDefault
+highlight link AerialPropertyIcon       CmpItemKindPropertyDefault
+highlight link AerialStringIcon         CmpItemKindText
+highlight link AerialStructIcon         CmpItemKindStructDefault
+highlight link AerialTypeParameterIcon  CmpItemKindDefault
+highlight link AerialVariableIcon       CmpItemKindVariableDefault
+]]
+
 -- Call the setup function to change the default behavior
 require('aerial').setup({
 

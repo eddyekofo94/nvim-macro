@@ -65,7 +65,7 @@ M.icons = {
   Struct = 'פּ',
   Event = '',
   Operator = '',
-  Collapsed   = ""
+  Collapsed   = ''
 }
 
 return M
