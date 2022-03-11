@@ -21,14 +21,14 @@ map('t', '\\<C-\\>', '<C-\\><C-n>', {noremap = true})
 
 -- Toggle hlsearch
 map('n', '\\', '<cmd>set hlsearch!<CR>', {noremap = true})
-map('n', '/', '<cmd>set hlsearch<CR>/', {noremap = true})
-map('n', '?', '<cmd>set hlsearch<CR>?', {noremap = true})
-map('n', '*', '<cmd>set hlsearch<CR>*', {noremap = true})
-map('n', '#', '<cmd>set hlsearch<CR>#', {noremap = true})
-map('n', 'g*', '<cmd>set hlsearch<CR>g*', {noremap = true})
-map('n', 'g#', '<cmd>set hlsearch<CR>g#', {noremap = true})
-map('n', 'n', '<cmd>set hlsearch<CR>n', {noremap = true})
-map('n', 'N', '<cmd>set hlsearch<CR>N', {noremap = true})
+map('n', '/', '/<cmd>set hlsearch<CR>', {noremap = true})
+map('n', '?', '?<cmd>set hlsearch<CR>', {noremap = true})
+map('n', '*', '*<cmd>set hlsearch<CR>', {noremap = true})
+map('n', '#', '#<cmd>set hlsearch<CR>', {noremap = true})
+map('n', 'g*', 'g*<cmd>set hlsearch<CR>', {noremap = true})
+map('n', 'g#', 'g#<cmd>set hlsearch<CR>', {noremap = true})
+map('n', 'n', 'n<cmd>set hlsearch<CR>', {noremap = true})
+map('n', 'N', 'N<cmd>set hlsearch<CR>', {noremap = true})
 
 -- Multi-window operations
 map('n', '<M-w>', '<C-w><C-w>', {noremap = true})
@@ -49,8 +49,8 @@ map('n', '<M-|>', '<C-w>|', {noremap = true})
 map('n', '<M-,>', '<C-w><', {noremap = true})
 map('n', '<M-.>', '<C-w>>', {noremap = true})
 map('n', '<M-p>', '<C-w>p', {noremap = true})
-map('n', '<M-v>', ':vsplit<CR>', {noremap = true, silent = true})
-map('n', '<M-x>', ':split<CR>', {noremap = true, silent = true})
+map('n', '<M-v>', '<cmd>vsplit<CR>', {noremap = true})
+map('n', '<M-x>', '<cmd>split<CR>', {noremap = true})
 map('n', '<M-c>', '<C-w>c', {noremap = true})   -- Close current window
 map('n', '<M-C>', '<C-w>o', {noremap = true})   -- Close all other windows
 
@@ -69,15 +69,13 @@ function _G.close_all_floatings()
 end
 
 -- Close all floating windows
-map('n','<M-;>',
-    "<cmd>lua close_all_floatings()<CR>",
-    {noremap = true, silent = true})
+map('n','<M-;>', "<cmd>lua close_all_floatings()<CR>", {noremap = true})
 
 
 -- Multi-buffer operations
-map('n', '<Tab>', ':bn<CR>', {noremap = true, silent = true})
-map('n', '<S-Tab>', ':bp<CR>', {noremap = true, silent = true})
-map('n', '<M-d>', ':bd<CR>', {noremap = true})  -- Delete current buffer
+map('n', '<Tab>', '<cmd>bn<CR>', {noremap = true})
+map('n', '<S-Tab>', '<cmd>bp<CR>', {noremap = true})
+map('n', '<M-d>', '<cmd>bd<CR>', {noremap = true})  -- Delete current buffer
 
 -- Moving in insert mode
 map('i', '<M-h>', '<left>', {noremap = true})
