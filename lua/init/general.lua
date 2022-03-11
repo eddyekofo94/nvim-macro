@@ -19,6 +19,7 @@ o.pumheight = 16
 o.cursorline = true
 o.cursorlineopt = 'number'
 o.undofile = true
+o.mouse = 'a'
 
 execute
 [[
