@@ -4,7 +4,7 @@ highlight link AerialArrayIcon          CmpItemKindDefault
 highlight link AerialBooleanIcon        Boolean
 highlight link AerialClassIcon          CmpItemKindClassDefault
 highlight link AerialConstantIcon       CmpItemKindConstantDefault
-highlight link AerialConstructorIcon    CmpItemKindDefault
+highlight link AerialConstructorIcon    CmpItemKindConstructorDefault
 highlight link AerialEnumIcon           CmpItemKindEnumDefault
 highlight link AerialEnumMemberIcon     CmpItemKindEnumMemberDefault
 highlight link AerialEventIcon          CmpItemKindEventDefault
@@ -26,6 +26,7 @@ highlight link AerialStringIcon         CmpItemKindText
 highlight link AerialStructIcon         CmpItemKindStructDefault
 highlight link AerialTypeParameterIcon  CmpItemKindDefault
 highlight link AerialVariableIcon       CmpItemKindVariableDefault
+highlight link AerialNamespaceIcon      CmpItemKindKeywordDefault
 ]]
 
 -- Call the setup function to change the default behavior
