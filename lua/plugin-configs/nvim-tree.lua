@@ -6,7 +6,7 @@ map('n', '<Leader>tq', [[<cmd>lua require('nvim-tree.view').close()<CR>]], {nore
 map('n', '<Leader>tff', [[<cmd>lua require('nvim-tree').find_file(true)<CR>]], {noremap = true})
 map('n', '<Leader>tft', [[<cmd>lua require('nvim-tree').toggle(true, false)<CR>]], {noremap = true})
 map('n', '<Leader>to', [[<cmd>lua require('nvim-tree').open()<CR> ]], {noremap = true})
-map('n', '<Leader>tr', [[<cm>lua require('nvim-tree.actions.reloaders').reload_explorer()]], {noremap = true})
+map('n', '<Leader>tr', [[<cmd>lua require('nvim-tree.actions.reloaders').reload_explorer()<CR>]], {noremap = true})
 
 local g = vim.g
 g.nvim_tree_highlight_opened_files = 2
