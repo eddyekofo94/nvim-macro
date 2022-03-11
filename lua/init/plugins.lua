@@ -13,7 +13,6 @@ end
 
 -- `PackerSync` on save of `plugins.lua`
 -- vim.cmd [[
---    use(get.spec('vim-easymotion'))     -- Moving around like magic!
 --   augroup packer_user_config
 --     autocmd!
 --     autocmd BufWritePost plugins.lua source <afile> | PackerSync
