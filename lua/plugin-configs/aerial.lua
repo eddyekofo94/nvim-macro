@@ -50,10 +50,10 @@ require('aerial').setup({
   -- To see all available values, see :help SymbolKind
   filter_kind = false,
 
-  -- Define symbol icons. You can also specify "<Symbol>Collapsed" to change the
-  -- icon when the tree is collapsed at that symbol, or "Collapsed" to specify a
+  -- Define symbol icons. You can also specify '<Symbol>Collapsed' to change the
+  -- icon when the tree is collapsed at that symbol, or 'Collapsed' to specify a
   -- default collapsed icon. The default icon set is determined by the
-  -- "nerd_font" option below.
+  -- 'nerd_font' option below.
   -- If you have lspkind-nvim installed, aerial will use it for icons.
   icons = require('utils.shared').icons,
 
@@ -92,7 +92,7 @@ require('aerial').setup({
   -- These control the width of the aerial window.
   -- They can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
   -- min_width and max_width can be a list of mixed types.
-  -- max_width = {40, 0.2} means "the lesser of 40 columns or 20% of total"
+  -- max_width = {40, 0.2} means 'the lesser of 40 columns or 20% of total'
   max_width = { 40, 0.2 },
   width = nil,
   min_width = 16,

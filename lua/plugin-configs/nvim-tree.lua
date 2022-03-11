@@ -44,10 +44,10 @@ require 'nvim-tree'.setup {
     enable = true,
     show_on_dirs = true,
     icons = {
-    error = ' ',   -- xf659
-    warning = ' ', -- xf529
-    info = ' ',    -- xf7fc
-    hint = ' ',    -- xf835
-    },
+      error = ' ',   -- xf659
+      warning = ' ', -- xf529
+      info = ' ',    -- xf7fc
+      hint = ' ',    -- xf835
+    }
   }
 }
