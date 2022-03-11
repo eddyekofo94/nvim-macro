@@ -12,6 +12,13 @@ require('nvim-lsp-installer').settings({
       server_installed = '',
       server_pending = '',
       server_uninstalled = ''
+    },
+    keymaps = {
+      toggle_server_expand = '<Tab>',
+      install_server = '<CR>',
+      update_server = 's',
+      update_all_servers = 'S',
+      uninstall_server = 'dd'
     }
   }
 })
