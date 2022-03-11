@@ -54,17 +54,12 @@ map('n', '<M-x>', ':split<CR>', {noremap = true, silent = true})
 map('n', '<M-c>', '<C-w>c', {noremap = true})   -- Close current window
 map('n', '<M-C>', '<C-w>o', {noremap = true})   -- Close all other windows
 
--- Close all floating windows
-map('n','<M-;>',
-    "<cmd>lua Close_all_floatings()<CR>",
-    {noremap = true, silent = true})
-
 -- From https://github.com/wookayin/dotfiles/commit/96d935515486f44ec361db3df8ab9ebb41ea7e40
-function Close_all_floatings()
+function _G.close_all_floatings()
   local closed_windows = {}
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     local config = vim.api.nvim_win_get_config(win)
-    if config.relative ~= "" then         -- is_floating_window?
+    if config.relative ~= '' then         -- is_floating_window?
       vim.api.nvim_win_close(win, false)  -- do not force
       table.insert(closed_windows, win)
     end
@@ -72,6 +67,11 @@ function Close_all_floatings()
   print(string.format ('Closed %d windows: %s', #closed_windows,
                        vim.inspect(closed_windows)))
 end
+
+-- Close all floating windows
+map('n','<M-;>',
+    "<cmd>lua close_all_floatings()<CR>",
+    {noremap = true, silent = true})
 
 
 -- Multi-buffer operations
