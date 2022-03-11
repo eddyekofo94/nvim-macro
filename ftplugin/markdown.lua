@@ -1,2 +1,1 @@
-vim.wo.wrap = true
-vim.wo.linebreak = true
+vim.cmd [[ setlocal wrap linebreak ]]
