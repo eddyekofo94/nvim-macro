@@ -1,7 +1,7 @@
 local bufmap = vim.api.nvim_buf_set_keymap
 local opt = { noremap = true }
 
-vim.cmd [[ setlocal nospell scrolloff=0 ]]
+vim.wo.spell = false
 
 bufmap(0, 'n', 'g?', [['<cmd>lua require'aerial.bindings.show()<CR>]], opt)
 bufmap(0, 'n', '<CR>', [[<cmd>lua require'aerial'.select()<CR>]], opt)

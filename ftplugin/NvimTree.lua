@@ -1,1 +1,1 @@
-vim.wo.scrolloff = 0
+vim.wo.list = false
