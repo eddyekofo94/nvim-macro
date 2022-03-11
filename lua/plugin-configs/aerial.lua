@@ -1,5 +1,5 @@
 vim.cmd [[
-highlight link AerialLine Cursorline
+highlight link AerialLine               QuickFixLine
 highlight link AerialArrayIcon          CmpItemKindDefault
 highlight link AerialBooleanIcon        Boolean
 highlight link AerialClassIcon          CmpItemKindClassDefault
