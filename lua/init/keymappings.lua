@@ -83,6 +83,38 @@ map('i', '<M-j>', '<down>', {noremap = true})
 map('i', '<M-k>', '<up>', {noremap = true})
 map('i', '<M-l>', '<right>', {noremap = true})
 
+-- Termdebug mappings and autocommands
+vim.cmd [[
+  nnoremap <F5> <Cmd>packadd termdebug\|Termdebug<CR>
+  au User TermdebugStartPre   let g:termdebug_wide=sort([float2nr(winwidth('$') * 0.4), 80, 28], 'n')[1]
+  au User TermdebugStartPre   nnoremap <F4>  <Cmd>Run<CR>|
+                             \nnoremap <F5>  <Cmd>Continue<CR>|
+                             \nnoremap <F6>  <Cmd>Stop<CR>|
+                             \nnoremap <F7>  <Cmd>Clear<CR>|
+                             \nnoremap <F8>  <Cmd>Break<CR>|
+                             \nnoremap <F10> <Cmd>Over<CR>|
+                             \nnoremap <F11> <Cmd>Step<CR>|
+                             \nnoremap <F12> <Cmd>Finish<CR>
+  au User TermdebugStartPost  lua vim.api.nvim_win_set_width(0, vim.g.termdebug_wide)
+  au User TermdebugStartPost  setlocal nobl|
+                             \wincmd j|
+                             \setlocal nobl|
+                             \wincmd k|
+                             \wincmd l|
+                             \wincmd p
+  au User TermdebugStartPost  nnoremap <buffer> <M-c> iquit<CR>|
+                             \nnoremap <buffer> <M-d> iquit<CR>|
+                             \nnoremap <buffer> q     iquit<CR>
+  au User TermdebugStopPost   unmap    <F4>|
+                             \nnoremap <F5>  <Cmd>packadd termdebug\|Termdebug<CR>|
+                             \unmap    <F6>|
+                             \unmap    <F7>|
+                             \unmap    <F8>|
+                             \unmap    <F10>|
+                             \unmap    <F11>|
+                             \unmap    <F12>
+]]
+
 -- -- Patch for pairing
 -- execute
 -- [[
