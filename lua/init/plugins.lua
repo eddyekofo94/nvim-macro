@@ -26,42 +26,40 @@ return require('packer').startup({
   function(use)
     use(get.spec('packer'))             -- Packer manages itself
 
-    -- Appearance
-    use(get.spec('nvim-treesitter'))
-    use(get.spec('falcon'))             -- Color scheme
+    -- Color schemes
+    use(get.spec('falcon'))
 
     -- Editing
-    use(get.spec('nvim-cmp'))
+    use(get.spec('nvim-cmp'))           -- Auto completion
     use(get.spec('vsc-vim-easymotion')) -- Easymotion for vscode-neovim
     use(get.spec('vim-surround'))
     use(get.spec('vim-commentary'))
     use(get.spec('vim-sleuth'))         -- Auto detect indentation
     use(get.spec('nvim-autopairs'))
-    use(get.spec('undotree'))
+    use(get.spec('undotree'))           -- Visible undo history
 
-    -- LSP
-    use(get.spec('nvim-lspconfig'))
+    -- Language support
+    use(get.spec('nvim-lspconfig'))     -- LSP config helper
     use(get.spec('nvim-lsp-installer'))
+    use(get.spec('nvim-treesitter'))    -- Language parser
 
     -- Integration
-    use(get.spec('toggleterm'))
+    use(get.spec('toggleterm'))         -- Better terminal integration
+    use(get.spec('gitsigns'))           -- Show git info at side
 
     -- Navigation
     use(get.spec('alpha-nvim'))         -- Greeting page
     use(get.spec('nvim-tree'))          -- File tree
     use(get.spec('barbar'))             -- Buffer line
-    use(get.spec('telescope'))
-    use(get.spec('aerial'))
+    use(get.spec('telescope'))          -- Fuzzy finding
+    use(get.spec('aerial'))             -- Code outline
 
-    -- Git
-    use(get.spec('gitsigns'))
-
-    -- Notes
+    -- Notes and docs
     use(get.spec('markdown-preview'))
 
     -- Tools
     use(get.spec('impatient'))          -- Speed up lua `require()`
-    use(get.spec('nvim-colorizer'))     -- Show inline RGB colors
+    use(get.spec('nvim-colorizer'))     -- Show RGB colors inline
   end,
 
   config = {
