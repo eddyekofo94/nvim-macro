@@ -2,6 +2,7 @@ local get = require('utils.get')
 
 return {
   'nvim-telescope/telescope.nvim',
+  opt = true,
   cmd = 'Telescope',
   keys = {
     '<Leader>F', '<Leader>ff', '<Leader>fof', '<Leader>f;',

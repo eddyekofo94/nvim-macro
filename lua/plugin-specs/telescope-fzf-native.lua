@@ -1,1 +1,4 @@
-return 'nvim-telescope/telescope-fzf-native.nvim'
+return {
+  'nvim-telescope/telescope-fzf-native.nvim',
+  run = 'make'
+}
