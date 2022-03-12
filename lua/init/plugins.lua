@@ -75,7 +75,10 @@ return require('packer').startup({
       error_sym = '',
       done_sym = '',
       removed_sym = '',
-      moved_sym = 'ﰲ'
+      moved_sym = 'ﰲ',
+      keybindings = {
+        toggle_info = '<Tab>'
+      }
     }
   }
 })
