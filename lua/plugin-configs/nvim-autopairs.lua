@@ -4,7 +4,7 @@ local Rule = require('nvim-autopairs.rule')
 npairs.setup({
   check_ts = true,
   fast_wrap = {
-    map = '<M-e>',
+    map = '<C-c>',
     chars = { '{', '[', '(', '"', "'", '`' },
     pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], '%s+', ''),
     offset = 0, -- Offset from pattern match

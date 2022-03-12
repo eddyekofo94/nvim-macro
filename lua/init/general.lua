@@ -68,6 +68,10 @@ o.swapfile = false
 --   ]]
 -- end
 
+-- Highlight the selection on yank
+execute [[ au TextYankPost * silent
+         \ lua vim.highlight.on_yank({higroup = 'Visual', timeout = 300}) ]]
+
 -- Autosave on focus change
 execute [[ autocmd BufLeave,WinLeave,FocusLost * nested silent! wall ]]
 
