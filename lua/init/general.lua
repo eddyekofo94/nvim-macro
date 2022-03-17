@@ -77,7 +77,7 @@ execute [[ autocmd BufLeave,WinLeave,FocusLost * nested silent! wall ]]
 
 
 -- Jump to last accessed window on closing the current one
-_G.winclosejmp = function ()
+_G.win_close_jmp = function ()
   -- Exclude floating windows
   if '' ~= vim.api.nvim_win_get_config(0).relative then return end
   -- Record the window we jump from (previous) and to (current)
@@ -97,7 +97,7 @@ _G.winclosejmp = function ()
   vim.cmd [[ wincmd p ]]
 end
 
-execute [[ autocmd VimEnter,WinEnter * lua winclosejmp() ]]
+execute [[ autocmd VimEnter,WinEnter * lua win_close_jmp() ]]
 
 -- Last-position-jump
 execute
