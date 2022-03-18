@@ -7,6 +7,7 @@ au User TermdebugStartPost  setlocal nobl|
                            \wincmd k|
                            \wincmd l|
                            \wincmd p
-au User TermdebugStartPost  nnoremap <buffer> <M-c> iquit<CR>|
-                           \nnoremap <buffer> <M-d> iquit<CR>|
-                           \nnoremap <buffer> q     iquit<CR>
+au User TermdebugStartPost  nnoremap <buffer> q <cmd>startinsert<CR>quit<CR>|
+                           \nnoremap <buffer> <M-d> <cmd>startinsert<CR>quit<CR>|
+                           \nnoremap <buffer> <M-c> <cmd>startinsert<CR>quit<CR>|
+                           \nnoremap <buffer> <C-W>c <cmd>startinsert<CR>quit<CR>
