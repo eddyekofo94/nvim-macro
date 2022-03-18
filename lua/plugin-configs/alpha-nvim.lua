@@ -36,8 +36,9 @@ local function button(sc, txt, leader_txt, keybind, keybind_opts)
 end
 
 dashboard.section.buttons.val= {
-  button('e', '  New file', leader, '<cmd>ene<CR>'),
+  button('e', 'ﱐ  New file', leader, '<cmd>ene<CR>'),
   button('s', '  Sync plugins' , leader, [[<cmd>echo 'Syncing...' | PackerSync<CR>]]),
+  button('c', '  Configurations', leader, '<cmd>split | e ~/.config/nvim/<CR>'),
   button(leader .. ' f f', '  Find files', leader, '<cmd>Telescope find_files<CR>'),
   button(leader .. ' fof', '  Find old files', leader, '<cmd>Telescope oldfiles<CR>'),
   button(leader .. ' f ;', 'ﭨ  Live grep', leader, '<cmd>Telescope live_grep<CR>'),
@@ -46,20 +47,53 @@ dashboard.section.buttons.val= {
 }
 
 -- Foot must be a table so that its height is correctly measured
-dashboard.section.footer.val = { #vim.tbl_keys(packer_plugins) .. ' plugins ﮣ loaded' }
+local num_plugins_loaded = #vim.fn.globpath(vim.fn.stdpath('data') .. '/site/pack/packer/start', '*', 0, 1)
+local num_plugins_tot = #vim.tbl_keys(packer_plugins)
+if num_plugins_tot <= 1 then
+  dashboard.section.footer.val = { num_plugins_loaded .. ' / ' .. num_plugins_tot .. ' plugin ﮣ loaded' }
+else
+  dashboard.section.footer.val = { num_plugins_loaded .. ' / ' .. num_plugins_tot.. ' plugins ﮣ loaded' }
+end
 dashboard.section.footer.opts.hl = 'Comment'
 
-local height = #dashboard.section.header.val + 2 * #dashboard.section.buttons.val
-               + #dashboard.section.footer.val + 5
-local header_padding = math.floor((vim.fn.winheight('$') - height) * 0.4)
+
+-- ┌──────────────────────────────────────────────────────────┐
+-- │                  /                                       │
+-- │    header_padding                                        │
+-- │                  \  ┌──────────────┐ ____                │
+-- │                     │    header    │     \               │
+-- │                  /  └──────────────┘      \              │
+-- │ head_butt_padding                          \             │
+-- │                  \                          occu_        │
+-- │                  ┌────────────────────┐     height       │
+-- │                  │       button       │    /             │
+-- │                  │       button       │   /              │
+-- │                  │       button       │  /               │
+-- │                  └────────────────────┘‾‾                │
+-- │                  /                                       │
+-- │ foot_butt_padding                                        │
+-- │                  \  ┌──────────────┐                     │
+-- │                     │    footer    │                     │
+-- │                     └──────────────┘                     │
+-- │                                                          │
+-- └──────────────────────────────────────────────────────────┘
+
+local head_butt_padding = 4
+local occu_height = #dashboard.section.header.val + 2 * #dashboard.section.buttons.val + head_butt_padding
+local header_padding = math.ceil((vim.fn.winheight('$') - occu_height) * 0.25)
+local foot_butt_padding = math.floor((vim.fn.winheight('$') - 2 * header_padding - occu_height))
 if 0 > header_padding then header_padding = 0 end
+if vim.o.lines - header_padding - occu_height - foot_butt_padding - #dashboard.section.footer.val < 3 then
+  foot_butt_padding = vim.o.lines - header_padding - occu_height - #dashboard.section.footer.val - 3
+  if foot_butt_padding < 0 then foot_butt_padding = 0 end
+end
 
 dashboard.config.layout = {
   { type = 'padding', val = header_padding },
   dashboard.section.header,
-  { type = 'padding', val = 4 },
+  { type = 'padding', val = head_butt_padding },
   dashboard.section.buttons,
-  { type = 'padding', val = 1 },
+  { type = 'padding', val = foot_butt_padding },
   dashboard.section.footer
 }
 
