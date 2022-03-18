@@ -4,7 +4,7 @@ local dashboard = require('alpha.themes.dashboard')
 local leader = '<LD>'
 
 local function button(sc, txt, leader_txt, keybind, keybind_opts)
-  local sc_ = sc:gsub('%s', ''):gsub(leader_txt, '<leader>')
+  local sc_after = sc:gsub('%s', ''):gsub(leader_txt, '<leader>')
 
   local opts = {
     position = 'center',
@@ -14,14 +14,16 @@ local function button(sc, txt, leader_txt, keybind, keybind_opts)
     align_shortcut = 'right',
     hl_shortcut = 'Keyword',
   }
-  if keybind then
-    keybind_opts = vim.F.if_nil(keybind_opts, { noremap = true, silent = true, nowait = true })
-    opts.keymap = { 'n', sc_, keybind, keybind_opts }
+
+  if nil == keybind then
+    keybind = sc_after
   end
+  keybind_opts = vim.F.if_nil(keybind_opts, { noremap = true, silent = true, nowait = true })
+  opts.keymap = { 'n', sc_after, keybind, keybind_opts }
 
   local function on_press()
     -- local key = vim.api.nvim_replace_termcodes(keybind .. '<Ignore>', true, false, true)
-    local key = vim.api.nvim_replace_termcodes(sc .. '<Ignore>', true, false, true)
+    local key = vim.api.nvim_replace_termcodes(sc_after .. '<Ignore>', true, false, true)
     vim.api.nvim_feedkeys(key, 't', false)
   end
 
@@ -35,12 +37,11 @@ end
 
 dashboard.section.buttons.val= {
   button('e', '  New file', leader, '<cmd>ene<CR>'),
-  button('s', '  Sync plugins' , leader, '<cmd>PackerSync<CR>'),
-  button('c', '  Configurations', leader, '<cmd>cd ~/.config/nvim/ | pwd <CR>'),
+  button('s', '  Sync plugins' , leader, [[<cmd>echo 'Syncing...' | PackerSync<CR>]]),
   button(leader .. ' f f', '  Find files', leader, '<cmd>Telescope find_files<CR>'),
   button(leader .. ' fof', '  Find old files', leader, '<cmd>Telescope oldfiles<CR>'),
   button(leader .. ' f ;', 'ﭨ  Live grep', leader, '<cmd>Telescope live_grep<CR>'),
-  button(leader .. ' f g', '  Git changes', leader, '<cmd>Telescope git_status<CR>'),
+  button(leader .. ' f g', '  Git status', leader, '<cmd>Telescope git_status<CR>'),
   button(leader .. '   q', '  Quit' , leader, '<cmd>qa<CR>')
 }
 
