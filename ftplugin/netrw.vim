@@ -1,0 +1,2 @@
+setlocal nospell
+setlocal nolist
