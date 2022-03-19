@@ -1,5 +1,6 @@
 local alpha = require('alpha')
 local dashboard = require('alpha.themes.dashboard')
+local headers = require('utils.shared').ascii_art
 
 local leader = '<LD>'
 
@@ -35,10 +36,13 @@ local function button(sc, txt, leader_txt, keybind, keybind_opts)
   }
 end
 
+math.randomseed(os.time())
+dashboard.section.header.val = headers[math.random(1, #headers)]
+
 dashboard.section.buttons.val= {
   button('e', 'ﱐ  New file', leader, '<cmd>ene<CR>'),
   button('s', '  Sync plugins' , leader, [[<cmd>echo 'Syncing...' | PackerSync<CR>]]),
-  button('c', '  Configurations', leader, '<cmd>split | e ~/.config/nvim/<CR>'),
+  button('c', '  Configurations', leader, '<cmd>e ~/.config/nvim/<CR>'),
   button(leader .. ' f f', '  Find files', leader, '<cmd>Telescope find_files<CR>'),
   button(leader .. ' fof', '  Find old files', leader, '<cmd>Telescope oldfiles<CR>'),
   button(leader .. ' f ;', 'ﭨ  Live grep', leader, '<cmd>Telescope live_grep<CR>'),
