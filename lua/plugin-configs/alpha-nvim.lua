@@ -43,11 +43,11 @@ dashboard.section.buttons.val= {
   button('e', 'ﱐ  New file', leader, '<cmd>ene<CR>'),
   button('s', '  Sync plugins' , leader, '<cmd>PackerSync<CR>'),
   button('c', '  Configurations', leader, '<cmd>e ~/.config/nvim/<CR>'),
+  button('g', '  Git', leader, '<cmd>Git<CR>'),
   button(leader .. ' f f', '  Find files', leader, '<cmd>Telescope find_files<CR>'),
-  button(leader .. ' fof', '  Find old files', leader, '<cmd>Telescope oldfiles<CR>'),
+  button(leader .. ' f j', '﬘  Switch to project', leader, '<cmd>Telescope project<CR>'),
   button(leader .. ' f ;', 'ﭨ  Live grep', leader, '<cmd>Telescope live_grep<CR>'),
-  button(leader .. ' f g', '  Git status', leader, '<cmd>Telescope git_status<CR>'),
-  button(leader .. '   q', '  Quit' , leader, '<cmd>qa<CR>')
+  button('Q', '  Quit' , leader, '<cmd>qa<CR>')
 }
 
 -- Foot must be a table so that its height is correctly measured
