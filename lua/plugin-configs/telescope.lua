@@ -20,6 +20,7 @@ map('n', '<Leader>fp', [[<cmd>lua require('telescope.builtin').treesitter()<CR>]
 map('n', '<Leader>fs', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
 map('n', '<Leader>fS', [[<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>]], opts)
 map('n', '<Leader>fg', [[<cmd>lua require('telescope.builtin').git_status()<CR>]], opts)
+map('n', '<Leader>fj', [[<cmd>lua require('telescope').extensions.project.project({})<CR>]], opts)
 
 local telescope = require('telescope')
 
@@ -101,7 +102,16 @@ telescope.setup{
         ['?'] = require('telescope.actions').which_key
       }
     }
+  },
+  extensions = {
+    project = {
+      base_dirs = {
+        '~/'
+      },
+      hidden_files = true
+    }
   }
 }
 
 telescope.load_extension('fzf')
+telescope.load_extension('project')
