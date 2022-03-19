@@ -76,6 +76,9 @@ map('n','<M-;>', "<cmd>lua close_all_floatings()<CR>", {noremap = true})
 map('n', '<Tab>', '<cmd>bn<CR>', {noremap = true})
 map('n', '<S-Tab>', '<cmd>bp<CR>', {noremap = true})
 map('n', '<M-d>', '<cmd>bd<CR>', {noremap = true})  -- Delete current buffer
+map('n', '<C-n>', '<C-i>', {noremap = true})        -- <Tab> / <C-i> is used to switch buffers
+                                                    -- so use <C-n> to jump to newer cursor
+                                                    -- position instead
 
 -- Moving in insert mode
 map('i', '<M-h>', '<left>', {noremap = true})
