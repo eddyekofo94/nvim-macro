@@ -113,5 +113,7 @@ telescope.setup{
   }
 }
 
+vim.cmd [[ packadd telescope-fzf-native.nvim ]]
+vim.cmd [[ packadd telescope-project.nvim ]]
 telescope.load_extension('fzf')
 telescope.load_extension('project')
