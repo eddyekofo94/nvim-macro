@@ -42,20 +42,16 @@ local lazygit = Terminal:new({
   -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd [[ startinsert ]]
-    vim.api.nvim_buf_set_keymap(term.bufnr, 't', 'q', '<cmd>close<CR>',
-                                {noremap = true, silent = true})
-    vim.api.nvim_buf_set_keymap(term.bufnr, 't', '<esc>', '<cmd>close<CR>',
-                                {noremap = true, silent = true})
     vim.api.nvim_buf_set_keymap(term.bufnr, 't', '<C-\\>', '<cmd>close<CR>',
                                 {noremap = true, silent = true})
   end
 })
 
-function Lazygit_toggle()
+function _G.lazygit_toggle()
   lazygit:toggle()
 end
 
-vim.cmd [[ command Git lua Lazygit_toggle()<CR> ]]
+vim.cmd [[ command Git lua lazygit_toggle()<CR> ]]
 vim.cmd [[ command ToggleTermFloat ToggleTerm direction='float' ]]
 vim.cmd [[ command ToggleTermHorizontal ToggleTerm direction='horizontal' ]]
 vim.cmd [[ command ToggleTermVertical ToggleTerm direction='vertical' ]]
