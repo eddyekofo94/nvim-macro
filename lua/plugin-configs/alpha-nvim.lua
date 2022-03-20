@@ -45,7 +45,7 @@ dashboard.section.buttons.val= {
   button('c', '  Configurations', leader, '<cmd>e ~/.config/nvim/<CR>'),
   button('g', '  Git', leader, '<cmd>Git<CR>'),
   button(leader .. ' f f', '  Find files', leader, '<cmd>Telescope find_files<CR>'),
-  button(leader .. ' f j', '﬘  Switch to project', leader, '<cmd>Telescope project<CR>'),
+  button(leader .. ' f j', '﬘  Switch to project', leader, '<cmd>Telescope project display_type=full<CR>'),
   button(leader .. ' f ;', 'ﭨ  Live grep', leader, '<cmd>Telescope live_grep<CR>'),
   button('Q', '  Quit' , leader, '<cmd>qa<CR>')
 }
