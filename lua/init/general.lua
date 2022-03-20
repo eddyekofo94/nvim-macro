@@ -20,6 +20,7 @@ o.cursorline = true
 o.cursorlineopt = 'number'
 o.undofile = true
 o.mouse = 'a'
+o.laststatus = 3            -- Global statusline, for neovim >= 0.7.0
 
 execute
 [[

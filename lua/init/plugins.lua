@@ -46,6 +46,7 @@ return require('packer').startup({
     -- Integration
     use(get.spec('toggleterm'))         -- Better terminal integration
     use(get.spec('gitsigns'))           -- Show git info at side
+    use(get.spec('lualine'))
 
     -- Navigation
     use(get.spec('alpha-nvim'))         -- Greeting page
