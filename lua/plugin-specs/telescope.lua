@@ -6,7 +6,7 @@ return {
   cmd = 'Telescope',
   keys = {
     '<Leader>F', '<Leader>ff', '<Leader>fof', '<Leader>f;',
-    '<Leader>f*', '<Leader>fh', '<Leader>fm', '<Leader>fc',
+    '<Leader>f*', '<Leader>fh', '<Leader>fm', '<Leader>fq',
     '<Leader>fl', '<Leader>fbf', '<Leader>fR', '<Leader>fa',
     '<Leader>fe', '<Leader>fd', '<Leader>ftd', '<Leader>fi',
     '<Leader>fp', '<Leader>fs', '<Leader>fS', '<Leader>fg',

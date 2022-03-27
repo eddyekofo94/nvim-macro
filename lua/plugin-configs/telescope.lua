@@ -7,7 +7,7 @@ map('n', '<Leader>f;', [[<cmd>lua require('telescope.builtin').live_grep()<CR>]]
 map('n', '<Leader>f*', [[<cmd>lua require('telescope.builtin').grep_string()<CR>]], opts)
 map('n', '<Leader>fh', [[<cmd>lua require('telescope.builtin').help_tags()<CR>]], opts)
 map('n', '<Leader>fm', [[<cmd>lua require('telescope.builtin').marks()<CR>]], opts)
-map('n', '<Leader>fc', [[<cmd>lua require('telescope.builtin').quickfix()<CR>]], opts)
+map('n', '<Leader>fq', [[<cmd>lua require('telescope.builtin').quickfix()<CR>]], opts)
 map('n', '<Leader>fl', [[<cmd>lua require('telescope.builtin').loclist()<CR>]], opts)
 map('n', '<Leader>fbf', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>]], opts)
 map('n', '<Leader>fR', [[<cmd>lua require('telescope.builtin').lsp_references()<CR>]], opts)
@@ -23,6 +23,7 @@ map('n', '<Leader>fg', [[<cmd>lua require('telescope.builtin').git_status()<CR>]
 map('n', '<Leader>fj', [[<cmd>lua require('telescope').extensions.project.project({display_type = 'full'})<CR>]], opts)
 
 local telescope = require('telescope')
+local actions = require('telescope.actions')
 
 telescope.setup{
   defaults = {
@@ -38,68 +39,25 @@ telescope.setup{
     preview = { filesize_limit = 5 },
     mappings = {
       i = {
-        ['<C-n>'] = require('telescope.actions').move_selection_next,
-        ['<C-p>'] = require('telescope.actions').move_selection_previous,
-
-        ['<M-c>'] = require('telescope.actions').close,
-
-        ['<Down>'] = require('telescope.actions').move_selection_next,
-        ['<Up>'] = require('telescope.actions').move_selection_previous,
-
-        ['<CR>'] = require('telescope.actions').select_default,
-        ['<M-x>'] = require('telescope.actions').select_horizontal,
-        ['<M-v>'] = require('telescope.actions').select_vertical,
-        ['<M-t>'] = require('telescope.actions').select_tab,
-
-        ['<C-u>'] = require('telescope.actions').preview_scrolling_up,
-        ['<C-d>'] = require('telescope.actions').preview_scrolling_down,
-
-        ['<PageUp>'] = require('telescope.actions').results_scrolling_up,
-        ['<PageDown>'] = require('telescope.actions').results_scrolling_down,
-
-        ['<Tab>'] = require('telescope.actions').toggle_selection + require('telescope.actions').move_selection_worse,
-        ['<S-Tab>'] = require('telescope.actions').toggle_selection + require('telescope.actions').move_selection_better,
-        ['<M-q>'] = require('telescope.actions').send_to_qflist + require('telescope.actions').open_qflist,
-        ['<M-Q>'] = require('telescope.actions').send_selected_to_qflist + require('telescope.actions').open_qflist,
-        ['<C-l>'] = require('telescope.actions').complete_tag,
-        ['<C-_>'] = require('telescope.actions').which_key, -- keys from pressing <C-/>
-        ['<C-w>'] = { '<c-s-w>', type = 'command' }
+        ['<M-c>'] = actions.close,
+        ['<M-x>'] = actions.select_horizontal,
+        ['<M-v>'] = actions.select_vertical,
+        ['<M-t>'] = actions.select_tab,
+        ['<M-q>'] = actions.send_to_qflist + actions.open_qflist,
+        ['<M-Q>'] = actions.send_selected_to_qflist + actions.open_qflist,
       },
 
       n = {
-        ['q'] = require('telescope.actions').close,
-        ['<esc>'] = require('telescope.actions').close,
-        ['<M-;>'] = require('telescope.actions').close,
-        ['<M-c>'] = require('telescope.actions').close,
-        ['<CR>'] = require('telescope.actions').select_default,
-        ['<M-x>'] = require('telescope.actions').select_horizontal,
-        ['<M-v>'] = require('telescope.actions').select_vertical,
-        ['<M-t>'] = require('telescope.actions').select_tab,
-
-        ['<Tab>'] = require('telescope.actions').toggle_selection + require('telescope.actions').move_selection_worse,
-        ['<S-Tab>'] = require('telescope.actions').toggle_selection + require('telescope.actions').move_selection_better,
-        ['<M-q>'] = require('telescope.actions').send_to_qflist + require('telescope.actions').open_qflist,
-        ['<M-Q>'] = require('telescope.actions').send_selected_to_qflist + require('telescope.actions').open_qflist,
-
-        -- TODO: This would be weird if we switch the ordering.
-        ['j'] = require('telescope.actions').move_selection_next,
-        ['k'] = require('telescope.actions').move_selection_previous,
-        ['H'] = require('telescope.actions').move_to_top,
-        ['M'] = require('telescope.actions').move_to_middle,
-        ['L'] = require('telescope.actions').move_to_bottom,
-
-        ['<Down>'] = require('telescope.actions').move_selection_next,
-        ['<Up>'] = require('telescope.actions').move_selection_previous,
-        ['gg'] = require('telescope.actions').move_to_top,
-        ['G'] = require('telescope.actions').move_to_bottom,
-
-        ['<C-u>'] = require('telescope.actions').preview_scrolling_up,
-        ['<C-d>'] = require('telescope.actions').preview_scrolling_down,
-
-        ['<PageUp>'] = require('telescope.actions').results_scrolling_up,
-        ['<PageDown>'] = require('telescope.actions').results_scrolling_down,
-
-        ['?'] = require('telescope.actions').which_key
+        ['q'] = actions.close,
+        ['<esc>'] = actions.close,
+        ['<M-c>'] = actions.close,
+        ['<M-x>'] = actions.select_horizontal,
+        ['<M-v>'] = actions.select_vertical,
+        ['<M-t>'] = actions.select_tab,
+        ['<M-q>'] = actions.send_to_qflist + actions.open_qflist,
+        ['<M-Q>'] = actions.send_selected_to_qflist + actions.open_qflist,
+        ['<C-n>'] = actions.move_selection_next,
+        ['<C-p>'] = actions.move_selection_previous,
       }
     }
   },
