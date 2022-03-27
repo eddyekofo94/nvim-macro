@@ -4,17 +4,17 @@ local headers = require('utils.shared').ascii_art
 
 local leader = '<LD>'
 
-local function button(sc, txt, leader_txt, keybind, keybind_opts)
-  local sc_after = sc:gsub('%s', ''):gsub(leader_txt, '<leader>')
+local function button(usr_opts, txt, leader_txt, keybind, keybind_opts)
+  local sc_after = usr_opts.shortcut:gsub('%s', ''):gsub(leader_txt, '<leader>')
 
-  local opts = {
+  local default_opts = {
     position = 'center',
-    shortcut = sc,
     cursor = 5,
     width = 50,
     align_shortcut = 'right',
-    hl_shortcut = 'Keyword',
+    hl_shortcut = 'Keyword'
   }
+  local opts = vim.tbl_deep_extend('force', default_opts, usr_opts)
 
   if nil == keybind then
     keybind = sc_after
@@ -40,17 +40,17 @@ math.randomseed(os.time())
 dashboard.section.header.val = headers[math.random(1, #headers)]
 
 dashboard.section.buttons.val= {
-  button('e', 'ﱐ  New file', leader, '<cmd>ene<CR>'),
-  button('s', '  Sync plugins' , leader, '<cmd>PackerSync<CR>'),
-  button('c', '  Configurations', leader, '<cmd>e ~/.config/nvim/<CR>'),
-  button('g', '  Git', leader, '<cmd>Git<CR>'),
-  button(leader .. ' f f', '  Find files', leader, '<cmd>Telescope find_files<CR>'),
-  button(leader .. ' f j', '﬘  Switch to project', leader, '<cmd>Telescope project display_type=full<CR>'),
-  button(leader .. ' f ;', 'ﭨ  Live grep', leader, '<cmd>Telescope live_grep<CR>'),
-  button('Q', '  Quit' , leader, '<cmd>qa<CR>')
+  button({shortcut = 'e', hl = {{'IconColor1', 2, 3}}}, 'ﱐ  New file', leader, '<cmd>ene<CR>'),
+  button({shortcut = 's', hl = {{'IconColor2', 2, 3}}}, '  Sync plugins' , leader, '<cmd>PackerSync<CR>'),
+  button({shortcut = 'c', hl = {{'IconColor3', 2, 3}}}, '  Configurations', leader, '<cmd>Vifm ~/.config/nvim<CR>'),
+  button({shortcut = 'g', hl = {{'IconColor4', 2, 3}}}, '  Git', leader, '<cmd>Git<CR>'),
+  button({shortcut = leader .. ' f f', hl = {{'IconColor5', 2, 3}}}, '  Find files', leader, '<cmd>Telescope find_files<CR>'),
+  button({shortcut = leader .. ' f j', hl = {{'IconColor6', 2, 3}}}, '﬘  Switch to project', leader, '<cmd>Telescope project display_type=full<CR>'),
+  button({shortcut = leader .. ' f ;', hl = {{'IconColor7', 2, 3}}}, 'ﭨ  Live grep', leader, '<cmd>Telescope live_grep<CR>'),
+  button({shortcut = 'Q', hl = {{'IconColor8', 2, 3}}}, '  Quit' , leader, '<cmd>qa<CR>')
 }
 
--- Foot must be a table so that its height is correctly measured
+-- Footer must be a table so that its height is correctly measured
 local num_plugins_loaded = #vim.fn.globpath(vim.fn.stdpath('data') .. '/site/pack/packer/start', '*', 0, 1)
 local num_plugins_tot = #vim.tbl_keys(packer_plugins)
 if num_plugins_tot <= 1 then
@@ -61,41 +61,25 @@ end
 dashboard.section.footer.opts.hl = 'Comment'
 
 
--- ┌──────────────────────────────────────────────────────────┐
--- │                  /                                       │
--- │    header_padding                                        │
--- │                  \  ┌──────────────┐ ____                │
--- │                     │    header    │     \               │
--- │                  /  └──────────────┘      \              │
--- │ head_butt_padding                          \             │
--- │                  \                          occu_        │
--- │                  ┌────────────────────┐     height       │
--- │                  │       button       │    /             │
--- │                  │       button       │   /              │
--- │                  │       button       │  /               │
--- │                  └────────────────────┘‾‾                │
--- │                  /                                       │
--- │ foot_butt_padding                                        │
--- │                  \  ┌──────────────┐                     │
--- │                     │    footer    │                     │
--- │                     └──────────────┘                     │
--- │                                                          │
--- └──────────────────────────────────────────────────────────┘
-
-local head_butt_padding = 4
-local occu_height = #dashboard.section.header.val + 2 * #dashboard.section.buttons.val + head_butt_padding
-local header_padding = math.max(0, math.ceil((vim.fn.winheight('$') - occu_height) * 0.25))
-local foot_butt_padding_ub = vim.o.lines - header_padding - occu_height - #dashboard.section.footer.val - 3
-local foot_butt_padding = math.floor((vim.fn.winheight('$') - 2 * header_padding - occu_height))
-foot_butt_padding = math.max(0, math.max(math.min(0, foot_butt_padding), math.min(math.max(0, foot_butt_padding), foot_butt_padding_ub)))
+-- Set paddings
+local h_header = #dashboard.section.header.val
+local h_buttons = #dashboard.section.buttons.val * 2 - 1
+local h_footer = #dashboard.section.footer.val
+local pad_tot = vim.o.lines - (h_header + h_buttons + h_footer)
+local pad_1 = math.ceil(pad_tot * 0.25)
+local pad_2 = math.ceil(pad_tot * 0.20)
+local pad_3 = math.floor(pad_tot * 0.30)
 
 dashboard.config.layout = {
-  { type = 'padding', val = header_padding },
+  { type = 'padding', val = pad_1 },
   dashboard.section.header,
-  { type = 'padding', val = head_butt_padding },
+  { type = 'padding', val = pad_2 },
   dashboard.section.buttons,
-  { type = 'padding', val = foot_butt_padding },
+  { type = 'padding', val = pad_3 },
   dashboard.section.footer
 }
+
+-- Do not show statusline or tabline in alpha buffer
+vim.cmd [[ au User AlphaReady if winnr('$') == 1 | set laststatus=0 showtabline=0 | endif | au BufUnload <buffer> set laststatus=3 showtabline=2 ]]
 
 alpha.setup(dashboard.opts)
