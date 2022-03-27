@@ -42,6 +42,7 @@ return require('packer').startup({
     use(get.spec('nvim-lspconfig'))     -- LSP config helper
     use(get.spec('nvim-lsp-installer'))
     use(get.spec('nvim-treesitter'))    -- Language parser
+    use(get.spec('copilot'))            -- Github copilot
 
     -- Integration
     use(get.spec('toggleterm'))         -- Better terminal integration

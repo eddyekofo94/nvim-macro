@@ -32,7 +32,8 @@ cmp.setup({
       return vim_item
     end
   },
-  experimental = {native_menu = false, ghost_text = true},
+  -- Avoid confliction with copilot ghost text
+  experimental = { native_menu = false, ghost_text = false },
   snippet = {
     expand = function(args)
       vim.fn['vsnip#anonymous'](args.body)
@@ -52,8 +53,14 @@ cmp.setup({
       elseif vim.fn['vsnip#available'](1) == 1 then
         feedkey('<Plug>(vsnip-expand-or-jump)', '')
       else
-        fallback()  -- The fallback function sends a already mapped key,
-      end       -- in this case, it's probably `<Tab>`.
+        -- Copilot integration
+        local copilot_keys = vim.fn['copilot#Accept']('')
+        if copilot_keys ~= '' then
+          feedkey(copilot_keys, 'i')
+        else
+          fallback()
+        end
+      end
     end, { 'i', 'c' }),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-n>'] = cmp.mapping.select_next_item(),
