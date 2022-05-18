@@ -40,6 +40,7 @@ telescope.setup{
     mappings = {
       i = {
         ['<M-c>'] = actions.close,
+        ['<M-;>'] = actions.close,
         ['<M-x>'] = actions.select_horizontal,
         ['<M-v>'] = actions.select_vertical,
         ['<M-t>'] = actions.select_tab,
@@ -51,6 +52,7 @@ telescope.setup{
         ['q'] = actions.close,
         ['<esc>'] = actions.close,
         ['<M-c>'] = actions.close,
+        ['<M-;>'] = actions.close,
         ['<M-x>'] = actions.select_horizontal,
         ['<M-v>'] = actions.select_vertical,
         ['<M-t>'] = actions.select_tab,
