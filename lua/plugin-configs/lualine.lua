@@ -10,13 +10,14 @@ local clock = function ()
 end
 
 local indent_style = function ()
-  local indent = 'Spaces'
-  if vim.o.expandtab == false then indent = 'Tab' end
-  if vim.o.softtabstop == vim.o.tabstop then
-    return indent .. ': ' .. vim.o.softtabstop
+  if vim.o.expandtab then
+    return 'Spaces: ' .. vim.o.shiftwidth
   else
-    return indent .. ': ' .. vim.o.softtabstop
-                  .. '/' .. vim.o.tabstop
+    if vim.o.tabstop == vim.o.shiftwidth then
+      return 'Tabs: ' .. vim.o.tabstop
+    else
+      return 'Tabs: ' .. vim.o.tabstop .. vim.o.shiftwidth
+    end
   end
 end
 
