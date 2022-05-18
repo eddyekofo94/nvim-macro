@@ -53,13 +53,7 @@ cmp.setup({
       elseif vim.fn['vsnip#available'](1) == 1 then
         feedkey('<Plug>(vsnip-expand-or-jump)', '')
       else
-        -- Copilot integration
-        local copilot_keys = vim.fn['copilot#Accept']('')
-        if copilot_keys ~= '' then
-          feedkey(copilot_keys, 'i')
-        else
           fallback()
-        end
       end
     end, { 'i', 'c' }),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
