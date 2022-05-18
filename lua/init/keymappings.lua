@@ -6,7 +6,7 @@
 -- Plugin-specific keymappings are kept in corresponding
 -- config files for that plugin
 
-local map = vim.api.nvim_set_keymap
+local map = vim.keymap.set
 local g = vim.g
 
 -- Map leader key to space
@@ -80,11 +80,11 @@ map('n', '<C-n>', '<C-i>', {noremap = true})        -- <Tab> / <C-i> is used to 
                                                     -- so use <C-n> to jump to newer cursor
                                                     -- position instead
 
--- Moving in insert mode
-map('i', '<M-h>', '<left>', {noremap = true})
-map('i', '<M-j>', '<down>', {noremap = true})
-map('i', '<M-k>', '<up>', {noremap = true})
-map('i', '<M-l>', '<right>', {noremap = true})
+-- Moving in insert and command-line mode
+map({'i', 'c'}, '<M-h>', '<left>', {noremap = true})
+map({'i', 'c'}, '<M-j>', '<down>', {noremap = true})
+map({'i', 'c'}, '<M-k>', '<up>', {noremap = true})
+map({'i', 'c'}, '<M-l>', '<right>', {noremap = true})
 
 -- -- Patch for pairing
 -- execute
