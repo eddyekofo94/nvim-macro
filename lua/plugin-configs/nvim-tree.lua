@@ -30,7 +30,7 @@ require 'nvim-tree'.setup {
       list = {
         { key = '<C-[>',                action = 'dir_up' },
         { key = '<M-v>',                action = 'vsplit' },
-        { key = '<M-x>',                action = 'split' },
+        { key = '<M-s>',                action = 'split' },
         { key = '<M-t>',                action = 'tabnew' },
         { key = '{',                    action = 'first_sibling' },
         { key = '}',                    action = 'last_sibling' },

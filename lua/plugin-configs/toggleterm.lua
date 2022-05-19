@@ -95,7 +95,7 @@ function M.vifm_toggle(args)
         -- Keymaps to open file in vertical split
         vim.keymap.set('t', '<M-v>', [[<cmd>lua require('plugin-configs.toggleterm').vifm_set_open_method({cmd='vsplit|e', type='file'})<CR><CR>]], keymap_opts)
         -- Keymaps to open file in horizontal split
-        vim.keymap.set('t', '<M-x>', [[<cmd>lua require('plugin-configs.toggleterm').vifm_set_open_method({cmd='split|e', type='file'})<CR><CR>]], keymap_opts)
+        vim.keymap.set('t', '<M-s>', [[<cmd>lua require('plugin-configs.toggleterm').vifm_set_open_method({cmd='split|e', type='file'})<CR><CR>]], keymap_opts)
         -- Keymaps to open file in new tab
         vim.keymap.set('t', '<M-t>', [[<cmd>lua require('plugin-configs.toggleterm').vifm_set_open_method({cmd='tabnew|e', type='file'})<CR><CR>]], keymap_opts)
         -- Keymap to change working directory

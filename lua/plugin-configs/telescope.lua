@@ -41,7 +41,7 @@ telescope.setup{
       i = {
         ['<M-c>'] = actions.close,
         ['<M-;>'] = actions.close,
-        ['<M-x>'] = actions.select_horizontal,
+        ['<M-s>'] = actions.select_horizontal,
         ['<M-v>'] = actions.select_vertical,
         ['<M-t>'] = actions.select_tab,
         ['<M-q>'] = actions.send_to_qflist + actions.open_qflist,
@@ -53,7 +53,7 @@ telescope.setup{
         ['<esc>'] = actions.close,
         ['<M-c>'] = actions.close,
         ['<M-;>'] = actions.close,
-        ['<M-x>'] = actions.select_horizontal,
+        ['<M-s>'] = actions.select_horizontal,
         ['<M-v>'] = actions.select_vertical,
         ['<M-t>'] = actions.select_tab,
         ['<M-q>'] = actions.send_to_qflist + actions.open_qflist,

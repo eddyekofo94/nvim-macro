@@ -20,7 +20,7 @@ require('trouble').setup {
     refresh = 'R',                  -- manually refresh
     jump = { '<Tab>' },             -- jump to the diagnostic or open / close folds
     jump_close = { '<CR>' },        -- jump to the diagnostic and close the list
-    open_split = { '<M-x>' },       -- open buffer in new split
+    open_split = { '<M-s>' },       -- open buffer in new split
     open_vsplit = { '<M-v>' },      -- open buffer in new vsplit
     open_tab = { '<M-t>' },         -- open buffer in new tab
     toggle_mode = 'tm',             -- toggle between 'workspace' and 'document' diagnostics mode
