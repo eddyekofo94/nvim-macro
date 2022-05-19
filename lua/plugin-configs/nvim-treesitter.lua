@@ -78,13 +78,13 @@ require 'nvim-treesitter.configs'.setup {
           ['[m'] = '@function.outer',
           ['[['] = '@function.outer',
           ['[k'] = '@class.outer',
-          [']a'] = '@parameter.outer'
+          ['[a'] = '@parameter.outer'
         },
         goto_previous_end = {
           ['[M'] = '@function.outer',
           ['[]'] = '@function.outer',
           ['[K'] = '@class.outer',
-          [']A'] = '@parameter.outer'
+          ['[A'] = '@parameter.outer'
         }
       }
     }
