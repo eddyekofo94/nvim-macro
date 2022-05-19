@@ -2,11 +2,9 @@ local get = require('utils.get')
 
 return {
   'hrsh7th/nvim-cmp',
-  branch = 'dev',
 -- Remove this line if nvim complains 'cmp' not found
 -- this error can occur when the plugin 'impatient' is
 -- not loaded
-  event = { 'InsertEnter', 'CmdlineEnter' },
   config = get.config('nvim-cmp'),
   requires = {
     get.spec('cmp-nvim-lsp'), get.spec('cmp-buffer'), get.spec('cmp-path'),

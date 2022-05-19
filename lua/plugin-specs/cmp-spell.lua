@@ -1,1 +1,1 @@
-return { 'f3fora/cmp-spell', event = 'InsertEnter' }
+return { 'f3fora/cmp-spell' }

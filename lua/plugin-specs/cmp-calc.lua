@@ -1,1 +1,1 @@
-return { 'hrsh7th/cmp-calc', event = 'InsertEnter' }
+return { 'hrsh7th/cmp-calc' }

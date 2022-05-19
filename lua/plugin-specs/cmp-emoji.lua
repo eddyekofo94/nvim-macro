@@ -1,1 +1,1 @@
-return { 'hrsh7th/cmp-emoji', event = 'InsertEnter' }
+return { 'hrsh7th/cmp-emoji' }

@@ -1,4 +1,1 @@
-return {
-   'hrsh7th/cmp-buffer',
-   event = { 'InsertEnter', 'CmdlineEnter' }
- }
+return { 'hrsh7th/cmp-buffer' }
