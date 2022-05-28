@@ -16,7 +16,7 @@ local indent_style = function ()
     if vim.o.tabstop == vim.o.shiftwidth then
       return 'Tabs: ' .. vim.o.tabstop
     else
-      return 'Tabs: ' .. vim.o.tabstop .. vim.o.shiftwidth
+      return 'Tabs: ' .. vim.o.tabstop .. '/' .. vim.o.shiftwidth
     end
   end
 end
