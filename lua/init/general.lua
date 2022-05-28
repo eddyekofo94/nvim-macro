@@ -1,84 +1,90 @@
 -------------------------------------------------------------------------------
 -- OPTIONS --------------------------------------------------------------------
 -------------------------------------------------------------------------------
-local o = vim.o
-local execute = vim.cmd
-
 
 -------------------------------------------------------------------------------
 -- Appearance & behavior ------------------------------------------------------
-o.eb = false
-o.vb = true
-o.relativenumber = true
-o.number = true
-o.ruler = true
-o.scrolloff = 8
-o.wrap = false
-o.termguicolors = true      -- Default GUI colors are too vivid
-o.pumheight = 16
-o.cursorline = true
-o.cursorlineopt = 'number'
-o.undofile = true
-o.mouse = 'a'
-o.laststatus = 3            -- Global statusline, for neovim >= 0.7.0
+vim.o.eb = false
+vim.o.vb = true
+vim.o.relativenumber = true
+vim.o.number = true
+vim.o.ruler = true
+vim.o.scrolloff = 8
+vim.o.wrap = false
+vim.o.termguicolors = true
+vim.o.pumheight = 16
+vim.o.cursorline = true
+vim.o.cursorlineopt = 'number'
+vim.o.undofile = true
+vim.o.mouse = 'a'
+vim.o.laststatus = 3 -- Global statusline, for neovim >= 0.7.0
+vim.o.foldlevelstart = 99 -- Always start editing with no fold closed
+vim.o.signcolumn = 2 -- For gitgutter & LSP diagnostic
+vim.o.updatetime = 10 -- (ms)
+vim.o.swapfile = false
 
-execute
-[[
-  set list listchars=tab:→\ ,
-          \extends:►,
-          \precedes:◄,
-          \nbsp:⌴,
-          \trail:·,
-          \lead:·,
-          \multispace:·
-]]
+vim.opt.list = true
+vim.opt.listchars = {
+  tab = '──•',
+  extends = '►',
+  precedes = '◄',
+  nbsp = '⌴',
+  trail = '·',
+  lead = '·',
+  multispace = '·'
+}
 
 -- Extra settings to show spaces hiding in tabs
-execute [[
-  au VimEnter,WinNew *
-    \ call matchadd('Conceal', '\zs\ [ ]\@!\ze\t\+', 0, -1, {'conceal': '·'}) |
-    \ call matchadd('Conceal', '\t\+\zs\ [ ]\@!', 0, -1, {'conceal': '·'}) |
-    \ set conceallevel=2 concealcursor=nic
-]]
+vim.api.nvim_create_autocmd(
+  { 'VimEnter', 'WinNew' },
+  {
+    pattern = '*',
+    callback = function()
+      vim.fn.matchadd('Conceal', [[\zs\ [ ]\@!\ze\t\+]], 0, -1, { conceal = '·' })
+      vim.fn.matchadd('Conceal', [[\t\+\zs\ [ ]\@!]], 0, -1, { conceal = '·' })
+      vim.o.conceallevel = 2
+      vim.o.concealcursor = 'nic'
+    end
+  }
+)
 
--- Disable number and relativenumber in the built-in terminal
-execute [[ autocmd TermOpen * setlocal nospell nonumber norelativenumber scrolloff=0 ]]
-
-execute                     -- Underline bad spellings
-[[
-augroup SpellBadStyle
-  autocmd!
-  au ColorScheme,VimEnter * hi clear SpellBad
-  au ColorScheme,VimEnter * hi SpellBad cterm=undercurl, gui=undercurl
-augroup END
-]]
-
-execute [[ autocmd InsertEnter * set nohlsearch ]]
-
-execute [[ set signcolumn=auto:1-2 ]]   -- For gitgutter & LSP diagnostic
-
-o.updatetime = 10   -- (ms)
-o.swapfile = false
-
--- if vim.fn.has('wsl') then
---   execute [[
---     augroup Yank
---       autocmd!
---       autocmd TextYankPost * :call system('/mnt/c/windows/system32/clip.exe', @")
---     augroup END
---   ]]
--- end
+-- Disable number, relativenumber, and spell check in the built-in terminal
+vim.api.nvim_create_autocmd(
+  { 'TermOpen' },
+  {
+    buffer = 0,
+    callback = function()
+      vim.wo.spell = false
+      vim.wo.number = false
+      vim.wo.relativenumber = false
+      vim.wo.scrolloff = 0
+    end
+  }
+)
 
 -- Highlight the selection on yank
-execute [[ au TextYankPost * silent
-         \ lua vim.highlight.on_yank({higroup = 'Visual', timeout = 300}) ]]
+vim.api.nvim_create_autocmd(
+  { 'TextYankPost' },
+  {
+    pattern = '*',
+    callback = function()
+      vim.highlight.on_yank({ higroup = 'Visual', timeout = 300 })
+    end
+  }
+)
 
 -- Autosave on focus change
-execute [[ autocmd BufLeave,WinLeave,FocusLost * nested silent! wall ]]
-
+vim.api.nvim_create_autocmd(
+  { 'BufLeave', 'WinLeave', 'FocusLost' },
+  {
+    pattern = '*',
+    command = 'silent! wall',
+    nested = true
+  }
+)
 
 -- Jump to last accessed window on closing the current one
-_G.win_close_jmp = function ()
+_G.win_close_jmp = function()
   -- Exclude floating windows
   if '' ~= vim.api.nvim_win_get_config(0).relative then return end
   -- Record the window we jump from (previous) and to (current)
@@ -87,21 +93,19 @@ _G.win_close_jmp = function ()
   else
     vim.t.winid_rec = { prev = vim.t.winid_rec.current, current = vim.fn.win_getid() }
   end
-
   -- Loop through all windows to check if the previous one has been closed
-  for winnr=1,vim.fn.winnr('$') do
+  for winnr = 1, vim.fn.winnr('$') do
     if vim.fn.win_getid(winnr) == vim.t.winid_rec.prev then
-      return        -- Return if previous window is not closed
+      return -- Return if previous window is not closed
     end
   end
-
   vim.cmd [[ wincmd p ]]
 end
 
-execute [[ autocmd VimEnter,WinEnter * lua win_close_jmp() ]]
+vim.cmd [[ autocmd VimEnter,WinEnter * lua win_close_jmp() ]]
 
 -- Last-position-jump
-execute
+vim.cmd
 [[
   autocmd BufRead * autocmd FileType <buffer> ++once
     \ if &ft !~# 'commit\|rebase' && line("'\"") > 1
@@ -113,31 +117,55 @@ execute
 
 --------------------------------------------------------------------------------
 -- Indentation settings --------------------------------------------------------
-o.ts = 4
-o.softtabstop = 4
-o.shiftwidth = 4
-o.expandtab = true
-o.smartindent = true
-o.autoindent = true
+vim.o.ts = 4
+vim.o.softtabstop = 4
+vim.o.shiftwidth = 4
+vim.o.expandtab = true
+vim.o.smartindent = true
+vim.o.autoindent = true
 -- End of Indentation settings -------------------------------------------------
 --------------------------------------------------------------------------------
 
 
 --------------------------------------------------------------------------------
 -- Searching -------------------------------------------------------------------
-o.hlsearch = false
-o.ignorecase = true
-o.smartcase = true
+vim.o.hlsearch = false
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.keymap.set('n', '\\', '<cmd>set hlsearch!<CR>', { noremap = true })
+vim.keymap.set('n', '/', '/<cmd>set hlsearch<CR>', { noremap = true })
+vim.keymap.set('n', '?', '?<cmd>set hlsearch<CR>', { noremap = true })
+vim.keymap.set('n', '*', '*<cmd>set hlsearch<CR>', { noremap = true })
+vim.keymap.set('n', '#', '#<cmd>set hlsearch<CR>', { noremap = true })
+vim.keymap.set('n', 'g*', 'g*<cmd>set hlsearch<CR>', { noremap = true })
+vim.keymap.set('n', 'g#', 'g#<cmd>set hlsearch<CR>', { noremap = true })
+vim.keymap.set('n', 'n', 'n<cmd>set hlsearch<CR>', { noremap = true })
+vim.keymap.set('n', 'N', 'N<cmd>set hlsearch<CR>', { noremap = true })
+vim.api.nvim_create_autocmd(
+  { 'InsertEnter' },
+  {
+    pattern = '*',
+    command = 'set nohlsearch'
+  }
+)
 -- End of Searching ------------------------------------------------------------
 --------------------------------------------------------------------------------
 
 
 --------------------------------------------------------------------------------
 -- Spell check (terrible, looking for alternatives...) -------------------------
-o.spell = true
-execute [[ set spelllang=en,cjk ]]
-o.spellsuggest = 'best, 9'
-o.spellcapcheck = ''
-o.spelloptions = 'camel'
+vim.o.spell = true
+vim.o.spelllang = 'en,cjk'
+vim.o.spellsuggest = 'best, 9'
+vim.o.spellcapcheck = ''
+vim.o.spelloptions = 'camel'
+vim.api.nvim_create_autocmd(
+  { 'ColorScheme', 'VimEnter' },
+  {
+    pattern = '*',
+    command = 'hi clear SpellBad | hi SpellBad cterm=undercurl, gui=undercurl',
+    group = 'SpellBadStyle'
+  }
+)
 -- End of Spell check ----------------------------------------------------------
 --------------------------------------------------------------------------------
