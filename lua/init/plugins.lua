@@ -19,7 +19,8 @@ end
 --   augroup end
 -- ]]
 
-pcall(require, 'compile/packer_compiled')
+require('load.packer_compiled')
+require('load.extra')
 
 local get = require('utils.get')
 return require('packer').startup({
@@ -66,7 +67,7 @@ return require('packer').startup({
 
   config = {
     clone_timeout = 300,
-    compile_path = fn.stdpath('config') .. '/lua/compile/packer_compiled.lua',
+    compile_path = fn.stdpath('config') .. '/lua/load/packer_compiled.lua',
     opt_default = false,
     transitive_opt = true,
     display = {

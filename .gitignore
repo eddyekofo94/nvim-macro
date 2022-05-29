@@ -5,5 +5,5 @@
 
 # ignore `packer_compiled.lua` and 'spell/'
 plugin/
-compile/
+packer_compiled.lua
 spell/
