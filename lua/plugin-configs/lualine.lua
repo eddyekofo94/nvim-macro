@@ -5,7 +5,20 @@ local location = function ()
   return cursor_loc[1] .. ',' .. cursor_loc[2] + 1
 end
 
-local clock = function ()
+-- Set up a timer to redraw status line every 1000 ms.
+if _G.Statusline_timer == nil then
+  _G.Statusline_timer = vim.loop.new_timer()
+else
+  _G.Statusline_timer:stop()
+end
+_G.Statusline_timer:start(
+  0, 1000,
+  vim.schedule_wrap(function()
+    vim.api.nvim_command('redrawstatus')
+  end)
+)
+
+local clock = function()
   return os.date('%a %H:%M')
 end
 
