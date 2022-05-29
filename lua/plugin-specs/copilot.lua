@@ -2,7 +2,7 @@ return {
   -- Setting this plugin to optional might
   -- break telescope's mappings.execute_keymap?
   'github/copilot.vim',
-  event = 'InsertEnter',
+  cmd = 'Copilot',
   setup = function ()
     -- Avoid conflict with nvim-cmp's tab fallback
     vim.g.copilot_no_tab_map = true
