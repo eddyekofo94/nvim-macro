@@ -1,4 +1,7 @@
 return {
   'Bekaboo/falcon',
-  config = vim.cmd [[colorscheme falcon]]
+  cond = function()
+    return vim.g.colorscheme == 'falcon'
+  end,
+  config = require('utils.get').config('falcon')
 }

@@ -29,6 +29,7 @@ return require('packer').startup({
 
     -- Color schemes
     use(get.spec('falcon'))
+    use(get.spec('dracula'))
 
     -- Editing
     use(get.spec('nvim-cmp'))           -- Auto completion
