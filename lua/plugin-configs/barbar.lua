@@ -29,15 +29,15 @@ map('n', '<M-8>', ':BufferGoto 8<CR>', opts)
 map('n', '<M-9>', ':BufferGoto 9<CR>', opts)
 map('n', '<M-$>', ':BufferLast<CR>', opts)
 -- Delete buffer
-map('n', '<M-d>', ':BufferClose<CR>', opts) -- Similar but better than `:bd`
+map('n', '<M-C>', ':BufferClose<CR>', opts) -- Similar but better than `:bd`
 -- Pin/Unpin buffer
 map('n', '<M-P>', ':BufferPin<CR>', opts)
 -- Wipeout buffer
 -- map('n', '???', ':BufferWipeout<CR>', opts)
 -- Close commands
-map('n', '<M-D>', ':BufferCloseAllButCurrentOrPinned<CR>', opts)
-map('n', '<M-[>', ':BufferCloseBuffersLeft<CR>', opts)
-map('n', '<M-]>', ':BufferCloseBuffersRight<CR>', opts)
+map('n', '<M-O>', ':BufferCloseAllButCurrentOrPinned<CR>', opts)
+map('n', '<M-(>', ':BufferCloseBuffersLeft<CR>', opts)
+map('n', '<M-)>', ':BufferCloseBuffersRight<CR>', opts)
 -- Magic buffer-picking mode
 map('n', '<M-S>', ':BufferPick<CR>', opts)
 -- Sort automatically by...
