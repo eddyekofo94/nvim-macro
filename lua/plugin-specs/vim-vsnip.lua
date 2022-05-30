@@ -1,1 +1,1 @@
-return { 'hrsh7th/vim-vsnip', event = { 'InsertEnter', 'CmdLineEnter' } }
+return { 'hrsh7th/vim-vsnip' }

@@ -136,7 +136,10 @@ local on_attach =
 
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+local cmp_ready, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
+if cmp_ready then
+capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+end
 
 -- Automatically install servers in `ensure_installed`
 -- and add additional capabilities supported by nvim-cmp
