@@ -80,7 +80,7 @@ function M.vifm_toggle(args)
         local keymap_opts = { noremap = true, silent = true, buffer = term.bufnr }
         vim.keymap.set('n', 'q', '<cmd>close<CR>', keymap_opts)
         vim.keymap.set('n', '<esc>', '<cmd>close<CR>', keymap_opts)
-        vim.keymap.set('n', '<M-d>', 'i:qa!<CR>', keymap_opts)
+        vim.keymap.set('n', '<M-C>', function() M.vifm_kill_silent(term) end, keymap_opts)
         vim.keymap.set('n', '<M-;>', function() M.vifm_close_silent(term) end, keymap_opts)
         vim.keymap.set('n', '<M-c>', function() M.vifm_close_silent(term) end, keymap_opts)
         vim.keymap.set('n', '<C-w>c', function() M.vifm_close_silent(term) end, keymap_opts)
@@ -176,6 +176,11 @@ function M.vifm_close_silent(vifm_term)
   vifm_term.on_close = false
   vifm_term:close()
   vifm_term.on_close = temp
+end
+
+function M.vifm_kill_silent(vifm_term)
+  vifm_term.on_close = false
+  vim.cmd [[bd!]]
 end
 
 M.open_method = {}

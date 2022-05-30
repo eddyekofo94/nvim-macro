@@ -74,13 +74,13 @@ vim.keymap.set('n', '<M-;>',
 vim.keymap.set('n', '<Tab>', '<cmd>bn<CR>', { noremap = true })
 vim.keymap.set('n', '<S-Tab>', '<cmd>bp<CR>', { noremap = true })
 -- Delete current buffer
-vim.keymap.set('n', '<M-d>', '<cmd>bd<CR>', { noremap = true })
+vim.keymap.set('n', '<M-C>', '<cmd>bd<CR>', { noremap = true })
 -- <Tab> / <C-i> is used to switch buffers,
 -- so use <C-n> to jump to newer cursor position instead
 vim.keymap.set('n', '<C-n>', '<C-i>', { noremap = true })
 
 -- Moving in insert and command-line mode
-vim.keymap.set({ 'i', 'c' }, '<M-h>', '<left>', { noremap = true })
-vim.keymap.set({ 'i', 'c' }, '<M-j>', '<down>', { noremap = true })
-vim.keymap.set({ 'i', 'c' }, '<M-k>', '<up>', { noremap = true })
-vim.keymap.set({ 'i', 'c' }, '<M-l>', '<right>', { noremap = true })
+vim.keymap.set('!', '<M-h>', '<left>', { noremap = true })
+vim.keymap.set('!', '<M-j>', '<down>', { noremap = true })
+vim.keymap.set('!', '<M-k>', '<up>', { noremap = true })
+vim.keymap.set('!', '<M-l>', '<right>', { noremap = true })
