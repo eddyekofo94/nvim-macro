@@ -20,7 +20,7 @@ end
 -- ]]
 
 require('load.packer_compiled')
-require('load.extra')
+pcall(require, 'load.extra')
 
 local get = require('utils.get')
 return require('packer').startup({
