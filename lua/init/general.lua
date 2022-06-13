@@ -3,12 +3,13 @@ vim.o.vb = true
 vim.o.relativenumber = true
 vim.o.number = true
 vim.o.ruler = true
-vim.o.scrolloff = 8
+vim.o.scrolloff = 4
 vim.o.wrap = false
 vim.o.termguicolors = true
 vim.o.pumheight = 16
 vim.o.cursorline = true
-vim.o.cursorlineopt = 'number'
+vim.o.cursorlineopt = 'both'
+vim.o.cursorcolumn = true
 vim.o.undofile = true
 vim.o.mouse = 'a'
 vim.o.laststatus = 3          -- Global status line, for neovim >= 0.7.0
@@ -16,7 +17,7 @@ vim.o.foldlevelstart = 99     -- Always start editing with no fold closed
 vim.o.signcolumn = 'auto:1-2' -- For gitgutter & LSP diagnostic
 vim.o.updatetime = 10         -- (ms)
 vim.o.swapfile = false
-vim.g.colorscheme = 'dracula' -- Default colorscheme
+vim.g.default_colorscheme = 'nvim-falcon' -- Default colorscheme
 
 vim.opt.list = true
 vim.opt.listchars = {

@@ -1,5 +1,5 @@
 -- Map leader key to space
-vim.keymap.set('n', '<Space>', '', {})
+vim.keymap.set({ 'n', 'v', 'x' }, '<Space>', '', {})
 vim.g.mapleader = ' '
 
 -- Map esc key
@@ -9,7 +9,7 @@ vim.keymap.set('i', 'jj', '<esc>', { noremap = true })
 vim.keymap.set('t', '\\<C-\\>', '<C-\\><C-n>', { noremap = true })
 
 -- Toggle hlsearch
-vim.keymap.set('n', '\\', '<cmd>set hlsearch!<CR>', { noremap = true })
+vim.keymap.set('n', '<leader><leader>', '<cmd>set hlsearch!<CR>', { noremap = true })
 vim.keymap.set('n', '/', '/<cmd>set hlsearch<CR>', { noremap = true })
 vim.keymap.set('n', '?', '?<cmd>set hlsearch<CR>', { noremap = true })
 vim.keymap.set('n', '*', '*<cmd>set hlsearch<CR>', { noremap = true })
@@ -63,9 +63,9 @@ vim.keymap.set('n', '<M-g><Tab>', '<C-w>g<Tab>', { noremap = true })
 vim.keymap.set('n', '<M-}>', '<C-w>}', { noremap = true })
 
 -- Close all floating windows
-vim.keymap.set('n', '<M-;>',
+vim.keymap.set('n', 'q',
   function()
-    require('utils.funcs').close_all_floatings()
+    require('utils.funcs').close_all_floatings('q')
   end,
   { noremap = true }
 )
