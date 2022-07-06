@@ -1,4 +1,4 @@
 return {
-  '~/NeoVim/colors/nvim-falcon',
+  '~/Neovim/colors/nvim-falcon',
   config = function() require('plugin-configs.nvim-falcon') end
 }
