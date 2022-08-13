@@ -1,10 +1,10 @@
 local M = {}
 
--- Remote pinyin base setup
-vim.g.ZFVimIM_pinyin_gitUserEmail = require('utils.git_account').email
-vim.g.ZFVimIM_pinyin_gitUserName = require('utils.git_account').name
-vim.g.ZFVimIM_pinyin_gitUserToken = require('utils.git_account').token
-vim.g.ZFVimIM_autoAddWordLen = 3 * 12
+-- -- Remote pinyin base setup
+-- vim.g.ZFVimIM_pinyin_gitUserEmail = require('utils.git_account').email
+-- vim.g.ZFVimIM_pinyin_gitUserName = require('utils.git_account').name
+-- vim.g.ZFVimIM_pinyin_gitUserToken = require('utils.git_account').token
+-- vim.g.ZFVimIM_autoAddWordLen = 3 * 12
 
 M.ZFVimIM_Set_cmdEdit = function()
   local cmdtype = vim.fn.getcmdtype()
@@ -49,20 +49,28 @@ M.ZF_Restore_Status = function()
   end
 end
 
+M.myLocalDb = function()
+  local db = vim.fn.ZFVimIM_dbInit({
+    name = 'pinyin',
+  })
+  vim.fn.ZFVimIM_cloudRegister({
+    mode = 'local',
+    dbId = db['dbId'],
+    repoPath = vim.fn.stdpath('config') .. '/db',
+    dbFile = '/pinyin.txt',
+    dbCountFile = '/pinyin_count.txt'
+  })
+end
+
 vim.keymap.set('c', '<C-Space>', M.ZFVimIM_Set_cmdEdit, { noremap = true, silent = true })
 vim.keymap.set('i', '<C-Space>', vim.fn.ZFVimIME_keymap_toggle_i, { noremap = true, silent = true })
 vim.keymap.set('n', '<C-Space>', vim.fn.ZFVimIME_keymap_toggle_n, { noremap = true, silent = true })
 vim.keymap.set('v', '<C-Space>', vim.fn.ZFVimIME_keymap_toggle_v, { noremap = true, silent = true })
 
--- Save ZFVimIM status (ON / OFF) before entering the cmdline
--- or the cmd window, so that we can recover it after we leave
--- the cmd window
--- ZFVimIM status in normal window persists in cmd window,
--- but the status in the cmd window should not affect
--- the status in normal windows
-vim.keymap.set('n', 'q:', function() M.ZF_Save_Status('q:') end, { noremap = true, silent = true })
-vim.keymap.set('n', 'q?', function() M.ZF_Save_Status('q?') end, { noremap = true, silent = true })
-vim.keymap.set('n', 'q/', function() M.ZF_Save_Status('q/') end, { noremap = true, silent = true })
+-- Save ZFVimIM status (ON / OFF) before entering the cmdline,
+-- so that we can recover it after we leave the cmd window
+-- ZFVimIM status in normal window persists in cmd line,
+-- but the status in the cmd line should not affect the status in normal windows
 vim.keymap.set('n', ':', function() M.ZF_Save_Status(':') end, { noremap = true, silent = true })
 vim.keymap.set('n', '?', function() M.ZF_Save_Status('?') end, { noremap = true, silent = true })
 vim.keymap.set('n', '/', function() M.ZF_Save_Status('/') end, { noremap = true, silent = true })
@@ -74,9 +82,13 @@ vim.api.nvim_create_autocmd('CmdwinLeave', {
   group = 'ZFVimIM_Status_Management',
 })
 vim.api.nvim_create_autocmd('User', {
-  pattern = 'ZFVimIME_event_OnStart',
+  pattern = 'ZFVimIM_event_OnEnable',
   callback = function() vim.g.ZFVimIM_called_Before = true end,
   group = 'ZFVimIM_Status_Management',
+})
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'ZFVimIM_event_OnDbInit',
+  callback = M.myLocalDb
 })
 
 -- Statusline integration

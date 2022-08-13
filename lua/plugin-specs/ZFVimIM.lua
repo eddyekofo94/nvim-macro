@@ -1,14 +1,13 @@
 return {
   'ZSaberLv0/ZFVimIM',
+  opt = true,
   keys = {
     { 'i', '<C-Space>' }, { 'c', '<C-Space>' },
     { 'v', '<C-Space>' }, { 'n', '<C-Space>' }
   },
   requires = {
-    require('plugin-specs.ZFVimIM_openapi'),
     require('plugin-specs.ZFVimJob'),
-    require('plugin-specs.ZFVimGitUtil'),
-    require('plugin-specs.ZFVimIM_pinyin_personal')
+    require('plugin-specs.ZFVimIM_openapi'),
   },
   setup = [[
     vim.g.ZFVimIM_keymap = 0
