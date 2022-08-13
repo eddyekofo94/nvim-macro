@@ -73,6 +73,7 @@ return require('packer').startup({
   config = {
     clone_timeout = 300,
     compile_path = fn.stdpath('config') .. '/lua/load/packer_compiled.lua',
+    snapshot_path = fn.stdpath('config') .. '/snapshots',
     opt_default = false,
     transitive_opt = true,
     display = {
