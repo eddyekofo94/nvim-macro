@@ -7,19 +7,6 @@ M.location = function()
   return cursor_loc[1] .. ',' .. cursor_loc[2] + 1
 end
 
--- Set up a timer to redraw status line every 1000 ms.
-if _G.Statusline_timer == nil then
-  _G.Statusline_timer = vim.loop.new_timer()
-else
-  _G.Statusline_timer:stop()
-end
-_G.Statusline_timer:start(
-  0, 1000,
-  vim.schedule_wrap(function()
-    vim.api.nvim_command('redrawstatus')
-  end)
-)
-
 M.clock = function()
   return os.date('%a %H:%M')
 end
@@ -70,8 +57,8 @@ M.opts = {
       },
       'filetype'
     },
-    lualine_y = { M.location, 'progress' },
-    lualine_z = { M.clock }
+    lualine_y = { M.location },
+    lualine_z = { 'progress' }
   }
 }
 M.lualine.setup(M.opts)
