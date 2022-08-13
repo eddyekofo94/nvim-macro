@@ -1,7 +1,7 @@
 local argc = vim.fn.argc()
-if (argc == 0)
-    and packer_plugins['alpha-nvim']
-    and not packer_plugins['alpha-nvim'].loaded
+if (argc == 0) and packer_plugins['alpha-nvim']
+               and not packer_plugins['alpha-nvim'].loaded
+               and vim.o.lines > 30
 then
   vim.cmd [[packadd alpha-nvim]]
   require('plugin-configs.alpha-nvim')
