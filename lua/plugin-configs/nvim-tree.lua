@@ -11,7 +11,6 @@ vim.keymap.set('n', '<Leader>tr', function() require('nvim-tree.actions.reloader
 M.nvim_tree = require('nvim-tree')
 M.opts = {
   view = {
-    auto_resize = true,
     mappings = {
       list = {
         { key = '<C-[>', action = 'dir_up' },
