@@ -9,7 +9,7 @@ vim.keymap.set('i', 'jj', '<esc>', { noremap = true })
 vim.keymap.set('t', '\\<C-\\>', '<C-\\><C-n>', { noremap = true })
 
 -- Toggle hlsearch
-vim.keymap.set('n', '<leader><leader>', '<cmd>set hlsearch!<CR>', { noremap = true })
+vim.keymap.set('n', '\\', '<cmd>set hlsearch!<CR>', { noremap = true })
 vim.keymap.set('n', '/', '/<cmd>set hlsearch<CR>', { noremap = true })
 vim.keymap.set('n', '?', '?<cmd>set hlsearch<CR>', { noremap = true })
 vim.keymap.set('n', '*', '*<cmd>set hlsearch<CR>', { noremap = true })

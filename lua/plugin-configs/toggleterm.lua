@@ -37,7 +37,7 @@ M.git_dir = require('toggleterm.utils').git_dir
 function M.lazygit_toggle()
   local directory = M.git_dir()
   if directory == nil then
-    print('Git: Not in a git directory')
+    vim.notify('Git: Not in a git directory', vim.log.levels.WARN)
     return
   end
   if directory ~= vim.g.git_pred_dir then
@@ -50,7 +50,6 @@ function M.lazygit_toggle()
         local keymap_opts = { noremap = true, silent = true, buffer = term.bufnr }
         vim.keymap.set('n', 'q', '<cmd>close<CR>', keymap_opts)
         vim.keymap.set('n', '<esc>', '<cmd>close<CR>', keymap_opts)
-        vim.keymap.set({ 't', 'n' }, '\\g', '<cmd>close<CR>', keymap_opts)
         vim.keymap.set('n', '<M-C>', '<cmd>bd!<CR>', keymap_opts)
         vim.keymap.set({ 't', 'n' }, '<C-\\>', '<cmd>close<CR>', keymap_opts)
       end
@@ -88,8 +87,8 @@ function M.vifm_toggle(args)
         vim.keymap.set('n', '<M-C>', function() M.vifm_kill_silent(term) end, keymap_opts)
         vim.keymap.set('n', '<M-c>', function() M.vifm_close_silent(term) end, keymap_opts)
         vim.keymap.set('n', '<C-w>c', function() M.vifm_close_silent(term) end, keymap_opts)
-        vim.keymap.set({ 't', 'n' }, '\\V', function() M.vifm_close_silent(term) end, keymap_opts)
-        vim.keymap.set({ 't', 'n' }, '\\v', function() M.vifm_close_silent(term) end, keymap_opts)
+        vim.keymap.set({ 't', 'n' }, '<leader>V', function() M.vifm_close_silent(term) end, keymap_opts)
+        vim.keymap.set({ 't', 'n' }, '<leader>v', function() M.vifm_close_silent(term) end, keymap_opts)
         vim.keymap.set({ 't', 'n' }, '<C-\\>', function() M.vifm_close_silent(term) end, keymap_opts)
         -- Keymap to open files
         M.vifm_set_open_method_and_keymap {
@@ -99,9 +98,9 @@ function M.vifm_toggle(args)
           { key = '<M-v>', close_trig = '<CR>', open_method = { cmd = 'vsplit|e', type = 'file' }, keymap_opts = keymap_opts },
           { key = '<M-s>', close_trig = '<CR>', open_method = { cmd = 'split|e', type = 'file' }, keymap_opts = keymap_opts },
           { key = '<M-t>', close_trig = '<CR>', open_method = { cmd = 'tabnew|e', type = 'file' }, keymap_opts = keymap_opts },
-          { key = '\\cd', close_trig = ':qa<CR>', open_method = { cmd = 'cd', type = 'dir' }, keymap_opts = keymap_opts },
-          { key = '\\lcd', close_trig = ':qa<CR>', open_method = { cmd = 'lcd', type = 'dir' }, keymap_opts = keymap_opts },
-          { key = '\\tcd', close_trig = ':qa<CR>', open_method = { cmd = 'tcd', type = 'dir' }, keymap_opts = keymap_opts }
+          { key = '<leader>cd', close_trig = ':qa<CR>', open_method = { cmd = 'cd', type = 'dir' }, keymap_opts = keymap_opts },
+          { key = '<leader>lcd', close_trig = ':qa<CR>', open_method = { cmd = 'lcd', type = 'dir' }, keymap_opts = keymap_opts },
+          { key = '<leader>tcd', close_trig = ':qa<CR>', open_method = { cmd = 'tcd', type = 'dir' }, keymap_opts = keymap_opts }
         }
       end,
       on_close = function()
@@ -169,10 +168,9 @@ end
 vim.cmd [[ command Git lua require('plugin-configs.toggleterm').lazygit_toggle() ]]
 vim.cmd [[ command -nargs=* Vifm lua require('plugin-configs.toggleterm').vifm_toggle({vifm_args = <q-args>, force_update = true}) ]]
 vim.cmd [[ command VifmCurrentFileFind lua require('plugin-configs.toggleterm').vifm_current_file(true) ]]
-vim.keymap.set('n', '\\g', function() M.lazygit_toggle() end, { noremap = true, silent = true })
-vim.keymap.set('n', '\\V', function() M.vifm_toggle() end, { noremap = true, silent = true })
-vim.keymap.set('n', '\\\\V', function() M.vifm_toggle({ force_update = true }) end, { noremap = true, silent = true })
-vim.keymap.set('n', '\\v', function() M.vifm_current_file() end, { noremap = true, silent = true })
-vim.keymap.set('n', '\\\\v', function() M.vifm_current_file(true) end, { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>V', function() M.vifm_toggle() end, { noremap = true, silent = true })
+vim.keymap.set('n', '<leader><leader>V', function() M.vifm_toggle({ force_update = true }) end, { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>v', function() M.vifm_current_file() end, { noremap = true, silent = true })
+vim.keymap.set('n', '<leader><leader>v', function() M.vifm_current_file(true) end, { noremap = true, silent = true })
 
 return M
