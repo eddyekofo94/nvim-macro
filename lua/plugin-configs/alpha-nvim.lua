@@ -59,11 +59,7 @@ end
 -- Footer must be a table so that its height is correctly measured
 local num_plugins_loaded = #vim.fn.globpath(vim.fn.stdpath('data') .. '/site/pack/packer/start', '*', 0, 1)
 local num_plugins_tot = #vim.tbl_keys(packer_plugins)
-if num_plugins_tot <= 1 then
-  M.dashboard.section.footer.val = { num_plugins_loaded .. ' / ' .. num_plugins_tot .. ' plugin ﮣ loaded' }
-else
-  M.dashboard.section.footer.val = { num_plugins_loaded .. ' / ' .. num_plugins_tot .. ' plugins ﮣ loaded' }
-end
+M.dashboard.section.footer.val = { num_plugins_loaded .. ' / ' .. num_plugins_tot .. ' plugins ﮣ loaded' }
 M.dashboard.section.footer.opts.hl = 'Comment'
 
 
