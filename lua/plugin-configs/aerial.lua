@@ -69,14 +69,14 @@ M.opts = {
 M.aerial.setup(M.opts)
 
 -- Integration with lsp
-if require('utils.funcs').loaded('nvim-lsp-installer') then
-  local lsp_cfg = require('plugin-configs.nvim-lsp-installer')
+if require('utils.funcs').loaded('nvim-lspconfig') then
+  local lsp_cfg = require('plugin-configs.nvim-lspconfig')
   local orig_on_attach = lsp_cfg.on_attach
   lsp_cfg.on_attach = function(client, bufnr)
     orig_on_attach(client, bufnr)
     M.aerial.on_attach(client, bufnr)
   end
-  lsp_cfg.lsp_install_and_set()
+  lsp_cfg.lsp_setup()
 end
 
 return M

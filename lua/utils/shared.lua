@@ -9,7 +9,9 @@ function langs_mt:list(field)
   end
   return list
 end
+
 M.langs = setmetatable({
+  asm = { ft = 'asm', lsp_server = 'asm_lsp' },
   bash = { ft = 'bash', lsp_server = 'bashls' },
   bibtex = { ts = 'bibtex', ft = 'bib', lsp_server = 'texlab' },
   c = { ts = 'c', ft = 'c', lsp_server = 'clangd' },

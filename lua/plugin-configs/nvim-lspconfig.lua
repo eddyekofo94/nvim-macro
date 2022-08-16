@@ -2,29 +2,10 @@ local M = {}
 
 M.langs = require('utils.shared').langs
 M.ensure_installed = require('utils.shared').langs:list('lsp_server')
-M.lsp_installer = require('nvim-lsp-installer')
+M.lspconfig = require('lspconfig')
 
 --------------------------------------------------------------------------------
 -- LSP UI configs --------------------------------------------------------------
-
--- Config for `nvim-lsp-installer` icons
-M.lsp_installer_opts = {
-  ui = {
-    icons = {
-      server_installed = '',
-      server_pending = '',
-      server_uninstalled = ''
-    },
-    keymaps = {
-      toggle_server_expand = '<Tab>',
-      install_server = '<CR>',
-      update_server = 's',
-      update_all_servers = 'S',
-      uninstall_server = 'dd'
-    }
-  }
-}
-M.lsp_installer.settings(M.lsp_installer_opts)
 
 -- Customize LSP floating window border
 M.floating_preview_opts = { border = 'single' }
@@ -38,12 +19,13 @@ end
 M.floating_preview_setup(M.floating_preview_opts)
 
 -- LSP diagnostic signs
-M.diagnostic_opts = {}
-M.diagnostic_opts.signs = {
-  { 'DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError', numhl = 'DiagnosticSignError' } },
-  { 'DiagnosticSignWarn', { text = ' ', texthl = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn' } },
-  { 'DiagnosticSignInfo', { text = ' ', texthl = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo' } },
-  { 'DiagnosticSignHint', { text = ' ', texthl = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint' } },
+M.diagnostic_opts = {
+  signs = {
+    { 'DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError', numhl = 'DiagnosticSignError' } },
+    { 'DiagnosticSignWarn', { text = ' ', texthl = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn' } },
+    { 'DiagnosticSignInfo', { text = ' ', texthl = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo' } },
+    { 'DiagnosticSignHint', { text = ' ', texthl = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint' } },
+  }
 }
 for _, sign_settings in ipairs(M.diagnostic_opts.signs) do
   vim.fn.sign_define(unpack(sign_settings))
@@ -112,8 +94,7 @@ M.keymaps = {
   { 'n', '<Leader>li', '<cmd>lua vim.lsp.buf.implementation()<CR>', { noremap = true, silent = true } },
   { 'n', '<Leader>lwa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', { noremap = true, silent = true } },
   { 'n', '<Leader>lwd', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', { noremap = true, silent = true } },
-  { 'n', '<Leader>lwl', '<cmd>lua vim.pretty_print(vim.lsp.buf.list_workspace_folders())<CR>',
-    { noremap = true, silent = true } },
+  { 'n', '<Leader>lwl', '<cmd>lua vim.pretty_print(vim.lsp.buf.list_workspace_folders())<CR>', { noremap = true, silent = true } },
   { 'n', '<leader>lt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', { noremap = true, silent = true } },
   { 'n', '<Leader>lr', '<cmd>lua vim.lsp.buf.rename()<CR>', { noremap = true, silent = true } },
   { 'n', '<Leader>la', '<cmd>lua vim.lsp.buf.code_action()<CR>', { noremap = true, silent = true } },
@@ -146,36 +127,24 @@ if cmp_ready then
 end
 
 M.get_lsp_server_cfg = function(name)
-  local status, server_config =
-  pcall(require, 'lsp-server-configs/' .. name)
-  if not status then return {}
-  else return server_config
+  local status, server_config = pcall(require, 'lsp-server-configs/' .. name)
+  if not status then
+    return {}
+  else
+    return server_config
   end
 end
 
--- Automatically install servers in `ensure_installed`
--- and add additional capabilities supported by nvim-cmp
-M.lsp_install_and_set = function()
+M.lsp_setup = function()
   for _, server_name in pairs(M.ensure_installed) do
-    local server_available, requested_server = M.lsp_installer.get_server(server_name)
-    if server_available then
-      if not requested_server:is_installed() then
-        print('[lsp-installer]: installing ' .. server_name)
-        requested_server:install()
-      end
-      requested_server:on_ready(function()
-        requested_server:setup {
-          on_attach = M.on_attach,
-          capabilities = M.capabilities,
-          settings = M.get_lsp_server_cfg(server_name)
-        }
-      end)
-    else
-      print('[lsp-installer]: server ' .. server_name .. ' not available')
-    end
+    M.lspconfig[server_name].setup {
+      on_attach = M.on_attach,
+      capabilities = M.capabilities,
+      settings = M.get_lsp_server_cfg(server_name)
+    }
   end
 end
-M.lsp_install_and_set()
+M.lsp_setup()
 -- Passed config table to each LSP server --------------------------------------
 --------------------------------------------------------------------------------
 

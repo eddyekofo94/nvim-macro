@@ -43,7 +43,8 @@ return require('packer').startup({
 
     -- Language support
     use(require('plugin-specs.nvim-lspconfig'))     -- LSP config helper
-    use(require('plugin-specs.nvim-lsp-installer'))
+    use(require('plugin-specs.mason'))
+    use(require('plugin-specs.mason-lspconfig'))
     use(require('plugin-specs.nvim-treesitter'))    -- Language parser
     use(require('plugin-specs.copilot'))            -- Github copilot
 
