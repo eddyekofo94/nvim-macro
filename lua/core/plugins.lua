@@ -32,6 +32,14 @@ return require('packer').startup({
     use(require('plugin-specs.dracula'))
 
     -- Editing
+    use(require('plugin-specs.cmp-buffer'))
+    use(require('plugin-specs.cmp-calc'))
+    use(require('plugin-specs.cmp-cmdline'))
+    use(require('plugin-specs.cmp-nvim-lsp'))
+    use(require('plugin-specs.cmp-path'))
+    use(require('plugin-specs.cmp-spell'))
+    use(require('plugin-specs.cmp_luasnip'))
+    use(require('plugin-specs.LuaSnip'))
     use(require('plugin-specs.nvim-cmp'))           -- Auto completion
     use(require('plugin-specs.vsc-vim-easymotion')) -- Easymotion for vscode-neovim
     use(require('plugin-specs.vim-surround'))
@@ -46,7 +54,6 @@ return require('packer').startup({
     use(require('plugin-specs.mason'))
     use(require('plugin-specs.mason-lspconfig'))
     use(require('plugin-specs.nvim-treesitter'))    -- Language parser
-    use(require('plugin-specs.copilot'))            -- Github copilot
 
     -- Integration
     use(require('plugin-specs.toggleterm'))         -- Better terminal integration
@@ -63,7 +70,6 @@ return require('packer').startup({
     -- Notes and docs
     use(require('plugin-specs.markdown-preview'))
     use(require('plugin-specs.clipboard-image'))    -- Paste pictures to markdown
-    use(require('plugin-specs.neorg'))              -- Org-mode in nvim
 
     -- Tools
     use(require('plugin-specs.impatient'))          -- Speed up lua `require()`
