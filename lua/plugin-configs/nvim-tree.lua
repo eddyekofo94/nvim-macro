@@ -16,7 +16,7 @@ M.opts = {
       list = { -- BEGIN_DEFAULT_MAPPINGS
         { key = { '<CR>', '<LeftMouse>' }, action = 'edit' },
         { key = '<C-e>', action = 'edit_in_place' },
-        { key = 'E', action = 'edit_no_picker' },
+        { key = 'e', action = 'edit_no_picker' },
         { key = { '<C-]>', '<RightMouse>', 'l' }, action = 'cd' },
         { key = '<M-v>', action = 'vsplit' },
         { key = '<M-x>', action = 'split' },
