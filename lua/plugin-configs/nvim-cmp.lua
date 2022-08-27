@@ -1,6 +1,7 @@
 local M = {}
 
 M.cmp = require 'cmp'
+M.snip = require 'luasnip'
 
 local feedkey = function(key, mode)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
@@ -37,22 +38,24 @@ M.opts = {
   experimental = { ghost_text = true },
   snippet = {
     expand = function(args)
-      vim.fn['vsnip#anonymous'](args.body)
+      require('luasnip').lsp_expand(args.body)
     end
   },
   mapping = {
-    ['<S-Tab>'] = M.cmp.mapping(function()
+    ['<S-Tab>'] = M.cmp.mapping(function(fallback)
       if M.cmp.visible() then
         M.cmp.select_prev_item()
-      elseif vim.fn['vsnip#jumpable'](-1) == 1 then
-        feedkey('<Plug>(vsnip-jump-prev)', '')
+      elseif M.luasnip.jumpable(-1) then
+        M.luasnip.jump(-1)
+      else
+        fallback()
       end
     end, { 'i', 'c' }),
     ['<Tab>'] = M.cmp.mapping(function(fallback)
       if M.cmp.visible() then
         M.cmp.select_next_item()
-      elseif vim.fn['vsnip#available'](1) == 1 then
-        feedkey('<Plug>(vsnip-expand-or-jump)', '')
+      elseif M.luasnip.expand_or_jumpable() then
+        M.luasnip.expand_or_jump()
       else
         fallback()
       end
@@ -88,7 +91,7 @@ M.opts = {
     { name = 'nvim_lsp' }, { name = 'path' },
     { name = 'spell', max_item_count = 5 },
     { name = 'buffer', max_item_count = 10 },
-    { name = 'vsnip' }, { name = 'calc' }, { name = 'emoji' }
+    { name = 'luasnip' }, { name = 'calc' }, { name = 'emoji' }
   },
   sorting = {
     comparators = {

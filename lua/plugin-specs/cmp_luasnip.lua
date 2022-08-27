@@ -1,5 +1,4 @@
 return {
-  'hrsh7th/cmp-path',
-  event = 'InsertEnter',
+  'saadparwaiz1/cmp_luasnip',
   requires = require('plugin-specs.nvim-cmp')
 }
