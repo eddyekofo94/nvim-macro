@@ -23,7 +23,6 @@ M.langs = setmetatable({
   markdown = { ts = 'markdown', ft = 'markdown', lsp_server = 'remark_ls' },
   python = { ts = 'python', ft = 'python', lsp_server = 'pylsp' },
   vim = { ts = 'vim', ft = 'vim', lsp_server = 'vimls' },
-  neorg = { ts = 'norg', ft = 'norg' }
 }, langs_mt)
 
 M.borders = {
