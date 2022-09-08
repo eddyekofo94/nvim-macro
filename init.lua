@@ -1,4 +1,3 @@
-pcall(require, 'impatient')
 require('core.general')
 require('core.keymaps')
 require('core.autocmds')

@@ -72,7 +72,6 @@ return require('packer').startup({
     use(require('plugin-specs.clipboard-image'))    -- Paste pictures to markdown
 
     -- Tools
-    use(require('plugin-specs.impatient'))          -- Speed up lua `require()`
     use(require('plugin-specs.nvim-colorizer'))     -- Show RGB colors inline
     use(require('plugin-specs.firenvim'))
   end,
