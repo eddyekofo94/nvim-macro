@@ -18,6 +18,7 @@ vim.o.signcolumn = 'auto:1-2' -- For gitgutter & LSP diagnostic
 vim.o.updatetime = 10         -- (ms)
 vim.o.swapfile = false
 vim.g.default_colorscheme = 'nvim-falcon' -- Default colorscheme
+vim.o.guifont = 'FiraCode Nerd Font:h12'
 
 vim.opt.list = true
 vim.opt.listchars = {
