@@ -102,7 +102,7 @@ if require('utils.funcs').loaded('lualine.nvim') then
   )
   lualine.setup(lualine_opts)
 else
-  vim.o.statusline = vim.o.statusline .. '%ZFVimIME_IMEStatusline()'
+  vim.o.statusline = vim.o.statusline .. '%{ZFVimIME_IMEStatusline()}'
 end
 
 return M
