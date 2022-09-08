@@ -47,7 +47,7 @@ M.dashboard_button_opts = {
   { { shortcut = 'c', hl = { { 'IconColor3', 2, 3 } } }, '  Configurations', M.leader, '<cmd>Vifm ~/.config/nvim<CR>' },
   { { shortcut = 'g', hl = { { 'IconColor4', 2, 3 } } }, '  Git', M.leader, '<cmd>Git<CR>' },
   { { shortcut = M.leader .. ' f f', hl = { { 'IconColor5', 2, 3 } } }, '  Find files', M.leader, '<cmd>Telescope find_files<CR>' },
-  { { shortcut = M.leader .. ' f j', hl = { { 'IconColor6', 2, 3 } } }, '﬘  Switch to project', M.leader, '<cmd>Telescope project display_type=full<CR>' },
+  { { shortcut = M.leader .. ' f j', hl = { { 'IconColor6', 2, 3 } } }, '  Switch to project', M.leader, '<cmd>Telescope project display_type=full<CR>' },
   { { shortcut = M.leader .. ' f ;', hl = { { 'IconColor7', 2, 3 } } }, 'ﭨ  Live grep', M.leader, '<cmd>Telescope live_grep<CR>' },
   { { shortcut = 'Q', hl = { { 'IconColor8', 2, 3 } } }, '  Quit', M.leader, '<cmd>qa<CR>' },
 }
