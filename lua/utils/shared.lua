@@ -12,7 +12,7 @@ end
 
 M.langs = setmetatable({
   asm = { ft = 'asm', lsp_server = 'asm_lsp' },
-  bash = { ft = 'bash', lsp_server = 'bashls' },
+  bash = { ft = 'sh', lsp_server = 'bashls' },
   bibtex = { ts = 'bibtex', ft = 'bib', lsp_server = 'texlab' },
   c = { ts = 'c', ft = 'c', lsp_server = 'clangd' },
   cpp = { ts = 'cpp', ft = 'cpp', lsp_server = 'clangd' },
