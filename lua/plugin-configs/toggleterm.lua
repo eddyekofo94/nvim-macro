@@ -12,7 +12,7 @@ M.opts = {
   end,
   start_in_insert = true,
   shade_terminals = false,
-  open_mapping = [[<C-\>]],
+  open_mapping = [[<C-\><C-\>]],
   on_open = function(term)
     local keymap_opts = { noremap = true, silent = true, buffer = term.bufnr }
     vim.keymap.set('n', 'q', '<cmd>close<CR>', keymap_opts)
@@ -51,7 +51,9 @@ function M.lazygit_toggle()
         vim.keymap.set('n', 'q', '<cmd>close<CR>', keymap_opts)
         vim.keymap.set('n', '<esc>', '<cmd>close<CR>', keymap_opts)
         vim.keymap.set('n', '<M-C>', '<cmd>bd!<CR>', keymap_opts)
-        vim.keymap.set({ 't', 'n' }, '<C-\\>', '<cmd>close<CR>', keymap_opts)
+        vim.keymap.set({ 't', 'n' }, '<C-\\><C-\\>', '<cmd>close<CR>', keymap_opts)
+        vim.keymap.set({ 't', 'n' }, '<C-\\>g', '<cmd>close<CR>', keymap_opts)
+        vim.keymap.set({ 't', 'n' }, '<C-\\><C-g>', '<cmd>close<CR>', keymap_opts)
       end
     })
   end
@@ -87,9 +89,11 @@ function M.vifm_toggle(args)
         vim.keymap.set('n', '<M-C>', function() M.vifm_kill_silent(term) end, keymap_opts)
         vim.keymap.set('n', '<M-c>', function() M.vifm_close_silent(term) end, keymap_opts)
         vim.keymap.set('n', '<C-w>c', function() M.vifm_close_silent(term) end, keymap_opts)
-        vim.keymap.set({ 't', 'n' }, '<leader>V', function() M.vifm_close_silent(term) end, keymap_opts)
-        vim.keymap.set({ 't', 'n' }, '<leader>v', function() M.vifm_close_silent(term) end, keymap_opts)
-        vim.keymap.set({ 't', 'n' }, '<C-\\>', function() M.vifm_close_silent(term) end, keymap_opts)
+        vim.keymap.set({ 't', 'n' }, '<C-\\>V', function() M.vifm_close_silent(term) end, keymap_opts)
+        vim.keymap.set({ 't', 'n' }, '<C-\\><C-V>', function() M.vifm_close_silent(term) end, keymap_opts)
+        vim.keymap.set({ 't', 'n' }, '<C-\\>v', function() M.vifm_close_silent(term) end, keymap_opts)
+        vim.keymap.set({ 't', 'n' }, '<C-\\><C-v>', function() M.vifm_close_silent(term) end, keymap_opts)
+        vim.keymap.set({ 't', 'n' }, '<C-\\><C-\\>', function() M.vifm_close_silent(term) end, keymap_opts)
         -- Keymap to open files
         M.vifm_set_open_method_and_keymap {
           { key = '<CR>', close_trig = '<CR>', open_method = { cmd = 'e', type = 'file' }, keymap_opts = keymap_opts },
@@ -98,9 +102,9 @@ function M.vifm_toggle(args)
           { key = '<M-v>', close_trig = '<CR>', open_method = { cmd = 'vsplit|e', type = 'file' }, keymap_opts = keymap_opts },
           { key = '<M-s>', close_trig = '<CR>', open_method = { cmd = 'split|e', type = 'file' }, keymap_opts = keymap_opts },
           { key = '<M-t>', close_trig = '<CR>', open_method = { cmd = 'tabnew|e', type = 'file' }, keymap_opts = keymap_opts },
-          { key = '<leader>cd', close_trig = ':qa<CR>', open_method = { cmd = 'cd', type = 'dir' }, keymap_opts = keymap_opts },
-          { key = '<leader>lcd', close_trig = ':qa<CR>', open_method = { cmd = 'lcd', type = 'dir' }, keymap_opts = keymap_opts },
-          { key = '<leader>tcd', close_trig = ':qa<CR>', open_method = { cmd = 'tcd', type = 'dir' }, keymap_opts = keymap_opts }
+          { key = '<C-\\>cd', close_trig = ':qa<CR>', open_method = { cmd = 'cd', type = 'dir' }, keymap_opts = keymap_opts },
+          { key = '<C-\\>lcd', close_trig = ':qa<CR>', open_method = { cmd = 'lcd', type = 'dir' }, keymap_opts = keymap_opts },
+          { key = '<C-\\>tcd', close_trig = ':qa<CR>', open_method = { cmd = 'tcd', type = 'dir' }, keymap_opts = keymap_opts }
         }
       end,
       on_close = function()
@@ -168,9 +172,11 @@ end
 vim.cmd [[ command Git lua require('plugin-configs.toggleterm').lazygit_toggle() ]]
 vim.cmd [[ command -nargs=* Vifm lua require('plugin-configs.toggleterm').vifm_toggle({vifm_args = <q-args>, force_update = true}) ]]
 vim.cmd [[ command VifmCurrentFileFind lua require('plugin-configs.toggleterm').vifm_current_file(true) ]]
-vim.keymap.set('n', '<leader>V', function() M.vifm_toggle() end, { noremap = true, silent = true })
-vim.keymap.set('n', '<leader><leader>V', function() M.vifm_toggle({ force_update = true }) end, { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>v', function() M.vifm_current_file() end, { noremap = true, silent = true })
-vim.keymap.set('n', '<leader><leader>v', function() M.vifm_current_file(true) end, { noremap = true, silent = true })
+vim.keymap.set('n', '<C-\\>V', function() M.vifm_toggle() end, { noremap = true, silent = true })
+vim.keymap.set('n', '<C-\\><C-V>', function() M.vifm_toggle() end, { noremap = true, silent = true })
+vim.keymap.set('n', '<C-\\>v', function() M.vifm_current_file() end, { noremap = true, silent = true })
+vim.keymap.set('n', '<C-\\><C-v>', function() M.vifm_toggle() end, { noremap = true, silent = true })
+vim.keymap.set('n', '<C-\\>g', function() M.lazygit_toggle() end, { noremap = true, silent = true })
+vim.keymap.set('n', '<C-\\><C-g>', function() M.lazygit_toggle() end, { noremap = true, silent = true })
 
 return M

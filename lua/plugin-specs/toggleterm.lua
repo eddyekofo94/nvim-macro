@@ -1,8 +1,8 @@
 return {
   'akinsho/toggleterm.nvim',
   keys = {
-    '<C-\\>', '<leader><leader>v','<leader><leader>V',
-    '<leader>v', '<leader>V'
+    '<C-\\>', '<C-\\><C-v>', '<C-\\>v',
+    '<C-\\>V', '<C-\\><C-V', '<C-\\>g', '<C-\\><C-g>'
   },
   cmd = {
     'ToggleTerm', 'ToggleTermToggleAdd',
