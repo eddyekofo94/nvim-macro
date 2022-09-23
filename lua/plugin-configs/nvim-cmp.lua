@@ -2,6 +2,7 @@ local M = {}
 
 M.cmp = require 'cmp'
 M.luasnip = require 'luasnip'
+M.context = require 'cmp.config.context'
 
 local feedkey = function(key, mode)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
@@ -10,6 +11,16 @@ end
 local icons = require('utils.shared').icons
 
 M.opts = {
+  enabled = function ()
+    if (M.context.in_treesitter_capture('comment')
+        or M.context.in_syntax_group('Comment'))
+        or vim.bo.filetype == 'text'
+    then
+      return false
+    else
+      return true
+    end
+  end,
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, vim_item)
@@ -75,7 +86,7 @@ M.opts = {
         M.cmp.complete()
       end
     end, { 'i', 'c' }),
-    ['<esc>'] = M.cmp.mapping(function(fallback)
+    ['<M-:>'] = M.cmp.mapping(function(fallback)
       if M.cmp.visible() then
         M.cmp.abort()
       else
@@ -95,10 +106,14 @@ M.opts = {
   },
   sorting = {
     comparators = {
+      M.cmp.config.compare.distance,
       M.cmp.config.compare.score,
-      M.cmp.config.compare.offset, M.cmp.config.compare.exact,
-      M.cmp.config.compare.kind, M.cmp.config.compare.sort_text,
-      M.cmp.config.compare.length, M.cmp.config.compare.order
+      M.cmp.config.compare.offset,
+      M.cmp.config.compare.exact,
+      M.cmp.config.compare.kind,
+      M.cmp.config.compare.sort_text,
+      M.cmp.config.compare.length,
+      M.cmp.config.compare.order
     }
   },
   -- cmp floating window config
@@ -110,8 +125,9 @@ M.opts = {
 M.cmp.setup(M.opts)
 
 M.opts_cmdline = {}
-M.opts_cmdline['/'] = { sources = { { name = 'buffer' } } }
+M.opts_cmdline['/'] = { enabled = true, sources = { { name = 'buffer' } } }
 M.opts_cmdline[':'] = {
+  enabled = true,
   sources = {
     { name = 'path' },
     -- Do not show completion for words starting with '!' (huge lag, why?)
