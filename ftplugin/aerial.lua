@@ -1,8 +1,9 @@
 local bufmap = vim.api.nvim_buf_set_keymap
 local opt = { noremap = true }
 
-vim.wo.spell = false
-vim.wo.cursorcolumn = false
+vim.opt.spell = false
+vim.opt.cursorcolumn = false
+vim.opt.list = false
 
 bufmap(0, 'n', '<leader>aa', '<cmd>AerialToggle<CR>', opt)
 bufmap(0, 'n', '<leader>ao', '<cmd>AerialOpen<CR>', opt)
