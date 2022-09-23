@@ -11,14 +11,6 @@ if fn.empty(fn.glob(install_path)) > 0 then
     execute 'packadd packer.nvim'
 end
 
--- `PackerSync` on save of `plugins.lua`
--- vim.cmd [[
---   augroup packer_user_config
---     autocmd!
---     autocmd BufWritePost plugins.lua source <afile> | PackerSync
---   augroup end
--- ]]
-
 pcall(require, 'load.packer_compiled')
 pcall(require, 'load.extra')
 
@@ -62,10 +54,10 @@ return require('packer').startup({
 
     -- Navigation
     use(require('plugin-specs.alpha-nvim'))         -- Greeting page
-    use(require('plugin-specs.nvim-tree'))          -- File tree
     use(require('plugin-specs.barbar'))             -- Buffer line
     use(require('plugin-specs.telescope'))          -- Fuzzy finding
     use(require('plugin-specs.aerial'))             -- Code outline
+    use(require('plugin-specs.rnvimr'))             -- ranger integration
 
     -- Notes and docs
     use(require('plugin-specs.markdown-preview'))
