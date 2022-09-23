@@ -2,12 +2,6 @@
 vim.keymap.set({ 'n', 'v', 'x' }, '<Space>', '', {})
 vim.g.mapleader = ' '
 
--- Map esc key
-vim.keymap.set('i', 'jj', '<esc>', { noremap = true })
-
--- Exit from term mode
-vim.keymap.set('t', '\\<C-\\>', '<C-\\><C-n>', { noremap = true })
-
 -- Toggle hlsearch
 vim.keymap.set('n', '\\', '<cmd>set hlsearch!<CR>', { noremap = true })
 vim.keymap.set('n', '/', '/<cmd>set hlsearch<CR>', { noremap = true })
