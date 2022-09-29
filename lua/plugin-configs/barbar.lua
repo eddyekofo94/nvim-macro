@@ -33,7 +33,7 @@ vim.api.nvim_set_keymap('n', '<M-S>', '<cmd>BufferPick<CR>', { noremap = true, s
 -- vim.api.nvim_set_keymap('n', '<Leader>bl', '<cmd>BufferOrderByLanguage<CR>', { noremap = true, silent = true })
 
 -- Set barbar's options
-vim.g.bufferline = {
+require('bufferline').setup {
   -- Enable/disable animations
   animation = false,
   -- Enable/disable auto-hiding the tab bar when there is a single buffer
