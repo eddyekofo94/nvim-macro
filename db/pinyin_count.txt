@@ -1,4 +1,4 @@
-a 1
+a 2
 ai 1
 ali 1
 an 3
@@ -113,7 +113,7 @@ cunchu 4
 cunzai 5
 cuo 3
 cuowu 3
-d 102
+d 103
 da 3
 dai 1
 daima 3
@@ -248,6 +248,7 @@ hui 14 11
 huidao 2
 huidiao 1
 huifu 2
+huiyi 1
 hulue 2
 huo 14
 huodong 1
@@ -256,7 +257,7 @@ ji 6 4 2 2
 jian 1 1 1
 jiance 4
 jiandan 2
-jiang 12
+jiang 12 1
 jiange 1
 jiangjie 1
 jianrong 3
@@ -347,6 +348,7 @@ liulan 1
 liyong 2
 lu 1
 lue 4
+lunwen 1
 luoji 11
 lv 1
 ma 3 2
@@ -375,6 +377,7 @@ motaibianji 1
 mou 2
 moyun 1
 muqian 5
+n 3
 na 1 1
 nage 1
 nei 16
@@ -388,7 +391,7 @@ nengli 1
 ni 1
 nianling 1
 niu 1
-o 1
+o 4
 ou 2
 paicha 1
 paichu 1
@@ -458,6 +461,7 @@ rumen 1
 ruo 24
 ruxia 1
 saoma 2
+se 1
 shanchu 9
 shang 3
 shangbao 2
@@ -488,6 +492,7 @@ shiyong 31
 shouci 8
 shouji 5
 shoujiduan 3
+shoulu 1
 shouye 2
 shu 4
 shuaxin 2
@@ -589,6 +594,7 @@ xianyou 1
 xianzai 1
 xiao 1
 xiaoguo 1
+xiaoji 1
 xiaoshi 2 2
 xiazai 1
 xie 1 1
