@@ -22,7 +22,7 @@ vim.api.nvim_set_keymap('n', '<M-P>', '<cmd>BufferPin<CR>', { noremap = true, si
 -- Wipeout buffer
 -- map('n', '???', '<cmd>BufferWipeout<CR>', opts)
 -- Close commands
-vim.api.nvim_set_keymap('n', '<M-O>', '<cmd>BufferCloseAllButCurrentOrPinned<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<M-O>', '<cmd>BufferCloseAllButVisible<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<M-(>', '<cmd>BufferCloseBuffersLeft<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<M-)>', '<cmd>BufferCloseBuffersRight<CR>', { noremap = true, silent = true })
 -- Magic buffer-picking mode

@@ -1,7 +1,7 @@
 local M = {}
 
-M.langs = require('utils.shared').langs
-M.ensure_installed = require('utils.shared').langs:list('lsp_server')
+M.langs = require('utils.static').langs
+M.ensure_installed = require('utils.static').langs:list('lsp_server')
 M.lsp_installer = require('nvim-lsp-installer')
 
 --------------------------------------------------------------------------------

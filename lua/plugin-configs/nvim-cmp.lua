@@ -8,7 +8,7 @@ local feedkey = function(key, mode)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
-local icons = require('utils.shared').icons
+local icons = require('utils.static').icons
 
 M.opts = {
   enabled = function ()

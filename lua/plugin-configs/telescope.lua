@@ -30,7 +30,7 @@ M.opts = {
   defaults = {
     prompt_prefix = '/ ',
     selection_caret = '→ ',
-    borderchars = require('utils.shared').borders.double_header,
+    borderchars = require('utils.static').borders.double_header,
     layout_config = {
       horizontal = { prompt_position = 'top' },
       vertical = { prompt_position = 'top' }

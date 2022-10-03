@@ -2,7 +2,7 @@ local M = {}
 
 M.alpha = require('alpha')
 M.dashboard = require('alpha.themes.dashboard')
-M.headers = require('utils.shared').ascii_art
+M.headers = require('utils.static').ascii_art
 
 M.leader = '<LD>'
 

@@ -16,7 +16,7 @@ M.opts = {
   -- default collapsed icon. The default icon set is determined by the
   -- 'nerd_font' option below.
   -- If you have lspkind-nvim installed, aerial will use it for icons.
-  icons = require('utils.shared').icons,
+  icons = require('utils.static').icons,
   -- Control which windows and buffers aerial should ignore.
   -- If close_behavior is 'global', focusing an ignored window/buffer will
   -- not cause the aerial window to update.

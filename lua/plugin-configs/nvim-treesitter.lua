@@ -2,7 +2,7 @@ local M = {}
 
 M.ts_configs = require('nvim-treesitter.configs')
 M.ts_opts = {
-  ensure_installed = require('utils.shared').langs:list('ts'),
+  ensure_installed = require('utils.static').langs:list('ts'),
   sync_install = true,
   ignore_install = {},
   highlight = {

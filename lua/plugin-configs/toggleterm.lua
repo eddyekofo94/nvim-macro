@@ -23,7 +23,7 @@ M.opts = {
   persist_size = false,
   direction = 'float',
   float_opts = {
-    border = require('utils.shared').borders.double_horizontal_clc,
+    border = require('utils.static').borders.double_horizontal_clc,
     width = function() return math.floor(0.7 * vim.o.columns) end,
     height = function() return math.floor(0.7 * vim.o.lines) end
   }
