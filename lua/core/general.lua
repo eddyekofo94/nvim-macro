@@ -23,7 +23,7 @@ vim.g.default_colorscheme = 'nvim-falcon' -- Default colorscheme
 
 vim.opt.list = true
 vim.opt.listchars = {
-  tab = '──•',
+  tab = '→ ',
   extends = '►',
   precedes = '◄',
   nbsp = '⌴',
