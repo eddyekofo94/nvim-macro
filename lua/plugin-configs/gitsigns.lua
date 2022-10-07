@@ -55,8 +55,17 @@ M.opts = {
     end
 
     -- Navigation
-    map('n', ']c', "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", { expr = true })
-    map('n', '[c', "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", { expr = true })
+    map('n', ']c', function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    map('n', '[c', function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
 
     -- Actions
     map({ 'n', 'v' }, '<leader>gs', gs.stage_hunk)
@@ -66,10 +75,8 @@ M.opts = {
     map('n', '<leader>gR', gs.reset_buffer)
     map('n', '<leader>gp', gs.preview_hunk)
     map('n', '<leader>gb', function() gs.blame_line { full = true } end)
-    map('n', '<leader>gtb', gs.toggle_current_line_blame)
     map('n', '<leader>gd', gs.diffthis)
     map('n', '<leader>gD', function() gs.diffthis('~') end)
-    map('n', '<leader>gtd', gs.toggle_deleted)
 
     -- Text object
     map({ 'o', 'x' }, 'ic', ':<C-U>Gitsigns select_hunk<CR>')
