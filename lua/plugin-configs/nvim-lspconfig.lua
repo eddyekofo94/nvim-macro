@@ -95,7 +95,7 @@ M.keymaps = {
   { 'n', '<Leader>lwa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', { noremap = true, silent = true } },
   { 'n', '<Leader>lwd', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', { noremap = true, silent = true } },
   { 'n', '<Leader>lwl', '<cmd>lua vim.pretty_print(vim.lsp.buf.list_workspace_folders())<CR>', { noremap = true, silent = true } },
-  { 'n', '<leader>lt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', { noremap = true, silent = true } },
+  { 'n', '<leader>gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', { noremap = true, silent = true } },
   { 'n', '<Leader>lr', '<cmd>lua vim.lsp.buf.rename()<CR>', { noremap = true, silent = true } },
   { 'n', '<Leader>la', '<cmd>lua vim.lsp.buf.code_action()<CR>', { noremap = true, silent = true } },
   { 'n', '<Leader>lR', '<cmd>lua vim.lsp.buf.references()<CR>', { noremap = true, silent = true } },
