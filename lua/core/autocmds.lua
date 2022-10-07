@@ -81,3 +81,19 @@ vim.api.nvim_create_autocmd(
     command = 'hi clear Conceal | hi link Conceal NonText'
   }
 )
+
+-- Used to restore the expandtab setting after temporarily
+-- forcing expandtab if have text before cursor, see the
+-- corresponding keymap in keymaps.lua
+vim.api.nvim_create_autocmd(
+  { 'TextChangedI' },
+  {
+    pattern = '*',
+    callback = function ()
+      -- Set expandtab only when we have modified it before
+      if vim.b.old_expandtab == false then
+        vim.bo.expandtab = false
+      end
+    end
+  }
+)

@@ -64,6 +64,14 @@ vim.keymap.set('n', 'q',
   { noremap = true }
 )
 
+-- Use spaces instead of tabs if have preceding texts
+vim.keymap.set('i', '<Tab>',
+  function()
+    require('utils.funcs').tab_space_switch()
+  end,
+  { noremap = true }
+)
+
 -- Multi-buffer operations
 vim.keymap.set('n', '<Tab>', '<cmd>bn<CR>', { noremap = true })
 vim.keymap.set('n', '<S-Tab>', '<cmd>bp<CR>', { noremap = true })
