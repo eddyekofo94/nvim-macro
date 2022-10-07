@@ -100,7 +100,6 @@ M.opts = {
   },
   sources = {
     { name = 'nvim_lsp' }, { name = 'path' },
-    { name = 'spell', max_item_count = 5 },
     { name = 'buffer', max_item_count = 10 },
     { name = 'luasnip' }, { name = 'calc' }, { name = 'emoji' }
   },
