@@ -12,14 +12,22 @@ M.clock = function()
 end
 
 M.indent_style = function()
-  if vim.o.expandtab then
-    return 'Spaces: ' .. vim.o.shiftwidth
+  -- Get softtabstop or equivalent fallback
+  local sts
+  if vim.bo.sts > 0 then
+    sts = vim.bo.sts
+  elseif vim.bo.sw > 0 then
+    sts = vim.bo.sw
   else
-    if vim.o.tabstop == vim.o.shiftwidth then
-      return 'Tabs: ' .. vim.o.tabstop
-    else
-      return 'Tabs: ' .. vim.o.tabstop .. '/' .. vim.o.shiftwidth
-    end
+    sts = vim.bo.ts
+  end
+
+  if vim.bo.expandtab then
+    return 'Spaces: ' .. sts
+  elseif vim.bo.ts == sts then
+    return 'Tabs: ' .. vim.bo.tabstop
+  else
+    return 'Tabs: ' .. vim.bo.tabstop .. '/' .. sts
   end
 end
 
