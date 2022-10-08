@@ -70,6 +70,10 @@ M.tab_space_switch = function()
   local text_offset = vim.fn.match(line:sub(1, x):reverse(), [[\S]])
 
   -- Find if there's an adjacent tab.
+  -- An adjacent tab is a tab that:
+  --  1. Located before and within 1 tabstop of the cursor, with
+  --     no non-whitespace character in between the tab and the cursor.
+  --  2. Or located right after the cursor.
   -- About what defines an adjacent tab, consider the following cases,
   -- assuming softtabstop (or its fallback value) is 2 and tabstop is 4:
   -- Case 1: │→               adjacent
