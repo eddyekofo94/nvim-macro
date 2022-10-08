@@ -10,16 +10,18 @@ end
 
 local icons = require('utils.static').icons
 
+local have_letter_before = function ()
+  local x = vim.api.nvim_win_get_cursor(0)[2]
+  local line = vim.api.nvim_get_current_line()
+  return vim.fn.match(line:sub(x, x), [[\S]]) >= 0
+end
+
 M.opts = {
   enabled = function ()
-    if (M.context.in_treesitter_capture('comment')
-        or M.context.in_syntax_group('Comment'))
-        or vim.bo.filetype == 'text'
-    then
-      return false
-    else
-      return true
-    end
+    return have_letter_before()
+      and not ((M.context.in_treesitter_capture('comment')
+                or M.context.in_syntax_group('Comment'))
+               or vim.bo.filetype == 'text')
   end,
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },
@@ -99,7 +101,8 @@ M.opts = {
     }
   },
   sources = {
-    { name = 'nvim_lsp' }, { name = 'path' },
+    { name = 'nvim_lsp', keyword_pattern = [[\(Workspace loading\)\@!]] },
+    { name = 'path' },
     { name = 'buffer', max_item_count = 10 },
     { name = 'luasnip' }, { name = 'calc' }, { name = 'emoji' }
   },
