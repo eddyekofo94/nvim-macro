@@ -8,7 +8,7 @@ local telescope_cfg = require('plugin-configs.telescope')
 M.opts = {
   extensions = {
     project = {
-      base_dirs = { '~/' },
+      base_dirs = { '~/Code/', '~/Scratches/', '~/School/' },
       hidden_files = true
     }
   }
