@@ -108,4 +108,12 @@ M.tab_space_switch = function()
     vim.api.nvim_replace_termcodes('<Tab>', true, true, true), 'nt', true)
 end
 
+M.git_dir = function ()
+local gitdir = vim.fn.system(string.format(
+  'git -C %s rev-parse --show-toplevel', vim.fn.expand('%:p:h')))
+local isgitdir = vim.fn.matchstr(gitdir, '^fatal:.*') == ''
+if not isgitdir then return end
+return vim.trim(gitdir)
+end
+
 return M

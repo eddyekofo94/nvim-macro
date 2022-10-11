@@ -97,3 +97,17 @@ vim.api.nvim_create_autocmd(
     end
   }
 )
+
+-- Automatically change local current directory
+vim.api.nvim_create_autocmd(
+  { 'BufEnter' },
+  {
+    pattern = '*',
+    callback = function ()
+      if vim.bo.buftype ~= '' then return end
+      local target_dir = require('utils.funcs').git_dir()
+      if not target_dir then target_dir = vim.fn.expand('%:p:h') end
+      if target_dir then vim.cmd('lcd ' .. target_dir) end
+    end
+  }
+)
