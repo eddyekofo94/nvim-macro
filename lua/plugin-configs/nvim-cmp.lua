@@ -39,10 +39,10 @@ M.opts = {
         vim_item.kind = string.format('%s ', icons[vim_item.kind])
       end
       -- Max word length visible
-      if #(vim_item.abbr) > 30 then
-        vim_item.abbr = string.sub(vim_item.abbr, 1, 18)
+      if #(vim_item.abbr) > 40 then
+        vim_item.abbr = string.sub(vim_item.abbr, 1, 23)
             .. '…'
-            .. string.sub(vim_item.abbr, -11, -1)
+            .. string.sub(vim_item.abbr, -16, -1)
       end
 
       return vim_item
