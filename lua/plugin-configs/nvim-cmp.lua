@@ -101,7 +101,7 @@ M.opts = {
     }
   },
   sources = {
-    { name = 'nvim_lsp', keyword_pattern = [[\(Workspace loading\)\@!]] },
+    { name = 'nvim_lsp' },
     { name = 'path' },
     { name = 'buffer', max_item_count = 10 },
     { name = 'luasnip' }, { name = 'calc' }, { name = 'emoji' }
