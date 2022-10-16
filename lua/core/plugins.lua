@@ -21,7 +21,6 @@ return require('packer').startup({
     -- Color schemes
     use(require('plugin-specs.falcon'))
     use(require('plugin-specs.nvim-falcon'))
-    use(require('plugin-specs.dracula'))
 
     -- Editing
     use(require('plugin-specs.cmp-buffer'))
