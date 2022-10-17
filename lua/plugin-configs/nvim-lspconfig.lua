@@ -123,7 +123,7 @@ end
 M.capabilities = vim.lsp.protocol.make_client_capabilities()
 local cmp_ready, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
 if cmp_ready then
-  M.capabilities = cmp_nvim_lsp.update_capabilities(M.capabilities)
+  M.capabilities = cmp_nvim_lsp.default_capabilities(M.capabilities)
 end
 
 M.get_lsp_server_cfg = function(name)
