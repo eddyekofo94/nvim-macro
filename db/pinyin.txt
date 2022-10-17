@@ -873,7 +873,7 @@ danyi 单一
 danyou 但有 担忧 但又
 danyuan 单元
 danzai 但在
-dao 到 刀 导 倒 道 岛 悼 盗 蹈 捣 祷 叨 稻 忉 帱 氘 纛 俦 儔 刂 受 啁 嘄 噵 壔 宲 導 屶 島 嶋 嶌 嶹 幬 忑 惆 捯 搗 擣 朷 椡 槝 檤 檮 洮 涛 濤 焘 燾 瓙 盜 禂 禱 稲 箌 絩 翢 翿 舠 菿 薵 虭 衜 衟 裯 軇 醻 釖 陦 陶 隝 隯 魛 鱽 鳥 鸟
+dao 到 道 刀 导 倒 岛 悼 盗 蹈 捣 祷 叨 稻 忉 帱 氘 纛 俦 儔 刂 受 啁 嘄 噵 壔 宲 導 屶 島 嶋 嶌 嶹 幬 忑 惆 捯 搗 擣 朷 椡 槝 檤 檮 洮 涛 濤 焘 燾 瓙 盜 禂 禱 稲 箌 絩 翢 翿 舠 菿 薵 虭 衜 衟 裯 軇 醻 釖 陦 陶 隝 隯 魛 鱽 鳥 鸟
 daochu 导出 到处
 daoda 到达
 daode 到的
@@ -2206,7 +2206,7 @@ jiankang 健康
 jiankong 监控
 jianku 艰苦
 jiankuang 简况
-jianli 建立 简历
+jianli 简历 建立
 jianlou 简陋
 jianmian 见面
 jianmin 健民
@@ -4090,7 +4090,7 @@ shencha 审查
 shenchu 身处
 shendu 深度
 shenfen 身份
-sheng 胜 生 声 省 升 圣 盛 剩 牲 绳 甥 笙 渑 眚 嵊 晟 丞 乗 乘 偗 冼 剰 勝 呏 垩 墭 姓 娍 媵 憴 斘 昇 晠 曻 枡 榺 橳 殅 殸 泩 渻 湦 澠 焺 狌 珄 琞 甸 竔 箵 縄 繩 聖 聲 苼 蕂 譝 貹 賸 鉎 鍟 阩 陞 陹 鱦 鵿 鼪
+sheng 生 胜 声 省 升 圣 盛 剩 牲 绳 甥 笙 渑 眚 嵊 晟 丞 乗 乘 偗 冼 剰 勝 呏 垩 墭 姓 娍 媵 憴 斘 昇 晠 曻 枡 榺 橳 殅 殸 泩 渻 湦 澠 焺 狌 珄 琞 甸 竔 箵 縄 繩 聖 聲 苼 蕂 譝 貹 賸 鉎 鍟 阩 陞 陹 鱦 鵿 鼪
 shengchan 生产
 shengcheng 生成 声称
 shengcun 生存
