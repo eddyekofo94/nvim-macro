@@ -4,25 +4,9 @@ M.cmp = require 'cmp'
 M.luasnip = require 'luasnip'
 M.context = require 'cmp.config.context'
 
-local feedkey = function(key, mode)
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
-end
-
 local icons = require('utils.static').icons
 
-local have_letter_before = function ()
-  local x = vim.api.nvim_win_get_cursor(0)[2]
-  local line = vim.api.nvim_get_current_line()
-  return vim.fn.match(line:sub(x, x), [[\S]]) >= 0
-end
-
 M.opts = {
-  enabled = function ()
-    return have_letter_before()
-      and not ((M.context.in_treesitter_capture('comment')
-                or M.context.in_syntax_group('Comment'))
-               or vim.bo.filetype == 'text')
-  end,
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, vim_item)
@@ -101,20 +85,27 @@ M.opts = {
     }
   },
   sources = {
-    { name = 'nvim_lsp' },
+    {
+      name = 'nvim_lsp',
+      -- Suppress LSP completion when workspace is not ready yet
+      entry_filter = function(entry, ctx)
+        return not entry.completion_item.label:match('Workspace loading')
+      end
+    },
+    { name = 'copilot' },
     { name = 'path' },
-    { name = 'buffer', max_item_count = 10 },
+    { name = 'buffer', max_item_count = 5, group_index = 1 },
+    { name = 'spell', max_item_count = 5, group_index = 2 },
     { name = 'luasnip' }, { name = 'calc' }, { name = 'emoji' }
   },
   sorting = {
     comparators = {
-      M.cmp.config.compare.distance,
       M.cmp.config.compare.score,
+      M.cmp.config.compare.distance,
       M.cmp.config.compare.offset,
       M.cmp.config.compare.exact,
       M.cmp.config.compare.kind,
       M.cmp.config.compare.sort_text,
-      M.cmp.config.compare.length,
       M.cmp.config.compare.order
     }
   },
@@ -132,8 +123,7 @@ M.opts_cmdline[':'] = {
   enabled = true,
   sources = {
     { name = 'path' },
-    -- Do not show completion for words starting with '!' (huge lag, why?)
-    { name = 'cmdline', keyword_pattern = [[\!\@<!\w*]] },
+    { name = 'cmdline' },
   }
 }
 -- Use buffer source for `/`.

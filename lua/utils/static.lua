@@ -56,6 +56,7 @@ M.icons = {
   Color = '',
   Constant = '',
   Constructor = '',
+  Copilot = '',
   Enum = '',
   EnumMember = '了',
   Event = '',
