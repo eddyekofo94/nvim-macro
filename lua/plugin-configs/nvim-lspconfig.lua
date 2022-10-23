@@ -103,7 +103,7 @@ M.keymaps = {
   { 'n', '[e', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true } },
   { 'n', ']e', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true } },
   { 'n', '<leader>ll', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true } },
-  { 'n', '<leader>l=', '<cmd>lua vim.lsp.buf.formatting({ async = true })<CR>', { noremap = true, silent = true } },
+  { 'n', '<leader>l=', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true } },
 }
 
 M.on_attach = function(client, bufnr)
