@@ -68,7 +68,7 @@ canjian 1
 canshu 12
 caozuo 2
 ce 3
-ceshi 16
+ceshi 17
 chajian 13
 chajianzuozhe 1
 chang 9 1
@@ -172,7 +172,7 @@ erqie 1
 erweima 8
 erxuanyi 1
 ewai 4
-fa 2 1
+fa 2 2
 fahui 1
 fang 1
 fangan 3
@@ -282,7 +282,9 @@ jiben 1
 jibie 1
 jici 2
 jidinghe 6
+jie 1
 jiedian 1
+jiefayi 1
 jiekou 16
 jiemian 1
 jieshao 4
@@ -647,7 +649,7 @@ ye 23 3
 yebu 1
 yemian 8
 yewu 5
-yi 2 2 1
+yi 3 2 1
 yiban 1
 yibu 1
 yichang 3
