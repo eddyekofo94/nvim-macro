@@ -33,21 +33,21 @@ M.ts_configs.setup(M.ts_opts)
 --   end
 -- end
 
--- Automatically install treesitter parsers (no confirmation)
-local ts_parsers = require('nvim-treesitter.parsers')
-vim.api.nvim_create_autocmd(
-  { 'FileType' },
-  {
-    pattern = '*',
-    callback = function()
-      local lang = ts_parsers.get_buf_lang()
-      if ts_parsers.get_parser_configs()[lang] and not ts_parsers.has_parser(lang) then
-        vim.schedule_wrap(function()
-          vim.cmd('TSInstall ' .. lang)
-        end)()
-      end
-    end
-  }
-)
+-- -- Automatically install treesitter parsers (no confirmation)
+-- local ts_parsers = require('nvim-treesitter.parsers')
+-- vim.api.nvim_create_autocmd(
+--   { 'FileType' },
+--   {
+--     pattern = '*',
+--     callback = function()
+--       local lang = ts_parsers.get_buf_lang()
+--       if ts_parsers.get_parser_configs()[lang] and not ts_parsers.has_parser(lang) then
+--         vim.schedule_wrap(function()
+--           vim.cmd('TSInstall ' .. lang)
+--         end)()
+--       end
+--     end
+--   }
+-- )
 
 return M

@@ -47,4 +47,13 @@ M.extra_rules = {
 }
 M.npairs.add_rules(M.extra_rules)
 
+M.markup_rules = {
+  M.Rule('$', '$', { 'tex', 'latex', 'markdown' }),
+  M.Rule('*', '*', 'markdown')
+    :with_pair(function()
+      return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') ~= 1
+    end),
+}
+M.npairs.add_rules(M.markup_rules)
+
 return M

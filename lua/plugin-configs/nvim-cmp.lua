@@ -40,19 +40,19 @@ M.opts = {
   },
   mapping = {
     ['<S-Tab>'] = M.cmp.mapping(function(fallback)
-      if M.cmp.visible() then
-        M.cmp.select_prev_item()
-      elseif M.luasnip.jumpable(-1) then
+      if M.luasnip.jumpable(-1) then
         M.luasnip.jump(-1)
+      elseif M.cmp.visible() then
+        M.cmp.select_prev_item()
       else
         fallback()
       end
     end, { 'i', 'c' }),
     ['<Tab>'] = M.cmp.mapping(function(fallback)
-      if M.cmp.visible() then
-        M.cmp.select_next_item()
-      elseif M.luasnip.expand_or_jumpable() then
+      if M.luasnip.expand_or_jumpable() then
         M.luasnip.expand_or_jump()
+      elseif M.cmp.visible() then
+        M.cmp.select_next_item()
       else
         fallback()
       end

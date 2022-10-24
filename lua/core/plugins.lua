@@ -63,6 +63,8 @@ return require('packer').startup({
     -- Notes and docs
     use(require('plugin-specs.markdown-preview'))
     use(require('plugin-specs.clipboard-image'))    -- Paste pictures to markdown
+    use(require('plugin-specs.vimtex'))
+    use(require('plugin-specs.vim-markdown'))
 
     -- Tools
     use(require('plugin-specs.nvim-colorizer'))     -- Show RGB colors inline
