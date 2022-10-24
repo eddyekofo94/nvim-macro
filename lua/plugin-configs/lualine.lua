@@ -7,10 +7,6 @@ M.location = function()
   return cursor_loc[1] .. ',' .. cursor_loc[2] + 1
 end
 
-M.clock = function()
-  return os.date('%a %H:%M')
-end
-
 M.indent_style = function()
   -- Get softtabstop or equivalent fallback
   local sts
@@ -44,10 +40,10 @@ M.opts = {
     lualine_c = {
       {
         'filename',
-        path = 1,
+        path = 3,
         symbols = {
-          modified = ' [+]',
-          readonly = ' [-]',
+          modified = '[+]',
+          readonly = '[-]',
           unnamed = ''
         }
       }
