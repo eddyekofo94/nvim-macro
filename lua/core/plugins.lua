@@ -18,10 +18,6 @@ return require('packer').startup({
   function(use)
     use(require('plugin-specs.packer'))             -- Packer manages itself
 
-    -- Color schemes
-    use(require('plugin-specs.falcon'))
-    use(require('plugin-specs.nvim-falcon'))
-
     -- Editing
     use(require('plugin-specs.cmp-buffer'))
     use(require('plugin-specs.cmp-calc'))

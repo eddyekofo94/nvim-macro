@@ -32,7 +32,7 @@ M.opts = {
     component_separators = { left = '', right = '' },
     section_separators = { left = '', right = '' },
     globalstatus = true and vim.o.laststatus == 3,
-    theme = vim.g.default_colorscheme
+    theme = require('colors.nvim-falcon.lualine.themes.nvim-falcon')
   },
   sections = {
     lualine_a = { 'mode' },

@@ -19,7 +19,6 @@ vim.opt.swapfile = false
 vim.opt.guifont = 'FiraCode Nerd Font:h12'
 -- vim.opt.pumblend = 25
 -- vim.opt.winblend = 25
-vim.g.default_colorscheme = 'nvim-falcon' -- Default colorscheme
 
 vim.opt.list = true
 vim.opt.listchars = {
@@ -72,3 +71,6 @@ vim.g.loaded_rrhelper = 1
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.loaded_netrwSettings = 1
+
+-- colorscheme
+vim.cmd('colorscheme nvim-falcon')
