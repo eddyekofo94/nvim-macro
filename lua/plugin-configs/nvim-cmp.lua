@@ -57,28 +57,26 @@ M.opts = {
         fallback()
       end
     end, { 'i', 'c' }),
-    ['<C-p>'] = M.cmp.mapping.select_prev_item(),
-    ['<C-n>'] = M.cmp.mapping.select_next_item(),
+    ['<C-p>'] = M.cmp.mapping(function()
+      if M.cmp.visible() then
+        M.cmp.select_prev_item()
+      else
+        M.cmp.complete()
+      end
+    end),
+    ['<C-n>'] = M.cmp.mapping(function()
+      if M.cmp.visible() then
+        M.cmp.select_next_item()
+      else
+        M.cmp.complete()
+      end
+    end),
     ['<C-b>'] = M.cmp.mapping.scroll_docs(-8),
     ['<C-f>'] = M.cmp.mapping.scroll_docs(8),
     ['<C-u>'] = M.cmp.mapping.scroll_docs(-4),
     ['<C-d>'] = M.cmp.mapping.scroll_docs(4),
     ['<C-y>'] = M.cmp.mapping.scroll_docs(-1),
     ['<C-e>'] = M.cmp.mapping.scroll_docs(1),
-    ['<M-;>'] = M.cmp.mapping(function()
-      if M.cmp.visible() then
-        M.cmp.close()
-      else
-        M.cmp.complete()
-      end
-    end, { 'i', 'c' }),
-    ['<M-:>'] = M.cmp.mapping(function(fallback)
-      if M.cmp.visible() then
-        M.cmp.abort()
-      else
-        fallback()
-      end
-    end, { 'i', 'c' }),
     ['<CR>'] = M.cmp.mapping.confirm {
       behavior = M.cmp.ConfirmBehavior.Replace,
       select = false
