@@ -98,13 +98,10 @@ M.opts = {
   },
   sorting = {
     comparators = {
-      M.cmp.config.compare.score,
-      M.cmp.config.compare.distance,
-      M.cmp.config.compare.offset,
-      M.cmp.config.compare.exact,
       M.cmp.config.compare.kind,
-      M.cmp.config.compare.sort_text,
-      M.cmp.config.compare.order
+      M.cmp.config.compare.score,
+      M.cmp.config.compare.locality,
+      M.cmp.config.compare.recently_used,
     }
   },
   -- cmp floating window config
