@@ -202,10 +202,10 @@ sch.htmlSpecialTagName = { fg = plt.yellow }
 sch.htmlEndTag         = { fg = plt.yellow }
 sch.htmlH1             = { fg = plt.tea, bold = true }
 sch.htmlH2             = { fg = plt.aqua, bold = true }
-sch.htmlH3             = { fg = plt.lavender, bold = true }
-sch.htmlH4             = { fg = plt.pink, bold = true }
+sch.htmlH3             = { fg = plt.cerulean, bold = true }
+sch.htmlH4             = { fg = plt.lavender, bold = true }
 sch.htmlH5             = { fg = plt.purple, bold = true }
-sch.htmlH6             = { fg = plt.aqua, bold = true }
+sch.htmlH6             = { fg = plt.pink, bold = true }
 sch.htmlItalic         = { italic = true }
 sch.htmlLink           = { fg = plt.flashlight, underline = true }
 sch.htmlSpecialChar    = { fg = plt.beige }
