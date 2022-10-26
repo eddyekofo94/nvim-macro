@@ -34,7 +34,7 @@ return require('packer').startup({
     use(require('plugin-specs.vim-sleuth'))         -- Auto detect indentation
     use(require('plugin-specs.nvim-autopairs'))
     use(require('plugin-specs.undotree'))           -- Visible undo history
-    use(require('plugin-specs.ZFVimIM'))            -- Chinese insert method
+    use(require('plugin-specs.fcitx'))              -- Chinese input method
     use(require('plugin-specs.copilot'))            -- Cloud AI assistance
     use(require('plugin-specs.copilot-cmp'))        -- Copilot integration with nvim-cmp
 
