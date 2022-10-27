@@ -3,8 +3,13 @@ local M = {}
 M.aerial = require('aerial')
 
 M.opts = {
-  -- Set to false to remove the default keybindings for the aerial buffer
-  default_bindings = false,
+  keymaps = {
+    ['?'] = false,
+    ['<M-v>'] = 'actions.jump_vsplit',
+    ['<C-v>'] = false,
+    ['<M-s>'] = 'actions.jump_split',
+    ['<C-s>'] = false,
+  },
   -- Disable aerial on files with this many lines
   disable_max_lines = 8192,
   -- A list of all symbols to display. Set to false to display all symbols.
@@ -48,9 +53,10 @@ M.opts = {
   -- They can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
   -- min_width and max_width can be a list of mixed types.
   -- max_width = {40, 0.2} means 'the lesser of 40 columns or 20% of total'
-  max_width = { 40, 0.2 },
-  width = nil,
-  min_width = 16,
+  layout = {
+    max_width = { 40, 0.2 },
+    min_width = 16,
+  },
   -- Show box drawing characters for the tree hierarchy
   show_guides = true,
   -- Options for opening aerial in a floating win
