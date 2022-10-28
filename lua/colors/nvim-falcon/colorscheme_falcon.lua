@@ -41,7 +41,7 @@ sch.Question     = { fg = plt.smoke } -- |hit-enter| prompt and yes/no questions
 sch.QuickFixLine = { link = 'Visual' } -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
 sch.SignColumn   = { fg = plt.smoke } -- Column where |signs| are displayed
 sch.SpecialKey   = { fg = plt.iron } -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
-sch.SpellBad     = { underline = true } -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
+sch.SpellBad     = { underdotted = true } -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
 sch.SpellCap     = { link = 'SpellBad' } -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
 sch.SpellLocal   = { link = 'SpellBad' } -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
 sch.SpellRare    = { link = 'SpellBad' } -- Word that is recognized by the spellchecker as one that is hardly ever used. |spell| Combined with the highlighting used otherwise.
@@ -110,10 +110,10 @@ sch.DiagnosticVirtualTextError = { link = 'DiagnosticError' } -- Used for 'Error
 sch.DiagnosticVirtualTextWarn  = { link = 'DiagnosticWarn' } -- Used for 'Warn' diagnostic virtual text.
 sch.DiagnosticVirtualTextInfo  = { link = 'DiagnosticInfo' } -- Used for 'Info' diagnostic virtual text.
 sch.DiagnosticVirtualTextHint  = { link = 'DiagnosticHint' } -- Used for 'Hint' diagnostic virtual text.
-sch.DiagnosticUnderlineError   = { underline = true } -- Used to underline 'Error' diagnostics.
-sch.DiagnosticUnderlineWarn    = { underline = true } -- Used to underline 'Warn' diagnostics.
-sch.DiagnosticUnderlineInfo    = { underline = true } -- Used to underline 'Info' diagnostics.
-sch.DiagnosticUnderlineHint    = { underline = true } -- Used to underline 'Hint' diagnostics.
+sch.DiagnosticUnderlineError   = { undercurl = true, sp = plt.wine } -- Used to underline 'Error' diagnostics.
+sch.DiagnosticUnderlineWarn    = { undercurl = true, sp = plt.earch } -- Used to underline 'Warn' diagnostics.
+sch.DiagnosticUnderlineInfo    = { undercurl = true, sp = plt.flashlight } -- Used to underline 'Info' diagnostics.
+sch.DiagnosticUnderlineHint    = { undercurl = true, sp = plt.white } -- Used to underline 'Hint' diagnostics.
 sch.DiagnosticFloatingError    = { link = 'DiagnosticError' } -- Used to color 'Error' diagnostic messages in diagnostics float. See |vim.diagnostic.open_float()|
 sch.DiagnosticFloatingWarn     = { link = 'DiagnosticWarn' } -- Used to color 'Warn' diagnostic messages in diagnostics float.
 sch.DiagnosticFloatingInfo     = { link = 'DiagnosticInfo' } -- Used to color 'Info' diagnostic messages in diagnostics float.
@@ -202,7 +202,7 @@ sch.htmlSpecialTagName = { fg = plt.yellow }
 sch.htmlEndTag         = { fg = plt.yellow }
 sch.htmlH1             = { fg = plt.tea, bold = true }
 sch.htmlH2             = { fg = plt.aqua, bold = true }
-sch.htmlH3             = { fg = plt.cerulean, bold = true }
+sch.htmlH3             = { fg = plt.turquoise, bold = true }
 sch.htmlH4             = { fg = plt.lavender, bold = true }
 sch.htmlH5             = { fg = plt.purple, bold = true }
 sch.htmlH6             = { fg = plt.pink, bold = true }
