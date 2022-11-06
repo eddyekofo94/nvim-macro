@@ -21,6 +21,9 @@ vim.opt.guifont = 'FiraCode Nerd Font:h12'
 -- vim.opt.pumblend = 25
 -- vim.opt.winblend = 25
 
+vim.opt.backup = true
+vim.opt.backupdir = vim.fn.expand('~/.local/share/nvim/backup//')
+
 vim.opt.list = true
 vim.opt.listchars = {
   tab = '→ ',
