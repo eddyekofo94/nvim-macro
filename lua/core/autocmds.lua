@@ -71,17 +71,6 @@ vim.api.nvim_create_autocmd(
   }
 )
 
--- Always link highlight group 'Conceal' to 'NonText',
--- so that spaces concealed and spaces displayed as listchars
--- have the same color and style
-vim.api.nvim_create_autocmd(
-  { 'ColorScheme', 'VimEnter' },
-  {
-    pattern = '*',
-    command = 'hi clear Conceal | hi link Conceal NonText'
-  }
-)
-
 -- Used to restore the expandtab setting after temporarily
 -- forcing expandtab if have text before cursor, see the
 -- corresponding keymap in keymaps.lua
