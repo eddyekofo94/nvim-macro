@@ -4,6 +4,7 @@ vim.opt.relativenumber = true
 vim.opt.number = true
 vim.opt.ruler = true
 vim.opt.scrolloff = 4
+vim.opt.sidescrolloff = 8
 vim.opt.wrap = false
 vim.opt.termguicolors = true
 vim.opt.pumheight = 16
