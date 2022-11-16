@@ -1,0 +1,79 @@
+local noremap = function(mappings)
+  local _noremap = function(mode, lhs, rhs, opts)
+    opts = vim.tbl_deep_extend('keep', opts or {}, { noremap = true })
+    vim.keymap.set(mode, lhs, rhs, opts)
+  end
+  for _, mapping in ipairs(mappings) do
+    _noremap(unpack(mapping))
+  end
+end
+
+local leadermap = function(key)
+  vim.keymap.set({ 'n', 'v', 'x' }, key, '')
+  vim.g.mapleader = vim.api.nvim_replace_termcodes(key, true, true, true)
+end
+
+leadermap('<Space>')
+
+noremap({
+  -- Multi-window operations
+  { 'n', '<M-w>', '<C-w><C-w>' },
+  { 'n', '<M-h>', '<C-w><C-h>' },
+  { 'n', '<M-j>', '<C-w><C-j>' },
+  { 'n', '<M-k>', '<C-w><C-k>' },
+  { 'n', '<M-l>', '<C-w><C-l>' },
+  { 'n', '<M-W>', '<C-w>W' },
+  { 'n', '<M-H>', '<C-w>H' },
+  { 'n', '<M-J>', '<C-w>J' },
+  { 'n', '<M-K>', '<C-w>K' },
+  { 'n', '<M-L>', '<C-w>L' },
+  { 'n', '<M-=>', '<C-w>=' },
+  { 'n', '<M-->', '<C-w>-' },
+  { 'n', '<M-+>', '<C-w>+' },
+  { 'n', '<M-_>', '<C-w>_' },
+  { 'n', '<M-|>', '<C-w>|' },
+  { 'n', '<M-,>', '<C-w><' },
+  { 'n', '<M-.>', '<C-w>>' },
+  { 'n', '<M-p>', '<C-w>p' },
+  { 'n', '<M-r>', '<C-w>r' },
+  { 'n', '<M-v>', '<C-w>v' },
+  { 'n', '<M-s>', '<C-w>s' },
+  { 'n', '<M-x>', '<C-w>x' },
+  { 'n', '<M-z>', '<C-w>z' },
+  { 'n', '<M-c>', '<C-w>c' },
+  { 'n', '<M-o>', '<C-w>o' },
+  { 'n', '<M-t>', '<C-w>t' },
+  { 'n', '<M-T>', '<C-w>T' },
+  { 'n', '<M-]>', '<C-w>]' },
+  { 'n', '<M-^>', '<C-w>^' },
+  { 'n', '<M-b>', '<C-w>b' },
+  { 'n', '<M-d>', '<C-w>d' },
+  { 'n', '<M-f>', '<C-w>f' },
+  { 'n', '<M-g><M-]>', '<C-w>g<C-]>' },
+  { 'n', '<M-g>]', '<C-w>g]' },
+  { 'n', '<M-g>}', '<C-w>g}' },
+  { 'n', '<M-g>f', '<C-w>gf' },
+  { 'n', '<M-g>F', '<C-w>gF' },
+  { 'n', '<M-g>t', '<C-w>gt' },
+  { 'n', '<M-g>T', '<C-w>gT' },
+  { 'n', '<M-g><Tab>', '<C-w>g<Tab>' },
+  { 'n', '<M-}>', '<C-w>}' },
+
+  -- Multi-buffer operations
+  { 'n', '<Tab>', '<cmd>bn<CR>' },
+  { 'n', '<S-Tab>', '<cmd>bp<CR>' },
+  -- Delete current buffer
+  { 'n', '<M-C>', '<cmd>bd<CR>' },
+  -- <Tab> / <C-i> is used to switch buffers,
+  -- so use <C-n> to jump to newer cursor position instead
+  { 'n', '<C-n>', '<C-i>' },
+
+  -- Moving in insert and command-line mode
+  { '!', '<M-h>', '<left>' },
+  { '!', '<M-j>', '<down>' },
+  { '!', '<M-k>', '<up>' },
+  { '!', '<M-l>', '<right>' },
+
+  -- Close all floating windows
+  { 'n', 'q', function() require('utils.funcs').close_all_floatings('q') end },
+})

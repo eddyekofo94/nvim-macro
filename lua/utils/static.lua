@@ -13,10 +13,8 @@ end
 M.langs = setmetatable({
   asm = { ft = 'asm', lsp_server = 'asm_lsp' },
   bash = { ft = 'sh', lsp_server = 'bashls' },
-  bibtex = { ts = 'bibtex', ft = 'bib', lsp_server = 'texlab' },
   c = { ts = 'c', ft = 'c', lsp_server = 'clangd' },
   cpp = { ts = 'cpp', ft = 'cpp', lsp_server = 'clangd' },
-  html = { ts = 'html', ft = 'html', lsp_server = 'html' },
   lua = { ts = 'lua', ft = 'lua', lsp_server = 'sumneko_lua' },
   make = { ts = 'make', ft = 'make' },
   python = { ts = 'python', ft = 'python', lsp_server = 'pylsp' },

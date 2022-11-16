@@ -10,3 +10,6 @@ spell/
 
 # ignore git account informations
 git_account.lua
+
+# ignore backup files
+*~
