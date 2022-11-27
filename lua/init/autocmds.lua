@@ -1,83 +1,88 @@
--- Disable number, relativenumber, and spell check in the built-in terminal
-vim.api.nvim_create_autocmd(
-  { 'TermOpen' },
-  {
-    buffer = 0,
-    callback = function()
-      vim.wo.spell = false
-      vim.wo.number = false
-      vim.wo.relativenumber = false
-      vim.wo.scrolloff = 0
-    end
-  }
-)
+local set_autocmds = function(autocmds)
+  for _, autocmd in ipairs(autocmds) do
+    vim.api.nvim_create_autocmd(unpack(autocmd))
+  end
+end
 
--- Highlight the selection on yank
-vim.api.nvim_create_autocmd(
-  { 'TextYankPost' },
+local autocmds = {
+  -- Disable number, relativenumber, and spell check in the built-in terminal
   {
-    pattern = '*',
-    callback = function()
-      vim.highlight.on_yank({ higroup = 'Visual', timeout = 300 })
-    end
-  }
-)
+    { 'TermOpen' },
+    {
+      buffer = 0,
+      callback = function()
+        vim.wo.spell = false
+        vim.wo.number = false
+        vim.wo.relativenumber = false
+        vim.wo.scrolloff = 0
+      end
+    },
+  },
 
--- Autosave on focus change
-vim.api.nvim_create_autocmd(
-  { 'BufLeave', 'WinLeave', 'FocusLost' },
+  -- Highlight the selection on yank
   {
-    pattern = '*',
-    command = 'silent! wall',
-    nested = true
-  }
-)
+    { 'TextYankPost' },
+    {
+      pattern = '*',
+      callback = function()
+        vim.highlight.on_yank({ higroup = 'Visual', timeout = 300 })
+      end
+    },
+  },
 
--- Jump to last accessed window on closing the current one
-vim.api.nvim_create_autocmd(
-  { 'VimEnter', 'WinEnter' },
+  -- Autosave on focus change
   {
-    pattern = '*',
-    callback = function()
-      require('utils.funcs').win_close_jmp()
-    end
-  }
-)
+    { 'BufLeave', 'WinLeave', 'FocusLost' },
+    {
+      pattern = '*',
+      command = 'silent! wall',
+      nested = true
+    },
+  },
 
--- Last-position-jump
-vim.api.nvim_create_autocmd(
-  { 'BufReadPost' },
+  -- Jump to last accessed window on closing the current one
   {
-    pattern = '*',
-    callback = function()
-      require('utils.funcs').last_pos_jmp()
-    end
-  }
-)
+    { 'VimEnter', 'WinEnter' },
+    {
+      pattern = '*',
+      callback = function()
+        require('utils.funcs').win_close_jmp()
+      end
+    },
+  },
 
-vim.api.nvim_create_autocmd(
-  { 'InsertEnter' },
+  -- Last-position-jump
   {
-  pattern = '*',
-  command = 'set nohlsearch'
-  }
-)
+    { 'BufReadPost' },
+    {
+      pattern = '*',
+      callback = function()
+        require('utils.funcs').last_pos_jmp()
+      end
+    },
+  },
 
-vim.api.nvim_create_autocmd(
-  { 'ColorScheme', 'VimEnter' },
   {
-    pattern = '*',
-    command = 'hi clear SpellBad | hi SpellBad cterm=undercurl gui=undercurl'
-  }
-)
+    { 'ColorScheme', 'VimEnter' },
+    {
+      pattern = '*',
+      command = 'hi clear SpellBad | hi SpellBad cterm=undercurl gui=undercurl'
+    },
+  },
 
--- Always link highlight group 'Conceal' to 'NonText',
--- so that spaces concealed and spaces displayed as listchars
--- have the same color and style
-vim.api.nvim_create_autocmd(
-  { 'ColorScheme', 'VimEnter' },
+  -- Automatically change local current directory
   {
-    pattern = '*',
-    command = 'hi clear Conceal | hi link Conceal NonText'
-  }
-)
+    { 'BufEnter' },
+    {
+      pattern = '*',
+      callback = function ()
+        if vim.bo.buftype ~= '' then return end
+        local target_dir = require('utils.funcs').git_dir()
+        if not target_dir then target_dir = vim.fn.expand('%:p:h') end
+        if target_dir then vim.cmd('lcd ' .. target_dir) end
+      end
+    },
+  },
+}
+
+set_autocmds(autocmds)
