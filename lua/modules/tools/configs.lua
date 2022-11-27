@@ -22,7 +22,7 @@ M['telescope.nvim'] = function()
   vim.keymap.set('n', '<Leader>fs', function() telescope_builtin.lsp_document_symbols() end, keymap_opts)
   vim.keymap.set('n', '<Leader>fS', function() telescope_builtin.lsp_workspace_symbols() end, keymap_opts)
   vim.keymap.set('n', '<Leader>fg', function() telescope_builtin.git_files() end, keymap_opts)
-  vim.keymap.set('n', '<Leader>fj', function() telescope.extensions.project.project({ display_type = 'full' }) end, keymap_opts)
+  vim.keymap.set('n', '<Leader>fm', function() telescope_builtin.marks() end, keymap_opts)
 
   telescope.setup({
     defaults = {

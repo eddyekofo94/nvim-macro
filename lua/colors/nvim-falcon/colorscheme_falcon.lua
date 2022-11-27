@@ -320,7 +320,7 @@ sch.IconColor2 = { fg = plt.pigeon }
 sch.IconColor3 = { fg = plt.steel }
 sch.IconColor4 = { fg = plt.ochre }
 sch.IconColor5 = { fg = plt.flashlight }
-sch.IconColor6 = { fg = plt.lavender }
+sch.IconColor6 = { fg = plt.earth }
 sch.IconColor7 = { fg = plt.white }
 sch.IconColor8 = { fg = plt.wine }
 
