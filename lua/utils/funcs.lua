@@ -53,14 +53,6 @@ function M.close_all_floatings(key)
   end
 end
 
--- Check if a plugin is loaded
-function M.loaded(plugin)
-  if type(plugin) == 'table' then
-    plugin = vim.split(plugin[1], '/')[2]
-  end
-  return packer_plugins[plugin] and packer_plugins[plugin].loaded
-end
-
 function M.git_dir()
 local gitdir = vim.fn.system(string.format(
   'git -C %s rev-parse --show-toplevel', vim.fn.expand('%:p:h')))
