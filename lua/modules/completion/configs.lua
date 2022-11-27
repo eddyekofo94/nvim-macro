@@ -3,7 +3,6 @@ local M = {}
 M['nvim-cmp'] = function()
   local cmp = require('cmp')
   local luasnip = require('luasnip')
-  local context = require('cmp.config.context')
   local icons = require('utils.static').icons
 
   cmp.setup({
@@ -163,6 +162,10 @@ end
 
 M['copilot.lua'] = function()
   vim.defer_fn(function()
+    if vim.g.loaded_coplilot then
+      return
+    end
+    vim.g.loaded_coplilot = true
     require('copilot').setup({
       suggestion = {
         enabled = true,
