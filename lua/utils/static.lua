@@ -11,7 +11,6 @@ function langs_mt:list(field)
 end
 
 M.langs = setmetatable({
-  asm = { ft = 'asm', lsp_server = 'asm_lsp' },
   bash = { ft = 'sh', lsp_server = 'bashls' },
   c = { ts = 'c', ft = 'c', lsp_server = 'clangd' },
   cpp = { ts = 'cpp', ft = 'cpp', lsp_server = 'clangd' },
