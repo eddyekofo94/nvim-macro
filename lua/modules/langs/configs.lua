@@ -57,7 +57,7 @@ M['nvim-lspconfig'] = function()
       { 'n', '[e', '<cmd>lua vim.diagnostic.goto_prev()<CR>', keymap_opts },
       { 'n', ']e', '<cmd>lua vim.diagnostic.goto_next()<CR>', keymap_opts },
       { 'n', '<leader>ll', '<cmd>lua vim.diagnostic.setloclist()<CR>', keymap_opts },
-      { 'n', '<leader>l=', '<cmd>lua vim.lsp.buf.forma)<CR>', keymap_opts },
+      { 'n', '<leader>l=', '<cmd>lua vim.lsp.buf.format()<CR>', keymap_opts },
     }
     local buf_set_keymap = function(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
     local buf_set_option = function(...) vim.api.nvim_buf_set_option(bufnr, ...) end
