@@ -14,7 +14,7 @@ M['nvim-lspconfig'] = function()
     local diagnostic_opts = {}
     -- LSP diagnostic signs
     diagnostic_opts.signs = {
-      { 'DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError', numhl = 'DiagnosticSignError' } },
+      { 'DiagnosticSignError', { text = ' ', texthl = 'DiagnosticSignError', numhl = 'DiagnosticSignError' } },
       { 'DiagnosticSignWarn', { text = ' ', texthl = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn' } },
       { 'DiagnosticSignInfo', { text = ' ', texthl = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo' } },
       { 'DiagnosticSignHint', { text = ' ', texthl = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint' } },
@@ -74,7 +74,7 @@ M['nvim-lspconfig'] = function()
     capabilities.offsetEncoding = 'utf-8'
     local cmp_nvim_lsp_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
     if cmp_nvim_lsp_ok then
-      capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+      capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
     end
     local function get_lsp_server_cfg(name)
       local status, server_config = pcall(require, 'modules/langs/lsp-server-configs/' .. name)
@@ -216,6 +216,132 @@ M['mason-lspconfig.nvim'] = function()
   require('mason-lspconfig').setup({
     ensure_installed = require('utils.static').langs:list('lsp_server'),
   })
+end
+
+M['lspsaga.nvim'] = function()
+  require('lspsaga').init_lsp_saga({
+    diagnostic_header = { ' ', ' ', ' ', ' ' },
+    code_action_icon = ' ',
+    -- finder icons
+    finder_icons = {
+      def = ' ',
+      ref = ' ',
+      link = ' ',
+    },
+    finder_action_keys = {
+      open = {'o', '<CR>'},
+      quit = {'q', '<ESC>'},
+      vsplit = 'v',
+      split = 's',
+      tabe = 't',
+    },
+    code_action_keys = {
+      quit = { 'q', '<ESC>' },
+      exec = '<CR>',
+    },
+    definition_action_keys = {
+      edit = '<C-c>o',
+      vsplit = '<C-c>v',
+      split = '<C-c>i',
+      tabe = '<C-c>t',
+      quit = 'q',
+    },
+    rename_action_quit = '<C-c>',
+    symbol_in_winbar = {
+      enable = true,
+      in_custom = true,
+      show_file = false,
+      separator = ' -> ',
+      click_support = function(node, clicks, button, modifiers)
+        -- To see all avaiable details: vim.pretty_print(node)
+        local st = node.range.start
+        local en = node.range['end']
+        if button == 'l' then
+          if clicks == 2 then
+            -- double left click to do nothing
+          else -- jump to node's starting line+char
+            vim.fn.cursor(st.line + 1, st.character + 1)
+          end
+        elseif button == 'r' then
+          if modifiers == 's' then
+            print 'lspsaga' -- shift right click to print 'lspsaga'
+          end -- jump to node's ending line+char
+          vim.fn.cursor(en.line + 1, en.character + 1)
+        elseif button == 'm' then
+          -- middle click to visual select node
+          vim.fn.cursor(st.line + 1, st.character + 1)
+          vim.cmd 'normal v'
+          vim.fn.cursor(en.line + 1, en.character + 1)
+        end
+      end,
+    },
+  })
+
+  local function get_file_name()
+    local file_name = require('lspsaga.symbolwinbar').get_file_name(nil)
+    if vim.fn.bufname '%' == '' then return '' end
+    -- Else if include path: ./lsp/saga.lua -> lsp > saga.lua
+    local sep = vim.loop.os_uname().sysname == 'Windows' and '\\' or '/'
+    local path_list = vim.split(string.gsub(vim.fn.expand '%:~:.:h', '%%', ''), sep)
+    local file_path = ''
+    for _, cur in ipairs(path_list) do
+      file_path = (cur == '.' or cur == '~') and '' or
+                  file_path .. cur .. ' ' .. '%#LspSagaWinbarSep#>%*' .. ' %*'
+    end
+    return file_path .. file_name
+  end
+
+  local function update_winbar()
+    local exclude = {
+      ['terminal'] = true,
+      ['toggleterm'] = true,
+      ['prompt'] = true,
+      ['NvimTree'] = true,
+      ['help'] = true,
+    } -- Ignore float windows and exclude filetype
+    if vim.api.nvim_win_get_config(0).zindex or exclude[vim.bo.filetype] then
+      vim.wo.winbar = ''
+    else
+      local ok, lspsaga = pcall(require, 'lspsaga.symbolwinbar')
+      local sym
+      if ok then sym = lspsaga.get_symbol_node() end
+      local win_val = get_file_name()
+      if sym ~= nil then win_val = win_val .. ': ' .. sym end
+      vim.wo.winbar = win_val
+    end
+  end
+
+  vim.api.nvim_create_augroup('Winbar', {})
+  vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'CursorMoved' }, {
+    pattern = '*',
+    callback = function() update_winbar() end,
+    group = 'Winbar',
+  })
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'LspsagaUpdateSymbol',
+    callback = function() update_winbar() end,
+    group = 'Winbar',
+  })
+
+  vim.keymap.set('n', 'gh', '<cmd>Lspsaga lsp_finder<CR>', { silent = true })
+  vim.keymap.set({ 'n','v' }, '<leader>ca', '<cmd>Lspsaga code_action<CR>', { silent = true })
+  vim.keymap.set('n', 'gr', '<cmd>Lspsaga rename<CR>', { silent = true })
+  vim.keymap.set('n', 'gd', '<cmd>Lspsaga peek_definition<CR>', { silent = true })
+  vim.keymap.set('n', '<leader>cd', '<cmd>Lspsaga show_line_diagnostics<CR>', { silent = true })
+  vim.keymap.set('n', '<leader>cd', '<cmd>Lspsaga show_cursor_diagnostics<CR>', { silent = true })
+  vim.keymap.set('n', '[e', '<cmd>Lspsaga diagnostic_jump_prev<CR>', { silent = true })
+  vim.keymap.set('n', ']e', '<cmd>Lspsaga diagnostic_jump_next<CR>', { silent = true })
+  vim.keymap.set('n', '[E', function()
+    require('lspsaga.diagnostic').goto_prev({ severity = vim.diagnostic.severity.ERROR })
+  end, { silent = true })
+  vim.keymap.set('n', ']E', function()
+    require('lspsaga.diagnostic').goto_next({ severity = vim.diagnostic.severity.ERROR })
+  end, { silent = true })
+  vim.keymap.set('n','<leader>o', '<cmd>LSoutlineToggle<CR>',{ silent = true })
+  vim.keymap.set('n', 'K', '<cmd>Lspsaga hover_doc<CR>', { silent = true })
+  vim.keymap.set('n', '<A-d>', '<cmd>Lspsaga open_floaterm<CR>', { silent = true })
+  vim.keymap.set('n', '<A-d>', '<cmd>Lspsaga open_floaterm lazygit<CR>', { silent = true })
+  vim.keymap.set('t', '<A-d>', '<C-\\><C-n><cmd>Lspsaga close_floaterm<CR>', { silent = true })
 end
 
 return M

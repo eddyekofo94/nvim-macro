@@ -55,6 +55,9 @@ end
 
 -- Check if a plugin is loaded
 function M.loaded(plugin)
+  if type(plugin) == 'table' then
+    plugin = vim.split(plugin[1], '/')[2]
+  end
   return packer_plugins[plugin] and packer_plugins[plugin].loaded
 end
 

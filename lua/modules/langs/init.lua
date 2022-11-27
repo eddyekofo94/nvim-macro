@@ -1,9 +1,10 @@
 local M = {}
 local configs = require('modules.langs.configs')
+local ft_list = require('utils.static').langs:list('ft')
 
 M['nvim-lspconfig'] = {
   'neovim/nvim-lspconfig',
-  ft = require('utils.static').langs:list('ft'),
+  ft = ft_list,
   config = configs['nvim-lspconfig'],
 }
 
@@ -23,14 +24,14 @@ M['mason.nvim'] = {
 M['mason-lspconfig'] = {
   'williamboman/mason-lspconfig.nvim',
   requires = { 'mason.nvim', 'nvim-lspconfig', },
-  ft = require('utils.static').langs:list('ft'),
+  ft = ft_list,
   config = configs['mason-lspconfig.nvim'],
 }
 
 M['nvim-treesitter'] = {
   'nvim-treesitter/nvim-treesitter',
   run = ':TSUpdate',
-  ft = require('utils.static').langs:list('ft'),
+  ft = ft_list,
   config = configs['nvim-treesitter'],
 }
 
@@ -50,6 +51,15 @@ M['nvim-ts-context-commentstring'] = {
   'JoosepAlviste/nvim-ts-context-commentstring',
   requires = 'nvim-treesitter',
   after = 'nvim-treesitter',
+}
+
+M['lspsage.nvim'] = {
+  'glepnir/lspsaga.nvim',
+  enable = false,
+  ft = ft_list,
+  requires = 'nvim-lspconfig',
+  after = 'nvim-lspconfig',
+  config = configs['lspsaga.nvim'],
 }
 
 return M
