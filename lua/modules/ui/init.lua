@@ -20,4 +20,10 @@ M['lualine.nvim'] = {
   config = configs['lualine.nvim'],
 }
 
+M['alpha-nvim'] = {
+  'goolord/alpha-nvim',
+  requires = 'nvim-web-devicons',
+  config = configs['alpha-nvim'],
+}
+
 return M
