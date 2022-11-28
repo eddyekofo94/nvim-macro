@@ -218,9 +218,33 @@ M['alpha-nvim'] = function()
     dashboard.section.footer
   }
 
-  -- Do not show statusline or tabline in alpha buffer
-  vim.cmd('au User AlphaReady if winnr("$") == 1 | set laststatus=0 showtabline=0 | endif | au BufUnload <buffer> set laststatus=3 showtabline=2')
   alpha.setup(dashboard.opts)
+
+  -- Do not show statusline or tabline in alpha buffer
+  local laststatus_save, showtabline_save
+  vim.api.nvim_create_augroup('AlphaSetLine', {})
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'AlphaReady',
+    callback = function()
+      if vim.fn.winnr('$') == 1 then
+        laststatus_save = vim.o.laststatus
+        showtabline_save = vim.o.showtabline
+        vim.o.laststatus = 0
+        vim.o.showtabline = 0
+      end
+    end,
+    group = 'AlphaSetLine',
+  })
+  vim.api.nvim_create_autocmd('BufUnload', {
+    pattern = '*',
+    callback = function()
+      if vim.bo.ft == 'alpha' then
+        vim.o.laststatus = laststatus_save
+        vim.o.showtabline = showtabline_save
+      end
+    end,
+    group = 'AlphaSetLine',
+  })
 end
 
 return M
