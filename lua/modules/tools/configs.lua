@@ -28,7 +28,7 @@ M['telescope.nvim'] = function()
     defaults = {
       prompt_prefix = '/ ',
       selection_caret = '→ ',
-      borderchars = require('utils.static').borders.double_header,
+      borderchars = require('utils.static').borders.single,
       layout_config = {
         horizontal = { prompt_position = 'top' },
         vertical = { prompt_position = 'top' }
@@ -100,7 +100,7 @@ M['toggleterm.nvim'] = function()
     persist_size = false,
     direction = 'float',
     float_opts = {
-      border = require('utils.static').borders.double_horizontal_clc,
+      border = 'single',
       width = function() return math.floor(0.7 * vim.o.columns) end,
       height = function() return math.floor(0.7 * vim.o.lines) end
     }

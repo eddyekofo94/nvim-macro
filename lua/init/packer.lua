@@ -18,7 +18,7 @@ local function packer_init()
     transitive_opt = true,
     display = {
       open_fn = function()
-        return require('packer.util').float({ border = 'double' })
+        return require('packer.util').float({ border = 'single' })
       end,
       working_sym = '',
       error_sym = '',

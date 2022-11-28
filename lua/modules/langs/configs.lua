@@ -196,7 +196,7 @@ end
 M['mason.nvim'] = function()
   require('mason').setup({
     ui = {
-      border = 'double',
+      border = 'single',
       icons = {
         package_installed = '',
         package_pending = '',
