@@ -37,34 +37,36 @@ M['nvim-lspconfig'] = function()
   end
 
   local function on_attach(_, bufnr)
+
+    -- Enable completion triggered by <c-x><c-o>
+    local buf_set_option = function(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
     -- Use an on_attach function to only map the following keys
     -- after the language server attaches to the current buffer
-    local keymap_opts = { noremap = true, silent = true }
     local keymaps = {
-      { 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', keymap_opts },
-      { 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', keymap_opts },
-      { 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', keymap_opts },
-      { 'n', '<leader>ls', '<cmd>lua vim.lsp.buf.signature_help()<CR>', keymap_opts },
-      { 'n', '<Leader>li', '<cmd>lua vim.lsp.buf.implementation()<CR>', keymap_opts },
-      { 'n', '<Leader>lwa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', keymap_opts },
-      { 'n', '<Leader>lwd', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', keymap_opts },
-      { 'n', '<Leader>lwl', '<cmd>lua vim.pretty_print(vim.lsp.buf.list_workspace_folders())<CR>', keymap_opts },
-      { 'n', '<leader>gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', keymap_opts },
-      { 'n', '<Leader>lr', '<cmd>lua vim.lsp.buf.rename()<CR>', keymap_opts },
-      { 'n', '<Leader>la', '<cmd>lua vim.lsp.buf.code_action()<CR>', keymap_opts },
-      { 'n', '<Leader>lR', '<cmd>lua vim.lsp.buf.references()<CR>', keymap_opts },
-      { 'n', '<Leader>le', '<cmd>lua vim.diagnostic.open_float()<CR>', keymap_opts },
-      { 'n', '[e', '<cmd>lua vim.diagnostic.goto_prev()<CR>', keymap_opts },
-      { 'n', ']e', '<cmd>lua vim.diagnostic.goto_next()<CR>', keymap_opts },
-      { 'n', '<leader>ll', '<cmd>lua vim.diagnostic.setloclist()<CR>', keymap_opts },
-      { 'n', '<leader>l=', '<cmd>lua vim.lsp.buf.format()<CR>', keymap_opts },
+      { 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>' },
+      { 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>' },
+      { 'K', '<cmd>lua vim.lsp.buf.hover()<CR>' },
+      { '<leader>ls', '<cmd>lua vim.lsp.buf.signature_help()<CR>' },
+      { '<Leader>li', '<cmd>lua vim.lsp.buf.implementation()<CR>' },
+      { '<Leader>lwa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>' },
+      { '<Leader>lwd', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>' },
+      { '<Leader>lwl', '<cmd>lua vim.pretty_print(vim.lsp.buf.list_workspace_folders())<CR>' },
+      { '<leader>gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>' },
+      { '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>' },
+      { '<Leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>' },
+      { '<Leader>R', '<cmd>lua vim.lsp.buf.references()<CR>' },
+      { '<Leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>' },
+      { '[e', '<cmd>lua vim.diagnostic.goto_prev()<CR>' },
+      { ']e', '<cmd>lua vim.diagnostic.goto_next()<CR>' },
+      { '<leader>ll', '<cmd>lua vim.diagnostic.setloclist()<CR>' },
+      { '<leader>=', '<cmd>lua vim.lsp.buf.format()<CR>' },
     }
-    local buf_set_keymap = function(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-    local buf_set_option = function(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-    -- Enable completion triggered by <c-x><c-o>
-    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
     for _, map in ipairs(keymaps) do
-      buf_set_keymap(unpack(map))
+      -- use <unique> to avoid overriding lspsaga keymaps
+      vim.cmd(string.format('silent! nnoremap <buffer> <silent> <unique> %s %s',
+            unpack(map)))
     end
   end
 
@@ -186,7 +188,6 @@ M['nvim-treesitter'] = function()
         border = 'single',
         peek_definition_code = {
           ['<leader>k'] = '@function.outer',
-          ['<leader>K'] = '@class.outer',
         },
       },
     },
@@ -229,14 +230,14 @@ M['lspsaga.nvim'] = function()
       link = ' ',
     },
     finder_action_keys = {
-      open = {'o', '<CR>'},
-      quit = {'q', '<ESC>'},
+      open = { 'o', '<CR>' },
+      quit = { 'q', '<ESC>' },
       vsplit = 'v',
       split = 's',
       tabe = 't',
     },
     code_action_keys = {
-      quit = { 'q', '<ESC>' },
+      quit = 'q',
       exec = '<CR>',
     },
     definition_action_keys = {
@@ -305,7 +306,7 @@ M['lspsaga.nvim'] = function()
       local ok, lspsaga = pcall(require, 'lspsaga.symbolwinbar')
       local sym
       if ok then sym = lspsaga.get_symbol_node() end
-      local win_val = get_file_name()
+      local win_val = ' ' .. get_file_name()
       if sym ~= nil then win_val = win_val .. ': ' .. sym end
       vim.wo.winbar = win_val
     end
@@ -324,10 +325,10 @@ M['lspsaga.nvim'] = function()
   })
 
   vim.keymap.set('n', '<leader>lf', '<cmd>Lspsaga lsp_finder<CR>', { silent = true })
-  vim.keymap.set({ 'n','v' }, '<leader>la', '<cmd>Lspsaga code_action<CR>', { silent = true })
-  vim.keymap.set('n', '<leader>lr', '<cmd>Lspsaga rename<CR>', { silent = true })
-  vim.keymap.set('n', 'gd', '<cmd>Lspsaga peek_definition<CR>', { silent = true })
-  vim.keymap.set('n', '<leader>le', '<cmd>Lspsaga show_line_diagnostics<CR>', { silent = true })
+  vim.keymap.set('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', { silent = true })
+  vim.keymap.set('n', '<leader>r', '<cmd>Lspsaga rename<CR>', { silent = true })
+  vim.keymap.set('n', '<leader>K', '<cmd>Lspsaga peek_definition<CR>', { silent = true })
+  vim.keymap.set('n', '<leader>e', '<cmd>Lspsaga show_line_diagnostics<CR>', { silent = true })
   vim.keymap.set('n', '[e', '<cmd>Lspsaga diagnostic_jump_prev<CR>', { silent = true })
   vim.keymap.set('n', ']e', '<cmd>Lspsaga diagnostic_jump_next<CR>', { silent = true })
   vim.keymap.set('n', '[E', function()
