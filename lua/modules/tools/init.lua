@@ -37,8 +37,9 @@ M['undotree'] = {
 
 M['toggleterm.nvim'] = {
   'akinsho/toggleterm.nvim',
-  keys = { '<C-\\>', '<M-d>' },
+  keys = { '<C-\\>', '<M-i>' },
   cmd = {
+    'Lzgit',
     'TermExec',
     'ToggleTerm',
     'ToggleTermToggleAll',

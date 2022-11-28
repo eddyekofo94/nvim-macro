@@ -140,8 +140,9 @@ M['toggleterm.nvim'] = function()
     Lazygit:toggle()
   end
 
-  vim.keymap.set({ 'n', 't' }, '<M-d>',
+  vim.keymap.set({ 'n', 't' }, '<M-i>',
       lazygit_toggle, { noremap = true, silent = true })
+  vim.api.nvim_create_user_command('Lzgit', lazygit_toggle, {})
 end
 
 M['rnvimr'] = function()
