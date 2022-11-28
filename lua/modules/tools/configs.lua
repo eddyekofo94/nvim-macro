@@ -166,11 +166,17 @@ M['gitsigns.nvim'] = function()
   require('gitsigns').setup({
     signs = {
       add = { hl = 'GitSignsAdd', text = '+', numhl = 'GitSignsAddNr', linehl = 'GitSignsAddLn' },
-      untracked = { hl = 'GitSignsAdd', text = '*', numhl = 'GitSignsAddNr', linehl = 'GitSignsAddLn' },
+      untracked = { hl = 'GitSignsAdd', text = '+', numhl = 'GitSignsAddNr', linehl = 'GitSignsAddLn' },
       change = { hl = 'GitSignsChange', text = '~', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn' },
       delete = { hl = 'GitSignsDelete', text = '_', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
       topdelete = { hl = 'GitSignsDelete', text = '‾', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
       changedelete = { hl = 'GitSignsDelete', text = '~', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
+    },
+    current_line_blame = true,
+    current_line_blame_opts = {
+      virt_text = true,
+      virt_text_pos = 'eol',
+      delay = 100,
     },
     on_attach = function(bufnr)
       local gs = package.loaded.gitsigns
@@ -195,9 +201,9 @@ M['gitsigns.nvim'] = function()
       end, {expr=true})
 
       -- Actions
-      map({ 'n', 'v' }, '<leader>gs', gs.stage_hunk)
+      map({ 'n', 'v' }, '<leader>ga', gs.stage_hunk)
       map({ 'n', 'v' }, '<leader>gr', gs.reset_hunk)
-      map('n', '<leader>gS', gs.stage_buffer)
+      map('n', '<leader>gA', gs.stage_buffer)
       map('n', '<leader>gu', gs.undo_stage_hunk)
       map('n', '<leader>gR', gs.reset_buffer)
       map('n', '<leader>gp', gs.preview_hunk)

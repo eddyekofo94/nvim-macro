@@ -15,11 +15,11 @@ M['nvim-cmp'] = function()
           vim_item.kind = ''
           -- Use a terminal icon for completions from cmp-cmdline
         elseif entry.source.name == 'cmdline' then
-          vim_item.kind = icons.Terminal .. ' '
+          vim_item.kind = icons.Terminal
         elseif entry.source.name == 'calc' then
-          vim_item.kind = icons.Calculator .. ' '
+          vim_item.kind = icons.Calculator
         else
-          vim_item.kind = string.format('%s ', icons[vim_item.kind])
+          vim_item.kind = icons[vim_item.kind]
         end
         -- Max word length visible
         if #(vim_item.abbr) > 40 then

@@ -1,7 +1,9 @@
 local M = {}
 
 M['nvim-lspconfig'] = function()
-  local ensure_installed = require('utils.static').langs:list('lsp_server')
+  local static = require('utils.static')
+  local ensure_installed = static.langs:list('lsp_server')
+  local icons = static.icons
 
   local function lspconfig_setui()
     -- Customize LSP floating window border
@@ -14,10 +16,10 @@ M['nvim-lspconfig'] = function()
     local diagnostic_opts = {}
     -- LSP diagnostic signs
     diagnostic_opts.signs = {
-      { 'DiagnosticSignError', { text = ' ', texthl = 'DiagnosticSignError', numhl = 'DiagnosticSignError' } },
-      { 'DiagnosticSignWarn', { text = ' ', texthl = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn' } },
-      { 'DiagnosticSignInfo', { text = ' ', texthl = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo' } },
-      { 'DiagnosticSignHint', { text = ' ', texthl = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint' } },
+      { 'DiagnosticSignError', { text = icons.DiagnosticSignError, texthl = 'DiagnosticSignError', numhl = 'DiagnosticSignError' } },
+      { 'DiagnosticSignWarn', { text = icons.DiagnosticSignWarn, texthl = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn' } },
+      { 'DiagnosticSignInfo', { text = icons.DiagnosticSignInfo, texthl = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo' } },
+      { 'DiagnosticSignHint', { text = icons.DiagnosticSignHint, texthl = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint' } },
     }
     for _, sign_settings in ipairs(diagnostic_opts.signs) do
       vim.fn.sign_define(unpack(sign_settings))
@@ -220,12 +222,78 @@ M['mason-lspconfig.nvim'] = function()
 end
 
 M['lspsaga.nvim'] = function()
+
+  local icons = require('utils.static').icons
+
+  local function gen_custom_kind()
+    local valid_types = {
+      File = {},
+      Module = {},
+      Namespace = {},
+      Package = {},
+      Class = {},
+      Method = {},
+      Property = {},
+      Field = {},
+      Constructor = {},
+      Enum = {},
+      Interface = {},
+      Function = {},
+      Variable = {},
+      Constant = {},
+      String = {},
+      Number = {},
+      Boolean = {},
+      Array = {},
+      Object = {},
+      Key = {},
+      Null = {},
+      EnumMember = {},
+      Struct = {},
+      Event = {},
+      Operator = {},
+      TypeParameter = {},
+      TypeAlias = {},
+      Parameter = {},
+      StaticMethod = {},
+      Macro = {},
+    }
+
+    local function get_hl(name)
+      local ok, hl = pcall(vim.api.nvim_get_hl_by_name, name, true)
+      if not ok then return nil end
+      for _, key in pairs({'foreground', 'background', 'special'}) do
+        if hl[key] then hl[key] = string.format('#%06x', hl[key]) end
+      end
+      return hl
+    end
+
+    for typename, _ in pairs(valid_types) do
+      local hlgroup = get_hl(string.format('CmpItemKind%s', typename)) or
+                      get_hl(string.format('TS%s', typename)) or
+                      get_hl(typename) or
+                      get_hl('Normal') or
+                      { foreground = require('colors.nvim-falcon.palette').white }
+      if icons[typename] then
+        valid_types[typename] = { icons[typename], hlgroup.foreground }
+      else
+        valid_types[typename] = nil
+      end
+    end
+    return valid_types
+  end
+
   require('lspsaga').init_lsp_saga({
-    diagnostic_header = { ' ', ' ', ' ', ' ' },
-    code_action_icon = ' ',
+    diagnostic_header = {
+      icons.DiagnosticSignError,
+      icons.DiagnosticSignWarn,
+      icons.DiagnosticSignInfo,
+      icons.DiagnosticSignHint,
+    },
+    code_action_icon = '',
     -- finder icons
     finder_icons = {
-      def = ' ',
+      def = ' ',
       ref = ' ',
       link = ' ',
     },
@@ -254,7 +322,6 @@ M['lspsaga.nvim'] = function()
       show_file = false,
       separator = ' -> ',
       click_support = function(node, clicks, button, modifiers)
-        -- To see all avaiable details: vim.pretty_print(node)
         local st = node.range.start
         local en = node.range['end']
         if button == 'l' then
@@ -265,7 +332,7 @@ M['lspsaga.nvim'] = function()
           end
         elseif button == 'r' then
           if modifiers == 's' then
-            print 'lspsaga' -- shift right click to print 'lspsaga'
+            print('lspsaga')  -- shift right click to print 'lspsaga'
           end -- jump to node's ending line+char
           vim.fn.cursor(en.line + 1, en.character + 1)
         elseif button == 'm' then
@@ -276,6 +343,7 @@ M['lspsaga.nvim'] = function()
         end
       end,
     },
+    custom_kind = gen_custom_kind(),
   })
 
   local function get_file_name()
@@ -324,7 +392,7 @@ M['lspsaga.nvim'] = function()
     group = 'Winbar',
   })
 
-  vim.keymap.set('n', '<leader>lf', '<cmd>Lspsaga lsp_finder<CR>', { silent = true })
+  vim.keymap.set('n', '<leader>l*', '<cmd>Lspsaga lsp_finder<CR>', { silent = true })
   vim.keymap.set('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', { silent = true })
   vim.keymap.set('n', '<leader>r', '<cmd>Lspsaga rename<CR>', { silent = true })
   vim.keymap.set('n', '<leader>K', '<cmd>Lspsaga peek_definition<CR>', { silent = true })

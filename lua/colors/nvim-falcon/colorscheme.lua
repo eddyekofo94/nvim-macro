@@ -65,10 +65,12 @@ sch.String         = { fg = plt.beige } --   A string constant: 'this is a strin
 sch.Character      = { fg = plt.orange } --   A character constant: 'c', '\n'
 sch.Number         = { fg = plt.smoke } --   A number constant: 234, 0xff
 sch.Boolean        = { link = 'Constant' } --   A boolean constant: TRUE, false
+sch.Array          = { fg = plt.orange }
 sch.Float          = { link = 'Number' } --   A floating point constant: 2.3e10
 sch.Identifier     = { fg = plt.pigeon } -- (*) Any variable name
 sch.Function       = { fg = plt.yellow } --   Function name (also: methods for classes)
 sch.Statement      = { fg = plt.pigeon } -- (*) Any statement
+sch.Object         = { fg = plt.lavender } -- (*) Any statement
 sch.Conditional    = { fg = plt.magenta } --   if, then, else, endif, switch, etc.
 sch.Repeat         = { fg = plt.cerulean } --   for, do, while, etc.
 sch.Label          = { fg = plt.magenta } --   case, default, etc.
@@ -111,7 +113,7 @@ sch.DiagnosticVirtualTextWarn  = { link = 'DiagnosticWarn' } -- Used for 'Warn' 
 sch.DiagnosticVirtualTextInfo  = { link = 'DiagnosticInfo' } -- Used for 'Info' diagnostic virtual text.
 sch.DiagnosticVirtualTextHint  = { link = 'DiagnosticHint' } -- Used for 'Hint' diagnostic virtual text.
 sch.DiagnosticUnderlineError   = { undercurl = true, sp = plt.wine } -- Used to underline 'Error' diagnostics.
-sch.DiagnosticUnderlineWarn    = { undercurl = true, sp = plt.earch } -- Used to underline 'Warn' diagnostics.
+sch.DiagnosticUnderlineWarn    = { undercurl = true, sp = plt.earth } -- Used to underline 'Warn' diagnostics.
 sch.DiagnosticUnderlineInfo    = { undercurl = true, sp = plt.flashlight } -- Used to underline 'Info' diagnostics.
 sch.DiagnosticUnderlineHint    = { undercurl = true, sp = plt.white } -- Used to underline 'Hint' diagnostics.
 sch.DiagnosticFloatingError    = { link = 'DiagnosticError' } -- Used to color 'Error' diagnostic messages in diagnostics float. See |vim.diagnostic.open_float()|
@@ -247,6 +249,7 @@ sch.CmpItemMenu             = { fg = plt.smoke }
 sch.GitSignsAdd             = { fg = plt.tea }
 sch.GitSignsDelete          = { fg = plt.scarlet }
 sch.GitSignsChange          = { fg = plt.aqua }
+sch.GitSignsCurrentLineBlame= { fg = plt.turquoise }
 -- barbar
 sch.BufferCurrent           = { fg = plt.flashlight }
 sch.BufferCurrentIndex      = { fg = plt.orange }
@@ -260,50 +263,50 @@ sch.BufferInactiveSign      = { fg = plt.pigeon, bg = plt.deepsea }
 sch.BufferInactiveTarget    = { fg = plt.wine, bg = plt.deepsea }
 sch.BufferVisible           = { fg = plt.pigeon }
 sch.BufferVisibleMod        = { fg = plt.orange }
--- nvim-tree
-sch.NvimTreeGitNew          = { link = 'GitSignsAdd' }
-sch.NvimTreeFileNew         = { link = 'GitSignsAdd' }
-sch.NvimTreeGitRenamed      = { link = 'GitSignsChange' }
-sch.NvimTreeFileRenamed     = { link = 'GitSignsChange' }
-sch.NvimTreeGitMerge        = { link = 'GitSignsAdd' }
-sch.NvimTreeFileMerge       = { link = 'GitSignsAdd' }
-sch.NvimTreeGitStaged       = { fg = plt.purple }
-sch.NvimTreeFileStaged      = { fg = plt.purple }
-sch.NvimTreeGitDeleted      = { link = 'GitSignsDelete' }
-sch.NvimTreeFileDeleted     = { link = 'GitSignsDelete' }
-sch.NvimTreeGitDirty        = { link = 'GitSignsChange' }
-sch.NvimTreeFileDirty       = { link = 'GitSignsChange' }
-sch.NvimTreeFolderIcon      = { link = 'CmpItemKindFolder' }
-sch.NvimTreeOpenedFile      = { fg = plt.flashlight }
-sch.NvimTreeNormal          = { link = 'NormalFloat' }
--- aerial
-sch.AerialLine              = { link = 'Visual' }
-sch.AerialArrayIcon         = { link = 'CmpItemKind' }
-sch.AerialBooleanIcon       = { link = 'Boolean' }
-sch.AerialClassIcon         = { link = 'CmpItemKindClass' }
-sch.AerialConstantIcon      = { link = 'CmpItemKindConstant' }
-sch.AerialConstructorIcon   = { link = 'CmpItemKindConstructor' }
-sch.AerialEnumIcon          = { link = 'CmpItemKindEnum' }
-sch.AerialEnumMemberIcon    = { link = 'CmpItemKindEnumMember' }
-sch.AerialEventIcon         = { link = 'CmpItemKindEvent' }
-sch.AerialFieldIcon         = { link = 'CmpItemKindField' }
-sch.AerialFileIcon          = { link = 'CmpItemKindFile' }
-sch.AerialFunctionIcon      = { link = 'CmpItemKindFunction' }
-sch.AerialInterfaceIcon     = { link = 'CmpItemKindInterface' }
-sch.AerialKeyIcon           = { link = 'CmpItemKindKeyword' }
-sch.AerialMethodIcon        = { link = 'CmpItemKindMethod' }
-sch.AerialModuleIcon        = { link = 'CmpItemKindModule' }
-sch.AerialNamespaceIcon     = { link = 'TSNamespace' }
-sch.AerialNullIcon          = { link = 'Boolean' }
-sch.AerialNumberIcon        = { link = 'CmpItemKindValue' }
-sch.AerialObjectIcon        = { link = 'CmpItemKind' }
-sch.AerialOperatorIcon      = { link = 'CmpItemKindOperator' }
-sch.AerialPackageIcon       = { link = 'CmpItemKindModule' }
-sch.AerialPropertyIcon      = { link = 'CmpItemKindProperty' }
-sch.AerialStringIcon        = { link = 'CmpItemKindText' }
-sch.AerialStructIcon        = { link = 'CmpItemKindStruct' }
-sch.AerialTypeParameterIcon = { link = 'CmpItemKind' }
-sch.AerialVariableIcon      = { link = 'CmpItemKindVariable' }
+-- -- nvim-tree
+-- sch.NvimTreeGitNew          = { link = 'GitSignsAdd' }
+-- sch.NvimTreeFileNew         = { link = 'GitSignsAdd' }
+-- sch.NvimTreeGitRenamed      = { link = 'GitSignsChange' }
+-- sch.NvimTreeFileRenamed     = { link = 'GitSignsChange' }
+-- sch.NvimTreeGitMerge        = { link = 'GitSignsAdd' }
+-- sch.NvimTreeFileMerge       = { link = 'GitSignsAdd' }
+-- sch.NvimTreeGitStaged       = { fg = plt.purple }
+-- sch.NvimTreeFileStaged      = { fg = plt.purple }
+-- sch.NvimTreeGitDeleted      = { link = 'GitSignsDelete' }
+-- sch.NvimTreeFileDeleted     = { link = 'GitSignsDelete' }
+-- sch.NvimTreeGitDirty        = { link = 'GitSignsChange' }
+-- sch.NvimTreeFileDirty       = { link = 'GitSignsChange' }
+-- sch.NvimTreeFolderIcon      = { link = 'CmpItemKindFolder' }
+-- sch.NvimTreeOpenedFile      = { fg = plt.flashlight }
+-- sch.NvimTreeNormal          = { link = 'NormalFloat' }
+-- -- aerial
+-- sch.AerialLine              = { link = 'Visual' }
+-- sch.AerialArrayIcon         = { link = 'CmpItemKind' }
+-- sch.AerialBooleanIcon       = { link = 'Boolean' }
+-- sch.AerialClassIcon         = { link = 'CmpItemKindClass' }
+-- sch.AerialConstantIcon      = { link = 'CmpItemKindConstant' }
+-- sch.AerialConstructorIcon   = { link = 'CmpItemKindConstructor' }
+-- sch.AerialEnumIcon          = { link = 'CmpItemKindEnum' }
+-- sch.AerialEnumMemberIcon    = { link = 'CmpItemKindEnumMember' }
+-- sch.AerialEventIcon         = { link = 'CmpItemKindEvent' }
+-- sch.AerialFieldIcon         = { link = 'CmpItemKindField' }
+-- sch.AerialFileIcon          = { link = 'CmpItemKindFile' }
+-- sch.AerialFunctionIcon      = { link = 'CmpItemKindFunction' }
+-- sch.AerialInterfaceIcon     = { link = 'CmpItemKindInterface' }
+-- sch.AerialKeyIcon           = { link = 'CmpItemKindKeyword' }
+-- sch.AerialMethodIcon        = { link = 'CmpItemKindMethod' }
+-- sch.AerialModuleIcon        = { link = 'CmpItemKindModule' }
+-- sch.AerialNamespaceIcon     = { link = 'TSNamespace' }
+-- sch.AerialNullIcon          = { link = 'Boolean' }
+-- sch.AerialNumberIcon        = { link = 'CmpItemKindValue' }
+-- sch.AerialObjectIcon        = { link = 'CmpItemKind' }
+-- sch.AerialOperatorIcon      = { link = 'CmpItemKindOperator' }
+-- sch.AerialPackageIcon       = { link = 'CmpItemKindModule' }
+-- sch.AerialPropertyIcon      = { link = 'CmpItemKindProperty' }
+-- sch.AerialStringIcon        = { link = 'CmpItemKindText' }
+-- sch.AerialStructIcon        = { link = 'CmpItemKindStruct' }
+-- sch.AerialTypeParameterIcon = { link = 'CmpItemKind' }
+-- sch.AerialVariableIcon      = { link = 'CmpItemKindVariable' }
 -- telescope
 sch.TelescopeNormal         = { link = 'NormalFloat' }
 sch.TelescopeBorder         = { link = 'NormalFloat' }
@@ -313,6 +316,52 @@ sch.TelescopeMatching       = { link = 'Search' }
 sch.TelescopePromptCounter  = { link = 'Comment' }
 sch.TelescopePromptPrefix   = { fg = plt.orange }
 sch.TelescopeSelectionCaret = { fg = plt.orange, bg = plt.thunder }
+-- lspsaga
+sch.LspSagaCodeActionTitle = { fg = plt.magenta }
+sch.LspSagaCodeActionBorder = { link = 'FloatBorder' }
+sch.LspSagaCodeActionContent = { fg = plt.smoke }
+sch.LspSagaLspFinderBorder = { link = 'FloatBorder' }
+sch.LspSagaAutoPreview = { fg = plt.smoke }
+sch.LspSagaFinderSelection = { link = 'Search' }
+sch.FinderParam = { fg = plt.magenta, bold = true }
+sch.FinderVirtText = { fg = plt.pigeon }
+sch.DefinitionsIcon = { fg = plt.yellow }
+sch.Definitions = { link = 'Title' }
+sch.ReferencesIcon = { fg = plt.turquoise }
+sch.References = { link = 'Title' }
+sch.ImplementsIcon = { fg = plt.purple }
+sch.Implements = { link = 'Title' }
+sch.FinderSpinnerBorder = { link = 'FloatBorder' }
+sch.FinderSpinnerTitle = { fg = plt.magenta, bold = true }
+sch.FinderSpinner = { fg = plt.flashlight, bold = true }
+sch.DefinitionBorder = { link = 'FloatBorder' }
+sch.DefinitionArrow = { fg = plt.flashlight }
+sch.DefinitionSearch = { link = 'Search' }
+sch.DefinitionFile = { fg = plt.magenta, bold = true }
+sch.LspSagaHoverBorder = { link = 'FloatBorder' }
+sch.LspSagaRenameBorder = { link = 'FloatBorder' }
+sch.LspSagaDiagnosticSource = { link = 'Comment' }
+sch.LspSagaDiagnosticError = { link = 'DiagnosticError' }
+sch.LspSagaDiagnosticWarn = { link = 'DiagnosticWarn' }
+sch.LspSagaDiagnosticInfo = { link = 'DiagnosticInfo' }
+sch.LspSagaDiagnosticHint = { link = 'DiagnosticHint' }
+sch.LspSagaErrorTrunCateLine = { link = 'DiagnosticError' }
+sch.LspSagaWarnTrunCateLine = { link = 'DiagnosticWarn' }
+sch.LspSagaInfoTrunCateLine = { link = 'DiagnosticInfo' }
+sch.LspSagaHintTrunCateLine = { link = 'DiagnosticHint' }
+sch.LspSagaDiagnosticBorder = { link = 'FloatBorder' }
+sch.LspSagaDiagnosticHeader = { fg = plt.pigeon }
+sch.DiagnosticQuickFix = { fg = plt.aqua, bold = true }
+sch.DiagnosticMap = { fg = plt.lavender }
+sch.DiagnosticLineCol = { fg = plt.steel }
+sch.LspSagaSignatureHelpBorder = { link = 'FloatBorder' }
+sch.LspSagaLightBulb = { link = 'DiagnosticSignHint' }
+sch.LspSagaBorderTitle = { link = 'Title' }
+sch.LSOutlinePreviewBorder = { fg = plt.smoke }
+sch.OutlineIndentEvn = { fg = plt.pigeon }
+sch.OutlineIndentOdd = { fg = plt.pigeon }
+sch.OutlineFoldPrefix = { fg = plt.ochre }
+sch.OutlineDetail = { fg = plt.smoke }
 
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }
