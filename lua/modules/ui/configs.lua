@@ -135,8 +135,8 @@ M['alpha-nvim'] = function()
   local dashboard = require('alpha.themes.dashboard')
   local headers = require('utils.static').ascii_art
 
-  local function make_button(usr_opts, txt, leader_txt, keybind, keybind_opts)
-    local sc_after = usr_opts.shortcut:gsub('%s', ''):gsub(leader_txt, '<leader>')
+  local function make_button(usr_opts, txt, keybind, keybind_opts)
+    local sc_after = usr_opts.shortcut:gsub('%s', '')
     local default_opts = {
       position = 'center',
       cursor = 5,
@@ -168,17 +168,16 @@ M['alpha-nvim'] = function()
   math.randomseed(os.time())
   dashboard.section.header.val = headers[math.random(1, #headers)]
 
-  local leader_text = '<LD>'
   local dashboard_button_opts = {
-    { { shortcut = 'e', hl = { { 'Tea', 2, 3 } } }, 'ﱐ  New file', leader_text, '<cmd>ene<CR>' },
-    { { shortcut = 's', hl = { { 'Pigeon', 2, 3 } } }, '  Sync plugins', leader_text, '<cmd>PackerSync<CR>' },
-    { { shortcut = 'c', hl = { { 'Steel', 2, 3 } } }, '  Open config dir', leader_text, string.format('<cmd>e %s<CR>', vim.fn.stdpath('config')) },
-    { { shortcut = 'g', hl = { { 'Ochre', 2, 3 } } }, '  Git', leader_text, '<cmd>Git<CR>' },
-    { { shortcut = leader_text .. ' f f', hl = { { 'Flashlight', 2, 3 } } }, '  Find files', leader_text, '<cmd>Telescope find_files<CR>' },
-    { { shortcut = leader_text .. ' f o', hl = { { 'Smoke', 2, 3 } } }, '  Old files', leader_text, '<cmd>Telescope oldfiles<CR>' },
-    { { shortcut = leader_text .. ' f m', hl = { { 'Earth', 2, 3 } } }, '  Goto bookmark', leader_text, '<cmd>Telescope marks<CR>' },
-    { { shortcut = leader_text .. ' f ;', hl = { { 'White', 2, 3 } } }, '  Live grep', leader_text, '<cmd>Telescope live_grep<CR>' },
-    { { shortcut = 'q', hl = { { 'Wine', 2, 3 } } }, '  Quit', leader_text, '<cmd>qa<CR>' },
+    { { shortcut = 'e', hl = { { 'Tea', 2, 3 } } }, 'ﱐ  New file', '<cmd>ene<CR>' },
+    { { shortcut = 's', hl = { { 'Pigeon', 2, 3 } } }, '  Sync plugins', '<cmd>PackerSync<CR>' },
+    { { shortcut = 'c', hl = { { 'Steel', 2, 3 } } }, '  Open config dir', string.format('<cmd>e %s<CR>', vim.fn.stdpath('config')) },
+    { { shortcut = 'g', hl = { { 'Ochre', 2, 3 } } }, '  Git', '<cmd>Git<CR>' },
+    { { shortcut = 'f f', hl = { { 'Flashlight', 2, 3 } } }, '  Find files', '<cmd>Telescope find_files<CR>' },
+    { { shortcut = 'f o', hl = { { 'Smoke', 2, 3 } } }, '  Old files', '<cmd>Telescope oldfiles<CR>' },
+    { { shortcut = 'f m', hl = { { 'Earth', 2, 3 } } }, '  Goto bookmark', '<cmd>Telescope marks<CR>' },
+    { { shortcut = 'f ;', hl = { { 'White', 2, 3 } } }, '  Live grep', '<cmd>Telescope live_grep<CR>' },
+    { { shortcut = 'q', hl = { { 'Wine', 2, 3 } } }, '  Quit', '<cmd>qa<CR>' },
   }
   dashboard.section.buttons.val = {}
   for _, button in ipairs(dashboard_button_opts) do
