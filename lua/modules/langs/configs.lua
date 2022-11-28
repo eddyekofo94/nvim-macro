@@ -406,7 +406,6 @@ M['lspsaga.nvim'] = function()
     require('lspsaga.diagnostic').goto_next({ severity = vim.diagnostic.severity.ERROR })
   end, { silent = true })
   vim.keymap.set('n','<leader>lo', '<cmd>LSoutlineToggle<CR>',{ silent = true })
-  vim.keymap.set('n', 'K', '<cmd>Lspsaga hover_doc<CR>', { silent = true })
 end
 
 return M
