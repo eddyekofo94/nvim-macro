@@ -314,12 +314,12 @@ M['lspsaga.nvim'] = function()
   vim.api.nvim_create_augroup('Winbar', {})
   vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'CursorMoved' }, {
     pattern = '*',
-    callback = function() update_winbar() end,
+    callback = update_winbar,
     group = 'Winbar',
   })
   vim.api.nvim_create_autocmd('User', {
     pattern = 'LspsagaUpdateSymbol',
-    callback = function() update_winbar() end,
+    callback = update_winbar,
     group = 'Winbar',
   })
 
