@@ -75,6 +75,22 @@ local autocmds = {
       callback = funcs.autocd
     },
   },
+
+  -- Show spellcheck only when in insert mode
+  {
+    { 'InsertEnter' },
+    {
+      pattern = '*',
+      command = 'set spell spelllang=en,cjk spellsuggest=best,9 spellcapcheck= spelloptions=camel'
+    },
+  },
+  {
+    { 'InsertLeave' },
+    {
+      pattern = '*',
+      command = 'set nospell'
+    },
+  },
 }
 
 set_autocmds(autocmds)

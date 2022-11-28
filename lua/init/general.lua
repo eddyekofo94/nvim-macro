@@ -54,12 +54,6 @@ opt.hlsearch = false
 opt.ignorecase = true
 opt.smartcase = true
 
-opt.spell = true
-opt.spelllang = 'en,cjk'
-opt.spellsuggest = 'best, 9'
-opt.spellcapcheck = ''
-opt.spelloptions = 'camel'
-
 -- disable plugins shipped with neovim
 g.loaded_gzip = 1
 g.loaded_tar = 1
