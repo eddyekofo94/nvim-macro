@@ -7,9 +7,8 @@ M['telescope.nvim'] = {
   keys = {
     '<Leader>F', '<Leader>ff', '<Leader>fo', '<Leader>f;',
     '<Leader>f*', '<Leader>fh', '<Leader>fm', '<Leader>fb',
-    '<Leader>fR', '<Leader>fa', '<Leader>fe', '<Leader>fd',
-    '<Leader>ft', '<Leader>fp', '<Leader>fs', '<Leader>fS',
-    '<Leader>fg', '<Leader>fm'
+    '<Leader>fR', '<Leader>fa', '<Leader>fe', '<Leader>fp',
+    '<Leader>fs', '<Leader>fS', '<Leader>fg', '<Leader>fm'
   },
   requires = {
     'plenary.nvim',
