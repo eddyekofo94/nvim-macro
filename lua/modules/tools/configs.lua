@@ -266,4 +266,8 @@ M['nvim-autopairs'] = function()
   })
 end
 
+M['nvim-colorizer'] = function()
+  require('colorizer').setup()
+end
+
 return M
