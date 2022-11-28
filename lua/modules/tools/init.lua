@@ -62,7 +62,7 @@ M['vim-fugitive'] = {
 
 M['gitsigns.nvim'] = {
   'lewis6991/gitsigns.nvim',
-  event = 'BufReadPost',
+  event = 'BufReadPre',
   requires = 'plenary.nvim',
   config = configs['gitsigns.nvim'],
 }
