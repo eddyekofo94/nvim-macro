@@ -170,13 +170,15 @@ M['alpha-nvim'] = function()
 
   local leader_text = '<LD>'
   local dashboard_button_opts = {
-    { { shortcut = 'e', hl = { { 'IconColor1', 2, 3 } } }, 'ﱐ  New file', leader_text, '<cmd>ene<CR>' },
-    { { shortcut = 's', hl = { { 'IconColor2', 2, 3 } } }, '  Sync plugins', leader_text, '<cmd>PackerSync<CR>' },
-    { { shortcut = 'g', hl = { { 'IconColor4', 2, 3 } } }, '  Git', leader_text, '<cmd>Git<CR>' },
-    { { shortcut = leader_text .. ' f f', hl = { { 'IconColor5', 2, 3 } } }, '  Find files', leader_text, '<cmd>Telescope find_files<CR>' },
-    { { shortcut = leader_text .. ' f m', hl = { { 'IconColor6', 2, 3 } } }, '  Goto Bookmark', leader_text, '<cmd>Telescope marks<CR>' },
-    { { shortcut = leader_text .. ' f ;', hl = { { 'IconColor7', 2, 3 } } }, '  Live grep', leader_text, '<cmd>Telescope live_grep<CR>' },
-    { { shortcut = 'q', hl = { { 'IconColor8', 2, 3 } } }, '  Quit', leader_text, '<cmd>qa<CR>' },
+    { { shortcut = 'e', hl = { { 'Tea', 2, 3 } } }, 'ﱐ  New file', leader_text, '<cmd>ene<CR>' },
+    { { shortcut = 's', hl = { { 'Pigeon', 2, 3 } } }, '  Sync plugins', leader_text, '<cmd>PackerSync<CR>' },
+    { { shortcut = 'c', hl = { { 'Steel', 2, 3 } } }, '  Open config dir', leader_text, string.format('<cmd>e %s<CR>', vim.fn.stdpath('config')) },
+    { { shortcut = 'g', hl = { { 'Ochre', 2, 3 } } }, '  Git', leader_text, '<cmd>Git<CR>' },
+    { { shortcut = leader_text .. ' f f', hl = { { 'Flashlight', 2, 3 } } }, '  Find files', leader_text, '<cmd>Telescope find_files<CR>' },
+    { { shortcut = leader_text .. ' f o', hl = { { 'Smoke', 2, 3 } } }, '  Old files', leader_text, '<cmd>Telescope oldfiles<CR>' },
+    { { shortcut = leader_text .. ' f m', hl = { { 'Earth', 2, 3 } } }, '  Goto bookmark', leader_text, '<cmd>Telescope marks<CR>' },
+    { { shortcut = leader_text .. ' f ;', hl = { { 'White', 2, 3 } } }, '  Live grep', leader_text, '<cmd>Telescope live_grep<CR>' },
+    { { shortcut = 'q', hl = { { 'Wine', 2, 3 } } }, '  Quit', leader_text, '<cmd>qa<CR>' },
   }
   dashboard.section.buttons.val = {}
   for _, button in ipairs(dashboard_button_opts) do

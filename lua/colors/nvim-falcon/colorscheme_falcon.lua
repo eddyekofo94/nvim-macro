@@ -315,13 +315,31 @@ sch.TelescopePromptPrefix   = { fg = plt.orange }
 sch.TelescopeSelectionCaret = { fg = plt.orange, bg = plt.thunder }
 
 -- Extra highlight groups
-sch.IconColor1 = { fg = plt.tea }
-sch.IconColor2 = { fg = plt.pigeon }
-sch.IconColor3 = { fg = plt.steel }
-sch.IconColor4 = { fg = plt.ochre }
-sch.IconColor5 = { fg = plt.flashlight }
-sch.IconColor6 = { fg = plt.earth }
-sch.IconColor7 = { fg = plt.white }
-sch.IconColor8 = { fg = plt.wine }
+sch.Yellow     = { fg = plt.yellow }
+sch.Earth      = { fg = plt.earth }
+sch.Orange     = { fg = plt.orange }
+sch.Scarlet    = { fg = plt.scarlet }
+sch.Ochre      = { fg = plt.ochre }
+sch.Wine       = { fg = plt.wine }
+sch.Pink       = { fg = plt.pink }
+sch.Tea        = { fg = plt.tea }
+sch.Flashlight = { fg = plt.flashlight }
+sch.Aqua       = { fg = plt.aqua }
+sch.Cerulean   = { fg = plt.cerulean }
+sch.Turquoise  = { fg = plt.turquoise }
+sch.Lavender   = { fg = plt.lavender }
+sch.Magenta    = { fg = plt.magenta }
+sch.Purple     = { fg = plt.purple }
+sch.Thunder    = { fg = plt.thunder }
+sch.White      = { fg = plt.white }
+sch.Beige      = { fg = plt.beige }
+sch.Pigeon     = { fg = plt.pigeon }
+sch.Steel      = { fg = plt.steel }
+sch.Smoke      = { fg = plt.smoke }
+sch.Iron       = { fg = plt.iron }
+sch.Deepsea    = { fg = plt.deepsea }
+sch.Ocean      = { fg = plt.ocean }
+sch.Space      = { fg = plt.space }
+sch.Black      = { fg = plt.black }
 
 return sch
