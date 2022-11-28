@@ -209,7 +209,7 @@ M['alpha-nvim'] = function()
   local pad_tot = vim.o.lines - (h_header + h_buttons + h_footer)
   local pad_1 = math.ceil(pad_tot * 0.25)
   local pad_2 = math.ceil(pad_tot * 0.20)
-  local pad_3 = math.floor(pad_tot * 0.30)
+  local pad_3 = math.floor(pad_tot * 0.20)
   dashboard.config.layout = {
     { type = 'padding', val = pad_1 },
     dashboard.section.header,
