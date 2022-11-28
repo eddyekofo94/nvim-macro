@@ -26,7 +26,7 @@ local autocmds = {
     {
       pattern = '*',
       callback = function()
-        vim.highlight.on_yank({ higroup = 'Visual', timeout = 300 })
+        vim.highlight.on_yank({ higroup = 'Visual', timeout = 200 })
       end
     },
   },
