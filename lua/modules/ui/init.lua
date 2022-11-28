@@ -10,17 +10,25 @@ M['nvim-web-devicons'] = {
 M['barbar.nvim'] = {
   'romgrk/barbar.nvim',
   cond = function()
-    vim.api.nvim_create_autocmd('BufAdd', {
+    -- try load barbar every time a real file is opened
+    -- do not use 'BufAdd' here because 'BufAdd' fires
+    -- even if no real file is behind the buffer
+    vim.api.nvim_create_autocmd('BufReadPre', {
       pattern = '*',
       callback = function()
-        if not vim.g.loaded_barbar then
+        -- load barbar only once
+        if not vim.g.loaded_barbar and
+            -- load barbar only if there's more than 1 listed buffer
+            vim.fn.len(vim.fn.getbufinfo({ buflisted = true })) > 1 then
           vim.g.loaded_barbar = true
           vim.cmd('packadd barbar.nvim')
           require('modules.ui.configs')['barbar.nvim']()
         end
       end
     })
-    return vim.fn.argc() > 0
+    -- load barbar at startup if more
+    -- than one argument passed to nvim
+    return vim.fn.argc() > 1
   end,
   requries = 'nvim-web-devicons',
   config = configs['barbar.nvim'],
@@ -28,6 +36,8 @@ M['barbar.nvim'] = {
 
 M['lualine.nvim'] = {
   'nvim-lualine/lualine.nvim',
+  -- load lualine only when a real
+  -- file is about to open
   event = 'BufReadPre',
   requires = 'nvim-web-devicons',
   config = configs['lualine.nvim'],
@@ -36,7 +46,10 @@ M['lualine.nvim'] = {
 M['alpha-nvim'] = {
   'goolord/alpha-nvim',
   cond = function()
+    -- load alpha only when no argument
+    -- passed to nvim at startup
     return vim.fn.argc() == 0 and
+        -- alpha will break if there's no enough space
         vim.o.lines >= 36 and vim.o.columns >= 112
   end,
   requires = 'nvim-web-devicons',
