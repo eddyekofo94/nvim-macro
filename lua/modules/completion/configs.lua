@@ -189,10 +189,10 @@ M['LuaSnip'] = function()
 
   local function load_snippets()
     local snippets_path = vim.split(fn.globpath(fn.stdpath('config')
-                        .. '/lua/snippets/', '*'), '\n')
+                        .. '/lua/modules/completion/snippets/', '*'), '\n')
     for _, path in ipairs(snippets_path) do
       local ft = fn.fnamemodify(path, ':t:r')
-      local snip_groups = require('snippets.' .. ft)
+      local snip_groups = require('modules/completion/snippets.' .. ft)
       for _, snip_group in pairs(snip_groups) do
         ls.add_snippets(ft, snip_group.snip or snip_group, snip_group.opts or {})
       end
