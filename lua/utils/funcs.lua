@@ -54,11 +54,26 @@ function M.close_all_floatings(key)
 end
 
 function M.git_dir()
-local gitdir = vim.fn.system(string.format(
-  'git -C %s rev-parse --show-toplevel', vim.fn.expand('%:p:h')))
-local isgitdir = vim.fn.matchstr(gitdir, '^fatal:.*') == ''
-if not isgitdir then return end
-return vim.trim(gitdir)
+  local gitdir = vim.fn.system(string.format(
+    'git -C %s rev-parse --show-toplevel', vim.fn.expand('%:p:h')))
+  local isgitdir = vim.fn.matchstr(gitdir, '^fatal:.*') == ''
+  if not isgitdir then return end
+  return vim.trim(gitdir)
+end
+
+function M.is_special_dir(path)
+  return path:match(':///') ~= nil
+end
+
+function M.autocd()
+  if vim.bo.buftype ~= '' then return end
+  local target_dir = M.git_dir()
+  if not target_dir then
+    target_dir = vim.fn.expand('%:p:h')
+  end
+  if target_dir and not M.is_special_dir(target_dir) then
+    vim.cmd('lcd ' .. target_dir)
+  end
 end
 
 return M

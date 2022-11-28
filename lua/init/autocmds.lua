@@ -1,3 +1,4 @@
+local funcs = require('utils.funcs')
 local set_autocmds = function(autocmds)
   for _, autocmd in ipairs(autocmds) do
     vim.api.nvim_create_autocmd(unpack(autocmd))
@@ -45,9 +46,7 @@ local autocmds = {
     { 'VimEnter', 'WinEnter' },
     {
       pattern = '*',
-      callback = function()
-        require('utils.funcs').win_close_jmp()
-      end
+      callback = funcs.win_close_jmp
     },
   },
 
@@ -56,9 +55,7 @@ local autocmds = {
     { 'BufReadPost' },
     {
       pattern = '*',
-      callback = function()
-        require('utils.funcs').last_pos_jmp()
-      end
+      callback = funcs.last_pos_jmp
     },
   },
 
@@ -75,12 +72,7 @@ local autocmds = {
     { 'BufEnter' },
     {
       pattern = '*',
-      callback = function ()
-        if vim.bo.buftype ~= '' then return end
-        local target_dir = require('utils.funcs').git_dir()
-        if not target_dir then target_dir = vim.fn.expand('%:p:h') end
-        if target_dir then vim.cmd('lcd ' .. target_dir) end
-      end
+      callback = funcs.autocd
     },
   },
 }
