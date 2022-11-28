@@ -85,7 +85,6 @@ M['toggleterm.nvim'] = function()
         return vim.o.columns * 0.4
       end
     end,
-    start_in_insert = true,
     shade_terminals = false,
     open_mapping = '<C-\\>',
     on_open = function(term)
@@ -103,6 +102,46 @@ M['toggleterm.nvim'] = function()
       height = function() return math.floor(0.7 * vim.o.lines) end
     }
   })
+
+  -- lazygit integration setup
+  local Lazygit = nil
+
+  local function lazygit_toggle()
+    if Lazygit then
+      Lazygit:toggle()
+      return
+    end
+    local Terminal = require('toggleterm.terminal').Terminal
+    local directory = require('toggleterm.utils').git_dir()
+    if directory == nil then
+      vim.notify('Git: Not in a git directory', vim.log.levels.WARN)
+      return
+    end
+    if directory ~= vim.g.git_pred_dir then
+      vim.g.git_pred_dir = directory
+      Lazygit = Terminal:new({
+        cmd = 'lazygit -p ' .. directory,
+        hidden = true,
+        -- function to run on opening the terminal
+        on_open = function(term)
+          local keymap_opts = {
+            noremap = true,
+            silent = true,
+            buffer = term.bufnr
+          }
+          vim.keymap.set('n', 'q', '<cmd>close<CR>', keymap_opts)
+          vim.keymap.set('n', '<esc>', '<cmd>close<CR>', keymap_opts)
+          vim.keymap.set('n', '<M-C>', '<cmd>bd!<CR>', keymap_opts)
+          vim.cmd('normal! 0')    -- workaround, else lazygit will shift left
+          vim.cmd('startinsert')
+        end
+      })
+    end
+    Lazygit:toggle()
+  end
+
+  vim.keymap.set({ 'n', 't' }, '<M-d>',
+      lazygit_toggle, { noremap = true, silent = true })
 end
 
 M['rnvimr'] = function()

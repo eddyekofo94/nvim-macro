@@ -37,7 +37,7 @@ M['undotree'] = {
 
 M['toggleterm.nvim'] = {
   'akinsho/toggleterm.nvim',
-  keys = '<C-\\>',
+  keys = { '<C-\\>', '<M-d>' },
   cmd = {
     'TermExec',
     'ToggleTerm',

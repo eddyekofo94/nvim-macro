@@ -74,6 +74,9 @@ noremap({
   { '!', '<M-k>', '<up>' },
   { '!', '<M-l>', '<right>' },
 
+  -- Enter normal mode from arbitrary mode
+  { { 'n', 't', 'v', 'i', 'c' }, '<M-\\>', '<C-\\><C-n>' },
+
   -- Close all floating windows
   { 'n', 'q', function() require('utils.funcs').close_all_floatings('q') end },
 })
