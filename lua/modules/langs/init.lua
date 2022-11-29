@@ -53,9 +53,8 @@ M['nvim-ts-context-commentstring'] = {
   after = 'nvim-treesitter',
 }
 
-M['lspsage.nvim'] = {
+M['lspsaga.nvim'] = {
   'glepnir/lspsaga.nvim',
-  enable = false,
   ft = ft_list,
   requires = 'nvim-lspconfig',
   after = 'nvim-lspconfig',
