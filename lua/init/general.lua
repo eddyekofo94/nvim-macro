@@ -41,7 +41,6 @@ opt.listchars = {
 vim.fn.matchadd('NonText', [[\zs\ [ ]\@!\ze\t\+]], 0, -1, { conceal = '·' })
 vim.fn.matchadd('NonText', [[\t\+\zs\ [ ]\@!]], 0, -1, { conceal = '·' })
 opt.conceallevel = 2
-opt.concealcursor = 'nic'
 
 opt.ts = 4
 opt.softtabstop = 4
