@@ -10,16 +10,14 @@ M['nvim-web-devicons'] = {
 M['barbar.nvim'] = {
   'romgrk/barbar.nvim',
   cond = function()
-    -- try load barbar every time a real file is opened
-    -- do not use 'BufAdd' here because 'BufAdd' fires
-    -- even if no real file is behind the buffer
-    vim.api.nvim_create_autocmd('BufReadPre', {
+    -- try load barbar every time a new buffer is created
+    vim.api.nvim_create_autocmd('BufNew', {
       pattern = '*',
       callback = function()
         -- load barbar only once
         if not vim.g.loaded_barbar and
             -- load barbar only if there's more than 1 listed buffer
-            vim.fn.len(vim.fn.getbufinfo({ buflisted = true })) > 1 then
+          #vim.fn.getbufinfo({ buflisted = true }) > 1 then
           vim.g.loaded_barbar = true
           vim.cmd('packadd barbar.nvim')
           require('modules.ui.configs')['barbar.nvim']()
