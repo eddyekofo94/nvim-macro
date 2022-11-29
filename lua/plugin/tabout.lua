@@ -34,8 +34,8 @@ local patterns = {
 
   ['<S-Tab>'] = fallback_tbl_t:new({
     markdown = {
-      catch_content = [[\s*\()\|]\|\|"\|'\|`\|\$\|\*\)\s*\zs\S\+\ze]],
-      if_no_content = [[\s*\()\|]\|\|"\|'\|`\|\$\|\*\)\zs\s*\ze]],
+      catch_content = [[\s*\()\|]\|}\|"\|'\|`\|\$\|\*\)\s*\zs\S\+\ze]],
+      if_no_content = [[\s*\()\|]\|}\|"\|'\|`\|\$\|\*\)\zs\s*\ze]],
     },
     tex = {
       catch_content = [[\s*\()\|]\|}\|"\|'\|`\|\$\)\s*\zs\S\+\ze]],
@@ -98,7 +98,7 @@ local function remap_func(key)
     vim.api.nvim_win_set_cursor(0, pos)
   else
     vim.api.nvim_feedkeys(
-      vim.api.nvim_replace_termcodes(key, true, true, true), 'n', false)
+      vim.api.nvim_replace_termcodes(key, true, true, true), 'nt', false)
   end
 end
 
