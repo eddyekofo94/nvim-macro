@@ -30,13 +30,12 @@ local function packer_init()
   })
 end
 
-
 local function packer_load_modules()
   -- packer.nvim manages itself
   packer.use({ 'wbthomason/packer.nvim', opt = true })
   -- manage other plugins
   local modules_path = vim.split(vim.fn.globpath(fn.stdpath('config')
-                        .. '/lua/modules/', '*'), '\n')
+    .. '/lua/modules/', '*'), '\n')
   for _, module_path in ipairs(modules_path) do
     local specs = require(module_path:match('modules/.*'))
     for _, spec in pairs(specs) do
@@ -45,21 +44,20 @@ local function packer_load_modules()
   end
 end
 
-
 -- Install and add packer.nvim if not installed
 local function packer_bootstrap()
   if fn.empty(fn.glob(packer_install_path)) > 0 then
     vim.notify('Installing packer.nvim...', vim.log.levels.INFO)
-    PACKER_BOOTSTRAP = fn.system ({
+    PACKER_BOOTSTRAP = fn.system({
       'git', 'clone', '--depth', '1', packer_url, packer_install_path
     })
     vim.notify('packer.nvim cloned to ' .. packer_install_path,
-        vim.log.levels.INFO)
+      vim.log.levels.INFO)
     cmd('packadd packer.nvim')
     packer = require('packer')
 
     -- make directory for packer compiled file
-    uv.fs_mkdir(packer_compile_path, 744, function ()
+    uv.fs_mkdir(packer_compile_path, 744, function()
       assert('Failed to create packer compile path')
     end)
     packer_init()
@@ -68,15 +66,20 @@ local function packer_bootstrap()
   end
 end
 
+local function load_packer()
+  cmd('packadd packer.nvim')
+  packer = require('packer')
+  packer_init()
+  packer_load_modules()
+end
 
 local function load_packer_compiled()
   local packer_compiled_ok, err_msg = pcall(require, 'packer_compiled')
   if not packer_compiled_ok then
     vim.notify('Error loading packer_compiled.lua: ' .. err_msg,
-        vim.log.levels.ERROR)
+      vim.log.levels.ERROR)
   end
 end
-
 
 local function create_packer_usercmds()
 
@@ -88,33 +91,28 @@ local function create_packer_usercmds()
   end
 
   local packer_cmds = {
-    Clean = { opts = { nargs = 0 }, func = function(tbl) require('packer').snapshot(tbl.args) end, } ,
-    Compile = { opts = { nargs = '*' }, func = function(tbl) require('packer').compile(tbl.args) end, } ,
-    Install = { opts = { nargs = '*' }, func = function(tbl) require('packer').install(nilify(tbl.fargs)) end, } ,
-    Profile = { opts = { nargs = 0 }, func = function(_) require('packer').profile_output() end, } ,
-    Rollback = { opts = { nargs = '+' }, func = function(tbl) require('packer').rollback(tbl.args) end, } ,
-    Snapshot = { opts = { nargs = '+' }, func = function(tbl) require('packer').snapshot(tbl.args) end, } ,
-    SnapshotDelete = { opts = { nargs = '+' }, func = function(tbl) require('packer.snapshot').delete(tbl.args) end, } ,
-    Status = { opts = { nargs = 0 }, func = function(_) require('packer').status() end, } ,
-    Sync = { opts = { nargs = '*' }, func = function(tbl) require('packer').sync(nilify(tbl.fargs)) end, } ,
-    Update = { opts = { nargs = '*' }, func = function(tbl) require('packer').update(nilify(tbl.fargs)) end, } ,
+    Clean = { opts = { nargs = 0 }, func = function(tbl) require('packer').snapshot(tbl.args) end },
+    Compile = { opts = { nargs = '*', complete = function(...) load_packer() return require('packer').plugin_complete(...) end }, func = function(tbl) require('packer').compile(tbl.args) end },
+    Install = { opts = { nargs = '*', complete = function(...) load_packer() return require('packer').plugin_complete(...) end }, func = function(tbl) require('packer').install(nilify(tbl.fargs)) end, },
+    Load = { opts = { nargs = '+', bang = true, complete = function(...) load_packer() return require('packer').loader_complete(...) end }, func = function(tbl) require('packer').loader(tbl.args) end },
+    Profile = { opts = { nargs = 0 }, func = function(_) require('packer').profile_output() end },
+    Snapshot = { opts = { nargs = '+', complete = function(...) load_packer() return require('packer.snapshot').completion.create(...) end }, func = function(tbl) require('packer').snapshot(tbl.args) end },
+    SnapshotDelete = { opts = { nargs = '+', complete = function(...) load_packer() return require('packer.snapshot').completion.snapshot(...) end }, func = function(tbl) require('packer.snapshot').delete(tbl.args) end },
+    SnapshotRollback = { opts = { nargs = '+', complete = function(...) load_packer() return require('packer.snapshot').completion.rollback(...) end }, func = function(tbl) require('packer').rollback(tbl.args) end },
+    Status = { opts = { nargs = 0 }, func = function(_) require('packer').status() end },
+    Sync = { opts = { nargs = '*', complete = function(...) load_packer() return require('packer').plugin_complete(...) end }, func = function(tbl) require('packer').sync(nilify(tbl.fargs)) end },
+    Update = { opts = { nargs = '*', complete = function(...) load_packer() return require('packer').plugin_complete(...) end }, func = function(tbl) require('packer').update(nilify(tbl.fargs)) end },
   }
 
   for packer_cmd, attr in pairs(packer_cmds) do
     api.nvim_create_user_command('Packer' .. packer_cmd, function(tbl)
       -- load packer if not loaded
-      if not packer then
-        cmd('packadd packer.nvim')
-        packer = require('packer')
-        packer_init()
-        packer_load_modules()
-      end
+      if not packer then load_packer() end
       -- then call the corresponding function with args
       attr.func(tbl)
     end, attr.opts)
   end
 end
-
 
 local function create_packer_autocmds()
   api.nvim_create_autocmd('User', {
@@ -124,7 +122,6 @@ local function create_packer_autocmds()
     end,
   })
 end
-
 
 packer_bootstrap()
 load_packer_compiled()
