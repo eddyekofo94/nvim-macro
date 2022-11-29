@@ -5,20 +5,6 @@ local set_autocmds = function(autocmds)
 end
 
 local autocmds = {
-  -- Disable number, relativenumber, and spell check in the built-in terminal
-  {
-    { 'TermOpen' },
-    {
-      buffer = 0,
-      callback = function()
-        vim.wo.spell = false
-        vim.wo.number = false
-        vim.wo.relativenumber = false
-        vim.wo.scrolloff = 0
-      end
-    },
-  },
-
   -- Highlight the selection on yank
   {
     { 'TextYankPost' },
@@ -55,14 +41,6 @@ local autocmds = {
     {
       pattern = '*',
       callback = function() require('utils.funcs').last_pos_jmp() end,
-    },
-  },
-
-  {
-    { 'ColorScheme', 'VimEnter' },
-    {
-      pattern = '*',
-      command = 'hi clear SpellBad | hi SpellBad cterm=undercurl gui=undercurl'
     },
   },
 
