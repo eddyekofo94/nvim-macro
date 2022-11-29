@@ -316,6 +316,15 @@ M['lspsaga.nvim'] = function()
       quit = 'q',
     },
     rename_action_quit = '<C-c>',
+    show_outline = {
+      win_position = 'right',
+      win_width = 40,
+      auto_enter = true,
+      auto_preview = true,
+      virt_text = '│',
+      jump_key = '<CR>',
+      auto_refresh = true,
+    },
     symbol_in_winbar = {
       enable = true,
       in_custom = true,
