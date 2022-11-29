@@ -203,7 +203,7 @@ M['gitsigns.nvim'] = function()
       -- Actions
       map({ 'n', 'v' }, '<leader>gs', gs.stage_hunk)
       map({ 'n', 'v' }, '<leader>gr', gs.reset_hunk)
-      map('n', '<leader>gs', gs.stage_buffer)
+      map('n', '<leader>gS', gs.stage_buffer)
       map('n', '<leader>gu', gs.undo_stage_hunk)
       map('n', '<leader>gR', gs.reset_buffer)
       map('n', '<leader>gp', gs.preview_hunk)
