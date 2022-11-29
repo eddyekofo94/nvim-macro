@@ -186,16 +186,23 @@ M['LuaSnip'] = function()
   local fn = vim.fn
   local ls = require('luasnip')
   local ls_types = require('luasnip.util.types')
+  local icons = require('utils.static').icons
 
-  local function load_snippets()
+  local function lazy_load_snippets()
     local snippets_path = vim.split(fn.globpath(fn.stdpath('config')
                         .. '/lua/modules/completion/snippets/', '*'), '\n')
     for _, path in ipairs(snippets_path) do
       local ft = fn.fnamemodify(path, ':t:r')
-      local snip_groups = require('modules/completion/snippets.' .. ft)
-      for _, snip_group in pairs(snip_groups) do
-        ls.add_snippets(ft, snip_group.snip or snip_group, snip_group.opts or {})
-      end
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = ft,
+        once = true,
+        callback = function()
+          local snip_groups = require('modules/completion/snippets.' .. ft)
+          for _, snip_group in pairs(snip_groups) do
+            ls.add_snippets(ft, snip_group.snip or snip_group, snip_group.opts or {})
+          end
+        end
+      })
     end
   end
 
@@ -214,18 +221,18 @@ M['LuaSnip'] = function()
     ext_opts = {
       [ls_types.choiceNode] = {
         active = {
-          virt_text = { { ' ', 'Tea' } },
+          virt_text = { { icons.Enum, 'Tea' } },
         },
       },
       [ls_types.insertNode] = {
         active = {
-          virt_text = { { '●', 'Tea' } },
+          virt_text = { { icons.Snippet, 'Tea' } },
         },
       },
     },
   })
 
-  load_snippets()
+  lazy_load_snippets()
   set_keymap()
 end
 
