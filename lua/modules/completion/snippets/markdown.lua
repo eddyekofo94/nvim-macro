@@ -22,6 +22,9 @@ local types = require('luasnip.util.types')
 local conds = require('luasnip.extras.expand_conditions')
 
 local function in_mathzone()
+  if not packer_plugins['vimtex'] then
+    return false
+  end
   vim.cmd('packadd vimtex')
   return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
 end
@@ -204,18 +207,13 @@ M.math_snippets = {
   opts = { type = 'autosnippets' },
 }
 
-M.md_normal = {
+M.format = {
   snip = add_attr({ condition = not_in_mathzone }, {
     s({ trig = '^# ', regTrig = true, snippetType = 'autosnippet' }, {
       t '# ',
       dl(1, l.TM_FILENAME:gsub('^%d*_', ''):gsub('_', ' '):gsub('%..*', ''), {}),
       i(0),
     }),
-    s({ trig = 'm'} , { t '$', i(1), t '$', i(0) }),
-    s({ trig = 'M'} , { t { '$$', '' }, i(1), t { '', '$$', '' }, i(0) }),
-    s({ trig = 'i'} , { t '*', i(1), t '*', i(0) }),
-    s({ trig = 'b', priority = 999 }, { t '**', i(1), t '**', i(0) }),
-    s({ trig = 'bi' }, { t '***', i(1), t '***', i(0) }),
     s('package', {
       t { '---', '' },
       t { 'header-includes:', '' },
@@ -227,5 +225,21 @@ M.md_normal = {
     }),
   }),
 }
+
+M.markers = {
+  snip = add_attr({ condition = function()
+    local trailing = vim.api.nvim_get_current_line():sub(
+      vim.api.nvim_win_get_cursor(0)[2], -1)
+    return not_in_mathzone() and
+      vim.fn.match(trailing, [[\s*\()\|]\|}\|"\|'\|`\)\|\$\|\*]]) ~= 1
+  end }, {
+    s({ trig = 'm' } , { t '$', i(1), t '$', i(0) }),
+    s({ trig = 'M' } , { t { '$$', '' }, i(1), t { '', '$$', '' }, i(0) }),
+    s({ trig = 'e' } , { t '*', i(1), t '*', i(0) }),
+    s({ trig = 'b' }, { t '**', i(1), t '**', i(0) }),
+    s({ trig = 'B' }, { t '***', i(1), t '***', i(0) }),
+  }),
+}
+
 
 return M

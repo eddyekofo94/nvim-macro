@@ -73,4 +73,10 @@ M['friendly-snippets'] = {
   config = configs['friendly-snippets'],
 }
 
+M['nvim-autopairs'] = {
+  'windwp/nvim-autopairs',
+  event = 'InsertEnter',
+  config = configs['nvim-autopairs']
+}
+
 return M
