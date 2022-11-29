@@ -50,7 +50,7 @@ M['alpha-nvim'] = {
     -- passed to nvim at startup
     return vim.fn.argc() == 0 and
         -- alpha will break if there's no enough space
-        vim.o.lines >= 36 and vim.o.columns >= 112
+        vim.o.lines >= 36 and vim.o.columns >= 80
   end,
   requires = 'nvim-web-devicons',
   config = configs['alpha-nvim'],
