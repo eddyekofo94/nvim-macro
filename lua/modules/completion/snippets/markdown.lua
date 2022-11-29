@@ -30,15 +30,17 @@ local function not_in_mathzone()
   return not in_mathzone()
 end
 
-local function add_cond(cond, snip_group)
+local function add_attr(attr, snip_group)
   for _, snip in ipairs(snip_group) do
-    snip.condition = cond
+    for attr_key, attr_val in pairs(attr) do
+      snip[attr_key] = attr_val
+    end
   end
   return snip_group
 end
 
 M.math_snippets = {
-  snip = add_cond(in_mathzone, {
+  snip = add_attr({ condition = in_mathzone, wordTrig = false }, {
     s({ trig = '(%S*)(%d)', regTrig = true }, {
       d(1, function(_, snip)
         local symbol = snip.captures[1]
@@ -142,8 +144,8 @@ M.math_snippets = {
 
     s({ trig = 'floor' }, { t '\\left\\lfloor ', i(1), t ' \\right\\rfloor', i(0) }),
     s({ trig = 'ceil' }, { t '\\left\\lceil ', i(1), t ' \\right\\rceil', i(0) }),
-    s({ trig = 'bmat' }, { t { '\\begin{bmatrix}', '' }, i(1), t { '', '\\end{bmatrix}' } }, i(0)),
-    s({ trig = 'pmat' }, { t {'\\begin{pmatrix}', '' }, i(1), t { '', '\\end{pmatrix}' } }, i(0)),
+    s({ trig = 'bmat' }, { t '\\begin{bmatrix} ', i(1), t ' \\end{bmatrix}', i(0) }),
+    s({ trig = 'pmat' }, { t '\\begin{pmatrix} ', i(1), t ' \\end{pmatrix}', i(0) }),
     s({ trig = 'aln' }, { t { '\\begin{align*}', '' }, i(0), t { '', '\\end{align*}' } }),
     s({ trig = 'eqt' }, { t { '\\begin{equation*}', '' }, i(0), t { '', '\\end{equation*}' } }),
     s({ trig = 'cas' }, { t { '\\begin{cases}', '' }, i(1), t { '', '\\end{cases}' } }, i(0)),
@@ -199,17 +201,21 @@ M.math_snippets = {
     s({ trig = 'Psi' }, { t '\\Psi', i(0) }),
     s({ trig = 'Omg' }, { t '\\Omega', i(0) }),
   }),
-  opts = { wordTrig = false, type = 'autosnippets' },
+  opts = { type = 'autosnippets' },
 }
 
 M.md_normal = {
-  snip = add_cond(not_in_mathzone, {
+  snip = add_attr({ condition = not_in_mathzone }, {
     s({ trig = '^# ', regTrig = true, snippetType = 'autosnippet' }, {
       t '# ',
       dl(1, l.TM_FILENAME:gsub('^%d*_', ''):gsub('_', ' '):gsub('%..*', ''), {}),
       i(0),
     }),
-
+    s( 'mm', { t '$', i(1), t '$', i(0) }),
+    s('md', { t { '$$', '' }, i(1), t { '', '$$', '' }, i(0) }),
+    s('em', { t '*', i(1), t '*', i(0) }),
+    s('bb', { t '**', i(1), t '**', i(0) }),
+    s('bem', { t '***', i(1), t '***', i(0) }),
     s('package', {
       t { '---', '' },
       t { 'header-includes:', '' },

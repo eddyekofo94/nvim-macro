@@ -214,12 +214,12 @@ M['LuaSnip'] = function()
     ext_opts = {
       [ls_types.choiceNode] = {
         active = {
-          virt_text = { { ' ', 'IconColor1' } },
+          virt_text = { { ' ', 'Tea' } },
         },
       },
       [ls_types.insertNode] = {
         active = {
-          virt_text = { { '●', 'IconColor1' } },
+          virt_text = { { '●', 'Tea' } },
         },
       },
     },
