@@ -1,4 +1,3 @@
-local funcs = require('utils.funcs')
 local set_autocmds = function(autocmds)
   for _, autocmd in ipairs(autocmds) do
     vim.api.nvim_create_autocmd(unpack(autocmd))
@@ -46,7 +45,7 @@ local autocmds = {
     { 'VimEnter', 'WinEnter' },
     {
       pattern = '*',
-      callback = funcs.win_close_jmp
+      callback = function() require('utils.funcs').win_close_jmp() end,
     },
   },
 
@@ -55,7 +54,7 @@ local autocmds = {
     { 'BufReadPost' },
     {
       pattern = '*',
-      callback = funcs.last_pos_jmp
+      callback = function() require('utils.funcs').last_pos_jmp() end,
     },
   },
 
@@ -72,7 +71,7 @@ local autocmds = {
     { 'BufEnter' },
     {
       pattern = '*',
-      callback = funcs.autocd
+      callback = function() require('utils.funcs').autocd() end,
     },
   },
 
@@ -89,6 +88,15 @@ local autocmds = {
     {
       pattern = '*',
       command = 'set nospell'
+    },
+  },
+
+  -- close hover windows, etc. when window scrolls
+  {
+    { 'WinScrolled' },
+    {
+      pattern = '*',
+      callback = function() require('utils.funcs').close_all_floatings(nil) end,
     },
   },
 }
