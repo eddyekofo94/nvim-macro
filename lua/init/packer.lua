@@ -63,7 +63,9 @@ local function packer_bootstrap()
     packer_init()
     packer_load_modules()
     packer.sync()
+    return true
   end
+  return false
 end
 
 local function load_packer()
@@ -123,7 +125,8 @@ local function create_packer_autocmds()
   })
 end
 
-packer_bootstrap()
-load_packer_compiled()
-create_packer_usercmds()
-create_packer_autocmds()
+if not packer_bootstrap() then
+  load_packer_compiled()
+  create_packer_usercmds()
+  create_packer_autocmds()
+end
