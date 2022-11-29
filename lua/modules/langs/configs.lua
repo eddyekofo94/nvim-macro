@@ -52,9 +52,9 @@ M['nvim-lspconfig'] = function()
       { 'K', '<cmd>lua vim.lsp.buf.hover()<CR>' },
       { '<leader>ls', '<cmd>lua vim.lsp.buf.signature_help()<CR>' },
       { '<Leader>li', '<cmd>lua vim.lsp.buf.implementation()<CR>' },
-      { '<Leader>lwa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>' },
-      { '<Leader>lwd', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>' },
-      { '<Leader>lwl', '<cmd>lua vim.pretty_print(vim.lsp.buf.list_workspace_folders())<CR>' },
+      { '<Leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>' },
+      { '<Leader>wd', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>' },
+      { '<Leader>wl', '<cmd>lua vim.pretty_print(vim.lsp.buf.list_workspace_folders())<CR>' },
       { '<leader>gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>' },
       { '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>' },
       { '<Leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>' },
@@ -300,19 +300,19 @@ M['lspsaga.nvim'] = function()
     finder_action_keys = {
       open = { 'o', '<CR>' },
       quit = { 'q', '<ESC>' },
-      vsplit = 'v',
-      split = 's',
-      tabe = 't',
+      vsplit = '<M-v>',
+      split = '<M-s>',
+      tabe = '<M-t>',
     },
     code_action_keys = {
       quit = 'q',
       exec = '<CR>',
     },
     definition_action_keys = {
-      edit = '<C-c>o',
-      vsplit = '<C-c>v',
-      split = '<C-c>i',
-      tabe = '<C-c>t',
+      edit = '<CR>',
+      vsplit = '<M-v>',
+      split = '<M-s>',
+      tabe = '<M-t>',
       quit = 'q',
     },
     rename_action_quit = '<C-c>',
@@ -321,7 +321,7 @@ M['lspsaga.nvim'] = function()
       win_width = 40,
       auto_enter = true,
       auto_preview = true,
-      virt_text = '│',
+      virt_text = '',
       jump_key = '<CR>',
       auto_refresh = true,
     },
@@ -355,7 +355,7 @@ M['lspsaga.nvim'] = function()
     custom_kind = gen_custom_kind(),
   })
 
-  local function get_file_name()
+  local function get_fpath_proj_relative()
     local file_name = require('lspsaga.symbolwinbar').get_file_name(nil)
     if vim.fn.bufname '%' == '' then return '' end
     -- Else if include path: ./lsp/saga.lua -> lsp > saga.lua
@@ -383,7 +383,7 @@ M['lspsaga.nvim'] = function()
       local ok, lspsaga = pcall(require, 'lspsaga.symbolwinbar')
       local sym
       if ok then sym = lspsaga.get_symbol_node() end
-      local win_val = ' ' .. get_file_name()
+      local win_val = ' ' .. get_fpath_proj_relative()
       if sym ~= nil then win_val = win_val .. ': ' .. sym end
       vim.wo.winbar = win_val
     end
@@ -414,7 +414,7 @@ M['lspsaga.nvim'] = function()
   vim.keymap.set('n', ']E', function()
     require('lspsaga.diagnostic').goto_next({ severity = vim.diagnostic.severity.ERROR })
   end, { silent = true })
-  vim.keymap.set('n','<leader>lo', '<cmd>LSoutlineToggle<CR>',{ silent = true })
+  vim.keymap.set('n','<leader>o', '<cmd>LSoutlineToggle<CR>',{ silent = true })
 end
 
 return M
