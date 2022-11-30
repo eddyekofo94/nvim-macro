@@ -9,7 +9,7 @@ M['nvim-cmp'] = function()
     formatting = {
       fields = { 'kind', 'abbr', 'menu' },
       format = function(entry, vim_item)
-        vim_item.menu = '[' .. string.upper(entry.source.name) .. ']'
+        vim_item.menu = string.format('[%s]', string.upper(entry.source.name))
 
         -- Use a terminal icon for completions from cmp-cmdline
         if entry.source.name == 'cmdline' then
@@ -21,9 +21,8 @@ M['nvim-cmp'] = function()
         end
         -- Max word length visible
         if #(vim_item.abbr) > 40 then
-          vim_item.abbr = string.sub(vim_item.abbr, 1, 23)
-              .. '…'
-              .. string.sub(vim_item.abbr, -16, -1)
+        vim_item.abbr = string.format('%s…%s',
+          string.sub(vim_item.abbr, 1, 23), string.sub(vim_item.abbr, -16, -1))
         end
 
         return vim_item
