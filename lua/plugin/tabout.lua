@@ -56,7 +56,7 @@ local patterns = {
   }),
 }
 
-local jump_funcs = {
+local get_jump_pos = {
   ['<Tab>'] = function()
     if vim.fn.mode() ~= 'i' then return false end
 
@@ -92,8 +92,8 @@ local jump_funcs = {
   end
 }
 
-local function remap_func(key)
-  local pos = jump_funcs[key]()
+local function do_key(key)
+  local pos = get_jump_pos[key]()
   if pos then
     vim.api.nvim_win_set_cursor(0, pos)
   else
@@ -103,5 +103,5 @@ local function remap_func(key)
 end
 
 return {
-  remap_func = remap_func,
+  do_key = do_key,
 }
