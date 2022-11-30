@@ -240,7 +240,7 @@ sch.CmpItemKindValue        = { link = 'Number' }
 sch.CmpItemKindClass        = { fg = plt.aqua }
 sch.CmpItemKindStruct       = { fg = plt.cerulean }
 sch.CmpItemKindEvent        = { fg = plt.flashlight }
-sch.CmpItemKindInterface    = { fg = plt.pink }
+sch.CmpItemKindInterface    = { fg = plt.flashlight }
 sch.CmpItemKindFile         = { fg = plt.smoke }
 sch.CmpItemKindFolder       = { fg = plt.pigeon }
 sch.CmpItemKind             = { fg = plt.iron }
