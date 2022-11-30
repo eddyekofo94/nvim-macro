@@ -29,8 +29,8 @@ M['barbar.nvim'] = function()
   end
   nnoremap('<Tab>', function() barbar_api.goto_buffer_relative(1) end)
   nnoremap('<S-Tab>', function() barbar_api.goto_buffer_relative(-1) end)
-  nnoremap('<M->>', function() barbar_api.move_current_buffer(1) end)
-  nnoremap('<M-<>', function() barbar_api.move_current_buffer(-1) end)
+  nnoremap('<M-.>', function() barbar_api.move_current_buffer(1) end)
+  nnoremap('<M-,>', function() barbar_api.move_current_buffer(-1) end)
   for buf_number = 1, 9 do
     -- goto buffer in position 1..9
     nnoremap(string.format('<M-%d>', buf_number),
