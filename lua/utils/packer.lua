@@ -7,22 +7,7 @@ local packer_install_path = fn.stdpath('data') .. '/site/pack/packer/opt/packer.
 local packer_snapshot_path = fn.stdpath('config') .. '/snapshots'
 local packer_url = 'https://github.com/wbthomason/packer.nvim'
 local packer = nil
-
--- true:  use module
--- false: disable module
--- nil:   remove module
-local use_modules = {
-  base = true,
-  completion = true,
-  git = true,
-  lsp = true,
-  markup = false,
-  misc = true,
-  tools = true,
-  treesitter = true,
-  ui = true,
-}
-
+local modules = nil
 
 local function packer_init()
   packer.init({
@@ -56,8 +41,8 @@ local function packer_register_plugins()
   -- packer.nvim manages itself
   packer.use({ 'wbthomason/packer.nvim', opt = true })
   -- manage other plugins
-  for module, enabled in pairs(use_modules) do
-    if use_modules[module] ~= nil then
+  for module, enabled in pairs(modules) do
+    if modules[module] ~= nil then
       local specs = require(string.format('modules.%s', module))
       for _, spec in pairs(specs) do
         packer.use(make_enable(spec, enabled))
@@ -147,8 +132,15 @@ local function create_packer_autocmds()
   })
 end
 
-if not packer_bootstrap() then
-  load_packer_compiled()
-  create_packer_usercmds()
-  create_packer_autocmds()
+local function use_modules(module_tbl)
+  modules = module_tbl
+  if not packer_bootstrap() then
+    load_packer_compiled()
+    create_packer_usercmds()
+    create_packer_autocmds()
+  end
 end
+
+return {
+  use_modules = use_modules,
+}
