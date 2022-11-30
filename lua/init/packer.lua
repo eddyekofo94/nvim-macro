@@ -8,6 +8,21 @@ local packer_snapshot_path = fn.stdpath('config') .. '/snapshots'
 local packer_url = 'https://github.com/wbthomason/packer.nvim'
 local packer = nil
 
+-- true:  use module
+-- false: disable module
+-- nil:   remove module
+local use_modules = {
+  base = true,
+  completion = true,
+  git = true,
+  lsp = true,
+  markup = false,
+  misc = true,
+  tools = true,
+  treesitter = true,
+  ui = true,
+}
+
 
 local function packer_init()
   packer.init({
@@ -30,16 +45,23 @@ local function packer_init()
   })
 end
 
-local function packer_load_modules()
+local function make_enable(spec, enable)
+  if enable == true then
+    return spec
+  end
+  return { spec[1], enable = false, opt = true }
+end
+
+local function packer_register_plugins()
   -- packer.nvim manages itself
   packer.use({ 'wbthomason/packer.nvim', opt = true })
   -- manage other plugins
-  local modules_path = vim.split(vim.fn.globpath(fn.stdpath('config')
-    .. '/lua/modules/', '*'), '\n')
-  for _, module_path in ipairs(modules_path) do
-    local specs = require(module_path:match('modules/.*'))
-    for _, spec in pairs(specs) do
-      packer.use(spec)
+  for module, enabled in pairs(use_modules) do
+    if use_modules[module] ~= nil then
+      local specs = require(string.format('modules.%s', module))
+      for _, spec in pairs(specs) do
+        packer.use(make_enable(spec, enabled))
+      end
     end
   end
 end
@@ -61,7 +83,7 @@ local function packer_bootstrap()
       assert('Failed to create packer compile path')
     end)
     packer_init()
-    packer_load_modules()
+    packer_register_plugins()
     packer.sync()
     return true
   end
@@ -72,7 +94,7 @@ local function load_packer()
   cmd('packadd packer.nvim')
   packer = require('packer')
   packer_init()
-  packer_load_modules()
+  packer_register_plugins()
 end
 
 local function load_packer_compiled()

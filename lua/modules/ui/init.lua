@@ -1,12 +1,6 @@
 local M = {}
 local configs = require('modules.ui.configs')
 
-M['nvim-web-devicons'] = {
-  'kyazdani42/nvim-web-devicons',
-  module = 'nvim-web-devicons',
-  config = configs['nvim-web-devicons'],
-}
-
 M['barbar.nvim'] = {
   'romgrk/barbar.nvim',
   cond = function()

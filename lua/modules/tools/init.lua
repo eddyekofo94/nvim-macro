@@ -56,46 +56,4 @@ M['rnvimr'] = {
   config = configs['rnvimr'],
 }
 
-M['vim-fugitive'] = {
-  'tpope/vim-fugitive',
-  cmd = { 'Git', 'G' },
-}
-
-M['gitsigns.nvim'] = {
-  'lewis6991/gitsigns.nvim',
-  event = 'BufReadPre',
-  requires = 'plenary.nvim',
-  config = configs['gitsigns.nvim'],
-}
-
-M['plenary.nvim'] = {
- 'nvim-lua/plenary.nvim',
- module = 'plenary',
-}
-
-M['nvim-surround'] = {
-  'kylechui/nvim-surround',
-  event = 'ModeChanged',
-  keys = { 'ys', 'ds', 'cs' },
-  config = configs['nvim-surround'],
-}
-
-M['Comment.nvim'] = {
-  'numToStr/Comment.nvim',
-  keys = { 'gc', 'gb' },
-  config = configs['Comment.nvim'],
-}
-
-M['vim-sleuth'] = {
-  'tpope/vim-sleuth',
-  event = 'BufReadPre',
-}
-
-M['nvim-colorizer'] = {
-  'norcalli/nvim-colorizer.lua',
-  event = 'BufReadPre',
-  cmd = { 'ColorizerAttachToBuffer', 'ColorizerToggle' },
-  config = configs['nvim-colorizer'],
-}
-
 return M

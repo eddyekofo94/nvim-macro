@@ -1,0 +1,98 @@
+local M = {}
+
+M['nvim-treesitter'] = function()
+  local ts_configs = require('nvim-treesitter.configs')
+  ts_configs.setup({
+    ensure_installed = require('utils.static').langs:list('ts'),
+    sync_install = true,
+    ignore_install = {},
+    highlight = {
+      enable = true,
+      additional_vim_regex_highlighting = false,
+    },
+    indent = {
+      enable = true,
+    },
+    context_commentstring = {
+      enable = true,
+    },
+    rainbow = {
+      enable = true,
+      extended_mode = true,
+      max_file_lines = 1024,
+    },
+    incremental_selection = {
+      enable = true,
+      keymaps = {
+        init_selection = 'gnn',
+        node_incremental = 'grn',
+        scope_incremental = 'grc',
+        node_decremental = 'grm',
+      },
+    },
+    textobjects = {
+      select = {
+        enable = true,
+        lookahead = true, -- Automatically jump forward to textobj
+        keymaps = {
+          -- You can use the capture groups defined in textobjects.scm
+          ['am'] = '@function.outer',
+          ['im'] = '@function.inner',
+          ['al'] = '@loop.outer',
+          ['il'] = '@loop.inner',
+          ['ak'] = '@class.outer',
+          ['ik'] = '@class.inner',
+          ['ia'] = '@parameter.inner',
+          ['aa'] = '@parameter.outer',
+          ['a/'] = '@comment.outer',
+        },
+      },
+      move = {
+        enable = true,
+        set_jumps = true, -- whether to set jumps in the jumplist
+        goto_next_start = {
+          [']m'] = '@function.outer',
+          [']]'] = '@function.outer',
+          [']k'] = '@class.outer',
+          [']a'] = '@parameter.outer'
+        },
+        goto_next_end = {
+          [']M'] = '@function.outer',
+          [']['] = '@function.outer',
+          [']K'] = '@class.outer',
+          [']A'] = '@parameter.outer'
+        },
+        goto_previous_start = {
+          ['[m'] = '@function.outer',
+          ['[['] = '@function.outer',
+          ['[k'] = '@class.outer',
+          ['[a'] = '@parameter.outer'
+        },
+        goto_previous_end = {
+          ['[M'] = '@function.outer',
+          ['[]'] = '@function.outer',
+          ['[K'] = '@class.outer',
+          ['[A'] = '@parameter.outer'
+        },
+      },
+      swap = {
+        enable = true,
+        swap_next = {
+          ['<leader>al'] = '@parameter.inner'
+        },
+        swap_previous = {
+          ['<leader>ah'] = '@parameter.inner'
+        },
+      },
+      lsp_interop = {
+        enable = true,
+        border = 'single',
+        peek_definition_code = {
+          ['<leader>k'] = '@function.outer',
+        },
+      },
+    },
+  })
+end
+
+return M
