@@ -106,6 +106,8 @@ M.math_snippets = {
     s({ trig = '...' }, { t '\\ldots' }),
     s({ trig = '~~' }, { t '\\sim ' }),
     s({ trig = '~=' }, { t '\\approx ' }),
+    s({ trig = '+-' }, { t '\\pm ' }),
+    s({ trig = '-+' }, { t '\\mp ' }),
     s({ trig = '//' }, { t '\\frac{', i(1), t '}{', i(2), t '}' }),
     s({ trig = '||' }, { t '\\mid ', i(0) }),
     s({ trig = '/.' }, { t '\\sqrt{', i(1), t '}', i(0) }),
