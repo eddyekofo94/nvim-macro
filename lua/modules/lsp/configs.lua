@@ -306,7 +306,7 @@ M['lspsaga.nvim'] = function()
     group = 'Winbar',
   })
 
-  vim.keymap.set('n', '<leader>l*', '<cmd>Lspsaga lsp_finder<CR>', { silent = true })
+  vim.keymap.set('n', '<leader>R', '<cmd>Lspsaga lsp_finder<CR>', { silent = true })
   vim.keymap.set('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', { silent = true })
   vim.keymap.set('n', '<leader>r', '<cmd>Lspsaga rename<CR>', { silent = true })
   vim.keymap.set('n', '<leader>K', '<cmd>Lspsaga peek_definition<CR>', { silent = true })
