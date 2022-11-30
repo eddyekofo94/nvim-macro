@@ -19,6 +19,12 @@ M['vim-sleuth'] = {
   event = 'BufReadPre',
 }
 
+M['nvim-autopairs'] = {
+  'windwp/nvim-autopairs',
+  event = 'InsertEnter',
+  config = configs['nvim-autopairs']
+}
+
 M['nvim-colorizer'] = {
   'norcalli/nvim-colorizer.lua',
   event = 'BufReadPre',
