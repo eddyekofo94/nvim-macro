@@ -140,7 +140,7 @@ sch.TSDebug              = { link = 'Debug' } -- Debugging statements.
 sch.TSDefine             = { link = 'Define' } -- Preprocessor #define statements.
 sch.TSError              = {} -- Syntax/parser errors. This might highlight large sections of code while the user is typing still incomplete code, use a sensible highlight.
 sch.TSException          = { link = 'Exception' } -- Exception related keywords: `try`, `except`, `finally` in Python.
-sch.TSField              = { fg = plt.pigeon } -- Object and struct fields.
+sch.TSField              = { fg = plt.pink } -- Object and struct fields.
 sch.TSFloat              = { link = 'Float' } -- Floating-point number literals.
 sch.TSFunction           = { link = 'Function' } -- Function calls and definitions.
 sch.TSFuncBuiltin        = { link = 'Special' } -- Built-in functions: `print` in Lua.
