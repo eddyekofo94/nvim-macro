@@ -10,11 +10,9 @@ M['nvim-cmp'] = function()
       fields = { 'kind', 'abbr', 'menu' },
       format = function(entry, vim_item)
         vim_item.menu = '[' .. string.upper(entry.source.name) .. ']'
-        -- Do not show kind icon for emoji
-        if entry.source.name == 'emoji' then
-          vim_item.kind = ''
-          -- Use a terminal icon for completions from cmp-cmdline
-        elseif entry.source.name == 'cmdline' then
+
+        -- Use a terminal icon for completions from cmp-cmdline
+        if entry.source.name == 'cmdline' then
           vim_item.kind = icons.Terminal
         elseif entry.source.name == 'calc' then
           vim_item.kind = icons.Calculator
@@ -111,27 +109,28 @@ M['nvim-cmp'] = function()
       }
     },
     sources = {
+      { name = 'luasnip', max_item_count = 3 },
+      { name = 'copilot', max_item_count = 3 },
       {
         name = 'nvim_lsp',
+        max_item_count = 20,
         -- Suppress LSP completion when workspace is not ready yet
         entry_filter = function(entry, _)
           return not entry.completion_item.label:match('Workspace loading')
         end
       },
-      { name = 'buffer', max_item_count = 5, group_index = 1 },
-      { name = 'spell', max_item_count = 5, group_index = 2 },
-      { name = 'copilot' },
+      { name = 'buffer', max_item_count = 8 },
+      { name = 'spell', max_item_count = 8 },
       { name = 'path' },
-      { name = 'luasnip' },
       { name = 'calc' },
-      { name = 'emoji' }
     },
     sorting = {
       comparators = {
-        cmp.config.compare.kind,
-        cmp.config.compare.score,
         cmp.config.compare.locality,
         cmp.config.compare.recently_used,
+        cmp.config.compare.exact,
+        cmp.config.compare.kind,
+        cmp.config.compare.score,
       }
     },
     -- cmp floating window config
