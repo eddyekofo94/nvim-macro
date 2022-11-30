@@ -1,19 +1,20 @@
-local fn = vim.fn
 local cmd = vim.cmd
-local uv = vim.loop
 local api = vim.api
-local packer_compile_path = fn.stdpath('data') .. '/site/lua/packer_compiled.lua'
-local packer_install_path = fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
-local packer_snapshot_path = fn.stdpath('config') .. '/snapshots'
-local packer_url = 'https://github.com/wbthomason/packer.nvim'
+local fn = vim.fn
+local root = fn.stdpath('data') .. '/nvim_pkgs'
 local packer = nil
-local modules = nil
 
-local function packer_init()
-  packer.init({
-    clone_timeout = 300,
-    compile_path = packer_compile_path,
-    snapshot_path = packer_snapshot_path,
+local packer_info = {
+  modules = {},
+  root = root,
+  bootstrap = {
+    path = root .. '/pack/packer/opt/packer.nvim',
+    url = 'https://github.com/wbthomason/packer.nvim',
+  },
+  config = {
+    package_root = root .. '/pack',
+    compile_path = root .. '/lua/packer_compiled.lua',
+    snapshot_path = fn.stdpath('config') .. '/snapshots',
     opt_default = false,
     transitive_opt = true,
     display = {
@@ -25,10 +26,12 @@ local function packer_init()
       done_sym = '',
       removed_sym = '',
       moved_sym = 'ﰲ',
-      keybindings = { toggle_info = '<Tab>' }
-    }
-  })
-end
+      keybindings = {
+        toggle_info = '<Tab>'
+      },
+    },
+  },
+}
 
 local function make_enable(spec, enable)
   if enable == true then
@@ -37,56 +40,64 @@ local function make_enable(spec, enable)
   return { spec[1], enable = false, opt = true }
 end
 
-local function packer_register_plugins()
+local function register_plugins()
   -- packer.nvim manages itself
   packer.use({ 'wbthomason/packer.nvim', opt = true })
   -- manage other plugins
-  for module, enabled in pairs(modules) do
-    if modules[module] ~= nil then
-      local specs = require(string.format('modules.%s', module))
-      for _, spec in pairs(specs) do
-        packer.use(make_enable(spec, enabled))
-      end
+  for module, enabled in pairs(packer_info.modules) do
+    local specs = require(string.format('modules.%s', module))
+    for _, spec in pairs(specs) do
+      packer.use(make_enable(spec, enabled))
     end
   end
 end
 
--- Install and add packer.nvim if not installed
-local function packer_bootstrap()
-  if fn.empty(fn.glob(packer_install_path)) > 0 then
-    vim.notify('Installing packer.nvim...', vim.log.levels.INFO)
-    PACKER_BOOTSTRAP = fn.system({
-      'git', 'clone', '--depth', '1', packer_url, packer_install_path
-    })
-    vim.notify('packer.nvim cloned to ' .. packer_install_path,
-      vim.log.levels.INFO)
+local function load_packer()
+  if not packer then
     cmd('packadd packer.nvim')
     packer = require('packer')
+    packer.init(packer_info.config)
+    register_plugins()
+  end
+end
 
-    -- make directory for packer compiled file
-    uv.fs_mkdir(packer_compile_path, 744, function()
-      assert('Failed to create packer compile path')
-    end)
-    packer_init()
-    packer_register_plugins()
-    packer.sync()
+local function sync_plugins()
+  load_packer()
+  -- make directory for packer compiled file
+  os.execute(string.format('mkdir -p %s',
+    fn.fnamemodify(packer_info.config.compile_path, ':p:h')))
+  packer.sync()
+end
+
+-- Install and add packer.nvim if not installed
+local function bootstrap()
+  local boot = packer_info.bootstrap
+  local compile_path = packer_info.config.compile_path
+  -- Install packer if not already installed
+  if fn.empty(fn.glob(boot.path)) > 0 then
+    vim.notify('Installing packer.nvim...', vim.log.levels.INFO)
+    PACKER_BOOTSTRAP = fn.system({
+      'git', 'clone', '--depth', '1', boot.url, boot.path
+    })
+    vim.notify('packer.nvim cloned to ' .. boot.path, vim.log.levels.INFO)
+    -- use packer to sync other plugins
+    sync_plugins()
+    return true
+  end
+  -- Sync plugins if packer is installed but compiled file is lost
+  if fn.filereadable(compile_path) == 0 then
+    sync_plugins()
     return true
   end
   return false
 end
 
-local function load_packer()
-  cmd('packadd packer.nvim')
-  packer = require('packer')
-  packer_init()
-  packer_register_plugins()
-end
-
 local function load_packer_compiled()
-  local packer_compiled_ok, err_msg = pcall(require, 'packer_compiled')
-  if not packer_compiled_ok then
-    vim.notify('Error loading packer_compiled.lua: ' .. err_msg,
-      vim.log.levels.ERROR)
+  local fname = fn.fnamemodify(packer_info.config.compile_path, ':t:r')
+  local ok, err_msg = pcall(require, fname)
+  if not ok then
+    vim.notify(string.format('Error loading packer compiled file %s: %s',
+      fname, err_msg), vim.log.levels.ERROR)
   end
 end
 
@@ -116,7 +127,7 @@ local function create_packer_usercmds()
   for packer_cmd, attr in pairs(packer_cmds) do
     api.nvim_create_user_command('Packer' .. packer_cmd, function(tbl)
       -- load packer if not loaded
-      if not packer then load_packer() end
+      load_packer()
       -- then call the corresponding function with args
       attr.func(tbl)
     end, attr.opts)
@@ -132,9 +143,11 @@ local function create_packer_autocmds()
   })
 end
 
-local function use_modules(module_tbl)
-  modules = module_tbl
-  if not packer_bootstrap() then
+local function manage_plugins(info)
+  packer_info = vim.tbl_deep_extend('force', packer_info, info)
+  vim.cmd(string.format('set rtp+=%s pp+=%s',
+    packer_info.root, packer_info.root))
+  if not bootstrap() then
     load_packer_compiled()
     create_packer_usercmds()
     create_packer_autocmds()
@@ -142,5 +155,5 @@ local function use_modules(module_tbl)
 end
 
 return {
-  use_modules = use_modules,
+  manage_plugins = manage_plugins,
 }

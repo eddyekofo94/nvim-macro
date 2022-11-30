@@ -7,7 +7,7 @@ M['nvim-treesitter'] = function()
     sync_install = true,
     ignore_install = {},
     highlight = {
-      enable = true,
+      enable = not vim.g.vscode,
       additional_vim_regex_highlighting = false,
     },
     indent = {
@@ -17,7 +17,7 @@ M['nvim-treesitter'] = function()
       enable = true,
     },
     rainbow = {
-      enable = true,
+      enable = not vim.g.vscode,
       extended_mode = true,
       max_file_lines = 1024,
     },
