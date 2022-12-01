@@ -34,6 +34,9 @@ xnoremap <leader>R <Cmd>call VSCodeNotify('editor.action.referenceSearch.trigger
 nnoremap ]c <Cmd>call VSCodeNotify('workbench.action.editor.nextChange')<CR>
 nnoremap [c <Cmd>call VSCodeNotify('workbench.action.editor.previousChange')<CR>
 
+" Navigation
+nnoremap <leader>ff <Cmd>call VSCodeNotify('workbench.action.quickOpen')<CR>
+
 " Window and buffer keymap settings
 function! s:split(...) abort
     let direction = a:1
