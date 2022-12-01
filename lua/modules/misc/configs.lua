@@ -5,9 +5,7 @@ M['nvim-surround'] = function()
 end
 
 M['Comment.nvim'] = function()
-  require('Comment').setup({
-    ignore = '^$',
-  })
+  require('Comment').setup()
 end
 
 M['nvim-autopairs'] = function()
