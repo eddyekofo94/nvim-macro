@@ -11,11 +11,11 @@ end
 local patterns = {
   ['<Tab>'] = fallback_tbl_t:new({
     markdown = {
-      jumpable = [[\s*\()\|]\|}\|"\|'\|`\)\|\$\|\*]],
+      jumpable = [[\s*\()\|]\|}\|"\|'\|`\|\$\|\*\)]],
       jump_pos = [[)\|]\|}\|"\|'\|`\|\$\|\*]],
     },
     tex = {
-      jumpable = [[\s*\()\|]\|}\|"\|'\|`\)\|\$]],
+      jumpable = [[\s*\()\|]\|}\|"\|'\|`\|\$\)]],
       jump_pos = [[)\|]\|}\|"\|'\|`\|\$]],
     },
     c = {
@@ -62,8 +62,10 @@ local get_jump_pos = {
 
     local cursor_pos = vim.api.nvim_win_get_cursor(0)
     local trailing = vim.api.nvim_get_current_line():sub(cursor_pos[2] + 1, -1)
+    local leading = vim.api.nvim_get_current_line():sub(1, cursor_pos[2])
 
     local jumpable = vim.fn.match(trailing, patterns['<Tab>'][vim.bo.ft].jumpable) == 0
+      and vim.fn.match(leading, [[\S]]) ~= -1
     local jump_pos = vim.fn.match(trailing, patterns['<Tab>'][vim.bo.ft].jump_pos)
 
     if jumpable then
