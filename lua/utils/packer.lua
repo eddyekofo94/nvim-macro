@@ -1,19 +1,18 @@
 local cmd = vim.cmd
 local api = vim.api
 local fn = vim.fn
-local root = fn.stdpath('data') .. '/nvim_pkgs'
+local default_root = fn.stdpath('data') .. '/site'
 local packer = nil
 
 local packer_info = {
   modules = {},
-  root = root,
+  root = default_root,
   bootstrap = {
-    path = root .. '/pack/packer/opt/packer.nvim',
+    path = default_root .. '/pack/packer/opt/packer.nvim',
     url = 'https://github.com/wbthomason/packer.nvim',
   },
   config = {
-    package_root = root .. '/pack',
-    compile_path = root .. '/lua/packer_compiled.lua',
+    compile_path = default_root .. '/lua/packer_compiled.lua',
     snapshot_path = fn.stdpath('config') .. '/snapshots',
     opt_default = false,
     transitive_opt = true,
@@ -32,6 +31,17 @@ local packer_info = {
     },
   },
 }
+
+local function update_paths()
+  if packer_info.root ~= default_root then
+    local root = packer_info.root
+    packer_info.bootstrap.path = root .. '/pack/packer/opt/packer.nvim'
+    packer_info.config.package_root = root .. '/pack'
+    packer_info.config.compile_path = root .. '/lua/packer_compiled.lua'
+    vim.cmd(string.format('set rtp-=%s pp-=%s', default_root, default_root))
+    vim.cmd(string.format('set rtp+=%s pp+=%s', root, root))
+  end
+end
 
 local function make_enable(spec, enable)
   if enable == true then
@@ -76,9 +86,7 @@ local function bootstrap()
   -- Install packer if not already installed
   if fn.empty(fn.glob(boot.path)) > 0 then
     vim.notify('Installing packer.nvim...', vim.log.levels.INFO)
-    PACKER_BOOTSTRAP = fn.system({
-      'git', 'clone', '--depth', '1', boot.url, boot.path
-    })
+    fn.system({ 'git', 'clone', '--depth', '1', boot.url, boot.path })
     vim.notify('packer.nvim cloned to ' .. boot.path, vim.log.levels.INFO)
     -- use packer to sync other plugins
     sync_plugins()
@@ -86,6 +94,7 @@ local function bootstrap()
   end
   -- Sync plugins if packer is installed but compiled file is lost
   if fn.filereadable(compile_path) == 0 then
+    vim.notify(string.format('Compiling at %s', compile_path))
     sync_plugins()
     return true
   end
@@ -145,8 +154,7 @@ end
 
 local function manage_plugins(info)
   packer_info = vim.tbl_deep_extend('force', packer_info, info)
-  vim.cmd(string.format('set rtp+=%s pp+=%s',
-    packer_info.root, packer_info.root))
+  update_paths()
   if not bootstrap() then
     load_packer_compiled()
     create_packer_usercmds()

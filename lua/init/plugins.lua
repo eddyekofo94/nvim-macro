@@ -1,15 +1,9 @@
 local manage_plugins = require('utils.packer').manage_plugins
 
 if vim.g.vscode then
-  local root = vim.fn.stdpath('data') .. '/vsc_nvim_pkgs'
   manage_plugins({
-    root = root,
-    bootstrap = {
-      path = root .. '/pack/packer/opt/packer.nvim',
-    },
+    root = vim.fn.stdpath('data') .. '/vscode_neovim',
     config = {
-      package_root = root .. '/pack',
-      compile_path = root .. '/lua/packer_compiled.lua',
       display = {
         non_interactive = true,
       },
