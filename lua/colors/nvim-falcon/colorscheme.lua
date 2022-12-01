@@ -27,7 +27,6 @@ sch.Folded       = { fg = plt.purple, bg = plt.space, italic = true } -- Line us
 sch.Search       = { fg = plt.flashlight, bold = true } -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
 sch.IncSearch    = { fg = plt.black, bg = plt.flashlight, bold = true } -- 'incsearch' highlighting; also used for the text replaced with ':s///c'
 sch.LineNr       = { fg = plt.steel } -- Line number for ':number' and ':#' commands, and when 'number' or 'relativenumber' option is set.
-sch.MatchParen   = { bg = plt.turquoise } -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
 sch.ModeMsg      = { fg = plt.smoke } -- 'showmode' message (e.g., '-- INSERT -- ')
 sch.MoreMsg      = { fg = plt.turquoise } -- |more-prompt|
 sch.MsgArea      = { link = 'Normal' } -- Area for messages and cmdline
