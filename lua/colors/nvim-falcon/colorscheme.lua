@@ -250,10 +250,10 @@ sch.GitSignsDelete          = { fg = plt.scarlet }
 sch.GitSignsChange          = { fg = plt.aqua }
 sch.GitSignsCurrentLineBlame= { fg = plt.turquoise }
 -- barbar
-sch.BufferCurrent           = { fg = plt.flashlight }
-sch.BufferCurrentIndex      = { fg = plt.orange }
-sch.BufferCurrentMod        = { fg = plt.orange }
-sch.BufferCurrentSign       = {}
+sch.BufferCurrent           = { fg = plt.white, bold = true }
+sch.BufferCurrentIndex      = { fg = plt.orange, bold = true }
+sch.BufferCurrentMod        = { fg = plt.orange, bold = true }
+sch.BufferCurrentSign       = { fg = plt.orange }
 sch.BufferInactive          = { fg = plt.pigeon, bg = plt.deepsea }
 sch.BufferInactiveIcon      = { bg = sch.StatusLine.bg }
 sch.BufferInactiveIndex     = { fg = plt.pigeon, bg = plt.deepsea }
@@ -262,6 +262,7 @@ sch.BufferInactiveSign      = { fg = plt.pigeon, bg = plt.deepsea }
 sch.BufferInactiveTarget    = { fg = plt.wine, bg = plt.deepsea }
 sch.BufferVisible           = { fg = plt.pigeon }
 sch.BufferVisibleMod        = { fg = plt.orange }
+sch.BufferTabpageFill       = { fg = plt.pigeon, bg = plt.deepsea }
 -- -- nvim-tree
 -- sch.NvimTreeGitNew          = { link = 'GitSignsAdd' }
 -- sch.NvimTreeFileNew         = { link = 'GitSignsAdd' }
