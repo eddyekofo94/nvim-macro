@@ -39,10 +39,6 @@ end
 
 -- Source: https://github.com/wookayin/dotfiles/commit/96d935515486f44ec361db3df8ab9ebb41ea7e40
 function M.close_all_floatings(key)
-  -- do not close if cursor is in a floating window
-  if vim.api.nvim_win_get_config(0).relative ~= '' then
-    return
-  end
   local count = 0
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     local config = vim.api.nvim_win_get_config(win)

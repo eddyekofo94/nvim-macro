@@ -68,15 +68,6 @@ local autocmds = {
       command = 'set nospell'
     },
   },
-
-  -- close hover windows, etc. when window scrolls
-  {
-    { 'WinScrolled' },
-    {
-      pattern = '*',
-      callback = function() require('utils.funcs').close_all_floatings(nil) end,
-    },
-  },
 }
 
 set_autocmds(autocmds)
