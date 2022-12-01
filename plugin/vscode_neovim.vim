@@ -125,8 +125,6 @@ nnoremap <C-w>L <Cmd>call VSCodeNotify('workbench.action.moveEditorToRightGroup'
 nnoremap <C-w>w <Cmd>call VSCodeNotify('workbench.action.focusNextGroup')<CR>
 nnoremap <C-w>W <Cmd>call VSCodeNotify('workbench.action.focusPreviousGroup')<CR>
 nnoremap <C-w>p <Cmd>call VSCodeNotify('workbench.action.focusPreviousGroup')<CR>
-nnoremap <C-w>0 <Cmd>call VSCodeNotify('workbench.action.focusFirstEditorGroup')<CR>
-nnoremap <C-w>$ <Cmd>call VSCodeNotify('workbench.action.focusLastEditorGroup')<CR>
 
 xnoremap <C-w>h <Cmd>call VSCodeNotify('workbench.action.focusLeftGroup')<CR>
 xnoremap <C-w>j <Cmd>call VSCodeNotify('workbench.action.focusBelowGroup')<CR>
@@ -139,5 +137,3 @@ xnoremap <C-w>L <Cmd>call VSCodeNotify('workbench.action.moveEditorToRightGroup'
 xnoremap <C-w>w <Cmd>call VSCodeNotify('workbench.action.focusNextGroup')<CR>
 xnoremap <C-w>W <Cmd>call VSCodeNotify('workbench.action.focusPreviousGroup')<CR>
 xnoremap <C-w>p <Cmd>call VSCodeNotify('workbench.action.focusPreviousGroup')<CR>
-xnoremap <C-w>0 <Cmd>call VSCodeNotify('workbench.action.focusFirstEditorGroup')<CR>
-xnoremap <C-w>$ <Cmd>call VSCodeNotify('workbench.action.focusLastEditorGroup')<CR>
