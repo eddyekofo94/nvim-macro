@@ -36,6 +36,7 @@ M['barbar.nvim'] = function()
     nnoremap(string.format('<M-%d>', buf_number),
             function() barbar_api.goto_buffer(buf_number) end)
   end
+  nnoremap('<M-0>', function() barbar_api.goto_buffer(-1) end)
   nnoremap('<M-(>', barbar_api.close_buffers_left)
   nnoremap('<M-)>', barbar_api.close_buffers_right)
   nnoremap('<M-S>', barbar_api.pick_buffer)
