@@ -1,10 +1,5 @@
 local M = {}
-local configs = require('modules.git.configs')
-
-M['vim-fugitive'] = {
-  'tpope/vim-fugitive',
-  cmd = { 'Git', 'G' },
-}
+local configs = require('modules.git_tools.configs')
 
 M['gitsigns.nvim'] = {
   'lewis6991/gitsigns.nvim',

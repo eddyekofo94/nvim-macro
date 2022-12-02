@@ -14,7 +14,7 @@ if vim.g.vscode then
     modules = {
       base = true,          -- base plugins that provide services to other plugins, loaded only when required
       completion = nil,     -- plugins provide completion and snippets,
-      git = nil,            -- git integration
+      git_tools = nil,      -- git integration
       lsp = nil,            -- lsp plugins,
       markup = nil,         -- plugins for markdown and tex,
       misc = true,          -- miscellaneous plugins for enhanced editing
@@ -28,7 +28,7 @@ else
     modules = {
       base = true,
       completion = true,
-      git = true,
+      git_tools = true,
       lsp = true,
       markup = true,
       misc = true,
