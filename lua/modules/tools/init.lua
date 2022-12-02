@@ -46,4 +46,11 @@ M['vim-floaterm'] = {
   config = configs['vim-floaterm'],
 }
 
+M['gitsigns.nvim'] = {
+  'lewis6991/gitsigns.nvim',
+  event = 'BufReadPre',
+  requires = 'plenary.nvim',
+  config = configs['gitsigns.nvim'],
+}
+
 return M
