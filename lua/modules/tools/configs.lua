@@ -87,8 +87,10 @@ M['vim-floaterm'] = function()
           \ a:tool, a:tool, a:tool))
       else
         execute(printf('FloatermToggle %s', a:tool))
-        " workaround to prevent lazygit shift left
-        execute('normal! 0')
+        " workaround to prevent lazygit shift left;
+        " another workaround here is to use sidlent!
+        " to ignore can't re-enter normal mode error
+        execute('silent! normal! 0')
       endif
     endfunction
 
