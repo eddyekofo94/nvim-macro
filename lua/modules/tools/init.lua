@@ -35,25 +35,14 @@ M['undotree'] = {
   config = configs['undotree'],
 }
 
-M['toggleterm.nvim'] = {
-  'akinsho/toggleterm.nvim',
-  keys = { '<C-\\>', '<M-i>' },
+M['vim-floaterm'] = {
+  'voldikss/vim-floaterm',
+  keys = { '<C-\\>', '<M-e>', '<M-i>' },
   cmd = {
-    'Lzgit',
-    'TermExec',
-    'ToggleTerm',
-    'ToggleTermToggleAll',
-    'ToggleTermToggleAdd',
-    'ToggleTermSendVisualLines',
-    'ToggleTermSendCurrentLine',
-    'ToggleTermSendVisualSelection',
+    'FloatermNew',
+    'FloatermToggle'
   },
-  config = configs['toggleterm.nvim'],
-}
-
-M['rnvimr'] = {
-  'kevinhwang91/rnvimr',
-  config = configs['rnvimr'],
+  config = configs['vim-floaterm'],
 }
 
 return M
