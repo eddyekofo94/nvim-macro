@@ -101,8 +101,8 @@ M['vim-floaterm'] = function()
     tnoremap <silent> <M-i> <Cmd>call ToggleTool('lazygit')<CR>
     nnoremap <silent> <C-\> <Cmd>FloatermToggle normal<CR>
     tnoremap <silent> <C-\> <Cmd>FloatermToggle normal<CR>
-    tnoremap <silent> <C-p> <Cmd>FloatermPrev<CR>
-    tnoremap <silent> <C-n> <Cmd>FloatermNext<CR>
+    tnoremap <silent> <F10> <Cmd>FloatermPrev<CR>
+    tnoremap <silent> <F11> <Cmd>FloatermNext<CR>
   ]])
 end
 
