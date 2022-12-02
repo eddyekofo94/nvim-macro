@@ -79,8 +79,8 @@ M['vim-floaterm'] = function()
     let g:floaterm_width = 0.7
     let g:floaterm_height = 0.8
     let g:floaterm_opener = 'edit'
-    nnoremap <silent> <M-i> <Cmd>FloatermNew --disposable lazygit<CR>
-    nnoremap <silent> <M-e> <Cmd>FloatermNew --disposable ranger<CR>
+    nnoremap <silent> <M-i> <Cmd>FloatermNew lazygit<CR>
+    nnoremap <silent> <M-e> <Cmd>FloatermNew ranger<CR>
     tnoremap <silent> <M-i> <Cmd>FloatermKill lazygit<CR>
     tnoremap <silent> <M-e> <Cmd>FloatermKill ranger<CR>
     nnoremap <silent> <C-\> <Cmd>FloatermToggle<CR>
