@@ -79,12 +79,26 @@ M['vim-floaterm'] = function()
     let g:floaterm_width = 0.7
     let g:floaterm_height = 0.8
     let g:floaterm_opener = 'edit'
-    nnoremap <silent> <M-i> <Cmd>FloatermNew lazygit<CR>
-    nnoremap <silent> <M-e> <Cmd>FloatermNew ranger<CR>
-    tnoremap <silent> <M-i> <Cmd>FloatermKill lazygit<CR>
-    tnoremap <silent> <M-e> <Cmd>FloatermKill ranger<CR>
-    nnoremap <silent> <C-\> <Cmd>FloatermToggle<CR>
-    tnoremap <silent> <C-\> <Cmd>FloatermToggle<CR>
+
+    function! ToggleTool(tool) abort
+      let bufnr = floaterm#terminal#get_bufnr(a:tool)
+      if bufnr == -1
+        execute(printf('FloatermNew --title=%s($1/$2) --name=%s %s',
+          \ a:tool, a:tool, a:tool))
+      else
+        execute(printf('FloatermToggle %s', a:tool))
+        " workaround to prevent lazygit shift left
+        execute('normal! 0')
+      endif
+    endfunction
+
+    command! -nargs=1 ToggleTool call ToggleTool(<q-args>)
+    nnoremap <silent> <M-e> <Cmd>call ToggleTool('ranger')<CR>
+    tnoremap <silent> <M-e> <Cmd>call ToggleTool('ranger')<CR>
+    nnoremap <silent> <M-i> <Cmd>call ToggleTool('lazygit')<CR>
+    tnoremap <silent> <M-i> <Cmd>call ToggleTool('lazygit')<CR>
+    nnoremap <silent> <C-\> <Cmd>FloatermToggle normal<CR>
+    tnoremap <silent> <C-\> <Cmd>FloatermToggle normal<CR>
     tnoremap <silent> <C-p> <Cmd>FloatermPrev<CR>
     tnoremap <silent> <C-n> <Cmd>FloatermNext<CR>
   ]])
