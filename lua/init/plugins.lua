@@ -13,14 +13,14 @@ if vim.g.vscode then
     -- nil: remove all plugins in the module
     modules = {
       base = true,          -- base plugins that provide services to other plugins, loaded only when required
-      completion = false,   -- plugins provide completion and snippets,
-      git = false,          -- git integration
-      lsp = false,          -- lsp plugins,
-      markup = false,       -- plugins for markdown and tex,
+      completion = nil,     -- plugins provide completion and snippets,
+      git = nil,            -- git integration
+      lsp = nil,            -- lsp plugins,
+      markup = nil,         -- plugins for markdown and tex,
       misc = true,          -- miscellaneous plugins for enhanced editing
-      tools = false,        -- navigation, terminal, undo, etc.,
+      tools = nil,          -- navigation, terminal, undo, etc.,
       treesitter = true,    -- treesitter support
-      ui = false,           -- pretty ui,
+      ui = nil,             -- pretty ui,
     },
   })
 else
