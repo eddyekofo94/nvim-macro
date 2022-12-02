@@ -74,92 +74,36 @@ M['undotree'] = function()
   vim.api.nvim_set_keymap('n', '<Leader>uq', '<cmd>UndotreeHide<CR>', { noremap = true })
 end
 
-M['toggleterm.nvim'] = function()
-  local toggleterm = require('toggleterm')
-  toggleterm.setup({
-    -- size can be a number or function which is passed the current terminal
-    size = function(term)
-      if term.direction == "horizontal" then
-        return 12
-      elseif term.direction == "vertical" then
-        return vim.o.columns * 0.4
-      end
-    end,
-    shade_terminals = false,
-    open_mapping = '<C-\\>',
-    on_open = function(term)
-      local keymap_opts = { noremap = true, silent = true, buffer = term.bufnr }
-      vim.keymap.set('n', 'q', '<cmd>close<CR>', keymap_opts)
-      vim.keymap.set('n', '<esc>', '<cmd>close<CR>', keymap_opts)
-      vim.keymap.set('n', '<M-C>', '<cmd>bd!<CR>', keymap_opts)
-    end,
-    terminal_mappings = true, -- whether or not the open mapping applies in the opened terminals
-    persist_size = false,
-    direction = 'float',
-    float_opts = {
-      border = 'single',
-      width = function() return math.floor(0.7 * vim.o.columns) end,
-      height = function() return math.floor(0.7 * vim.o.lines) end
-    }
-  })
+M['vim-floaterm'] = function()
+  vim.cmd([[
+    let g:floaterm_width = 0.7
+    let g:floaterm_height = 0.8
+    let g:floaterm_opener = 'edit'
 
-  -- lazygit integration setup
-  local Lazygit = nil
+    function! ToggleTool(tool) abort
+      let bufnr = floaterm#terminal#get_bufnr(a:tool)
+      if bufnr == -1
+        execute(printf('FloatermNew --title=%s($1/$2) --name=%s %s',
+          \ a:tool, a:tool, a:tool))
+      else
+        execute(printf('FloatermToggle %s', a:tool))
+        " workaround to prevent lazygit shift left;
+        " another workaround here is to use sidlent!
+        " to ignore can't re-enter normal mode error
+        execute('silent! normal! 0')
+      endif
+    endfunction
 
-  local function lazygit_toggle()
-    if Lazygit then
-      Lazygit:toggle()
-      return
-    end
-    local Terminal = require('toggleterm.terminal').Terminal
-    local directory = require('toggleterm.utils').git_dir()
-    if directory == nil then
-      vim.notify('Git: Not in a git directory', vim.log.levels.WARN)
-      return
-    end
-    if directory ~= vim.g.git_pred_dir then
-      vim.g.git_pred_dir = directory
-      Lazygit = Terminal:new({
-        cmd = 'lazygit -p ' .. directory,
-        hidden = true,
-        -- function to run on opening the terminal
-        on_open = function(term)
-          local keymap_opts = {
-            noremap = true,
-            silent = true,
-            buffer = term.bufnr
-          }
-          vim.keymap.set('n', 'q', '<cmd>close<CR>', keymap_opts)
-          vim.keymap.set('n', '<esc>', '<cmd>close<CR>', keymap_opts)
-          vim.keymap.set('n', '<M-C>', '<cmd>bd!<CR>', keymap_opts)
-          vim.cmd('normal! 0')    -- workaround, else lazygit will shift left
-          vim.cmd('startinsert')
-        end
-      })
-    end
-    Lazygit:toggle()
-  end
-
-  vim.keymap.set({ 'n', 't' }, '<M-i>',
-      lazygit_toggle, { noremap = true, silent = true })
-  vim.api.nvim_create_user_command('Lzgit', lazygit_toggle, {})
-end
-
-M['rnvimr'] = function()
-  vim.g.rnvimr_enable_ex = 1
-  vim.g.rnvimr_enable_picker = 1
-  vim.g.rnvimr_enable_bw = 1
-  vim.g.rnvimr_ranger_cmd = { 'ranger', '--cmd=set draw_borders both' }
-  vim.g.rnvimr_action = {
-    ['<A-t>'] = 'NvimEdit tabedit',
-    ['<A-s>'] = 'NvimEdit split',
-    ['<A-v>'] = 'NvimEdit vsplit',
-    ['gw'] = 'JumpNvimCwd',
-    ['yw'] = 'EmitRangerCwd'
-  }
-
-  vim.keymap.set({ 'n', 't' }, '<M-e>',
-      '<cmd>RnvimrToggle<CR>', { noremap = true })
+    command! -nargs=1 ToggleTool call ToggleTool(<q-args>)
+    nnoremap <silent> <M-e> <Cmd>call ToggleTool('ranger')<CR>
+    tnoremap <silent> <M-e> <Cmd>call ToggleTool('ranger')<CR>
+    nnoremap <silent> <M-i> <Cmd>call ToggleTool('lazygit')<CR>
+    tnoremap <silent> <M-i> <Cmd>call ToggleTool('lazygit')<CR>
+    nnoremap <silent> <C-\> <Cmd>FloatermToggle normal<CR>
+    tnoremap <silent> <C-\> <Cmd>FloatermToggle normal<CR>
+    tnoremap <silent> <C-p> <Cmd>FloatermPrev<CR>
+    tnoremap <silent> <C-n> <Cmd>FloatermNext<CR>
+  ]])
 end
 
 return M
