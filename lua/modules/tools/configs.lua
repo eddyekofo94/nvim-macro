@@ -80,13 +80,33 @@ M['vim-floaterm'] = function()
     let g:floaterm_height = 0.8
     let g:floaterm_opener = 'edit'
 
+    function! s:get_bufnr_unnamed() abort
+      let buflist = floaterm#buflist#gather()
+      for bufnr in buflist
+        let name = getbufvar(bufnr, 'floaterm_name')
+        if empty(name)
+          return bufnr
+        endif
+      endfor
+      return -1
+    endfunction
+
     function! ToggleTool(tool) abort
-      let bufnr = floaterm#terminal#get_bufnr(a:tool)
+      " find bufnr according to the tool name
+      let bufnr = empty(a:tool) ?
+        \ s:get_bufnr_unnamed() : floaterm#terminal#get_bufnr(a:tool)
+
       if bufnr == -1
-        execute(printf('FloatermNew --title=%s($1/$2) --name=%s %s',
-          \ a:tool, a:tool, a:tool))
+        if empty(a:tool)
+          " ToggleTool should only be called from
+          " normal mode or terminal mode without bang
+          call floaterm#run('new', 0, [visualmode(), 0, 0, 0], '')
+        else
+          call floaterm#run('new', 0, [visualmode(), 0, 0, 0],
+            \ printf('--title=%s($1/$2) --name=%s %s', a:tool, a:tool, a:tool))
+        endif
       else
-        execute(printf('FloatermToggle %s', a:tool))
+        call floaterm#toggle(0, bufnr, '')
         " workaround to prevent lazygit shift left;
         " another workaround here is to use sidlent!
         " to ignore can't re-enter normal mode error
@@ -94,15 +114,18 @@ M['vim-floaterm'] = function()
       endif
     endfunction
 
-    command! -nargs=1 ToggleTool call ToggleTool(<q-args>)
+    command! -nargs=? ToggleTool call ToggleTool(<q-args>)
     nnoremap <silent> <M-e> <Cmd>call ToggleTool('ranger')<CR>
     tnoremap <silent> <M-e> <Cmd>call ToggleTool('ranger')<CR>
     nnoremap <silent> <M-i> <Cmd>call ToggleTool('lazygit')<CR>
     tnoremap <silent> <M-i> <Cmd>call ToggleTool('lazygit')<CR>
-    nnoremap <silent> <C-\> <Cmd>FloatermToggle normal<CR>
-    tnoremap <silent> <C-\> <Cmd>FloatermToggle normal<CR>
-    tnoremap <silent> <F10> <Cmd>FloatermPrev<CR>
-    tnoremap <silent> <F11> <Cmd>FloatermNext<CR>
+    nnoremap <silent> <C-\> <Cmd>call ToggleTool('')<CR>
+    tnoremap <silent> <C-\> <Cmd>call ToggleTool('')<CR>
+
+    autocmd User FloatermOpen nnoremap <buffer> <silent> <M-p> <Cmd>FloatermPrev<CR>
+    autocmd User FloatermOpen tnoremap <buffer> <silent> <M-p> <Cmd>FloatermPrev<CR>
+    autocmd User FloatermOpen nnoremap <buffer> <silent> <M-n> <Cmd>FloatermNext<CR>
+    autocmd User FloatermOpen tnoremap <buffer> <silent> <M-n> <Cmd>FloatermNext<CR>
   ]])
 end
 
