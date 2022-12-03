@@ -116,11 +116,12 @@ M['vim-floaterm'] = function()
 
     command! -nargs=? -count=0 ToggleTool call ToggleTool(<q-args>, <count>)
     nnoremap <silent> <M-e> <Cmd>execute v:count . 'ToggleTool ranger'<CR>
-    tnoremap <silent> <M-e> <Cmd>execute v:count . 'ToggleTool ranger'<CR>
     nnoremap <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
-    tnoremap <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
     nnoremap <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
-    tnoremap <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
+
+    autocmd User FloatermOpen tnoremap <buffer> <silent> <M-e> <Cmd>execute v:count . 'ToggleTool ranger'<CR>
+    autocmd User FloatermOpen tnoremap <buffer> <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
+    autocmd User FloatermOpen tnoremap <buffer> <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
 
     autocmd User FloatermOpen nnoremap <buffer> <silent> <M-p> <Cmd>FloatermPrev<CR>
     autocmd User FloatermOpen tnoremap <buffer> <silent> <M-p> <Cmd>FloatermPrev<CR>
