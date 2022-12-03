@@ -37,7 +37,7 @@ M['undotree'] = {
 
 M['vim-floaterm'] = {
   'voldikss/vim-floaterm',
-  keys = { '<C-\\>', '<M-e>', '<M-i>' },
+  keys = { '<C-\\>', '<M-i>' },
   cmd = {
     'T',
     'ToggleTool',
@@ -52,6 +52,11 @@ M['gitsigns.nvim'] = {
   event = 'BufReadPre',
   requires = 'plenary.nvim',
   config = configs['gitsigns.nvim'],
+}
+
+M['rnvimr'] = {
+  'kevinhwang91/rnvimr',
+  config = configs['rnvimr'],
 }
 
 return M

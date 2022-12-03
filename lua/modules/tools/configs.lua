@@ -116,11 +116,9 @@ M['vim-floaterm'] = function()
 
     command! -nargs=? -count=0 T          call ToggleTool(<q-args>, <count>)
     command! -nargs=? -count=0 ToggleTool call ToggleTool(<q-args>, <count>)
-    nnoremap <silent> <M-e> <Cmd>execute v:count . 'ToggleTool ranger'<CR>
     nnoremap <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
     nnoremap <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
 
-    autocmd User FloatermOpen tnoremap <buffer> <silent> <M-e> <Cmd>execute v:count . 'ToggleTool ranger'<CR>
     autocmd User FloatermOpen tnoremap <buffer> <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
     autocmd User FloatermOpen tnoremap <buffer> <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
 
@@ -186,6 +184,23 @@ M['gitsigns.nvim'] = function()
       map({ 'o', 'x' }, 'ac', ':<C-U>Gitsigns select_hunk<CR>')
     end,
   })
+end
+
+M['rnvimr'] = function()
+  vim.g.rnvimr_enable_ex = 1
+  vim.g.rnvimr_enable_picker = 1
+  vim.g.rnvimr_enable_bw = 1
+  vim.g.rnvimr_ranger_cmd = { 'ranger', '--cmd=set draw_borders both' }
+  vim.g.rnvimr_action = {
+    ['<A-t>'] = 'NvimEdit tabedit',
+    ['<A-s>'] = 'NvimEdit split',
+    ['<A-v>'] = 'NvimEdit vsplit',
+    ['gw'] = 'JumpNvimCwd',
+    ['yw'] = 'EmitRangerCwd'
+  }
+
+  vim.keymap.set({ 'n', 't' }, '<M-e>',
+      '<cmd>RnvimrToggle<CR>', { noremap = true })
 end
 
 return M
