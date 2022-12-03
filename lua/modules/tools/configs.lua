@@ -91,7 +91,7 @@ M['vim-floaterm'] = function()
       return -1
     endfunction
 
-    function! ToggleTool(tool) abort
+    function! ToggleTool(tool, count) abort
       " find bufnr according to the tool name
       let bufnr = empty(a:tool) ?
         \ s:get_bufnr_unnamed() : floaterm#terminal#get_bufnr(a:tool)
@@ -106,7 +106,7 @@ M['vim-floaterm'] = function()
             \ printf('--title=%s($1/$2) --name=%s %s', a:tool, a:tool, a:tool))
         endif
       else
-        call floaterm#toggle(0, bufnr, '')
+        call floaterm#toggle(0, a:count ? a:count : bufnr, '')
         " workaround to prevent lazygit shift left;
         " another workaround here is to use sidlent!
         " to ignore can't re-enter normal mode error
@@ -114,13 +114,13 @@ M['vim-floaterm'] = function()
       endif
     endfunction
 
-    command! -nargs=? ToggleTool call ToggleTool(<q-args>)
-    nnoremap <silent> <M-e> <Cmd>call ToggleTool('ranger')<CR>
-    tnoremap <silent> <M-e> <Cmd>call ToggleTool('ranger')<CR>
-    nnoremap <silent> <M-i> <Cmd>call ToggleTool('lazygit')<CR>
-    tnoremap <silent> <M-i> <Cmd>call ToggleTool('lazygit')<CR>
-    nnoremap <silent> <C-\> <Cmd>call ToggleTool('')<CR>
-    tnoremap <silent> <C-\> <Cmd>call ToggleTool('')<CR>
+    command! -nargs=? -count=0 ToggleTool call ToggleTool(<q-args>, <count>)
+    nnoremap <silent> <M-e> <Cmd>execute v:count . 'ToggleTool ranger'<CR>
+    tnoremap <silent> <M-e> <Cmd>execute v:count . 'ToggleTool ranger'<CR>
+    nnoremap <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
+    tnoremap <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
+    nnoremap <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
+    tnoremap <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
 
     autocmd User FloatermOpen nnoremap <buffer> <silent> <M-p> <Cmd>FloatermPrev<CR>
     autocmd User FloatermOpen tnoremap <buffer> <silent> <M-p> <Cmd>FloatermPrev<CR>
