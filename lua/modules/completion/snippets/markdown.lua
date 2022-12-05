@@ -66,38 +66,50 @@ M.math_snippets = {
       i(0),
     }),
     -- matrix/vector bold font
-    s({ trig = 'v(%a)', regTrig = true, dscr = 'vector bold math font' }, {
+    s({ trig = '(%a)(%a)', regTrig = true, priority = 999, dscr = 'vector bold math font' }, {
       d(1, function(_, snip)
-        local letter = snip.captures[1]
-        return sn(nil, { t(string.format('\\mathbf{%s}', letter)) })
+        local prefix = snip.captures[1]
+        local letter = snip.captures[2]
+        if prefix == letter then
+          return sn(nil, { t(string.format('\\mathbf{%s}', letter)) })
+        end
+        return sn(nil, { t(string.format('%s%s', prefix, letter)) })
       end),
       i(0),
     }),
     -- matrix/vector
     s({ trig = 'rv', dscr = 'row vector' },
-      fmta('\\begin{bmatrix} <el>_0 & <el>_1 & \\ldots & <el>_{<end_idx>} \\end{bmatrix}', {
+      fmta('\\begin{bmatrix} <el><underscore>{0<mod>} & <el><underscore>{1<mod>} & \\ldots & <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
         el = i(1, 'a'),
         end_idx = i(2, 'N-1'),
+        underscore = i(3, '_'),
+        mod = i(4),
       }, { repeat_duplicates = true })
     ),
     s({ trig = 'cv', dscr = 'column vector' },
-      fmta('\\begin{bmatrix} <el>_0 \\\\ <el>_1 \\\\ \\vdots \\\\ <el>_{<end_idx>} \\end{bmatrix}', {
+      fmta('\\begin{bmatrix} <el><underscore>{0<mod>} \\\\ <el><underscore>{1,<mod>} \\\\ \\vdots \\\\ <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
         el = i(1, 'a'),
         end_idx = i(2, 'N-1'),
+        underscore = i(3, '_'),
+        mod = i(4),
       }, { repeat_duplicates = true })
     ),
     s({ trig = 'mt', dscr = 'matrix' },
       fmta([[
 \begin{bmatrix}
-<el>_{0,0} & <el>_{0,1} & \ldots & <el>_{0,<width>} \\
-<el>_{1,0} & <el>_{1,1} & \ldots & <el>_{1,<width>} \\
-\ldots & \ldots & \ddots & \ldots \\
-<el>_{<height>,0} & <el>_{<height>,1} & \ldots & <el>_{<height>,<width>} \\
+<el><underscore>{0<mod0><comma>0<mod1>} & <el><underscore>{0<mod0><comma>1<mod1>} & \ldots & <el><underscore>{0<mod0><comma><width>} \\
+<el><underscore>{1<mod0><comma>0<mod1>} & <el><underscore>{1<mod0><comma>1<mod1>} & \ldots & <el><underscore>{1<mod0><comma><width>} \\
+\vdots & \vdots & \ddots & \vdots \\
+<el><underscore>{<height><comma>0} & <el><underscore>{<height><comma>1} & \ldots & <el><underscore>{<height><comma><width>} \\
 \end{bmatrix}
       ]], {
         el = i(1, 'a'),
         height = i(2, 'N-1'),
         width = i(3, 'M-1'),
+        underscore = i(4, '_'),
+        comma = i(5, ','),
+        mod0 = i(6),
+        mod1 = i(7),
     }, { repeat_duplicates = true })),
     s({ trig = 'inf' }, { t '\\infty', i(0) }),
     s({ trig = 'deg' }, { t '\\degree', i(0) }),
@@ -105,8 +117,9 @@ M.math_snippets = {
     s({ trig = 'mcal' }, { t '\\mathcal{', i(1), t '}', i(0) }),
     s({ trig = 'msrc' }, { t '\\mathsrc{', i(1), t '}', i(0) }),
     s({ trig = 'mbb' }, { t '\\mathbb{', i(1), t '}', i(0) }),
+    s({ trig = 'mbf' }, { t '\\mathbf{', i(1), t '}', i(0) }),
     s({ trig = 'mrm' }, { t '\\mathrm{', i(1), t '}', i(0) }),
-    s({ trig = 'xx' }, { t '\\times ', i(0) }),
+    s({ trig = 'tm' }, { t '\\times ', i(0) }),
     s({ trig = '**' }, { t '\\cdot ', i(0) }),
     s({ trig = 'o*' }, { t '\\circledast ', i(0) }),
     s({ trig = 'dd' }, { t '\\mathrm{d}', i(0) }),
@@ -138,8 +151,8 @@ M.math_snippets = {
     s({ trig = '>>' }, { t '\\gg ', i(0) }),
     s({ trig = '<<' }, { t '\\ll ', i(0) }),
     s({ trig = '...' }, { t '\\ldots' }),
-    s({ trig = ':d' }, { t '\\vdots' }),
-    s({ trig = '\\d' }, { t '\\ddots' }),
+    s({ trig = ':..' }, { t '\\vdots' }),
+    s({ trig = '\\..' }, { t '\\ddots' }),
     s({ trig = '~~' }, { t '\\sim ' }),
     s({ trig = '~=' }, { t '\\approx ' }),
     s({ trig = '+-' }, { t '\\pm ' }),
@@ -158,7 +171,6 @@ M.math_snippets = {
     s({ trig = 'in ' }, { t '\\in ', i(0) }),
     s({ trig = 'uu' }, { t '\\cup ', i(0) }),
     s({ trig = 'nn' }, { t '\\cap ', i(0) }),
-    s({ trig = 'NN' }, { t '\\N ', i(0) }),
     s({ trig = 'bigv' }, { t '\\big\\rvert_{', i(1), t '}' }),
     s({ trig = 'forall' }, { t '\\forall ', i(0) }),
     s({ trig = 'any' }, { t '\\forall ', i(0) }),
