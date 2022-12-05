@@ -42,6 +42,12 @@ M['nvim-autopairs'] = function()
       end),
     -- autopair c block comment
     Rule('/*', '*/', { 'c', 'cpp' }),
+    -- markdown/tex math, pairing is taken care by snippets
+    Rule('$', '$', { 'markdown', 'tex' })
+      :with_pair(function() return false end),
+    -- markdown italic/bold, pairing is taken care by snippets
+    Rule('*', '*', { 'markdown' })
+      :with_pair(function() return false end),
   })
 end
 

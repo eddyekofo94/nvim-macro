@@ -65,6 +65,40 @@ M.math_snippets = {
       end),
       i(0),
     }),
+    -- matrix/vector bold font
+    s({ trig = 'v(%a)', regTrig = true, dscr = 'vector bold math font' }, {
+      d(1, function(_, snip)
+        local letter = snip.captures[1]
+        return sn(nil, { t(string.format('\\mathbf{%s}', letter)) })
+      end),
+      i(0),
+    }),
+    -- matrix/vector
+    s({ trig = 'rv', dscr = 'row vector' },
+      fmta('\\begin{bmatrix} <el>_0 & <el>_1 & \\ldots & <el>_{<end_idx>} \\end{bmatrix}', {
+        el = i(1, 'a'),
+        end_idx = i(2, 'N-1'),
+      }, { repeat_duplicates = true })
+    ),
+    s({ trig = 'cv', dscr = 'column vector' },
+      fmta('\\begin{bmatrix} <el>_0 \\\\ <el>_1 \\\\ \\vdots \\\\ <el>_{<end_idx>} \\end{bmatrix}', {
+        el = i(1, 'a'),
+        end_idx = i(2, 'N-1'),
+      }, { repeat_duplicates = true })
+    ),
+    s({ trig = 'mt', dscr = 'matrix' },
+      fmta([[
+\begin{bmatrix}
+<el>_{0,0} & <el>_{0,1} & \ldots & <el>_{0,<width>} \\
+<el>_{1,0} & <el>_{1,1} & \ldots & <el>_{1,<width>} \\
+\ldots & \ldots & \ddots & \ldots \\
+<el>_{<height>,0} & <el>_{<height>,1} & \ldots & <el>_{<height>,<width>} \\
+\end{bmatrix}
+      ]], {
+        el = i(1, 'a'),
+        height = i(2, 'N-1'),
+        width = i(3, 'M-1'),
+    }, { repeat_duplicates = true })),
     s({ trig = 'inf' }, { t '\\infty', i(0) }),
     s({ trig = 'deg' }, { t '\\degree', i(0) }),
     s({ trig = 'ang' }, { t '\\angle ', i(0) }),
@@ -104,6 +138,8 @@ M.math_snippets = {
     s({ trig = '>>' }, { t '\\gg ', i(0) }),
     s({ trig = '<<' }, { t '\\ll ', i(0) }),
     s({ trig = '...' }, { t '\\ldots' }),
+    s({ trig = ':d' }, { t '\\vdots' }),
+    s({ trig = '\\d' }, { t '\\ddots' }),
     s({ trig = '~~' }, { t '\\sim ' }),
     s({ trig = '~=' }, { t '\\approx ' }),
     s({ trig = '+-' }, { t '\\pm ' }),
@@ -146,11 +182,14 @@ M.math_snippets = {
     s({ trig = 'lrB' }, { t '\\left{', i(1), t '\\right}', i(0) }),
     s({ trig = 'lr}' }, { t '\\left{', i(1), t '\\right}', i(0) }),
     s({ trig = 'lr>' }, { t '\\left<', i(1), t '\\right>', i(0) }),
+    s({ trig = 'norm' }, { t '\\left\\lVert ', i(1), t '\\right\\lVert', i(0) }),
 
     s({ trig = 'floor' }, { t '\\left\\lfloor ', i(1), t ' \\right\\rfloor', i(0) }),
     s({ trig = 'ceil' }, { t '\\left\\lceil ', i(1), t ' \\right\\rceil', i(0) }),
     s({ trig = 'bmat' }, { t '\\begin{bmatrix} ', i(1), t ' \\end{bmatrix}', i(0) }),
     s({ trig = 'pmat' }, { t '\\begin{pmatrix} ', i(1), t ' \\end{pmatrix}', i(0) }),
+    s({ trig = 'Bmat' }, { t { '\\begin{bmatrix}', '' }, i(0), t { '', '\\end{bmatrix}', '' } }),
+    s({ trig = 'Pmat' }, { t { '\\begin{pmatrix}', '' }, i(0), t { '', '\\end{pmatrix}', '' } }),
     s({ trig = 'aln' }, { t { '\\begin{align*}', '' }, i(0), t { '', '\\end{align*}' } }),
     s({ trig = 'eqt' }, { t { '\\begin{equation*}', '' }, i(0), t { '', '\\end{equation*}' } }),
     s({ trig = 'cas' }, { t { '\\begin{cases}', '' }, i(1), t { '', '\\end{cases}' } }, i(0)),
@@ -159,7 +198,7 @@ M.math_snippets = {
     s({ trig = 'int', priority = 998 }, { t '\\int_{', i(1), t '}^{', i(2), t '} ', i(0) }),
     s({ trig = 'iint', priority = 999 }, { t '\\iint_{', i(1), t '}^{', i(2), t '} ', i(0) }),
     s({ trig = 'iiint' }, { t '\\iiint_{', i(1), t '}^{', i(2), t '} ', i(0) }),
-    s({ trig = 'sum' }, { t '\\sum_{', i(1), t '}^{', i(2), t '} ', i(0) }),
+    s({ trig = 'sum' }, { t '\\sum_{', i(1, 'n=0'), t '}^{', i(2, 'N-1'), t '} ', i(0) }),
 
     s({ trig = 'alpha' }, { t '\\alpha', i(0) }),
     s({ trig = 'beta' }, { t '\\beta', i(0) }),
@@ -235,8 +274,8 @@ M.markers = {
     return not_in_mathzone() and
       vim.fn.match(trailing, [[\s*\()\|]\|}\|"\|'\|`\)\|\$\|\*]]) ~= 1
   end }, {
-    s({ trig = 'm' } , { t '$', i(1), t '$', i(0) }),
-    s({ trig = 'M' } , { t { '$$', '' }, i(1), t { '', '$$', '' }, i(0) }),
+    s({ trig = 'm' } , { t '$', i(0), t '$' }),
+    s({ trig = 'M' } , { t { '$$', '' }, i(0), t { '', '$$', '' } }),
     s({ trig = 'e' } , { t '*', i(1), t '*', i(0) }),
     s({ trig = 'b' }, { t '**', i(1), t '**', i(0) }),
     s({ trig = 'B' }, { t '***', i(1), t '***', i(0) }),
