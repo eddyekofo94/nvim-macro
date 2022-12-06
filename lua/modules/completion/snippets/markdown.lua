@@ -66,14 +66,10 @@ M.math_snippets = {
       i(0),
     }),
     -- matrix/vector bold font
-    s({ trig = '(%a)(%a)', regTrig = true, priority = 999, dscr = 'vector bold math font' }, {
+    s({ trig = ';(%a)', regTrig = true, priority = 999,
+        dscr = 'vector bold math font' }, {
       d(1, function(_, snip)
-        local prefix = snip.captures[1]
-        local letter = snip.captures[2]
-        if prefix == letter then
-          return sn(nil, { t(string.format('\\mathbf{%s}', letter)) })
-        end
-        return sn(nil, { t(string.format('%s%s', prefix, letter)) })
+        return sn(nil, { t(string.format('\\mathbf{%s}', snip.captures[1])) })
       end),
       i(0),
     }),
@@ -159,11 +155,14 @@ M.math_snippets = {
     s({ trig = '-+' }, { t '\\mp ' }),
     s({ trig = '//' }, { t '\\frac{', i(1), t '}{', i(2), t '}' }),
     s({ trig = '||' }, { t '\\mid ', i(0) }),
-    s({ trig = '/.' }, { t '\\sqrt{', i(1), t '}', i(0) }),
+    s({ trig = 'rt' }, { t '\\sqrt[', i(2), t ']{', i(1), t '}', i(0) }),
     s({ trig = '\\\\\\' }, { t '\\setminus ', i(0) }),
     s({ trig = '%%' }, { t '\\%', i(0) }),
 
     s({ trig = 'compl' }, { t '^{C} ', i(0) }),
+    s({ trig = 'inv' }, { t '^{-1}', i(0) }),
+    s({ trig = 'sq' }, { t '^{2}', i(0) }),
+    s({ trig = 'cb' }, { t '^{3}', i(0) }),
     s({ trig = 'set' }, { t '\\{', i(1), t '\\}', i(0) }),
     s({ trig = 'tt' }, { t '\\text{', i(1), t '}', i(0) }),
     s({ trig = 'cc' }, { t '\\subset ', i(0) }),
@@ -176,7 +175,9 @@ M.math_snippets = {
     s({ trig = 'any' }, { t '\\forall ', i(0) }),
     s({ trig = 'exist' }, { t '\\exist ', i(0) }),
     s({ trig = 'transp' }, { t '^{\\intercal}', i(0) }),
-    s({ trig = 'inv' }, { t '^{-1}', i(0) }),
+    s({ trig = 'hat' }, { t '\\hat{', i(1), t '}' }),
+    s({ trig = 'tilde' }, { t '\\tilde{', i(1), t '}' }),
+    s({ trig = 'over' }, { t '\\overset{', i(2), t '}{', i(1), t '}' }),
 
     s({ trig = 'sin', priority = 999 }, { t '\\mathrm{sin}\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'cos', priority = 999 }, { t '\\mathrm{cos}\\left(', i(1), t '\\right)', i(0) }),
@@ -256,6 +257,11 @@ M.math_snippets = {
     s({ trig = 'Phi' }, { t '\\Phi', i(0) }),
     s({ trig = 'Psi' }, { t '\\Psi', i(0) }),
     s({ trig = 'Omg' }, { t '\\Omega', i(0) }),
+
+    -- special functions and other notations
+    s({ trig = 'Cov' }, { t '\\mathrm{Cov}\\left(', i(1, 'X'), t ',', i(2, 'Y'), t '\\right)' }),
+    s({ trig = 'Var' }, { t '\\mathrm{Var}\\left(', i(1, 'X'), t '\\right)' }),
+    s({ trig = 'MSE' }, { t '\\mathrm{MSE}' }),
   }),
   opts = { type = 'autosnippets' },
 }
