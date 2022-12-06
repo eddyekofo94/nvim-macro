@@ -14,6 +14,7 @@ M['nvim-autopairs'] = function()
 
   npairs.setup({
     check_ts = true,
+    ignored_next_char = [=[[%w%%%'%[%"%.%`]]=],
     fast_wrap = {
       map = '<C-c>',
       chars = { '{', '[', '(', '"', "'", '`' },
