@@ -55,7 +55,7 @@ M.math_snippets = {
       end),
       i(0),
     }),
-    s({ trig = '(\\?%w*)//', regTrig = true }, {
+    s({ trig = '(%w*)//', regTrig = true }, {
       d(1, function(_, snip)
         local numerator = snip.captures[1]
         if numerator == nil or not numerator:match('%S') then
@@ -74,7 +74,7 @@ M.math_snippets = {
       i(0),
     }),
     -- matrix/vector
-    s({ trig = 'rv', dscr = 'row vector' },
+    s({ trig = 'rowv', dscr = 'row vector' },
       fmta('\\begin{bmatrix} <el><underscore>{0<mod>} & <el><underscore>{1<mod>} & \\ldots & <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
         el = i(1, 'a'),
         end_idx = i(2, 'N-1'),
@@ -82,7 +82,7 @@ M.math_snippets = {
         mod = i(4),
       }, { repeat_duplicates = true })
     ),
-    s({ trig = 'cv', dscr = 'column vector' },
+    s({ trig = 'colv', dscr = 'column vector' },
       fmta('\\begin{bmatrix} <el><underscore>{0<mod>} \\\\ <el><underscore>{1,<mod>} \\\\ \\vdots \\\\ <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
         el = i(1, 'a'),
         end_idx = i(2, 'N-1'),
@@ -115,13 +115,13 @@ M.math_snippets = {
     s({ trig = 'mbb' }, { t '\\mathbb{', i(1), t '}', i(0) }),
     s({ trig = 'mbf' }, { t '\\mathbf{', i(1), t '}', i(0) }),
     s({ trig = 'mrm' }, { t '\\mathrm{', i(1), t '}', i(0) }),
-    s({ trig = 'tm' }, { t '\\times ', i(0) }),
+    s({ trig = 'xx' }, { t '\\times ', i(0) }),
     s({ trig = '**' }, { t '\\cdot ', i(0) }),
     s({ trig = 'o*' }, { t '\\circledast ', i(0) }),
     s({ trig = 'dd' }, { t '\\mathrm{d}', i(0) }),
 
     s({ trig = '!=' }, { t '\\neq ', i(0) }),
-    s({ trig = '==' }, { t '&= ', i(0) }),
+    s({ trig = '==' }, { t '&= ', i(1), t ' \\\\' }),
     s({ trig = '&= =' }, { t '\\equiv ', i(0) }),
     s({ trig = '>=' }, { t '\\ge ', i(0) }),
     s({ trig = '<=' }, { t '\\le ', i(0) }),
@@ -153,9 +153,8 @@ M.math_snippets = {
     s({ trig = '~=' }, { t '\\approx ' }),
     s({ trig = '+-' }, { t '\\pm ' }),
     s({ trig = '-+' }, { t '\\mp ' }),
-    s({ trig = '//' }, { t '\\frac{', i(1), t '}{', i(2), t '}' }),
     s({ trig = '||' }, { t '\\mid ', i(0) }),
-    s({ trig = 'rt' }, { t '\\sqrt[', i(2), t ']{', i(1), t '}', i(0) }),
+    s({ trig = 'rt' }, { t '\\sqrt{', i(1), t '}' }),
     s({ trig = '\\\\\\' }, { t '\\setminus ', i(0) }),
     s({ trig = '%%' }, { t '\\%', i(0) }),
 
@@ -212,6 +211,7 @@ M.math_snippets = {
     s({ trig = 'iint', priority = 999 }, { t '\\iint_{', i(1), t '}^{', i(2), t '} ', i(0) }),
     s({ trig = 'iiint' }, { t '\\iiint_{', i(1), t '}^{', i(2), t '} ', i(0) }),
     s({ trig = 'sum' }, { t '\\sum_{', i(1, 'n=0'), t '}^{', i(2, 'N-1'), t '} ', i(0) }),
+    s({ trig = 'lim' }, { t '\\lim_{', i(1, 'n'), t '\\to ', i(2, '\\infty'), t '} ', i(0) }),
 
     s({ trig = 'alpha' }, { t '\\alpha', i(0) }),
     s({ trig = 'beta' }, { t '\\beta', i(0) }),
