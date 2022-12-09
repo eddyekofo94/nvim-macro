@@ -125,10 +125,10 @@ M['nvim-cmp'] = function()
     },
     sorting = {
       comparators = {
+        cmp.config.compare.kind,
         cmp.config.compare.locality,
         cmp.config.compare.recently_used,
         cmp.config.compare.exact,
-        cmp.config.compare.kind,
         cmp.config.compare.score,
       }
     },
