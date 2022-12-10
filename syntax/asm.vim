@@ -26,7 +26,7 @@ syn match   gasSymbolRef	/\$[-_$.A-Za-z][-_$.A-Za-z0-9]*\>/
 syn match   gasSpecial		/\<[$.]\>/
 
 " constants
-syn region  gasString		start=/"/  end=/"/ skip=/\\"/
+syn region  gasString		start=/"/  end=/"/ skip=/[^\\]\\"/
 syn match   gasCharacter	/'\(?\|\\?\)/
 syn match   gasDecimalNumber	/\$\?-\?\d\+/
 syn match   gasBinaryNumber	/\$\?-\?0b[01]\+/
