@@ -80,9 +80,8 @@ M['vim-floaterm'] = function()
     let g:floaterm_height = 0.74
     let g:floaterm_opener = 'edit'
 
-    function! s:get_bufnr_unnamed() abort
-      let buflist = floaterm#buflist#gather()
-      for bufnr in buflist
+    function! s:get_bufnr_unnamed(buflist) abort
+      for bufnr in a:buflist
         let name = getbufvar(bufnr, 'floaterm_name')
         if empty(name)
           return bufnr
@@ -92,9 +91,14 @@ M['vim-floaterm'] = function()
     endfunction
 
     function! ToggleTool(tool, count) abort
-      " find bufnr according to the tool name
-      let bufnr = empty(a:tool) ?
-        \ s:get_bufnr_unnamed() : floaterm#terminal#get_bufnr(a:tool)
+      " If current buffer is a floaterm?
+      let bufnr = bufnr('%')
+      let buflist = floaterm#buflist#gather()
+      if index(buflist, bufnr) == -1
+        " find bufnr according to the tool name
+        let bufnr = empty(a:tool) ?
+          \ s:get_bufnr_unnamed(buflist) : floaterm#terminal#get_bufnr(a:tool)
+      endif
 
       if bufnr == -1
         if empty(a:tool)
@@ -122,10 +126,10 @@ M['vim-floaterm'] = function()
     autocmd User FloatermOpen tnoremap <buffer> <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
     autocmd User FloatermOpen tnoremap <buffer> <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
 
-    autocmd User FloatermOpen nnoremap <buffer> <silent> <M-p> <Cmd>FloatermPrev<CR>
-    autocmd User FloatermOpen tnoremap <buffer> <silent> <M-p> <Cmd>FloatermPrev<CR>
-    autocmd User FloatermOpen nnoremap <buffer> <silent> <M-n> <Cmd>FloatermNext<CR>
-    autocmd User FloatermOpen tnoremap <buffer> <silent> <M-n> <Cmd>FloatermNext<CR>
+    autocmd User FloatermOpen nnoremap <buffer> <silent> <S-Up> <Cmd>FloatermPrev<CR>
+    autocmd User FloatermOpen tnoremap <buffer> <silent> <S-Up> <Cmd>FloatermPrev<CR>
+    autocmd User FloatermOpen nnoremap <buffer> <silent> <S-Down> <Cmd>FloatermNext<CR>
+    autocmd User FloatermOpen tnoremap <buffer> <silent> <S-Down> <Cmd>FloatermNext<CR>
   ]])
 end
 
