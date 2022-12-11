@@ -60,6 +60,8 @@ M['nvim-lspconfig'] = function()
       { 'n', '<Leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>' },
       { 'n', '<Leader>rf', '<cmd>lua vim.lsp.buf.references()<CR>' },
       { 'n', '<Leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>' },
+      { 'n', '[E', '<cmd>lua vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })<CR>' },
+      { 'n', ']E', '<cmd>lua vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })<CR>' },
       { 'n', '[e', '<cmd>lua vim.diagnostic.goto_prev()<CR>' },
       { 'n', ']e', '<cmd>lua vim.diagnostic.goto_next()<CR>' },
       { 'n', '<leader>ll', '<cmd>lua vim.diagnostic.setloclist()<CR>' },
