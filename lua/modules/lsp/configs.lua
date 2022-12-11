@@ -226,7 +226,9 @@ M['nvim-navic'] = function()
       local sym = navic.get_location()
       local win_val = ' ' .. get_fpath_proj_relative()
       if sym ~= nil and sym ~= '' then
-        win_val = win_val .. ' %#Orange#► ' .. sym
+        win_val = win_val .. ' %#Orange#► '
+            .. sym:gsub('%s+%%%*%%#NavicText#%s+%%%*%%#NavicSeparator#%s+',
+                        '%%%*%%#NavicText#%%%*%%#NavicSeparator# ')
       end
       vim.wo.winbar = win_val
     end
@@ -235,7 +237,7 @@ M['nvim-navic'] = function()
   vim.api.nvim_create_autocmd(
     {
       'BufEnter',
-      'BufWinEnter',
+      'BufLeave',
       'CursorMoved',
       'CursorMovedI',
       'TextChanged',
