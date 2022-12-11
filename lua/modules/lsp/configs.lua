@@ -210,44 +210,37 @@ M['nvim-navic'] = function()
     return fpath .. fname
   end
 
-  local function update_winbar()
-    local exclude = {
-      ['terminal'] = true,
-      ['prompt'] = true,
-      ['help'] = true,
-      ['checkhealth'] = true,
-      ['Outline'] = true,
-      ['undotree'] = true,
-      ['floaterm'] = true,
-      [''] = true,
-    } -- Ignore float windows and exclude filetype
-    if vim.api.nvim_win_get_config(0).zindex or exclude[vim.bo.filetype] then
-      vim.wo.winbar = ''
-    else
-      local sym = navic.get_location()
-      local win_val = ' ' .. get_fpath_proj_relative()
-      if sym ~= nil and sym ~= '' then
-        win_val = win_val .. ' %#Orange#► '
-            .. sym:gsub('%s+%%%*%%#NavicText#%s+%%%*%%#NavicSeparator#%s+',
-                        '%%%*%%#NavicText#%%%*%%#NavicSeparator# ')
-      end
-      vim.wo.winbar = win_val
+  function _G.update_winbar()
+    local sym = navic.get_location()
+    local win_val = ' ' .. get_fpath_proj_relative()
+    if sym ~= nil and sym ~= '' then
+      win_val = win_val .. ' %#Orange#► '
+          .. sym:gsub('%s+%%%*%%#NavicText#%s+%%%*%%#NavicSeparator#%s+',
+                      '%%%*%%#NavicText#%%%*%%#NavicSeparator# ')
     end
+    return win_val
   end
 
-  vim.api.nvim_create_autocmd(
-    {
-      'BufEnter',
-      'BufLeave',
-      'CursorMoved',
-      'CursorMovedI',
-      'TextChanged',
-      'TextChangedI'
-    }, {
-      pattern = '*',
-      callback = update_winbar,
-    }
-  )
+  vim.api.nvim_create_autocmd({ 'BufEnter', 'BufLeave', }, {
+    pattern = '*',
+    callback = function()
+      local exclude = {
+        ['terminal'] = true,
+        ['prompt'] = true,
+        ['help'] = true,
+        ['checkhealth'] = true,
+        ['Outline'] = true,
+        ['undotree'] = true,
+        ['floaterm'] = true,
+        [''] = true,
+      } -- Ignore float windows and exclude filetype
+      if vim.api.nvim_win_get_config(0).zindex or exclude[vim.bo.filetype] then
+        vim.wo.winbar = nil
+      else
+        vim.wo.winbar = "%{%v:lua.update_winbar()%}"
+      end
+    end,
+  })
 end
 
 return M
