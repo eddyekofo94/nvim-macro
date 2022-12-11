@@ -55,19 +55,11 @@ local autocmds = {
     },
   },
 
-  -- Show spellcheck only when in insert mode
   {
-    { 'InsertEnter' },
+    { 'BufReadPost' },
     {
       pattern = '*',
       command = 'set spell spelllang=en,cjk spellsuggest=best,9 spellcapcheck= spelloptions=camel'
-    },
-  },
-  {
-    { 'InsertLeave' },
-    {
-      pattern = '*',
-      command = 'set nospell'
     },
   },
 }
