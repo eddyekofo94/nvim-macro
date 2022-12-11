@@ -215,6 +215,7 @@ M['nvim-navic'] = function()
       ['terminal'] = true,
       ['prompt'] = true,
       ['help'] = true,
+      ['checkhealth'] = true,
       ['Outline'] = true,
       ['undotree'] = true,
       ['floaterm'] = true,
