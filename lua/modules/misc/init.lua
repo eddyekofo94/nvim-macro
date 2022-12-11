@@ -25,11 +25,4 @@ M['nvim-autopairs'] = {
   config = configs['nvim-autopairs']
 }
 
-M['nvim-colorizer'] = {
-  'norcalli/nvim-colorizer.lua',
-  event = 'BufReadPre',
-  cmd = { 'ColorizerAttachToBuffer', 'ColorizerToggle' },
-  config = configs['nvim-colorizer'],
-}
-
 return M
