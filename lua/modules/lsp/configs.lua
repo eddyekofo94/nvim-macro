@@ -38,7 +38,7 @@ M['nvim-lspconfig'] = function()
                        diagnostic_opts.handlers)
   end
 
-  local function on_attach(_, bufnr)
+  local function on_attach(client, bufnr)
 
     -- Enable completion triggered by <c-x><c-o>
     local buf_set_option = function(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -55,10 +55,10 @@ M['nvim-lspconfig'] = function()
       { 'n', '<Leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>' },
       { 'n', '<Leader>wd', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>' },
       { 'n', '<Leader>wl', '<cmd>lua vim.pretty_print(vim.lsp.buf.list_workspace_folders())<CR>' },
-      { 'n', '<leader>gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>' },
-      { 'n', '<Leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>' },
+      { 'n', '<leader>td', '<cmd>lua vim.lsp.buf.type_definition()<CR>' },
+      { 'n', '<Leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>' },
       { 'n', '<Leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>' },
-      { 'n', '<Leader>R', '<cmd>lua vim.lsp.buf.references()<CR>' },
+      { 'n', '<Leader>rf', '<cmd>lua vim.lsp.buf.references()<CR>' },
       { 'n', '<Leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>' },
       { 'n', '[e', '<cmd>lua vim.diagnostic.goto_prev()<CR>' },
       { 'n', ']e', '<cmd>lua vim.diagnostic.goto_next()<CR>' },
@@ -67,9 +67,14 @@ M['nvim-lspconfig'] = function()
       { 'v', '<leader>=', '<cmd>lua vim.lsp.buf.format()<CR>' },
     }
     for _, map in ipairs(keymaps) do
-      -- use <unique> to avoid overriding lspsaga keymaps
+      -- use <unique> to avoid overriding telescope keymaps
       vim.cmd(string.format('silent! %snoremap <buffer> <silent> <unique> %s %s',
             unpack(map)))
+    end
+
+    -- integration with nvim-navic
+    if client.server_capabilities.documentSymbolProvider then
+      require('nvim-navic').attach(client, bufnr)
     end
   end
 
@@ -127,200 +132,65 @@ M['mason-lspconfig.nvim'] = function()
   })
 end
 
-M['lspsaga.nvim'] = function()
-
+M['symbols-outline.nvim'] = function()
   local icons = require('utils.static').icons
-
-  local function gen_custom_kind()
-    local valid_types = {
-      File = {},
-      Module = {},
-      Namespace = {},
-      Package = {},
-      Class = {},
-      Method = {},
-      Property = {},
-      Field = {},
-      Constructor = {},
-      Enum = {},
-      Interface = {},
-      Function = {},
-      Variable = {},
-      Constant = {},
-      String = {},
-      Number = {},
-      Boolean = {},
-      Array = {},
-      Object = {},
-      Key = {},
-      Null = {},
-      EnumMember = {},
-      Struct = {},
-      Event = {},
-      Operator = {},
-      TypeParameter = {},
-      TypeAlias = {},
-      Parameter = {},
-      StaticMethod = {},
-      Macro = {},
+  require('symbols-outline').setup({
+    relative_width = true,
+    width = 20,
+    keymaps = {
+      close = { '<Esc>', 'q' },
+      goto_location = '<CR>',
+      focus_location = '<Tab>',
+      rename_symbol = 'r',
+      code_actions = 'a',
+      fold = 'zc',
+      unfold = 'zo',
+      fold_all = 'zC',
+      unfold_all = 'zO',
+      fold_reset = 'zE',
+    },
+    symbols = {
+      File = { icon = icons.File, hl = 'CmpItemKindFile' },
+      Module = { icon = icons.Module, hl = 'CmpItemKindModule' },
+      Namespace = { icon = icons.Namespace, hl = 'TSNamespace' },
+      Package = { icon = icons.Package, hl = 'CmpItemKindModule' },
+      Class = { icon = icons.Class, hl = 'CmpItemKindClass' },
+      Method = { icon = icons.Method, hl = 'TSFunction' },
+      Property = { icon = icons.Property, hl = 'TSMethod' },
+      Field = { icon = icons.Field, hl = 'TSField' },
+      Constructor = { icon = icons.Constructor, hl = 'Constructor' },
+      Enum = { icon = icons.Enum, hl = 'CmpItemKindEnum' },
+      Interface = { icon = icons.Interface, hl = 'CmpItemKindInterface' },
+      Function = { icon = icons.Function, hl = 'TSFunction' },
+      Variable = { icon = icons.Variable, hl = 'CmpItemKindVariable' },
+      Constant = { icon = icons.Constant, hl = 'TSConstant' },
+      String = { icon = icons.String, hl = 'TSString' },
+      Number = { icon = icons.Number, hl = 'TSNumber' },
+      Boolean = { icon = icons.Boolean, hl = 'TSBoolean' },
+      Array = { icon = icons.Array, hl = 'Array' },
+      Object = { icon = icons.Object, hl = 'Object' },
+      Key = { icon = icons.Keyword, hl = 'TSKeyword' },
+      Null = { icon = icons.Constant, hl = 'TSConstant' },
+      EnumMember = { icon = icons.EnumMember, hl = 'CmpItemKindEnum' },
+      Struct = { icon = icons.Struct, hl = 'CmpItemKindStruct' },
+      Event = { icon = icons.Event, hl = 'CmpItemKindEvent' },
+      Operator = { icon = icons.Operator, hl = 'TSOperator' },
+      TypeParameter = { icon = icons.TypeParameter, hl = 'TSParameter' }
     }
-
-    local function get_hl(name)
-      local ok, hl = pcall(vim.api.nvim_get_hl_by_name, name, true)
-      if not ok then return nil end
-      for _, key in pairs({'foreground', 'background', 'special'}) do
-        if hl[key] then hl[key] = string.format('#%06x', hl[key]) end
-      end
-      return hl
-    end
-
-    for typename, _ in pairs(valid_types) do
-      local hlgroup = get_hl(string.format('CmpItemKind%s', typename)) or
-                      get_hl(string.format('TS%s', typename)) or
-                      get_hl(typename) or
-                      get_hl('Normal') or
-                      { foreground = require('colors.nvim-falcon.palette').white }
-      if icons[typename] then
-        valid_types[typename] = { icons[typename], hlgroup.foreground }
-      else
-        valid_types[typename] = nil
-      end
-    end
-    return valid_types
-  end
-
-  require('lspsaga').init_lsp_saga({
-    diagnostic_header = {
-      icons.DiagnosticSignError,
-      icons.DiagnosticSignWarn,
-      icons.DiagnosticSignInfo,
-      icons.DiagnosticSignHint,
-    },
-    code_action_icon = '',
-    -- finder icons
-    finder_icons = {
-      def = ' ',
-      ref = ' ',
-      link = ' ',
-    },
-    finder_action_keys = {
-      open = { 'o', '<CR>' },
-      quit = { 'q', '<ESC>' },
-      vsplit = '<M-v>',
-      split = '<M-s>',
-      tabe = '<M-t>',
-    },
-    code_action_keys = {
-      quit = 'q',
-      exec = '<CR>',
-    },
-    definition_action_keys = {
-      edit = '<CR>',
-      vsplit = '<M-v>',
-      split = '<M-s>',
-      tabe = '<M-t>',
-      quit = 'q',
-    },
-    rename_action_quit = '<C-c>',
-    show_outline = {
-      win_position = 'right',
-      win_width = 40,
-      auto_enter = true,
-      auto_preview = true,
-      virt_text = '',
-      jump_key = '<CR>',
-      auto_refresh = true,
-    },
-    symbol_in_winbar = {
-      enable = true,
-      in_custom = true,
-      show_file = false,
-      separator = ' -> ',
-      click_support = function(node, clicks, button, modifiers)
-        local st = node.range.start
-        local en = node.range['end']
-        if button == 'l' then
-          if clicks == 2 then
-            -- double left click to do nothing
-          else -- jump to node's starting line+char
-            vim.fn.cursor(st.line + 1, st.character + 1)
-          end
-        elseif button == 'r' then
-          if modifiers == 's' then
-            print('lspsaga')  -- shift right click to print 'lspsaga'
-          end -- jump to node's ending line+char
-          vim.fn.cursor(en.line + 1, en.character + 1)
-        elseif button == 'm' then
-          -- middle click to visual select node
-          vim.fn.cursor(st.line + 1, st.character + 1)
-          vim.cmd 'normal v'
-          vim.fn.cursor(en.line + 1, en.character + 1)
-        end
-      end,
-    },
-    custom_kind = gen_custom_kind(),
   })
+  vim.keymap.set('n', '<Leader>o', '<Cmd>SymbolsOutline<CR>', { noremap = true })
+end
 
-  local function get_fpath_proj_relative()
-    local file_name = require('lspsaga.symbolwinbar').get_file_name(nil)
-    if vim.fn.bufname '%' == '' then return '' end
-    -- Else if include path: ./lsp/saga.lua -> lsp > saga.lua
-    local sep = vim.loop.os_uname().sysname == 'Windows' and '\\' or '/'
-    local path_list = vim.split(string.gsub(vim.fn.expand '%:~:.:h', '%%', ''), sep)
-    local file_path = ''
-    for _, cur in ipairs(path_list) do
-      file_path = (cur == '.' or cur == '~') and '' or
-                  file_path .. cur .. ' ' .. '%#LspSagaWinbarSep#>%*' .. ' %*'
-    end
-    return file_path .. file_name
-  end
-
-  local function update_winbar()
-    local exclude = {
-      ['terminal'] = true,
-      ['toggleterm'] = true,
-      ['prompt'] = true,
-      ['NvimTree'] = true,
-      ['help'] = true,
-    } -- Ignore float windows and exclude filetype
-    if vim.api.nvim_win_get_config(0).zindex or exclude[vim.bo.filetype] then
-      vim.wo.winbar = ''
-    else
-      local ok, lspsaga = pcall(require, 'lspsaga.symbolwinbar')
-      local sym
-      if ok then sym = lspsaga.get_symbol_node() end
-      local win_val = ' ' .. get_fpath_proj_relative()
-      if sym ~= nil then win_val = win_val .. ': ' .. sym end
-      vim.wo.winbar = win_val
-    end
-  end
-
-  vim.api.nvim_create_augroup('Winbar', {})
-  vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'CursorMoved' }, {
-    pattern = '*',
-    callback = update_winbar,
-    group = 'Winbar',
+M['nvim-navic'] = function()
+  require('nvim-navic').setup ({
+      icons = require('utils.static').icons,
+      highlight = true,
+      separator = ' ► ',
+      depth_limit = 0,
+      depth_limit_indicator = '…',
+      safe_output = true
   })
-  vim.api.nvim_create_autocmd('User', {
-    pattern = 'LspsagaUpdateSymbol',
-    callback = update_winbar,
-    group = 'Winbar',
-  })
-
-  vim.keymap.set('n', '<leader>R', '<cmd>Lspsaga lsp_finder<CR>', { silent = true })
-  vim.keymap.set('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', { silent = true })
-  vim.keymap.set('n', '<leader>r', '<cmd>Lspsaga rename<CR>', { silent = true })
-  vim.keymap.set('n', '<leader>K', '<cmd>Lspsaga peek_definition<CR>', { silent = true })
-  vim.keymap.set('n', '<leader>e', '<cmd>Lspsaga show_line_diagnostics<CR>', { silent = true })
-  vim.keymap.set('n', '[e', '<cmd>Lspsaga diagnostic_jump_prev<CR>', { silent = true })
-  vim.keymap.set('n', ']e', '<cmd>Lspsaga diagnostic_jump_next<CR>', { silent = true })
-  vim.keymap.set('n', '[E', function()
-    require('lspsaga.diagnostic').goto_prev({ severity = vim.diagnostic.severity.ERROR })
-  end, { silent = true })
-  vim.keymap.set('n', ']E', function()
-    require('lspsaga.diagnostic').goto_next({ severity = vim.diagnostic.severity.ERROR })
-  end, { silent = true })
-  vim.keymap.set('n','<leader>o', '<cmd>LSoutlineToggle<CR>',{ silent = true })
+  vim.o.winbar = " %{%v:lua.require'nvim-navic'.get_location()%}"
 end
 
 return M

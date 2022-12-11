@@ -63,7 +63,7 @@ sch.Constant       = { fg = plt.beige, bold = true } -- (*) Any constant
 sch.String         = { fg = plt.beige } --   A string constant: 'this is a string'
 sch.Character      = { fg = plt.orange } --   A character constant: 'c', '\n'
 sch.Number         = { fg = plt.smoke } --   A number constant: 234, 0xff
-sch.Boolean        = { link = 'Constant' } --   A boolean constant: TRUE, false
+sch.Boolean        = { link = 'Constant' } --   A boolean     constant: TRUE, false
 sch.Array          = { fg = plt.orange }
 sch.Float          = { link = 'Number' } --   A floating point constant: 2.3e10
 sch.Identifier     = { fg = plt.pigeon } -- (*) Any variable name
@@ -263,50 +263,6 @@ sch.BufferInactiveTarget    = { fg = plt.wine, bg = plt.deepsea }
 sch.BufferVisible           = { fg = plt.pigeon }
 sch.BufferVisibleMod        = { fg = plt.orange }
 sch.BufferTabpageFill       = { fg = plt.pigeon, bg = plt.deepsea }
--- -- nvim-tree
--- sch.NvimTreeGitNew          = { link = 'GitSignsAdd' }
--- sch.NvimTreeFileNew         = { link = 'GitSignsAdd' }
--- sch.NvimTreeGitRenamed      = { link = 'GitSignsChange' }
--- sch.NvimTreeFileRenamed     = { link = 'GitSignsChange' }
--- sch.NvimTreeGitMerge        = { link = 'GitSignsAdd' }
--- sch.NvimTreeFileMerge       = { link = 'GitSignsAdd' }
--- sch.NvimTreeGitStaged       = { fg = plt.purple }
--- sch.NvimTreeFileStaged      = { fg = plt.purple }
--- sch.NvimTreeGitDeleted      = { link = 'GitSignsDelete' }
--- sch.NvimTreeFileDeleted     = { link = 'GitSignsDelete' }
--- sch.NvimTreeGitDirty        = { link = 'GitSignsChange' }
--- sch.NvimTreeFileDirty       = { link = 'GitSignsChange' }
--- sch.NvimTreeFolderIcon      = { link = 'CmpItemKindFolder' }
--- sch.NvimTreeOpenedFile      = { fg = plt.flashlight }
--- sch.NvimTreeNormal          = { link = 'NormalFloat' }
--- -- aerial
--- sch.AerialLine              = { link = 'Visual' }
--- sch.AerialArrayIcon         = { link = 'CmpItemKind' }
--- sch.AerialBooleanIcon       = { link = 'Boolean' }
--- sch.AerialClassIcon         = { link = 'CmpItemKindClass' }
--- sch.AerialConstantIcon      = { link = 'CmpItemKindConstant' }
--- sch.AerialConstructorIcon   = { link = 'CmpItemKindConstructor' }
--- sch.AerialEnumIcon          = { link = 'CmpItemKindEnum' }
--- sch.AerialEnumMemberIcon    = { link = 'CmpItemKindEnumMember' }
--- sch.AerialEventIcon         = { link = 'CmpItemKindEvent' }
--- sch.AerialFieldIcon         = { link = 'CmpItemKindField' }
--- sch.AerialFileIcon          = { link = 'CmpItemKindFile' }
--- sch.AerialFunctionIcon      = { link = 'CmpItemKindFunction' }
--- sch.AerialInterfaceIcon     = { link = 'CmpItemKindInterface' }
--- sch.AerialKeyIcon           = { link = 'CmpItemKindKeyword' }
--- sch.AerialMethodIcon        = { link = 'CmpItemKindMethod' }
--- sch.AerialModuleIcon        = { link = 'CmpItemKindModule' }
--- sch.AerialNamespaceIcon     = { link = 'TSNamespace' }
--- sch.AerialNullIcon          = { link = 'Boolean' }
--- sch.AerialNumberIcon        = { link = 'CmpItemKindValue' }
--- sch.AerialObjectIcon        = { link = 'CmpItemKind' }
--- sch.AerialOperatorIcon      = { link = 'CmpItemKindOperator' }
--- sch.AerialPackageIcon       = { link = 'CmpItemKindModule' }
--- sch.AerialPropertyIcon      = { link = 'CmpItemKindProperty' }
--- sch.AerialStringIcon        = { link = 'CmpItemKindText' }
--- sch.AerialStructIcon        = { link = 'CmpItemKindStruct' }
--- sch.AerialTypeParameterIcon = { link = 'CmpItemKind' }
--- sch.AerialVariableIcon      = { link = 'CmpItemKindVariable' }
 -- telescope
 sch.TelescopeNormal         = { link = 'NormalFloat' }
 sch.TelescopeBorder         = { link = 'NormalFloat' }
@@ -316,52 +272,37 @@ sch.TelescopeMatching       = { link = 'Search' }
 sch.TelescopePromptCounter  = { link = 'Comment' }
 sch.TelescopePromptPrefix   = { fg = plt.orange }
 sch.TelescopeSelectionCaret = { fg = plt.orange, bg = plt.thunder }
--- lspsaga
-sch.LspSagaCodeActionTitle = { fg = plt.magenta }
-sch.LspSagaCodeActionBorder = { link = 'FloatBorder' }
-sch.LspSagaCodeActionContent = { fg = plt.smoke }
-sch.LspSagaLspFinderBorder = { link = 'FloatBorder' }
-sch.LspSagaAutoPreview = { fg = plt.smoke }
-sch.LspSagaFinderSelection = { link = 'Search' }
-sch.FinderParam = { fg = plt.magenta, bold = true }
-sch.FinderVirtText = { fg = plt.pigeon }
-sch.DefinitionsIcon = { fg = plt.yellow }
-sch.Definitions = { link = 'Title' }
-sch.ReferencesIcon = { fg = plt.turquoise }
-sch.References = { link = 'Title' }
-sch.ImplementsIcon = { fg = plt.purple }
-sch.Implements = { link = 'Title' }
-sch.FinderSpinnerBorder = { link = 'FloatBorder' }
-sch.FinderSpinnerTitle = { fg = plt.magenta, bold = true }
-sch.FinderSpinner = { fg = plt.flashlight, bold = true }
-sch.DefinitionBorder = { link = 'FloatBorder' }
-sch.DefinitionArrow = { fg = plt.flashlight }
-sch.DefinitionSearch = { link = 'Search' }
-sch.DefinitionFile = { fg = plt.magenta, bold = true }
-sch.LspSagaHoverBorder = { link = 'FloatBorder' }
-sch.LspSagaRenameBorder = { link = 'FloatBorder' }
-sch.LspSagaDiagnosticSource = { link = 'Comment' }
-sch.LspSagaDiagnosticError = { link = 'DiagnosticError' }
-sch.LspSagaDiagnosticWarn = { link = 'DiagnosticWarn' }
-sch.LspSagaDiagnosticInfo = { link = 'DiagnosticInfo' }
-sch.LspSagaDiagnosticHint = { link = 'DiagnosticHint' }
-sch.LspSagaErrorTrunCateLine = { link = 'DiagnosticError' }
-sch.LspSagaWarnTrunCateLine = { link = 'DiagnosticWarn' }
-sch.LspSagaInfoTrunCateLine = { link = 'DiagnosticInfo' }
-sch.LspSagaHintTrunCateLine = { link = 'DiagnosticHint' }
-sch.LspSagaDiagnosticBorder = { link = 'FloatBorder' }
-sch.LspSagaDiagnosticHeader = { fg = plt.pigeon }
-sch.DiagnosticQuickFix = { fg = plt.aqua, bold = true }
-sch.DiagnosticMap = { fg = plt.lavender }
-sch.DiagnosticLineCol = { fg = plt.steel }
-sch.LspSagaSignatureHelpBorder = { link = 'FloatBorder' }
-sch.LspSagaLightBulb = { link = 'DiagnosticSignHint' }
-sch.LspSagaBorderTitle = { link = 'Title' }
-sch.LSOutlinePreviewBorder = { fg = plt.smoke }
-sch.OutlineIndentEvn = { fg = plt.pigeon }
-sch.OutlineIndentOdd = { fg = plt.pigeon }
-sch.OutlineFoldPrefix = { fg = plt.ochre }
-sch.OutlineDetail = { fg = plt.smoke }
+-- symbols-outline
+sch.FocusedSymbol = { fg = plt.white, bold = true }
+-- nvim-navic
+sch.NavicIconsFile = { link = 'File' }
+sch.NavicIconsModule = { link = 'CmpItemKindModule' }
+sch.NavicIconsNamespace = { link = 'TSNamespace' }
+sch.NavicIconsPackage = { link = 'CmpItemKindModule' }
+sch.NavicIconsClass = { link = 'CmpItemKindClass' }
+sch.NavicIconsMethod = { link = 'CmpItemKindMethod' }
+sch.NavicIconsProperty = { link = 'CmpItemKindProperty' }
+sch.NavicIconsField = { link = 'CmpItemKindField' }
+sch.NavicIconsConstructor = { link = 'CmpItemKindConstructor' }
+sch.NavicIconsEnum = { link = 'CmpItemKindEnum' }
+sch.NavicIconsInterface = { link = 'CmpItemKindInterface' }
+sch.NavicIconsFunction = { link = 'Function' }
+sch.NavicIconsVariable = { link = 'CmpItemKindVariable' }
+sch.NavicIconsConstant = { link = 'Constant' }
+sch.NavicIconsString = { link = 'String' }
+sch.NavicIconsNumber = { link = 'Number' }
+sch.NavicIconsBoolean = { link = 'Boolean' }
+sch.NavicIconsArray = { link = 'Array' }
+sch.NavicIconsObject = { link = 'Object' }
+sch.NavicIconsKey = { link = 'Keyword' }
+sch.NavicIconsNull = { link = 'Constant' }
+sch.NavicIconsEnumMember = { link = 'CmpItemKindEnumMember' }
+sch.NavicIconsStruct = { link = 'CmpItemKindStruct' }
+sch.NavicIconsEvent = { link = 'CmpItemKindEvent' }
+sch.NavicIconsOperator = { link = 'Operator' }
+sch.NavicIconsTypeParameter = { link = 'CmpItemKind' }
+sch.NavicText = { fg = plt.smoke, italic = true }
+sch.NavicSeparator = { fg = plt.orange }
 
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }

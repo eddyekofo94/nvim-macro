@@ -28,12 +28,17 @@ M['mason-lspconfig'] = {
   config = configs['mason-lspconfig.nvim'],
 }
 
-M['lspsaga.nvim'] = {
-  'glepnir/lspsaga.nvim',
-  ft = ft_list,
+M['symbols-outline'] = {
+  'simrat39/symbols-outline.nvim',
   requires = 'nvim-lspconfig',
   after = 'nvim-lspconfig',
-  config = configs['lspsaga.nvim'],
+  config = configs['symbols-outline.nvim'],
+}
+
+M['nvim-navic'] = {
+  'SmiteshP/nvim-navic',
+  after = 'nvim-lspconfig',
+  config = configs['nvim-navic'],
 }
 
 return M

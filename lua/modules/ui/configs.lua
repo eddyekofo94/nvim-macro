@@ -79,6 +79,7 @@ M['lualine.nvim'] = function()
       globalstatus = true and vim.o.laststatus == 3,
       theme = require('colors.nvim-falcon.lualine.themes.nvim-falcon')
     },
+    extensions = { 'symbols-outline' },
     sections = {
       lualine_a = { 'mode' },
       lualine_b = { 'branch', 'diff', 'diagnostics' },
