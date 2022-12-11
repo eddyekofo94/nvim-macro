@@ -59,7 +59,7 @@ local autocmds = {
     { 'BufReadPost' },
     {
       pattern = '*',
-      command = 'set spell spelllang=en,cjk spellsuggest=best,9 spellcapcheck= spelloptions=camel'
+      command = 'setlocal spell spelllang=en,cjk spellsuggest=best,9 spellcapcheck= spelloptions=camel'
     },
   },
 }
