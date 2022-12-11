@@ -46,10 +46,12 @@ local autocmds = {
 
   -- Automatically change local current directory
   {
-    { 'BufEnter' },
+    { 'BufReadPost' },
     {
       pattern = '*',
-      callback = function() require('utils.funcs').autocd() end,
+      callback = function()
+        vim.defer_fn(require('utils.funcs').autocd, 10)
+      end,
     },
   },
 
