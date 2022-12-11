@@ -29,10 +29,8 @@ M['telescope-fzf-native.nvim'] = {
 
 M['undotree'] = {
   'mbbill/undotree',
-  keys = {
-    '<Leader>uu',
-    '<Leader>uo',
-  },
+  keys = '<Leader>u',
+  cmd = { 'UndotreeToggle', 'UndotreeShow' },
   config = configs['undotree'],
 }
 
