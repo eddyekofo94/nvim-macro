@@ -184,7 +184,8 @@ M['symbols-outline.nvim'] = function()
 end
 
 M['nvim-navic'] = function()
-  require('nvim-navic').setup ({
+  local navic = require('nvim-navic')
+  navic.setup({
       icons = require('utils.static').icons,
       highlight = true,
       separator = ' ► ',
@@ -192,7 +193,58 @@ M['nvim-navic'] = function()
       depth_limit_indicator = '…',
       safe_output = true
   })
-  vim.o.winbar = " %{%v:lua.require'nvim-navic'.get_location()%}"
+
+  local function get_fpath_proj_relative()
+    local fname = vim.fn.expand('%:t')
+    local icon, iconcolor = require('nvim-web-devicons').get_icon(fname,
+        vim.fn.fnamemodify(fname, ':e'), { default = true })
+    fname = string.format('%%#%s#%s %%*%s%%*', iconcolor, icon, fname)
+    if vim.fn.bufname('%') == '' then return '' end
+    local sep = vim.loop.os_uname().sysname == 'Windows' and '\\' or '/'
+    local path_list = vim.split(string.gsub(vim.fn.expand '%:~:.:h', '%%', ''), sep)
+    local fpath = ''
+    for _, cur in ipairs(path_list) do
+      fpath = (cur == '.' or cur == '~') and '' or
+                  fpath .. cur .. ' %#Tea#►%* ' .. '%*'
+    end
+    return fpath .. fname
+  end
+
+  local function update_winbar()
+    local exclude = {
+      ['terminal'] = true,
+      ['prompt'] = true,
+      ['help'] = true,
+      ['Outline'] = true,
+      ['undotree'] = true,
+      ['floaterm'] = true,
+      [''] = true,
+    } -- Ignore float windows and exclude filetype
+    if vim.api.nvim_win_get_config(0).zindex or exclude[vim.bo.filetype] then
+      vim.wo.winbar = ''
+    else
+      local sym = navic.get_location()
+      local win_val = ' ' .. get_fpath_proj_relative()
+      if sym ~= nil and sym ~= '' then
+        win_val = win_val .. ' %#Orange#► ' .. sym
+      end
+      vim.wo.winbar = win_val
+    end
+  end
+
+  vim.api.nvim_create_autocmd(
+    {
+      'BufEnter',
+      'BufWinEnter',
+      'CursorMoved',
+      'CursorMovedI',
+      'TextChanged',
+      'TextChangedI'
+    }, {
+      pattern = '*',
+      callback = update_winbar,
+    }
+  )
 end
 
 return M
