@@ -38,7 +38,6 @@ M['vim-floaterm'] = {
   'voldikss/vim-floaterm',
   keys = { '<C-\\>', '<M-i>' },
   cmd = {
-    'T',
     'ToggleTool',
     'FloatermNew',
     'FloatermToggle'

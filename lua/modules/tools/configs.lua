@@ -117,8 +117,8 @@ M['vim-floaterm'] = function()
       endif
     endfunction
 
-    command! -nargs=? -count=0 T          call ToggleTool(<q-args>, <count>)
-    command! -nargs=? -count=0 ToggleTool call ToggleTool(<q-args>, <count>)
+    command! -nargs=? -count=0 -complete=customlist,floaterm#cmdline#complete_names1
+        \ ToggleTool call ToggleTool(<q-args>, <count>)
     nnoremap <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
     nnoremap <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
 
