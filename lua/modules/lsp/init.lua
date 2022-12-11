@@ -37,6 +37,7 @@ M['symbols-outline'] = {
 
 M['nvim-navic'] = {
   'SmiteshP/nvim-navic',
+  requires = { 'nvim-lspconfig', 'nvim-web-devicons' },
   after = 'nvim-lspconfig',
   config = configs['nvim-navic'],
 }
