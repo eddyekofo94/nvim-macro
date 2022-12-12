@@ -192,7 +192,7 @@ sch.TSType               = { link = 'Type' } -- Type (and class) definitions and
 sch.TSTypeBuiltin        = { link = 'Type' } -- Built-in types: `i32` in Rust.
 sch.TSVariable           = { link = 'Identifier' } -- Variable names that don't fit into other categories.
 sch.TSVariableBuiltin    = { fg = plt.pigeon, italic = true } -- Variable names defined by the language: `this` or `self` in Javascript.
-sch.rainbowcol1          = { fg = plt.ochre } -- default light is too bright
+sch.rainbowcol1          = { fg = plt.smoke } -- default light is too bright
 
 -- HTML
 sch.htmlArg            = { fg = plt.pigeon }
