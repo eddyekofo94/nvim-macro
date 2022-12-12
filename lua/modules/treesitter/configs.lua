@@ -24,10 +24,10 @@ M['nvim-treesitter'] = function()
     incremental_selection = {
       enable = true,
       keymaps = {
-        init_selection = 'gnn',
-        node_incremental = 'grn',
-        scope_incremental = 'grc',
-        node_decremental = 'grm',
+        init_selection = 'van',
+        node_incremental = 'an',
+        scope_incremental = 'aN',
+        node_decremental = 'in',
       },
     },
     textobjects = {
@@ -78,17 +78,17 @@ M['nvim-treesitter'] = function()
       swap = {
         enable = true,
         swap_next = {
-          ['<leader>al'] = '@parameter.inner'
+          ['<C-l>'] = '@parameter.inner'
         },
         swap_previous = {
-          ['<leader>ah'] = '@parameter.inner'
+          ['<C-h>'] = '@parameter.inner'
         },
       },
       lsp_interop = {
         enable = true,
         border = 'single',
         peek_definition_code = {
-          ['<leader>k'] = '@function.outer',
+          ['<leader>p'] = '@function.outer',
         },
       },
     },
