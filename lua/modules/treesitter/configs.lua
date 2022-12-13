@@ -42,9 +42,12 @@ M['nvim-treesitter'] = function()
           ['il'] = '@loop.inner',
           ['ak'] = '@class.outer',
           ['ik'] = '@class.inner',
-          ['ia'] = '@parameter.inner',
           ['aa'] = '@parameter.outer',
+          ['ia'] = '@parameter.inner',
           ['a/'] = '@comment.outer',
+          ['i/'] = '@comment.inner',
+          ['a*'] = '@comment.outer',
+          ['i*'] = '@comment.inner',
         },
       },
       move = {
