@@ -30,6 +30,7 @@ M['mason-lspconfig'] = {
 
 M['symbols-outline'] = {
   'simrat39/symbols-outline.nvim',
+  ft = { unpack(ft_list), 'markdown' },
   requires = 'nvim-lspconfig',
   after = 'nvim-lspconfig',
   config = configs['symbols-outline.nvim'],
