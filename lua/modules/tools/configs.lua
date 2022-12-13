@@ -158,21 +158,21 @@ M['gitsigns.nvim'] = function()
       end
 
       -- Navigation
-      map('n', ']c', function()
+      map({ 'n', 'v' }, ']c', function()
         if vim.wo.diff then return ']c' end
         vim.schedule(function() gs.next_hunk() end)
         return '<Ignore>'
-      end, {expr=true})
+      end, { expr = true })
 
-      map('n', '[c', function()
+      map({ 'n', 'v' }, '[c', function()
         if vim.wo.diff then return '[c' end
         vim.schedule(function() gs.prev_hunk() end)
         return '<Ignore>'
-      end, {expr=true})
+      end, { expr = true })
 
       -- Actions
-      map({ 'n', 'v' }, '<leader>gs', gs.stage_hunk)
-      map({ 'n', 'v' }, '<leader>gr', gs.reset_hunk)
+      map('n', '<leader>gs', gs.stage_hunk)
+      map('n', '<leader>gr', gs.reset_hunk)
       map('n', '<leader>gS', gs.stage_buffer)
       map('n', '<leader>gu', gs.undo_stage_hunk)
       map('n', '<leader>gR', gs.reset_buffer)
