@@ -15,6 +15,7 @@ opt.cursorline = true
 opt.cursorlineopt = 'number'
 opt.undofile = true
 opt.mouse = 'a'
+opt.showtabline = 0
 opt.laststatus = 3        -- Global status line, for neovim >= 0.7.0
 opt.foldlevelstart = 99   -- Always start editing with no fold closed
 opt.signcolumn = 'auto'   -- For gitgutter & LSP diagnostic
