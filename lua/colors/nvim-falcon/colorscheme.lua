@@ -124,75 +124,7 @@ sch.DiagnosticSignWarn         = { link = 'DiagnosticWarn' } -- Used for 'Warn' 
 sch.DiagnosticSignInfo         = { link = 'DiagnosticInfo' } -- Used for 'Info' signs in sign column.
 sch.DiagnosticSignHint         = { link = 'DiagnosticHint' } -- Used for 'Hint' signs in sign column.
 
--- Tree-Sitter syntax groups. Most link to corresponding
-sch.TSAttribute          = { fg = plt.beige } -- Annotations that can be attached to the code to denote some kind of meta information. e.g. C++/Dart attributes.
-sch.TSBoolean            = { link = 'Boolean' } -- Boolean literals: `True` and `False` in Python.
-sch.TSCharacter          = { link = 'Character' } -- Character literals: `'a'` in C.
-sch.TSCharacterSpecial   = { link = 'SpecialChar' } -- Special characters.
-sch.TSComment            = { link = 'Comment' } -- Line comments and block comments.
-sch.TSConditional        = { link = 'Conditional' } -- Keywords related to conditionals: `if`, `when`, `cond`, etc.
-sch.TSConstant           = { link = 'Constant' } -- Constants identifiers. These might not be semantically constant. E.g. uppercase variables in Python.
-sch.TSConstBuiltin       = { link = 'Constant' } -- Built-in constant values: `nil` in Lua.
-sch.TSConstMacro         = { link = 'Macro' } -- Constants defined by macros: `NULL` in C.
-sch.TSConstructor        = { link = 'Constructor' } -- Constructor calls and definitions: `{}` in Lua, and Java constructors.
-sch.TSDebug              = { link = 'Debug' } -- Debugging statements.
-sch.TSDefine             = { link = 'Define' } -- Preprocessor #define statements.
-sch.TSError              = {} -- Syntax/parser errors. This might highlight large sections of code while the user is typing still incomplete code, use a sensible highlight.
-sch.TSException          = { link = 'Exception' } -- Exception related keywords: `try`, `except`, `finally` in Python.
-sch.TSField              = { fg = plt.pink } -- Object and struct fields.
-sch.TSFloat              = { link = 'Float' } -- Floating-point number literals.
-sch.TSFunction           = { link = 'Function' } -- Function calls and definitions.
-sch.TSFuncBuiltin        = { link = 'Special' } -- Built-in functions: `print` in Lua.
-sch.TSFuncMacro          = { link = 'Macro' } -- Macro defined functions (calls and definitions): each `macro_rules` in Rust.
-sch.TSInclude            = { link = 'Include' } -- File or module inclusion keywords: `#include` in C, `use` or `extern crate` in Rust.
-sch.TSKeyword            = { link = 'Keyword' } -- Keywords that don't fit into other categories.
-sch.TSKeywordFunction    = { fg = plt.beige } -- Keywords used to define a function: `function` in Lua, `def` and `lambda` in Python.
-sch.TSKeywordOperator    = { link = 'Operator' } -- Unary and binary operators that are English words: `and`, `or` in Python; `sizeof` in C.
-sch.TSKeywordReturn      = { link = 'Special' } -- Keywords like `return` and `yield`.
-sch.TSLabel              = { link = 'Label' } -- GOTO labels: `label:` in C, and `::label::` in Lua.
-sch.TSMethod             = { link = 'Function' } -- Method calls and definitions.
-sch.TSNamespace          = { fg = plt.beige } -- Identifiers referring to modules and namespaces.
-sch.TSNone               = {} -- No highlighting (sets all highlight arguments to `NONE`). this group is used to clear certain ranges, for example, string interpolations. Don't change the values of this highlight group.
-sch.TSNumber             = { link = 'Number' } -- Numeric literals that don't fit into other categories.
-sch.TSOperator           = { link = 'Operator' } -- Binary or unary operators: `+`, and also `->` and `*` in C.
-sch.TSParameter          = { link = 'Identifier' } -- Parameters of a function.
-sch.TSParameterReference = { link = 'TSParameter' } -- References to parameters of a function.
-sch.TSPreCondit          = { link = 'PreCondit' } --   Preprocessor #if, #else, #endif, etc.
-sch.TSPreProc            = { link = 'PreProc' } -- Preprocessor #if, #else, #endif, etc.
-sch.TSProperty           = { link = 'TSField' } -- Same as `TSField`.
-sch.TSPunctDelimiter     = { fg = plt.white } -- Punctuation delimiters: Periods, commas, semicolons, etc.
-sch.TSPunctBracket       = { fg = plt.smoke } -- Brackets, braces, parentheses, etc.
-sch.TSPunctSpecial       = { fg = plt.beige } -- Special punctuation that doesn't fit into the previous categories.
-sch.TSRepeat             = { link = 'Repeat' } -- Keywords related to loops: `for`, `while`, etc.
-sch.TSStorageClass       = { fg = plt.steel } -- Keywords that affect how a variable is stored: `static`, `comptime`, `extern`, etc.
-sch.TSString             = { link = 'String' } -- String literals.
-sch.TSStringRegex        = { link = 'String' } -- Regular expression literals.
-sch.TSStringEscape       = { link = 'SpecialChar' } -- Escape characters within a string: `\n`, `\t`, etc.
-sch.TSStringSpecial      = { link = 'SpecialChar' } -- Strings with special meaning that don't fit into the previous categories.
-sch.TSSymbol             = { link = 'Identifier' } -- Identifiers referring to symbols or atoms.
-sch.TSTag                = { link = 'Tag' } -- Tags like HTML tag names.
-sch.TSTagAttribute       = { link = 'TSField' } -- HTML tag attributes.
-sch.TSTagDelimiter       = { link = 'TSPunctBracket' } -- Tag delimiters like `<` `>` `/`.
-sch.TSText               = { fg = plt.smoke } -- Non-structured text. Like text in a markup language.
-sch.TSStrong             = { bold = true } -- Text to be represented in bold.
-sch.TSEmphasis           = { fg = plt.white, italic = true } -- Text to be represented with emphasis.
-sch.TSUnderline          = { underline = true } -- Text to be represented with an underline.
-sch.TSStrike             = { strikethrough = true } -- Strikethrough text.
-sch.TSTitle              = { link = 'Title' } -- Text that is part of a title.
-sch.TSLiteral            = { link = 'String' } -- Literal or verbatim text.
-sch.TSURI                = { fg = plt.aqua, underline = true } -- URIs like hyperlinks or email addresses.
-sch.TSMath               = { fg = plt.magenta, italic = true } -- Math environments like LaTeX's `$ ... $`
-sch.TSTextReference      = { fg = plt.pigeon } -- Footnotes, text references, citations, etc.
-sch.TSEnvironment        = { link = 'TSNamespace' } -- Text environments of markup languages.
-sch.TSEnvironmentName    = { link = 'TSEnvironment' } -- Text/string indicating the type of text environment. Like the name of a `\begin` block in LaTeX.
-sch.TSNote               = { link = 'SpecialChar' } -- Text representation of an informational note.
-sch.TSWarning            = { link = 'WarningMsg' } -- Text representation of a warning note.
-sch.TSDanger             = { link = 'ErrorMsg' } -- Text representation of a danger note.
-sch.TSType               = { link = 'Type' } -- Type (and class) definitions and annotations.
-sch.TSTypeBuiltin        = { link = 'Type' } -- Built-in types: `i32` in Rust.
-sch.TSVariable           = { link = 'Identifier' } -- Variable names that don't fit into other categories.
-sch.TSVariableBuiltin    = { fg = plt.pigeon, italic = true } -- Variable names defined by the language: `this` or `self` in Javascript.
-sch.rainbowcol1          = { fg = plt.smoke } -- default light is too bright
+sch.rainbowcol1             = { fg = plt.smoke } -- default light is too bright
 
 -- HTML
 sch.htmlArg            = { fg = plt.pigeon }
@@ -219,10 +151,10 @@ sch.CmpItemAbbrDeprecated   = { fg = plt.iron }
 sch.CmpItemAbbrMatch        = { fg = plt.white }
 sch.CmpItemAbbrMatchFuzzy   = { link = 'CmpItemAbbrMatch' }
 sch.CmpItemKindText         = { link = 'String' }
-sch.CmpItemKindMethod       = { link = 'TSMethod' }
-sch.CmpItemKindFunction     = { link = 'TSFunction' }
-sch.CmpItemKindConstructor  = { link = 'TSConstructor' }
-sch.CmpItemKindField        = { link = 'TSField' }
+sch.CmpItemKindMethod       = { link = 'Function' }
+sch.CmpItemKindFunction     = { link = 'Function' }
+sch.CmpItemKindConstructor  = { link = 'Function' }
+sch.CmpItemKindField        = { link = 'Identifier' }
 sch.CmpItemKindProperty     = { link = 'CmpItemKindField' }
 sch.CmpItemKindVariable     = { fg = plt.turquoise }
 sch.CmpItemKindReference    = { link = 'CmpItemKindVariable' }
@@ -277,7 +209,7 @@ sch.FocusedSymbol = { fg = plt.white, bold = true }
 -- nvim-navic
 sch.NavicIconsFile = { link = 'File' }
 sch.NavicIconsModule = { link = 'CmpItemKindModule' }
-sch.NavicIconsNamespace = { link = 'TSNamespace' }
+sch.NavicIconsNamespace = { fg = plt.beige }
 sch.NavicIconsPackage = { link = 'CmpItemKindModule' }
 sch.NavicIconsClass = { link = 'CmpItemKindClass' }
 sch.NavicIconsMethod = { link = 'CmpItemKindMethod' }
