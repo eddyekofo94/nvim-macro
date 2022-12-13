@@ -10,7 +10,7 @@ return {
   flashlight  = '#B9DEFF',
   aqua        = '#69C3EB',
   cerulean    = '#79A9F5',
-  turquoise   = '#5C9EA1',
+  turquoise   = '#55abb3',
   lavender    = '#BB99E3',
   magenta     = '#DE05A1',
   purple      = '#8966D1',
