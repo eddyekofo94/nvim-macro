@@ -142,7 +142,7 @@ M['gitsigns.nvim'] = function()
       topdelete = { hl = 'GitSignsDelete', text = '‾', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
       changedelete = { hl = 'GitSignsDelete', text = '~', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
     },
-    current_line_blame = true,
+    current_line_blame = false,
     current_line_blame_opts = {
       virt_text = true,
       virt_text_pos = 'eol',
