@@ -23,6 +23,6 @@ return {
   iron        = '#373d4a',
   deepsea     = '#12244c',
   ocean       = '#0f172b',
-  space       = '#030a27',
+  space       = '#070d1f',
   black       = '#000004',
 }

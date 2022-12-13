@@ -10,7 +10,7 @@ sch.Conceal      = { fg = plt.smoke } -- Placeholder characters substituted for 
 sch.Cursor       = { bg = plt.white } -- Character under the cursor
 sch.CursorColumn = { bg = plt.deepsea } -- Screen-column at the cursor, when 'cursorcolumn' is set.
 sch.CursorIM     = { bg = plt.flashlight, fg = plt.black } -- Like Cursor, but used when in IME mode |CursorIM|
-sch.CursorLine   = { bg = plt.deepsea } -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
+sch.CursorLine   = { bg = plt.space } -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
 sch.CursorLineNr = { fg = plt.orange } -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
 sch.lCursor      = { link = 'Cursor' } -- Character under the cursor when |language-mapping| is used (see 'guicursor')
 sch.TermCursor   = { reverse = true } -- Cursor in a focused terminal
