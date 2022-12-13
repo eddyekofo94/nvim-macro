@@ -46,7 +46,7 @@ local autocmds = {
 
   -- Automatically change local current directory
   {
-    { 'BufReadPost' },
+    { 'BufEnter' },
     {
       pattern = '*',
       callback = function()
