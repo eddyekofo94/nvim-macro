@@ -2,7 +2,7 @@ local plt = require('colors.nvim-falcon.palette')
 local sch = {}
 
 -- Common highlight groups
-sch.Normal       = { fg = plt.smoke } -- Normal text
+sch.Normal       = { fg = plt.smoke, bg = plt.ocean } -- Normal text
 sch.NormalFloat  = { fg = sch.smoke } -- Normal text in floating windows.
 sch.NormalNC     = { link = 'Normal' } -- normal text in non-current windows
 sch.ColorColumn  = { link = 'CursorColumn' } -- Columns set with 'colorcolumn'
