@@ -148,8 +148,8 @@ M['nvim-cmp'] = function()
   cmp.setup.cmdline(':', {
     enabled = true,
     sources = {
-      { name = 'path' },
-      { name = 'cmdline' },
+      { name = 'path', group_index = 1 },
+      { name = 'cmdline', group_index = 2 },
     }
   })
 end
