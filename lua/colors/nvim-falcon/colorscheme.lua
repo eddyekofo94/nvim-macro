@@ -124,7 +124,8 @@ sch.DiagnosticSignWarn         = { link = 'DiagnosticWarn' } -- Used for 'Warn' 
 sch.DiagnosticSignInfo         = { link = 'DiagnosticInfo' } -- Used for 'Info' signs in sign column.
 sch.DiagnosticSignHint         = { link = 'DiagnosticHint' } -- Used for 'Hint' signs in sign column.
 
-sch.rainbowcol1             = { fg = plt.smoke } -- default light is too bright
+sch.rainbowcol1 = { fg = plt.smoke } -- default light is too bright
+sch['@field']   = { fg = plt.smoke }
 
 -- HTML
 sch.htmlArg            = { fg = plt.pigeon }
@@ -154,7 +155,7 @@ sch.CmpItemKindText         = { link = 'String' }
 sch.CmpItemKindMethod       = { link = 'Function' }
 sch.CmpItemKindFunction     = { link = 'Function' }
 sch.CmpItemKindConstructor  = { link = 'Function' }
-sch.CmpItemKindField        = { link = 'Identifier' }
+sch.CmpItemKindField        = { fg = plt.pink }
 sch.CmpItemKindProperty     = { link = 'CmpItemKindField' }
 sch.CmpItemKindVariable     = { fg = plt.turquoise }
 sch.CmpItemKindReference    = { link = 'CmpItemKindVariable' }
