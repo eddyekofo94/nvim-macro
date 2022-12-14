@@ -236,6 +236,34 @@ sch.NavicIconsOperator = { link = 'Operator' }
 sch.NavicIconsTypeParameter = { link = 'CmpItemKind' }
 sch.NavicText = { fg = plt.smoke, italic = true }
 sch.NavicSeparator = { fg = plt.orange }
+-- aerial
+sch.AerialLine              = { fg = plt.white, bg = plt.space, bold = true }
+sch.AerialArrayIcon         = { link = 'Array' }
+sch.AerialBooleanIcon       = { link = 'Boolean' }
+sch.AerialClassIcon         = { link = 'CmpItemKindClass' }
+sch.AerialConstantIcon      = { link = 'CmpItemKindConstant' }
+sch.AerialConstructorIcon   = { link = 'CmpItemKindConstructor' }
+sch.AerialEnumIcon          = { link = 'CmpItemKindEnum' }
+sch.AerialEnumMemberIcon    = { link = 'CmpItemKindEnumMember' }
+sch.AerialEventIcon         = { link = 'CmpItemKindEvent' }
+sch.AerialFieldIcon         = { link = 'CmpItemKindField' }
+sch.AerialFileIcon          = { link = 'CmpItemKindFile' }
+sch.AerialFunctionIcon      = { link = 'CmpItemKindFunction' }
+sch.AerialInterfaceIcon     = { link = 'CmpItemKindInterface' }
+sch.AerialKeyIcon           = { link = 'CmpItemKindKeyword' }
+sch.AerialMethodIcon        = { link = 'CmpItemKindMethod' }
+sch.AerialModuleIcon        = { link = 'CmpItemKindModule' }
+sch.AerialNamespaceIcon     = { link = 'TSNamespace' }
+sch.AerialNullIcon          = { link = 'Boolean' }
+sch.AerialNumberIcon        = { link = 'CmpItemKindValue' }
+sch.AerialObjectIcon        = { link = 'Object' }
+sch.AerialOperatorIcon      = { link = 'CmpItemKindOperator' }
+sch.AerialPackageIcon       = { link = 'CmpItemKindModule' }
+sch.AerialPropertyIcon      = { link = 'CmpItemKindProperty' }
+sch.AerialStringIcon        = { link = 'CmpItemKindText' }
+sch.AerialStructIcon        = { link = 'CmpItemKindStruct' }
+sch.AerialTypeParameterIcon = { link = 'CmpItemKind' }
+sch.AerialVariableIcon      = { link = 'CmpItemKindVariable' }
 
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }

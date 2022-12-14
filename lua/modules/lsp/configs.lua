@@ -134,53 +134,46 @@ M['mason-lspconfig.nvim'] = function()
   })
 end
 
-M['symbols-outline.nvim'] = function()
-  local icons = require('utils.static').icons
-  require('symbols-outline').setup({
-    relative_width = true,
-    width = 20,
+M['aerial.nvim'] = function()
+  require('aerial').setup({
     keymaps = {
-      close = { '<Esc>', 'q' },
-      goto_location = '<CR>',
-      focus_location = '<Tab>',
-      rename_symbol = 'r',
-      code_actions = 'a',
-      fold = 'zc',
-      unfold = 'zo',
-      fold_all = 'zC',
-      unfold_all = 'zO',
-      fold_reset = 'zE',
+      ['<M-v>'] = 'actions.jump_vsplit',
+      ['<M-s>'] = 'actions.jump_split',
+      ['<Tab>'] = 'actions.scroll',
+      ['p'] = 'actions.prev_up',
+
+      ['?'] = false,
+      ['<C-v>'] = false,
+      ['<C-s>'] = false,
+      ['[['] = false,
+      [']]'] = false,
+      ['l'] = false,
+      ['L'] = false,
+      ['h'] = false,
+      ['H'] = false,
     },
-    symbols = {
-      File = { icon = icons.File, hl = 'CmpItemKindFile' },
-      Module = { icon = icons.Module, hl = 'CmpItemKindModule' },
-      Namespace = { icon = icons.Namespace, hl = '@namespace' },
-      Package = { icon = icons.Package, hl = 'CmpItemKindModule' },
-      Class = { icon = icons.Class, hl = 'CmpItemKindClass' },
-      Method = { icon = icons.Method, hl = 'Function' },
-      Property = { icon = icons.Property, hl = 'Pink' },
-      Field = { icon = icons.Field, hl = 'Identifier' },
-      Constructor = { icon = icons.Constructor, hl = 'Constructor' },
-      Enum = { icon = icons.Enum, hl = 'CmpItemKindEnum' },
-      Interface = { icon = icons.Interface, hl = 'CmpItemKindInterface' },
-      Function = { icon = icons.Function, hl = 'Function' },
-      Variable = { icon = icons.Variable, hl = 'CmpItemKindVariable' },
-      Constant = { icon = icons.Constant, hl = 'Constant' },
-      String = { icon = icons.String, hl = 'String' },
-      Number = { icon = icons.Number, hl = 'Number' },
-      Boolean = { icon = icons.Boolean, hl = 'Boolean' },
-      Array = { icon = icons.Array, hl = 'Array' },
-      Object = { icon = icons.Object, hl = 'Object' },
-      Key = { icon = icons.Keyword, hl = 'Keyword' },
-      Null = { icon = icons.Constant, hl = 'Constant' },
-      EnumMember = { icon = icons.EnumMember, hl = 'CmpItemKindEnum' },
-      Struct = { icon = icons.Struct, hl = 'CmpItemKindStruct' },
-      Event = { icon = icons.Event, hl = 'CmpItemKindEvent' },
-      Operator = { icon = icons.Operator, hl = 'Operator' },
-      TypeParameter = { icon = icons.TypeParameter, hl = 'CmpItemKind' }
-    }
+    attach_mode = 'global',
+    backends = { 'lsp', 'markdown', 'man' },
+    disable_max_lines = 8192,
+    filter_kind = false,
+    icons = require('utils.static').icons,
+    ignore = {
+      filetypes = { 'aerial', 'help', 'alpha', 'undotree', 'TelescopePrompt' },
+    },
+    link_folds_to_tree = true,
+    link_tree_to_folds = true,
+    manage_folds = true,
+    layout = {
+      max_width = { 0.2 },
+      min_width = 20,
+    },
+    show_guides = true,
+    float = { border = 'single' },
+    treesitter = { update_delay = 10 },
+    markdown = { update_delay = 10 }
   })
-  vim.keymap.set('n', '<Leader>o', '<Cmd>SymbolsOutline<CR>', { noremap = true })
+
+  vim.keymap.set('n', '<Leader>o', '<Cmd>AerialToggle<CR>', { noremap = true })
 end
 
 M['nvim-navic'] = function()
@@ -229,7 +222,7 @@ M['nvim-navic'] = function()
         ['prompt'] = true,
         ['help'] = true,
         ['checkhealth'] = true,
-        ['Outline'] = true,
+        ['aerial'] = true,
         ['undotree'] = true,
         ['floaterm'] = true,
         [''] = true,

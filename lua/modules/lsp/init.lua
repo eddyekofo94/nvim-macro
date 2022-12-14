@@ -28,12 +28,12 @@ M['mason-lspconfig'] = {
   config = configs['mason-lspconfig.nvim'],
 }
 
-M['symbols-outline'] = {
-  'simrat39/symbols-outline.nvim',
+M['aerial.nvim'] = {
+  'stevearc/aerial.nvim',
   ft = { unpack(ft_list), 'markdown' },
   requires = 'nvim-lspconfig',
   after = 'nvim-lspconfig',
-  config = configs['symbols-outline.nvim'],
+  config = configs['aerial.nvim'],
 }
 
 M['nvim-navic'] = {
