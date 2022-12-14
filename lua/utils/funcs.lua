@@ -66,7 +66,10 @@ function M.is_special_dir(path)
 end
 
 function M.autocd()
-  if vim.bo.buftype ~= '' then return end
+  if vim.bo.buftype ~= '' or
+      '' ~= vim.api.nvim_win_get_config(0).relative then
+    return
+  end
   local target_dir = M.git_dir()
   if not target_dir then
     target_dir = vim.fn.expand('%:p:h')
