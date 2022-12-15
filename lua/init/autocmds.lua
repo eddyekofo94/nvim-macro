@@ -56,7 +56,7 @@ local autocmds = {
   },
 
   {
-    { 'BufReadPost' },
+    { 'BufReadPre' },
     {
       pattern = '*',
       command = 'setlocal spell spelllang=en,cjk spellsuggest=best,9 spellcapcheck= spelloptions=camel'
