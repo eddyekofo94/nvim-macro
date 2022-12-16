@@ -12,6 +12,7 @@ opt.wrap = false
 opt.termguicolors = true
 opt.pumheight = 16
 opt.cursorline = true
+opt.cursorlineopt = 'number'
 opt.undofile = true
 opt.mouse = 'a'
 opt.showtabline = 0
@@ -21,8 +22,7 @@ opt.signcolumn = 'auto'   -- For gitgutter & LSP diagnostic
 opt.updatetime = 10       -- (ms)
 opt.swapfile = false
 opt.guifont = 'FiraCode Nerd Font:h12'
--- opt.pumblend = 25
--- opt.winblend = 25
+opt.splitright = true
 
 opt.backup = true
 opt.backupdir = vim.fn.expand('~/.local/share/nvim/backup//')
