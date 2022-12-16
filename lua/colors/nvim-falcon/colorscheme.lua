@@ -2,7 +2,7 @@ local plt = require('colors.nvim-falcon.palette')
 local sch = {}
 
 -- Common highlight groups
-sch.Normal       = { fg = plt.smoke, bg = plt.ocean } -- Normal text
+sch.Normal       = { fg = plt.smoke } -- Normal text
 sch.NormalFloat  = { fg = sch.smoke } -- Normal text in floating windows.
 sch.NormalNC     = { link = 'Normal' } -- normal text in non-current windows
 sch.ColorColumn  = { link = 'CursorColumn' } -- Columns set with 'colorcolumn'
@@ -237,7 +237,7 @@ sch.NavicIconsTypeParameter = { link = 'CmpItemKind' }
 sch.NavicText = { fg = plt.smoke, italic = true }
 sch.NavicSeparator = { fg = plt.orange }
 -- aerial
-sch.AerialLine              = { fg = plt.white, bg = plt.space, bold = true }
+sch.AerialLine              = { fg = plt.white, bg = plt.thunder, bold = true }
 sch.AerialArrayIcon         = { link = 'Array' }
 sch.AerialBooleanIcon       = { link = 'Boolean' }
 sch.AerialClassIcon         = { link = 'CmpItemKindClass' }
