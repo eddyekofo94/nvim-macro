@@ -13,20 +13,21 @@
 1. [Features](#features)
 2. [Requirements](#requirements)
 3. [Installation](#installation)
-4. [Tweaking this Configuration](#tweaking-this-configuration)
+4. [Overview](#overview)
     1. [Config Structure](#config-structure)
     2. [Boot Process](#boot-process)
-    3. [Managing Plugins with Modules](#managing-plugins-with-modules)
-    4. [Installing Packages to an Existing Module](#installing-packages-to-an-existing-module)
-    5. [Installing Packages to a New Module](#installing-packages-to-a-new-module)
-    6. [General Settings and Options](#general-settings-and-options)
-    7. [Keymaps](#keymaps)
-    8. [Colorscheme](#colorscheme)
-    9. [Auto Commands](#auto-commands)
-    10. [LSP Server Configurations](#lsp-server-configuration)
-    11. [Snippets](#snippets)
-    12. [Enabling VSCode Integration](#enabling-vscode-integration)
-5. [Appendix](#appendix)
+5. [Tweaking this Configuration](#tweaking-this-configuration)
+    1. [Managing Plugins with Modules](#managing-plugins-with-modules)
+    2. [Installing Packages to an Existing Module](#installing-packages-to-an-existing-module)
+    3. [Installing Packages to a New Module](#installing-packages-to-a-new-module)
+    4. [General Settings and Options](#general-settings-and-options)
+    5. [Keymaps](#keymaps)
+    6. [Colorscheme](#colorscheme)
+    7. [Auto Commands](#auto-commands)
+    8. [LSP Server Configurations](#lsp-server-configuration)
+    9. [Snippets](#snippets)
+    10. [Enabling VSCode Integration](#enabling-vscode-integration)
+6. [Appendix](#appendix)
     1. [Default Modules and Plugins of Choice](#default-modules-and-plugins-of-choice)
     2. [Startuptime Statistics](#startuptime-statistics)
 
@@ -73,7 +74,7 @@ Optional:
 5. Run `:checkhealth` to check potential dependency issues.
 6. Enjoy!
 
-## Tweaking this Configuration
+## Overview
 
 ### Config Structure
 
@@ -153,6 +154,8 @@ including `packer.nvim`.
                      ▼
                 sync plugins
 ```
+
+## Tweaking this Configuration
 
 ### Managing Plugins with Modules
 
