@@ -49,6 +49,17 @@
 - A decent terminal emulator, [Kitty](https://sw.kovidgoyal.net/kitty/) for example
 - A nerd font, I personally use [FiraCode](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode)
 
+For LSP support:
+
+- [Nodejs](https://nodejs.org/en/), for LSP support
+- Clangd requires Zip (**not** Gzip) to be installed
+- Some other LSP clients may requires Go, Cargo, etc.
+
+Optional:
+
+- [Lazygit](https://github.com/jesseduffield/lazygit)
+- [Pandoc](https://pandoc.org/)
+
 ## Installation
 
 1. Backup your own settings.
