@@ -16,7 +16,7 @@
 4. [Tweaking this Configuration](#tweaking-this-configuration)
     1. [Config Structure](#config-structure)
     2. [Boot Process](#boot-process)
-    3. [Enabling or Disabling a Module](#enabling-or-disabling-a-module)
+    3. [Managing Plugins with Modules](#managing-plugins-with-modules)
     4. [Installing Packages to an Existing Module](#installing-packages-to-an-existing-module)
     5. [Installing Packages to a New Module](#installing-packages-to-a-new-module)
     6. [General Settings and Options](#general-settings-and-options)
@@ -143,7 +143,7 @@ including `packer.nvim`.
                 sync plugins
 ```
 
-### Enabling or Disabling a Module
+### Managing Plugins with Modules
 
 In order to enable or disable a module, one need to change the table in
 `lua/init/plugins.lua` passed to `manage_plugins()`, for example
@@ -391,7 +391,7 @@ it should work.
 
 ### Startuptime Statistics
 
-Last update: 2022-12-10
+Last update: 2022-12-20
 
 Commit: `75068b4a` (#451)
 
