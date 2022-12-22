@@ -80,6 +80,16 @@ M['nvim-lspconfig'] = function()
     end
   end
 
+  local function get_override_config(name)
+    local status, override_config
+      = pcall(require, 'modules/lsp/lsp-server-configs/' .. name)
+    if not status then
+      return nil
+    else
+      return override_config.on_new_config
+    end
+  end
+
   local function lsp_setup()
     -- Add additional capabilities
     local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -88,22 +98,14 @@ M['nvim-lspconfig'] = function()
     if cmp_nvim_lsp_ok then
       capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
     end
-    local function get_lsp_server_cfg(name)
-      local status, server_config = pcall(require, 'modules/lsp/lsp-server-configs/' .. name)
-      if not status then
-        return {}
-      else
-        return server_config
-      end
-    end
-    for _, server_name in pairs(ensure_installed) do
-      require('lspconfig')[server_name].setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = get_lsp_server_cfg(server_name),
-      })
-    end
+  for _, server_name in pairs(ensure_installed) do
+    require('lspconfig')[server_name].setup({
+      on_attach = on_attach,
+      capabilities = capabilities,
+      on_new_config = get_override_config(server_name),
+    })
   end
+end
 
   lspconfig_setui()
   lsp_setup()

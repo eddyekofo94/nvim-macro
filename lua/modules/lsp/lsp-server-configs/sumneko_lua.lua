@@ -1,23 +1,50 @@
--- Config for neovim lua scripts
+local function config_path(app)
+  return string.format('%s/.config/%s',
+    os.getenv('XDG_CONFIG_HOME') or os.getenv('HOME') or '', app)
+end
+
+local function on_new_config(config, root_dir)
+  if not root_dir then return end
+  if root_dir:match(vim.fn.stdpath('config')) then
+    config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
+      Lua = {
+        runtime = {
+          version = 'LuaJIT',
+          path = vim.split(package.path, ';'),
+        },
+        completion = {
+          callSnippet = 'Replace',
+        },
+        diagnostics = {
+          enable = true,
+          globals = { 'vim', 'use' },
+        },
+        workspace = {
+          library = vim.api.nvim_get_runtime_file('', true),
+          checkThirdParty = false,
+        },
+        telemetry = {
+          enable = false,
+        },
+      },
+    })
+  elseif root_dir:match(config_path('awesome')) then
+    config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
+      Lua = {
+        diagnostics = {
+          enable = true,
+          globals = {
+            'awesome',
+            'client',
+            'screen',
+            'root',
+          },
+        },
+      },
+    })
+  end
+end
+
 return {
-  Lua = {
-    runtime = {
-      version = 'LuaJIT',
-      path = vim.split(package.path, ';'),
-    },
-    completion = {
-      callSnippet = 'Replace',
-    },
-    diagnostics = {
-      enable = true,
-      globals = { 'vim', 'use' },
-    },
-    workspace = {
-      library = vim.api.nvim_get_runtime_file('', true),
-      checkThirdParty = false,
-    },
-    telemetry = {
-      enable = false,
-    },
-  },
+  on_new_config = on_new_config,
 }
