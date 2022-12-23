@@ -27,6 +27,12 @@ M['cmp-nvim-lsp'] = {
   after = 'nvim-lspconfig',
 }
 
+M['cmp-nvim-lsp-signature-help'] = {
+  'hrsh7th/cmp-nvim-lsp-signature-help',
+  requires = { 'nvim-cmp', 'nvim-lspconfig' },
+  after = 'nvim-lspconfig',
+}
+
 M['cmp-path'] = {
   'hrsh7th/cmp-path',
   requires = 'nvim-cmp',
