@@ -109,7 +109,6 @@ M['nvim-cmp'] = function()
     },
     sources = {
       { name = 'luasnip', max_item_count = 3 },
-      { name = 'copilot', max_item_count = 3 },
       {
         name = 'nvim_lsp',
         max_item_count = 20,
@@ -166,14 +165,9 @@ M['copilot.lua'] = function()
     vim.g.loaded_coplilot = true
     require('copilot').setup({
       suggestion = {
-        enabled = true,
-        auto_trigger = false,
-        debounce = 75,
+        auto_trigger = true,
         keymap = {
-         accept = '<C-j>',
-         next = '<C-j>',
-         prev = '<C-j>',
-         dismiss = '<C-j>',
+          accept = '<C-j>',
         },
       },
     })

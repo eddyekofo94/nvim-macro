@@ -45,13 +45,6 @@ M['cmp_luasnip'] = {
   after = 'LuaSnip',
 }
 
-M['copilot-cmp'] = {
-  'zbirenbaum/copilot-cmp',
-  after = 'copilot.lua',
-  requires ={ 'nvim-cmp', 'copilot.lua' },
-  config = configs['copilot-cmp'],
-}
-
 M['copilot.lua'] = {
   'zbirenbaum/copilot.lua',
   cmd = 'Copilot',
