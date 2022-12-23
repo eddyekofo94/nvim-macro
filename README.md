@@ -367,7 +367,7 @@ it should work.
     - [cmp-path](https://github.com/hrsh7th/cmp-path)
     - [cmp-buffer](https://github.com/hrsh7th/cmp-buffer)
     - [cmp_luasnip](https://github.com/saadparwaiz1/cmp_luasnip)
-    - [copilot-cmp](https://github.com/zbirenbaum/copilot-cmp)
+    - [cmp-nvim-lsp-signature-help](https://github.com/hrsh7th/cmp-nvim-lsp-signature-help)
     - [copilot.lua](https://github.com/zbirenbaum/copilot.lua)
     - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
 - **LSP**
