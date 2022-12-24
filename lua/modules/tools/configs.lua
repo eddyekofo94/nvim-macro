@@ -218,17 +218,15 @@ M['tmux.nvim'] = function()
     },
   })
 
-  local navigation_keys = {
-    h = tmux.move_left,
-    j = tmux.move_bottom,
-    k = tmux.move_top,
-    l = tmux.move_right,
-  }
-  for direction_key, tmux_navigation_func in pairs(navigation_keys) do
-    local win_navigation_key = '<M-' .. direction_key .. '>'
-    vim.keymap.set('n', win_navigation_key, tmux_navigation_func, { noremap = true })
-  end
+  vim.keymap.set('n', '<M-h>', tmux.move_left, { noremap = true })
+  vim.keymap.set('n', '<M-j>', tmux.move_bottom, { noremap = true })
+  vim.keymap.set('n', '<M-k>', tmux.move_top, { noremap = true })
+  vim.keymap.set('n', '<M-l>', tmux.move_right, { noremap = true })
 
+  vim.keymap.set('n', '<M-C-h>', tmux.resize_left, { noremap = true })
+  vim.keymap.set('n', '<M-C-j>', tmux.resize_bottom, { noremap = true })
+  vim.keymap.set('n', '<M-C-k>', tmux.resize_top, { noremap = true })
+  vim.keymap.set('n', '<M-C-l>', tmux.resize_right, { noremap = true })
 end
 
 return M
