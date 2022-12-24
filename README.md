@@ -393,6 +393,7 @@ it should work.
   - [vim-floaterm](https://github.com/voldikss/vim-floaterm)
   - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
   - [rnvimr](https://github.com/kevinhwang91/rnvimr)
+  - [tmux.nvim](https://github.com/aserowy/tmux.nvim)
 - **Treesitter**
   - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
   - [nvim-ts-rainbow](https://github.com/p00f/nvim-ts-rainbow)
