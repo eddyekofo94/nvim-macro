@@ -3,9 +3,18 @@ local function config_path(app)
     os.getenv('XDG_CONFIG_HOME') or os.getenv('HOME') or '', app)
 end
 
+local function inside_nvim_runtime_paths(path)
+  for _, runtime_path in ipairs(vim.api.nvim_list_runtime_paths()) do
+    if vim.startswith(path, runtime_path) then
+      return true
+    end
+  end
+  return false
+end
+
 local function on_new_config(config, root_dir)
   if not root_dir then return end
-  if root_dir:match(vim.fn.stdpath('config')) then
+  if inside_nvim_runtime_paths(root_dir) then
     config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
       Lua = {
         runtime = {
