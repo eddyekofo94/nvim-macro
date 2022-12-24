@@ -57,4 +57,10 @@ M['rnvimr'] = {
   config = configs['rnvimr'],
 }
 
+M['tmux.nvim'] = {
+  'aserowy/tmux.nvim',
+  keys = { '<M-h>', '<M-j>', '<M-k>', '<M-l>' },
+  config = configs['tmux.nvim'],
+}
+
 return M

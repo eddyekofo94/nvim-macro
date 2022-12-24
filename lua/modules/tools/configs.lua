@@ -206,4 +206,29 @@ M['rnvimr'] = function()
       '<cmd>RnvimrToggle<CR>', { noremap = true })
 end
 
+M['tmux.nvim'] = function()
+  local tmux = require('tmux')
+  tmux.setup({
+    navigation = {
+      cycle_navigation = false,
+      enable_default_keybindings = false,
+    },
+    resize = {
+      enable_default_keybindings = false,
+    },
+  })
+
+  local navigation_keys = {
+    h = tmux.move_left,
+    j = tmux.move_bottom,
+    k = tmux.move_top,
+    l = tmux.move_right,
+  }
+  for direction_key, tmux_navigation_func in pairs(navigation_keys) do
+    local win_navigation_key = '<M-' .. direction_key .. '>'
+    vim.keymap.set('n', win_navigation_key, tmux_navigation_func, { noremap = true })
+  end
+
+end
+
 return M
