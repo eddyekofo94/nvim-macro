@@ -134,8 +134,16 @@ M['nvim-cmp'] = function()
     },
     -- cmp floating window config
     window = {
-      completion = { border = 'single' },
-      documentation = { border = 'single' }
+      completion = {
+        border = 'single',
+        max_width = 40,
+        max_height = 16,
+      },
+      documentation = {
+        border = 'single',
+        max_width = 80,
+        max_height = 16,
+      }
     },
   })
 
