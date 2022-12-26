@@ -176,7 +176,8 @@ M.math_snippets = {
     s({ trig = 'transp' }, { t '^{\\intercal}', i(0) }),
     s({ trig = 'hat' }, { t '\\hat{', i(1), t '}' }),
     s({ trig = 'tilde' }, { t '\\tilde{', i(1), t '}' }),
-    s({ trig = 'over' }, { t '\\overset{', i(2), t '}{', i(1), t '}' }),
+    s({ trig = 'overl' }, { t '\\overline{', i(1), t '}' }),
+    s({ trig = 'overs' }, { t '\\overset{', i(2), t '}{', i(1), t '}' }),
 
     s({ trig = 'sin', priority = 999 }, { t '\\mathrm{sin}\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'cos', priority = 999 }, { t '\\mathrm{cos}\\left(', i(1), t '\\right)', i(0) }),
