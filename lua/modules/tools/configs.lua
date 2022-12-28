@@ -222,11 +222,6 @@ M['tmux.nvim'] = function()
   vim.keymap.set('n', '<M-j>', tmux.move_bottom, { noremap = true })
   vim.keymap.set('n', '<M-k>', tmux.move_top, { noremap = true })
   vim.keymap.set('n', '<M-l>', tmux.move_right, { noremap = true })
-
-  vim.keymap.set('n', '<M-C-h>', tmux.resize_left, { noremap = true })
-  vim.keymap.set('n', '<M-C-j>', tmux.resize_bottom, { noremap = true })
-  vim.keymap.set('n', '<M-C-k>', tmux.resize_top, { noremap = true })
-  vim.keymap.set('n', '<M-C-l>', tmux.resize_right, { noremap = true })
 end
 
 return M
