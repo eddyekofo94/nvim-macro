@@ -5,7 +5,7 @@ M['barbar.nvim'] = {
   'romgrk/barbar.nvim',
   cond = function()
     -- try load barbar every time a new buffer is created
-    vim.api.nvim_create_autocmd('BufReadPre', {
+    vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufWritePost' }, {
       pattern = '*',
       callback = function()
         -- load barbar only once
