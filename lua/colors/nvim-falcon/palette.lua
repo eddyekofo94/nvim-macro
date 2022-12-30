@@ -11,6 +11,7 @@ return {
   turquoise   = '#55ABB3',
   flashlight  = '#B9DEFF',
   cerulean    = '#79A9F5',
+  skyblue     = '#8ECAFF',
   lavender    = '#BB99E3',
   magenta     = '#DE05A1',
   purple      = '#8966D1',
