@@ -24,6 +24,9 @@ opt.swapfile = false
 opt.guifont = 'FiraCode Nerd Font:h12'
 opt.splitright = true
 
+-- Cursor shape
+opt.gcr = 'n-v:block,i-c-ci-ve:blinkoff500-blinkon500-block,r-cr-o:hor20'
+
 opt.backup = true
 opt.backupdir = vim.fn.expand('~/.local/share/nvim/backup//')
 
