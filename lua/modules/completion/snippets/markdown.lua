@@ -296,7 +296,7 @@ M.markers = {
     return not_in_mathzone() and
       vim.fn.match(trailing, [[\s*\()\|]\|}\|"\|'\|`\)\|\$\|\*]]) ~= 1
   end }, {
-    s({ trig = 'm' } , { t '$', i(0), t '$' }),
+    s({ trig = 'm' } , { t '$', i(1), t '$' }),
     s({ trig = 'M' } , { t { '$$', '' }, i(0), t { '', '$$', '' } }),
     s({ trig = 'e' } , { t '*', i(1), t '*', i(0) }),
     s({ trig = 'b' }, { t '**', i(1), t '**', i(0) }),
