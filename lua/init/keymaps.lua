@@ -70,10 +70,13 @@ noremap({
   { 'n', '<C-n>', '<C-i>' },
 
   -- Moving in insert and command-line mode
-  { '!', '<M-h>', '<left>' },
-  { '!', '<M-j>', '<down>' },
-  { '!', '<M-k>', '<up>' },
-  { '!', '<M-l>', '<right>' },
+  { '!', '<C-b>', '<Left>' },
+  { '!', '<C-f>', '<Right>' },
+  { '!', '<C-a>', '<Home>' },
+  { '!', '<C-e>', '<End>' },
+  { 'i', '<C-k>', '<C-o>D' },
+  { 'c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>' },
+  { '!', '<C-d>', '<Del>' },
 
   -- Enter normal mode from arbitrary mode
   { { 'n', 't', 'v', 'i', 'c' }, '<M-\\>', '<C-\\><C-n>' },
