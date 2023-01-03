@@ -25,10 +25,13 @@ local function get_previewers()
     'okular',
     'zathura',
   }
-  for idx, previewer in ipairs(previewers) do
-    if os.execute('command -v ' .. previewer ..
-        ' >/dev/null 2>&1') ~= 0 then
+  local idx = 1
+  while idx <= #previewers do
+    local previewer = previewers[idx]
+    if os.execute('command -v ' .. previewer .. ' >/dev/null 2>&1') ~= 0 then
       table.remove(previewers, idx)
+    else
+      idx = idx + 1
     end
   end
   return previewers
