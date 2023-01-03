@@ -37,7 +37,7 @@ end
 local function get_md_files()
   local bufnames = {}
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    local bufname = vim.api.nvim_buf_get_name(buf)
+    local bufname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ':~:.')
     if bufname:match('.md$') then
       table.insert(bufnames, bufname)
     end
