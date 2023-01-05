@@ -10,7 +10,7 @@ M['nvim-treesitter'] = {
 }
 
 M['nvim-ts-rainbow'] = {
-  'p00f/nvim-ts-rainbow',
+  'mrjones2014/nvim-ts-rainbow',
   requires = 'nvim-treesitter',
   after = 'nvim-treesitter',
 }
