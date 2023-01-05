@@ -13,7 +13,7 @@ return {
   cerulean    = '#79A9F5',
   skyblue     = '#8ECAFF',
   lavender    = '#BB99E3',
-  magenta     = '#DE05A1',
+  magenta     = '#F131C4',
   purple      = '#8966D1',
   thunder     = '#2D1078',
   white       = '#E5E5EB',
