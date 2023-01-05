@@ -43,7 +43,7 @@
 
 ## Requirements
 
-- [Neovim](https://github.com/neovim/neovim) (latest release)
+- [Neovim](https://github.com/neovim/neovim) (***nightly***)
 - [Neovim Remote](https://github.com/mhinz/neovim-remote) and [Ranger](https://github.com/ranger/ranger) for file manager support
 - [Fd](https://github.com/sharkdp/fd) and [Ripgrep](https://github.com/BurntSushi/ripgrep) for the fuzzy finder `telescope`
 - [Git](https://git-scm.com/), of course
@@ -58,8 +58,8 @@ For LSP support:
 
 Optional:
 
-- [Lazygit](https://github.com/jesseduffield/lazygit)
-- [Pandoc](https://pandoc.org/)
+- [Lazygit](https://github.com/jesseduffield/lazygit) for improved git integration
+- [Pandoc](https://pandoc.org/), [custom scripts](https://github.com/Bekaboo/dot/tree/master/.scripts) and [TexLive](https://www.tug.org/texlive/) (for ArchLinux users, it is `texlive-core` and `texlive-extra`) for markdown → PDF conversion
 
 ## Installation
 
@@ -70,7 +70,7 @@ Optional:
     git clone https://github.com/Bekaboo/nvim ~/.config/nvim
     ```
 4. Open neovim, manually run `:PackerSync` if packer does not
-    automatically syncs.
+    automatically sync.
 5. Run `:checkhealth` to check potential dependency issues.
 6. Enjoy!
 
@@ -244,7 +244,7 @@ To install plugin `foo` under module `misc`, just insert the
 corresponding specification to the big table
 `lua/modules/misc/init.lua` returns, for instance,
 
-`lua/modules/init.lua`:
+`lua/modules/misc/init.lua`:
 
 ```lua
 -- ...
@@ -262,7 +262,7 @@ return M
 ### Installing Packages to a New Module
 
 To install plugin `foo` under module `bar`, one should first
-create module `bar` under `lua/modules`, there are two choices:
+create module `bar` under `lua/modules`, there are two approaches:
 
 ```
 .
@@ -299,6 +299,20 @@ all specifications of plugins under that module, for instance:
     config = function() require('bufferline').setup() end,
   },
 }
+```
+
+After creating the new module `bar`, enable it in `lua/init/plugins.lua`:
+
+```lua
+local manage_plugins = require('utils.packer').manage_plugins
+
+manage_plugins({
+  modules = {
+    -- ...
+    bar = true,
+    -- ...
+  }
+})
 ```
 
 ### General Settings and Options
