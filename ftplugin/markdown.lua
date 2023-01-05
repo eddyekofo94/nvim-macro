@@ -1,6 +1,3 @@
-local handler_md2pdf = nil
-local handler_viewer = nil
-
 local function parse_args(fargs)
   local args = {}
   local opts = {}
@@ -15,8 +12,8 @@ local function parse_args(fargs)
   return args, opts
 end
 
-local function get_previewers()
-  local previewers = {
+local function get_viewers()
+  local viewers = {
     'firefox',
     'google-chrome',
     'google-chrome-beta',
@@ -26,15 +23,15 @@ local function get_previewers()
     'zathura',
   }
   local idx = 1
-  while idx <= #previewers do
-    local previewer = previewers[idx]
-    if os.execute('command -v ' .. previewer .. ' >/dev/null 2>&1') ~= 0 then
-      table.remove(previewers, idx)
+  while idx <= #viewers do
+    local viewer = viewers[idx]
+    if os.execute('command -v ' .. viewer .. ' >/dev/null 2>&1') ~= 0 then
+      table.remove(viewers, idx)
     else
       idx = idx + 1
     end
   end
-  return previewers
+  return viewers
 end
 
 local function get_md_files()
@@ -53,11 +50,11 @@ local function complete_md_to_pdf(arg_before, cmdline, cursor_pos)
     return get_md_files()
   elseif arg_before == '--' then
     return {
-      '--previewer',
+      '--viewer',
       '--pdf-engine',
     }
-  elseif arg_before == '--previewer=' then
-    return get_previewers()
+  elseif arg_before == '--viewer=' then
+    return get_viewers()
   elseif arg_before == '--pdf-engine=' then
     return {
       'latexmk',
@@ -70,39 +67,52 @@ local function complete_md_to_pdf(arg_before, cmdline, cursor_pos)
   return {}
 end
 
-local function md_to_pdf(tbl)
-  local args, opts = parse_args(tbl.fargs)
-  local pdf_engine = opts['pdf-engine'] or 'pdflatex'
-  local fname_mds = (not vim.tbl_isempty(args) and args) or { vim.fn.expand('%') }
+local function close_handler(handler)
+  if handler and not handler:is_closing() then
+    handler:close()
+  end
+end
+
+local function spawn_viewer(args, opts)
   local fname_pdfs = {}
-  for _, fname in ipairs(fname_mds) do
+  for _, fname in ipairs(args) do
     local fname_pdf = fname:gsub('%.md$', '.pdf')
     table.insert(fname_pdfs, fname_pdf)
   end
-  vim.cmd('write')
-  handler_md2pdf = vim.loop.spawn('md2pdf',
-    { args = { '--' .. pdf_engine, unpack(fname_mds) } },
-    vim.schedule_wrap(function(code_md2pdf, _)
-      if handler_md2pdf then
-        handler_md2pdf:close()
-      end
-      if code_md2pdf ~= 0 then
-        vim.notify(string.format('md2pdf failed with code %d',
-          code_md2pdf), vim.log.levels.ERROR)
-      elseif opts.previewer then
-        handler_viewer = vim.loop.spawn(opts.previewer,
-          { args = { unpack(fname_pdfs) } },
-          vim.schedule_wrap(function(code_viewer, _)
-            if handler_viewer then
-              handler_viewer:close()
-            end
-            if code_viewer ~= 0 then
-              vim.notify(string.format('previewer %s failed with code %d',
-                opts.previewer, code_viewer), vim.log.levels.ERROR)
-            end
-          end))
+
+  close_handler(_G.handler_viewer)
+  _G.handler_viewer = vim.loop.spawn(opts.viewer,
+  { args = fname_pdfs },
+    vim.schedule_wrap(function(code_viewer, _)
+      close_handler(_G.handler_viewer)
+      if code_viewer ~= 0 then
+        vim.notify(string.format('viewer %s failed with code %d',
+          opts.viewer, code_viewer), vim.log.levels.ERROR)
       end
     end))
+end
+
+local function spawn_pandoc(args, opts)
+  close_handler(_G.handler_md2pdf)
+  _G.handler_md2pdf = vim.loop.spawn('md2pdf', {
+    args = { '--' .. opts['pdf-engine'], unpack(args) },
+  }, vim.schedule_wrap(function(code_md2pdf, _)
+    close_handler(_G.handler_md2pdf)
+    if code_md2pdf ~= 0 then
+      vim.notify(string.format('md2pdf failed with code %d',
+        code_md2pdf), vim.log.levels.ERROR)
+    elseif opts.viewer then
+      spawn_viewer(args, opts)
+    end
+  end))
+end
+
+local function md_to_pdf(tbl)
+  local args, opts = parse_args(tbl.fargs)
+  args = vim.tbl_deep_extend('force', { vim.fn.expand('%') }, args)
+  opts = vim.tbl_deep_extend('force', { ['pdf-engine'] = 'pdflatex' }, opts)
+  vim.cmd('silent! wall')
+  spawn_pandoc(args, opts)
 end
 
 vim.api.nvim_buf_create_user_command(0, 'MarkdownToPDF', md_to_pdf, {
