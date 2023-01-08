@@ -41,7 +41,7 @@ M['barbar.nvim'] = function()
   nnoremap('<M-)>', barbar_api.close_buffers_right)
   nnoremap('<M-P>', barbar_api.toggle_pin)
   nnoremap('<M-O>', barbar_api.close_all_but_visible)
-  nnoremap('<M-C>', '<CMD>BufferClose<CR>')
+  nnoremap('<M-C>', '<CMD>BufferClose<CR>') -- equivalent to :bufdo bwipeout
 end
 
 M['lualine.nvim'] = function()
