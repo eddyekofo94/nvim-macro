@@ -227,6 +227,7 @@ M['nvim-navic'] = function()
         ['aerial'] = true,
         ['undotree'] = true,
         ['floaterm'] = true,
+        ['qf'] = true,
         [''] = true,
       } -- Ignore float windows and exclude filetype
       if vim.api.nvim_win_get_config(0).zindex or exclude[vim.bo.filetype] then
