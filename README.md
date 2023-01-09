@@ -160,7 +160,7 @@ including `packer.nvim`.
 ### Managing Plugins with Modules
 
 In order to enable or disable a module, one need to change the table in
-`lua/init/plugins.lua` passed to `manage_plugins()`, for example
+[lua/init/plugins.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua) passed to `manage_plugins()`, for example
 
 ```lua
 local manage_plugins = require('utils.packer').manage_plugins
@@ -198,8 +198,6 @@ manage_plugins({
 - `bootstrap`: information for automatically installing `packer.nvim`
 - `configs`: configuration passed to `packer.init()`, see [packer's doc](https://github.com/wbthomason/packer.nvim#custom-initialization)
 
----
-
 <details>
   <summary><strong>Default argument passed to `manage_plugins()`:</strong></summary>
 
@@ -236,8 +234,6 @@ manage_plugins({
 
 </details>
 
----
-
 ### Installing Packages to an Existing Module
 
 To install plugin `foo` under module `misc`, just insert the
@@ -262,7 +258,7 @@ return M
 ### Installing Packages to a New Module
 
 To install plugin `foo` under module `bar`, one should first
-create module `bar` under `lua/modules`, there are two approaches:
+create module `bar` under [lua/modules](https://github.com/Bekaboo/nvim/tree/master/lua/modules), there are two approaches:
 
 ```
 .
@@ -301,7 +297,7 @@ all specifications of plugins under that module, for instance:
 }
 ```
 
-After creating the new module `bar`, enable it in `lua/init/plugins.lua`:
+After creating the new module `bar`, enable it in [lua/init/plugins.lua](hub.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua):
 
 ```lua
 local manage_plugins = require('utils.packer').manage_plugins
@@ -317,11 +313,11 @@ manage_plugins({
 
 ### General Settings and Options
 
-See `lua/init/general.lua`.
+See [lua/init/general.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/general.lua).
 
 ### Keymaps
 
-See `lua/init/keymaps.lua`, or see module config files for
+See [lua/init/keymaps.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/keymaps.lua), or see module config files for
 corresponding plugin keymaps.
 
 ### Colorscheme
@@ -329,29 +325,29 @@ corresponding plugin keymaps.
 `nvim-falcon` is a custom colorscheme builtin in this configuration and is
 enabled by default.
 
-To disable it, remove the corresponding line in `lua/init/general.lua`.
+To disable it, remove the [corresponding lines](https://github.com/Bekaboo/nvim/blob/master/lua/init/general.lua#L76-L78) in [lua/init/general.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/general.lua).
 
-To tweak this colorscheme, see `lua/colors/nvim-falcon`.
+To tweak this colorscheme, see [lua/colors/nvim-falcon](https://github.com/Bekaboo/nvim/tree/master/lua/colors/nvim-falcon).
 
 ### Auto Commands
 
-See `lua/init/autocmds.lua`.
+See [lua/init/autocmds.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/autocmds.lua).
 
 ### LSP Server Configurations
 
-See `lua/modules/lsp/lsp-server-configs`.
+See [lua/modules/lsp/lsp-server-configs](https://github.com/Bekaboo/nvim/tree/master/lua/modules/lsp/lsp-server-configs).
 
 ### Snippets
 
 This configuration use [LuaSnip](https://github.com/L3MON4D3/LuaSnip) as the snippet engine,
 custom snippets for different filetypes
-are defined under `lua/modules/completion/snippets`.
+are defined under [lua/modules/completion/snippets](https://github.com/Bekaboo/nvim/tree/master/lua/modules/completion/snippets).
 
 ### Enabling VSCode Integration
 
 VSCode integration takes advantages of the modular design, allowing to use
 a different set of modules when Neovim is launched by VSCode, relevant code is
-in `plugin/vscode_neovim.vim` and `lua/init/plugins.lua`.
+in [plugin/vscode_neovim.vim](https://github.com/Bekaboo/nvim/blob/master/plugin/vscode_neovim.vim) and [lua/init/plugins.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua).
 
 To make VSCode integration work, please install [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) in VSCode
 and configure it correctly.
@@ -410,7 +406,7 @@ it should work.
   - [tmux.nvim](https://github.com/aserowy/tmux.nvim)
 - **Treesitter**
   - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-  - [nvim-ts-rainbow](https://github.com/p00f/nvim-ts-rainbow)
+  - [nvim-ts-rainbow](https://github.com/mrjones2014/nvim-ts-rainbow)
   - [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)
   - [nvim-ts-context-commentstring](https://github.com/JoosepAlviste/nvim-ts-context-commentstring)
 - **UI**
