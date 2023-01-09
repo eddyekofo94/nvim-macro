@@ -88,7 +88,7 @@ sch.Typedef        = { fg = plt.beige } --   A typedef
 sch.Special        = { fg = plt.orange } -- (*) Any special symbol
 sch.SpecialChar    = { link = 'Special' } --   Special character in a constant
 sch.Tag            = { fg = plt.flashlight, underline = true } --   You can use CTRL-] on this
-sch.Delimiter      = { fg = plt.pigeon } --   Character that needs attention
+sch.Delimiter      = { fg = plt.orange } --   Character that needs attention
 sch.SpecialComment = { link = 'SpecialChar' } --   Special things inside a comment (e.g. '\n')
 sch.Debug          = { link = 'Special' } --   Debugging statements
 sch.Underlined     = { underline = true } -- Text that stands out, HTML links
@@ -124,8 +124,9 @@ sch.DiagnosticSignWarn         = { link = 'DiagnosticWarn' } -- Used for 'Warn' 
 sch.DiagnosticSignInfo         = { link = 'DiagnosticInfo' } -- Used for 'Info' signs in sign column.
 sch.DiagnosticSignHint         = { link = 'DiagnosticHint' } -- Used for 'Hint' signs in sign column.
 
-sch.rainbowcol1 = { fg = plt.smoke } -- default light is too bright
-sch['@field']   = { fg = plt.smoke }
+sch.rainbowcol1  = { fg = plt.smoke }   -- default light is too bright
+sch['@field']    = { fg = plt.smoke }
+sch['@property'] = { fg = plt.smoke }
 
 -- HTML
 sch.htmlArg            = { fg = plt.pigeon }
