@@ -1,4 +1,4 @@
-local function config_path(app)
+local function in_config_path(app)
   return string.format('%s/.config/%s',
     os.getenv('XDG_CONFIG_HOME') or os.getenv('HOME') or '', app)
 end
@@ -37,9 +37,15 @@ local function on_new_config(config, root_dir)
         },
       },
     })
-  elseif root_dir:match(config_path('awesome')) then
+  elseif root_dir:match(in_config_path('awesome')) then
     config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
       Lua = {
+        runtime = {
+          path = {
+            '/usr/share/awesome/lib',
+            '/usr/share/awesome/themes',
+          },
+        },
         diagnostics = {
           enable = true,
           globals = {
