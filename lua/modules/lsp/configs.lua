@@ -189,14 +189,14 @@ M['nvim-navic'] = function()
       safe_output = true
   })
 
-  local function get_fpath_proj_relative()
+  local function get_fpath_relative()
     local fname = vim.fn.expand('%:t')
     local icon, iconcolor = require('nvim-web-devicons').get_icon(fname,
         vim.fn.fnamemodify(fname, ':e'), { default = true })
     fname = string.format('%%#%s#%s %%*%s%%*', iconcolor, icon, fname)
     if vim.fn.bufname('%') == '' then return '' end
     local sep = vim.loop.os_uname().sysname == 'Windows' and '\\' or '/'
-    local path_list = vim.split(string.gsub(vim.fn.expand '%:~:.:h', '%%', ''), sep)
+    local path_list = vim.split(vim.fn.expand('%:~:.:h'), sep)
     local fpath = ''
     for _, cur in ipairs(path_list) do
       fpath = (cur == '.' or cur == '~') and '' or
@@ -207,7 +207,7 @@ M['nvim-navic'] = function()
 
   function _G.update_winbar()
     local sym = navic.get_location()
-    local win_val = ' ' .. get_fpath_proj_relative()
+    local win_val = ' ' .. get_fpath_relative()
     if sym ~= nil and sym ~= '' then
       win_val = win_val .. ' %#Orange#► '
           .. sym:gsub('%s+%%%*%%#NavicText#%s+%%%*%%#NavicSeparator#%s+',
@@ -216,7 +216,7 @@ M['nvim-navic'] = function()
     return win_val
   end
 
-  vim.api.nvim_create_autocmd({ 'BufEnter', 'BufLeave', }, {
+  vim.api.nvim_create_autocmd('BufEnter', {
     pattern = '*',
     callback = function()
       local exclude = {
