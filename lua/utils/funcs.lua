@@ -61,10 +61,6 @@ function M.git_dir()
   return vim.trim(gitdir)
 end
 
-function M.is_special_dir(path)
-  return path:match(':///') ~= nil
-end
-
 function M.autocd()
   if vim.bo.buftype ~= '' or
       '' ~= vim.api.nvim_win_get_config(0).relative then
@@ -74,7 +70,7 @@ function M.autocd()
   if not target_dir then
     target_dir = vim.fn.expand('%:p:h')
   end
-  if target_dir and not M.is_special_dir(target_dir) then
+  if target_dir and vim.fn.isdirectory(target_dir) then
     vim.cmd('lcd ' .. target_dir)
   end
 end
