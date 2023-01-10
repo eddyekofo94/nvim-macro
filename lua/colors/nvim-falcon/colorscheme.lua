@@ -31,6 +31,7 @@ sch.ModeMsg      = { fg = plt.smoke } -- 'showmode' message (e.g., '-- INSERT --
 sch.MoreMsg      = { fg = plt.turquoise } -- |more-prompt|
 sch.MsgArea      = { link = 'Normal' } -- Area for messages and cmdline
 sch.MsgSeparator = { link = 'StatusLine' } -- Separator for scrolled messages, `msgsep` flag of 'display'
+sch.MatchParen   = { bold = true }
 sch.NonText      = { fg = plt.iron } -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., '>' displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
 sch.Pmenu        = { fg = sch.smoke } -- Popup menu: Normal item.
 sch.PmenuSbar    = {} -- Popup menu: Scrollbar.
@@ -59,30 +60,30 @@ sch.Winseparator = { link = 'VertSplit' } -- Separator between window splits. In
 
 -- Syntax highlighting
 sch.Comment        = { fg = plt.steel } -- Any comment
-sch.Constant       = { fg = plt.beige, bold = true } -- (*) Any constant
+sch.Constant       = { fg = plt.beige } -- (*) Any constant
 sch.String         = { fg = plt.beige } --   A string constant: 'this is a string'
 sch.Character      = { fg = plt.orange } --   A character constant: 'c', '\n'
-sch.Number         = { fg = plt.smoke } --   A number constant: 234, 0xff
+sch.Number         = { link = 'Constant' } --   A number constant: 234, 0xff
 sch.Boolean        = { link = 'Constant' } --   A boolean     constant: TRUE, false
 sch.Array          = { fg = plt.orange }
 sch.Float          = { link = 'Number' } --   A floating point constant: 2.3e10
 sch.Identifier     = { fg = plt.pigeon } -- (*) Any variable name
 sch.Function       = { fg = plt.yellow } --   Function name (also: methods for classes)
-sch.Statement      = { fg = plt.pigeon } -- (*) Any statement
+sch.Statement      = { fg = plt.smoke } -- (*) Any statement
 sch.Object         = { fg = plt.lavender } -- (*) Any statement
 sch.Conditional    = { fg = plt.magenta } --   if, then, else, endif, switch, etc.
 sch.Repeat         = { fg = plt.cerulean } --   for, do, while, etc.
 sch.Label          = { fg = plt.magenta } --   case, default, etc.
 sch.Operator       = { fg = plt.orange } --   'sizeof', '+', '*', etc.
 sch.Keyword        = { fg = plt.lavender } --   any other keyword
-sch.Exception      = { fg = plt.pigeon } --   try, catch, throw
-sch.PreProc        = { fg = plt.beige, bold = true } -- (*) Generic Preprocessor
+sch.Exception      = { fg = plt.magenta } --   try, catch, throw
+sch.PreProc        = { fg = plt.beige } -- (*) Generic Preprocessor
 sch.PreCondit      = { link = 'PreProc' } --   Preprocessor #if, #else, #endif, etc.
 sch.Include        = { link = 'PreProc' } --   Preprocessor #include
 sch.Define         = { link = 'PreProc' } --   Preprocessor #define
 sch.Macro          = { link = 'PreProc' } --   Same as Define
-sch.Type           = { fg = plt.white } -- (*) int, long, char, etc.
-sch.StorageClass   = { link = 'Type' } --   static, register, volatile, etc.
+sch.Type           = { fg = plt.white, italic = true } -- (*) int, long, char, etc.
+sch.StorageClass   = { link = 'Keyword' } --   static, register, volatile, etc.
 sch.Structure      = { link = 'Type' } --   struct, union, enum, etc.
 sch.Typedef        = { fg = plt.beige } --   A typedef
 sch.Special        = { fg = plt.orange } -- (*) Any special symbol
@@ -127,6 +128,81 @@ sch.DiagnosticSignHint         = { link = 'DiagnosticHint' } -- Used for 'Hint' 
 sch.rainbowcol1  = { fg = plt.smoke }   -- default light is too bright
 sch['@field']    = { fg = plt.smoke }
 sch['@property'] = { fg = plt.smoke }
+
+sch['@annotation'] = { link = 'Operator' }
+sch['@comment'] = { link = 'Comment' }
+sch['@none'] = { bg = 'NONE', fg = 'NONE' }
+sch['@preproc'] = { link = 'PreProc' }
+sch['@define'] = { link = 'Define' }
+sch['@operator'] = { link = 'Operator' }
+sch['@punctuation.delimiter'] = { link= 'Delimiter' }
+sch['@punctuation.bracket'] = { fg = plt.smoke }
+sch['@punctuation.special'] = { link = 'Delimiter' }
+sch['@string'] = { link = 'String' }
+sch['@string.regex'] = { link = 'String' }
+sch['@string.escape'] = { link = 'SpecialChar' }
+sch['@string.special'] = { link = 'SpecialChar' }
+sch['@character'] = { link = 'Character' }
+sch['@character.special'] = { link = 'SpecialChar' }
+sch['@boolean'] = { link = 'Boolean' }
+sch['@number'] = { link = 'Number' }
+sch['@float'] = { link = 'Float' }
+sch['@function'] = { link = 'Function' }
+sch['@function.call'] = { link = 'Function' }
+sch['@function.builtin'] = { link = 'Special' }
+sch['@function.macro'] = { link = 'Macro' }
+sch['@method'] = { link = 'Function' }
+sch['@method.call'] = { link = 'Function' }
+sch['@constructor'] = { link = 'Special' }
+sch['@parameter'] = { link = 'Identifier' }
+sch['@keyword'] = { link = 'Keyword' }
+sch['@keyword.function'] = { link = 'Keyword' }
+sch['@keyword.return'] = { link = 'Keyword' }
+sch['@conditional'] = { link = 'Conditional' }
+sch['@repeat'] = { link = 'Repeat' }
+sch['@debug'] = { link = 'Debug' }
+sch['@label'] = { link = 'Label' }
+sch['@include'] = { link = 'Include' }
+sch['@exception'] = { link = 'Exception' }
+sch['@type'] = { link = 'Type' }
+sch['@type.builtin'] = { link = 'Type' }
+sch['@type.qualifier'] = { link = 'Type' }
+sch['@type.definition'] = { link = 'Typedef' }
+sch['@storageclass'] = { link = 'StorageClass' }
+sch['@attribute'] = { link = 'PreProc' }
+sch['@field'] = { link = 'Identifier' }
+sch['@property'] = { link = 'Identifier' }
+sch['@variable'] = { link = 'Variable' }
+sch['@variable.builtin'] = { link = 'Special' }
+sch['@constant'] = { link = 'Constant' }
+sch['@constant.builtin'] = { link = 'Special' }
+sch['@constant.macro'] = { link = 'Macro' }
+sch['@namespace'] = { fg = plt.ochre }
+sch['@symbol'] = { link = 'Identifier' }
+sch['@text'] = { link = 'String' }
+sch['@text.title'] = { link = 'Title' }
+sch['@text.literal'] = { link = 'String' }
+sch['@text.uri'] = { link = 'Underlined' }
+sch['@text.math'] = { link = 'Special' }
+sch['@text.environment'] = { link = 'Macro' }
+sch['@text.environment.name'] = { link = 'Type' }
+sch['@text.reference'] = { link = 'Constant' }
+sch['@text.todo'] = { link = 'Todo' }
+sch['@text.todo.unchecked'] = { link = 'Todo' }
+sch['@text.todo.checked'] = { link = 'Done' }
+sch['@text.note'] = { link = 'SpecialComment' }
+sch['@text.warning'] = { link = 'WarningMsg' }
+sch['@text.danger'] = { link = 'ErrorMsg' }
+sch['@text.diff.add'] = { link = 'DiffAdded' }
+sch['@text.diff.delete'] = { link = 'DiffRemoved' }
+sch['@tag'] = { link = 'Tag' }
+sch['@tag.attribute'] = { link = 'Identifier' }
+sch['@tag.delimiter'] = { link = 'Delimiter' }
+sch['@text.strong'] = { bold = true }
+sch['@text.strike'] = { strikethrough = true }
+sch['@text.emphasis'] = { fg = plt.black, bg = plt.beige, bold = true, italic = true }
+sch['@text.underline'] = { underline = true }
+sch['@keyword.operator'] = { link = 'Operator' }
 
 -- HTML
 sch.htmlArg            = { fg = plt.pigeon }
@@ -189,7 +265,7 @@ sch.BufferCurrentIndex      = { fg = plt.orange, bold = true }
 sch.BufferCurrentMod        = { fg = plt.orange, bold = true }
 sch.BufferCurrentSign       = { fg = plt.orange }
 sch.BufferInactive          = { fg = plt.pigeon, bg = plt.deepsea }
-sch.BufferInactiveIcon      = { bg = sch.StatusLine.bg }
+sch.BufferInactiveIcon      = { link = 'StatusLine' }
 sch.BufferInactiveIndex     = { fg = plt.pigeon, bg = plt.deepsea }
 sch.BufferInactiveMod       = { fg = plt.wine, bg = plt.deepsea }
 sch.BufferInactiveSign      = { fg = plt.pigeon, bg = plt.deepsea }
@@ -211,7 +287,7 @@ sch.FocusedSymbol = { fg = plt.white, bold = true }
 -- nvim-navic
 sch.NavicIconsFile = { link = 'File' }
 sch.NavicIconsModule = { link = 'CmpItemKindModule' }
-sch.NavicIconsNamespace = { fg = plt.beige }
+sch.NavicIconsNamespace = { fg = plt.ochre }
 sch.NavicIconsPackage = { link = 'CmpItemKindModule' }
 sch.NavicIconsClass = { link = 'CmpItemKindClass' }
 sch.NavicIconsMethod = { link = 'CmpItemKindMethod' }
@@ -254,7 +330,7 @@ sch.AerialInterfaceIcon     = { link = 'CmpItemKindInterface' }
 sch.AerialKeyIcon           = { link = 'CmpItemKindKeyword' }
 sch.AerialMethodIcon        = { link = 'CmpItemKindMethod' }
 sch.AerialModuleIcon        = { link = 'CmpItemKindModule' }
-sch.AerialNamespaceIcon     = { link = 'TSNamespace' }
+sch.AerialNamespaceIcon     = { link = '@namespace' }
 sch.AerialNullIcon          = { link = 'Boolean' }
 sch.AerialNumberIcon        = { link = 'CmpItemKindValue' }
 sch.AerialObjectIcon        = { link = 'Object' }
@@ -278,6 +354,7 @@ sch.Tea        = { fg = plt.tea }
 sch.Flashlight = { fg = plt.flashlight }
 sch.Aqua       = { fg = plt.aqua }
 sch.Cerulean   = { fg = plt.cerulean }
+sch.SkyBlue    = { fg = plt.skyblue }
 sch.Turquoise  = { fg = plt.turquoise }
 sch.Lavender   = { fg = plt.lavender }
 sch.Magenta    = { fg = plt.magenta }
