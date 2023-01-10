@@ -24,6 +24,22 @@ if vim.g.vscode then
   })
 else
   manage_plugins({
+    config = {
+      snapshot_path = vim.fn.stdpath('config') .. '/snapshots',
+      display = {
+        open_fn = function()
+          return require('packer.util').float({ border = 'single' })
+        end,
+        working_sym = '',
+        error_sym = '',
+        done_sym = '',
+        removed_sym = '',
+        moved_sym = 'ﰲ',
+        keybindings = {
+          toggle_info = '<Tab>'
+        },
+      },
+    },
     modules = {
       base = true,
       completion = true,

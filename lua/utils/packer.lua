@@ -13,22 +13,8 @@ local packer_info = {
   },
   config = {
     compile_path = default_root .. '/lua/packer_compiled.lua',
-    snapshot_path = fn.stdpath('config') .. '/snapshots',
     opt_default = false,
     transitive_opt = true,
-    display = {
-      open_fn = function()
-        return require('packer.util').float({ border = 'single' })
-      end,
-      working_sym = '',
-      error_sym = '',
-      done_sym = '',
-      removed_sym = '',
-      moved_sym = 'ﰲ',
-      keybindings = {
-        toggle_info = '<Tab>'
-      },
-    },
   },
 }
 
