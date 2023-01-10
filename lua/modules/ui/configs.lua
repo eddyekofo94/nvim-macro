@@ -149,6 +149,7 @@ M['alpha-nvim'] = function()
 
   math.randomseed(os.time())
   dashboard.section.header.val = headers[math.random(1, #headers)]
+  dashboard.section.header.opts.hl = 'White'
 
   local dashboard_button_opts = {
     { { shortcut = 'e', hl = { { 'Tea', 2, 3 } } }, 'ﱐ  New file', '<cmd>ene<CR>' },
