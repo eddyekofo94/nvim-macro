@@ -136,6 +136,12 @@ local function create_packer_autocmds()
       vim.notify('Packer compiled successfully!', vim.log.levels.INFO)
     end,
   })
+  api.nvim_create_autocmd('User', {
+    pattern = 'PackerComplete',
+    callback = function()
+      require('packer').snapshot('pkg_lockfile.json')
+    end,
+  })
 end
 
 local function manage_plugins(info)

@@ -25,11 +25,9 @@ if vim.g.vscode then
 else
   manage_plugins({
     config = {
-      snapshot_path = vim.fn.stdpath('config') .. '/snapshots',
+      snapshot_path = vim.fn.stdpath('config'),
       display = {
-        open_fn = function()
-          return require('packer.util').float({ border = 'single' })
-        end,
+        open_cmd = 'new \\[packer\\]',
         working_sym = '',
         error_sym = '',
         done_sym = '',
