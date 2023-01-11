@@ -129,6 +129,9 @@ M['vim-floaterm'] = function()
     autocmd User FloatermOpen tnoremap <buffer> <silent> <S-Up> <Cmd>FloatermPrev<CR>
     autocmd User FloatermOpen nnoremap <buffer> <silent> <S-Down> <Cmd>FloatermNext<CR>
     autocmd User FloatermOpen tnoremap <buffer> <silent> <S-Down> <Cmd>FloatermNext<CR>
+
+    " Auto resize floaterm when window is resized
+    autocmd VimResized * if &filetype ==# 'floaterm' | exe 'FloatermHide' | exe 'FloatermShow' | endif
   ]])
 end
 
