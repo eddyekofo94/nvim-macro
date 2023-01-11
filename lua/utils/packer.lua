@@ -9,7 +9,7 @@ local packer_info = {
   root = default_root,
   bootstrap = {
     path = default_root .. '/pack/packer/opt/packer.nvim',
-    url = 'https://github.com/Bekaboo/packer.nvim',
+    url = 'https://github.com/wbthomason/packer.nvim',
   },
   config = {
     compile_path = default_root .. '/lua/packer_compiled.lua',
@@ -38,7 +38,7 @@ end
 
 local function register_plugins()
   -- packer.nvim manages itself
-  packer.use({ 'Bekaboo/packer.nvim', opt = true })
+  packer.use({ 'wbthomason/packer.nvim', opt = true })
   -- manage other plugins
   for module, enabled in pairs(packer_info.modules) do
     local specs = require(string.format('modules.%s', module))
