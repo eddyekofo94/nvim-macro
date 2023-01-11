@@ -24,8 +24,10 @@ local function update_paths()
     packer_info.bootstrap.path = root .. '/pack/packer/opt/packer.nvim'
     packer_info.config.package_root = root .. '/pack'
     packer_info.config.compile_path = root .. '/lua/packer_compiled.lua'
-    vim.cmd(string.format('set rtp-=%s pp-=%s', default_root, default_root))
-    vim.cmd(string.format('set rtp+=%s pp+=%s', root, root))
+    vim.opt.rtp:remove(default_root)
+    vim.opt.pp:remove(default_root)
+    vim.opt.rtp:append(root)
+    vim.opt.pp:append(root)
   end
 end
 
