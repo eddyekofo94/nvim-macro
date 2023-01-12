@@ -19,7 +19,7 @@ return {
   white       = '#E5E5EB',
   beige       = '#DCC7B5',
   pigeon      = '#8F9FBC',
-  steel       = '#666C84',
+  steel       = '#575C70',
   smoke       = '#CACAD0',
   iron        = '#313742',
   deepsea     = '#12244C',
