@@ -71,12 +71,40 @@ M['lualine.nvim'] = function()
     end
   end
 
+  local lualine_theme = require('colors.nvim-falcon.lualine.themes.nvim-falcon')
+  local palette = require('colors.nvim-falcon.palette')
+
+  local function lsp_info()
+    local lsp_names = vim.tbl_map(function(client_info)
+      return client_info.name
+    end, vim.lsp.get_active_clients({
+      bufnr = vim.api.nvim_get_current_buf()
+    }))
+
+    if #lsp_names == 0 then
+      return ''
+    else
+      vim.api.nvim_set_hl(0, 'LSPServerIcon',
+        { fg = palette.lavender, bg = lualine_theme.normal.c.bg })
+      return '%#LSPServerIcon# %*LSP: ' .. table.concat(lsp_names, ', ')
+    end
+  end
+
+  vim.api.nvim_set_hl(0, 'TuxIcon',
+    { fg = palette.yellow,
+      bg = lualine_theme.normal.c.bg })
+  vim.api.nvim_set_hl(0, 'WindowsIcon',
+    { fg = palette.skyblue,
+      bg = lualine_theme.normal.c.bg })
+  vim.api.nvim_set_hl(0, 'OSXIcon',
+    { fg = palette.ochre,
+      bg = lualine_theme.normal.c.bg })
   require('lualine').setup({
     options = {
       component_separators = { left = '', right = '' },
       section_separators = { left = '', right = '' },
       globalstatus = true and vim.o.laststatus == 3,
-      theme = require('colors.nvim-falcon.lualine.themes.nvim-falcon')
+      theme = lualine_theme
     },
     extensions = { 'aerial' },
     sections = {
@@ -85,7 +113,6 @@ M['lualine.nvim'] = function()
       lualine_c = {
         {
           'filename',
-          path = 3,
           symbols = {
             modified = '[+]',
             readonly = '[-]',
@@ -99,12 +126,13 @@ M['lualine.nvim'] = function()
         {
           'fileformat',
           symbols = {
-            unix = ' Unix',
-            dos = ' DOS',
-            mac = ' Mac'
+            unix = '%#TuxIcon# %*Unix',
+            dos = '%#WindowsIcon# %*DOS',
+            mac = '%#OSXIcon# %*Mac'
           }
         },
         'filetype',
+        lsp_info,
       },
       lualine_y = { location },
       lualine_z = { 'progress' },
