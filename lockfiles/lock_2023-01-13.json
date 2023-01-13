@@ -29,6 +29,7 @@
   "nvim-ts-context-commentstring": { "commit": "4a42b30" },
   "nvim-ts-rainbow": { "commit": "aa83e49" },
   "nvim-web-devicons": { "commit": "6c38926" },
+  "packer.nvim": { "commit": "f436f0c" },
   "plenary.nvim": { "commit": "1c7e3e6" },
   "rnvimr": { "commit": "64579c4" },
   "telescope-fzf-native.nvim": { "commit": "fab3e22" },
