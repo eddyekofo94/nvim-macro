@@ -12,22 +12,16 @@ if vim.g.vscode then
     -- false: don't load any plugins in the module
     -- nil: remove all plugins in the module
     modules = {
-      base = true,          -- base plugins that provide services to other plugins, loaded only when required
-      completion = nil,     -- plugins provide completion and snippets,
-      lsp = nil,            -- lsp plugins,
-      markup = nil,         -- plugins for markdown and tex,
-      misc = true,          -- miscellaneous plugins for enhanced editing
-      tools = nil,          -- git integration, navigation, terminal, undo, etc.
-      treesitter = true,    -- treesitter support
-      ui = nil,             -- pretty ui,
+      'base',
+      'misc',
+      'treesitter',
     },
   })
 else
   manage_plugins({
     config = {
-      snapshot_path = vim.fn.stdpath('config'),
       display = {
-        open_cmd = 'new \\[packer\\]',
+        open_cmd = '20new \\[packer\\]',
         working_sym = '',
         error_sym = '',
         done_sym = '',
@@ -39,14 +33,14 @@ else
       },
     },
     modules = {
-      base = true,
-      completion = true,
-      lsp = true,
-      markup = true,
-      misc = true,
-      tools = true,
-      treesitter = true,
-      ui = true,
+      'base',
+      'completion',
+      'lsp',
+      'markup',
+      'misc',
+      'tools',
+      'treesitter',
+      'ui',
     }
   })
 end

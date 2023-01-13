@@ -9,9 +9,17 @@ local packer_info = {
   root = default_root,
   bootstrap = {
     path = default_root .. '/pack/packer/opt/packer.nvim',
-    url = 'https://github.com/wbthomason/packer.nvim',
+    url = 'https://github.com/Bekaboo/packer.nvim',
   },
   config = {
+    snapshot = {
+      auto = true,
+      name = function()
+        return string.format('lock_%s.json', os.date('%Y-%m-%d'))
+      end,
+      path = fn.stdpath('config') .. '/lockfiles/',
+      silent_overwrite = true,
+    },
     compile_path = default_root .. '/lua/packer_compiled.lua',
     opt_default = false,
     transitive_opt = true,
@@ -31,21 +39,14 @@ local function update_paths()
   end
 end
 
-local function make_enable(spec, enable)
-  if enable == true then
-    return spec
-  end
-  return { spec[1], enable = false, opt = true }
-end
-
 local function register_plugins()
   -- packer.nvim manages itself
-  packer.use({ 'wbthomason/packer.nvim', opt = true })
+  packer.use({ 'Bekaboo/packer.nvim', opt = true })
   -- manage other plugins
-  for module, enabled in pairs(packer_info.modules) do
+  for _, module in ipairs(packer_info.modules) do
     local specs = require(string.format('modules.%s', module))
     for _, spec in pairs(specs) do
-      packer.use(make_enable(spec, enabled))
+      packer.use(spec)
     end
   end
 end
@@ -113,7 +114,7 @@ local function create_packer_usercmds()
     Install = { opts = { nargs = '*', complete = function(...) load_packer() return require('packer').plugin_complete(...) end }, func = function(tbl) require('packer').install(nilify(tbl.fargs)) end, },
     Load = { opts = { nargs = '+', bang = true, complete = function(...) load_packer() return require('packer').loader_complete(...) end }, func = function(tbl) require('packer').loader(tbl.args) end },
     Profile = { opts = { nargs = 0 }, func = function(_) require('packer').profile_output() end },
-    Snapshot = { opts = { nargs = '+', complete = function(...) load_packer() return require('packer.snapshot').completion.create(...) end }, func = function(tbl) require('packer').snapshot(tbl.args) end },
+    Snapshot = { opts = { nargs = '*', complete = function(...) load_packer() return require('packer.snapshot').completion.create(...) end }, func = function(tbl) require('packer').snapshot(tbl.args) end },
     SnapshotDelete = { opts = { nargs = '+', complete = function(...) load_packer() return require('packer.snapshot').completion.snapshot(...) end }, func = function(tbl) require('packer.snapshot').delete(tbl.args) end },
     SnapshotRollback = { opts = { nargs = '+', complete = function(...) load_packer() return require('packer.snapshot').completion.rollback(...) end }, func = function(tbl) require('packer').rollback(tbl.args) end },
     Status = { opts = { nargs = 0 }, func = function(_) require('packer').status() end },
@@ -131,28 +132,12 @@ local function create_packer_usercmds()
   end
 end
 
-local function create_packer_autocmds()
-  api.nvim_create_autocmd('User', {
-    pattern = 'PackerCompileDone',
-    callback = function()
-      vim.notify('Packer compiled successfully!', vim.log.levels.INFO)
-    end,
-  })
-  api.nvim_create_autocmd('User', {
-    pattern = 'PackerComplete',
-    callback = function()
-      require('packer').snapshot('pkg_lockfile.json')
-    end,
-  })
-end
-
 local function manage_plugins(info)
   packer_info = vim.tbl_deep_extend('force', packer_info, info)
   update_paths()
   if not bootstrap() then
     load_packer_compiled()
     create_packer_usercmds()
-    create_packer_autocmds()
   end
 end
 
