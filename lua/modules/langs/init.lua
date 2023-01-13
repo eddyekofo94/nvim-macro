@@ -21,7 +21,7 @@ M['mason.nvim'] = {
   config = configs['mason.nvim'],
 }
 
-M['mason-lspconfig'] = {
+M['mason-lspconfig.nvim'] = {
   'williamboman/mason-lspconfig.nvim',
   requires = { 'mason.nvim', 'nvim-lspconfig', },
   ft = ft_list,
