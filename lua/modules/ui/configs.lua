@@ -110,6 +110,14 @@ M['lualine.nvim'] = function()
     end
   end
 
+  local function reg_recording()
+    local reg = vim.fn.reg_recording()
+    if vim.fn.empty(reg) == 0 then
+      return 'recording @' .. reg
+    end
+    return ''
+  end
+
   vim.api.nvim_set_hl(0, 'TuxIcon',
     { fg = palette.yellow,
       bg = lualine_theme.normal.c.bg })
@@ -128,7 +136,7 @@ M['lualine.nvim'] = function()
     },
     extensions = { 'aerial' },
     sections = {
-      lualine_a = { 'mode' },
+      lualine_a = { 'mode', reg_recording },
       lualine_b = { 'branch', 'diff', 'diagnostics' },
       lualine_c = {
         {
