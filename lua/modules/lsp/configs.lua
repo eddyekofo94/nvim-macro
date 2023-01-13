@@ -98,14 +98,14 @@ M['nvim-lspconfig'] = function()
     if cmp_nvim_lsp_ok then
       capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
     end
-  for _, server_name in pairs(ensure_installed) do
-    require('lspconfig')[server_name].setup({
-      on_attach = on_attach,
-      capabilities = capabilities,
-      on_new_config = get_override_config(server_name),
-    })
+    for _, server_name in pairs(ensure_installed) do
+      require('lspconfig')[server_name].setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+        on_new_config = get_override_config(server_name),
+      })
+    end
   end
-end
 
   lspconfig_setui()
   lsp_setup()
@@ -181,18 +181,18 @@ end
 M['nvim-navic'] = function()
   local navic = require('nvim-navic')
   navic.setup({
-      icons = require('utils.static').icons,
-      highlight = true,
-      separator = ' ► ',
-      depth_limit = 0,
-      depth_limit_indicator = '…',
-      safe_output = true
+    icons = require('utils.static').icons,
+    highlight = true,
+    separator = ' ► ',
+    depth_limit = 0,
+    depth_limit_indicator = '…',
+    safe_output = true
   })
 
   local function get_fpath_relative()
     local fname = vim.fn.expand('%:t')
     local icon, iconcolor = require('nvim-web-devicons').get_icon(fname,
-        vim.fn.fnamemodify(fname, ':e'), { default = true })
+      vim.fn.fnamemodify(fname, ':e'), { default = true })
     fname = string.format('%%#%s#%s %%*%s%%*', iconcolor, icon, fname)
     if vim.fn.bufname('%') == '' then return '' end
     local sep = vim.loop.os_uname().sysname == 'Windows' and '\\' or '/'
@@ -200,7 +200,7 @@ M['nvim-navic'] = function()
     local fpath = ''
     for _, cur in ipairs(path_list) do
       fpath = (cur == '.' or cur == '~') and '' or
-                  fpath .. cur .. ' %#Tea#►%* ' .. '%*'
+          fpath .. cur .. ' %#Tea#►%* ' .. '%*'
     end
     return fpath .. fname
   end
@@ -211,7 +211,7 @@ M['nvim-navic'] = function()
     if sym ~= nil and sym ~= '' then
       win_val = win_val .. ' %#Orange#► '
           .. sym:gsub('%s+%%%*%%#NavicText#%s+%%%*%%#NavicSeparator#%s+',
-                      '%%%*%%#NavicText#%%%*%%#NavicSeparator# ')
+                      '%%%*%%#NavicText#%%%*%%#NavicSeparator# ') .. ' '
     end
     return win_val
   end
