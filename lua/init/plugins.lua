@@ -35,7 +35,7 @@ else
     modules = {
       'base',
       'completion',
-      'lsp',
+      'langs',
       'markup',
       'misc',
       'tools',

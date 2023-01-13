@@ -1,5 +1,5 @@
 local M = {}
-local configs = require('modules.lsp.configs')
+local configs = require('modules.langs.configs')
 local ft_list = require('utils.static').langs:list('ft')
 
 M['nvim-lspconfig'] = {
