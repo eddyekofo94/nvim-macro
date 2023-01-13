@@ -341,6 +341,9 @@ sch.AerialStringIcon        = { link = 'CmpItemKindText' }
 sch.AerialStructIcon        = { link = 'CmpItemKindStruct' }
 sch.AerialTypeParameterIcon = { link = 'CmpItemKind' }
 sch.AerialVariableIcon      = { link = 'CmpItemKindVariable' }
+-- fidget
+sch.FidgetTitle             = { link = 'Title' }
+sch.FidgetTask              = { link = 'Comment' }
 
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }

@@ -43,4 +43,10 @@ M['nvim-navic'] = {
   config = configs['nvim-navic'],
 }
 
+M['fidget.nvim'] = {
+  'j-hui/fidget.nvim',
+  after = 'nvim-lspconfig',
+  config = configs['fidget.nvim'],
+}
+
 return M
