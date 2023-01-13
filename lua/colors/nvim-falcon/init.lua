@@ -11,7 +11,7 @@ function M.apply()
   end
   -- set terminal colors
   require('colors.nvim-falcon.terminal')
-  vim.g.colors_name = 'nvim_falcon'
+  vim.g.colors_name = 'nvim-falcon'
 end
 
 return M

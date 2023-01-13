@@ -23,7 +23,7 @@ return {
   smoke       = '#CACAD0',
   iron        = '#313742',
   deepsea     = '#12244C',
-  ocean       = '#0B132B',
+  ocean       = '#0F1A3B',
   space       = '#070D1F',
   black       = '#000004',
 }
