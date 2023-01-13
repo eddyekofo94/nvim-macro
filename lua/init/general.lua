@@ -23,6 +23,7 @@ opt.updatetime = 10       -- (ms)
 opt.swapfile = false
 opt.guifont = 'FiraCode Nerd Font:h12'
 opt.splitright = true
+opt.splitkeep = 'screen'
 
 -- Cursor shape
 opt.gcr = 'n-v:block,i-c-ci-ve:blinkoff500-blinkon500-block,r-cr-o:hor20'
