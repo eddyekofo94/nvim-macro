@@ -30,7 +30,7 @@ M['mason-lspconfig'] = {
 
 M['aerial.nvim'] = {
   'stevearc/aerial.nvim',
-  ft = { unpack(ft_list), 'markdown' },
+  ft = 'markdown',
   requires = 'nvim-lspconfig',
   after = 'nvim-lspconfig',
   config = configs['aerial.nvim'],
