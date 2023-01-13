@@ -24,6 +24,7 @@ opt.swapfile = false
 opt.guifont = 'FiraCode Nerd Font:h12'
 opt.splitright = true
 opt.splitkeep = 'screen'
+opt.cmdheight = 0
 
 -- Cursor shape
 opt.gcr = 'n-v:block,i-c-ci-ve:blinkoff500-blinkon500-block,r-cr-o:hor20'

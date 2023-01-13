@@ -71,6 +71,23 @@ M['lualine.nvim'] = function()
     end
   end
 
+  local function searchcount()
+    local info = vim.fn.searchcount({ maxcount = 999 })
+    if not vim.o.hlsearch then
+      return ''
+    end
+    if info.incomplete == 1 then  -- timed out
+      return '[?/??]'
+    end
+    if info.current > info.maxcount then
+      info.current = '>' .. info.maxcount
+    end
+    if info.total > info.maxcount then
+      info.total = '>' .. info.maxcount
+    end
+    return string.format('[%s/%s]', info.current, info.total)
+  end
+
   local lualine_theme = require('colors.nvim-falcon.lualine.themes.nvim-falcon')
   local palette = require('colors.nvim-falcon.palette')
 
@@ -134,7 +151,7 @@ M['lualine.nvim'] = function()
         'filetype',
         lsp_info,
       },
-      lualine_y = { location },
+      lualine_y = { searchcount, location },
       lualine_z = { 'progress' },
     },
   })
