@@ -79,6 +79,9 @@ M['lualine.nvim'] = function()
     if info.incomplete == 1 then  -- timed out
       return '[?/??]'
     end
+    if info.total == 0 then
+      return ''
+    end
     if info.current > info.maxcount then
       info.current = '>' .. info.maxcount
     end
