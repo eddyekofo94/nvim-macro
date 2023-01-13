@@ -3,11 +3,18 @@ local M = {}
 local langs_mt = {}
 langs_mt.__index = langs_mt
 function langs_mt:list(field)
-  local list = {}
-  for _, val in pairs(self) do
-    table.insert(list, val[field])
+  local deduplist = {}
+  local result = {}
+  -- deduplication
+  for _, info in pairs(self) do
+    if type(info[field]) == 'string' then
+      deduplist[info[field]] = true
+    end
   end
-  return list
+  for name, _ in pairs(deduplist) do
+    table.insert(result, name)
+  end
+  return result
 end
 
 M.langs = setmetatable({
