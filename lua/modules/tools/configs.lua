@@ -40,8 +40,7 @@ M['telescope.nvim'] = function()
           ['<M-s>'] = telescope_actions.select_horizontal,
           ['<M-v>'] = telescope_actions.select_vertical,
           ['<M-t>'] = telescope_actions.select_tab,
-          ['<M-q>'] = telescope_actions.send_to_qflist + telescope_actions.open_qflist,
-          ['<M-Q>'] = telescope_actions.send_selected_to_qflist + telescope_actions.open_qflist,
+          ['<M-Q>'] = telescope_actions.send_to_qflist + telescope_actions.open_qflist,
         },
 
         n = {
@@ -51,8 +50,7 @@ M['telescope.nvim'] = function()
           ['<M-s>'] = telescope_actions.select_horizontal,
           ['<M-v>'] = telescope_actions.select_vertical,
           ['<M-t>'] = telescope_actions.select_tab,
-          ['<M-q>'] = telescope_actions.send_to_qflist + telescope_actions.open_qflist,
-          ['<M-Q>'] = telescope_actions.send_selected_to_qflist + telescope_actions.open_qflist,
+          ['<M-Q>'] = telescope_actions.send_to_qflist + telescope_actions.open_qflist,
           ['<C-n>'] = telescope_actions.move_selection_next,
           ['<C-p>'] = telescope_actions.move_selection_previous,
         },
