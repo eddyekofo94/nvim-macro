@@ -82,7 +82,7 @@ M['nvim-lspconfig'] = function()
 
   local function get_override_config(name)
     local status, override_config
-      = pcall(require, 'modules.langs.lsp-server-configs.' .. name)
+      = pcall(require, 'modules.lsp.lsp-server-configs.' .. name)
     if not status then
       return nil
     else
