@@ -36,7 +36,12 @@ M['undotree'] = {
 
 M['vim-floaterm'] = {
   'voldikss/vim-floaterm',
-  keys = { '<C-\\>', '<M-i>' },
+  keys = {
+    { 'n', '<C-\\>' },
+    { 't', '<C-\\>' },
+    { 'n', '<M-i>' },
+    { 't', '<M-i>' },
+  },
   cmd = { 'FloatermNew', 'FloatermToggle', 'ToggleTool' },
   config = configs['vim-floaterm'],
 }
