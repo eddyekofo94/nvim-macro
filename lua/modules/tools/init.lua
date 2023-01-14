@@ -60,10 +60,7 @@ M['rnvimr'] = {
 
 M['tmux.nvim'] = {
   'aserowy/tmux.nvim',
-  keys = {
-    '<M-h>', '<M-j>', '<M-k>', '<M-l>',
-    '<M-C-h>', '<M-C-j>', '<M-C-k>', '<M-C-l>',
-  },
+  keys = { '<M-h>', '<M-j>', '<M-k>', '<M-l>' },
   config = configs['tmux.nvim'],
 }
 
