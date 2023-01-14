@@ -106,7 +106,7 @@ M['lualine.nvim'] = function()
     else
       vim.api.nvim_set_hl(0, 'LSPServerIcon',
         { fg = palette.lavender, bg = lualine_theme.normal.c.bg })
-      return '%#LSPServerIcon# %*LSP: ' .. table.concat(lsp_names, ', ')
+      return '%#LSPServerIcon# %*' .. table.concat(lsp_names, ', ')
     end
   end
 
