@@ -63,11 +63,11 @@ M['lualine.nvim'] = function()
     end
 
     if vim.bo.expandtab then
-      return 'Spaces: ' .. sts
+      return '• ' .. sts
     elseif vim.bo.ts == sts then
-      return 'Tabs: ' .. vim.bo.tabstop
+      return '⟼ ' .. vim.bo.tabstop
     else
-      return 'Tabs: ' .. vim.bo.tabstop .. '/' .. sts
+      return '⟼ ' .. vim.bo.tabstop .. ' • ' .. sts
     end
   end
 
@@ -106,7 +106,7 @@ M['lualine.nvim'] = function()
     else
       vim.api.nvim_set_hl(0, 'LSPServerIcon',
         { fg = palette.lavender, bg = lualine_theme.normal.c.bg })
-      return '%#LSPServerIcon# %*' .. table.concat(lsp_names, ', ')
+      return '%#LSPServerIcon# %*' .. table.concat(lsp_names, ', ')
     end
   end
 
@@ -118,15 +118,15 @@ M['lualine.nvim'] = function()
     return ''
   end
 
-  vim.api.nvim_set_hl(0, 'TuxIcon',
-    { fg = palette.yellow,
-      bg = lualine_theme.normal.c.bg })
-  vim.api.nvim_set_hl(0, 'WindowsIcon',
-    { fg = palette.skyblue,
-      bg = lualine_theme.normal.c.bg })
-  vim.api.nvim_set_hl(0, 'OSXIcon',
-    { fg = palette.ochre,
-      bg = lualine_theme.normal.c.bg })
+  local function longer_than(len)
+    return function()
+      return vim.o.columns > len
+    end
+  end
+
+  vim.api.nvim_set_hl(0, 'TuxIcon', { fg = palette.earth, bg = lualine_theme.normal.c.bg })
+  vim.api.nvim_set_hl(0, 'WindowsIcon', { fg = palette.skyblue, bg = lualine_theme.normal.c.bg })
+  vim.api.nvim_set_hl(0, 'MacIcon', { fg = palette.ochre, bg = lualine_theme.normal.c.bg })
   require('lualine').setup({
     options = {
       component_separators = { left = '', right = '' },
@@ -136,9 +136,25 @@ M['lualine.nvim'] = function()
     },
     extensions = { 'aerial' },
     sections = {
-      lualine_a = { 'mode', reg_recording },
-      lualine_b = { 'branch', 'diff', 'diagnostics' },
+      lualine_a = {
+        'mode',
+        {
+          reg_recording,
+          padding = { left = 0, right = 1 },
+          color = { fg = palette.orange, gui = 'bold' },
+        },
+      },
+      lualine_b = {
+        { 'branch', cond = longer_than(75) },
+        { 'diff', cond = longer_than(50) },
+        { 'diagnostics', cond = longer_than(50) },
+      },
       lualine_c = {
+        {
+          'filetype',
+          icon_only = true,
+          padding = { left = 1, right = 0 },
+        },
         {
           'filename',
           symbols = {
@@ -149,20 +165,23 @@ M['lualine.nvim'] = function()
         },
       },
       lualine_x = {
-        indent_style,
-        'encoding',
+        { indent_style, cond = longer_than(60) },
+        { 'encoding', cond = longer_than(85) },
         {
           'fileformat',
           symbols = {
             unix = '%#TuxIcon# %*Unix',
             dos = '%#WindowsIcon# %*DOS',
-            mac = '%#OSXIcon# %*Mac'
-          }
+            mac = '%#MacIcon# %*Mac',
+          },
+          cond = longer_than(80),
         },
-        'filetype',
-        lsp_info,
+        { lsp_info, cond = longer_than(105) },
       },
-      lualine_y = { searchcount, location },
+      lualine_y = {
+        { searchcount, padding = { left = 1, right =0 } },
+        location
+      },
       lualine_z = { 'progress' },
     },
   })
