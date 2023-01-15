@@ -2,7 +2,6 @@ local M = {}
 
 M['barbar.nvim'] = function()
   require('bufferline').setup({
-    animation = false,
     auto_hide = true,
     tabpages = true,
     closable = true,
@@ -317,8 +316,6 @@ M['nvim-navic'] = function()
     icons = require('utils.static').icons,
     highlight = true,
     separator = ' ► ',
-    depth_limit = 0,
-    depth_limit_indicator = '…',
     safe_output = true
   })
 
