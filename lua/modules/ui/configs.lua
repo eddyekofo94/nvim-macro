@@ -373,4 +373,28 @@ M['nvim-navic'] = function()
   })
 end
 
+M['indent-blankline.nvim'] = function()
+  vim.o.list = false
+  require('indent_blankline').setup({
+    show_current_context = false,
+    show_trailing_blankline_indent = false,
+    indent_blankline_use_treesitter = false,
+  })
+end
+
+M['mini.indentscope'] = function()
+  vim.api.nvim_create_autocmd('BufEnter', {
+    pattern = '*',
+    callback = function()
+      if vim.bo.bt ~= '' then
+        vim.b.miniindentscope_disable = true
+      end
+    end,
+  })
+  require('mini.indentscope').setup({
+    symbol = '│',
+    draw = { delay = 0 }
+  })
+end
+
 return M

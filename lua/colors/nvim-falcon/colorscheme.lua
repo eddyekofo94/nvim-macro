@@ -347,6 +347,8 @@ sch.AerialVariableIcon      = { link = 'CmpItemKindVariable' }
 -- fidget
 sch.FidgetTitle             = { link = 'Title' }
 sch.FidgetTask              = { link = 'Comment' }
+-- mini.indentscope
+sch.MiniIndentscopeSymbol   = { fg = plt.skyblue }
 
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }
