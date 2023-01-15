@@ -6,7 +6,7 @@ return {
   ochre       = '#E84E31',
   wine        = '#B31F1F',
   pink        = '#F0989A',
-  tea         = '#C1E587',
+  tea         = '#A8CA71',
   aqua        = '#6EC4CC',
   turquoise   = '#55ABB3',
   flashlight  = '#B9DEFF',

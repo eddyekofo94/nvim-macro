@@ -146,7 +146,15 @@ M['lualine.nvim'] = function()
       },
       lualine_b = {
         { 'branch', cond = longer_than(75) },
-        { 'diff', cond = longer_than(50) },
+        {
+          'diff',
+          cond = longer_than(50),
+          diff_color = {
+            added = { fg = palette.tea },
+            modified = { fg = palette.aqua },
+            removed = { fg = palette.ochre },
+          },
+        },
         { 'diagnostics', cond = longer_than(50) },
       },
       lualine_c = {
