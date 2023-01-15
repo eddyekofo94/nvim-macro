@@ -123,6 +123,12 @@ M['lualine.nvim'] = function()
     end
   end
 
+  local function shorter_than(len)
+    return function()
+      return vim.o.columns <= len
+    end
+  end
+
   vim.api.nvim_set_hl(0, 'TuxIcon', { fg = palette.earth, bg = lualine_theme.normal.c.bg })
   vim.api.nvim_set_hl(0, 'WindowsIcon', { fg = palette.skyblue, bg = lualine_theme.normal.c.bg })
   vim.api.nvim_set_hl(0, 'MacIcon', { fg = palette.ochre, bg = lualine_theme.normal.c.bg })
@@ -164,11 +170,22 @@ M['lualine.nvim'] = function()
         },
         {
           'filename',
+          path = 1,
           symbols = {
             modified = '[+]',
             readonly = '[-]',
             unnamed = '',
           },
+          cond = longer_than(115),
+        },
+        {
+          'filename',
+          symbols = {
+            modified = '[+]',
+            readonly = '[-]',
+            unnamed = '',
+          },
+          cond = shorter_than(115),
         },
       },
       lualine_x = {
