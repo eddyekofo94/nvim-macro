@@ -161,7 +161,7 @@ sch['@keyword.return'] = { link = 'Keyword' }
 sch['@conditional'] = { link = 'Conditional' }
 sch['@repeat'] = { link = 'Repeat' }
 sch['@debug'] = { link = 'Debug' }
-sch['@label'] = { link = 'Label' }
+sch['@label'] = { link = 'Keyword' }
 sch['@include'] = { link = 'Include' }
 sch['@exception'] = { link = 'Exception' }
 sch['@type'] = { link = 'Type' }
@@ -221,6 +221,9 @@ sch.htmlItalic         = { italic = true }
 sch.htmlLink           = { fg = plt.flashlight, underline = true }
 sch.htmlSpecialChar    = { fg = plt.beige }
 sch.htmlTitle          = { fg = plt.pigeon }
+-- Json
+sch.jsonKeyword = { link = 'Keyword' }
+sch.jsonBraces  = { fg = plt.smoke }
 
 -- Plugin highlights
 -- nvim-cmp
