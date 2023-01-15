@@ -40,10 +40,16 @@ end
 -- Source: https://github.com/wookayin/dotfiles/commit/96d935515486f44ec361db3df8ab9ebb41ea7e40
 function M.close_all_floatings(key)
   local count = 0
+  local current_win = vim.api.nvim_get_current_win()
+  -- close current win only if it's a floating window
+  if vim.api.nvim_win_get_config(current_win).relative ~= '' then
+    vim.api.nvim_win_close(current_win, true)
+    return
+  end
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     local config = vim.api.nvim_win_get_config(win)
-    -- close floating windows with border (to exclude fidget windows)
-    if config.relative ~= '' and config.border then
+    -- close floating windows that can be focused
+    if config.relative ~= '' and config.focusable then
       vim.api.nvim_win_close(win, false) -- do not force
       count = count + 1
     end
