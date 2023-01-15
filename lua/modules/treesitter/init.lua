@@ -27,4 +27,12 @@ M['nvim-ts-context-commentstring'] = {
   after = 'nvim-treesitter',
 }
 
+M['ts-node-action'] = {
+  'CKolkey/ts-node-action',
+  ft = ft_list,
+  requires = 'nvim-treesitter',
+  after = 'nvim-treesitter',
+  config = configs['ts-node-action'],
+}
+
 return M
