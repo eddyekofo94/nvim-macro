@@ -36,13 +36,6 @@ M['aerial.nvim'] = {
   config = configs['aerial.nvim'],
 }
 
-M['nvim-navic'] = {
-  'SmiteshP/nvim-navic',
-  requires = { 'nvim-lspconfig', 'nvim-web-devicons' },
-  after = 'nvim-lspconfig',
-  config = configs['nvim-navic'],
-}
-
 M['fidget.nvim'] = {
   'j-hui/fidget.nvim',
   after = 'nvim-lspconfig',

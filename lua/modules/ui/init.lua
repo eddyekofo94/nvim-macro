@@ -48,4 +48,12 @@ M['alpha-nvim'] = {
   config = configs['alpha-nvim'],
 }
 
+M['nvim-navic'] = {
+  'SmiteshP/nvim-navic',
+  requires = 'nvim-web-devicons',
+  module = 'nvim-navic',
+  event = 'BufReadPost',
+  config = configs['nvim-navic'],
+}
+
 return M

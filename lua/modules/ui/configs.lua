@@ -303,4 +303,66 @@ M['alpha-nvim'] = function()
   })
 end
 
+M['nvim-navic'] = function()
+  local navic = require('nvim-navic')
+  navic.setup({
+    icons = require('utils.static').icons,
+    highlight = true,
+    separator = ' ► ',
+    depth_limit = 0,
+    depth_limit_indicator = '…',
+    safe_output = true
+  })
+
+  local function get_fpath_relative()
+    local fname = vim.fn.expand('%:t')
+    local icon, iconcolor = require('nvim-web-devicons').get_icon(fname,
+      vim.fn.fnamemodify(fname, ':e'), { default = true })
+    fname = string.format('%%#%s#%s %%*%s%%*', iconcolor, icon, fname)
+    if vim.fn.bufname('%') == '' then return '' end
+    local sep = vim.loop.os_uname().sysname == 'Windows' and '\\' or '/'
+    local path_list = vim.split(vim.fn.expand('%:~:.:h'), sep)
+    local fpath = ''
+    for _, cur in ipairs(path_list) do
+      fpath = (cur == '.' or cur == '~') and '' or
+          fpath .. cur .. ' %#Tea#►%* ' .. '%*'
+    end
+    return fpath .. fname
+  end
+
+  function _G.update_winbar()
+    local sym = navic.get_location()
+    local win_val = ' ' .. get_fpath_relative() .. ' '
+    if sym ~= nil and sym ~= '' then
+      win_val = win_val .. '%#Orange#► '
+          .. sym:gsub('%s+%%%*%%#NavicText#%s+%%%*%%#NavicSeparator#%s+',
+                      '%%%*%%#NavicText#%%%*%%#NavicSeparator# ') .. ' '
+    end
+    return win_val
+  end
+
+  vim.api.nvim_create_autocmd('BufEnter', {
+    pattern = '*',
+    callback = function()
+      local exclude = {
+        ['terminal'] = true,
+        ['prompt'] = true,
+        ['help'] = true,
+        ['checkhealth'] = true,
+        ['aerial'] = true,
+        ['undotree'] = true,
+        ['floaterm'] = true,
+        ['qf'] = true,
+        [''] = true,
+      } -- Ignore float windows and exclude filetype
+      if vim.api.nvim_win_get_config(0).zindex or
+          exclude[vim.bo.filetype] then
+        vim.wo.winbar = nil
+      else
+        vim.wo.winbar = "%{%v:lua.update_winbar()%}"
+      end
+    end,
+  })
+end
+
 return M
