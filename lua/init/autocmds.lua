@@ -54,14 +54,6 @@ local autocmds = {
       end,
     },
   },
-
-  {
-    { 'BufReadPre', 'BufWritePost' },
-    {
-      pattern = '*',
-      command = 'setlocal spell spelllang=en,cjk spellsuggest=best,9 spellcapcheck= spelloptions=camel'
-    },
-  },
 }
 
 set_autocmds(autocmds)
