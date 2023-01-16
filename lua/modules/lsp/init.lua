@@ -8,19 +8,6 @@ M['nvim-lspconfig'] = {
   config = configs['nvim-lspconfig'],
 }
 
-M['mason.nvim'] = {
-  'williamboman/mason.nvim',
-  cmd = {
-    'Mason',
-    'MasonUninstall',
-    'MasonLog',
-    'MasonInstall',
-    'MasonUninstallAll',
-  },
-  module = 'mason',
-  config = configs['mason.nvim'],
-}
-
 M['mason-lspconfig.nvim'] = {
   'williamboman/mason-lspconfig.nvim',
   requires = { 'mason.nvim', 'nvim-lspconfig', },

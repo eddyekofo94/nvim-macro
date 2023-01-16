@@ -114,25 +114,6 @@ M['nvim-lspconfig'] = function()
   lsp_setup()
 end
 
-M['mason.nvim'] = function()
-  require('mason').setup({
-    ui = {
-      border = 'single',
-      icons = {
-        package_installed = '',
-        package_pending = '',
-        package_uninstalled = '',
-      },
-      keymaps = {
-        -- Keymap to expand a package
-        toggle_package_expand = '<Tab>',
-        -- Keymap to uninstall a package
-        uninstall_package = 'x',
-      },
-    },
-  })
-end
-
 M['mason-lspconfig.nvim'] = function()
   require('mason-lspconfig').setup({
     ensure_installed = require('utils.static').langs:list('lsp_server'),

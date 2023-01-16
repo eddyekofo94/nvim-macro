@@ -1,6 +1,19 @@
 local M = {}
 local configs = require('modules/tools/configs')
 
+M['mason.nvim'] = {
+  'williamboman/mason.nvim',
+  cmd = {
+    'Mason',
+    'MasonUninstall',
+    'MasonLog',
+    'MasonInstall',
+    'MasonUninstallAll',
+  },
+  module = 'mason',
+  config = configs['mason.nvim'],
+}
+
 M['telescope.nvim'] = {
   'nvim-telescope/telescope.nvim',
   cmd = 'Telescope',
