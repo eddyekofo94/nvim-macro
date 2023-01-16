@@ -314,6 +314,7 @@ sch.NavicIconsStruct = { link = 'CmpItemKindStruct' }
 sch.NavicIconsEvent = { link = 'CmpItemKindEvent' }
 sch.NavicIconsOperator = { link = 'Operator' }
 sch.NavicIconsTypeParameter = { link = 'CmpItemKind' }
+sch.NavicPath = { fg = plt.smoke, bold = true }
 sch.NavicText = { fg = plt.smoke, italic = true }
 sch.NavicSeparator = { fg = plt.orange }
 -- aerial
