@@ -82,7 +82,7 @@ sch.PreCondit      = { link = 'PreProc' } --   Preprocessor #if, #else, #endif, 
 sch.Include        = { link = 'PreProc' } --   Preprocessor #include
 sch.Define         = { link = 'PreProc' } --   Preprocessor #define
 sch.Macro          = { link = 'PreProc' } --   Same as Define
-sch.Type           = { fg = plt.white, italic = true } -- (*) int, long, char, etc.
+sch.Type           = { fg = plt.smoke, italic = true } -- (*) int, long, char, etc.
 sch.StorageClass   = { link = 'Keyword' } --   static, register, volatile, etc.
 sch.Structure      = { link = 'Type' } --   struct, union, enum, etc.
 sch.Typedef        = { fg = plt.beige } --   A typedef
@@ -106,8 +106,8 @@ sch.LspSignatureActiveParameter = { link = 'IncSearch' } -- Used to highlight th
 -- Diagnostic highlighting
 sch.DiagnosticError            = { fg = plt.wine } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
 sch.DiagnosticWarn             = { fg = plt.earth } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-sch.DiagnosticInfo             = { fg = plt.flashlight } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-sch.DiagnosticHint             = { fg = plt.white } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
+sch.DiagnosticInfo             = { fg = plt.smoke } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
+sch.DiagnosticHint             = { fg = plt.pigeon } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
 sch.DiagnosticVirtualTextError = { link = 'DiagnosticError' } -- Used for 'Error' diagnostic virtual text.
 sch.DiagnosticVirtualTextWarn  = { link = 'DiagnosticWarn' } -- Used for 'Warn' diagnostic virtual text.
 sch.DiagnosticVirtualTextInfo  = { link = 'DiagnosticInfo' } -- Used for 'Info' diagnostic virtual text.

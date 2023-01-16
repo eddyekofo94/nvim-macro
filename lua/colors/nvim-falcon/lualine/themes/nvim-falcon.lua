@@ -2,9 +2,9 @@ local plt = require('colors.nvim-falcon.palette')
 
 local nvim_falcon = {
   inactive = {
-    a = { fg = plt.smoke, bg = plt.iron, gui = 'bold' },
-    b = { fg = plt.smoke, bg = plt.iron },
-    c = { fg = plt.smoke, bg = plt.iron },
+    a = { fg = plt.smoke, bg = plt.ocean, gui = 'bold' },
+    b = { fg = plt.smoke, bg = plt.ocean },
+    c = { fg = plt.smoke, bg = plt.ocean },
   },
   normal = {
     a = { fg = plt.smoke, bg = plt.space, gui = 'bold' },

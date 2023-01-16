@@ -90,10 +90,18 @@ M['lualine.nvim'] = function()
     return string.format('[%s/%s]', info.current, info.total)
   end
 
-  local lualine_theme = require('colors.nvim-falcon.lualine.themes.nvim-falcon')
   local palette = require('colors.nvim-falcon.palette')
 
-  local function lsp_info()
+  local function lsp_icon()
+    if #vim.lsp.get_active_clients({
+      bufnr = vim.api.nvim_get_current_buf()
+    }) > 0 then
+      return ' '
+    end
+    return ''
+  end
+
+  local function lsp_list()
     local lsp_names = vim.tbl_map(function(client_info)
       return client_info.name
     end, vim.lsp.get_active_clients({
@@ -103,9 +111,7 @@ M['lualine.nvim'] = function()
     if #lsp_names == 0 then
       return ''
     else
-      vim.api.nvim_set_hl(0, 'LSPServerIcon',
-        { fg = palette.lavender, bg = lualine_theme.normal.c.bg })
-      return '%#LSPServerIcon# %*' .. table.concat(lsp_names, ', ')
+      return table.concat(lsp_names, ', ')
     end
   end
 
@@ -129,15 +135,12 @@ M['lualine.nvim'] = function()
     end
   end
 
-  vim.api.nvim_set_hl(0, 'TuxIcon', { fg = palette.earth, bg = lualine_theme.normal.c.bg })
-  vim.api.nvim_set_hl(0, 'WindowsIcon', { fg = palette.skyblue, bg = lualine_theme.normal.c.bg })
-  vim.api.nvim_set_hl(0, 'MacIcon', { fg = palette.ochre, bg = lualine_theme.normal.c.bg })
   require('lualine').setup({
     options = {
       component_separators = { left = '', right = '' },
       section_separators = { left = '', right = '' },
-      globalstatus = true and vim.o.laststatus == 3,
-      theme = lualine_theme
+      globalstatus = vim.o.laststatus == 3,
+      theme = require('colors.nvim-falcon.lualine.themes.nvim-falcon'),
     },
     extensions = { 'aerial' },
     sections = {
@@ -151,15 +154,7 @@ M['lualine.nvim'] = function()
       },
       lualine_b = {
         { 'branch', cond = longer_than(75) },
-        {
-          'diff',
-          cond = longer_than(50),
-          diff_color = {
-            added = { fg = palette.tea },
-            modified = { fg = palette.aqua },
-            removed = { fg = palette.ochre },
-          },
-        },
+        { 'diff', cond = longer_than(50) },
         { 'diagnostics', cond = longer_than(50) },
       },
       lualine_c = {
@@ -194,16 +189,28 @@ M['lualine.nvim'] = function()
         {
           'fileformat',
           symbols = {
-            unix = '%#TuxIcon# %*Unix',
-            dos = '%#WindowsIcon# %*DOS',
-            mac = '%#MacIcon# %*Mac',
+            unix = 'Unix',
+            dos = 'DOS',
+            mac = 'Mac',
           },
-          cond = longer_than(80),
+          cond = longer_than(70),
         },
-        { lsp_info, cond = longer_than(105) },
+        {
+          lsp_icon,
+          cond = longer_than(70),
+          color = { fg = palette.lavender }
+        },
+        {
+          lsp_list,
+          cond = longer_than(105),
+          padding = { left = 0, right = 1 }
+        },
       },
       lualine_y = {
-        { searchcount, padding = { left = 1, right =0 } },
+        {
+          searchcount,
+          padding = { left = 1, right =0 }
+        },
         location
       },
       lualine_z = { 'progress' },
@@ -360,7 +367,6 @@ M['nvim-navic'] = function()
           or vim.trim(hl(str, tbl_hl[i]))
       end
     end
-    -- vim.notify('result len: ' .. displen(result), vim.log.levels.DEBUG) -- DEBUG'
     return vim.trim(result or '')
   end
 
