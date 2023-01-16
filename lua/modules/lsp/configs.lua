@@ -170,12 +170,7 @@ M['fidget.nvim'] = function()
         if string.match(vim.api.nvim_get_mode().mode, 'i.?') then return nil end
         return string.format('%s %s', spinner, fidget_name)
       end,
-      task = function(task_name, message, percentage)
-        if string.match(vim.api.nvim_get_mode().mode, 'i.?') then return nil end
-        return string.format('%s%s [%s]', message,
-          percentage and string.format(' (%s%%)', percentage) or '',
-          task_name)
-      end,
+      task = function(_) return nil end,
     },
   })
 end
