@@ -350,6 +350,38 @@ sch.FidgetTitle             = { link = 'Title' }
 sch.FidgetTask              = { link = 'Comment' }
 -- mini.indentscope
 sch.MiniIndentscopeSymbol   = { fg = plt.skyblue }
+-- nvim-dap-ui
+sch.DapUIBreakpointsCurrentLine = { fg = plt.yellow }
+sch.DapUIBreakpointsInfo        = { fg = plt.tea }
+sch.DapUIBreakpointsPath        = { link = 'Directory' }
+sch.DapUICurrentFrameName       = { fg = plt.tea, bold = true }
+sch.DapUIDecoration             = { fg = plt.yellow }
+sch.DapUIFloatBorder            = { link = 'FloatBorder' }
+sch.DapUILineNumber             = { link = 'CursorLineNr' }
+sch.DapUIModifiedValue          = { fg = plt.skyblue, bold = true }
+sch.DapUIPlayPause              = { fg = plt.tea }
+sch.DapUIPlayPauseNC            = { fg = plt.tea }
+sch.DapUIRestart                = { fg = plt.tea }
+sch.DapUIRestartNC              = { fg = plt.tea }
+sch.DapUIScope                  = { fg = plt.orange }
+sch.DapUISource                 = { link = 'Directory' }
+sch.DapUIStepBack               = { fg = plt.lavender }
+sch.DapUIStepBackRC             = { fg = plt.lavender }
+sch.DapUIStepInto               = { fg = plt.lavender }
+sch.DapUIStepIntoRC             = { fg = plt.lavender }
+sch.DapUIStepOut                = { fg = plt.lavender }
+sch.DapUIStepOutRC              = { fg = plt.lavender }
+sch.DapUIStepOver               = { fg = plt.lavender }
+sch.DapUIStepOverRC             = { fg = plt.lavender }
+sch.DapUIStop                   = { fg = plt.scarlet }
+sch.DapUIStopNC                 = { fg = plt.scarlet }
+sch.DapUIStoppedThread          = { fg = plt.tea }
+sch.DapUIThread                 = { fg = plt.aqua }
+sch.DapUIType                   = { fg = plt.steel, italic = true }
+sch.DapUIVariable               = { link = 'Variable' }
+sch.DapUIWatchesEmpty           = { link = 'Comment' }
+sch.DapUIWatchesError           = { link = 'Error' }
+sch.DapUIWatchesValue           = { fg = plt.tea }
 
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }
