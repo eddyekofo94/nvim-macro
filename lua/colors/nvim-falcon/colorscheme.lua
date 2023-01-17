@@ -351,13 +351,13 @@ sch.FidgetTask              = { link = 'Comment' }
 -- mini.indentscope
 sch.MiniIndentscopeSymbol   = { fg = plt.skyblue }
 -- nvim-dap-ui
-sch.DapUIBreakpointsCurrentLine = { fg = plt.yellow }
+sch.DapUIBreakpointsCurrentLine = { link = 'CursorLineNr' }
 sch.DapUIBreakpointsInfo        = { fg = plt.tea }
 sch.DapUIBreakpointsPath        = { link = 'Directory' }
 sch.DapUICurrentFrameName       = { fg = plt.tea, bold = true }
 sch.DapUIDecoration             = { fg = plt.yellow }
 sch.DapUIFloatBorder            = { link = 'FloatBorder' }
-sch.DapUILineNumber             = { link = 'CursorLineNr' }
+sch.DapUILineNumber             = { link = 'LineNr' }
 sch.DapUIModifiedValue          = { fg = plt.skyblue, bold = true }
 sch.DapUIPlayPause              = { fg = plt.tea }
 sch.DapUIPlayPauseNC            = { fg = plt.tea }
