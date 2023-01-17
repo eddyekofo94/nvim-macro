@@ -166,9 +166,11 @@ In order to enable or disable a module, one need to change the table in
 local manage_plugins = require('utils.packer').manage_plugins
 manage_plugins({
   modules = {
-    'base',         -- install all plugins in 'base'
-    'completion',   -- disable all plugins in 'completion' but don't remove
-    'lsp',          -- remove all plugins in 'lsp'
+    -- ...
+    'base',
+    'completion',
+    'lsp',
+    -- ...
   },
 })
 ```
@@ -291,7 +293,7 @@ local manage_plugins = require('utils.packer').manage_plugins
 manage_plugins({
   modules = {
     -- ...
-    bar = true,
+    'bar',
     -- ...
   }
 })
@@ -313,7 +315,7 @@ corresponding plugin keymaps.
 `nvim-falcon` is a builtin custom colorscheme optimized for transparent
 background and is enabled by default.
 
-To disable it, remove the [corresponding lines](https://github.com/Bekaboo/nvim/blob/master/lua/init/general.lua#L77-L79) in [lua/init/general.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/general.lua).
+To disable it, remove the [corresponding lines](https://github.com/Bekaboo/nvim/blob/master/lua/init/general.lua#L78-L80) in [lua/init/general.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/general.lua).
 
 To tweak this colorscheme, see [lua/colors/nvim-falcon](https://github.com/Bekaboo/nvim/tree/master/lua/colors/nvim-falcon).
 
