@@ -30,7 +30,7 @@ M['lualine.nvim'] = {
   'nvim-lualine/lualine.nvim',
   -- load lualine only when a real
   -- file is about to open
-  event = 'BufReadPre',
+  event = { 'BufReadPre', 'BufWrite' },
   requires = 'nvim-web-devicons',
   config = configs['lualine.nvim'],
 }
