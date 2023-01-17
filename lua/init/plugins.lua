@@ -8,9 +8,6 @@ if vim.g.vscode then
         non_interactive = true,
       },
     },
-    -- true: load all plugins in the module
-    -- false: don't load any plugins in the module
-    -- nil: remove all plugins in the module
     modules = {
       'base',
       'misc',
