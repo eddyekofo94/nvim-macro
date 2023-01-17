@@ -166,9 +166,9 @@ In order to enable or disable a module, one need to change the table in
 local manage_plugins = require('utils.packer').manage_plugins
 manage_plugins({
   modules = {
-    base = true,          -- install all plugins in 'base'
-    completion = false,   -- disable all plugins in 'completion' but don't remove
-    lsp = nil,            -- remove all plugins in 'lsp'
+    'base',         -- install all plugins in 'base'
+    'completion',   -- disable all plugins in 'completion' but don't remove
+    'lsp',          -- remove all plugins in 'lsp'
   },
 })
 ```
@@ -354,6 +354,8 @@ it should work.
 
 ### Default Modules and Plugins of Choice
 
+Total # of plugins: 46 (package manager excluded).
+
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
     - [nvim-web-devicons](https://github.com/kyazdani42/nvim-web-devicons)
@@ -369,46 +371,50 @@ it should work.
     - [copilot.lua](https://github.com/zbirenbaum/copilot.lua)
     - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
 - **LSP**
-  - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
-  - [mason.nvim](https://github.com/williamboman/mason.nvim)
-  - [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim)
-  - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
-  - [nvim-navic](https://github.com/SmiteshP/nvim-navic)
+    - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
+    - [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim)
+    - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
+    - [nvim-navic](https://github.com/SmiteshP/nvim-navic)
 - **Markup**
-  - [vimtex](https://github.com/lervag/vimtex)
-  - [vim-markdown](https://github.com/preservim/vim-markdown)
-  - [clipboard-image.nvim](https://github.com/ekickx/clipboard-image.nvim)
-  - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
+    - [vimtex](https://github.com/lervag/vimtex)
+    - [vim-markdown](https://github.com/preservim/vim-markdown)
+    - [clipboard-image.nvim](https://github.com/ekickx/clipboard-image.nvim)
+    - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
 - **Misc**
-  - [nvim-surround](https://github.com/kylechui/nvim-surround)
-  - [Comment.nvim](https://github.com/numToStr/Comment.nvim)
-  - [vim-sleuth](https://github.com/tpope/vim-sleuth)
-  - [nvim-autopairs](https://github.com/windwp/nvim-autopairs)
+    - [nvim-surround](https://github.com/kylechui/nvim-surround)
+    - [Comment.nvim](https://github.com/numToStr/Comment.nvim)
+    - [vim-sleuth](https://github.com/tpope/vim-sleuth)
+    - [nvim-autopairs](https://github.com/windwp/nvim-autopairs)
 - **Tools**
-  - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
-  - [telescope-fzf-native.nvim](https://github.com/nvim-telescope/telescope-fzf-native.nvim)
-  - [undotree](https://github.com/mbbill/undotree)
-  - [vim-floaterm](https://github.com/voldikss/vim-floaterm)
-  - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
-  - [rnvimr](https://github.com/kevinhwang91/rnvimr)
-  - [tmux.nvim](https://github.com/aserowy/tmux.nvim)
+    - [mason.nvim](https://github.com/williamboman/mason.nvim)
+    - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
+    - [telescope-fzf-native.nvim](https://github.com/nvim-telescope/telescope-fzf-native.nvim)
+    - [undotree](https://github.com/mbbill/undotree)
+    - [vim-floaterm](https://github.com/voldikss/vim-floaterm)
+    - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
+    - [rnvimr](https://github.com/kevinhwang91/rnvimr)
+    - [tmux.nvim](https://github.com/aserowy/tmux.nvim)
 - **Treesitter**
-  - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-  - [nvim-ts-rainbow](https://github.com/mrjones2014/nvim-ts-rainbow)
-  - [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)
-  - [nvim-ts-context-commentstring](https://github.com/JoosepAlviste/nvim-ts-context-commentstring)
+    - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+    - [nvim-ts-rainbow](https://github.com/mrjones2014/nvim-ts-rainbow)
+    - [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)
+    - [nvim-ts-context-commentstring](https://github.com/JoosepAlviste/nvim-ts-context-commentstring)
 - **UI**
-  - [barbar.nvim](https://github.com/romgrk/barbar.nvim)
-  - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
-  - [alpha-nvim](https://github.com/goolord/alpha-nvim)
+      - [barbar.nvim](https://github.com/romgrk/barbar.nvim)
+      - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
+      - [alpha-nvim](https://github.com/goolord/alpha-nvim)
+- **DEBUG**
+      - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
+      - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
+      - [mason-nvim-dap.nvim](https://github.com/jayp0521/mason-nvim-dap.nvim)
 
 ### Startuptime Statistics
 
-Last update: 2023-01-10
+Last update: 2023-01-16
 
 Neovim Version: `NVIM v0.9.0-dev-646+gef67503320`
 
-Commit: `ee062fcf` (#505)
+Commit: `db72f37` (#551)
 
 System: Arch Linux 6.1.4
 
@@ -420,90 +426,99 @@ Command: `nvim --startuptime startuptime.log`
   <summary>startuptime log</summary>
 
   ```
-  000.012  000.012: --- NVIM STARTING ---
-  000.115  000.103: event init
-  000.227  000.112: early init
-  000.305  000.078: locale set
-  000.349  000.044: init first window
-  000.676  000.327: inits 1
-  000.707  000.031: window checked
-  000.712  000.005: parsing arguments
-  001.240  000.063  000.063: require('vim.shared')
-  001.349  000.035  000.035: require('vim._meta')
-  001.351  000.107  000.072: require('vim._editor')
-  001.352  000.198  000.028: require('vim._init_packages')
-  001.354  000.444: init lua interpreter
-  001.426  000.072: expanding arguments
-  001.454  000.028: inits 2
-  001.680  000.226: init highlight
-  001.681  000.001: waiting for UI
-  001.798  000.116: done waiting for UI
-  001.803  000.005: clear screen
-  001.894  000.091: init default mappings
-  001.907  000.013: init default autocommands
-  002.254  000.045  000.045: sourcing /usr/share/nvim/runtime/ftplugin.vim
-  002.305  000.024  000.024: sourcing /usr/share/nvim/runtime/indent.vim
-  002.348  000.008  000.008: sourcing /usr/share/nvim/archlinux.vim
-  002.350  000.023  000.015: sourcing /etc/xdg/nvim/sysinit.vim
-  003.668  000.032  000.032: require('colors.nvim-falcon.palette')
-  003.754  000.487  000.455: require('colors.nvim-falcon.colorscheme')
-  003.756  000.527  000.040: require('colors.nvim-falcon')
-  004.556  000.053  000.053: require('colors.nvim-falcon.terminal')
-  004.560  001.343  000.762: sourcing /home/zeng/.config/nvim/colors/nvim-falcon.lua
-  004.564  002.185  000.842: require('init.general')
-  004.745  000.013  000.013: require('vim.keymap')
-  005.490  000.925  000.912: require('init.keymaps')
-  005.593  000.101  000.101: require('init.autocmds')
-  005.837  000.191  000.191: require('utils.packer')
-  007.549  000.468  000.468: require('packer.load')
-  007.936  000.050  000.050: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vim-markdown/ftdetect/markdown.vim
-  007.972  000.015  000.015: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/cls.vim
-  008.003  000.015  000.015: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim
-  008.031  000.012  000.012: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tikz.vim
-  008.037  002.077  001.517: require('packer_compiled')
-  008.072  002.477  000.209: require('init.plugins')
-  008.074  005.708  000.021: sourcing /home/zeng/.config/nvim/init.lua
-  008.078  000.371: sourcing vimrc file(s)
-  008.262  000.010  000.010: sourcing /usr/share/vim/vimfiles/ftdetect/PKGBUILD.vim
-  008.282  000.009  000.009: sourcing /usr/share/vim/vimfiles/ftdetect/SRCINFO.vim
-  008.336  000.223  000.204: sourcing /usr/share/nvim/runtime/filetype.lua
-  008.475  000.066  000.066: sourcing /usr/share/nvim/runtime/syntax/synload.vim
-  008.547  000.177  000.111: sourcing /usr/share/nvim/runtime/syntax/syntax.vim
-  008.759  000.009  000.009: sourcing /home/zeng/.config/nvim/plugin/vscode_neovim.vim
-  008.983  000.011  000.011: sourcing /usr/share/nvim/runtime/plugin/gzip.vim
-  009.001  000.007  000.007: sourcing /usr/share/nvim/runtime/plugin/health.vim
-  009.021  000.009  000.009: sourcing /usr/share/nvim/runtime/plugin/matchit.vim
-  009.143  000.111  000.111: sourcing /usr/share/nvim/runtime/plugin/matchparen.vim
-  009.170  000.013  000.013: sourcing /usr/share/nvim/runtime/plugin/netrwPlugin.vim
-  009.293  000.007  000.007: sourcing /home/zeng/.local/share/nvim/rplugin.vim
-  009.299  000.118  000.111: sourcing /usr/share/nvim/runtime/plugin/rplugin.vim
-  009.353  000.045  000.045: sourcing /usr/share/nvim/runtime/plugin/shada.vim
-  009.389  000.017  000.017: sourcing /usr/share/nvim/runtime/plugin/spellfile.vim
-  009.416  000.014  000.014: sourcing /usr/share/nvim/runtime/plugin/tarPlugin.vim
-  009.439  000.009  000.009: sourcing /usr/share/nvim/runtime/plugin/tohtml.vim
-  009.477  000.019  000.019: sourcing /usr/share/nvim/runtime/plugin/tutor.vim
-  009.506  000.014  000.014: sourcing /usr/share/nvim/runtime/plugin/zipPlugin.vim
-  009.645  000.054  000.054: sourcing /home/zeng/.config/nvim/plugin/auto_hlsearch.lua
-  009.690  000.031  000.031: sourcing /home/zeng/.config/nvim/plugin/tabout.lua
-  010.047  000.041  000.041: sourcing /usr/share/nvim/runtime/plugin/editorconfig.lua
-  010.130  000.070  000.070: sourcing /usr/share/nvim/runtime/plugin/man.lua
-  010.166  000.021  000.021: sourcing /usr/share/nvim/runtime/plugin/nvim.lua
-  010.184  001.095: loading rtp plugins
-  010.304  000.120: loading packages
-  010.658  000.044  000.044: sourcing /home/zeng/.local/share/nvim/site/pack/packer/start/rnvimr/after/plugin/rnvimr.vim
-  010.694  000.346: loading after plugins
-  010.704  000.011: inits 3
-  015.740  005.035: reading ShaDa
-  015.899  000.160: opening buffers
-  016.021  000.110  000.110: require('utils.funcs')
-  016.180  000.115  000.115: sourcing /home/zeng/.local/share/nvim/site/pack/packer/start/rnvimr/autoload/rnvimr.vim
-  016.201  000.077: BufEnter autocommands
-  016.203  000.002: editing files in windows
-  016.226  000.023: VimEnter autocommands
-  016.228  000.002: UIEnter autocommands
-  016.229  000.001: before starting main loop
-  016.358  000.129: first screen update
-  016.360  000.002: --- NVIM STARTED ---
+    times in msec
+     clock   self+sourced   self:  sourced script
+     clock   elapsed:              other lines
+
+    000.007  000.007: --- NVIM STARTING ---
+    000.054  000.047: event init
+    000.102  000.048: early init
+    000.137  000.035: locale set
+    000.167  000.031: init first window
+    000.373  000.205: inits 1
+    000.381  000.009: window checked
+    000.383  000.002: parsing arguments
+    000.741  000.060  000.060: require('vim.shared')
+    000.835  000.032  000.032: require('vim._meta')
+    000.837  000.092  000.060: require('vim._editor')
+    000.838  000.176  000.024: require('vim._init_packages')
+    000.839  000.280: init lua interpreter
+    000.880  000.041: expanding arguments
+    000.904  000.024: inits 2
+    001.109  000.205: init highlight
+    001.110  000.001: waiting for UI
+    001.208  000.098: done waiting for UI
+    001.213  000.005: clear screen
+    001.305  000.092: init default mappings
+    001.316  000.011: init default autocommands
+    001.653  000.061  000.061: sourcing /usr/share/nvim/runtime/ftplugin.vim
+    001.702  000.022  000.022: sourcing /usr/share/nvim/runtime/indent.vim
+    001.741  000.007  000.007: sourcing /usr/share/nvim/archlinux.vim
+    001.744  000.021  000.014: sourcing /etc/xdg/nvim/sysinit.vim
+    003.039  000.032  000.032: require('colors.nvim-falcon.palette')
+    003.146  000.523  000.491: require('colors.nvim-falcon.colorscheme')
+    003.148  000.559  000.036: require('colors.nvim-falcon')
+    003.952  000.073  000.073: require('colors.nvim-falcon.terminal')
+    003.956  001.377  000.746: sourcing /home/zeng/.config/nvim/colors/nvim-falcon.lua
+    003.960  002.190  000.813: require('init.general')
+    004.077  000.005  000.005: require('vim.keymap')
+    004.879  000.918  000.913: require('init.keymaps')
+    004.954  000.072  000.072: require('init.autocmds')
+    005.194  000.202  000.202: require('utils.packer')
+    006.651  000.398  000.398: require('packer.load')
+    007.549  000.006  000.006: require('vim.F')
+    007.559  000.696  000.690: require('alpha')
+    007.691  000.131  000.131: require('alpha.themes.dashboard')
+    008.047  000.354  000.354: require('utils.static')
+    008.710  000.044  000.044: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vim-markdown/ftdetect/markdown.vim
+    008.743  000.015  000.015: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/cls.vim
+    008.775  000.016  000.016: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim
+    008.805  000.014  000.014: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tikz.vim
+    008.825  003.603  001.936: require('packer_compiled')
+    008.852  003.896  000.091: require('init.plugins')
+    008.853  007.095  000.020: sourcing /home/zeng/.config/nvim/init.lua
+    008.858  000.342: sourcing vimrc file(s)
+    009.054  000.009  000.009: sourcing /usr/share/vim/vimfiles/ftdetect/PKGBUILD.vim
+    009.074  000.009  000.009: sourcing /usr/share/vim/vimfiles/ftdetect/SRCINFO.vim
+    009.131  000.232  000.214: sourcing /usr/share/nvim/runtime/filetype.lua
+    009.273  000.072  000.072: sourcing /usr/share/nvim/runtime/syntax/synload.vim
+    009.345  000.182  000.110: sourcing /usr/share/nvim/runtime/syntax/syntax.vim
+    009.585  000.009  000.009: sourcing /home/zeng/.config/nvim/plugin/vscode_neovim.vim
+    009.783  000.010  000.010: sourcing /usr/share/nvim/runtime/plugin/gzip.vim
+    009.800  000.007  000.007: sourcing /usr/share/nvim/runtime/plugin/health.vim
+    009.816  000.008  000.008: sourcing /usr/share/nvim/runtime/plugin/matchit.vim
+    009.936  000.110  000.110: sourcing /usr/share/nvim/runtime/plugin/matchparen.vim
+    009.961  000.012  000.012: sourcing /usr/share/nvim/runtime/plugin/netrwPlugin.vim
+    010.073  000.006  000.006: sourcing /home/zeng/.local/share/nvim/rplugin.vim
+    010.080  000.108  000.102: sourcing /usr/share/nvim/runtime/plugin/rplugin.vim
+    010.135  000.046  000.046: sourcing /usr/share/nvim/runtime/plugin/shada.vim
+    010.168  000.016  000.016: sourcing /usr/share/nvim/runtime/plugin/spellfile.vim
+    010.192  000.011  000.011: sourcing /usr/share/nvim/runtime/plugin/tarPlugin.vim
+    010.210  000.007  000.007: sourcing /usr/share/nvim/runtime/plugin/tohtml.vim
+    010.233  000.012  000.012: sourcing /usr/share/nvim/runtime/plugin/tutor.vim
+    010.294  000.013  000.013: sourcing /usr/share/nvim/runtime/plugin/zipPlugin.vim
+    010.500  000.118  000.118: sourcing /home/zeng/.config/nvim/plugin/auto_hlsearch.lua
+    010.555  000.038  000.038: sourcing /home/zeng/.config/nvim/plugin/auto_set_spell.lua
+    010.600  000.033  000.033: sourcing /home/zeng/.config/nvim/plugin/tabout.lua
+    010.811  000.039  000.039: sourcing /usr/share/nvim/runtime/plugin/editorconfig.lua
+    010.879  000.056  000.056: sourcing /usr/share/nvim/runtime/plugin/man.lua
+    010.912  000.019  000.019: sourcing /usr/share/nvim/runtime/plugin/nvim.lua
+    010.927  000.981: loading rtp plugins
+    011.048  000.120: loading packages
+    011.489  000.121  000.121: sourcing /home/zeng/.local/share/nvim/site/pack/packer/start/rnvimr/after/plugin/rnvimr.vim
+    011.527  000.359: loading after plugins
+    011.541  000.014: inits 3
+    013.598  002.057: reading ShaDa
+    013.783  000.185: opening buffers
+    013.914  000.116  000.116: require('utils.funcs')
+    014.107  000.113  000.113: sourcing /home/zeng/.local/share/nvim/site/pack/packer/start/rnvimr/autoload/rnvimr.vim
+    014.128  000.116: BufEnter autocommands
+    014.130  000.002: editing files in windows
+    015.761  001.631: VimEnter autocommands
+    015.764  000.004: UIEnter autocommands
+    015.766  000.002: before starting main loop
+    016.512  000.746: first screen update
+    016.515  000.002: --- NVIM STARTED ---
   ```
 
 </details>
@@ -513,56 +528,56 @@ Command: `nvim --startuptime startuptime.log`
 
 
   ```
-  016.360  000.002: --- NVIM STARTED ---
-  016.742  000.002: --- NVIM STARTED ---
-  016.749  000.002: --- NVIM STARTED ---
-  016.759  000.002: --- NVIM STARTED ---
-  016.762  000.002: --- NVIM STARTED ---
-  016.787  000.002: --- NVIM STARTED ---
-  016.807  000.002: --- NVIM STARTED ---
-  016.889  000.002: --- NVIM STARTED ---
-  016.906  000.002: --- NVIM STARTED ---
-  016.947  000.002: --- NVIM STARTED ---
-  016.947  000.002: --- NVIM STARTED ---
-  016.961  000.002: --- NVIM STARTED ---
-  016.989  000.002: --- NVIM STARTED ---
-  016.999  000.002: --- NVIM STARTED ---
-  017.038  000.002: --- NVIM STARTED ---
-  017.073  000.002: --- NVIM STARTED ---
-  017.099  000.002: --- NVIM STARTED ---
-  017.117  000.002: --- NVIM STARTED ---
-  017.145  000.002: --- NVIM STARTED ---
-  017.150  000.002: --- NVIM STARTED ---
-  017.231  000.002: --- NVIM STARTED ---
-  017.247  000.002: --- NVIM STARTED ---
-  017.275  000.002: --- NVIM STARTED ---
-  017.294  000.002: --- NVIM STARTED ---
-  017.361  000.002: --- NVIM STARTED ---
-  017.371  000.002: --- NVIM STARTED ---
-  017.410  000.002: --- NVIM STARTED ---
-  017.423  000.002: --- NVIM STARTED ---
-  017.464  000.002: --- NVIM STARTED ---
-  017.494  000.002: --- NVIM STARTED ---
-  017.607  000.002: --- NVIM STARTED ---
-  017.617  000.002: --- NVIM STARTED ---
-  017.686  000.002: --- NVIM STARTED ---
-  017.803  000.003: --- NVIM STARTED ---
-  017.848  000.002: --- NVIM STARTED ---
-  017.942  000.001: --- NVIM STARTED ---
-  017.992  000.002: --- NVIM STARTED ---
-  018.078  000.002: --- NVIM STARTED ---
-  018.186  000.002: --- NVIM STARTED ---
-  018.248  000.002: --- NVIM STARTED ---
-  018.327  000.002: --- NVIM STARTED ---
-  018.969  000.002: --- NVIM STARTED ---
-  019.093  000.002: --- NVIM STARTED ---
-  019.308  000.002: --- NVIM STARTED ---
-  019.859  000.002: --- NVIM STARTED ---
-  020.243  000.002: --- NVIM STARTED ---
-  020.529  000.001: --- NVIM STARTED ---
-  022.157  000.002: --- NVIM STARTED ---
-  025.490  000.002: --- NVIM STARTED ---
-  027.609  000.002: --- NVIM STARTED ---
+  016.891  000.004: --- NVIM STARTED ---
+  018.252  000.003: --- NVIM STARTED ---
+  019.379  000.003: --- NVIM STARTED ---
+  019.416  000.003: --- NVIM STARTED ---
+  019.486  000.003: --- NVIM STARTED ---
+  019.490  000.003: --- NVIM STARTED ---
+  019.644  000.004: --- NVIM STARTED ---
+  019.657  000.003: --- NVIM STARTED ---
+  019.746  000.004: --- NVIM STARTED ---
+  019.794  000.003: --- NVIM STARTED ---
+  019.821  000.003: --- NVIM STARTED ---
+  019.846  000.003: --- NVIM STARTED ---
+  019.913  000.003: --- NVIM STARTED ---
+  019.951  000.003: --- NVIM STARTED ---
+  019.961  000.003: --- NVIM STARTED ---
+  019.969  000.003: --- NVIM STARTED ---
+  019.985  000.003: --- NVIM STARTED ---
+  020.053  000.003: --- NVIM STARTED ---
+  020.107  000.003: --- NVIM STARTED ---
+  020.118  000.003: --- NVIM STARTED ---
+  020.133  000.003: --- NVIM STARTED ---
+  020.134  000.003: --- NVIM STARTED ---
+  020.136  000.003: --- NVIM STARTED ---
+  020.202  000.003: --- NVIM STARTED ---
+  020.229  000.003: --- NVIM STARTED ---
+  020.236  000.003: --- NVIM STARTED ---
+  020.236  000.003: --- NVIM STARTED ---
+  020.248  000.003: --- NVIM STARTED ---
+  020.327  000.003: --- NVIM STARTED ---
+  020.346  000.003: --- NVIM STARTED ---
+  020.374  000.003: --- NVIM STARTED ---
+  020.379  000.003: --- NVIM STARTED ---
+  020.401  000.003: --- NVIM STARTED ---
+  020.440  000.003: --- NVIM STARTED ---
+  020.486  000.003: --- NVIM STARTED ---
+  020.509  000.003: --- NVIM STARTED ---
+  020.524  000.003: --- NVIM STARTED ---
+  020.543  000.003: --- NVIM STARTED ---
+  020.555  000.003: --- NVIM STARTED ---
+  020.570  000.003: --- NVIM STARTED ---
+  020.584  000.003: --- NVIM STARTED ---
+  020.635  000.003: --- NVIM STARTED ---
+  020.717  000.003: --- NVIM STARTED ---
+  020.736  000.003: --- NVIM STARTED ---
+  020.763  000.003: --- NVIM STARTED ---
+  021.218  000.003: --- NVIM STARTED ---
+  021.375  000.003: --- NVIM STARTED ---
+  021.800  000.003: --- NVIM STARTED ---
+  026.470  000.004: --- NVIM STARTED ---
+  027.071  000.004: --- NVIM STARTED ---
   ```
 
 </details>
