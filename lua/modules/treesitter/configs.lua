@@ -42,9 +42,11 @@ M['nvim-treesitter'] = function()
           ['aa'] = '@parameter.outer',
           ['ia'] = '@parameter.inner',
           ['a/'] = '@comment.outer',
-          ['i/'] = '@comment.inner',
           ['a*'] = '@comment.outer',
-          ['i*'] = '@comment.inner',
+          ['ab'] = '@block.outer',
+          ['ib'] = '@block.inner',
+          ['a?'] = '@conditional.outer',
+          ['i?'] = '@conditional.inner',
         },
       },
       move = {
@@ -55,28 +57,38 @@ M['nvim-treesitter'] = function()
           [']]'] = '@function.outer',
           [']k'] = '@class.outer',
           [']}'] = '@class.outer',
-          [']a'] = '@parameter.outer'
+          [']a'] = '@parameter.outer',
+          [']/'] = '@comment.outer',
+          [']*'] = '@comment.outer',
+          [']b'] = '@block.outer',
+          [']?'] = '@conditional.outer',
         },
         goto_next_end = {
           [']M'] = '@function.outer',
           [']['] = '@function.outer',
           [']K'] = '@class.outer',
           [']{'] = '@class.outer',
-          [']A'] = '@parameter.outer'
+          [']A'] = '@parameter.outer',
+          [']B'] = '@block.outer',
         },
         goto_previous_start = {
           ['[m'] = '@function.outer',
           ['[['] = '@function.outer',
           ['[k'] = '@class.outer',
           ['[{'] = '@class.outer',
-          ['[a'] = '@parameter.outer'
+          ['[a'] = '@parameter.outer',
+          ['[/'] = '@comment.outer',
+          ['[*'] = '@comment.outer',
+          ['[b'] = '@block.outer',
+          ['[?'] = '@conditional.outer',
         },
         goto_previous_end = {
           ['[M'] = '@function.outer',
           ['[]'] = '@function.outer',
           ['[K'] = '@class.outer',
           ['[}'] = '@class.outer',
-          ['[A'] = '@parameter.outer'
+          ['[A'] = '@parameter.outer',
+          ['[B'] = '@block.outer',
         },
       },
       swap = {
