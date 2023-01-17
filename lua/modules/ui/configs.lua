@@ -376,11 +376,14 @@ M['nvim-navic'] = function()
     end
 
     local sep = vim.loop.os_uname().sysname == 'Windows' and '\\' or '/'
-    local dir_list = vim.tbl_map(function(dir_name)
-      return { name = dir_name }
-    end, vim.split(vim.fn.expand('%:~:.:h'), sep))
+    local dir_list = vim.split(vim.fn.expand('%:~:.:h'), sep)
+    if #dir_list == 0 or #dir_list == 1 and dir_list[1] == '.' then
+      return {}
+    end
 
-    return dir_list
+    return vim.tbl_map(function(dir_name)
+      return { name = dir_name }
+    end, dir_list)
   end
 
   local function get_file()
