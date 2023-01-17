@@ -150,6 +150,7 @@ M['lualine.nvim'] = function()
           reg_recording,
           padding = { left = 0, right = 1 },
           color = { fg = palette.orange, gui = 'bold' },
+          cond = function() return vim.o.cmdheight == 0 end,
         },
       },
       lualine_b = {
@@ -209,7 +210,8 @@ M['lualine.nvim'] = function()
       lualine_y = {
         {
           searchcount,
-          padding = { left = 1, right =0 }
+          padding = { left = 1, right = 0 },
+          cond = function() return vim.o.cmdheight == 0 end,
         },
         location
       },
