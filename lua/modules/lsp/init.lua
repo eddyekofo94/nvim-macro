@@ -5,7 +5,16 @@ local ft_list = require('utils.static').langs:list('ft')
 M['nvim-lspconfig'] = {
   'neovim/nvim-lspconfig',
   ft = ft_list,
+  module = 'lspconfig',
   config = configs['nvim-lspconfig'],
+}
+
+M['clangd_extensions.nvim'] = {
+  'p00f/clangd_extensions.nvim',
+  ft = { 'c', 'cpp' },
+  module_pattern = 'clangd_extensions.*',
+  requires = 'nvim-lspconfig',
+  config = configs['clangd_extensions.nvim'],
 }
 
 M['mason-lspconfig.nvim'] = {

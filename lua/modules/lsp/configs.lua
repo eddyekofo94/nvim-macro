@@ -114,6 +114,39 @@ M['nvim-lspconfig'] = function()
   lsp_setup()
 end
 
+M['clangd_extensions.nvim'] = function()
+  local icons = require('utils.static').icons
+  require('clangd_extensions').setup({
+    extensions = {
+      ast = {
+        role_icons = {
+          ['type'] = icons.Type,
+          ['declaration'] = icons.Function,
+          ['expression'] = icons.Snippet,
+          ['specifier'] = icons.Specifier,
+          ['statement'] = icons.Statement,
+          ['template argument'] = icons.TypeParameter,
+        },
+        kind_icons = {
+          ['Compound'] = icons.Namespace,
+          ['Recovery'] = icons.DiagnosticSignError,
+          ['TranslationUnit'] = icons.Unit,
+          ['PackExpansion'] = icons.Ellipsis,
+          ['TemplateTypeParm'] = icons.TypeParameter,
+          ['TemplateTemplateParm'] = icons.TypeParameter,
+          ['TemplateParamObject'] = icons.TypeParameter,
+        },
+      },
+      memory_usage = {
+        border = 'none',
+      },
+      symbol_info = {
+        border = 'none',
+      },
+    },
+  })
+end
+
 M['mason-lspconfig.nvim'] = function()
   require('mason-lspconfig').setup({
     ensure_installed = require('utils.static').langs:list('lsp_server'),

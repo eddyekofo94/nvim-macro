@@ -5,6 +5,19 @@ M['nvim-cmp'] = function()
   local luasnip = require('luasnip')
   local icons = require('utils.static').icons
 
+  local comparators = {
+    cmp.config.compare.kind,
+    cmp.config.compare.locality,
+    cmp.config.compare.recently_used,
+    cmp.config.compare.exact,
+    cmp.config.compare.score,
+  }
+  local clangd_ready, clangd_score =
+    pcall(require, 'clangd_extensions.cmp_scores')
+  if clangd_ready then
+    table.insert(comparators, 2, clangd_score)
+  end
+
   cmp.setup({
     formatting = {
       fields = { 'kind', 'abbr', 'menu' },
@@ -124,13 +137,7 @@ M['nvim-cmp'] = function()
       { name = 'calc' },
     },
     sorting = {
-      comparators = {
-        cmp.config.compare.kind,
-        cmp.config.compare.locality,
-        cmp.config.compare.recently_used,
-        cmp.config.compare.exact,
-        cmp.config.compare.score,
-      }
+      comparators = comparators,
     },
     -- cmp floating window config
     window = {
