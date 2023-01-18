@@ -108,10 +108,10 @@ sch.DiagnosticError            = { fg = plt.wine } -- Used as the base highlight
 sch.DiagnosticWarn             = { fg = plt.earth } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
 sch.DiagnosticInfo             = { fg = plt.smoke } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
 sch.DiagnosticHint             = { fg = plt.pigeon } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-sch.DiagnosticVirtualTextError = { link = 'DiagnosticError' } -- Used for 'Error' diagnostic virtual text.
-sch.DiagnosticVirtualTextWarn  = { link = 'DiagnosticWarn' } -- Used for 'Warn' diagnostic virtual text.
-sch.DiagnosticVirtualTextInfo  = { link = 'DiagnosticInfo' } -- Used for 'Info' diagnostic virtual text.
-sch.DiagnosticVirtualTextHint  = { link = 'DiagnosticHint' } -- Used for 'Hint' diagnostic virtual text.
+sch.DiagnosticVirtualTextError = { fg = plt.wine, underline = true } -- Used for 'Error' diagnostic virtual text.
+sch.DiagnosticVirtualTextWarn  = { fg = plt.earth, underline = true } -- Used for 'Warn' diagnostic virtual text.
+sch.DiagnosticVirtualTextInfo  = { fg = plt.smoke, underline = true } -- Used for 'Info' diagnostic virtual text.
+sch.DiagnosticVirtualTextHint  = { fg = plt.pigeo, underline = true } -- Used for 'Hint' diagnostic virtual text.
 sch.DiagnosticUnderlineError   = { undercurl = true, sp = plt.wine } -- Used to underline 'Error' diagnostics.
 sch.DiagnosticUnderlineWarn    = { undercurl = true, sp = plt.earth } -- Used to underline 'Warn' diagnostics.
 sch.DiagnosticUnderlineInfo    = { undercurl = true, sp = plt.flashlight } -- Used to underline 'Info' diagnostics.
@@ -382,6 +382,42 @@ sch.DapUIVariable               = { link = 'Variable' }
 sch.DapUIWatchesEmpty           = { link = 'Comment' }
 sch.DapUIWatchesError           = { link = 'Error' }
 sch.DapUIWatchesValue           = { fg = plt.tea }
+-- vimtex
+sch.texMathArg            = { fg = plt.ornge, bold = true }
+sch.texMathCmd            = { fg = plt.tea }
+sch.texMathSub            = { fg = plt.orange }
+sch.texMathOper           = { fg = plt.orange, italic = true }
+sch.texMathZone           = { fg = plt.tea }
+sch.texMathDelim          = { fg = plt.yellow }
+sch.texMathError          = { link = 'Error' }
+sch.texMathGroup          = { fg = plt.orange }
+sch.texMathSuper          = { fg = plt.orange }
+sch.texMathSymbol         = { fg = plt.tea }
+sch.texMathZoneLD         = { fg = plt.orange }
+sch.texMathZoneLI         = { fg = plt.orange }
+sch.texMathZoneTD         = { fg = plt.orange }
+sch.texMathZoneTI         = { fg = plt.orange }
+sch.texMathCmdText        = { fg = plt.tea }
+sch.texMathZoneEnv        = { fg = plt.orange }
+sch.texMathArrayArg       = { fg = plt.tea }
+sch.texMathCmdStyle       = { fg = plt.tea }
+sch.texMathDelimMod       = { fg = plt.yellow }
+sch.texMathSuperSub       = { fg = plt.yellow }
+sch.texMathDelimZone      = { fg = plt.pigeon }
+sch.texMathStyleBold      = { fg = plt.smoke, bold = true }
+sch.texMathStyleItal      = { fg = plt.smoke, italic = true }
+sch.texMathEnvArgName     = { fg = plt.orange }
+sch.texMathErrorDelim     = { link = 'Error' }
+sch.texMathDelimZoneLD    = { fg = plt.pigeon }
+sch.texMathDelimZoneLI    = { fg = plt.pigeon }
+sch.texMathDelimZoneTD    = { fg = plt.pigeon }
+sch.texMathDelimZoneTI    = { fg = plt.pigeon }
+sch.texMathZoneEnsured    = { fg = plt.pigeon }
+sch.texMathCmdStyleBold   = { fg = plt.tea, bold = true }
+sch.texMathCmdStyleItal   = { fg = plt.tea, italic = true }
+sch.texMathStyleConcArg   = { fg = plt.ornge }
+sch.texMathZoneEnvStarred = { fg = plt.pigeon }
+
 
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }
