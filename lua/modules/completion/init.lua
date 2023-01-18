@@ -65,4 +65,11 @@ M['LuaSnip'] = {
   config = configs['LuaSnip'],
 }
 
+M['friendly-snippets'] = {
+  'rafamadriz/friendly-snippets',
+  requires = 'LuaSnip',
+  after = 'LuaSnip',
+  config = configs['friendly-snippets'],
+}
+
 return M
