@@ -142,7 +142,7 @@ M.math_snippets = {
     s({ trig = '|>' }, { t '\\mapsto ', i(0) }),
     s({ trig = '=>' }, t '\\implies ', i(0)),
 
-    s({ trig = '_' }, { t '_{', i(1), t '}', i(0) }),
+    s({ trig = '_', priority = 999 }, { t '_{', i(1), t '}', i(0) }),
     s({ trig = '^' }, { t '^{', i(1), t '}', i(0) }),
     s({ trig = '>>' }, { t '\\gg ', i(0) }),
     s({ trig = '<<' }, { t '\\ll ', i(0) }),
