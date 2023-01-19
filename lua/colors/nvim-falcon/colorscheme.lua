@@ -10,7 +10,7 @@ sch.Conceal      = { fg = plt.smoke } -- Placeholder characters substituted for 
 sch.Cursor       = { bg = plt.white } -- Character under the cursor
 sch.CursorColumn = { bg = plt.deepsea } -- Screen-column at the cursor, when 'cursorcolumn' is set.
 sch.CursorIM     = { bg = plt.flashlight, fg = plt.black } -- Like Cursor, but used when in IME mode |CursorIM|
-sch.CursorLine   = { bg = plt.space } -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
+sch.CursorLine   = { bg = plt.ocean } -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
 sch.CursorLineNr = { fg = plt.orange } -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
 sch.lCursor      = { link = 'Cursor' } -- Character under the cursor when |language-mapping| is used (see 'guicursor')
 sch.TermCursor   = { reverse = true } -- Cursor in a focused terminal
@@ -211,9 +211,9 @@ sch.htmlTag            = { fg = plt.smoke }
 sch.htmlTagName        = { link = 'Tag' }
 sch.htmlSpecialTagName = { fg = plt.yellow }
 sch.htmlEndTag         = { fg = plt.yellow }
-sch.htmlH1             = { fg = plt.tea, bold = true }
-sch.htmlH2             = { fg = plt.aqua, bold = true }
-sch.htmlH3             = { fg = plt.turquoise, bold = true }
+sch.htmlH1             = { fg = plt.yellow, bold = true }
+sch.htmlH2             = { fg = plt.tea, bold = true }
+sch.htmlH3             = { fg = plt.skyblue, bold = true }
 sch.htmlH4             = { fg = plt.lavender, bold = true }
 sch.htmlH5             = { fg = plt.purple, bold = true }
 sch.htmlH6             = { fg = plt.pink, bold = true }
@@ -249,7 +249,7 @@ sch.CmpItemKindColor        = { fg = plt.pink }
 sch.CmpItemKindConstant     = { link = 'Constant' }
 sch.CmpItemKindCopilot      = { fg = plt.magenta }
 sch.CmpItemKindValue        = { link = 'Number' }
-sch.CmpItemKindClass        = { fg = plt.aqua }
+sch.CmpItemKindClass        = { fg = plt.cerulean }
 sch.CmpItemKindStruct       = { fg = plt.cerulean }
 sch.CmpItemKindEvent        = { fg = plt.flashlight }
 sch.CmpItemKindInterface    = { fg = plt.flashlight }
