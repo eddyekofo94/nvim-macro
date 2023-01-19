@@ -171,7 +171,7 @@ M['aerial.nvim'] = function()
       ['h'] = false,
       ['H'] = false,
     },
-    attach_mode = 'global',
+    attach_mode = 'window',
     backends = { 'lsp', 'markdown', 'man' },
     disable_max_lines = 8192,
     filter_kind = false,
@@ -179,9 +179,9 @@ M['aerial.nvim'] = function()
     ignore = {
       filetypes = { 'aerial', 'help', 'alpha', 'undotree', 'TelescopePrompt' },
     },
-    link_folds_to_tree = true,
-    link_tree_to_folds = true,
-    manage_folds = true,
+    link_folds_to_tree = false,
+    link_tree_to_folds = false,
+    manage_folds = false,
     layout = {
       max_width = { 0.2 },
       min_width = 20,
