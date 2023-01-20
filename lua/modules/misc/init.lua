@@ -25,4 +25,9 @@ M['nvim-autopairs'] = {
   config = configs['nvim-autopairs']
 }
 
+M['fcitx.nvim'] = {
+  'h-hg/fcitx.nvim',
+  event = 'InsertEnter',
+}
+
 return M
