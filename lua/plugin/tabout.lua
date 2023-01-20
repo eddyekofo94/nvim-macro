@@ -100,7 +100,8 @@ local function do_key(key)
     vim.api.nvim_win_set_cursor(0, pos)
   else
     vim.api.nvim_feedkeys(
-      vim.api.nvim_replace_termcodes(key, true, true, true), 'nt', false)
+      vim.api.nvim_replace_termcodes(key, true, true, true),
+      'in', false)
   end
 end
 
