@@ -25,7 +25,7 @@ local function get_viewers()
   local idx = 1
   while idx <= #viewers do
     local viewer = viewers[idx]
-    if os.execute('command -v ' .. viewer .. ' >/dev/null 2>&1') ~= 0 then
+    if vim.fn.executable(viewer) == 0 then
       table.remove(viewers, idx)
     else
       idx = idx + 1
