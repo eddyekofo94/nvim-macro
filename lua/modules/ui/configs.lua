@@ -8,11 +8,11 @@ M['barbar.nvim'] = function()
     clickable = true,
     icons = 'both',
     icon_custom_colors = false,
-    icon_separator_active = '▌',
-    icon_separator_inactive = '▌',
+    icon_separator_active = '',
+    icon_separator_inactive = '',
     icon_close_tab = '',
     icon_close_tab_modified = '[+]',
-    icon_pinned = '車',
+    icon_pinned = '',
     insert_at_end = false,
     insert_at_start = false,
     maximum_padding = 1,
@@ -588,10 +588,11 @@ M['nvim-navic'] = function()
     return winbar_str
   end
 
-  vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
+  vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter', 'BufWritePost' }, {
     pattern = '*',
     callback = function()
-      if vim.api.nvim_win_get_config(0).zindex or vim.bo.buftype ~= '' then
+      if vim.api.nvim_win_get_config(0).zindex or vim.bo.buftype ~= ''
+          or vim.fn.expand('%') == '' then
         vim.wo.winbar = nil
       else
         vim.wo.winbar = "%{%v:lua.get_winbar()%}"
