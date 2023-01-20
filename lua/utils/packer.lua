@@ -17,7 +17,7 @@ local packer_info = {
       name = function()
         return string.format('lock_%s.json', os.date('%Y-%m-%d'))
       end,
-      path = fn.stdpath('config') .. '/lockfiles/',
+      path = fn.stdpath('config') .. '/lockfiles',
       silent_overwrite = true,
     },
     compile_path = default_root .. '/lua/packer_compiled.lua',
@@ -132,12 +132,34 @@ local function create_packer_usercmds()
   end
 end
 
+local function create_packer_autocmds()
+  api.nvim_create_autocmd('User', {
+    pattern = {
+      'PackerSyncComplete',
+      'PackerUpdateComplete',
+      'PackerCleanComplete',
+      'PackerInstallComplete',
+    },
+    callback = function()
+      local snapshots =
+          fn.glob(packer_info.config.snapshot.path .. '/*', false, true)
+        local i = 1
+        while i <= #snapshots - 7 do
+          os.remove(snapshots[i])
+          table.remove(snapshots, i)
+          i = i + 1
+        end
+    end,
+  })
+end
+
 local function manage_plugins(info)
   packer_info = vim.tbl_deep_extend('force', packer_info, info)
   update_paths()
   if not bootstrap() then
     load_packer_compiled()
     create_packer_usercmds()
+    create_packer_autocmds()
   end
 end
 
