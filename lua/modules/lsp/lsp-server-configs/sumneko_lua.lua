@@ -1,3 +1,5 @@
+local default_config = require('modules.lsp.lsp-server-configs.default')
+
 local function in_config_path(app)
   return string.format('%s/.config/%s',
     os.getenv('XDG_CONFIG_HOME') or os.getenv('HOME') or '', app)
@@ -60,6 +62,6 @@ local function on_new_config(config, root_dir)
   end
 end
 
-return {
-  on_new_config = on_new_config,
-}
+default_config.on_new_config = on_new_config
+
+return default_config
