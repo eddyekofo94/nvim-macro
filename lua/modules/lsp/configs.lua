@@ -66,7 +66,7 @@ M['nvim-lspconfig'] = function()
       { 'n', ']e', '<cmd>lua vim.diagnostic.goto_next()<CR>' },
       { 'n', '<leader>ll', '<cmd>lua vim.diagnostic.setloclist()<CR>' },
       { 'n', '==', '<cmd>lua vim.lsp.buf.format()<CR>' },
-      { 'v', '=', '<cmd>lua vim.lsp.buf.format()<CR>' },
+      { 'x', '=', '<cmd>lua vim.lsp.buf.format()<CR>' },
     }
     for _, map in ipairs(keymaps) do
       -- use <unique> to avoid overriding telescope keymaps

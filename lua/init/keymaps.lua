@@ -9,7 +9,7 @@ local noremap = function(mappings)
 end
 
 local leadermap = function(key)
-  vim.keymap.set({ 'n', 'v', 'x' }, key, '')
+  vim.keymap.set({ 'n', 'x', 'x' }, key, '')
   vim.g.mapleader = vim.api.nvim_replace_termcodes(key, true, true, true)
 end
 

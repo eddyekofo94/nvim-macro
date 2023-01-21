@@ -43,7 +43,7 @@ M['nvim-dap-ui'] = function()
   -- Use menu key (Fn + left Ctrl) to open floating window
   vim.keymap.set('n', '<F16>', dapui.float_element, { noremap = true })
   -- Use shift + F12 to evaluate expression
-  vim.keymap.set({ 'n', 'v' }, '<F24>', dapui.eval, { noremap = true })
+  vim.keymap.set({ 'n', 'x' }, '<F24>', dapui.eval, { noremap = true })
   dapui.setup({
     expand_lines = false,
     icons = {
