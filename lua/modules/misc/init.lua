@@ -30,4 +30,10 @@ M['fcitx.nvim'] = {
   event = 'InsertEnter',
 }
 
+M['vim-easy-align'] = {
+  'junegunn/vim-easy-align',
+  keys = { 'ga' },
+  config = configs['vim-easy-align'],
+}
+
 return M
