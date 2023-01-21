@@ -46,6 +46,8 @@ M['nvim-autopairs'] = function()
     -- markdown/tex math, pairing is taken care by snippets
     Rule('$', '$', { 'markdown', 'tex' })
       :with_pair(function() return false end),
+    -- markdown/tex math env braces
+    Rule('\\{', '\\}', { 'markdown', 'tex' }),
     -- markdown italic/bold, pairing is taken care by snippets
     Rule('*', '*', { 'markdown' })
       :with_pair(function() return false end),
