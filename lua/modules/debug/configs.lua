@@ -45,6 +45,7 @@ M['nvim-dap-ui'] = function()
   -- Use shift + F12 to evaluate expression
   vim.keymap.set({ 'n', 'v' }, '<F24>', dapui.eval, { noremap = true })
   dapui.setup({
+    expand_lines = false,
     icons = {
       expanded = '▼',
       collapsed = '►',
@@ -60,6 +61,8 @@ M['nvim-dap-ui'] = function()
       toggle = '<Leader><Leader>',
     },
     floating = {
+      max_height = 20,
+      max_width = 80,
       mappings = {
         close = { 'q', '<Esc>' },
       },
