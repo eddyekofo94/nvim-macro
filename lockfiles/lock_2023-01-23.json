@@ -1,0 +1,16 @@
+{
+  "Comment.nvim": { "commit": "eab2c83" },
+  "fcitx.nvim": { "commit": "dcb6b70" },
+  "nvim-autopairs": { "commit": "31042a5" },
+  "nvim-surround": { "commit": "ad56e62" },
+  "nvim-treesitter": { "commit": "f3b8f00" },
+  "nvim-treesitter-textobjects": { "commit": "2fb97bd" },
+  "nvim-ts-context-commentstring": { "commit": "a0f8956" },
+  "nvim-ts-rainbow": { "commit": "aa83e49" },
+  "nvim-web-devicons": { "commit": "3548363" },
+  "packer.nvim": { "commit": "f436f0c" },
+  "plenary.nvim": { "commit": "1c7e3e6" },
+  "ts-node-action": { "commit": "399eb33" },
+  "vim-easy-align": { "commit": "12dd631" },
+  "vim-sleuth": { "commit": "1cc4557" }
+}
