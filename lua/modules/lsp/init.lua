@@ -25,9 +25,8 @@ M['mason-lspconfig.nvim'] = {
 
 M['aerial.nvim'] = {
   'stevearc/aerial.nvim',
-  ft = 'markdown',
-  requires = 'nvim-lspconfig',
-  after = 'nvim-lspconfig',
+  keys = '<Leader>o',
+  cmd = { 'AerialToggle', 'AerialOpen', 'AerialOpenAll' },
   config = configs['aerial.nvim'],
 }
 

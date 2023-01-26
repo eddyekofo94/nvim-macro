@@ -130,16 +130,22 @@ M['aerial.nvim'] = function()
     link_tree_to_folds = false,
     manage_folds = false,
     layout = {
-      max_width = { 0.2 },
-      min_width = 20,
+      default_direction = 'float',
+      max_width = 0.5,
+      min_width = 0.25,
     },
+    float = {
+      border = 'single',
+      relative = 'editor',
+      max_height = 0.7,
+    },
+    close_on_select = true,
     show_guides = true,
-    float = { border = 'single' },
     treesitter = { update_delay = 10 },
-    markdown = { update_delay = 10 }
+    markdown = { update_delay = 10 },
   })
-
-  vim.keymap.set('n', '<Leader>o', '<Cmd>AerialToggle<CR>', { noremap = true })
+  vim.keymap.set('n', '<Leader>o', '<Cmd>AerialToggle float<CR>', { noremap = true })
+  vim.keymap.set('n', '<Leader>O', '<Cmd>AerialToggle right<CR>', { noremap = true })
 end
 
 M['fidget.nvim'] = function()
