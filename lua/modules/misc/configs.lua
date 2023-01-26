@@ -46,6 +46,30 @@ M['nvim-autopairs'] = function()
     -- markdown/tex math, pairing is taken care by snippets
     Rule('$', '$', { 'markdown', 'tex' })
       :with_pair(function() return false end),
+    Rule('\\(', '\\)', { 'tex' })
+      :with_pair(function() return false end),
+    Rule('\\[', '\\]', { 'tex' })
+      :with_pair(function() return false end),
+    -- markdown/tex math left right env
+    Rule('\\left(', '\\right)', { 'markdown', 'tex' })
+      :with_pair(function() return false end),
+    Rule('\\left[', '\\right]', { 'markdown', 'tex' })
+      :with_pair(function() return false end),
+    Rule('\\left{', '\\right}', { 'markdown', 'tex' })
+      :with_pair(function() return false end),
+    Rule('\\left<', '\\right>', { 'markdown', 'tex' })
+      :with_pair(function() return false end),
+    Rule('\\left\\lfloor ', ' \\right\\rfloor', { 'markdown', 'tex' })
+      :with_pair(function() return false end),
+    Rule('\\left\\lceil ', ' \\right\\rceil', { 'markdown', 'tex' })
+      :with_pair(function() return false end),
+    Rule('\\left\\vert ', ' \\right\\vert', { 'markdown', 'tex' })
+      :with_pair(function() return false end),
+    Rule('\\left\\lVert ', ' \\right\\lVert', { 'markdown', 'tex' })
+      :with_pair(function() return false end),
+    -- markdown/tex aligned text
+    Rule('&= ', ' \\\\', { 'markdown', 'tex' })
+      :with_pair(function() return false end),
     -- markdown/tex math env braces
     Rule('\\{', '\\}', { 'markdown', 'tex' }),
     -- markdown italic/bold, pairing is taken care by snippets

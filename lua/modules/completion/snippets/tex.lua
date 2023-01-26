@@ -24,43 +24,23 @@ local conds = require('luasnip.extras.expand_conditions')
 
 M.math = require('modules.completion.snippets.share.math')
 
-local function add_attr(attr, snip_group)
-  for _, snip in ipairs(snip_group) do
-    for attr_key, attr_val in pairs(attr) do
-      snip[attr_key] = attr_val
-    end
-  end
-  return snip_group
-end
-
-M.format = {
+M.env = {
   snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
-    s({ trig = '^# ', regTrig = true, snippetType = 'autosnippet' }, {
-      t '# ',
-      dl(1, l.TM_FILENAME:gsub('^%d*_', ''):gsub('_', ' '):gsub('%..*', ''), {}),
-      i(0),
-    }),
-    s('package', {
-      t { '---', '' },
-      t { 'header-includes:', '' },
-      t { '    - \\usepackage{gensymb}', '' },
-      t { '    - \\usepackage{amsmath}', '' },
-      t { '    - \\usepackage{amssymb}', '' },
-      t { '    - \\usepackage{mathtools}', '' },
-      t { '---', '' },
-    }),
-  }),
-}
-
-M.markers = {
-  snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
+    s({ trig = 'env' }, fmta([[
+\begin{<env>}
+<text>
+\end{<env>}
+    ]] , {
+      env = i(1, 'align*'),
+      text = i(2),
+    }, { repeat_duplicates = true })),
     s({ trig = 'm' } , { t '$', i(1), t '$' }),
-    s({ trig = 'M' } , { t { '$$', '' }, i(1), t { '', '$$' } }),
-    s({ trig = 'e' } , { t '*', i(1), t '*', i(0) }),
-    s({ trig = 'b' }, { t '**', i(1), t '**', i(0) }),
-    s({ trig = 'B' }, { t '***', i(1), t '***', i(0) }),
-  }),
+    s({ trig = 'M' } , { t { '\\[', '' }, i(1), t { '', '\\]' } }),
+    s({ trig = 'e' } , { t '\\emph{', i(1), t '}' }),
+    s({ trig = 'b' }, { t '\\textbf{', i(1), t '}' }),
+    s({ trig = 'B' }, { t '\\textbf{\\textit{', i(1), t '}}' }),
+    s({ trig = 'u' }, { t '\\underline{', i(1), t '}' }),
+  })
 }
-
 
 return M

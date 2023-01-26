@@ -60,16 +60,10 @@ M['copilot.lua'] = {
 
 M['LuaSnip'] = {
   'L3MON4D3/LuaSnip',
+  branch = 'get_jump_dest',
   event = 'InsertCharPre',
   module = 'luasnip',
   config = configs['LuaSnip'],
-}
-
-M['friendly-snippets'] = {
-  'rafamadriz/friendly-snippets',
-  requires = 'LuaSnip',
-  after = 'LuaSnip',
-  config = configs['friendly-snippets'],
 }
 
 return M

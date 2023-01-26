@@ -22,7 +22,7 @@ local types = require('luasnip.util.types')
 local conds = require('luasnip.extras.expand_conditions')
 
 M.cpp_snippets = {
-  s({ trig = 'inclfmt' }, {
+  s({ trig = '^#include fmt', regTrig = true, snippetType = 'autosnippet' }, {
     t { '#define FMT_HEADER_ONLY', '' },
     t { '#include <fmt/core.h>', '' },
     t { '#include <fmt/format.h>', '' },

@@ -107,4 +107,7 @@ end
 
 return {
   do_key = do_key,
+  get_jump_pos = function(key)
+    return get_jump_pos[key]()
+  end,
 }
