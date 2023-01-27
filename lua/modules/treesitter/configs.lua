@@ -54,6 +54,7 @@ M['nvim-treesitter'] = function()
         set_jumps = true, -- whether to set jumps in the jumplist
         goto_next_start = {
           [']m'] = '@function.outer',
+          [']l'] = '@loop.outer',
           [']]'] = '@function.outer',
           [']k'] = '@class.outer',
           [']}'] = '@class.outer',
@@ -65,6 +66,7 @@ M['nvim-treesitter'] = function()
         },
         goto_next_end = {
           [']M'] = '@function.outer',
+          [']L'] = '@loop.outer',
           [']['] = '@function.outer',
           [']K'] = '@class.outer',
           [']{'] = '@class.outer',
@@ -73,6 +75,7 @@ M['nvim-treesitter'] = function()
         },
         goto_previous_start = {
           ['[m'] = '@function.outer',
+          ['[l'] = '@loop.outer',
           ['[['] = '@function.outer',
           ['[k'] = '@class.outer',
           ['[{'] = '@class.outer',
@@ -84,6 +87,7 @@ M['nvim-treesitter'] = function()
         },
         goto_previous_end = {
           ['[M'] = '@function.outer',
+          ['[L'] = '@loop.outer',
           ['[]'] = '@function.outer',
           ['[K'] = '@class.outer',
           ['[}'] = '@class.outer',
