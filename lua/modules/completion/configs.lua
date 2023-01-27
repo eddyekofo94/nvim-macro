@@ -107,8 +107,8 @@ M['nvim-cmp'] = function()
           if luasnip.expandable() then
             luasnip.expand()
           elseif luasnip.jumpable(1) then
-            local session = require('luasnip.session')
-            local current = session.current_nodes[vim.api.nvim_get_current_buf()]
+            local buf = vim.api.nvim_get_current_buf()
+            local current = luasnip.session.current_nodes[buf]
             local _, current_end = current:get_buf_position()
             current_end[1] = current_end[1] + 1 -- (1, 0) indexed
             local cursor = vim.api.nvim_win_get_cursor(0)
@@ -275,10 +275,38 @@ M['LuaSnip'] = function()
     vim.keymap.set('s', '<S-Tab>', function() ls.jump(-1) end, { noremap = false })
   end
 
+  local function set_ls_region_check_autocmd()
+    vim.api.nvim_create_autocmd('CursorMovedI', {
+      pattern = '*',
+      callback = function(ev)
+        if not ls.session
+          or not ls.session.current_nodes[ev.buf]
+          or ls.session.jump_active
+        then
+          return
+        end
+
+        local current_node = ls.session.current_nodes[ev.buf]
+        local current_start, current_end = current_node:get_buf_position()
+        current_start[1] = current_start[1] + 1 -- (1, 0) indexed
+        current_end[1] = current_end[1] + 1     -- (1, 0) indexed
+        local cursor = vim.api.nvim_win_get_cursor(0)
+
+        if cursor[1] < current_start[1]
+          or cursor[1] > current_end[1]
+          or cursor[2] < current_start[2]
+          or cursor[2] > current_end[2]
+        then
+          ls.unlink_current()
+        end
+      end
+    })
+  end
+
   ls.setup({
     history = true,
-    region_check_events = 'CursorMoved',
-    delete_check_events = 'TextChangedI',
+    region_check_events = 'CursorMoved,CursorMovedI',
+    delete_check_events = 'TextChanged,TextChangedI',
     updateevents = 'TextChanged,TextChangedI,InsertLeave',
     enable_autosnippets = true,
     store_selection_keys = '<Tab>',
@@ -298,6 +326,7 @@ M['LuaSnip'] = function()
 
   lazy_load_snippets()
   set_keymap()
+  set_ls_region_check_autocmd()
 end
 
 return M
