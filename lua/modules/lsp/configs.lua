@@ -36,6 +36,18 @@ M['nvim-lspconfig'] = function()
     vim.lsp.handlers['textDocument/publishDiagnostics']
         = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics,
                        diagnostic_opts.handlers)
+    -- setup LspInfo floating window border
+    require('lspconfig.ui.windows').default_options.border = 'single'
+    -- reload LspInfo floating window on VimResized
+    vim.api.nvim_create_autocmd('VimResized', {
+      pattern = '*',
+      callback = function()
+        if vim.bo.ft == 'lspinfo' then
+          vim.api.nvim_win_close(0, true)
+          vim.cmd('LspInfo')
+        end
+      end,
+    })
   end
 
   local function get_server_config(server_name)
