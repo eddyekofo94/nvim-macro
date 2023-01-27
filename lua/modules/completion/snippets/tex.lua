@@ -35,7 +35,7 @@ M.env_standalone = {
       env = i(1),
       text = i(2),
     }, { repeat_duplicates = true })),
-    s({ trig = 'cas' }, { t { '\\begin{equation}', '\\begin{cases}', '' }, funcs.ifn(1), i(1), t { '', '\\end{cases}', '\\end{equation}' } }, i(0)),
+    s({ trig = 'cs' }, { t { '\\begin{equation}', '\\begin{cases}', '' }, funcs.ifn(1), i(1), t { '', '\\end{cases}', '\\end{equation}' } }, i(0)),
     s({ trig = 'aln' }, { t { '\\begin{align*}', '' }, funcs.ifn(1), i(0), t { '', '\\end{align*}' } }),
     s({ trig = 'eqt' }, { t { '\\begin{equation*}', '' }, funcs.ifn(1), i(0), t { '', '\\end{equation*}' } }),
   }),

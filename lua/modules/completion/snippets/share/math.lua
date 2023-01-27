@@ -266,7 +266,7 @@ local math_snippets = {
     s({ trig = 'Pmat' }, { t { '\\begin{pmatrix}', '' }, funcs.ifn(1), i(1), t { '', '\\end{pmatrix}', '' } }),
     s({ trig = 'aln' }, { t { '\\begin{align*}', '' }, funcs.ifn(1), i(1), t { '', '\\end{align*}' } }),
     s({ trig = 'eqt' }, { t { '\\begin{equation*}', '' }, funcs.ifn(1), i(1), t { '', '\\end{equation*}' } }),
-    s({ trig = 'cas' }, { t { '\\begin{cases}', '' }, funcs.ifn(1), i(1), t { '', '\\end{cases}' } }, i(0)),
+    s({ trig = 'cs' }, { t { '\\begin{cases}', '' }, funcs.ifn(1), i(1), t { '', '\\end{cases}' } }, i(0)),
     s({ trig = 'part' }, { t { '\\frac{\\partial ' }, i(1), t { '}{\\partial ' }, i(2), t { '}' }, i(0) }),
     s({ trig = 'diff' }, { t '\\frac{\\mathrm{d}', i(1), t '}{\\mathrm{d}', i(2), t '} ', i(0) }),
     s({ trig = 'int', priority = 998 }, { t '\\int_{', i(1), t '}^{', i(2), t '} ', i(0) }),
@@ -275,6 +275,15 @@ local math_snippets = {
     s({ trig = 'sum' }, { t '\\sum_{', i(1, 'n=0'), t '}^{', i(2, 'N-1'), t '} ', i(0) }),
     s({ trig = 'so' }, { t '\\sum_{', i(1, 'x'), t '} ', i(0) }),
     s({ trig = 'lim' }, { t '\\lim_{', i(1, 'n'), t '\\to ', i(2, '\\infty'), t '} ', i(0) }),
+    s({ trig = 'env' }, fmta([[
+\begin{<env>}
+<indent><text>
+\end{<env>}
+    ]] , {
+      indent = funcs.ifn(1),
+      env = i(1),
+      text = i(2),
+    }, { repeat_duplicates = true })),
 
     s({ trig = 'alpha' }, { t '\\alpha', i(0) }),
     s({ trig = 'beta' }, { t '\\beta', i(0) }),
