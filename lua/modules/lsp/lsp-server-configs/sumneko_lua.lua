@@ -62,6 +62,6 @@ local function on_new_config(config, root_dir)
   end
 end
 
-default_config.on_new_config = on_new_config
-
-return default_config
+return vim.tbl_deep_extend('force', default_config, {
+  on_new_config = on_new_config,
+})
