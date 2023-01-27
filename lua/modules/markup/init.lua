@@ -4,11 +4,7 @@ local configs = require('modules.markup.configs')
 M['vimtex'] = {
   'lervag/vimtex',
   ft = { 'tex', 'markdown' },
-  setup = function()
-    vim.g.vimtex_mappings_enabled = 0
-    vim.g.vimtex_motion_enabled = 0
-    vim.g.vimtex_syntax_conceal = { math_bounds = 0 }
-  end,
+  config = configs['vimtex'],
 }
 
 M['vim-markdown'] = {
@@ -20,7 +16,6 @@ M['vim-markdown'] = {
     vim.g.vim_markdown_conceal_code_blocks = 0
     vim.g.vim_markdown_auto_insert_bullets = 0
     vim.g.vim_markdown_new_list_item_indent = 0
-    vim.g.vim_markdown_no_default_key_mappings = 1
   end,
 }
 

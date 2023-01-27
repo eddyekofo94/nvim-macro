@@ -25,6 +25,7 @@ M.langs = setmetatable({
   make = { ts = 'make', ft = 'make' },
   python = { ts = 'python', ft = 'python', lsp_server = 'pylsp', dap = 'python' },
   vim = { ts = 'vim', ft = 'vim', lsp_server = 'vimls' },
+  latex = { ft = 'tex', lsp_server = 'texlab' },
 }, langs_mt)
 
 M.borders = {

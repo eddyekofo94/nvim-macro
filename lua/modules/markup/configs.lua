@@ -1,5 +1,15 @@
 local M = {}
 
+M['vimtex'] = function()
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'markdown',
+    callback = function()
+      vim.api.nvim_eval('vimtex#init()')
+      vim.api.nvim_eval('vimtex#text_obj#init_buffer()')
+    end
+  })
+end
+
 M['clipboard-image.nvim'] = function()
 
   local function empty_line(lnum)
