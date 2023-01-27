@@ -110,12 +110,13 @@ local math_snippets = {
     s({ trig = 'mt', dscr = 'matrix' },
       fmta([[
 \begin{bmatrix}
-<el><underscore>{<mod0><comma><mod1>} & <el><underscore>{<mod0><comma><mod1>} & \ldots & <el><underscore>{<mod0><comma><width>} \\
-<el><underscore>{<mod0><comma><mod1>} & <el><underscore>{<mod0><comma><mod1>} & \ldots & <el><underscore>{<mod0><comma><width>} \\
-\vdots & \vdots & \ddots & \vdots \\
-<el><underscore>{<height><comma>0} & <el><underscore>{<height><comma>1} & \ldots & <el><underscore>{<height><comma><width>} \\
+<indent><el><underscore>{<mod0><comma><mod1>} & <el><underscore>{<mod0><comma><mod1>} & \ldots & <el><underscore>{<mod0><comma><width>} \\
+<indent><el><underscore>{<mod0><comma><mod1>} & <el><underscore>{<mod0><comma><mod1>} & \ldots & <el><underscore>{<mod0><comma><width>} \\
+<indent>\vdots & \vdots & \ddots & \vdots \\
+<indent><el><underscore>{<height><comma>0} & <el><underscore>{<height><comma>1} & \ldots & <el><underscore>{<height><comma><width>} \\
 \end{bmatrix}
       ]], {
+        indent = funcs.ifn(1),
         el = i(1, 'a'),
         height = i(2, 'N-1'),
         width = i(3, 'M-1'),
@@ -139,7 +140,7 @@ local math_snippets = {
     s({ trig = 'dd' }, { t '\\mathrm{d}', i(0) }),
 
     s({ trig = '!=' }, { t '\\neq ', i(0) }),
-    s({ trig = '==' }, { t '&= ', i(1), t ' \\\\' }),
+    s({ trig = '==' }, { t '&= ', i(0) }),
     s({ trig = '&= =' }, { t '\\equiv ', i(0) }),
     s({ trig = '>=' }, { t '\\ge ', i(0) }),
     s({ trig = '<=' }, { t '\\le ', i(0) }),
@@ -190,6 +191,12 @@ local math_snippets = {
     s({ trig = '+-' }, { t '\\pm ' }),
     s({ trig = '-+' }, { t '\\mp ' }),
     s({ trig = '||' }, { t '\\mid ', i(0) }),
+    s({ trig = '(%[.*%])rt', regTrig = true }, {
+      d(1, function(_, snip)
+        local order = snip.captures[1]
+        return sn(nil, { t('\\sqrt' .. order .. '{'), i(1), t '}' })
+      end),
+    }),
     s({ trig = 'rt' }, { t '\\sqrt{', i(1), t '}' }),
     s({ trig = '\\\\\\' }, { t '\\setminus ', i(0) }),
     s({ trig = '%%' }, { t '\\%', i(0) }),
@@ -255,11 +262,11 @@ local math_snippets = {
     s({ trig = 'cl' }, { t '\\left\\lceil ', i(1), t ' \\right\\rceil', i(0) }),
     s({ trig = 'bmat' }, { t '\\begin{bmatrix} ', i(1), t ' \\end{bmatrix}', i(0) }),
     s({ trig = 'pmat' }, { t '\\begin{pmatrix} ', i(1), t ' \\end{pmatrix}', i(0) }),
-    s({ trig = 'Bmat' }, { t { '\\begin{bmatrix}', '' }, i(0), t { '', '\\end{bmatrix}', '' } }),
-    s({ trig = 'Pmat' }, { t { '\\begin{pmatrix}', '' }, i(0), t { '', '\\end{pmatrix}', '' } }),
-    s({ trig = 'aln' }, { t { '\\begin{align*}', '' }, i(0), t { '', '\\end{align*}' } }),
-    s({ trig = 'eqt' }, { t { '\\begin{equation*}', '' }, i(0), t { '', '\\end{equation*}' } }),
-    s({ trig = 'cas' }, { t { '\\begin{cases}', '' }, i(1), t { '', '\\end{cases}' } }, i(0)),
+    s({ trig = 'Bmat' }, { t { '\\begin{bmatrix}', '' }, funcs.ifn(1), i(1), t { '', '\\end{bmatrix}', '' } }),
+    s({ trig = 'Pmat' }, { t { '\\begin{pmatrix}', '' }, funcs.ifn(1), i(1), t { '', '\\end{pmatrix}', '' } }),
+    s({ trig = 'aln' }, { t { '\\begin{align*}', '' }, funcs.ifn(1), i(1), t { '', '\\end{align*}' } }),
+    s({ trig = 'eqt' }, { t { '\\begin{equation*}', '' }, funcs.ifn(1), i(1), t { '', '\\end{equation*}' } }),
+    s({ trig = 'cas' }, { t { '\\begin{cases}', '' }, funcs.ifn(1), i(1), t { '', '\\end{cases}' } }, i(0)),
     s({ trig = 'part' }, { t { '\\frac{\\partial ' }, i(1), t { '}{\\partial ' }, i(2), t { '}' }, i(0) }),
     s({ trig = 'diff' }, { t '\\frac{\\mathrm{d}', i(1), t '}{\\mathrm{d}', i(2), t '} ', i(0) }),
     s({ trig = 'int', priority = 998 }, { t '\\int_{', i(1), t '}^{', i(2), t '} ', i(0) }),

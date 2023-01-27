@@ -26,9 +26,32 @@ local function get_char_after()
   return current_line:sub(cursor[2], cursor[2])
 end
 
+local function get_indent_str(depth)
+  local f = require('luasnip').function_node
+  local sts
+  if vim.bo.sts > 0 then sts = vim.bo.sts
+  elseif vim.bo.sw > 0 then sts = vim.bo.sw
+  else sts = vim.bo.ts end
+
+  if vim.bo.expandtab then
+    return string.rep(' ', sts * depth)
+  else
+    local n_tab = math.floor(sts * depth / vim.bo.ts)
+    local indent_str = string.rep('\t', n_tab)
+    indent_str = indent_str .. string.rep(' ', sts * depth % vim.bo.ts)
+    return indent_str
+  end
+end
+
+local function indent_function_node(depth)
+  local f = require('luasnip').function_node
+  return f(function() return get_indent_str(depth) end, {}, {})
+end
+
 return {
   add_attr = add_attr,
   in_mathzone = in_mathzone,
   not_in_mathzone = not_in_mathzone,
   get_char_after = get_char_after,
+  ifn = indent_function_node,
 }
