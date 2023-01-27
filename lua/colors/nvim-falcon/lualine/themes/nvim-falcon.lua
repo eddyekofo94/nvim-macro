@@ -16,17 +16,19 @@ local nvim_falcon = {
     b = { fg = plt.smoke, bg = plt.thunder }
   },
   replace = {
-    a = { fg = plt.space, bg = plt.yellow, gui = 'bold' }
+    a = { fg = plt.space, bg = plt.yellow, gui = 'bold' },
+    b = { fg = plt.smoke, bg = plt.thunder }
   },
   insert = {
     a = { fg = plt.space, bg = plt.flashlight, gui = 'bold' },
-    b = { fg = plt.smoke, bg = plt.ocean }
+    b = { fg = plt.smoke, bg = plt.thunder }
   },
   terminal = {
-    a = { fg = plt.space, bg = plt.flashlight, gui = 'bold' }
+    a = { fg = plt.space, bg = plt.turquoise, gui = 'bold' }
   },
   command = {
-    a = { fg = plt.space, bg = plt.flashlight, gui = 'bold' }
+    a = { fg = plt.space, bg = plt.flashlight, gui = 'bold' },
+    b = { fg = plt.smoke, bg = plt.thunder }
   }
 }
 

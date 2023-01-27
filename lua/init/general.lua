@@ -12,7 +12,6 @@ opt.wrap = false
 opt.termguicolors = true
 opt.pumheight = 16
 opt.cursorline = true
-opt.cursorlineopt = 'number'
 opt.undofile = true
 opt.mouse = 'a'
 opt.showtabline = 0

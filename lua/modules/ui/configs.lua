@@ -232,7 +232,7 @@ M['alpha-nvim'] = function()
       cursor = 5,
       width = 50,
       align_shortcut = 'right',
-      hl_shortcut = 'Keyword'
+      hl_shortcut = 'Lavender'
     }
     local opts = vim.tbl_deep_extend('force', default_opts, usr_opts)
     if nil == keybind then
