@@ -264,8 +264,24 @@ local math_snippets = {
     s({ trig = 'pmat' }, { t '\\begin{pmatrix} ', i(1), t ' \\end{pmatrix}', i(0) }),
     s({ trig = 'Bmat' }, { t { '\\begin{bmatrix}', '' }, funcs.ifn(1), i(1), t { '', '\\end{bmatrix}', '' } }),
     s({ trig = 'Pmat' }, { t { '\\begin{pmatrix}', '' }, funcs.ifn(1), i(1), t { '', '\\end{pmatrix}', '' } }),
-    s({ trig = 'aln' }, { t { '\\begin{align*}', '' }, funcs.ifn(1), i(1), t { '', '\\end{align*}' } }),
-    s({ trig = 'eqt' }, { t { '\\begin{equation*}', '' }, funcs.ifn(1), i(1), t { '', '\\end{equation*}' } }),
+    s({ trig = 'aln' }, fmta([[
+\begin{<env>}
+<indent><text>
+\end{<env>}
+    ]], {
+      env = c(1, { i(nil, 'aligned'), i(nil, 'align*'), i(nil, 'align') }),
+      indent = funcs.ifn(1),
+      text = i(2),
+    }, { repeat_duplicates = true })),
+    s({ trig = 'eqt' }, fmta([[
+\begin{<env>}
+<indent><text>
+\end{<env>}
+    ]], {
+      env = c(1, { i(nil, 'equation*'), i(nil, 'equation') }),
+      indent = funcs.ifn(1),
+      text = i(2),
+    }, { repeat_duplicates = true })),
     s({ trig = 'cs' }, { t { '\\begin{cases}', '' }, funcs.ifn(1), i(1), t { '', '\\end{cases}' } }, i(0)),
     s({ trig = 'part' }, { t { '\\frac{\\partial ' }, i(1), t { '}{\\partial ' }, i(2), t { '}' }, i(0) }),
     s({ trig = 'diff' }, { t '\\frac{\\mathrm{d}', i(1), t '}{\\mathrm{d}', i(2), t '} ', i(0) }),

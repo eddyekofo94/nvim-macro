@@ -24,15 +24,6 @@ local conds = require('luasnip.extras.expand_conditions')
 
 M.math = require('modules.completion.snippets.share.math')
 
-local function add_attr(attr, snip_group)
-  for _, snip in ipairs(snip_group) do
-    for attr_key, attr_val in pairs(attr) do
-      snip[attr_key] = attr_val
-    end
-  end
-  return snip_group
-end
-
 M.format = {
   snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
     s({ trig = '^# ', regTrig = true, snippetType = 'autosnippet' }, {

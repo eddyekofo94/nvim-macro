@@ -273,6 +273,8 @@ M['LuaSnip'] = function()
   local function set_keymap()
     vim.keymap.set('s', '<Tab>', function() ls.jump(1) end, { noremap = false })
     vim.keymap.set('s', '<S-Tab>', function() ls.jump(-1) end, { noremap = false })
+    vim.keymap.set('s', '<C-n>', '<Plug>luasnip-next-choice', {})
+    vim.keymap.set('s', '<C-p>', '<Plug>luasnip-prev-choice', {})
   end
 
   local function set_ls_region_check_autocmd()
@@ -313,7 +315,7 @@ M['LuaSnip'] = function()
     ext_opts = {
       [ls_types.choiceNode] = {
         active = {
-          virt_text = { { icons.Enum, 'Tea' } },
+          virt_text = { { icons.Enum, 'Ochre' } },
         },
       },
       [ls_types.insertNode] = {

@@ -35,9 +35,30 @@ M.env_standalone = {
       env = i(1),
       text = i(2),
     }, { repeat_duplicates = true })),
-    s({ trig = 'cs' }, { t { '\\begin{equation}', '\\begin{cases}', '' }, funcs.ifn(1), i(1), t { '', '\\end{cases}', '\\end{equation}' } }, i(0)),
-    s({ trig = 'aln' }, { t { '\\begin{align*}', '' }, funcs.ifn(1), i(0), t { '', '\\end{align*}' } }),
-    s({ trig = 'eqt' }, { t { '\\begin{equation*}', '' }, funcs.ifn(1), i(0), t { '', '\\end{equation*}' } }),
+    s({ trig = 'cs' }, {
+      t { '\\begin{equation}', '\\begin{cases}', '' },
+      funcs.ifn(1),
+      i(1),
+      t { '', '\\end{cases}', '\\end{equation}' }
+    }),
+    s({ trig = 'aln' }, fmta([[
+\begin{<env>}
+<indent><text>
+\end{<env>}
+    ]], {
+      env = c(1, { i(nil, 'align*'), i(nil, 'align') }),
+      indent = funcs.ifn(1),
+      text = i(2),
+    }, { repeat_duplicates = true })),
+    s({ trig = 'eqt' }, fmta([[
+\begin{<env>}
+<indent><text>
+\end{<env>}
+    ]], {
+      env = c(1, { i(nil, 'equation*'), i(nil, 'equation') }),
+      indent = funcs.ifn(1),
+      text = i(2),
+    }, { repeat_duplicates = true })),
   }),
 }
 
@@ -50,6 +71,16 @@ M.style = {
     s({ trig = 'B' }, { t '\\textbf{\\textit{', i(1), t '}}' }),
     s({ trig = 'u' }, { t '\\underline{', i(1), t '}' }),
   })
+}
+
+M.style_auto = {
+  snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
+    s({ trig = '- ' }, { t '\\item' }),
+    s({ trig = '\\item(%w)', regTrig = true }, d(1, function(_, snip)
+      return sn(nil, { t('\\item{' .. snip.captures[1]), i(1), t '}' })
+    end))
+  }),
+  opts = { type = 'autosnippets' },
 }
 
 return M
