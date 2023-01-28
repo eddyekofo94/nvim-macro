@@ -35,4 +35,9 @@ M['ts-node-action'] = {
   config = configs['ts-node-action'],
 }
 
+M['cellular-automaton.nvim'] = {
+  'Eandrju/cellular-automaton.nvim',
+  after = 'nvim-treesitter',
+}
+
 return M
