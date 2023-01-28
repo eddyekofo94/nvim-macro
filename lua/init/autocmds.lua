@@ -54,6 +54,17 @@ local autocmds = {
       end,
     },
   },
+
+  -- Automatically create missing directories
+  {
+    { 'BufWritePre' },
+    {
+      pattern = '*',
+      callback = function()
+        vim.fn.mkdir(vim.fn.expand('%:p:h'), 'p')
+      end,
+    },
+  },
 }
 
 set_autocmds(autocmds)
