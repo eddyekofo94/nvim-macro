@@ -1,5 +1,6 @@
 local M = {}
 local fn = vim.fn
+local api = vim.api
 local config = require('plugin.skeleton.config').config
 
 ---Select skeleton file from a list of candidates.
@@ -72,28 +73,30 @@ function M.test_apply_cond(fname, dir, skeleton)
 end
 
 ---Get the extension of a file; fallback to filetype
+---@param ft string filetype of the new file
 ---@param fname string
 ---@return string
-function M.get_ext(fname)
+function M.get_ext(ft, fname)
   local ext = fn.fnamemodify(fname, ':e')
   if ext == '' then
-    return vim.bo.ft
+    return ft
   end
   return ext
 end
 
 ---Find proper skeleton inside skeleton direcotry and apply it.
+---@param ft string filetype of the new file
 ---@param fname string name of the new file
 ---@param dir string directory of the new file
 ---@param skeleton_dir string skeleton directory, default to <project_dir>/.skeleton
 ---@param candidates nil|string[] list of fallback skeleton files
 ---@return boolean true if skeleton is applied
-function M.apply_skeleton_indir(fname, dir, skeleton_dir, candidates)
+function M.apply_skeleton_indir(ft, fname, dir, skeleton_dir, candidates)
   if not skeleton_dir or fn.isdirectory(skeleton_dir) == 0 then
     return false
   end
 
-  local ext = M.get_ext(fname)
+  local ext = M.get_ext(ft, fname)
   local skeleton = M.skeleton_fallback(fname, dir, candidates or {
     fname,
     'skeleton.' .. fname,
@@ -122,17 +125,18 @@ function M.apply_skeleton_indir(fname, dir, skeleton_dir, candidates)
 end
 
 ---Find skeleton files in project directory and apply it.
+---@param ft string filetype of the new file
 ---@param fname string name of the new file
 ---@param dir string directory of the new file
 ---@param skeleton_dir string skeleton directory, project directory in this case
 ---@param candidates nil|string[] fallback skeleton files
 ---@return boolean true if skeleton is applied
-function M.apply_skeleton_bare(fname, dir, skeleton_dir, candidates)
+function M.apply_skeleton_bare(ft, fname, dir, skeleton_dir, candidates)
   if not skeleton_dir or fn.isdirectory(skeleton_dir) == 0 then
     return false
   end
 
-  local ext = M.get_ext(fname)
+  local ext = M.get_ext(ft, fname)
   local skeleton = M.skeleton_fallback(fname, dir, candidates or {
     '.skeleton.' .. fname,
     '.skeleton.' .. ext
@@ -145,23 +149,50 @@ function M.apply_skeleton_bare(fname, dir, skeleton_dir, candidates)
   return false
 end
 
+---Check if the file is new.
+---@param tbl table passed by autocmd
+---@return boolean true if the file is new
+function M.is_new_file(tbl)
+  if tbl.event == 'BufNewFile' then
+    return true
+  end
+  return false
+end
+
+---Check if the file is empty.
+---@param tbl table passed by autocmd
+---@boolean true if the file is empty
+function M.is_empty_file(tbl)
+  local stat = vim.loop.fs_stat(tbl.file)
+  if stat and stat.size == 0 then
+    return true
+  end
+  return false
+end
+
 ---Apply skeleton to the new file.
 ---@return boolean true if skeleton is applied
-function M.apply_skeleton()
+function M.apply_skeleton(tbl)
   if not vim.bo.buftype == '' then return false end
 
   local proj_dir = require('utils.funcs').proj_dir() or ''
-  local fname = fn.expand('%:t')
-  local fpath = fn.expand('%:p:h')
+  local fname = fn.fnamemodify(tbl.file, ':t')
+  local ft = api.nvim_buf_get_option(tbl.buf, 'filetype')
+  local fpath = fn.fnamemodify(tbl.file, ':p:h')
   local utils = require('plugin.skeleton.utils')
   local skeletons_configured = utils.get_skeletons_configured(fname)
 
-  return M.apply_skeleton_bare(fname, fpath, proj_dir, skeletons_configured)
-    or M.apply_skeleton_indir(fname, fpath, proj_dir .. config.skeleton_proj_dirname, skeletons_configured)
-    or M.apply_skeleton_indir(fname, fpath, config.skeleton_dir, skeletons_configured)
-    or M.apply_skeleton_bare(fname, fpath, proj_dir, nil)
-    or M.apply_skeleton_indir(fname, fpath, proj_dir .. config.skeleton_proj_dirname, nil)
-    or M.apply_skeleton_indir(fname, fpath, config.skeleton_dir, nil)
+  if config.apply.new_files and M.is_new_file(tbl) or
+      config.apply.empty_files and M.is_empty_file(tbl) then
+    return M.apply_skeleton_bare(ft, fname, fpath, proj_dir, skeletons_configured)
+      or M.apply_skeleton_indir(ft, fname, fpath, proj_dir .. config.skeleton_proj_dirname, skeletons_configured)
+      or M.apply_skeleton_indir(ft, fname, fpath, config.skeleton_dir, skeletons_configured)
+      or M.apply_skeleton_bare(ft, fname, fpath, proj_dir, nil)
+      or M.apply_skeleton_indir(ft, fname, fpath, proj_dir .. config.skeleton_proj_dirname, nil)
+      or M.apply_skeleton_indir(ft, fname, fpath, config.skeleton_dir, nil)
+  end
+
+  return false
 end
 
 return M
