@@ -58,13 +58,13 @@ M['nvim-navic'] = {
 
 M['indent-blankline.nvim'] = {
   'lukas-reineke/indent-blankline.nvim',
-  event = 'BufReadPre',
+  event = { 'BufReadPre', 'BufWrite' },
   config = configs['indent-blankline.nvim'],
 }
 
 M['mini.indentscope'] = {
   'echasnovski/mini.indentscope',
-  event = 'BufReadPre',
+  event = { 'BufReadPre', 'BufWrite' },
   config = configs['mini.indentscope'],
 }
 
