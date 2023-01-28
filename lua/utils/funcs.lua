@@ -68,7 +68,7 @@ function M.git_dir()
   return vim.trim(gitdir)
 end
 
-function M.autocd()
+function M.proj_dir()
   if vim.bo.buftype ~= '' or
       '' ~= vim.api.nvim_win_get_config(0).relative then
     return
@@ -78,6 +78,13 @@ function M.autocd()
     target_dir = vim.fn.expand('%:p:h')
   end
   if target_dir and vim.fn.isdirectory(target_dir) then
+    return target_dir
+  end
+end
+
+function M.autocd()
+  local target_dir = M.proj_dir()
+  if target_dir then
     vim.cmd('lcd ' .. target_dir)
   end
 end
