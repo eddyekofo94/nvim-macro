@@ -77,7 +77,7 @@ function M.proj_dir()
   if not target_dir then
     target_dir = vim.fn.expand('%:p:h')
   end
-  if target_dir and vim.fn.isdirectory(target_dir) then
+  if target_dir and vim.fn.isdirectory(target_dir) ~= 0 then
     return target_dir
   end
 end
