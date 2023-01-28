@@ -1,6 +1,5 @@
 local M = {}
 local fn = vim.fn
-local fs = vim.fs
 local config = require('plugin.skeleton.config').config
 
 ---Select skeleton file from a list of candidates.
