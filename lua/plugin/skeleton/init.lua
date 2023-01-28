@@ -4,6 +4,7 @@
 -- TODO: match multiple skeletons
 local M = {}
 
+---@param user_config skeleton_config_t
 function M.setup(user_config)
   local config = require('plugin.skeleton.config')
   config.config = vim.tbl_deep_extend('force', config.config, user_config or {})
