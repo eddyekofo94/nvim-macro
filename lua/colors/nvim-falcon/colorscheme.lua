@@ -291,6 +291,7 @@ sch.TelescopeNormal         = { link = 'NormalFloat' }
 sch.TelescopeBorder         = { link = 'FloatBorder' }
 sch.TelescopeSelection      = { bg = plt.thunder }
 sch.TelescopeMultiSelection = { bg = plt.thunder, bold = true }
+sch.TelescopePreviewLine    = { bg = plt.thunder }
 sch.TelescopeMatching       = { link = 'Search' }
 sch.TelescopePromptCounter  = { link = 'Comment' }
 sch.TelescopePromptPrefix   = { fg = plt.orange }
