@@ -68,4 +68,17 @@ M['mini.indentscope'] = {
   config = configs['mini.indentscope'],
 }
 
+M['twilight.nvim'] = {
+  'folke/twilight.nvim',
+  keys = { '<Leader>;' },
+  cmd = { 'Twilight', 'TwilightEnable' },
+  config = configs['twilight.nvim'],
+}
+
+M['limelight.vim'] = {
+  'junegunn/limelight.vim',
+  cmd = 'Limelight',
+  config = configs['limelight.vim'],
+}
+
 return M

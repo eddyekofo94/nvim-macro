@@ -625,4 +625,47 @@ M['mini.indentscope'] = function()
   })
 end
 
+M['twilight.nvim'] = function()
+  local twilight = require('twilight')
+  local utils = require('modules.ui.utils')
+  twilight.setup({
+    context = 0,
+    dimming = {
+      alpha = 0.4,
+      color = { 'Turquoise', '#7fa0af' },
+      term_bg = '#171d2b',
+    },
+    exclude = utils.twilight_exclude,
+  })
+
+  vim.api.nvim_create_user_command('Twilight', function(_)
+    twilight.toggle()
+    vim.g.twilight_active = not vim.g.twilight_active
+    utils.limelight_check()
+  end, { desc = 'Toggle twilight.nvim and limelight.vim' })
+  vim.api.nvim_create_user_command('TwilightDisable', function(_)
+    twilight.disable()
+    vim.g.twilight_active = false
+    utils.limelight_check()
+  end, { desc = 'Disable twilight.nvim and limelight.vim' })
+  vim.api.nvim_create_user_command('TwilightEnable', function(_)
+    twilight.enable()
+    vim.g.twilight_active = true
+    utils.limelight_check()
+  end, { desc = 'Enable twilight.nvim and limelight.vim' })
+
+  vim.keymap.set('n', '<Leader>;', '<Cmd>Twilight<CR>', {
+    silent = true,
+    noremap = true
+  })
+end
+
+M['limelight.vim'] = function()
+  vim.g.limelight_conceal_guifg = '#415160'
+  vim.api.nvim_create_autocmd({ 'BufLeave', 'BufEnter' }, {
+    pattern = '*',
+    callback = require('modules.ui.utils').limelight_check,
+  })
+end
+
 return M
