@@ -148,14 +148,13 @@ M['lualine.nvim'] = function()
         'mode',
         {
           reg_recording,
-          padding = { left = 0, right = 1 },
-          color = { fg = palette.orange, gui = 'bold' },
+          color = { fg = palette.space, bg = palette.orange, gui = 'bold' },
           cond = function() return vim.o.cmdheight == 0 end,
         },
       },
       lualine_b = {
-        { 'branch', cond = longer_than(75) },
-        { 'diff', cond = longer_than(50) },
+        { 'branch', icon = { '', color = { fg = palette.turquoise } }, cond = longer_than(75) },
+        { 'diff', cond = longer_than(50), padding = { left = 0, right = 1 } },
         { 'diagnostics', cond = longer_than(50) },
       },
       lualine_c = {
