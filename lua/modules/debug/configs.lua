@@ -46,6 +46,33 @@ M['nvim-dap-ui'] = function()
   vim.keymap.set({ 'n', 'x' }, '<F24>', dapui.eval, { noremap = true })
   dapui.setup({
     expand_lines = false,
+    layouts = { {
+        elements = { {
+            id = 'scopes',
+            size = 0.25
+          }, {
+            id = 'breakpoints',
+            size = 0.25
+          }, {
+            id = 'stacks',
+            size = 0.25
+          }, {
+            id = 'watches',
+            size = 0.25
+          } },
+        position = 'left',
+        size = 0.3
+      }, {
+        elements = { {
+            id = 'repl',
+            size = 0.5
+          }, {
+            id = 'console',
+            size = 0.5
+          } },
+        position = 'bottom',
+        size = 0.25
+      } },
     icons = {
       expanded = '▼',
       collapsed = '►',
@@ -78,7 +105,7 @@ M['mason-nvim-dap.nvim'] = function()
     automatic_setup = true,
   })
   mason_nvim_dap.setup_handlers({
-    python = function(source_name) end, -- suppress auto setup for python
+    python = function(_) end, -- suppress auto setup for python
   })
 end
 
