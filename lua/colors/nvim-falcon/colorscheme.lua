@@ -127,84 +127,83 @@ sch.DiagnosticSignWarn         = { link = 'DiagnosticWarn' } -- Used for 'Warn' 
 sch.DiagnosticSignInfo         = { link = 'DiagnosticInfo' } -- Used for 'Info' signs in sign column.
 sch.DiagnosticSignHint         = { link = 'DiagnosticHint' } -- Used for 'Hint' signs in sign column.
 
-sch.rainbowcol1  = { fg = plt.smoke }   -- default light is too bright
-sch['@field']    = { fg = plt.smoke }
-sch['@property'] = { fg = plt.smoke }
-
-sch['@annotation'] = { link = 'Operator' }
-sch['@comment'] = { link = 'Comment' }
-sch['@none'] = { bg = 'NONE', fg = 'NONE' }
-sch['@preproc'] = { link = 'PreProc' }
-sch['@define'] = { link = 'Define' }
-sch['@operator'] = { link = 'Operator' }
-sch['@punctuation.delimiter'] = { link= 'Delimiter' }
-sch['@punctuation.bracket'] = { fg = plt.smoke }
-sch['@punctuation.special'] = { link = 'Delimiter' }
-sch['@string'] = { link = 'String' }
-sch['@string.regex'] = { link = 'String' }
-sch['@string.escape'] = { link = 'SpecialChar' }
-sch['@string.special'] = { link = 'SpecialChar' }
-sch['@character'] = { link = 'Character' }
-sch['@character.special'] = { link = 'SpecialChar' }
-sch['@boolean'] = { link = 'Boolean' }
-sch['@number'] = { link = 'Number' }
-sch['@float'] = { link = 'Float' }
-sch['@function'] = { link = 'Function' }
-sch['@function.call'] = { link = 'Function' }
-sch['@function.builtin'] = { link = 'Special' }
-sch['@function.macro'] = { link = 'Macro' }
-sch['@method'] = { link = 'Function' }
-sch['@method.call'] = { link = 'Function' }
-sch['@constructor'] = { link = 'Special' }
-sch['@parameter'] = { link = 'Identifier' }
-sch['@keyword'] = { link = 'Keyword' }
-sch['@keyword.function'] = { link = 'Keyword' }
-sch['@keyword.return'] = { link = 'Keyword' }
-sch['@conditional'] = { link = 'Conditional' }
-sch['@repeat'] = { link = 'Repeat' }
-sch['@debug'] = { link = 'Debug' }
-sch['@label'] = { link = 'Keyword' }
-sch['@include'] = { link = 'Include' }
-sch['@exception'] = { link = 'Exception' }
-sch['@type'] = { link = 'Type' }
-sch['@type.builtin'] = { link = 'Type' }
-sch['@type.qualifier'] = { link = 'Type' }
-sch['@type.definition'] = { link = 'Typedef' }
-sch['@storageclass'] = { link = 'StorageClass' }
-sch['@attribute'] = { link = 'PreProc' }
-sch['@field'] = { link = 'Identifier' }
-sch['@property'] = { link = 'Identifier' }
-sch['@variable'] = { link = 'Variable' }
-sch['@variable.builtin'] = { link = 'Special' }
-sch['@constant'] = { link = 'Constant' }
-sch['@constant.builtin'] = { link = 'Special' }
-sch['@constant.macro'] = { link = 'Macro' }
-sch['@namespace'] = { fg = plt.ochre }
-sch['@symbol'] = { link = 'Identifier' }
-sch['@text'] = { link = 'String' }
-sch['@text.title'] = { link = 'Title' }
-sch['@text.literal'] = { link = 'String' }
-sch['@text.uri'] = { link = 'Underlined' }
-sch['@text.math'] = { link = 'Special' }
-sch['@text.environment'] = { link = 'Macro' }
+sch.rainbowcol1               = { fg = plt.smoke } -- default light is too bright
+sch['@field']                 = { fg = plt.smoke }
+sch['@property']              = { fg = plt.smoke }
+sch['@annotation']            = { link = 'Operator' }
+sch['@comment']               = { link = 'Comment' }
+sch['@none']                  = { bg = 'NONE', fg = 'NONE' }
+sch['@preproc']               = { link = 'PreProc' }
+sch['@define']                = { link = 'Define' }
+sch['@operator']              = { link = 'Operator' }
+sch['@punctuation.delimiter'] = { link = 'Delimiter' }
+sch['@punctuation.bracket']   = { fg = plt.smoke }
+sch['@punctuation.special']   = { link = 'Delimiter' }
+sch['@string']                = { link = 'String' }
+sch['@string.regex']          = { link = 'String' }
+sch['@string.escape']         = { link = 'SpecialChar' }
+sch['@string.special']        = { link = 'SpecialChar' }
+sch['@character']             = { link = 'Character' }
+sch['@character.special']     = { link = 'SpecialChar' }
+sch['@boolean']               = { link = 'Boolean' }
+sch['@number']                = { link = 'Number' }
+sch['@float']                 = { link = 'Float' }
+sch['@function']              = { link = 'Function' }
+sch['@function.call']         = { link = 'Function' }
+sch['@function.builtin']      = { link = 'Special' }
+sch['@function.macro']        = { link = 'Macro' }
+sch['@method']                = { link = 'Function' }
+sch['@method.call']           = { link = 'Function' }
+sch['@constructor']           = { link = 'Special' }
+sch['@parameter']             = { link = 'Identifier' }
+sch['@keyword']               = { link = 'Keyword' }
+sch['@keyword.function']      = { link = 'Keyword' }
+sch['@keyword.return']        = { link = 'Keyword' }
+sch['@conditional']           = { link = 'Conditional' }
+sch['@repeat']                = { link = 'Repeat' }
+sch['@debug']                 = { link = 'Debug' }
+sch['@label']                 = { link = 'Keyword' }
+sch['@include']               = { link = 'Include' }
+sch['@exception']             = { link = 'Exception' }
+sch['@type']                  = { link = 'Type' }
+sch['@type.builtin']          = { link = 'Type' }
+sch['@type.qualifier']        = { link = 'Type' }
+sch['@type.definition']       = { link = 'Typedef' }
+sch['@storageclass']          = { link = 'StorageClass' }
+sch['@attribute']             = { link = 'PreProc' }
+sch['@field']                 = { link = 'Identifier' }
+sch['@property']              = { link = 'Identifier' }
+sch['@variable']              = { link = 'Variable' }
+sch['@variable.builtin']      = { link = 'Special' }
+sch['@constant']              = { link = 'Constant' }
+sch['@constant.builtin']      = { link = 'Special' }
+sch['@constant.macro']        = { link = 'Macro' }
+sch['@namespace']             = { fg = plt.ochre }
+sch['@symbol']                = { link = 'Identifier' }
+sch['@text']                  = { link = 'String' }
+sch['@text.title']            = { link = 'Title' }
+sch['@text.literal']          = { link = 'String' }
+sch['@text.uri']              = { link = 'Underlined' }
+sch['@text.math']             = { link = 'Special' }
+sch['@text.environment']      = { link = 'Macro' }
 sch['@text.environment.name'] = { link = 'Type' }
-sch['@text.reference'] = { link = 'Constant' }
-sch['@text.todo'] = { link = 'Todo' }
-sch['@text.todo.unchecked'] = { link = 'Todo' }
-sch['@text.todo.checked'] = { link = 'Done' }
-sch['@text.note'] = { link = 'SpecialComment' }
-sch['@text.warning'] = { link = 'WarningMsg' }
-sch['@text.danger'] = { link = 'ErrorMsg' }
-sch['@text.diff.add'] = { link = 'DiffAdded' }
-sch['@text.diff.delete'] = { link = 'DiffRemoved' }
-sch['@tag'] = { link = 'Tag' }
-sch['@tag.attribute'] = { link = 'Identifier' }
-sch['@tag.delimiter'] = { link = 'Delimiter' }
-sch['@text.strong'] = { bold = true }
-sch['@text.strike'] = { strikethrough = true }
-sch['@text.emphasis'] = { fg = plt.black, bg = plt.beige, bold = true, italic = true }
-sch['@text.underline'] = { underline = true }
-sch['@keyword.operator'] = { link = 'Operator' }
+sch['@text.reference']        = { link = 'Constant' }
+sch['@text.todo']             = { link = 'Todo' }
+sch['@text.todo.unchecked']   = { link = 'Todo' }
+sch['@text.todo.checked']     = { link = 'Done' }
+sch['@text.note']             = { link = 'SpecialComment' }
+sch['@text.warning']          = { link = 'WarningMsg' }
+sch['@text.danger']           = { link = 'ErrorMsg' }
+sch['@text.diff.add']         = { link = 'DiffAdded' }
+sch['@text.diff.delete']      = { link = 'DiffRemoved' }
+sch['@tag']                   = { link = 'Tag' }
+sch['@tag.attribute']         = { link = 'Identifier' }
+sch['@tag.delimiter']         = { link = 'Delimiter' }
+sch['@text.strong']           = { bold = true }
+sch['@text.strike']           = { strikethrough = true }
+sch['@text.emphasis']         = { fg = plt.black, bg = plt.beige, bold = true, italic = true }
+sch['@text.underline']        = { underline = true }
+sch['@keyword.operator']      = { link = 'Operator' }
 
 -- HTML
 sch.htmlArg            = { fg = plt.pigeon }
@@ -224,41 +223,42 @@ sch.htmlLink           = { fg = plt.flashlight, underline = true }
 sch.htmlSpecialChar    = { fg = plt.beige }
 sch.htmlTitle          = { fg = plt.pigeon }
 -- Json
-sch.jsonKeyword = { link = 'Keyword' }
-sch.jsonBraces  = { fg = plt.smoke }
+sch.jsonKeyword        = { link = 'Keyword' }
+sch.jsonBraces         = { fg = plt.smoke }
 
 -- Plugin highlights
 -- nvim-cmp
-sch.CmpItemAbbr             = { fg = plt.smoke }
-sch.CmpItemAbbrDeprecated   = { strikethrough = true }
-sch.CmpItemAbbrMatch        = { fg = plt.white }
-sch.CmpItemAbbrMatchFuzzy   = { link = 'CmpItemAbbrMatch' }
-sch.CmpItemKindText         = { link = 'String' }
-sch.CmpItemKindMethod       = { link = 'Function' }
-sch.CmpItemKindFunction     = { link = 'Function' }
-sch.CmpItemKindConstructor  = { link = 'Function' }
-sch.CmpItemKindField        = { fg = plt.purple }
-sch.CmpItemKindProperty     = { link = 'CmpItemKindField' }
-sch.CmpItemKindVariable     = { fg = plt.aqua }
-sch.CmpItemKindReference    = { link = 'CmpItemKindVariable' }
-sch.CmpItemKindModule       = { fg = plt.magenta }
-sch.CmpItemKindEnum         = { fg = plt.ochre }
-sch.CmpItemKindEnumMember   = { link = 'CmpItemKindEnum' }
-sch.CmpItemKindKeyword      = { link = 'Keyword' }
-sch.CmpItemKindOperator     = { link = 'Operator' }
-sch.CmpItemKindSnippet      = { fg = plt.tea }
-sch.CmpItemKindColor        = { fg = plt.pink }
-sch.CmpItemKindConstant     = { link = 'Constant' }
-sch.CmpItemKindCopilot      = { fg = plt.magenta }
-sch.CmpItemKindValue        = { link = 'Number' }
-sch.CmpItemKindClass        = { link = 'Type' }
-sch.CmpItemKindStruct       = { link = 'Type' }
-sch.CmpItemKindEvent        = { fg = plt.flashlight }
-sch.CmpItemKindInterface    = { fg = plt.flashlight }
-sch.CmpItemKindFile         = { fg = plt.smoke }
-sch.CmpItemKindFolder       = { fg = plt.pigeon }
-sch.CmpItemKind             = { fg = plt.smoke }
-sch.CmpItemMenu             = { fg = plt.smoke }
+sch.CmpItemAbbr            = { fg = plt.smoke }
+sch.CmpItemAbbrDeprecated  = { strikethrough = true }
+sch.CmpItemAbbrMatch       = { fg = plt.white }
+sch.CmpItemAbbrMatchFuzzy  = { link = 'CmpItemAbbrMatch' }
+sch.CmpItemKindText        = { link = 'String' }
+sch.CmpItemKindMethod      = { link = 'Function' }
+sch.CmpItemKindFunction    = { link = 'Function' }
+sch.CmpItemKindConstructor = { link = 'Function' }
+sch.CmpItemKindField       = { fg = plt.purple }
+sch.CmpItemKindProperty    = { link = 'CmpItemKindField' }
+sch.CmpItemKindVariable    = { fg = plt.aqua }
+sch.CmpItemKindReference   = { link = 'CmpItemKindVariable' }
+sch.CmpItemKindModule      = { fg = plt.magenta }
+sch.CmpItemKindEnum        = { fg = plt.ochre }
+sch.CmpItemKindEnumMember  = { link = 'CmpItemKindEnum' }
+sch.CmpItemKindKeyword     = { link = 'Keyword' }
+sch.CmpItemKindOperator    = { link = 'Operator' }
+sch.CmpItemKindSnippet     = { fg = plt.tea }
+sch.CmpItemKindColor       = { fg = plt.pink }
+sch.CmpItemKindConstant    = { link = 'Constant' }
+sch.CmpItemKindCopilot     = { fg = plt.magenta }
+sch.CmpItemKindValue       = { link = 'Number' }
+sch.CmpItemKindClass       = { link = 'Type' }
+sch.CmpItemKindStruct      = { link = 'Type' }
+sch.CmpItemKindEvent       = { fg = plt.flashlight }
+sch.CmpItemKindInterface   = { fg = plt.flashlight }
+sch.CmpItemKindFile        = { fg = plt.smoke }
+sch.CmpItemKindFolder      = { fg = plt.pigeon }
+sch.CmpItemKind            = { fg = plt.smoke }
+sch.CmpItemMenu            = { fg = plt.smoke }
+
 -- gitsigns
 sch.GitSignsAdd                = { fg = plt.tea }
 sch.GitSignsDelete             = { fg = plt.scarlet }
@@ -272,20 +272,22 @@ sch.GitSignsDeleteInline       = { fg = plt.scarlet, bg = plt.scarlet_blend }
 sch.GitSignsDeleteLnInline     = { fg = plt.scarlet, bg = plt.scarlet_blend }
 sch.GitSignsDeleteVirtLnInLine = { fg = plt.scarlet, bg = plt.scarlet_blend }
 sch.GitSignsDeletePreview      = { fg = plt.scarlet, bg = plt.wine_blend }
+
 -- barbar
-sch.BufferCurrent           = { fg = plt.smoke }
-sch.BufferCurrentIndex      = { fg = plt.orange, bold = true }
-sch.BufferCurrentMod        = { fg = plt.orange, bold = true }
-sch.BufferCurrentSign       = { fg = plt.orange }
-sch.BufferInactive          = { fg = plt.pigeon, bg = plt.deepsea }
-sch.BufferInactiveIcon      = { link = 'StatusLine' }
-sch.BufferInactiveIndex     = { fg = plt.pigeon, bg = plt.deepsea }
-sch.BufferInactiveMod       = { fg = plt.wine, bg = plt.deepsea }
-sch.BufferInactiveSign      = { fg = plt.pigeon, bg = plt.deepsea }
-sch.BufferInactiveTarget    = { fg = plt.wine, bg = plt.deepsea }
-sch.BufferVisible           = { fg = plt.pigeon }
-sch.BufferVisibleMod        = { fg = plt.orange }
-sch.BufferTabpageFill       = { fg = plt.pigeon, bg = plt.ocean }
+sch.BufferCurrent        = { fg = plt.smoke }
+sch.BufferCurrentIndex   = { fg = plt.orange, bold = true }
+sch.BufferCurrentMod     = { fg = plt.orange, bold = true }
+sch.BufferCurrentSign    = { fg = plt.orange }
+sch.BufferInactive       = { fg = plt.pigeon, bg = plt.deepsea }
+sch.BufferInactiveIcon   = { link = 'StatusLine' }
+sch.BufferInactiveIndex  = { fg = plt.pigeon, bg = plt.deepsea }
+sch.BufferInactiveMod    = { fg = plt.wine, bg = plt.deepsea }
+sch.BufferInactiveSign   = { fg = plt.pigeon, bg = plt.deepsea }
+sch.BufferInactiveTarget = { fg = plt.wine, bg = plt.deepsea }
+sch.BufferVisible        = { fg = plt.pigeon }
+sch.BufferVisibleMod     = { fg = plt.orange }
+sch.BufferTabpageFill    = { fg = plt.pigeon, bg = plt.ocean }
+
 -- telescope
 sch.TelescopeNormal         = { link = 'NormalFloat' }
 sch.TelescopeBorder         = { link = 'FloatBorder' }
@@ -296,38 +298,38 @@ sch.TelescopeMatching       = { link = 'Search' }
 sch.TelescopePromptCounter  = { link = 'Comment' }
 sch.TelescopePromptPrefix   = { fg = plt.orange }
 sch.TelescopeSelectionCaret = { fg = plt.orange, bg = plt.thunder }
--- symbols-outline
-sch.FocusedSymbol = { fg = plt.white, bold = true }
+
 -- nvim-navic
-sch.NavicIconsFile = { link = 'File' }
-sch.NavicIconsModule = { link = 'CmpItemKindModule' }
-sch.NavicIconsNamespace = { fg = plt.ochre }
-sch.NavicIconsPackage = { link = 'CmpItemKindModule' }
-sch.NavicIconsClass = { link = 'CmpItemKindClass' }
-sch.NavicIconsMethod = { link = 'CmpItemKindMethod' }
-sch.NavicIconsProperty = { link = 'CmpItemKindProperty' }
-sch.NavicIconsField = { link = 'CmpItemKindField' }
-sch.NavicIconsConstructor = { link = 'CmpItemKindConstructor' }
-sch.NavicIconsEnum = { link = 'CmpItemKindEnum' }
-sch.NavicIconsInterface = { link = 'CmpItemKindInterface' }
-sch.NavicIconsFunction = { link = 'Function' }
-sch.NavicIconsVariable = { link = 'CmpItemKindVariable' }
-sch.NavicIconsConstant = { link = 'Constant' }
-sch.NavicIconsString = { link = 'String' }
-sch.NavicIconsNumber = { link = 'Number' }
-sch.NavicIconsBoolean = { link = 'Boolean' }
-sch.NavicIconsArray = { link = 'Array' }
-sch.NavicIconsObject = { link = 'Object' }
-sch.NavicIconsKey = { link = 'Keyword' }
-sch.NavicIconsNull = { link = 'Constant' }
-sch.NavicIconsEnumMember = { link = 'CmpItemKindEnumMember' }
-sch.NavicIconsStruct = { link = 'CmpItemKindStruct' }
-sch.NavicIconsEvent = { link = 'CmpItemKindEvent' }
-sch.NavicIconsOperator = { link = 'Operator' }
+sch.NavicIconsFile          = { link = 'File' }
+sch.NavicIconsModule        = { link = 'CmpItemKindModule' }
+sch.NavicIconsNamespace     = { fg = plt.ochre }
+sch.NavicIconsPackage       = { link = 'CmpItemKindModule' }
+sch.NavicIconsClass         = { link = 'CmpItemKindClass' }
+sch.NavicIconsMethod        = { link = 'CmpItemKindMethod' }
+sch.NavicIconsProperty      = { link = 'CmpItemKindProperty' }
+sch.NavicIconsField         = { link = 'CmpItemKindField' }
+sch.NavicIconsConstructor   = { link = 'CmpItemKindConstructor' }
+sch.NavicIconsEnum          = { link = 'CmpItemKindEnum' }
+sch.NavicIconsInterface     = { link = 'CmpItemKindInterface' }
+sch.NavicIconsFunction      = { link = 'Function' }
+sch.NavicIconsVariable      = { link = 'CmpItemKindVariable' }
+sch.NavicIconsConstant      = { link = 'Constant' }
+sch.NavicIconsString        = { link = 'String' }
+sch.NavicIconsNumber        = { link = 'Number' }
+sch.NavicIconsBoolean       = { link = 'Boolean' }
+sch.NavicIconsArray         = { link = 'Array' }
+sch.NavicIconsObject        = { link = 'Object' }
+sch.NavicIconsKey           = { link = 'Keyword' }
+sch.NavicIconsNull          = { link = 'Constant' }
+sch.NavicIconsEnumMember    = { link = 'CmpItemKindEnumMember' }
+sch.NavicIconsStruct        = { link = 'CmpItemKindStruct' }
+sch.NavicIconsEvent         = { link = 'CmpItemKindEvent' }
+sch.NavicIconsOperator      = { link = 'Operator' }
 sch.NavicIconsTypeParameter = { link = 'CmpItemKind' }
-sch.NavicPath = { fg = plt.smoke }
-sch.NavicText = { fg = plt.smoke }
-sch.NavicSeparator = { fg = plt.orange }
+sch.NavicPath               = { fg = plt.smoke }
+sch.NavicText               = { fg = plt.smoke }
+sch.NavicSeparator          = { fg = plt.orange }
+
 -- aerial
 sch.AerialLine              = { fg = plt.white, bg = plt.thunder, bold = true }
 sch.AerialArrayIcon         = { link = 'Array' }
@@ -356,11 +358,14 @@ sch.AerialStringIcon        = { link = 'CmpItemKindText' }
 sch.AerialStructIcon        = { link = 'CmpItemKindStruct' }
 sch.AerialTypeParameterIcon = { link = 'CmpItemKind' }
 sch.AerialVariableIcon      = { link = 'CmpItemKindVariable' }
+
 -- fidget
-sch.FidgetTitle             = { link = 'Title' }
-sch.FidgetTask              = { link = 'Comment' }
+sch.FidgetTitle = { link = 'Title' }
+sch.FidgetTask  = { link = 'Comment' }
+
 -- mini.indentscope
-sch.MiniIndentscopeSymbol   = { fg = plt.pigeon }
+sch.MiniIndentscopeSymbol = { fg = plt.pigeon }
+
 -- nvim-dap-ui
 sch.DapUIBreakpointsCurrentLine = { link = 'CursorLineNr' }
 sch.DapUIBreakpointsInfo        = { fg = plt.tea }
@@ -393,6 +398,7 @@ sch.DapUIVariable               = { link = 'Variable' }
 sch.DapUIWatchesEmpty           = { link = 'Comment' }
 sch.DapUIWatchesError           = { link = 'Error' }
 sch.DapUIWatchesValue           = { fg = plt.orange }
+
 -- vimtex
 sch.texArg                = { fg = plt.pigeon }
 sch.texArgNew             = { fg = plt.skyblue }
