@@ -661,7 +661,7 @@ end
 
 M['limelight.vim'] = function()
   vim.g.limelight_conceal_guifg = '#415160'
-  vim.api.nvim_create_autocmd({ 'BufLeave', 'BufEnter' }, {
+  vim.api.nvim_create_autocmd('BufEnter', {
     pattern = '*',
     callback = require('modules.ui.utils').limelight_check,
   })
