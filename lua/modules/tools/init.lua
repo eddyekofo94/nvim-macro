@@ -77,4 +77,10 @@ M['tmux.nvim'] = {
   config = configs['tmux.nvim'],
 }
 
+M['nvim-colorizer.lua'] = {
+  'NvChad/nvim-colorizer.lua',
+  event = { 'BufNew', 'BufRead' },
+  config = configs['nvim-colorizer.lua'],
+}
+
 return M

@@ -269,4 +269,16 @@ M['tmux.nvim'] = function()
   vim.keymap.set('n', '<M-l>', tmux.move_right, { noremap = true })
 end
 
+M['nvim-colorizer.lua'] = function()
+  require('colorizer').setup({
+    user_default_options = {
+      names = false,
+      RRGGBBAA = true,
+      AARRGGBB = true,
+      rgb_fn = true,
+      hsl_fn = true,
+    }
+  })
+end
+
 return M
