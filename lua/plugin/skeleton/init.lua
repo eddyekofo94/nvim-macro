@@ -7,6 +7,7 @@ local M = {}
 function M.setup(user_config)
   local config = require('plugin.skeleton.config')
   config.config = vim.tbl_deep_extend('force', config.config, user_config or {})
+  config.config.skeldir = vim.fn.fnamemodify(config.config.skeldir, ':p')
 
   vim.api.nvim_create_autocmd({
     'BufNewFile',
@@ -14,7 +15,7 @@ function M.setup(user_config)
   }, {
     pattern = '*',
     callback = function(...)
-      require('plugin.skeleton.utils').apply_skeleton(...)
+      require('plugin.skeleton.utils').apply(...)
     end
   })
 end

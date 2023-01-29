@@ -1,13 +1,13 @@
 local M = {}
 
 ---@class skeleton_config_t
----@field skeleton_dir string skeleton directory under config directory
----@field skeleton_proj_dirname string skeleton directory name under project root directory
----@field apply table<string, boolean> apply to new files / empty files
----@field rules table<string, { cond: function }> filename patterns and apply conditions
+---@field skeldir string skeleton directory under config directory
+---@field proj_skeldir string skeleton directory name under project root directory
+---@field apply table<string, boolean> apply to new files / empty existing files
+---@field rules table<string, table<string, any>> rules for each filetype
 M.config = {
-  skeleton_dir = vim.fn.stdpath('config') .. '/skeleton',
-  skeleton_proj_dirname = '/.skeleton',
+  skeldir = vim.fn.stdpath('config') .. '/skeleton',
+  proj_skeldir = '.skeleton',
   apply = {
     new_files = true,
     empty_files = true,
