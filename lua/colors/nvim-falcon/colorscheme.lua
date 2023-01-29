@@ -388,11 +388,11 @@ sch.DapUIStop                   = { fg = plt.scarlet }
 sch.DapUIStopNC                 = { fg = plt.scarlet }
 sch.DapUIStoppedThread          = { fg = plt.tea }
 sch.DapUIThread                 = { fg = plt.aqua }
-sch.DapUIType                   = { fg = plt.steel, italic = true }
+sch.DapUIType                   = { link = 'Type' }
 sch.DapUIVariable               = { link = 'Variable' }
 sch.DapUIWatchesEmpty           = { link = 'Comment' }
 sch.DapUIWatchesError           = { link = 'Error' }
-sch.DapUIWatchesValue           = { fg = plt.tea }
+sch.DapUIWatchesValue           = { fg = plt.orange }
 -- vimtex
 sch.texArg                = { fg = plt.pigeon }
 sch.texArgNew             = { fg = plt.skyblue }
