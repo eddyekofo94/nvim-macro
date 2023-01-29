@@ -153,7 +153,7 @@ M['lualine.nvim'] = function()
         },
       },
       lualine_b = {
-        { 'branch', icon = { '', color = { fg = palette.turquoise } }, cond = longer_than(75) },
+        { 'branch', icon = { '', color = { fg = palette.turquoise } } },
         { 'diff', cond = longer_than(50), padding = { left = 0, right = 1 } },
         { 'diagnostics', cond = longer_than(50) },
       },
