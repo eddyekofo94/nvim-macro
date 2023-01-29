@@ -16,6 +16,7 @@ return {
   purple         = '#a48fd1',
   magenta        = '#f481e3',
   pigeon         = '#8f9fbc',
+  cumulonimbus   = '#486a91',
   thunder        = '#385372',
   white          = '#e5e5eb',
   smoke          = '#bebec3',
