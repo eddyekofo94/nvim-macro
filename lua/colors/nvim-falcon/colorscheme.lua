@@ -1,4 +1,5 @@
-local plt = require('colors.nvim-falcon.palette')
+local utils = require('colors.nvim-falcon.utils')
+local plt = utils.reload('colors.nvim-falcon.palette')
 local sch = {}
 
 -- Common highlight groups
@@ -7,7 +8,7 @@ sch.NormalFloat  = { fg = sch.smoke } -- Normal text in floating windows.
 sch.NormalNC     = { link = 'Normal' } -- normal text in non-current windows
 sch.ColorColumn  = { link = 'CursorColumn' } -- Columns set with 'colorcolumn'
 sch.Conceal      = { fg = plt.smoke } -- Placeholder characters substituted for concealed text (see 'conceallevel')
-sch.Cursor       = { bg = plt.white } -- Character under the cursor
+sch.Cursor       = { fg = plt.space, bg = plt.white } -- Character under the cursor
 sch.CursorColumn = { bg = plt.deepsea } -- Screen-column at the cursor, when 'cursorcolumn' is set.
 sch.CursorIM     = { bg = plt.flashlight, fg = plt.black } -- Like Cursor, but used when in IME mode |CursorIM|
 sch.CursorLine   = { bg = plt.ocean } -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
@@ -42,7 +43,7 @@ sch.Question     = { fg = plt.smoke } -- |hit-enter| prompt and yes/no questions
 sch.QuickFixLine = { link = 'Visual' } -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
 sch.SignColumn   = { fg = plt.smoke } -- Column where |signs| are displayed
 sch.SpecialKey   = { fg = plt.iron } -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
-sch.SpellBad     = { underdashed = true } -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
+sch.SpellBad     = { underdotted = true } -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
 sch.SpellCap     = { link = 'SpellBad' } -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
 sch.SpellLocal   = { link = 'SpellBad' } -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
 sch.SpellRare    = { link = 'SpellBad' } -- Word that is recognized by the spellchecker as one that is hardly ever used. |spell| Combined with the highlighting used otherwise.
@@ -285,6 +286,7 @@ sch.BufferInactiveMod    = { fg = plt.wine, bg = plt.deepsea }
 sch.BufferInactiveSign   = { fg = plt.pigeon, bg = plt.deepsea }
 sch.BufferInactiveTarget = { fg = plt.wine, bg = plt.deepsea }
 sch.BufferVisible        = { fg = plt.pigeon }
+sch.BufferVisibleIndex   = { fg = plt.pigeon }
 sch.BufferVisibleMod     = { fg = plt.orange }
 sch.BufferTabpageFill    = { fg = plt.pigeon, bg = plt.ocean }
 
