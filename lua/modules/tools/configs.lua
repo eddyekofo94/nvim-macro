@@ -244,7 +244,7 @@ M['rnvimr'] = function()
         vim.api.nvim_win_close(winnr, true)
       end
     end
-    vim.cmd('RnvimrToggle')
+    vim.cmd('silent! RnvimrToggle')
   end, { noremap = true })
 end
 
