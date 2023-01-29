@@ -131,7 +131,7 @@ end
 function M.fallback(fallback_list)
   local fname = fn.fnamemodify(M.trigger_info.file, ':t')
   local ft = api.nvim_buf_get_option(M.trigger_info.buf, 'filetype')
-  local proj_dir = require('utils.funcs').proj_dir() or ''
+  local proj_dir = require('utils.funcs').proj_dir(M.trigger_info.file) or ''
 
   local default_fallback = {
     fname,

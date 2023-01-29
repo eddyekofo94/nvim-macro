@@ -60,20 +60,22 @@ function M.close_all_floatings(key)
   end
 end
 
-function M.git_dir()
+function M.git_dir(path)
+  path = path and vim.fn.fnamemodify(path, ':p') or vim.fn.expand('%:p:h')
   local gitdir = vim.fn.system(string.format(
-    'git -C %s rev-parse --show-toplevel', vim.fn.expand('%:p:h')))
+    'git -C %s rev-parse --show-toplevel', path))
   local isgitdir = vim.fn.matchstr(gitdir, '^fatal:.*') == ''
   if not isgitdir then return end
   return vim.trim(gitdir)
 end
 
-function M.proj_dir()
+function M.proj_dir(path)
   if vim.bo.buftype ~= '' or
       '' ~= vim.api.nvim_win_get_config(0).relative then
     return
   end
-  local target_dir = M.git_dir()
+  path = path and vim.fn.fnamemodify(path, ':p') or vim.fn.expand('%:p:h')
+  local target_dir = M.git_dir(path)
   if not target_dir then
     target_dir = vim.fn.fnamemodify(vim.fs.find({
       '.svn',
@@ -84,7 +86,7 @@ function M.proj_dir()
       '.sln',
       '.vcxproj',
       '.editorconfig',
-    }, { upward=true })[1] or vim.fn.expand('%'), ':p:h')
+    }, { path = path, upward=true })[1] or vim.fn.expand('%'), ':p:h')
   end
   if target_dir and vim.fn.isdirectory(target_dir) ~= 0 then
     return target_dir
