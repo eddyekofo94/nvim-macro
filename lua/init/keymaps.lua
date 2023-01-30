@@ -1,6 +1,5 @@
 local noremap = function(mappings)
   local _noremap = function(mode, lhs, rhs, opts)
-    opts = vim.tbl_deep_extend('keep', opts or {}, { noremap = true })
     vim.keymap.set(mode, lhs, rhs, opts)
   end
   for _, mapping in ipairs(mappings) do
