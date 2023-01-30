@@ -88,7 +88,7 @@ end
 ---@return boolean, any
 function M.configured()
 
-  local fname = fn.fnamemodify(M.trigger_info.file, ':t')
+  local fpath = fn.fnamemodify(M.trigger_info.file, ':p')
   local ft = api.nvim_buf_get_option(M.trigger_info.buf, 'filetype')
 
   if vim.tbl_isempty(config.rules or {})
@@ -98,7 +98,7 @@ function M.configured()
   end
 
   for pattern, configure in pairs(config.rules[ft]) do
-    if fname:match(pattern) then
+    if fpath:match(pattern) then
       return true, configure
     end
   end
@@ -130,6 +130,7 @@ end
 ---@return string|boolean skeleton file path or false if no skeleton is found
 function M.fallback(fallback_list)
   local fname = fn.fnamemodify(M.trigger_info.file, ':t')
+  local fpath = fn.fnamemodify(M.trigger_info.file, ':p:h')
   local ft = api.nvim_buf_get_option(M.trigger_info.buf, 'filetype')
   local proj_dir = require('utils.funcs').proj_dir(M.trigger_info.file) or ''
 
@@ -142,9 +143,11 @@ function M.fallback(fallback_list)
   }
   fallback_list = fallback_list or default_fallback
 
-  return M.fallback_bare(proj_dir, fallback_list)
-      or M.fallback_skeldir(ft, fname, proj_dir .. '/' .. config.proj_skeldir, fallback_list)
-      or M.fallback_skeldir(ft, fname, config.skeldir, fallback_list)
+  return M.fallback_bare(fpath, fallback_list)
+    or M.fallback_skeldir(ft, fname, fpath .. '/' .. config.proj_skeldir, fallback_list)
+    or M.fallback_bare(proj_dir, fallback_list)
+    or M.fallback_skeldir(ft, fname, proj_dir .. '/' .. config.proj_skeldir, fallback_list)
+    or M.fallback_skeldir(ft, fname, config.skeldir, fallback_list)
 end
 
 ---Try applying a skeleton to the new file.

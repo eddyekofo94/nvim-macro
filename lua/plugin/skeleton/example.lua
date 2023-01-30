@@ -16,6 +16,9 @@ require('plugin.skeleton').setup({
           return '~/.config/nvim/init.lua'
         end
         -- use fallback() to search for foo.lua or bar.lua under:
+        -- <file_dir>/
+        -- <file_dir>/<config.proj_skeldir>/
+        -- <file_dir>/<config.proj_skeldir>/lua/
         -- <proj_root>/
         -- <proj_root>/<config.proj_skeldir>/
         -- <proj_root>/<config.proj_skeldir>/lua/
