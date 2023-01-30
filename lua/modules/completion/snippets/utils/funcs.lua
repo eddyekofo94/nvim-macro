@@ -27,7 +27,6 @@ local function get_char_after()
 end
 
 local function get_indent_str(depth)
-  local f = require('luasnip').function_node
   local sts
   if vim.bo.sts > 0 then sts = vim.bo.sts
   elseif vim.bo.sw > 0 then sts = vim.bo.sw
