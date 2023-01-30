@@ -1,20 +1,17 @@
-local noremap = function(mappings)
-  local _noremap = function(mode, lhs, rhs, opts)
-    vim.keymap.set(mode, lhs, rhs, opts)
-  end
+local function map(mappings)
   for _, mapping in ipairs(mappings) do
-    _noremap(unpack(mapping))
+    vim.keymap.set(unpack(mapping))
   end
 end
 
-local leadermap = function(key)
+local function mapleader(key)
   vim.keymap.set({ 'n', 'x', 'x' }, key, '')
   vim.g.mapleader = vim.api.nvim_replace_termcodes(key, true, true, true)
 end
 
-leadermap('<Space>')
+mapleader('<Space>')
 
-noremap({
+map({
   -- Multi-window operations
   { 'n', '<M-w>', '<C-w><C-w>' },
   { 'n', '<M-h>', '<C-w><C-h>' },
@@ -81,5 +78,9 @@ noremap({
   { { 'n', 't', 'v', 'i', 'c' }, '<M-\\>', '<C-\\><C-n>' },
 
   -- Close all floating windows
-  { 'n', 'q', function() require('utils.funcs').close_all_floatings('q') end },
+  { 'n', 'q', '<Cmd>lua require("utils.funcs").close_all_floatings("q")<CR>' },
+
+  -- Toggle background
+  { 'n', '<M-D>', '<Cmd>if &background=="dark" | set background=light | ' ..
+                  'else | set background=dark | endif<CR>' }
 })
