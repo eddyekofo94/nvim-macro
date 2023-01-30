@@ -1,44 +1,46 @@
-local manage_plugins = require('utils.packer').manage_plugins
+local function manage_plugins(config)
+  config = vim.tbl_deep_extend('force', {
+    root = vim.fn.stdpath('data') .. '/lazy',
+    ui = {
+      border = 'single',
+      size = { width = 0.7, height = 0.74 },
+    },
+    checker = { enabled = true },
+    change_detection = { notify = false },
+    install = {
+      colorscheme = { 'nvim-falcon' },
+    },
+  }, config)
+
+  -- Install lazy if not already installed
+  local url = 'https://github.com/folke/lazy.nvim.git'
+  local lazy_path = config.root .. '/lazy.nvim'
+  vim.opt.rtp:prepend(lazy_path)
+  vim.opt.pp:prepend(lazy_path)
+  if not vim.loop.fs_stat(lazy_path) then
+    vim.notify('Installing lazy.nvim...', vim.log.levels.INFO)
+    vim.fn.system({ 'git', 'clone', '--filter=blob:none', url, lazy_path })
+    vim.notify('lazy.nvim cloned to ' .. lazy_path, vim.log.levels.INFO)
+  end
+
+  require('lazy').setup(config)
+end
 
 if vim.g.vscode then
   manage_plugins({
-    root = vim.fn.stdpath('data') .. '/vscode_neovim',
-    config = {
-      display = {
-        non_interactive = true,
-      },
-    },
-    modules = {
-      'base',
-      'misc',
-      'treesitter',
-    },
+    spec = {
+      { import = 'modules.base' },
+      { import = 'modules.treesitter' },
+      { import = 'modules.misc' },
+    }
   })
 else
   manage_plugins({
-    config = {
-      display = {
-        open_cmd = '20new \\[packer\\]',
-        working_sym = '',
-        error_sym = '',
-        done_sym = '',
-        removed_sym = '',
-        moved_sym = 'ﰲ',
-        keybindings = {
-          toggle_info = '<Tab>'
-        },
-      },
+    spec = {
+      { import = 'modules' },
     },
-    modules = {
-      'base',
-      'completion',
-      'debug',
-      'lsp',
-      'markup',
-      'misc',
-      'tools',
-      'treesitter',
-      'ui',
-    }
   })
 end
+
+-- a handy abbreviation
+vim.cmd('cnoreabbrev lz Lazy')

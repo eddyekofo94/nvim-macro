@@ -17,7 +17,6 @@ function M.apply()
   end
 
   vim.g.colors_name = 'nvim-falcon'
-  vim.opt.rtp:append(vim.fn.stdpath('config') .. '/lua/colors/nvim-falcon')
 end
 
 return M

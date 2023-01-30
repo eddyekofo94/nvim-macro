@@ -44,6 +44,8 @@ M['barbar.nvim'] = function()
 end
 
 M['lualine.nvim'] = function()
+  vim.opt.rtp:append(vim.fn.stdpath('config') .. '/lua/colors/nvim-falcon')
+
   local function lualine_config()
     local function location()
       local cursor_loc = vim.api.nvim_win_get_cursor(0)
@@ -268,7 +270,7 @@ M['alpha-nvim'] = function()
 
   local dashboard_button_opts = {
     { { shortcut = 'e', hl = { { 'Tea', 2, 3 } } }, 'ﱐ  New file', '<cmd>ene<CR>' },
-    { { shortcut = 's', hl = { { 'Pigeon', 2, 3 } } }, '  Sync plugins', '<cmd>PackerSync<CR>' },
+    { { shortcut = 's', hl = { { 'Pigeon', 2, 3 } } }, '  Sync plugins', '<cmd>Lazy sync<CR>' },
     { { shortcut = 'i', hl = { { 'Ochre', 2, 3 } } }, '  Git', '<cmd>ToggleTool lazygit<CR>' },
     { { shortcut = 'f f', hl = { { 'Flashlight', 2, 3 } } }, '  Find files', '<cmd>Telescope find_files<CR>' },
     { { shortcut = 'f o', hl = { { 'Smoke', 2, 3 } } }, '  Old files', '<cmd>Telescope oldfiles<CR>' },
@@ -281,21 +283,11 @@ M['alpha-nvim'] = function()
     table.insert(dashboard.section.buttons.val, make_button(unpack(button)))
   end
 
-  local function get_num_plugins_loaded()
-    local num = 0
-    for _, plugin in pairs(packer_plugins) do
-      if plugin.loaded then
-        num = num + 1
-      end
-    end
-    return num
-  end
-
   -- Footer must be a table so that its height is correctly measured
-  local num_plugins_loaded = get_num_plugins_loaded()
-  local num_plugins_tot = #vim.tbl_keys(packer_plugins)
+  local lazy_ok, lazy = pcall(require, 'lazy')
+  local stat = lazy_ok and lazy.stats() or { count = '?', loaded = '?' }
   dashboard.section.footer.val = { string.format('%d / %d  plugins ﮣ loaded',
-                                  num_plugins_loaded, num_plugins_tot) }
+                                  stat.loaded, stat.count) }
   dashboard.section.footer.opts.hl = 'Comment'
 
   -- Set paddings

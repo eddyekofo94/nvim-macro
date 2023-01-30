@@ -8,10 +8,6 @@ local function add_attr(attr, snip_group)
 end
 
 local function in_mathzone()
-  if not packer_plugins['vimtex'] then
-    return false
-  end
-  vim.cmd('packadd vimtex')
   return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
 end
 
