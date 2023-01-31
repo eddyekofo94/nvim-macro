@@ -24,10 +24,10 @@ local conds = require('luasnip.extras.expand_conditions')
 
 M.snippets = {
   s({ trig = 'spec' }, fmta([[
-M['<plugin_name>'] = {
+{
 <indent>'<author>/<plugin_name>',<finish>
 <indent>config = configs['<plugin_name>'],
-}
+},
   ]], {
     plugin_name = i(1),
     author = i(2),
