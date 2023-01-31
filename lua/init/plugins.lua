@@ -3,10 +3,18 @@ local function manage_plugins(config)
     root = vim.fn.stdpath('data') .. '/lazy',
     ui = {
       border = 'single',
-      size = { width = 0.7, height = 0.74 },
+      size = {
+        width = 0.7,
+        height = 0.74,
+      },
     },
-    checker = { enabled = true },
-    change_detection = { notify = false },
+    checker = {
+      notify = false,
+      enabled = true,
+    },
+    change_detection = {
+      notify = false,
+    },
     install = {
       colorscheme = { 'nvim-falcon' },
     },
