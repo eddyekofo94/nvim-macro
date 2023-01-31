@@ -488,6 +488,18 @@ sch.texMathCmdStyleItal   = { fg = plt.yellow, italic = true }
 sch.texMathStyleConcArg   = { fg = plt.pigeon }
 sch.texMathZoneEnvStarred = { fg = plt.pigeon }
 
+-- lazy.nvim
+sch.LazyDir           = { link = 'Directory' }
+sch.LazyUrl           = { link = 'htmlLink' }
+sch.LazySpecial       = { fg = plt.orange }
+sch.LazyCommit        = { fg = plt.tea }
+sch.LazyReasonFt      = { fg = plt.pigeon }
+sch.LazyReasonCmd     = { fg = plt.yellow }
+sch.LazyReasonPlugin  = { fg = plt.turquoise }
+sch.LazyReasonSource  = { fg = plt.orange }
+sch.LazyReasonRuntime = { fg = plt.lavender }
+sch.LazyReasonEvent   = { fg = plt.flashlight }
+sch.LazyReasonKeys    = { fg = plt.pink }
 
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }
