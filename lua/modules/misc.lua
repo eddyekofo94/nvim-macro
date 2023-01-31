@@ -32,7 +32,9 @@ return {
 
   {
     'junegunn/vim-easy-align',
-    keys = { 'ga' },
+    keys = {
+      { 'ga', mode = { 'n', 'x' } }
+    },
     config = configs['vim-easy-align'],
   },
 }
