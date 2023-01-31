@@ -23,6 +23,9 @@ local function manage_plugins(config)
     vim.notify('lazy.nvim cloned to ' .. lazy_path, vim.log.levels.INFO)
   end
 
+  local lazy_view_config = require('lazy.view.config')
+  lazy_view_config.keys.details = '<Tab>'
+
   require('lazy').setup(config)
 end
 
