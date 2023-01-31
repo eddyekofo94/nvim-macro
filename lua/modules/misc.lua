@@ -3,14 +3,20 @@ local configs = require('modules.misc.configs')
 return {
   {
     'kylechui/nvim-surround',
-    event = 'ModeChanged',
-    keys = { 'ys', 'ds', 'cs' },
+    keys = {
+      'ys', 'ds', 'cs',
+      { 'S', mode = 'x' },
+      { '<C-g>s', mode = 'i' },
+    },
     config = configs['nvim-surround'],
   },
 
   {
     'numToStr/Comment.nvim',
-    keys = { 'gc', 'gb' },
+    keys = {
+      { 'gc', mode = { 'n', 'x' } },
+      { 'gb', mode = { 'n', 'x' } },
+    },
     config = configs['Comment.nvim'],
   },
 
