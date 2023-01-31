@@ -23,7 +23,6 @@ return {
       return vim.fn.argc() == 0 and
       vim.o.lines >= 36 and vim.o.columns >= 80
     end,
-    dependencies = 'nvim-web-devicons',
     config = configs['alpha-nvim'],
   },
 
