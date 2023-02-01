@@ -1,5 +1,3 @@
-local configs = require('modules/tools/configs')
-
 return {
   {
     'williamboman/mason.nvim',
@@ -10,7 +8,9 @@ return {
       'MasonInstall',
       'MasonUninstallAll',
     },
-    config = configs['mason.nvim'],
+    config = function()
+      require('configs.mason')
+    end,
   },
 
   {
@@ -27,7 +27,9 @@ return {
       'plenary.nvim',
       'telescope-fzf-native.nvim'
     },
-    config = configs['telescope.nvim'],
+    config = function()
+      require('configs.telescope')
+    end,
   },
 
   {
@@ -43,7 +45,9 @@ return {
     'mbbill/undotree',
     keys = '<Leader>u',
     cmd = { 'UndotreeToggle', 'UndotreeShow' },
-    config = configs['undotree'],
+    config = function()
+      require('configs.undotree')
+    end,
   },
 
   {
@@ -53,31 +57,41 @@ return {
       { '<M-i>', mode = { 'n', 't' } },
     },
     cmd = { 'FloatermNew', 'FloatermToggle', 'ToggleTool' },
-    config = configs['vim-floaterm'],
+    config = function()
+      require('configs.vim-floaterm')
+    end,
   },
 
   {
     'lewis6991/gitsigns.nvim',
     event = 'BufReadPre',
     dependencies = 'plenary.nvim',
-    config = configs['gitsigns.nvim'],
+    config = function()
+      require('configs.gitsigns')
+    end,
   },
 
   {
     'kevinhwang91/rnvimr',
     lazy = false,
-    config = configs['rnvimr'],
+    config = function()
+      require('configs.rnvimr')
+    end,
   },
 
   {
     'aserowy/tmux.nvim',
     keys = { '<M-h>', '<M-j>', '<M-k>', '<M-l>' },
-    config = configs['tmux.nvim'],
+    config = function()
+      require('configs.tmux')
+    end,
   },
 
   {
     'NvChad/nvim-colorizer.lua',
     event = { 'BufNew', 'BufRead' },
-    config = configs['nvim-colorizer.lua'],
+    config = function()
+      require('configs.nvim-colorizer')
+    end,
   },
 }

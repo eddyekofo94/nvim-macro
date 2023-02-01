@@ -1,5 +1,3 @@
-local configs = require('modules.misc.configs')
-
 return {
   {
     'kylechui/nvim-surround',
@@ -8,7 +6,9 @@ return {
       { 'S', mode = 'x' },
       { '<C-g>s', mode = 'i' },
     },
-    config = configs['nvim-surround'],
+    config = function()
+      require('configs.nvim-surround')
+    end,
   },
 
   {
@@ -17,7 +17,9 @@ return {
       { 'gc', mode = { 'n', 'x' } },
       { 'gb', mode = { 'n', 'x' } },
     },
-    config = configs['Comment.nvim'],
+    config = function()
+      require('configs.Comment')
+    end,
   },
 
   {
@@ -28,7 +30,9 @@ return {
   {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
-    config = configs['nvim-autopairs']
+    config = function()
+      require('configs.nvim-autopairs')
+    end,
   },
 
   {
@@ -41,6 +45,8 @@ return {
     keys = {
       { 'ga', mode = { 'n', 'x' } }
     },
-    config = configs['vim-easy-align'],
+    config = function()
+      require('configs.vim-easy-align')
+    end,
   },
 }

@@ -1,10 +1,10 @@
-local configs = require('modules.markup.configs')
-
 return {
   {
     'lervag/vimtex',
     ft = { 'tex', 'markdown' },
-    config = configs['vimtex'],
+    config = function()
+      require('configs.vimtex')
+    end,
   },
 
   {
@@ -22,7 +22,9 @@ return {
   {
     'ekickx/clipboard-image.nvim',
     ft = { 'tex', 'markdown' },
-    config = configs['clipboard-image.nvim'],
+    config = function()
+      require('configs.clipboard-image')
+    end,
   },
 
   {

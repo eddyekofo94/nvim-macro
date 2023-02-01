@@ -1,4 +1,3 @@
-local configs = require('modules.treesitter.configs')
 local ft_list = require('utils.static').langs:list('ft')
 
 return {
@@ -6,7 +5,9 @@ return {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     ft = ft_list,
-    config = configs['nvim-treesitter'],
+    config = function()
+      require('configs.nvim-treesitter')
+    end,
     dependencies = {
       'nvim-ts-rainbow',
       'nvim-treesitter-textobjects',
@@ -36,7 +37,9 @@ return {
     'CKolkey/ts-node-action',
     ft = ft_list,
     dependencies = 'nvim-treesitter',
-    config = configs['ts-node-action'],
+    config = function()
+      require('configs.ts-node-action')
+    end,
   },
 
   {

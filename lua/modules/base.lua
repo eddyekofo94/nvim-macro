@@ -1,5 +1,3 @@
-local configs = require('modules.base.configs')
-
 return {
   {
     'nvim-lua/plenary.nvim',
@@ -9,6 +7,8 @@ return {
   {
     'kyazdani42/nvim-web-devicons',
     lazy = true,
-    config = configs['nvim-web-devicons'],
+    config = function()
+      require('configs.nvim-web-devicons')
+    end,
   },
 }

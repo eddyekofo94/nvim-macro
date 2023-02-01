@@ -1,10 +1,10 @@
-local configs = require('modules.completion.configs')
-
 return {
   {
     'hrsh7th/nvim-cmp',
     event = { 'InsertEnter', 'CmdlineEnter' },
-    config = configs['nvim-cmp'],
+    config = function()
+      require('configs.nvim-cmp')
+    end,
     dependencies = 'LuaSnip',
   },
 
@@ -55,13 +55,17 @@ return {
     'zbirenbaum/copilot.lua',
     cmd = 'Copilot',
     event = 'InsertEnter',
-    config = configs['copilot.lua'],
+    config = function()
+      require('configs.copilot')
+    end,
   },
 
   {
     'L3MON4D3/LuaSnip',
     branch = 'get_jump_dest',
     event = 'InsertCharPre',
-    config = configs['LuaSnip'],
+    config = function()
+      require('configs.LuaSnip')
+    end,
   },
 }
