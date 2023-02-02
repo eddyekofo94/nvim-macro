@@ -43,7 +43,7 @@ return {
 
   {
     'debugloop/telescope-undo.nvim',
-    module = 'telescope._extensions.undo',
+    lazy = true,
     requires = { 'plenary.nvim', 'telescope.nvim' },
   },
 
