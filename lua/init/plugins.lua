@@ -9,8 +9,7 @@ local function manage_plugins(config)
       },
     },
     checker = {
-      notify = false,
-      enabled = true,
+      enabled = false,
     },
     change_detection = {
       notify = false,
