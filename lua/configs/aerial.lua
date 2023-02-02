@@ -34,7 +34,7 @@ require('aerial').setup({
   float = {
     border = 'single',
     relative = 'editor',
-    max_height = 0.7,
+    max_height = 0.6,
   },
   close_on_select = true,
   show_guides = true,
