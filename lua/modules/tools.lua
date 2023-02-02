@@ -42,6 +42,12 @@ return {
   },
 
   {
+    'debugloop/telescope-undo.nvim',
+    module = 'telescope._extensions.undo',
+    requires = { 'plenary.nvim', 'telescope.nvim' },
+  },
+
+  {
     'mbbill/undotree',
     keys = '<Leader>u',
     cmd = { 'UndotreeToggle', 'UndotreeShow' },
