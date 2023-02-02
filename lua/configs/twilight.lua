@@ -1,5 +1,5 @@
 local twilight = require('twilight')
-local limelight_check = require('config.limelight').limelight_check
+local limelight_check = require('configs.limelight').limelight_check
 
 twilight.setup({
   context = 0,

@@ -20,7 +20,7 @@ local function limelight_check()
   end
 end
 
-M.set_limelight_conceal_color()
+set_limelight_conceal_color()
 
 vim.api.nvim_create_autocmd('ColorScheme', {
   pattern = '*',
@@ -29,7 +29,7 @@ vim.api.nvim_create_autocmd('ColorScheme', {
 
 vim.api.nvim_create_autocmd('BufEnter', {
   pattern = '*',
-  callback = require('modules.ui.utils').limelight_check,
+  callback = limelight_check,
 })
 
 return {
