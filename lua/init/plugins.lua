@@ -17,6 +17,20 @@ local function manage_plugins(config)
     install = {
       colorscheme = { 'nvim-falcon' },
     },
+    performance = {
+      rtp = {
+        disabled_plugins = {
+          'gzip',
+          'matchit',
+          'netrwPlugin',
+          'tarPlugin',
+          'tohtml',
+          'tutor',
+          'zipPlugin',
+          'health',
+        },
+      },
+    },
   }, config)
 
   -- Install lazy if not already installed
