@@ -48,7 +48,7 @@ require('gitsigns').setup({
     map('n', '<leader>gD', function() gs.diffthis('~') end)
 
     -- Text object
-    map({ 'o', 'x' }, 'ic', '<Cmd>C-UGitsigns select_hunk<CR>')
-    map({ 'o', 'x' }, 'ac', '<Cmd>C-UGitsigns select_hunk<CR>')
+    map({ 'o', 'x' }, 'ic', ':<C-U>Gitsigns select_hunk<CR>')
+    map({ 'o', 'x' }, 'ac', ':<C-U>Gitsigns select_hunk<CR>')
   end,
 })
