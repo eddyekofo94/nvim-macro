@@ -509,6 +509,10 @@ sch.LazyReasonKeys    = { fg = plt.pink }
 sch.Floaterm       = { bg = plt.ocean }
 sch.FloatermBorder = { bg = plt.ocean }
 
+-- copilot.lua
+sch.CopilotSuggestion = { fg = plt.steel, italic = true }
+sch.CopilotAnnotation = { fg = plt.steel, italic = true }
+
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }
 sch.Earth      = { fg = plt.earth }
