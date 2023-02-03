@@ -20,7 +20,7 @@ function! ToggleTool(tool, count) abort
     \ 'getwinvar(v:val, "&buftype") ==# "terminal"')
   for winnr in winlist
     if getbufvar(winbufnr(winnr), '&filetype') !=# 'floaterm'
-      execute winnr.'wincmd c'
+      execute 'silent! ' . winnr . 'wincmd c'
     endif
   endfor
 
