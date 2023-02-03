@@ -32,10 +32,7 @@ local function set_ls_region_check_autocmd()
   vim.api.nvim_create_autocmd('CursorMovedI', {
     pattern = '*',
     callback = function(ev)
-      if not ls.session
-        or not ls.session.current_nodes[ev.buf]
-        or ls.session.jump_active
-      then
+      if not ls.session or not ls.session.current_nodes[ev.buf] then
         return
       end
 
