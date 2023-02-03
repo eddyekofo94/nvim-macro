@@ -1,4 +1,8 @@
 require('gitsigns').setup({
+  preview_config = {
+    border = 'solid',
+    style = 'minimal',
+  },
   signs = {
     add = { text = '+' },
     untracked = { text = '+' },
