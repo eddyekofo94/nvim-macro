@@ -40,6 +40,9 @@ palette.dark = {
   earth_blend    = '#303032',
   smoke_blend    = '#272d3a',
   pigeon_blend   = '#262e3e',
+  ocean_blend    = '#1c2434',
+
+  shadow = '#09080b',
 }
 
 palette.light = {
@@ -61,13 +64,13 @@ palette.light = {
   magenta      = '#ac4ea1',
   pigeon       = '#6666a8',
   cumulonimbus = '#486a91',
-  thunder      = '#cac4bf',
+  thunder      = '#dad4ce',
   white        = '#385372',
   smoke        = '#404553',
   beige        = '#385372',
   steel        = '#989c8b',
   iron         = '#b8b7b3',
-  deepsea      = '#c2b8b1',
+  deepsea      = '#c6beb8',
   ocean        = '#cac4bf',
   jeans        = '#d9d6cf',
   space        = '#e2dfd7',
@@ -82,6 +85,9 @@ palette.light = {
   earth_blend    = '#CBC0AC',
   smoke_blend    = '#B6B6B4',
   pigeon_blend   = '#bcbac2',
+  ocean_blend    = '#d3d1c9',
+
+  shadow = '#78726b',
 }
 
 return palette[vim.o.background or 'dark']

@@ -3,62 +3,64 @@ local plt = utils.reload('colors.nvim-falcon.palette')
 local sch = {}
 
 -- Common highlight groups
-sch.Normal       = { fg = plt.smoke, bg = plt.jeans } -- Normal text
-sch.NormalFloat  = { fg = sch.smoke, bg = plt.ocean } -- Normal text in floating windows.
-sch.NormalNC     = { link = 'Normal' } -- normal text in non-current windows
-sch.ColorColumn  = { link = 'CursorColumn' } -- Columns set with 'colorcolumn'
-sch.Conceal      = { fg = plt.smoke } -- Placeholder characters substituted for concealed text (see 'conceallevel')
-sch.Cursor       = { fg = plt.space, bg = plt.white } -- Character under the cursor
-sch.CursorColumn = { bg = plt.deepsea } -- Screen-column at the cursor, when 'cursorcolumn' is set.
-sch.CursorIM     = { bg = plt.flashlight, fg = plt.black } -- Like Cursor, but used when in IME mode |CursorIM|
-sch.CursorLine   = { bg = plt.ocean } -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
-sch.CursorLineNr = { fg = plt.orange, bg = plt.ocean, bold = true } -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
-sch.lCursor      = { link = 'Cursor' } -- Character under the cursor when |language-mapping| is used (see 'guicursor')
-sch.TermCursor   = { reverse = true } -- Cursor in a focused terminal
-sch.TermCursorNC = { bg = plt.smoke } -- Cursor in an unfocused terminal
-sch.DiffAdd      = { bg = plt.aqua_blend } -- Diff mode: Added line |diff.txt|
-sch.DiffChange   = { bg = plt.purple_blend } -- Diff mode: Changed line |diff.txt|
-sch.DiffDelete   = { fg = plt.wine } -- Diff mode: Deleted line |diff.txt|
-sch.DiffText     = { bg = plt.lavender_blend } -- Diff mode: Changed text within a changed line |diff.txt|
-sch.Directory    = { fg = plt.pigeon } -- Directory names (and other special names in listings)
-sch.EndOfBuffer  = { fg = plt.iron } -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
-sch.ErrorMsg     = { fg = plt.scarlet } -- Error messages on the command line
-sch.FoldColumn   = { fg = plt.iron } -- 'foldcolumn'
-sch.Folded       = { fg = plt.iron, italic = true } -- Line used for closed folds
-sch.FloatBorder  = { fg = plt.smoke } -- Border of floating windows.
-sch.Search       = { fg = plt.flashlight, bold = true } -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
-sch.IncSearch    = { fg = plt.black, bg = plt.flashlight, bold = true } -- 'incsearch' highlighting; also used for the text replaced with ':s///c'
-sch.LineNr       = { fg = plt.steel } -- Line number for ':number' and ':#' commands, and when 'number' or 'relativenumber' option is set.
-sch.ModeMsg      = { fg = plt.smoke } -- 'showmode' message (e.g., '-- INSERT -- ')
-sch.MoreMsg      = { fg = plt.aqua } -- |more-prompt|
-sch.MsgArea      = { link = 'Normal' } -- Area for messages and cmdline
-sch.MsgSeparator = { link = 'StatusLine' } -- Separator for scrolled messages, `msgsep` flag of 'display'
-sch.MatchParen   = { bg = plt.thunder, bold = true }
-sch.NonText      = { fg = plt.iron } -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., '>' displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
-sch.Pmenu        = { fg = plt.smoke, bg = plt.ocean } -- Popup menu: Normal item.
-sch.PmenuSbar    = { bg = plt.deepsea } -- Popup menu: Scrollbar.
-sch.PmenuSel     = { fg = plt.white, bg = plt.thunder } -- Popup menu: Selected item.
-sch.PmenuThumb   = { bg = plt.orange } -- Popup menu: Thumb of the scrollbar.
-sch.Question     = { fg = plt.smoke } -- |hit-enter| prompt and yes/no questions
-sch.QuickFixLine = { link = 'Visual' } -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
-sch.SignColumn   = { fg = plt.smoke } -- Column where |signs| are displayed
-sch.SpecialKey   = { fg = plt.iron } -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
-sch.SpellBad     = { underdotted = true } -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
-sch.SpellCap     = { link = 'SpellBad' } -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
-sch.SpellLocal   = { link = 'SpellBad' } -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
-sch.SpellRare    = { link = 'SpellBad' } -- Word that is recognized by the spellchecker as one that is hardly ever used. |spell| Combined with the highlighting used otherwise.
-sch.StatusLine   = { bg = plt.deepsea } -- Status line of current window
-sch.StatusLineNC = { bg = plt.space } -- Status lines of not-current windows. Note: If this is equal to 'StatusLine' Vim will use '^^^' in the status line of the current window.
-sch.Substitute   = { link = 'Search' } -- |:substitute| replacement text highlighting
-sch.TabLine      = { link = 'StatusLine' } -- Tab pages line, not active tab page label
-sch.Title        = { fg = plt.pigeon, bold = true } -- Titles for output from ':set all', ':autocmd' etc.
-sch.VertSplit    = { fg = plt.deepsea } -- Column separating vertically split windows
-sch.Visual       = { bg = plt.deepsea } -- Visual mode selection
-sch.VisualNOS    = { link = 'Visual' } -- Visual mode selection when vim is 'Not Owning the Selection'.
-sch.WarningMsg   = { fg = plt.yellow } -- Warning messages
-sch.Whitespace   = { link = 'SpecialKey' } -- 'nbsp', 'space', 'tab' and 'trail' in 'listchars'
-sch.WildMenu     = { link = 'PmenuSel' } -- Current match in 'wildmenu' completion
-sch.Winseparator = { link = 'VertSplit' } -- Separator between window splits. Inherts from |hl-VertSplit| by default, which it will replace eventually.
+sch.Normal             = { fg = plt.smoke, bg = plt.jeans } -- Normal text
+sch.NormalFloat        = { fg = sch.smoke, bg = plt.ocean } -- Normal text in floating windows.
+sch.NormalNC           = { link = 'Normal' } -- normal text in non-current windows
+sch.ColorColumn        = { bg = plt.deepsea } -- Columns set with 'colorcolumn'
+sch.Conceal            = { fg = plt.smoke } -- Placeholder characters substituted for concealed text (see 'conceallevel')
+sch.Cursor             = { fg = plt.space, bg = plt.white } -- Character under the cursor
+sch.CursorColumn       = { bg = plt.ocean_blend } -- Screen-column at the cursor, when 'cursorcolumn' is set.
+sch.CursorIM           = { bg = plt.flashlight, fg = plt.black } -- Like Cursor, but used when in IME mode |CursorIM|
+sch.CursorLine         = { bg = plt.ocean_blend } -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
+sch.CursorLineNr       = { fg = plt.orange, bg = plt.ocean_blend, bold = true } -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
+sch.lCursor            = { link = 'Cursor' } -- Character under the cursor when |language-mapping| is used (see 'guicursor')
+sch.TermCursor         = { reverse = true } -- Cursor in a focused terminal
+sch.TermCursorNC       = { bg = plt.smoke } -- Cursor in an unfocused terminal
+sch.DiffAdd            = { bg = plt.aqua_blend } -- Diff mode: Added line |diff.txt|
+sch.DiffChange         = { bg = plt.purple_blend } -- Diff mode: Changed line |diff.txt|
+sch.DiffDelete         = { fg = plt.wine } -- Diff mode: Deleted line |diff.txt|
+sch.DiffText           = { bg = plt.lavender_blend } -- Diff mode: Changed text within a changed line |diff.txt|
+sch.Directory          = { fg = plt.pigeon } -- Directory names (and other special names in listings)
+sch.EndOfBuffer        = { fg = plt.iron } -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
+sch.ErrorMsg           = { fg = plt.scarlet } -- Error messages on the command line
+sch.FoldColumn         = { fg = plt.iron } -- 'foldcolumn'
+sch.Folded             = { fg = plt.iron, italic = true } -- Line used for closed folds
+sch.FloatBorder        = { fg = plt.smoke, bg = plt.ocean } -- Border of floating windows.
+sch.FloatShadow        = { bg = plt.shadow, blend = 70 } -- Shadow of floating windows.
+sch.FloatShadowThrough = { bg = plt.shadow, blend = 100 } -- Shadow of floating windows
+sch.Search             = { fg = plt.flashlight, bold = true } -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
+sch.IncSearch          = { fg = plt.black, bg = plt.flashlight, bold = true } -- 'incsearch' highlighting; also used for the text replaced with ':s///c'
+sch.LineNr             = { fg = plt.steel } -- Line number for ':number' and ':#' commands, and when 'number' or 'relativenumber' option is set.
+sch.ModeMsg            = { fg = plt.smoke } -- 'showmode' message (e.g., '-- INSERT -- ')
+sch.MoreMsg            = { fg = plt.aqua } -- |more-prompt|
+sch.MsgArea            = { link = 'Normal' } -- Area for messages and cmdline
+sch.MsgSeparator       = { link = 'StatusLine' } -- Separator for scrolled messages, `msgsep` flag of 'display'
+sch.MatchParen         = { bg = plt.thunder, bold = true }
+sch.NonText            = { fg = plt.iron } -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., '>' displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
+sch.Pmenu              = { fg = plt.smoke, bg = plt.ocean } -- Popup menu: Normal item.
+sch.PmenuSbar          = { bg = plt.deepsea } -- Popup menu: Scrollbar.
+sch.PmenuSel           = { fg = plt.white, bg = plt.thunder } -- Popup menu: Selected item.
+sch.PmenuThumb         = { bg = plt.orange } -- Popup menu: Thumb of the scrollbar.
+sch.Question           = { fg = plt.smoke } -- |hit-enter| prompt and yes/no questions
+sch.QuickFixLine       = { link = 'Visual' } -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
+sch.SignColumn         = { fg = plt.smoke } -- Column where |signs| are displayed
+sch.SpecialKey         = { fg = plt.iron } -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
+sch.SpellBad           = { underdotted = true } -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
+sch.SpellCap           = { link = 'SpellBad' } -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
+sch.SpellLocal         = { link = 'SpellBad' } -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
+sch.SpellRare          = { link = 'SpellBad' } -- Word that is recognized by the spellchecker as one that is hardly ever used. |spell| Combined with the highlighting used otherwise.
+sch.StatusLine         = { bg = plt.deepsea } -- Status line of current window
+sch.StatusLineNC       = { bg = plt.space } -- Status lines of not-current windows. Note: If this is equal to 'StatusLine' Vim will use '^^^' in the status line of the current window.
+sch.Substitute         = { link = 'Search' } -- |:substitute| replacement text highlighting
+sch.TabLine            = { link = 'StatusLine' } -- Tab pages line, not active tab page label
+sch.Title              = { fg = plt.pigeon, bold = true } -- Titles for output from ':set all', ':autocmd' etc.
+sch.VertSplit          = { fg = plt.deepsea } -- Column separating vertically split windows
+sch.Visual             = { bg = plt.deepsea } -- Visual mode selection
+sch.VisualNOS          = { link = 'Visual' } -- Visual mode selection when vim is 'Not Owning the Selection'.
+sch.WarningMsg         = { fg = plt.yellow } -- Warning messages
+sch.Whitespace         = { link = 'SpecialKey' } -- 'nbsp', 'space', 'tab' and 'trail' in 'listchars'
+sch.WildMenu           = { link = 'PmenuSel' } -- Current match in 'wildmenu' completion
+sch.Winseparator       = { link = 'VertSplit' } -- Separator between window splits. Inherts from |hl-VertSplit| by default, which it will replace eventually.
 
 -- Syntax highlighting
 sch.Comment        = { fg = plt.steel } -- Any comment
