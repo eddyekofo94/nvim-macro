@@ -4,7 +4,7 @@ local icons = static.icons
 
 local function lspconfig_setui()
   -- Customize LSP floating window border
-  local floating_preview_opts = { border = 'shadow' }
+  local floating_preview_opts = { border = 'solid' }
   local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
   function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
     opts = vim.tbl_deep_extend('force', opts, floating_preview_opts)
@@ -34,7 +34,7 @@ local function lspconfig_setui()
       = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics,
                      diagnostic_opts.handlers)
   -- setup LspInfo floating window border
-  require('lspconfig.ui.windows').default_options.border = 'shadow'
+  require('lspconfig.ui.windows').default_options.border = 'solid'
   -- reload LspInfo floating window on VimResized
   vim.api.nvim_create_autocmd('VimResized', {
     pattern = '*',
