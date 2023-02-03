@@ -11,11 +11,6 @@ ts_configs.setup({
   context_commentstring = {
     enable = true,
   },
-  rainbow = {
-    enable = not vim.g.vscode,
-    extended_mode = true,
-    max_file_lines = 1024,
-  },
   incremental_selection = {
     enable = true,
     keymaps = {

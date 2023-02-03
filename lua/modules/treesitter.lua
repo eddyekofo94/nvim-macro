@@ -9,16 +9,9 @@ return {
       require('configs.nvim-treesitter')
     end,
     dependencies = {
-      'nvim-ts-rainbow',
       'nvim-treesitter-textobjects',
       'nvim-ts-context-commentstring',
     }
-  },
-
-  {
-    'mrjones2014/nvim-ts-rainbow',
-    lazy = true,
-    dependencies = 'nvim-treesitter',
   },
 
   {
