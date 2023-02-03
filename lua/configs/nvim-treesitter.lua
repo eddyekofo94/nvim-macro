@@ -104,7 +104,7 @@ ts_configs.setup({
     },
     lsp_interop = {
       enable = true,
-      border = 'single',
+      border = 'shadow',
       peek_definition_code = {
         ['<leader>p'] = '@function.outer',
       },

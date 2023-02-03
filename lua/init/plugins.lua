@@ -2,7 +2,7 @@ local function manage_plugins(config)
   config = vim.tbl_deep_extend('force', {
     root = vim.fn.stdpath('data') .. '/lazy',
     ui = {
-      border = 'single',
+      border = 'shadow',
       size = {
         width = 0.7,
         height = 0.74,

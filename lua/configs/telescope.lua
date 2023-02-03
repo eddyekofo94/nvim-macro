@@ -25,7 +25,7 @@ telescope.setup({
   defaults = {
     prompt_prefix = '/ ',
     selection_caret = '→ ',
-    borderchars = require('utils.static').borders.single,
+    borderchars = require('utils.static').borders.empty,
     layout_config = {
       horizontal = { prompt_position = 'top', preview_width = 0.5 },
       vertical = { prompt_position = 'top', preview_width = 0.5 }

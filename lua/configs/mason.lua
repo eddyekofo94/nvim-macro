@@ -1,6 +1,6 @@
 require('mason').setup({
   ui = {
-    border = 'single',
+    border = 'shadow',
     width = 0.7,
     height = 0.74,
     icons = {

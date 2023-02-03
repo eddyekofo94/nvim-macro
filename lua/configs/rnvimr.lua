@@ -1,7 +1,8 @@
 vim.g.rnvimr_enable_ex = 1
 vim.g.rnvimr_enable_picker = 1
 vim.g.rnvimr_enable_bw = 1
-vim.g.rnvimr_ranger_cmd = { 'ranger', '--cmd=set draw_borders both' }
+vim.g.rnvimr_ranger_cmd = { 'ranger', '--cmd=set draw_borders none' }
+vim.g.rnvimr_draw_border = 0
 vim.g.rnvimr_action = {
   ['<A-t>'] = 'NvimEdit tabedit',
   ['<A-s>'] = 'NvimEdit split',

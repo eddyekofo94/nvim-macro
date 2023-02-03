@@ -4,7 +4,7 @@ local sch = {}
 
 -- Common highlight groups
 sch.Normal       = { fg = plt.smoke, bg = plt.jeans } -- Normal text
-sch.NormalFloat  = { fg = sch.smoke } -- Normal text in floating windows.
+sch.NormalFloat  = { fg = sch.smoke, bg = plt.ocean } -- Normal text in floating windows.
 sch.NormalNC     = { link = 'Normal' } -- normal text in non-current windows
 sch.ColorColumn  = { link = 'CursorColumn' } -- Columns set with 'colorcolumn'
 sch.Conceal      = { fg = plt.smoke } -- Placeholder characters substituted for concealed text (see 'conceallevel')
@@ -35,8 +35,8 @@ sch.MsgArea      = { link = 'Normal' } -- Area for messages and cmdline
 sch.MsgSeparator = { link = 'StatusLine' } -- Separator for scrolled messages, `msgsep` flag of 'display'
 sch.MatchParen   = { bg = plt.thunder, bold = true }
 sch.NonText      = { fg = plt.iron } -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., '>' displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
-sch.Pmenu        = { fg = sch.smoke } -- Popup menu: Normal item.
-sch.PmenuSbar    = {} -- Popup menu: Scrollbar.
+sch.Pmenu        = { fg = plt.smoke, bg = plt.ocean } -- Popup menu: Normal item.
+sch.PmenuSbar    = { bg = plt.deepsea } -- Popup menu: Scrollbar.
 sch.PmenuSel     = { fg = plt.white, bg = plt.thunder } -- Popup menu: Selected item.
 sch.PmenuThumb   = { bg = plt.orange } -- Popup menu: Thumb of the scrollbar.
 sch.Question     = { fg = plt.smoke } -- |hit-enter| prompt and yes/no questions
@@ -291,15 +291,19 @@ sch.BufferVisibleMod     = { fg = plt.orange }
 sch.BufferTabpageFill    = { fg = plt.pigeon, bg = plt.ocean }
 
 -- telescope
-sch.TelescopeNormal         = { link = 'NormalFloat' }
-sch.TelescopeBorder         = { link = 'FloatBorder' }
-sch.TelescopeSelection      = { bg = plt.thunder }
-sch.TelescopeMultiSelection = { bg = plt.thunder, bold = true }
-sch.TelescopePreviewLine    = { bg = plt.thunder }
-sch.TelescopeMatching       = { link = 'Search' }
-sch.TelescopePromptCounter  = { link = 'Comment' }
-sch.TelescopePromptPrefix   = { fg = plt.orange }
-sch.TelescopeSelectionCaret = { fg = plt.orange, bg = plt.thunder }
+sch.TelescopeNormal               = { link = 'NormalFloat' }
+sch.TelescopePromptNormal         = { bg = plt.deepsea }
+sch.TelescopeTitle                = { fg = plt.space, bg = plt.turquoise, bold = true }
+sch.TelescopePromptTitle          = { fg = plt.space, bg = plt.yellow, bold = true }
+sch.TelescopeBorder               = { bg = plt.ocean }
+sch.TelescopePromptBorder         = { bg = plt.deepsea }
+sch.TelescopeSelection            = { bg = plt.thunder }
+sch.TelescopeMultiSelection       = { bg = plt.thunder, bold = true }
+sch.TelescopePreviewLine          = { bg = plt.thunder }
+sch.TelescopeMatching             = { link = 'Search' }
+sch.TelescopePromptCounter        = { link = 'Comment' }
+sch.TelescopePromptPrefix         = { fg = plt.orange }
+sch.TelescopeSelectionCaret       = { fg = plt.orange, bg = plt.thunder }
 
 -- nvim-navic
 sch.NavicIconsFile          = { link = 'File' }
@@ -500,6 +504,10 @@ sch.LazyReasonSource  = { fg = plt.orange }
 sch.LazyReasonRuntime = { fg = plt.lavender }
 sch.LazyReasonEvent   = { fg = plt.flashlight }
 sch.LazyReasonKeys    = { fg = plt.pink }
+
+-- vim-floaterm
+sch.Floaterm       = { bg = plt.ocean }
+sch.FloatermBorder = { bg = plt.ocean }
 
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }

@@ -32,7 +32,7 @@ require('aerial').setup({
     min_width = 0.25,
   },
   float = {
-    border = 'single',
+    border = 'shadow',
     relative = 'editor',
     max_height = 0.6,
   },

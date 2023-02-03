@@ -196,12 +196,10 @@ cmp.setup({
   -- cmp floating window config
   window = {
     completion = {
-      border = 'single',
       max_width = 40,
       max_height = 16,
     },
     documentation = {
-      border = 'single',
       max_width = 80,
       max_height = 16,
     }
