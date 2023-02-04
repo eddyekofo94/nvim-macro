@@ -50,6 +50,7 @@ local autocmds = {
     {
       pattern = '*',
       callback = function(tbl)
+        if tbl.file == '' then return end
         local proj_dir = require('utils.funcs').proj_dir(tbl.file)
         if proj_dir then
           vim.cmd.lcd(proj_dir)

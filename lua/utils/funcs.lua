@@ -78,19 +78,15 @@ end
 function M.proj_dir(path)
   if path == '' then return end
 
+  path = vim.fn.fnamemodify(path, ':p:h')
   local target_dir = M.git_dir(path)
-  if not target_dir then
-    target_dir = vim.fn.fnamemodify(vim.fs.find({
-      '.svn',
-      '.bzr',
-      '.hg',
-      '.project',
-      '.pro',
-      '.sln',
-      '.vcxproj',
-      '.editorconfig',
-    }, { path = path, upward=true })[1], ':p:h')
-  end
+    or vim.fs.find({
+      '.svn', '.bzr',
+      '.hg', '.project',
+      '.pro', '.sln',
+      '.vcxproj', '.editorconfig',
+    }, { path = path, upward=true })[1]
+    or path
   if target_dir and vim.fn.isdirectory(target_dir) ~= 0 then
     return target_dir
   end
