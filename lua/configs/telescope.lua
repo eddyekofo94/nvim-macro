@@ -64,6 +64,21 @@ telescope.setup({
       },
     },
   },
+  extensions = {
+    undo = {
+      use_delta = true,
+      mappings = {
+        i = {
+          ['<CR>'] = require('telescope-undo.actions').restore,
+        },
+        n = {
+          ['<CR>'] = require('telescope-undo.actions').restore,
+          ['ya'] = require("telescope-undo.actions").yank_additions,
+          ['yd'] = require("telescope-undo.actions").yank_deletions,
+        },
+      },
+    },
+  },
 })
 
 -- load telescope extensions
