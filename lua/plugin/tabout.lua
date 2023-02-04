@@ -1,107 +1,213 @@
-local fallback_tbl_t = {
-  __index = function(tbl, _)
-    return tbl.default
-  end
-}
+local api = vim.api
+local fmt = string.format
 
-function fallback_tbl_t:new(init_tbl)
-  return setmetatable(init_tbl or {}, self)
+---@class fallbak_dbl_t each key shares a default / fallback pattern table
+---that can be used for pattern matching is corresponding key is not present
+---or non patterns stored in the key are matched
+---@field __content table closing patterns for each filetype
+local fallbak_tbl_t = {}
+
+function fallbak_tbl_t:__index(k)
+  return fallbak_tbl_t[k] or self:concat(k, '')
 end
 
-local patterns = {
-  ['<Tab>'] = fallback_tbl_t:new({
-    markdown = {
-      jumpable = [[\s*\()\|]\|}\|"\|'\|`\|\$\|\*\|,\|;\||\)]],
-      jump_pos = [[)\|]\|}\|"\|'\|`\|\$\|\*\|,\|;\||]],
-    },
-    tex = {
-      jumpable = [[\s*\()\|]\|}\|"\|'\|`\|\$\|,\|;\)]],
-      jump_pos = [[)\|]\|}\|"\|'\|`\|\$\|,\|;]],
-    },
-    c = {
-      jumpable = [[\s*\()\|]\|}\|"\|'\|`\|\*\/\|,\|;\)]],
-      jump_pos = [[)\|]\|}\|"\|'\|`\|\/\|,\|;]],
-    },
-    cpp = {
-      jumpable = [[\s*\()\|]\|}\|"\|'\|`\|\*\/\|,\|;\)]],
-      jump_pos = [[)\|]\|}\|"\|'\|`\|\/\|,\|;]],
-    },
-    default = {
-      jumpable = [[\s*\()\|]\|}\|"\|'\|`\|,\|;\)]],
-      jump_pos = [[)\|]\|}\|"\|'\|`\|,\|;]],
-    },
-  }),
+---Concatenate two pattern tables
+---@param k1 string filetype (key) of the first table
+---@param k2 string filetype (key) of the second table
+---@return table concatenated table
+function fallbak_tbl_t:concat(k1, k2)
+  local tbl1 = rawget(self.__content, k1)
+  local tbl2 = rawget(self.__content, k2)
+  if tbl1 and tbl2 then
+    for _, v in ipairs(tbl2) do
+      table.insert(tbl1, v)
+    end
+    return tbl1
+  elseif tbl1 then
+    return tbl1
+  elseif tbl2 then
+    return tbl2
+  else
+    return {}
+  end
+end
 
-  ['<S-Tab>'] = fallback_tbl_t:new({
-    markdown = {
-      catch_content = [[\s*\()\|]\|}\|"\|'\|`\|\$\|\*\|,\|;\||\)\s*\zs\S\+\ze]],
-      if_no_content = [[\s*\()\|]\|}\|"\|'\|`\|\$\|\*\|,\|;\||\)\zs\s*\ze]],
-    },
-    tex = {
-      catch_content = [[\s*\()\|]\|}\|"\|'\|`\|\$\|,\|;\)\s*\zs\S\+\ze]],
-      if_no_content = [[\s*\()\|]\|}\|"\|'\|`\|\$\|,\|;\)\zs\s*\ze]],
-    },
-    c = {
-      catch_content = [[\s*\()\|]\|}\|"\|'\|`\|\/\*\|,\|;\)\s*\zs\S\+\ze]],
-      if_no_content = [[\s*\()\|]\|}\|"\|'\|`\|\/\*\|,\|;\)\zs\s*\ze]],
-    },
-    cpp = {
-      catch_content = [[\s*\()\|]\|}\|"\|'\|`\|\/\*\|,\|;\)\s*\zs\S\+\ze]],
-      if_no_content = [[\s*\()\|]\|}\|"\|'\|`\|\/\*\|,\|;\)\zs\s*\ze]],
-    },
-    default = {
-      catch_content = [[\s*\()\|]\|}\|"\|'\|`\|,\|;\)\s*\zs\S\+\ze]],
-      if_no_content = [[\s*\()\|]\|}\|"\|'\|`\|,\|;\)\zs\s*\ze]],
-    },
-  }),
+---Create a new shared table
+---@param init_tbl table|nil initial table
+---@return fallbak_dbl_t
+function fallbak_tbl_t:new(init_tbl)
+  local shared_tbl = {
+    __content = init_tbl or {},
+  }
+  return setmetatable(shared_tbl, self)
+end
+
+local patterns = fallbak_tbl_t:new({
+  ['']         = { '%)', '%]', '}', '"', "'", '`', ',', ';', '%.' },
+  ['c']        = { '%*/' },
+  ['cpp']      = { '%*/' },
+  ['lua']      = { '%]%]' },
+  ['python']   = { '"""', "'''" },
+  ['markdown'] = {
+    '\\right\\rfloor',
+    '\\right\\rceil',
+    '\\right\\vert',
+    '\\right\\Vert',
+    '\\right%)',
+    '\\right%]',
+    '\\right}',
+    '\\right>',
+    '-->',
+    '%*',
+    '%$',
+    '|',
+  },
+  ['tex']      = {
+    '\\right\\rfloor',
+    '\\right\\rceil',
+    '\\right\\vert',
+    '\\right\\Vert',
+    '\\right%)',
+    '\\right%]',
+    '\\right}',
+    '\\right>',
+    '\\%]',
+    '\\%)',
+    '\\}',
+    '%$',
+  },
+})
+
+local opening_pattern_lookup_tbl = {
+  ["'"]               = "'",
+  ['"']               = '"',
+  [',']               = '.',
+  [';']               = '.',
+  ['`']               = '`',
+  ['|']               = '|',
+  ['}']               = '{',
+  ['%.']              = '.',
+  ['%$']              = '%$',
+  ['%)']              = '%(',
+  ['%*']              = '%*',
+  ['%]']              = '%[',
+  ['"""']             = '"""',
+  ["'''"]             = "'''",
+  ['%*/']             = '/%*',
+  ['\\}']             = '\\{',
+  ['-->']             = '<!--',
+  ['\\%)']            = '\\%(',
+  ['\\%]']            = '\\%[',
+  ['%]%]']            = '--%[%[',
+  ['\\right}']        = '\\left{',
+  ['\\right>']        = '\\left<',
+  ['\\right%)']       = '\\left%(',
+  ['\\right%]']       = '\\left%[',
+  ['\\right\\vert']   = '\\left\\vert',
+  ['\\right\\Vert']   = '\\left\\lVert',
+  ['\\right\\rceil']  = '\\left\\lceil',
+  ['\\right\\rfloor'] = '\\left\\lfloor',
 }
 
+---Get the index where Shift-Tab should jump to
+---1. If there is only white space characters or not characters in between
+---   the opening and closing pattern, jump to the end of the white space
+---   characters
+---
+---       1.1. Special case: if there is exactly two white space characters,
+---            jump to the middle of the two white space characters
+---
+---2. If there is contents (non-white space characters) in between the
+---   opening and closing pattern, jump to the end of the contents
+---@param leading any leading texts on current line
+---@param closing_pattern any closing pattern
+---@param cursor table<number> cursor position
+---@return table<number> cursor position after jump
+local function jumpin_idx(leading, closing_pattern, cursor)
+  local opening_pattern = opening_pattern_lookup_tbl[closing_pattern]
+
+  -- Case 1
+  local _, _, content_str, closing_pattern_str
+    = leading:find(fmt('%s(%s)(%s)$', opening_pattern, '%s*', closing_pattern))
+  if content_str == nil or closing_pattern_str == nil then
+    _, _, content_str, closing_pattern_str
+      = leading:find(fmt('^(%s)(%s)$', '%s*', closing_pattern))
+  end
+
+  if content_str and closing_pattern_str then
+    -- Case 1.1
+    if #content_str == 2 then
+      return { cursor[1], cursor[2] - #closing_pattern_str - 1 }
+    else
+      return { cursor[1], cursor[2] - #closing_pattern_str }
+    end
+  end
+
+  -- Case 2
+  _, _, content_str, closing_pattern_str
+    = leading:find(fmt('%s(%s)%s$',
+      opening_pattern .. '%s*', '.*%S', '%s*' .. closing_pattern))
+
+  if content_str == nil or closing_pattern_str == nil then
+    _, _, closing_pattern_str
+      = leading:find(fmt('%s(%s)$', '%S', '%s*' .. closing_pattern))
+  end
+
+  return { cursor[1], cursor[2] - #closing_pattern_str }
+end
+
 local get_jump_pos = {
+  ---Getting the jump position for Tab
+  ---@return table<number>|boolean cursor position after jump; false if no jump
   ['<Tab>'] = function()
-    if vim.fn.mode() ~= 'i' then return false end
+    local cursor = api.nvim_win_get_cursor(0)
+    local current_line = api.nvim_get_current_line()
+    local trailing = current_line:sub(cursor[2] + 1, -1)
+    local leading = current_line:sub(1, cursor[2])
 
-    local cursor_pos = vim.api.nvim_win_get_cursor(0)
-    local trailing = vim.api.nvim_get_current_line():sub(cursor_pos[2] + 1, -1)
-    local leading = vim.api.nvim_get_current_line():sub(1, cursor_pos[2])
+    -- Do not jump if the cursor is at the beginning of the line
+    if leading:match('^%s*$') then
+      return false
+    end
 
-    local jumpable = vim.fn.match(trailing, patterns['<Tab>'][vim.bo.ft].jumpable) == 0
-      and vim.fn.match(leading, [[\S]]) ~= -1
-    local jump_pos = vim.fn.match(trailing, patterns['<Tab>'][vim.bo.ft].jump_pos)
-
-    if jumpable then
-      return { cursor_pos[1], cursor_pos[2] + jump_pos + 1 }
+    for _, pattern in ipairs(patterns[vim.bo.ft or '']) do
+      local _, jump_pos = trailing:find('^%s*' .. pattern)
+      if jump_pos then
+        return { cursor[1], cursor[2] + jump_pos }
+      end
     end
 
     return false
   end,
 
+  ---Getting the jump position for Shift-Tab
+  ---@return table<number>|boolean cursor position after jump; false if no jump
   ['<S-Tab>'] = function()
-    if vim.fn.mode() ~= 'i' then return false end
+    local cursor = api.nvim_win_get_cursor(0)
+    local current_line = api.nvim_get_current_line()
+    local leading = current_line:sub(1, cursor[2])
 
-    local cursor_pos = vim.api.nvim_win_get_cursor(0)
-    local leading = vim.api.nvim_get_current_line():sub(1, cursor_pos[2]):reverse()
-
-    local jump_pos = vim.fn.match(leading, patterns['<S-Tab>'][vim.bo.ft].catch_content)
-    if jump_pos == -1 then
-      jump_pos = vim.fn.match(leading, patterns['<S-Tab>'][vim.bo.ft].if_no_content)
-    end
-
-    if jump_pos ~= -1 then
-      return { cursor_pos[1], cursor_pos[2] - jump_pos }
+    for _, pattern in ipairs(patterns[vim.bo.ft or '']) do
+      local _, closing_pattern_end = leading:find(pattern .. '%s*$')
+      if closing_pattern_end then
+        return jumpin_idx(leading:sub(1, closing_pattern_end), pattern, cursor)
+      end
     end
 
     return false
   end
 }
 
+---Get the position to jump for Tab or Shift-Tab, perform the jump if
+---there is a position to jump to, otherwise fallback (feedkeys)
+---@param key string key to be pressed
 local function do_key(key)
   local pos = get_jump_pos[key]()
   if pos then
-    vim.api.nvim_win_set_cursor(0, pos)
+    api.nvim_win_set_cursor(0, pos)
   else
-    vim.api.nvim_feedkeys(
-      vim.api.nvim_replace_termcodes(key, true, true, true),
-      'in', false)
+    local termcode = api.nvim_replace_termcodes(key, true, true, true)
+    api.nvim_feedkeys(termcode, 'in', false)
   end
 end
 
