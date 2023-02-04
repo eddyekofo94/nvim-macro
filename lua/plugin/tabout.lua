@@ -1,8 +1,8 @@
 local api = vim.api
 local fmt = string.format
 
----@class fallbak_dbl_t each key shares a default / fallback pattern table
----that can be used for pattern matching is corresponding key is not present
+---@class fallbak_tbl_t each key shares a default / fallback pattern table
+---that can be used for pattern matching if corresponding key is not present
 ---or non patterns stored in the key are matched
 ---@field __content table closing patterns for each filetype
 local fallbak_tbl_t = {}
@@ -34,7 +34,7 @@ end
 
 ---Create a new shared table
 ---@param init_tbl table|nil initial table
----@return fallbak_dbl_t
+---@return fallbak_tbl_t
 function fallbak_tbl_t:new(init_tbl)
   local shared_tbl = {
     __content = init_tbl or {},
