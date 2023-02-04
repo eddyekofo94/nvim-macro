@@ -1,5 +1,6 @@
 local npairs = require('nvim-autopairs')
 local Rule = require('nvim-autopairs.rule')
+local cond = require('nvim-autopairs.conds')
 
 npairs.setup({
   check_ts = true,
@@ -30,38 +31,19 @@ npairs.add_rules({
         return vim.fn.match(opts.line:sub(1, opts.col):reverse(),
           [[\s\((\|[\|{\|\*\/\)]]) == 0
       end),
-  -- autopair c block comment
+
   Rule('/*', '*/', { 'c', 'cpp' }),
-  -- markdown/tex math, pairing is taken care by snippets
-  Rule('$', '$', { 'markdown', 'tex' })
-      :with_pair(function() return false end),
-  Rule('\\(', '\\)', { 'tex' })
-      :with_pair(function() return false end),
-  Rule('\\[', '\\]', { 'tex' })
-      :with_pair(function() return false end),
-  -- markdown/tex math left right env
-  Rule('\\left(', '\\right)', { 'markdown', 'tex' })
-      :with_pair(function() return false end),
-  Rule('\\left[', '\\right]', { 'markdown', 'tex' })
-      :with_pair(function() return false end),
-  Rule('\\left{', '\\right}', { 'markdown', 'tex' })
-      :with_pair(function() return false end),
-  Rule('\\left<', '\\right>', { 'markdown', 'tex' })
-      :with_pair(function() return false end),
-  Rule('\\left\\lfloor ', ' \\right\\rfloor', { 'markdown', 'tex' })
-      :with_pair(function() return false end),
-  Rule('\\left\\lceil ', ' \\right\\rceil', { 'markdown', 'tex' })
-      :with_pair(function() return false end),
-  Rule('\\left\\vert ', ' \\right\\vert', { 'markdown', 'tex' })
-      :with_pair(function() return false end),
-  Rule('\\left\\lVert ', ' \\right\\lVert', { 'markdown', 'tex' })
-      :with_pair(function() return false end),
-  -- markdown/tex aligned text
-  Rule('&= ', ' \\\\', { 'markdown', 'tex' })
-      :with_pair(function() return false end),
-  -- markdown/tex math env braces
-  Rule('\\{', '\\}', { 'markdown', 'tex' }),
-  -- markdown italic/bold, pairing is taken care by snippets
-  Rule('*', '*', { 'markdown' })
-      :with_pair(function() return false end),
+  Rule('$', '$', { 'markdown', 'tex' })                              : with_pair(cond.none()),
+  Rule('\\(', '\\)', { 'tex' })                                      : with_pair(cond.not_before_text('\\)')),
+  Rule('\\[', '\\]', { 'tex' })                                      : with_pair(cond.not_before_text('\\]')),
+  Rule('\\{', '\\}', { 'markdown', 'tex' })                          : with_pair(cond.not_before_text('\\}')),
+  Rule('\\left(', '\\right)', { 'markdown', 'tex' })                 : with_pair(cond.not_before_text('\\right)')),
+  Rule('\\left[', '\\right]', { 'markdown', 'tex' })                 : with_pair(cond.not_before_text('\\right]')),
+  Rule('\\left{', '\\right}', { 'markdown', 'tex' })                 : with_pair(cond.not_before_text('\\right}')),
+  Rule('\\left<', '\\right>', { 'markdown', 'tex' })                 : with_pair(cond.not_before_text('\\right>')),
+  Rule('\\left\\lfloor ', ' \\right\\rfloor', { 'markdown', 'tex' }) : with_pair(cond.not_before_text('\\right\\rfloor)')),
+  Rule('\\left\\lceil ', ' \\right\\rceil', { 'markdown', 'tex' })   : with_pair(cond.not_before_text('\\right\\rceil)')),
+  Rule('\\left\\vert ', ' \\right\\vert', { 'markdown', 'tex' })     : with_pair(cond.not_before_text('\\right\\vert')),
+  Rule('\\left\\lVert ', ' \\right\\lVert', { 'markdown', 'tex' })   : with_pair(cond.not_before_text('\\right\\lVert')),
+  Rule('*', '*', { 'markdown' })                                     : with_pair(cond.none()),
 })
