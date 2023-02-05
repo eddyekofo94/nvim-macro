@@ -27,10 +27,15 @@ M.snippets = {
   s({ trig = 'spec' }, fmta([[
 {
 <indent>'<author>/<plugin_name>',<finish>
-<indent>config = configs['<plugin_name>'],
+<indent>config = function()
+<indent><indent>require('configs.<plugin_base_name>')
+<indent>end,
 },
   ]], {
     plugin_name = i(1),
+    plugin_base_name = f(function(text, _, _)
+      return text[1][1]:gsub('%..*', '')
+    end, { 1 }),
     author = i(2),
     indent = ifn(1),
     finish = i(0),
