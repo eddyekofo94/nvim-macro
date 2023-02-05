@@ -260,8 +260,8 @@ local math_snippets = {
     s({ trig = 'lr>' }, { t '\\left<', i(1), t '\\right>', i(0) }),
     s({ trig = 'norm' }, { t '\\left\\lVert ', i(1), t ' \\right\\lVert', i(0) }),
 
-    s({ trig = 'fl' }, { t '\\left\\lfloor ', i(1), t ' \\right\\rfloor', i(0) }),
-    s({ trig = 'cl' }, { t '\\left\\lceil ', i(1), t ' \\right\\rceil', i(0) }),
+    s({ trig = 'flr' }, { t '\\left\\lfloor ', i(1), t ' \\right\\rfloor', i(0) }),
+    s({ trig = 'clg' }, { t '\\left\\lceil ', i(1), t ' \\right\\rceil', i(0) }),
     s({ trig = 'bmat' }, { t '\\begin{bmatrix} ', i(1), t ' \\end{bmatrix}', i(0) }),
     s({ trig = 'pmat' }, { t '\\begin{pmatrix} ', i(1), t ' \\end{pmatrix}', i(0) }),
     s({ trig = 'Bmat' }, { t { '\\begin{bmatrix}', '' }, ifn(1), i(1), t { '', '\\end{bmatrix}', '' } }),
