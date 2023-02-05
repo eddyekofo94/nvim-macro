@@ -1,5 +1,6 @@
 local funcs = require('snippets.utils.funcs')
 local ifn = funcs.ifn
+local sdn = funcs.sdn
 local fn = vim.fn
 local ls = require('luasnip')
 local ls_types = require('luasnip.util.types')
@@ -68,8 +69,7 @@ local math_snippets = {
     }),
     s({ trig = '(\\%w+{%S+})//', regTrig = true }, {
       d(1, function(_, snip)
-        return sn(nil, { t '\\frac{', t(snip.captures[1]),
-          t '}{', i(1), t '}' })
+        return sn(nil, { t'\\frac{', t(snip.captures[1]), t'}{', i(1), t'}' })
       end),
       i(0),
     }),
@@ -92,7 +92,7 @@ local math_snippets = {
       i(0),
     }),
     -- matrix/vector
-    s({ trig = 'rowv', dscr = 'row vector' },
+    s({ trig = 'vr', dscr = 'row vector' },
       fmta('\\begin{bmatrix} <el><underscore>{0<mod>} & <el><underscore>{1<mod>} & \\ldots & <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
         el = i(1, 'a'),
         end_idx = i(2, 'N-1'),
@@ -100,7 +100,7 @@ local math_snippets = {
         mod = i(4),
       }, { repeat_duplicates = true })
     ),
-    s({ trig = 'colv', dscr = 'column vector' },
+    s({ trig = 'vc', dscr = 'column vector' },
       fmta('\\begin{bmatrix} <el><underscore>{0<mod>} \\\\ <el><underscore>{1,<mod>} \\\\ \\vdots \\\\ <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
         el = i(1, 'a'),
         end_idx = i(2, 'N-1'),
@@ -230,10 +230,20 @@ local math_snippets = {
     s({ trig = 'any' }, { t '\\forall ', i(0) }),
     s({ trig = 'exist' }, { t '\\exist ', i(0) }),
     s({ trig = 'transp' }, { t '^{\\intercal}', i(0) }),
-    s({ trig = 'hat' }, { t '\\hat{', i(1), t '}' }),
-    s({ trig = 'tilde' }, { t '\\tilde{', i(1), t '}' }),
-    s({ trig = 'overl' }, { t '\\overline{', i(1), t '}' }),
-    s({ trig = 'overs' }, { t '\\overset{', i(2), t '}{', i(1), t '}' }),
+    s({ trig = '(\\?%w*)vv', regTrig = true }, { sdn(1, '\\vec{', '}') }),
+    s({ trig = '(\\?%w*)ht', regTrig = true }, { sdn(1, '\\hat{', '}') }),
+    s({ trig = '(\\?%w*)td', regTrig = true }, { sdn(1, '\\tilde{', '}') }),
+    s({ trig = '(\\?%w*)bar', regTrig = true }, { sdn(1, '\\bar{', '}') }),
+    s({ trig = '(\\?%w*)ovl', regTrig = true }, { sdn(1, '\\overline{', '}') }),
+    s({ trig = '(\\?%w*)ovs', regTrig = true }, {
+      d(1, function(_, snip)
+        local text = snip.captures[1]
+        if text == nil or not text:match('%S') then
+          return sn(nil, { t '\\overset{', i(2), t '}{', i(1), t '}' })
+        end
+        return sn(nil, { t '\\overset{', i(1), t '}{', t(text), t '}' })
+      end),
+    }),
 
     s({ trig = 'log' }, { t '\\mathrm{log}_{', i(1, '10'), t '}\\left(', i(2), t '\\right)', i(0) }),
     s({ trig = 'ln', priority = 999 }, { t '\\mathrm{ln}', t '\\left(', i(1), t '\\right)', i(0) }),
@@ -290,8 +300,12 @@ local math_snippets = {
     s({ trig = 'int', priority = 998 }, { t '\\int_{', i(1), t '}^{', i(2), t '} ', i(0) }),
     s({ trig = 'iint', priority = 999 }, { t '\\iint_{', i(1), t '}^{', i(2), t '} ', i(0) }),
     s({ trig = 'iiint' }, { t '\\iiint_{', i(1), t '}^{', i(2), t '} ', i(0) }),
-    s({ trig = 'sum' }, { t '\\sum_{', i(1, 'n=0'), t '}^{', i(2, 'N-1'), t '} ', i(0) }),
-    s({ trig = 'so' }, { t '\\sum_{', i(1, 'x'), t '} ', i(0) }),
+    s({ trig = 'sum' }, {
+      c(1, {
+        sn(nil, { t '\\sum_{', i(1, 'n=0'), t '}^{', i(2, 'N-1'), t '} ' }),
+        sn(nil, { t '\\sum_{', i(1, 'x'), t '} ' })
+      }),
+    }),
     s({ trig = 'lim' }, { t '\\lim_{', i(1, 'n'), t '\\to ', i(2, '\\infty'), t '} ', i(0) }),
     s({ trig = 'env' }, fmta([[
 \begin{<env>}
