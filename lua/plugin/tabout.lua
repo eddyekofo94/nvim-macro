@@ -125,8 +125,8 @@ local opening_pattern_lookup_tbl = {
 ---   opening and closing pattern, jump to the end of the contents
 ---@param leading any leading texts on current line
 ---@param closing_pattern any closing pattern
----@param cursor table<number> cursor position
----@return table<number> cursor position after jump
+---@param cursor number[] cursor position
+---@return number[] cursor position after jump
 local function jumpin_idx(leading, closing_pattern, cursor)
   local opening_pattern = opening_pattern_lookup_tbl[closing_pattern]
 
@@ -162,7 +162,7 @@ end
 
 local get_jump_pos = {
   ---Getting the jump position for Tab
-  ---@return table<number>|boolean cursor position after jump; false if no jump
+  ---@return number[]|boolean cursor position after jump; false if no jump
   ['<Tab>'] = function()
     local cursor = api.nvim_win_get_cursor(0)
     local current_line = api.nvim_get_current_line()
