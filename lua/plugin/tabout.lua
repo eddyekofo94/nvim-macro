@@ -114,14 +114,14 @@ local opening_pattern_lookup_tbl = {
 }
 
 ---Get the index where Shift-Tab should jump to
----1. If there is only white space characters or not characters in between
----   the opening and closing pattern, jump to the end of the white space
----   characters
+---1. If there is only whitespace characters or no character in between
+---   the opening and closing pattern, jump to the end of the whitespace
+---   characters (i.e. right before the closing pattern)
 ---
----       1.1. Special case: if there is exactly two white space characters,
----            jump to the middle of the two white space characters
+---       1.1. Special case: if there is exactly two whitespace characters,
+---            jump to the middle of the two whitespace characters
 ---
----2. If there is contents (non-white space characters) in between the
+---2. If there is contents (non-whitespace characters) in between the
 ---   opening and closing pattern, jump to the end of the contents
 ---@param leading any leading texts on current line
 ---@param closing_pattern any closing pattern
