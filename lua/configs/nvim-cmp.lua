@@ -53,7 +53,7 @@ cmp.setup({
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, vim_item)
-      vim_item.menu = string.format('[%s]', string.upper(entry.source.name))
+      vim_item.menu = string.format('[%s]', entry.source.name:upper())
 
       -- Use a terminal icon for completions from cmp-cmdline
       if entry.source.name == 'cmdline' then
@@ -64,9 +64,10 @@ cmp.setup({
         vim_item.kind = icons[vim_item.kind]
       end
       -- Max word length visible
-      if #(vim_item.abbr) > 40 then
+      if #(vim_item.abbr) > 30 then
         vim_item.abbr = string.format('%s…%s',
-          string.sub(vim_item.abbr, 1, 23), string.sub(vim_item.abbr, -16, -1))
+          string.sub(vim_item.abbr, 1, 19),
+          string.sub(vim_item.abbr, -10, -1))
       end
 
       return vim_item
