@@ -16,6 +16,10 @@ end
 ---@param k2 string filetype (key) of the second table
 ---@return table concatenated table
 function fallbak_tbl_t:concat(k1, k2)
+  if k1 == k2 then
+    return rawget(self.__content, k1) or {}
+  end
+
   local tbl1 = rawget(self.__content, k1)
   local tbl2 = rawget(self.__content, k2)
   if tbl1 and tbl2 then
@@ -27,9 +31,9 @@ function fallbak_tbl_t:concat(k1, k2)
     return tbl1
   elseif tbl2 then
     return tbl2
-  else
-    return {}
   end
+
+  return {}
 end
 
 ---Create a new shared table
@@ -165,8 +169,8 @@ local get_jump_pos = {
     local trailing = current_line:sub(cursor[2] + 1, -1)
     local leading = current_line:sub(1, cursor[2])
 
-    -- Do not jump if the cursor is at the beginning of the line
-    if leading:match('^%s*$') then
+    -- Do not jump if the cursor is at the beginning/end of the current line
+    if leading:match('^%s*$') or trailing == '' then
       return false
     end
 
