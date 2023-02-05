@@ -70,9 +70,8 @@ local function correct_word_before(line, col)
     return
   end
 
-  if (#word_before <= 2 or lowercase_words[word_before:lower()])
+  if lowercase_words[word_before:lower()]
     and not first_word(line, col, word_before)
-    and not word_before:match('^%u%u+$')
   then
     word_before = word_before:lower()
     line = line:sub(1, col - #word_before - 1)
