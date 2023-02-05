@@ -42,7 +42,21 @@ end
     plugin_name = i(1),
     config = i(0),
     indent = funcs.ifn(1),
-  }, { repeat_duplicates = true }))
+  }, { repeat_duplicates = true })),
+  s({ trig = 'notify' }, {
+    t('vim.notify('),
+    i(1),
+    t(', vim.log.levels.'),
+    c(2, {
+      i(nil, 'DEBUG'),
+      i(nil, 'WARN'),
+      i(nil, 'ERROR'),
+      i(nil, 'INFO'),
+      i(nil, 'OFF'),
+      i(nil, 'TRACE')
+    }),
+    t(')'),
+  }),
 }
 
 return M
