@@ -148,13 +148,13 @@ local function jumpin_idx(leading, closing_pattern, cursor)
   end
 
   -- Case 2
-  _, _, content_str, closing_pattern_str
-    = leading:find(fmt('%s(%s)%s$',
-      opening_pattern .. '%s*', '.*%S', '%s*' .. closing_pattern))
+  _, _, _, closing_pattern_str
+    = leading:find(fmt('%s%s(%s)$',
+      opening_pattern .. '%s*', '.*%S', '%s*' .. closing_pattern .. '%s*'))
 
   if content_str == nil or closing_pattern_str == nil then
     _, _, closing_pattern_str
-      = leading:find(fmt('%s(%s)$', '%S', '%s*' .. closing_pattern))
+      = leading:find(fmt('%s(%s)$', '%S', '%s*' .. closing_pattern .. '%s*'))
   end
 
   return { cursor[1], cursor[2] - #closing_pattern_str }
@@ -185,7 +185,7 @@ local get_jump_pos = {
   end,
 
   ---Getting the jump position for Shift-Tab
-  ---@return table<number>|boolean cursor position after jump; false if no jump
+  ---@return number[]|boolean cursor position after jump; false if no jump
   ['<S-Tab>'] = function()
     local cursor = api.nvim_win_get_cursor(0)
     local current_line = api.nvim_get_current_line()
