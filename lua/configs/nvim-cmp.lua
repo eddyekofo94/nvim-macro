@@ -105,15 +105,19 @@ cmp.setup({
         if luasnip.expandable() then
           luasnip.expand()
         elseif luasnip.jumpable(1) then
-          local buf = vim.api.nvim_get_current_buf()
-          local current = luasnip.session.current_nodes[buf]
-          local _, current_end = current:get_buf_position()
-          current_end[1] = current_end[1] + 1 -- (1, 0) indexed
-          local cursor = vim.api.nvim_win_get_cursor(0)
-          if current_end[1] == cursor[1] and current_end[2] == cursor[2] then
+          if luasnip.choice_active() then
             luasnip.jump(1)
           else
-            fallback()
+            local buf = vim.api.nvim_get_current_buf()
+            local current = luasnip.session.current_nodes[buf]
+            local _, current_end = current:get_buf_position()
+            current_end[1] = current_end[1] + 1 -- (1, 0) indexed
+            local cursor = vim.api.nvim_win_get_cursor(0)
+            if current_end[1] == cursor[1] and current_end[2] == cursor[2] then
+              luasnip.jump(1)
+            else
+              fallback()
+            end
           end
         else
           fallback()
@@ -130,6 +134,8 @@ cmp.setup({
       if vim.fn.mode() == 'i' then
         if cmp.visible() then
           cmp.select_prev_item()
+        elseif luasnip.choice_active() then
+          luasnip.change_choice(-1)
         else
           cmp.complete()
         end
@@ -145,6 +151,8 @@ cmp.setup({
       if vim.fn.mode() == 'i' then
         if cmp.visible() then
           cmp.select_next_item()
+        elseif luasnip.choice_active() then
+          luasnip.change_choice(1)
         else
           cmp.complete()
         end
