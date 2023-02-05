@@ -47,7 +47,7 @@ return {
 
   {
     'saadparwaiz1/cmp_luasnip',
-    event = 'InsertEnter',
+    event = { 'BufReadPost', 'InsertEnter' },
     dependencies = { 'nvim-cmp', 'LuaSnip' },
   },
 
