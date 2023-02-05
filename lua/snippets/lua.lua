@@ -1,5 +1,6 @@
 local M = {}
 local funcs = require('snippets.utils.funcs')
+local ifn = funcs.ifn
 local fn = vim.fn
 local ls = require('luasnip')
 local ls_types = require('luasnip.util.types')
@@ -31,7 +32,7 @@ M.snippets = {
   ]], {
     plugin_name = i(1),
     author = i(2),
-    indent = funcs.ifn(1),
+    indent = ifn(1),
     finish = i(0),
   }, { repeat_duplicates = true })),
   s({ trig = 'config' }, fmta([[
@@ -41,7 +42,7 @@ end
   ]], {
     plugin_name = i(1),
     config = i(0),
-    indent = funcs.ifn(1),
+    indent = ifn(1),
   }, { repeat_duplicates = true })),
   s({ trig = 'notify' }, {
     t('vim.notify('),
