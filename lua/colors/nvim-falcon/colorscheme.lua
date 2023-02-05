@@ -261,6 +261,8 @@ sch.CmpItemKindFile        = { fg = plt.smoke }
 sch.CmpItemKindFolder      = { fg = plt.pigeon }
 sch.CmpItemKind            = { fg = plt.smoke }
 sch.CmpItemMenu            = { fg = plt.smoke }
+sch.CmpItemAbbrMatch       = { fg = plt.white, bold = true }
+sch.CmpItemAbbrMatchFuzzy  = { link = 'CmpItemAbbrMatch' }
 
 -- gitsigns
 sch.GitSignsAdd                = { fg = plt.tea }
