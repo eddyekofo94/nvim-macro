@@ -185,6 +185,7 @@ cmp.setup({
   sources = {
     { name = 'luasnip', max_item_count = 3 },
     { name = 'nvim_lsp_signature_help' },
+    { name = 'copilot' },
     {
       name = 'nvim_lsp',
       max_item_count = 20,
