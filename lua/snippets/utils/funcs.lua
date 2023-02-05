@@ -1,3 +1,26 @@
+local M = {}
+local fn = vim.fn
+local ls = require('luasnip')
+local ls_types = require('luasnip.util.types')
+local s = ls.snippet
+local sn = ls.snippet_node
+local t = ls.text_node
+local i = ls.insert_node
+local f = ls.function_node
+local c = ls.choice_node
+local d = ls.dynamic_node
+local r = ls.restore_node
+local l = require('luasnip.extras').lambda
+local rep = require('luasnip.extras').rep
+local p = require('luasnip.extras').partial
+local m = require('luasnip.extras').match
+local n = require('luasnip.extras').nonempty
+local dl = require('luasnip.extras').dynamic_lambda
+local fmt = require('luasnip.extras.fmt').fmt
+local fmta = require('luasnip.extras.fmt').fmta
+local types = require('luasnip.util.types')
+local conds = require('luasnip.extras.expand_conditions')
+
 local function add_attr(attr, snip_group)
   for _, snip in ipairs(snip_group) do
     for attr_key, attr_val in pairs(attr) do
@@ -39,8 +62,17 @@ local function get_indent_str(depth)
 end
 
 local function indent_function_node(depth)
-  local f = require('luasnip').function_node
   return f(function() return get_indent_str(depth) end, {}, {})
+end
+
+local function simple_suffix_dynamic_node(jump_index, opening, closing)
+  return d(jump_index or 1, function(_, snip)
+    local symbol = snip.captures[1]
+    if symbol == nil or not symbol:match('%S') then
+      return sn(nil, { t(opening), i(1), t(closing) })
+    end
+    return sn(nil, { t(opening), t(symbol), t(closing) })
+  end)
 end
 
 return {
@@ -49,4 +81,5 @@ return {
   not_in_mathzone = not_in_mathzone,
   get_char_after = get_char_after,
   ifn = indent_function_node,
+  sdn = simple_suffix_dynamic_node,
 }
