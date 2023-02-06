@@ -144,6 +144,7 @@ local math_snippets = {
     s({ trig = '!=' }, { t '\\neq ', i(0) }),
     s({ trig = '==' }, { t '&= ', i(0) }),
     s({ trig = '&= =' }, { t '\\equiv ', i(0) }),
+    s({ trig = ':=' }, { t '\\coloneqq ', i(0) }),
     s({ trig = '>=' }, { t '\\ge ', i(0) }),
     s({ trig = '<=' }, { t '\\le ', i(0) }),
     s({ trig = '<->', priority = 999 }, { t '\\leftrightarrow ', i(0) }),
@@ -193,13 +194,13 @@ local math_snippets = {
     s({ trig = '+-' }, { t '\\pm ' }),
     s({ trig = '-+' }, { t '\\mp ' }),
     s({ trig = '||' }, { t '\\mid ', i(0) }),
-    s({ trig = '(%[.*%])rt', regTrig = true }, {
+    s({ trig = '(%[.*%])rt', regTrig = true, priority = 999 }, {
       d(1, function(_, snip)
         local order = snip.captures[1]
         return sn(nil, { t('\\sqrt' .. order .. '{'), i(1), t '}' })
       end),
     }),
-    s({ trig = 'rt' }, { t '\\sqrt{', i(1), t '}' }),
+    s({ trig = 'rt', priority = 999 }, { t '\\sqrt{', i(1), t '}' }),
     s({ trig = '\\\\\\' }, { t '\\setminus ', i(0) }),
     s({ trig = '%%' }, { t '\\%', i(0) }),
     s({ trig = '##' }, { t '\\#' }),
@@ -317,6 +318,7 @@ local math_snippets = {
       text = i(2),
     }, { repeat_duplicates = true })),
 
+    s({ trig = 'nabla' }, { t '\\nabla', i(0) }),
     s({ trig = 'alpha' }, { t '\\alpha', i(0) }),
     s({ trig = 'beta' }, { t '\\beta', i(0) }),
     s({ trig = 'gamma' }, { t '\\gamma', i(0) }),
