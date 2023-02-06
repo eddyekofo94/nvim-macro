@@ -250,8 +250,8 @@ local math_snippets = {
     s({ trig = 'ln', priority = 999 }, { t '\\mathrm{ln}', t '\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'min', priority = 999 }, { t '\\mathrm{min}', t '\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'max', priority = 999 }, { t '\\mathrm{min}', t '\\left(', i(1), t '\\right)', i(0) }),
-    s({ trig = 'argmin' }, { t '\\mathrm{argmin}\\ ' }),
-    s({ trig = 'argmax' }, { t '\\mathrm{argmin}\\ ' }),
+    s({ trig = 'argmin' }, { t '\\mathrm{argmin}_{', i(1), t '}' }),
+    s({ trig = 'argmax' }, { t '\\mathrm{argamx}_{', i(1), t '}' }),
 
     s({ trig = 'sin', priority = 999 }, { t '\\mathrm{sin}\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'cos', priority = 999 }, { t '\\mathrm{cos}\\left(', i(1), t '\\right)', i(0) }),
