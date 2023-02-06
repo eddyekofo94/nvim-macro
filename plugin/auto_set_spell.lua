@@ -24,3 +24,8 @@ vim.api.nvim_create_autocmd('InsertEnter', {
   pattern = '*',
   command = 'hi SpellBad gui=underdotted',
 })
+
+vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
+  pattern = '*',
+  command = 'if mode() == "n" | hi clear SpellBad | endif',
+})
