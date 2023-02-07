@@ -97,7 +97,6 @@ local function lualine_config()
       component_separators = { left = '', right = '' },
       section_separators = { left = '', right = '' },
       globalstatus = vim.o.laststatus == 3,
-      theme = 'nvim-falcon',
     },
     extensions = { 'aerial' },
     sections = {
