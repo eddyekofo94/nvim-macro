@@ -140,7 +140,7 @@ sch['@preproc']               = { link = 'PreProc' }
 sch['@define']                = { link = 'Define' }
 sch['@operator']              = { link = 'Operator' }
 sch['@punctuation.delimiter'] = { link = 'Delimiter' }
-sch['@punctuation.bracket']   = { fg = plt.smoke }
+sch['@punctuation.bracket']   = { fg = plt.pigeon }
 sch['@punctuation.special']   = { link = 'Delimiter' }
 sch['@string']                = { link = 'String' }
 sch['@string.regex']          = { link = 'String' }
@@ -157,7 +157,7 @@ sch['@function.builtin']      = { link = 'Special' }
 sch['@function.macro']        = { link = 'Macro' }
 sch['@method']                = { link = 'Function' }
 sch['@method.call']           = { link = 'Function' }
-sch['@constructor']           = { link = 'Special' }
+sch['@constructor']           = { link = 'Function' }
 sch['@parameter']             = { link = 'Identifier' }
 sch['@keyword']               = { link = 'Keyword' }
 sch['@keyword.function']      = { link = 'Keyword' }
