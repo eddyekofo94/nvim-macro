@@ -16,7 +16,7 @@ require('aerial').setup({
     ['H'] = false,
   },
   attach_mode = 'window',
-  backends = { 'lsp', 'markdown', 'man' },
+  backends = { 'lsp', 'treesitter', 'markdown', 'man' },
   disable_max_lines = 8192,
   filter_kind = false,
   icons = require('utils.static').icons,
