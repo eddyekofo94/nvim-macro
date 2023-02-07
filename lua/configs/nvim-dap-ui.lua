@@ -50,6 +50,7 @@ dapui.setup({
     toggle = '<Leader><Leader>',
   },
   floating = {
+    border = 'solid',
     max_height = 20,
     max_width = 80,
     mappings = {
