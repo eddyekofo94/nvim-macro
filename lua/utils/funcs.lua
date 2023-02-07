@@ -87,6 +87,7 @@ function M.proj_dir(path)
       '.vcxproj', '.editorconfig',
     }, { path = path, upward=true })[1]
     or path
+  target_dir = vim.fn.fnamemodify(target_dir, ':p:h')
   if target_dir and vim.fn.isdirectory(target_dir) ~= 0 then
     return target_dir
   end
