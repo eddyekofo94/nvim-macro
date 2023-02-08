@@ -40,22 +40,6 @@ return {
   },
 
   {
-    'lukas-reineke/indent-blankline.nvim',
-    event = { 'BufRead', 'BufWrite' },
-    config = function()
-      require('configs.indent-blankline')
-    end,
-  },
-
-  {
-    'echasnovski/mini.indentscope',
-    event = { 'BufRead', 'BufWrite' },
-    config = function()
-      require('configs.indentscope')
-    end,
-  },
-
-  {
     'folke/twilight.nvim',
     keys = { '<Leader>;' },
     cmd = { 'Twilight', 'TwilightEnable' },
