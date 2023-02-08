@@ -87,7 +87,7 @@ palette.light = {
   pigeon_blend   = '#bcbac2',
   ocean_blend    = '#d3d1c9',
 
-  shadow = '#78726b',
+  shadow = '#3c3935',
 }
 
 return palette[vim.o.background or 'dark']
