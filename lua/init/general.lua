@@ -4,6 +4,7 @@ local g = vim.g
 local opt = vim.opt
 
 opt.cursorline     = true
+opt.cursorlineopt  = 'number'
 opt.eb             = false
 opt.foldlevelstart = 99
 opt.guifont        = 'FiraCode Nerd Font:h24'
