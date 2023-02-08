@@ -200,7 +200,7 @@ local math_snippets = {
         return sn(nil, { t('\\sqrt' .. order .. '{'), i(1), t '}' })
       end),
     }),
-    s({ trig = 'rt', priority = 999 }, { t '\\sqrt{', i(1), t '}' }),
+    s({ trig = '/.', priority = 999 }, { t '\\sqrt{', i(1), t '}' }),
     s({ trig = '\\\\\\' }, { t '\\setminus ', i(0) }),
     s({ trig = '%%' }, { t '\\%', i(0) }),
     s({ trig = '##' }, { t '\\#' }),
