@@ -28,6 +28,18 @@ M.langs = setmetatable({
   latex = { ft = 'tex', lsp_server = 'texlab' },
 }, langs_mt)
 
+M.root_patterns = {
+  '.git',
+  '.svn',
+  '.bzr',
+  '.hg',
+  '.project',
+  '.pro',
+  '.sln',
+  '.vcxproj',
+  '.editorconfig',
+}
+
 M.borders = {
   rounded = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
   single = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
