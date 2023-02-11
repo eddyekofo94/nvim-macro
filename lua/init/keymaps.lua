@@ -82,6 +82,5 @@ map({
   { 'n', 'q', '<Cmd>lua require("utils.funcs").close_all_floatings("q")<CR>' },
 
   -- Toggle background
-  { 'n', '<M-D>', '<Cmd>if &background=="dark" | set background=light | ' ..
-                  'else | set background=dark | endif<CR>' }
+  { 'n', '<M-D>', '<Cmd>lua require("utils.funcs").toggle_background()<CR>' },
 })

@@ -89,4 +89,14 @@ function M.proj_dir(path)
   end
 end
 
+function M.toggle_background()
+  if vim.o.background == 'dark' then
+    vim.opt.background = 'light'
+    vim.g.BACKGROUND = 'light'
+  else
+    vim.opt.background = 'dark'
+    vim.g.BACKGROUND = 'dark'
+  end
+end
+
 return M

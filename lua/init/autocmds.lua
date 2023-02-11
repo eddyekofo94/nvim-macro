@@ -69,6 +69,16 @@ local autocmds = {
       end,
     },
   },
+
+  -- Restore dark/light background from ShaDa
+  {
+    { 'UIEnter' },
+    {
+      callback = function()
+        vim.opt.background = vim.g.BACKGROUND or 'dark'
+      end
+    }
+  }
 }
 
 set_autocmds(autocmds)
