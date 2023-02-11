@@ -229,7 +229,7 @@ local math_snippets = {
     s({ trig = 'bigv' }, { t '\\big\\rvert_{', i(1), t '}' }),
     s({ trig = 'forall' }, { t '\\forall ', i(0) }),
     s({ trig = 'any' }, { t '\\forall ', i(0) }),
-    s({ trig = 'exist' }, { t '\\exist ', i(0) }),
+    s({ trig = 'exists' }, { t '\\exists ', i(0) }),
     s({ trig = 'transp' }, { t '^{\\intercal}', i(0) }),
     s({ trig = '(\\?%w*)vv', regTrig = true }, { sdn(1, '\\vec{', '}') }),
     s({ trig = '(\\?%w*)ht', regTrig = true }, { sdn(1, '\\hat{', '}') }),
