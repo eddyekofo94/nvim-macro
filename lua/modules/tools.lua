@@ -17,11 +17,11 @@ return {
     'nvim-telescope/telescope.nvim',
     cmd = 'Telescope',
     keys = {
-      '<Leader>F', '<Leader>ff', '<Leader>fo', '<Leader>f;',
-      '<Leader>f*', '<Leader>fh', '<Leader>fm', '<Leader>fb',
-      '<Leader>fr', '<Leader>fa', '<Leader>fe', '<Leader>fp',
-      '<Leader>fs', '<Leader>fS', '<Leader>fg', '<Leader>fm',
-      '<Leader>fd'
+      '<Leader>F', '<Leader>f', '<Leader>ff', '<Leader>fo',
+      '<Leader>f;', '<Leader>f*', '<Leader>fh', '<Leader>fm',
+      '<Leader>fb', '<Leader>fr', '<Leader>fa', '<Leader>fe',
+      '<Leader>fp', '<Leader>fs', '<Leader>fS', '<Leader>fg',
+      '<Leader>fm', '<Leader>fd'
     },
     dependencies = {
       'plenary.nvim',

@@ -4,6 +4,7 @@ local telescope_actions = require('telescope.actions')
 
 local keymap_opts = { noremap = true, silent = true }
 vim.keymap.set('n', '<Leader>F', function() telescope_builtin.builtin() end, keymap_opts)
+vim.keymap.set('n', '<Leader>f', function() telescope_builtin.builtin() end, keymap_opts)
 vim.keymap.set('n', '<Leader>ff', function() telescope_builtin.find_files() end, keymap_opts)
 vim.keymap.set('n', '<Leader>fo', function() telescope_builtin.oldfiles() end, keymap_opts)
 vim.keymap.set('n', '<Leader>f;', function() telescope_builtin.live_grep() end, keymap_opts)
