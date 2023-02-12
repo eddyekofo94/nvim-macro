@@ -1,86 +1,63 @@
-local function map(mappings)
-  for _, mapping in ipairs(mappings) do
-    vim.keymap.set(unpack(mapping))
-  end
-end
-
 vim.keymap.set({ 'n', 'x', 'x' }, '<Space>', '')
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-map({
   -- Multi-window operations
-  { 'n', '<M-w>', '<C-w><C-w>' },
-  { 'n', '<M-h>', '<C-w><C-h>' },
-  { 'n', '<M-j>', '<C-w><C-j>' },
-  { 'n', '<M-k>', '<C-w><C-k>' },
-  { 'n', '<M-l>', '<C-w><C-l>' },
-  { 'n', '<M-W>', '<C-w>W' },
-  { 'n', '<M-H>', '<C-w>H' },
-  { 'n', '<M-J>', '<C-w>J' },
-  { 'n', '<M-K>', '<C-w>K' },
-  { 'n', '<M-L>', '<C-w>L' },
-  { 'n', '<M-=>', '<C-w>=' },
-  { 'n', '<M-->', '<C-w>-' },
-  { 'n', '<M-+>', '<C-w>+' },
-  { 'n', '<M-_>', '<C-w>_' },
-  { 'n', '<M-|>', '<C-w>|' },
-  { 'n', '<M-<>', '<C-w><' },
-  { 'n', '<M->>', '<C-w>>' },
-  { 'n', '<M-p>', '<C-w>p' },
-  { 'n', '<M-r>', '<C-w>r' },
-  { 'n', '<M-v>', '<C-w>v' },
-  { 'n', '<M-s>', '<C-w>s' },
-  { 'n', '<M-x>', '<C-w>x' },
-  { 'n', '<M-z>', '<C-w>z' },
-  { 'n', '<M-c>', '<C-w>c' },
-  { 'n', '<M-n>', '<C-w>n' },
-  { 'n', '<M-o>', '<C-w>o' },
-  { 'n', '<M-t>', '<C-w>t' },
-  { 'n', '<M-T>', '<C-w>T' },
-  { 'n', '<M-]>', '<C-w>]' },
-  { 'n', '<M-^>', '<C-w>^' },
-  { 'n', '<M-b>', '<C-w>b' },
-  { 'n', '<M-d>', '<C-w>d' },
-  { 'n', '<M-f>', '<C-w>f' },
-  { 'n', '<M-g><M-]>', '<C-w>g<C-]>' },
-  { 'n', '<M-g>]', '<C-w>g]' },
-  { 'n', '<M-g>}', '<C-w>g}' },
-  { 'n', '<M-g>f', '<C-w>gf' },
-  { 'n', '<M-g>F', '<C-w>gF' },
-  { 'n', '<M-g>t', '<C-w>gt' },
-  { 'n', '<M-g>T', '<C-w>gT' },
-  { 'n', '<M-g><Tab>', '<C-w>g<Tab>' },
-  { 'n', '<M-}>', '<C-w>}' },
+vim.keymap.set('n', '<M-W>', '<C-w>W')
+vim.keymap.set('n', '<M-H>', '<C-w>H')
+vim.keymap.set('n', '<M-J>', '<C-w>J')
+vim.keymap.set('n', '<M-K>', '<C-w>K')
+vim.keymap.set('n', '<M-L>', '<C-w>L')
+vim.keymap.set('n', '<M-=>', '<C-w>=')
+vim.keymap.set('n', '<M-->', '<C-w>-')
+vim.keymap.set('n', '<M-+>', '<C-w>+')
+vim.keymap.set('n', '<M-_>', '<C-w>_')
+vim.keymap.set('n', '<M-|>', '<C-w>|')
+vim.keymap.set('n', '<M-<>', '<C-w><')
+vim.keymap.set('n', '<M->>', '<C-w>>')
+vim.keymap.set('n', '<M-p>', '<C-w>p')
+vim.keymap.set('n', '<M-r>', '<C-w>r')
+vim.keymap.set('n', '<M-v>', '<C-w>v')
+vim.keymap.set('n', '<M-s>', '<C-w>s')
+vim.keymap.set('n', '<M-x>', '<C-w>x')
+vim.keymap.set('n', '<M-z>', '<C-w>z')
+vim.keymap.set('n', '<M-c>', '<C-w>c')
+vim.keymap.set('n', '<M-n>', '<C-w>n')
+vim.keymap.set('n', '<M-o>', '<C-w>o')
+vim.keymap.set('n', '<M-t>', '<C-w>t')
+vim.keymap.set('n', '<M-T>', '<C-w>T')
+vim.keymap.set('n', '<M-]>', '<C-w>]')
+vim.keymap.set('n', '<M-^>', '<C-w>^')
+vim.keymap.set('n', '<M-b>', '<C-w>b')
+vim.keymap.set('n', '<M-d>', '<C-w>d')
+vim.keymap.set('n', '<M-f>', '<C-w>f')
+vim.keymap.set('n', '<M-}>', '<C-w>}')
+vim.keymap.set('n', '<M-g>]', '<C-w>g]')
+vim.keymap.set('n', '<M-g>}', '<C-w>g}')
+vim.keymap.set('n', '<M-g>f', '<C-w>gf')
+vim.keymap.set('n', '<M-g>F', '<C-w>gF')
+vim.keymap.set('n', '<M-g>t', '<C-w>gt')
+vim.keymap.set('n', '<M-g>T', '<C-w>gT')
+vim.keymap.set('n', '<M-w>', '<C-w><C-w>')
+vim.keymap.set('n', '<M-h>', '<C-w><C-h>')
+vim.keymap.set('n', '<M-j>', '<C-w><C-j>')
+vim.keymap.set('n', '<M-k>', '<C-w><C-k>')
+vim.keymap.set('n', '<M-l>', '<C-w><C-l>')
+vim.keymap.set('n', '<M-g><M-]>', '<C-w>g<C-]>')
+vim.keymap.set('n', '<M-g><Tab>', '<C-w>g<Tab>')
 
-  -- Multi-buffer operations
-  { 'n', '<Tab>', '<cmd>bn<CR>' },
-  { 'n', '<S-Tab>', '<cmd>bp<CR>' },
-  -- Delete current buffer
-  { 'n', '<M-C>', '<cmd>bd<CR>' },
-  -- <Tab> / <C-i> is used to switch buffers,
-  -- so use <C-n> to jump to newer cursor position instead
-  { 'n', '<C-n>', '<C-i>' },
+-- Buffer navigation
+vim.keymap.set('n', '<Tab>', '<cmd>bn<CR>')
+vim.keymap.set('n', '<S-Tab>', '<cmd>bp<CR>')
+vim.keymap.set('n', '<M-C>', '<cmd>bd<CR>')
+vim.keymap.set('n', '<C-n>', '<C-i>')
 
-  -- Moving in insert and command-line mode
-  { '!', '<C-b>', '<Left>' },
-  { '!', '<C-f>', '<Right>' },
-  { '!', '<C-a>', '<Home>' },
-  { '!', '<C-e>', '<End>' },
-  { 'i', '<C-k>', '<C-o>D' },
-  { 'c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>' },
-  { '!', '<C-d>', '<Del>' },
+-- Correct misspelled word / mark as correct
+vim.keymap.set('i', '<C-S-L>', '<Esc>[szg`]a')
+vim.keymap.set('i', '<C-l>', '<C-G>u<Esc>[s1z=`]a<C-G>u')
 
-  -- Correct misspelled word / mark as correct
-  { 'i', '<C-l>', '<C-G>u<Esc>[s1z=`]a<C-G>u' },
-  { 'i', '<C-S-L>', '<Esc>[szg`]a' },
+-- Enter normal mode from arbitrary mode
+vim.keymap.set({ 'n', 't', 'v', 'i', 'c' }, '<M-\\>', '<C-\\><C-n>')
 
-  -- Enter normal mode from arbitrary mode
-  { { 'n', 't', 'v', 'i', 'c' }, '<M-\\>', '<C-\\><C-n>' },
-
-  -- Close all floating windows
-  { 'n', 'q', '<Cmd>lua require("utils.funcs").close_all_floatings("q")<CR>' },
-
-  -- Toggle background
-  { 'n', '<M-D>', '<Cmd>lua require("utils.funcs").toggle_background()<CR>' },
-})
+vim.keymap.set('n', 'q', function() require('utils.funcs').close_all_floatings('q') end)
+vim.keymap.set('n', '<M-D>', function() require('utils.funcs').toggle_background() end)
