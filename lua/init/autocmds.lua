@@ -46,14 +46,14 @@ local autocmds = {
 
   -- Automatically change local current directory
   {
-    { 'BufWinEnter' },
+    { 'WinEnter', 'BufWinEnter' },
     {
       pattern = '*',
       callback = function(tbl)
         if tbl.file == '' then return end
         local proj_dir = require('utils.funcs').proj_dir(tbl.file)
         if proj_dir then
-          vim.cmd.lcd(proj_dir)
+          vim.defer_fn(function() vim.cmd.lcd(proj_dir) end, 100)
         end
       end,
     },
