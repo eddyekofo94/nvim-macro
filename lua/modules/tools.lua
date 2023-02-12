@@ -44,7 +44,7 @@ return {
   {
     'debugloop/telescope-undo.nvim',
     lazy = true,
-    requires = { 'plenary.nvim', 'telescope.nvim' },
+    dependencies = { 'plenary.nvim', 'telescope.nvim' },
   },
 
   {

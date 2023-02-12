@@ -2,7 +2,7 @@ return {
   {
     'romgrk/barbar.nvim',
     event = 'VeryLazy',
-    requries = 'nvim-web-devicons',
+    dependencies = 'nvim-web-devicons',
     config = function()
       require('configs.barbar')
     end,
