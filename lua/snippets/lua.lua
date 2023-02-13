@@ -40,15 +40,6 @@ M.snippets = {
     indent = ifn(1),
     finish = i(0),
   }, { repeat_duplicates = true })),
-  s({ trig = 'config' }, fmta([[
-M['<plugin_name>'] = function()
-<indent><config>
-end
-  ]], {
-    plugin_name = i(1),
-    config = i(0),
-    indent = ifn(1),
-  }, { repeat_duplicates = true })),
   s({ trig = 'notify' }, {
     t('vim.notify('),
     i(1),
