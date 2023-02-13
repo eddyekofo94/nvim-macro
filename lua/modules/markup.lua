@@ -37,4 +37,10 @@ return {
       vim.g.mkdp_theme = 'light'
     end,
   },
+
+  {
+    'dhruvasagar/vim-table-mode',
+    cmd = 'TableModToggle',
+    keys = '<Leader>tm',
+  },
 }
