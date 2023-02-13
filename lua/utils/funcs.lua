@@ -66,27 +66,18 @@ function M.close_all_floatings(key)
   end
 end
 
-function M.git_dir(path)
-  path = path and vim.fn.fnamemodify(path, ':p:h') or vim.fn.expand('%:p:h')
-  local gitdir = vim.fn.system(string.format(
-    'git -C %s rev-parse --show-toplevel', path))
-  local isgitdir = vim.fn.matchstr(gitdir, '^fatal:.*') == ''
-  if not isgitdir then return end
-  return vim.trim(gitdir)
-end
-
 function M.proj_dir(path)
   if path == '' then return end
 
   path = vim.fn.fnamemodify(path, ':p:h')
-  local target_dir = M.git_dir(path)
-    or vim.fs.find(require('utils.static').root_patterns,
+  local target_dir
+    = vim.fs.find(require('utils.static').root_patterns,
       { path = path, upward=true })[1]
-    or path
-  target_dir = vim.fn.fnamemodify(target_dir, ':p:h')
+  target_dir = vim.fn.fnamemodify(target_dir, ':p:h:h')
   if target_dir and vim.fn.isdirectory(target_dir) ~= 0 then
     return target_dir
   end
+  return vim.fn.getcwd()
 end
 
 function M.toggle_background()
