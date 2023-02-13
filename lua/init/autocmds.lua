@@ -76,9 +76,10 @@ local autocmds = {
     {
       callback = function()
         vim.opt.background = vim.g.BACKGROUND or 'dark'
+        vim.cmd.doautocmd('Colorscheme')
       end
-    }
-  }
+    },
+  },
 }
 
 set_autocmds(autocmds)
