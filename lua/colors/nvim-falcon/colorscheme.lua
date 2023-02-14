@@ -28,7 +28,7 @@ sch.Folded             = { fg = plt.iron, italic = true } -- Line used for close
 sch.FloatBorder        = { fg = plt.smoke, bg = plt.ocean } -- Border of floating windows.
 sch.FloatShadow        = { bg = plt.shadow, blend = 70 } -- Shadow of floating windows.
 sch.FloatShadowThrough = { bg = plt.shadow, blend = 100 } -- Shadow of floating windows
-sch.Search             = { fg = plt.flashlight, bold = true } -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
+sch.Search             = { fg = plt.flashlight, bg = plt.thunder, bold = true } -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
 sch.IncSearch          = { fg = plt.black, bg = plt.flashlight, bold = true } -- 'incsearch' highlighting; also used for the text replaced with ':s///c'
 sch.LineNr             = { fg = plt.steel } -- Line number for ':number' and ':#' commands, and when 'number' or 'relativenumber' option is set.
 sch.ModeMsg            = { fg = plt.smoke } -- 'showmode' message (e.g., '-- INSERT -- ')
