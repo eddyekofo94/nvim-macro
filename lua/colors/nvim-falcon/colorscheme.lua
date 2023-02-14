@@ -109,22 +109,27 @@ sch.LspSignatureActiveParameter = { link = 'IncSearch' } -- Used to highlight th
 sch.LspInfoBorder               = { link = 'FloatBorder' } -- Used to color the border of the info box
 
 -- Diagnostic highlighting
+sch.DiagnosticOK               = { fg = plt.tea } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
 sch.DiagnosticError            = { fg = plt.wine } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
 sch.DiagnosticWarn             = { fg = plt.earth } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
 sch.DiagnosticInfo             = { fg = plt.smoke } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
 sch.DiagnosticHint             = { fg = plt.pigeon } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
+sch.DiagnosticVirtualTextOK    = { fg = plt.tea, bg = plt.tea_blend } -- Used for 'OK' diagnostic virtual text.
 sch.DiagnosticVirtualTextError = { fg = plt.wine, bg = plt.wine_blend } -- Used for 'Error' diagnostic virtual text.
 sch.DiagnosticVirtualTextWarn  = { fg = plt.earth, bg = plt.earth_blend } -- Used for 'Warn' diagnostic virtual text.
 sch.DiagnosticVirtualTextInfo  = { fg = plt.smoke, bg = plt.smoke_blend } -- Used for 'Info' diagnostic virtual text.
 sch.DiagnosticVirtualTextHint  = { fg = plt.pigeon, bg = plt.pigeon_blend } -- Used for 'Hint' diagnostic virtual text.
+sch.DiagnosticUnderlineOK      = { underline = true, sp = plt.tea } -- Used to underline 'OK' diagnostics.
 sch.DiagnosticUnderlineError   = { undercurl = true, sp = plt.wine } -- Used to underline 'Error' diagnostics.
 sch.DiagnosticUnderlineWarn    = { undercurl = true, sp = plt.earth } -- Used to underline 'Warn' diagnostics.
 sch.DiagnosticUnderlineInfo    = { undercurl = true, sp = plt.flashlight } -- Used to underline 'Info' diagnostics.
 sch.DiagnosticUnderlineHint    = { undercurl = true, sp = plt.white } -- Used to underline 'Hint' diagnostics.
+sch.DiagnosticFloatingOK       = { link = 'DiagnosticOK' } -- Used to color 'OK' diagnostic messages in diagnostics float. See |vim.diagnostic.open_float()|
 sch.DiagnosticFloatingError    = { link = 'DiagnosticError' } -- Used to color 'Error' diagnostic messages in diagnostics float. See |vim.diagnostic.open_float()|
 sch.DiagnosticFloatingWarn     = { link = 'DiagnosticWarn' } -- Used to color 'Warn' diagnostic messages in diagnostics float.
 sch.DiagnosticFloatingInfo     = { link = 'DiagnosticInfo' } -- Used to color 'Info' diagnostic messages in diagnostics float.
 sch.DiagnosticFloatingHint     = { link = 'DiagnosticHint' } -- Used to color 'Hint' diagnostic messages in diagnostics float.
+sch.DiagnosticSignOK           = { link = 'DiagnosticOK' } -- Used for 'Error' signs in sign column.
 sch.DiagnosticSignError        = { link = 'DiagnosticError' } -- Used for 'Error' signs in sign column.
 sch.DiagnosticSignWarn         = { link = 'DiagnosticWarn' } -- Used for 'Warn' signs in sign column.
 sch.DiagnosticSignInfo         = { link = 'DiagnosticInfo' } -- Used for 'Info' signs in sign column.
