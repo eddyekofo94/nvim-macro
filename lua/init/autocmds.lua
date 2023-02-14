@@ -53,7 +53,7 @@ local autocmds = {
         if tbl.file == '' then return end
         local proj_dir = require('utils.funcs').proj_dir(tbl.file)
         if proj_dir then
-          vim.defer_fn(function() vim.cmd.lcd(proj_dir) end, 100)
+          vim.cmd.tcd(proj_dir)
         end
       end,
     },
