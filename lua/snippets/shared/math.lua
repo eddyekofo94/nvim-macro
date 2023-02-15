@@ -111,8 +111,8 @@ local math_snippets = {
     s({ trig = 'mt', dscr = 'matrix' },
       fmta([[
 \begin{bmatrix}
-<indent><el><underscore>{<mod0><comma><mod1>} & <el><underscore>{<mod0><comma><mod1>} & \ldots & <el><underscore>{<mod0><comma><width>} \\
-<indent><el><underscore>{<mod0><comma><mod1>} & <el><underscore>{<mod0><comma><mod1>} & \ldots & <el><underscore>{<mod0><comma><width>} \\
+<indent><el><underscore>{<row0><comma><col0>} & <el><underscore>{<row0><comma><col1>} & \ldots & <el><underscore>{<row0><comma><width>} \\
+<indent><el><underscore>{<row1><comma><col0>} & <el><underscore>{<row1><comma><col1>} & \ldots & <el><underscore>{<row1><comma><width>} \\
 <indent>\vdots & \vdots & \ddots & \vdots \\
 <indent><el><underscore>{<height><comma>0} & <el><underscore>{<height><comma>1} & \ldots & <el><underscore>{<height><comma><width>} \\
 \end{bmatrix}
@@ -121,10 +121,12 @@ local math_snippets = {
         el = i(1, 'a'),
         height = i(2, 'N-1'),
         width = i(3, 'M-1'),
-        underscore = i(4, '_'),
-        comma = i(5, ','),
-        mod0 = i(6, '0'),
-        mod1 = i(7, '1'),
+        row0 = i(4, '0'),
+        col0 = i(5, '0'),
+        row1 = i(6, '1'),
+        col1 = i(7, '1'),
+        underscore = i(8, '_'),
+        comma = i(9, ','),
     }, { repeat_duplicates = true })),
     s({ trig = 'inf' }, { t '\\infty', i(0) }),
     s({ trig = 'prop' }, t '\\propto ', i(0)),
