@@ -72,11 +72,6 @@ return {
     'lewis6991/gitsigns.nvim',
     event = 'BufReadPre',
     dependencies = 'plenary.nvim',
-    -- Fix gigsigns winscroll bug
-    build = [[sed -i '/\s*api.nvim_win_set_config(winid, opts1)/ ]] ..
-            [[c\         pcall(api.nvim_win_set_config, winid, opts1)' ]] ..
-            vim.fn.stdpath('data') ..
-            [[/lazy/gitsigns.nvim/lua/gitsigns/popup.lua]],
     config = function()
       require('configs.gitsigns')
     end,
