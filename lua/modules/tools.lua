@@ -48,15 +48,6 @@ return {
   },
 
   {
-    'mbbill/undotree',
-    keys = '<Leader>u',
-    cmd = { 'UndotreeToggle', 'UndotreeShow' },
-    config = function()
-      require('configs.undotree')
-    end,
-  },
-
-  {
     'voldikss/vim-floaterm',
     keys = {
       { '<C-\\>', mode = { 'n', 't' } },
