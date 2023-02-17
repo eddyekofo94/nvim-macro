@@ -251,7 +251,7 @@ local math_snippets = {
     s({ trig = 'log' }, { t '\\mathrm{log}_{', i(1, '10'), t '}\\left(', i(2), t '\\right)', i(0) }),
     s({ trig = 'ln', priority = 999 }, { t '\\mathrm{ln}', t '\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'min', priority = 999 }, { t '\\mathrm{min}', t '\\left(', i(1), t '\\right)', i(0) }),
-    s({ trig = 'max', priority = 999 }, { t '\\mathrm{min}', t '\\left(', i(1), t '\\right)', i(0) }),
+    s({ trig = 'max', priority = 999 }, { t '\\mathrm{max}', t '\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'argmin' }, { t '\\mathrm{argmin}_{', i(1), t '}' }),
     s({ trig = 'argmax' }, { t '\\mathrm{argamx}_{', i(1), t '}' }),
 
