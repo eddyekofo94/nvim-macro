@@ -55,7 +55,7 @@ lualine_theme.light = {
     b = { fg = plt.smoke, bg = plt.thunder },
   },
   insert = {
-    a = { fg = plt.space, bg = plt.aqua, gui = 'bold' },
+    a = { fg = plt.space, bg = plt.purple, gui = 'bold' },
     b = { fg = plt.smoke, bg = plt.thunder },
   },
   terminal = {
