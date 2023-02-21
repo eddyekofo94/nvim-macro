@@ -73,7 +73,7 @@ local math_snippets = {
       end),
       i(0),
     }),
-    s({ trig = '(\\?%w*)//', regTrig = true }, {
+    s({ trig = '(\\?%w*_*%w*)//', regTrig = true }, {
       d(1, function(_, snip)
         local numerator = snip.captures[1]
         if numerator == nil or not numerator:match('%S') then
@@ -233,12 +233,12 @@ local math_snippets = {
     s({ trig = 'any' }, { t '\\forall ', i(0) }),
     s({ trig = 'exists' }, { t '\\exists ', i(0) }),
     s({ trig = 'transp' }, { t '^{\\intercal}', i(0) }),
-    s({ trig = '(\\?%w*)vv', regTrig = true }, { sdn(1, '\\vec{', '}') }),
-    s({ trig = '(\\?%w*)ht', regTrig = true }, { sdn(1, '\\hat{', '}') }),
-    s({ trig = '(\\?%w*)td', regTrig = true }, { sdn(1, '\\tilde{', '}') }),
-    s({ trig = '(\\?%w*)bar', regTrig = true }, { sdn(1, '\\bar{', '}') }),
-    s({ trig = '(\\?%w*)ovl', regTrig = true }, { sdn(1, '\\overline{', '}') }),
-    s({ trig = '(\\?%w*)ovs', regTrig = true }, {
+    s({ trig = '(\\?%w*_*%w*)vv', regTrig = true }, { sdn(1, '\\vec{', '}') }),
+    s({ trig = '(\\?%w*_*%w*)ht', regTrig = true }, { sdn(1, '\\hat{', '}') }),
+    s({ trig = '(\\?%w*_*%w*)td', regTrig = true }, { sdn(1, '\\tilde{', '}') }),
+    s({ trig = '(\\?%w*_*%w*)bar', regTrig = true }, { sdn(1, '\\bar{', '}') }),
+    s({ trig = '(\\?%w*_*%w*)ovl', regTrig = true }, { sdn(1, '\\overline{', '}') }),
+    s({ trig = '(\\?%w*_*%w*)ovs', regTrig = true }, {
       d(1, function(_, snip)
         local text = snip.captures[1]
         if text == nil or not text:match('%S') then
