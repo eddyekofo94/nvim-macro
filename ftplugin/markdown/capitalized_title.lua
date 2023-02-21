@@ -41,7 +41,7 @@ end
 ---@return boolean
 local function on_word_boundary(line, col)
   local char_before = line:sub(col - 1, col - 1)
-  if char_before:match('%w') then
+  if char_before:match('%w') or char_before == "'" then
     return false
   end
   return true
