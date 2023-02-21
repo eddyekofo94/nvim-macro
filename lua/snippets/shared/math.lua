@@ -142,6 +142,7 @@ local math_snippets = {
     s({ trig = '**' }, { t '\\cdot ', i(0) }),
     s({ trig = 'o*' }, { t '\\circledast ', i(0) }),
     s({ trig = 'dd' }, { t '\\mathrm{d}', i(0) }),
+    s({ trig = 'pp' }, { t '\\partial ', i(0) }),
 
     s({ trig = '!=' }, { t '\\neq ', i(0) }),
     s({ trig = '==' }, { t '&= ', i(0) }),
