@@ -89,14 +89,15 @@ Optional:
 │   │   ├── keymaps.lua
 │   │   └── plugins.lua         # specify which modules to use in different conditions
 │   ├── modules                 # all plugin specifications and configs go here
-│   │   ├── base                # plugin specifications in module 'base'
-│   │   ├── completion          # plugin specifications in module 'completion'
-│   │   ├── lsp                 # plugin specifications in module 'lsp'
-│   │   ├── markup              # ...
-│   │   ├── misc
-│   │   ├── tools
-│   │   ├── treesitter
-│   │   └── ui
+│   │   ├── base.lua            # plugin specifications in module 'base'
+│   │   ├── completion.lua      # plugin specifications in module 'completion'
+│   │   ├── debug.lua           # plugin specifications in modules 'debug'
+│   │   ├── lsp.lua             # plugin specifications in module 'lsp'
+│   │   ├── markup.lua          # ...
+│   │   ├── misc.lua
+│   │   ├── tools.lua
+│   │   ├── treesitter.lua
+│   │   └── ui.lua
 │   ├── configs                 # configs for each plugin
 │   ├── snippets                # snippets
 │   ├── plugin                  # the actual implementation of custom plugins
