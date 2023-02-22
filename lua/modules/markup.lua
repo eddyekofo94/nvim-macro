@@ -40,6 +40,25 @@ return {
   },
 
   {
+    'mickael-menu/zk-nvim',
+    ft = 'markdown',
+    cmd = {
+      'ZkNew',
+      'ZkTags',
+      'ZkLinks',
+      'ZkNotes',
+      'ZkMatch',
+      'ZkInsertLink',
+      'ZkInsertLinkAtSelection',
+      'ZkNewFromTitleSelection',
+      'ZkNewFromContentSelection',
+    },
+    config = function()
+      require('configs.zk-nvim')
+    end,
+  },
+
+  {
     'dhruvasagar/vim-table-mode',
     cmd = 'TableModToggle',
     keys = '<Leader>tm',
