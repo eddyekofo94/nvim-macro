@@ -71,7 +71,6 @@ return {
 
   {
     'L3MON4D3/LuaSnip',
-    branch = 'get_jump_dest',
     event = 'InsertCharPre',
     config = function()
       require('configs.LuaSnip')
