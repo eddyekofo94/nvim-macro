@@ -107,6 +107,7 @@ sch.LspReferenceRead            = { link = 'LspReferenceText' } -- Used for high
 sch.LspReferenceWrite           = { link = 'LspReferenceText' } -- Used for highlighting 'write' references
 sch.LspSignatureActiveParameter = { link = 'IncSearch' } -- Used to highlight the active parameter in the signature help. See |vim.lsp.handlers.signature_help()|.
 sch.LspInfoBorder               = { link = 'FloatBorder' } -- Used to color the border of the info box
+sch.LSPInlayHint                = { fg = plt.lavender, bg = plt.ocean, italic = true }
 
 -- Diagnostic highlighting
 sch.DiagnosticOK               = { fg = plt.tea } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
