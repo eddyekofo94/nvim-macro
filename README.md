@@ -2,9 +2,9 @@
 
 <center>
 
-<img src="pic/README/splashscreen.png">
+![image](https://user-images.githubusercontent.com/76579810/220516563-8c9e9f95-fa8d-4788-b995-04e1efca7124.png)
 
-<img src="pic/README/screenshot.png">
+![image](https://user-images.githubusercontent.com/76579810/220517666-4a6ce796-0972-4b06-98ac-86313036537e.png)
 
 </center>
 
@@ -69,90 +69,40 @@ Optional:
     ```
     git clone https://github.com/Bekaboo/nvim ~/.config/nvim
     ```
-4. Open neovim, manually run `:PackerSync` if packer does not
+4. Open neovim, manually run `:Lazy sync` if lazy.nvim does not
     automatically sync.
 5. Run `:checkhealth` to check potential dependency issues.
 6. Enjoy!
 
-## Overview
-
-### Config Structure
+## Config Structure
 
 ```
 .
-├── colors                      # colorschemes loaders
+├── colors                      # colorschemes
 ├── plugin                      # custom plugins
 ├── ftplugin                    # custom filetype plugins
 ├── init.lua                    # entry of config
 ├── lua
-│   ├── colors                  # the actual implementation of colorshemes
+│   ├── colors                  # actual implementation of colorshemes
 │   ├── init                    # files under this folder is required by 'init.lua'
 │   │   ├── autocmds.lua
 │   │   ├── general.lua         # options and general settings
 │   │   ├── keymaps.lua
 │   │   └── plugins.lua         # specify which modules to use in different conditions
 │   ├── modules                 # all plugin specifications and configs go here
-│   │   ├── base                # module 'base'
-│   │   │   ├── configs.lua     # plugin configs
-│   │   │   └── init.lua        # plugin specifications
-│   │   ├── completion          # module 'completion'
-│   │   ├── lsp                 # module 'lsp'
+│   │   ├── base                # plugin specifications in module 'base'
+│   │   ├── completion          # plugin specifications in module 'completion'
+│   │   ├── lsp                 # plugin specifications in module 'lsp'
 │   │   ├── markup              # ...
 │   │   ├── misc
 │   │   ├── tools
 │   │   ├── treesitter
 │   │   └── ui
+│   ├── configs                 # configs for each plugin
+│   ├── snippets                # snippets
 │   ├── plugin                  # the actual implementation of custom plugins
 │   └── utils
-├── snapshots                   # packer snapshots go here
 └── syntax                      # syntax files
-```
-
-### Boot Process
-
-To optimize startup time, nearly all packages are lazy-loaded,
-including `packer.nvim`.
-
-```
-┌──────────┐
-│ init.lua │
-└────┬─────┘┌──────────────────────┐
-     ├─────►│ lua/init/general.lua │
-     │      └──────────────────────┘
-     │      ┌──────────────────────┐
-     ├─────►│ lua/init/keymaps.lua │
-     │      └──────────────────────┘
-     │      ┌───────────────────────┐
-     ├─────►│ lua/init/autocmds.lua │
-     │      └───────────────────────┘
-     │      ┌──────────────────────┐
-     └─────►│ lua/init/plugins.lua │
-            └──────────┬───────────┘
-                       │
-             specify modules to use
-                       │     ┌──────────────────────┐
-                       └────►│ lua/utils/packer.lua │
-                             └──────────┬───────────┘
-                                        │
-                               check if packer.nvim
-                                   is installed
-                                        │
-    install and load packer.nvim ◄─ NO ─┴─ YES ─► check if packer_compiled.lua exists
-                     │                                         │
-                     ▼                                         │        ┌─────────────────────┐
-              register plugins ◄───────────── NO ──────────────┴─ YES ─►│ packer_compiled.lua │
-                from modules                                            └─────────────────────┘
-                     │  ┌──────────────────┐
-                     ├─►│ lua/modules/base │
-┌─────────────────┐  │  └──────────────────┘
-│ lua/modules/lsp │◄─┤
-└─────────────────┘  │  ┌────────────────────────┐
-                     ├─►│ lua/modules/treesitter │
-                     │  └────────────────────────┘
-               ... ◄─┤
-                     │
-                     ▼
-                sync plugins
 ```
 
 ## Tweaking this Configuration
@@ -163,100 +113,41 @@ In order to enable or disable a module, one need to change the table in
 [lua/init/plugins.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua) passed to `manage_plugins()`, for example
 
 ```lua
-local manage_plugins = require('utils.packer').manage_plugins
 manage_plugins({
-  modules = {
-    -- ...
-    'base',
-    'completion',
-    'lsp',
-    -- ...
-  },
+    spec = {
+      { import = 'modules.base' },
+      { import = 'modules.treesitter' },
+      { import = 'modules.misc' },
+      -- ...
+    },
 })
 ```
 
-you can also pass `root`, `bootstrap`, and `configs` to `manage_plugins()`:
-
-```lua
-manage_plugins({
-  root = vim.fn.stdpath('data') .. '/foo',
-  bootstrap = {
-    url = 'https://github.com/wbthomason/packer.nvim',
-  },
-  configs = {
-    display = {
-      open_fn = function()
-        return require('packer.util').float({ border = 'double' })
-      end,
-    },
-  },
-})
-```
-
-- `root`: root directory of the plugins
-    - Normally setting `root` will automatically set `bootstrap.path` and
-        `configs.compile_path` **UNLESS** you explicitly set these
-        two options in the argument passed to `manage_plugins()`
-- `bootstrap`: information for automatically installing `packer.nvim`
-- `configs`: configuration passed to `packer.init()`, see [packer's doc](https://github.com/wbthomason/packer.nvim#custom-initialization)
-
-<details>
-  <summary><strong>Default argument passed to `manage_plugins()`:</strong></summary>
-
-  ```lua
-  local default_root = fn.stdpath('data') .. '/site'
-  local packer_info = {
-    modules = {},
-    root = default_root,
-    bootstrap = {
-      path = default_root .. '/pack/packer/opt/packer.nvim',
-      url = 'https://github.com/wbthomason/packer.nvim',
-    },
-    config = {
-      compile_path = default_root .. '/lua/packer_compiled.lua',
-      opt_default = false,
-      transitive_opt = true,
-    },
-  }
-  ```
-
-</details>
+the format of argument passed to `manage_plugins` is the same as that passed to
+lazy.nvim's setup function.
 
 ### Installing Packages to an Existing Module
 
 To install plugin `foo` under module `misc`, just insert the
 corresponding specification to the big table
-`lua/modules/misc/init.lua` returns, for instance,
+`lua/modules/misc.lua` returns, for instance,
 
-`lua/modules/misc/init.lua`:
+`lua/modules/misc.lua`:
 
 ```lua
--- ...
-
-M['foo'] = {
-  'foo/foo',
-  requires = 'foo_dep',
+return {
+    -- ...
+    {
+        'foo/foo',
+        requires = 'foo_dep',
+    },
 }
-
--- ...
-
-return M
 ```
 
 ### Installing Packages to a New Module
 
 To install plugin `foo` under module `bar`, one should first
-create module `bar` under [lua/modules](https://github.com/Bekaboo/nvim/tree/master/lua/modules), there are two approaches:
-
-```
-.
-└── lua
-    └── modules
-        └── bar
-            └── init.lua
-```
-
-or
+create module `bar` under [lua/modules](https://github.com/Bekaboo/nvim/tree/master/lua/modules):
 
 ```
 .
@@ -265,11 +156,11 @@ or
         └── bar.lua
 ```
 
-in either case a module should return a big table containing
-all specifications of plugins under that module, for instance:
+a module should return a big table containing all specifications of plugins
+under that module, for instance:
 
 ```lua
-{
+return {
   {
     'goolord/alpha-nvim',
     cond = function()
@@ -277,7 +168,9 @@ all specifications of plugins under that module, for instance:
           vim.o.lines >= 36 and vim.o.columns >= 80
     end,
     requires = 'nvim-web-devicons',
-  }, {
+  },
+
+  {
     'romgrk/barbar.nvim',
     requries = 'nvim-web-devicons',
     config = function() require('bufferline').setup() end,
@@ -288,14 +181,11 @@ all specifications of plugins under that module, for instance:
 After creating the new module `bar`, enable it in [lua/init/plugins.lua](hub.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua):
 
 ```lua
-local manage_plugins = require('utils.packer').manage_plugins
-
 manage_plugins({
-  modules = {
-    -- ...
-    'bar',
-    -- ...
-  }
+    spec = {
+      -- ...
+      { import = 'bar' },
+    },
 })
 ```
 
@@ -310,12 +200,18 @@ corresponding plugin keymaps.
 
 ### Colorscheme
 
-![colorscheme-nvim-falcon](pic/README/colorscheme-nvim-falcon.png)
+![image](https://user-images.githubusercontent.com/76579810/220518710-aa55a4cc-6855-471d-8ed8-627bbfdf617c.png)
 
-`nvim-falcon` is a builtin custom colorscheme optimized for transparent
-background and is enabled by default.
 
-To disable it, remove the [corresponding lines](https://github.com/Bekaboo/nvim/blob/master/lua/init/general.lua#L78-L80) in [lua/init/general.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/general.lua).
+`nvim-falcon` is a builtin custom colorscheme, with seperate palettes for dark and light background.
+
+Use `<M-C-d>` to toggle dark/light background.
+
+Neoovim is configured to restore the background settings on startup, so there
+is no need to setup `vim.opt.bg` in the config.
+
+To disable the auto-restore feature, remove corresponding lines in
+[lua/init/autocmds.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/autocmds.lua)
 
 To tweak this colorscheme, see [lua/colors/nvim-falcon](https://github.com/Bekaboo/nvim/tree/master/lua/colors/nvim-falcon).
 
@@ -331,7 +227,7 @@ See [lua/modules/lsp/lsp-server-configs](https://github.com/Bekaboo/nvim/tree/ma
 
 This configuration use [LuaSnip](https://github.com/L3MON4D3/LuaSnip) as the snippet engine,
 custom snippets for different filetypes
-are defined under [lua/modules/completion/snippets](https://github.com/Bekaboo/nvim/tree/master/lua/modules/completion/snippets).
+are defined under [lua/snippets](https://github.com/Bekaboo/nvim/tree/master/lua/snippets).
 
 ### Enabling VSCode Integration
 
@@ -343,14 +239,7 @@ To make VSCode integration work, please install [VSCode-Neovim](https://github.c
 and configure it correctly.
 
 After setting up VSCode-Neovim, re-enter VSCode, open a random file
-and run `:PackerSync`, if the message says "Packer Compiled Successfully!" then
-it should work.
-
-<center>
-
-<img src="pic/README/vscode-neovim-message.png" width=50% height=50%>
-
-</center>
+and it should work out of the box.
 
 ## Appendix
 
@@ -371,22 +260,27 @@ Total # of plugins: 46 (package manager excluded).
     - [cmp_luasnip](https://github.com/saadparwaiz1/cmp_luasnip)
     - [cmp-nvim-lsp-signature-help](https://github.com/hrsh7th/cmp-nvim-lsp-signature-help)
     - [copilot.lua](https://github.com/zbirenbaum/copilot.lua)
+    - [copilot-cmp](https://github.com/zbirenbaum/copilot-cmp)
     - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
 - **LSP**
     - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
+    - [clangd_extensions.nvim](https://github.com/p00f/clangd_extensions.nvim)
     - [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim)
-    - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
-    - [nvim-navic](https://github.com/SmiteshP/nvim-navic)
+    - [fidget.nvim](https://github.com/j-hui/fidget.nvim)
 - **Markup**
     - [vimtex](https://github.com/lervag/vimtex)
     - [vim-markdown](https://github.com/preservim/vim-markdown)
     - [clipboard-image.nvim](https://github.com/ekickx/clipboard-image.nvim)
     - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
+    - [zk-nvim](https://github.com/mickael-menu/zk-nvim)
+    - [vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
 - **Misc**
     - [nvim-surround](https://github.com/kylechui/nvim-surround)
     - [Comment.nvim](https://github.com/numToStr/Comment.nvim)
     - [vim-sleuth](https://github.com/tpope/vim-sleuth)
     - [nvim-autopairs](https://github.com/windwp/nvim-autopairs)
+    - [fcitx.nvim](https://github.com/h-hg/fcitx.nvim)
+    - [vim-easy-align](https://github.com/junegunn/vim-easy-align)
 - **Tools**
     - [mason.nvim](https://github.com/williamboman/mason.nvim)
     - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
@@ -396,15 +290,22 @@ Total # of plugins: 46 (package manager excluded).
     - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
     - [rnvimr](https://github.com/kevinhwang91/rnvimr)
     - [tmux.nvim](https://github.com/aserowy/tmux.nvim)
+    - [nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua)
 - **Treesitter**
     - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
     - [nvim-ts-rainbow](https://github.com/mrjones2014/nvim-ts-rainbow)
     - [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)
     - [nvim-ts-context-commentstring](https://github.com/JoosepAlviste/nvim-ts-context-commentstring)
+    - [ts-node-action](https://github.com/CKolkey/ts-node-action)
+    - [cellular-automaton.nvim](https://github.com/Eandrju/cellular-automaton.nvim)
 - **UI**
       - [barbar.nvim](https://github.com/romgrk/barbar.nvim)
       - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
       - [alpha-nvim](https://github.com/goolord/alpha-nvim)
+      - [nvim-navic](https://github.com/SmiteshP/nvim-navic)
+      - [twilight.nvim](https://github.com/folke/twilight.nvim)
+      - [limelight.vim](https://github.com/junegunn/limelight.vim)
+      - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
 - **DEBUG**
       - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
       - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
