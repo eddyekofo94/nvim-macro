@@ -245,7 +245,7 @@ and it should work out of the box.
 
 ### Default Modules and Plugins of Choice
 
-Total # of plugins: 46 (package manager excluded).
+Total # of plugins: 54 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -285,7 +285,7 @@ Total # of plugins: 46 (package manager excluded).
     - [mason.nvim](https://github.com/williamboman/mason.nvim)
     - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
     - [telescope-fzf-native.nvim](https://github.com/nvim-telescope/telescope-fzf-native.nvim)
-    - [undotree](https://github.com/mbbill/undotree)
+    - [telescope-undo.nvim](https://github.com/debugloop/telescope-undo.nvim)
     - [vim-floaterm](https://github.com/voldikss/vim-floaterm)
     - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
     - [rnvimr](https://github.com/kevinhwang91/rnvimr)
@@ -299,17 +299,17 @@ Total # of plugins: 46 (package manager excluded).
     - [ts-node-action](https://github.com/CKolkey/ts-node-action)
     - [cellular-automaton.nvim](https://github.com/Eandrju/cellular-automaton.nvim)
 - **UI**
-      - [barbar.nvim](https://github.com/romgrk/barbar.nvim)
-      - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
-      - [alpha-nvim](https://github.com/goolord/alpha-nvim)
-      - [nvim-navic](https://github.com/SmiteshP/nvim-navic)
-      - [twilight.nvim](https://github.com/folke/twilight.nvim)
-      - [limelight.vim](https://github.com/junegunn/limelight.vim)
-      - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
+    - [barbar.nvim](https://github.com/romgrk/barbar.nvim)
+    - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
+    - [alpha-nvim](https://github.com/goolord/alpha-nvim)
+    - [nvim-navic](https://github.com/SmiteshP/nvim-navic)
+    - [twilight.nvim](https://github.com/folke/twilight.nvim)
+    - [limelight.vim](https://github.com/junegunn/limelight.vim)
+    - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
 - **DEBUG**
-      - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
-      - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
-      - [mason-nvim-dap.nvim](https://github.com/jayp0521/mason-nvim-dap.nvim)
+    - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
+    - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
+    - [mason-nvim-dap.nvim](https://github.com/jayp0521/mason-nvim-dap.nvim)
 
 ### Startuptime Statistics
 
