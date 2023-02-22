@@ -15,7 +15,6 @@
 3. [Installation](#installation)
 4. [Overview](#overview)
     1. [Config Structure](#config-structure)
-    2. [Boot Process](#boot-process)
 5. [Tweaking this Configuration](#tweaking-this-configuration)
     1. [Managing Plugins with Modules](#managing-plugins-with-modules)
     2. [Installing Packages to an Existing Module](#installing-packages-to-an-existing-module)
@@ -24,7 +23,7 @@
     5. [Keymaps](#keymaps)
     6. [Colorscheme](#colorscheme)
     7. [Auto Commands](#auto-commands)
-    8. [LSP Server Configurations](#lsp-server-configuration)
+    8. [LSP Server Configurations](#lsp-server-configurations)
     9. [Snippets](#snippets)
     10. [Enabling VSCode Integration](#enabling-vscode-integration)
 6. [Appendix](#appendix)
@@ -221,7 +220,7 @@ See [lua/init/autocmds.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init
 
 ### LSP Server Configurations
 
-See [lua/modules/lsp/lsp-server-configs](https://github.com/Bekaboo/nvim/tree/master/lua/modules/lsp/lsp-server-configs).
+See [lua/configs/lsp-server-configs](https://github.com/Bekaboo/nvim/tree/master/lua/configs/lsp-server-configs) and [lua/configs/nvim-lspconfig.lua](https://github.com/Bekaboo/nvim/tree/master/lua/configs/nvim-lspconfig.lua).
 
 ### Snippets
 
