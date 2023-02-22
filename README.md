@@ -207,7 +207,7 @@ corresponding plugin keymaps.
 
 Use `<M-C-d>` to toggle dark/light background.
 
-Neoovim is configured to restore the background settings on startup, so there
+Neovim is configured to restore the background settings on startup, so there
 is no need to setup `vim.opt.bg` in the config.
 
 To disable the auto-restore feature, remove corresponding lines in
