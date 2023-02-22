@@ -61,6 +61,9 @@ return {
   {
     'dhruvasagar/vim-table-mode',
     cmd = 'TableModToggle',
-    keys = '<Leader>tm',
+    event = { 'BufReadPost', 'BufNew' },
+    config = function()
+      require('configs.vim-table-mode')
+    end
   },
 }
