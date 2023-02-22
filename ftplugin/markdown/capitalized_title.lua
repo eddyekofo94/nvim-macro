@@ -23,6 +23,7 @@ local lowercase_words = {
   ['to'] = true,
   ['up'] = true,
   ['via'] = true,
+  ['vs'] = true,
   ['yet'] = true,
 }
 
