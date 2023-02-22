@@ -52,9 +52,6 @@ end
 local default_config = {
   on_attach = on_attach,
   capabilities = capabilities,
-  root_dir = require('lspconfig').util.root_pattern(
-    unpack(require('utils.static').root_patterns)
-  )
 }
 
 return default_config
