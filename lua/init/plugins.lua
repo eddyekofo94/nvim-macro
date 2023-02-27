@@ -55,7 +55,7 @@ if vim.g.vscode then
     spec = {
       { import = 'modules.base' },
       { import = 'modules.treesitter' },
-      { import = 'modules.misc' },
+      { import = 'modules.editor' },
     }
   })
 else
