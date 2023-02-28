@@ -73,11 +73,11 @@ function M.proj_dir(path)
   local target_dir
     = vim.fs.find(require('utils.static').root_patterns,
       { path = path, upward=true })[1]
-  target_dir = vim.fn.fnamemodify(target_dir, ':p:h:h')
-  if target_dir and vim.fn.isdirectory(target_dir) ~= 0 then
-    return target_dir
+
+  if not target_dir or vim.fn.isdirectory(target_dir) == 0 then
+    return vim.fn.getcwd()
   end
-  return vim.fn.getcwd()
+  return vim.fn.fnamemodify(target_dir, ':p:h:h')
 end
 
 function M.toggle_background()
