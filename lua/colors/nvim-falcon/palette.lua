@@ -83,7 +83,7 @@ palette.light = {
   scarlet_blend  = '#e6b8b3',
   wine_blend     = '#e6c9c3',
   earth_blend    = '#ebe0ce',
-  smoke_blend    = '#d2d2d0',
+  smoke_blend    = '#e4e4e2',
   pigeon_blend   = '#e6e6e3',
   ocean_blend    = '#dcdad2',
 
