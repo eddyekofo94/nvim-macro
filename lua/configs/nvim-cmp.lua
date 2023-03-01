@@ -178,7 +178,7 @@ cmp.setup({
         fallback()
       end
     end, { 'i' }),
-    ['<CR>'] = cmp.mapping.confirm {
+    ['<C-y>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
       select = false
     }
