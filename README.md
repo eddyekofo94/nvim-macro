@@ -245,7 +245,7 @@ and it should work out of the box.
 
 ### Default Modules and Plugins of Choice
 
-Total # of plugins: 54 (package manager included).
+Total # of plugins: 52 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -303,8 +303,6 @@ Total # of plugins: 54 (package manager included).
     - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
     - [alpha-nvim](https://github.com/goolord/alpha-nvim)
     - [nvim-navic](https://github.com/SmiteshP/nvim-navic)
-    - [twilight.nvim](https://github.com/folke/twilight.nvim)
-    - [limelight.vim](https://github.com/junegunn/limelight.vim)
     - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
 - **DEBUG**
     - [nvim-dap](https://github.com/mfussenegger/nvim-dap)

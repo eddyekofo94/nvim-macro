@@ -40,23 +40,6 @@ return {
   },
 
   {
-    'folke/twilight.nvim',
-    keys = { '<Leader>;' },
-    cmd = { 'Twilight', 'TwilightEnable' },
-    config = function()
-      require('configs.twilight')
-    end,
-  },
-
-  {
-    'junegunn/limelight.vim',
-    cmd = 'Limelight',
-    config = function()
-      require('configs.limelight')
-    end,
-  },
-
-  {
     'stevearc/aerial.nvim',
     keys = { '<Leader>O', '<Leader>o' },
     cmd = { 'AerialToggle', 'AerialOpen', 'AerialOpenAll' },
