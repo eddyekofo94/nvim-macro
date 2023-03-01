@@ -1,6 +1,6 @@
 local M = {}
 
--- Jump to last accessed window on closing the current one
+---Jump to last accessed window on closing the current one
 function M.win_close_jmp()
   -- Exclude floating windows
   if '' ~= vim.api.nvim_win_get_config(0).relative then return end
@@ -25,8 +25,8 @@ function M.win_close_jmp()
   vim.cmd('wincmd p')
 end
 
--- Last-position-jump
--- Source: https://www.reddit.com/r/neovim/comments/ucgxmj/comment/i6coai3/?utm_source=share&utm_medium=web2x&context=3
+---Jump to the position last time the buffer was edited.
+---Source: https://www.reddit.com/r/neovim/comments/ucgxmj/comment/i6coai3/?utm_source=share&utm_medium=web2x&context=3
 function M.last_pos_jmp()
   local ft = vim.opt_local.filetype:get()
   -- don't apply to git messages
@@ -43,7 +43,9 @@ function M.last_pos_jmp()
   end
 end
 
--- Source: https://github.com/wookayin/dotfiles/commit/96d935515486f44ec361db3df8ab9ebb41ea7e40
+---Close all floating windows.
+---Source: https://github.com/wookayin/dotfiles/commit/96d935515486f44ec361db3df8ab9ebb41ea7e40
+---@param key string|nil Fallback key to feed if no floating window is found.
 function M.close_all_floatings(key)
   local count = 0
   local current_win = vim.api.nvim_get_current_win()
@@ -103,6 +105,8 @@ function M.proj_dir(fpath)
   return nil
 end
 
+---Toggle between light and dark background,
+---setting global variables accordingly.
 function M.toggle_background()
   if vim.o.background == 'dark' then
     vim.opt.background = 'light'
