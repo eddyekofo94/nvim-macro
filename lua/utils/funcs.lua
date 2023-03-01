@@ -66,18 +66,41 @@ function M.close_all_floatings(key)
   end
 end
 
-function M.proj_dir(path)
-  if path == '' then return end
-
-  path = vim.fn.fnamemodify(path, ':p:h')
-  local target_dir
-    = vim.fs.find(require('utils.static').root_patterns,
-      { path = path, upward=true })[1]
-
-  if not target_dir or vim.fn.isdirectory(target_dir) == 0 then
-    return vim.fn.getcwd()
+---Compute project directory for given path.
+---@param fpath string
+---@return string|nil
+function M.proj_dir(fpath)
+  if not fpath or fpath == '' then
+    return nil
   end
-  return vim.fn.fnamemodify(target_dir, ':p:h:h')
+
+  local root_patterns = {
+    '.git',
+    '.svn',
+    '.bzr',
+    '.hg',
+    '.project',
+    '.pro',
+    '.sln',
+    '.vcxproj',
+    '.editorconfig',
+  }
+
+  local dirpath = vim.fs.dirname(fpath)
+  local root = vim.fs.find(root_patterns,
+    { path = dirpath, upward = true })[1]
+  if root and vim.loop.fs_stat(root) then
+    return vim.fs.dirname(root)
+  end
+
+  if dirpath then
+    local dirstat = vim.loop.fs_stat(dirpath)
+    if dirstat and dirstat.type == 'directory' then
+      return dirpath
+    end
+  end
+
+  return nil
 end
 
 function M.toggle_background()
