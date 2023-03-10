@@ -1,3 +1,4 @@
+local M = {}
 local funcs = require('snippets.utils.funcs')
 local ifn = funcs.ifn
 local sdn = funcs.sdn
@@ -23,7 +24,7 @@ local fmta = require('luasnip.extras.fmt').fmta
 local types = require('luasnip.util.types')
 local conds = require('luasnip.extras.expand_conditions')
 
-local math_snippets = {
+M.symbols = {
   snip = funcs.add_attr({ condition = funcs.in_mathzone, wordTrig = false }, {
     s({ trig = '(%a)(%d)', regTrig = true }, {
       d(1, function(_, snip)
@@ -91,58 +92,6 @@ local math_snippets = {
       end),
       i(0),
     }),
-    -- matrix/vector
-    s({ trig = 'vr', dscr = 'row vector' },
-      fmta('\\begin{bmatrix} <el><underscore>{0<mod>} & <el><underscore>{1<mod>} & \\ldots & <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
-        el = i(1, 'a'),
-        end_idx = i(2, 'N-1'),
-        underscore = i(3, '_'),
-        mod = i(4),
-      }, { repeat_duplicates = true })
-    ),
-    s({ trig = 'vc', dscr = 'column vector' },
-      fmta('\\begin{bmatrix} <el><underscore>{0<mod>} \\\\ <el><underscore>{1,<mod>} \\\\ \\vdots \\\\ <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
-        el = i(1, 'a'),
-        end_idx = i(2, 'N-1'),
-        underscore = i(3, '_'),
-        mod = i(4),
-      }, { repeat_duplicates = true })
-    ),
-    s({ trig = 'mt', dscr = 'matrix' },
-      fmta([[
-\begin{bmatrix}
-<indent><el><underscore>{<row0><comma><col0>} & <el><underscore>{<row0><comma><col1>} & \ldots & <el><underscore>{<row0><comma><width>} \\
-<indent><el><underscore>{<row1><comma><col0>} & <el><underscore>{<row1><comma><col1>} & \ldots & <el><underscore>{<row1><comma><width>} \\
-<indent>\vdots & \vdots & \ddots & \vdots \\
-<indent><el><underscore>{<height><comma>0} & <el><underscore>{<height><comma>1} & \ldots & <el><underscore>{<height><comma><width>} \\
-\end{bmatrix}
-      ]], {
-        indent = ifn(1),
-        el = i(1, 'a'),
-        height = i(2, 'N-1'),
-        width = i(3, 'M-1'),
-        row0 = i(4, '0'),
-        col0 = i(5, '0'),
-        row1 = i(6, '1'),
-        col1 = i(7, '1'),
-        underscore = i(8, '_'),
-        comma = i(9, ','),
-    }, { repeat_duplicates = true })),
-    s({ trig = 'inf' }, { t '\\infty', i(0) }),
-    s({ trig = 'prop' }, t '\\propto ', i(0)),
-    s({ trig = 'deg' }, { t '\\degree', i(0) }),
-    s({ trig = 'ang' }, { t '\\angle ', i(0) }),
-    s({ trig = 'mcal' }, { t '\\mathcal{', i(1), t '}', i(0) }),
-    s({ trig = 'msrc' }, { t '\\mathsrc{', i(1), t '}', i(0) }),
-    s({ trig = 'mbb' }, { t '\\mathbb{', i(1), t '}', i(0) }),
-    s({ trig = 'mbf' }, { t '\\mathbf{', i(1), t '}', i(0) }),
-    s({ trig = 'mff' }, { t '\\mff{', i(1), t '}', i(0) }),
-    s({ trig = 'mrm' }, { t '\\mathrm{', i(1), t '}', i(0) }),
-    s({ trig = 'xx' }, { t '\\times ', i(0) }),
-    s({ trig = '**' }, { t '\\cdot ', i(0) }),
-    s({ trig = 'o*' }, { t '\\circledast ', i(0) }),
-    s({ trig = 'dd' }, { t '\\mathrm{d}', i(0) }),
-    s({ trig = 'pp' }, { t '\\partial ', i(0) }),
 
     s({ trig = '!=' }, { t '\\neq ', i(0) }),
     s({ trig = '==' }, { t '&= ', i(0) }),
@@ -208,11 +157,97 @@ local math_snippets = {
     s({ trig = '%%' }, { t '\\%', i(0) }),
     s({ trig = '##' }, { t '\\#' }),
 
+    s({ trig = 'abs' }, { t '\\left\\vert ', i(1), t ' \\right\\vert', i(0) }),
+    s({ trig = 'lrv' }, { t '\\left\\vert ', i(1), t ' \\right\\vert', i(0) }),
+    s({ trig = 'lrb' }, { t '\\left(', i(1), t '\\right)', i(0) }),
+    s({ trig = 'lr)' }, { t '\\left(', i(1), t '\\right)', i(0) }),
+    s({ trig = 'lr]' }, { t '\\left[', i(1), t '\\right]', i(0) }),
+    s({ trig = 'lrB' }, { t '\\left{', i(1), t '\\right}', i(0) }),
+    s({ trig = 'lr}' }, { t '\\left{', i(1), t '\\right}', i(0) }),
+    s({ trig = 'lr>' }, { t '\\left<', i(1), t '\\right>', i(0) }),
+    s({ trig = 'norm' }, { t '\\left\\lVert ', i(1), t ' \\right\\lVert', i(0) }),
+
     s({ trig = '(%s*)compl', regTrig = true }, { t '^{C} ', i(0) }),
     s({ trig = '(%s*)inv', regTrig = true }, { t '^{-1}', i(0) }),
     s({ trig = '(%s*)sq', regTrig = true }, { t '^{2}', i(0) }),
     s({ trig = '(%s*)cb', regTrig = true }, { t '^{3}', i(0) }),
     s({ trig = '(%s*)ks', regTrig = true }, { t '^{*}', i(0) }), -- Kleene star
+
+    s({ trig = 'transp' }, { t '^{\\intercal}', i(0) }),
+    s({ trig = '(\\?%w*_*%w*)vv', regTrig = true }, { sdn(1, '\\vec{', '}') }),
+    s({ trig = '(\\?%w*_*%w*)hat', regTrig = true }, { sdn(1, '\\hat{', '}') }),
+    s({ trig = '(\\?%w*_*%w*)td', regTrig = true }, { sdn(1, '\\tilde{', '}') }),
+    s({ trig = '(\\?%w*_*%w*)bar', regTrig = true }, { sdn(1, '\\bar{', '}') }),
+    s({ trig = '(\\?%w*_*%w*)ovl', regTrig = true }, { sdn(1, '\\overline{', '}') }),
+    s({ trig = '(\\?%w*_*%w*)ovs', regTrig = true }, {
+      d(1, function(_, snip)
+        local text = snip.captures[1]
+        if text == nil or not text:match('%S') then
+          return sn(nil, { t '\\overset{', i(2), t '}{', i(1), t '}' })
+        end
+        return sn(nil, { t '\\overset{', i(1), t '}{', t(text), t '}' })
+      end),
+    }),
+  }),
+  opts = { type = 'autosnippets' },
+}
+
+M.words = {
+  snip = funcs.add_attr({ condition = funcs.in_mathzone, wordTrig = true }, {
+    -- matrix/vector
+    s({ trig = 'vr', dscr = 'row vector' },
+      fmta('\\begin{bmatrix} <el><underscore>{0<mod>} & <el><underscore>{1<mod>} & \\ldots & <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
+        el = i(1, 'a'),
+        end_idx = i(2, 'N-1'),
+        underscore = i(3, '_'),
+        mod = i(4),
+      }, { repeat_duplicates = true })
+    ),
+    s({ trig = 'vc', dscr = 'column vector' },
+      fmta('\\begin{bmatrix} <el><underscore>{0<mod>} \\\\ <el><underscore>{1,<mod>} \\\\ \\vdots \\\\ <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
+        el = i(1, 'a'),
+        end_idx = i(2, 'N-1'),
+        underscore = i(3, '_'),
+        mod = i(4),
+      }, { repeat_duplicates = true })
+    ),
+    s({ trig = 'mt', dscr = 'matrix' },
+      fmta([[
+\begin{bmatrix}
+<indent><el><underscore>{<row0><comma><col0>} & <el><underscore>{<row0><comma><col1>} & \ldots & <el><underscore>{<row0><comma><width>} \\
+<indent><el><underscore>{<row1><comma><col0>} & <el><underscore>{<row1><comma><col1>} & \ldots & <el><underscore>{<row1><comma><width>} \\
+<indent>\vdots & \vdots & \ddots & \vdots \\
+<indent><el><underscore>{<height><comma>0} & <el><underscore>{<height><comma>1} & \ldots & <el><underscore>{<height><comma><width>} \\
+\end{bmatrix}
+      ]], {
+        indent = ifn(1),
+        el = i(1, 'a'),
+        height = i(2, 'N-1'),
+        width = i(3, 'M-1'),
+        row0 = i(4, '0'),
+        col0 = i(5, '0'),
+        row1 = i(6, '1'),
+        col1 = i(7, '1'),
+        underscore = i(8, '_'),
+        comma = i(9, ','),
+    }, { repeat_duplicates = true })),
+    s({ trig = 'inf' }, { t '\\infty', i(0) }),
+    s({ trig = 'prop' }, t '\\propto ', i(0)),
+    s({ trig = 'deg' }, { t '\\degree', i(0) }),
+    s({ trig = 'ang' }, { t '\\angle ', i(0) }),
+    s({ trig = 'mcal' }, { t '\\mathcal{', i(1), t '}', i(0) }),
+    s({ trig = 'msrc' }, { t '\\mathsrc{', i(1), t '}', i(0) }),
+    s({ trig = 'mbb' }, { t '\\mathbb{', i(1), t '}', i(0) }),
+    s({ trig = 'mbf' }, { t '\\mathbf{', i(1), t '}', i(0) }),
+    s({ trig = 'mff' }, { t '\\mff{', i(1), t '}', i(0) }),
+    s({ trig = 'mrm' }, { t '\\mathrm{', i(1), t '}', i(0) }),
+    s({ trig = 'mit' }, { t '\\mathit{', i(1), t '}', i(0) }),
+    s({ trig = 'xx' }, { t '\\times ', i(0) }),
+    s({ trig = '**' }, { t '\\cdot ', i(0) }),
+    s({ trig = 'o*' }, { t '\\circledast ', i(0) }),
+    s({ trig = 'dd' }, { t '\\mathrm{d}', i(0) }),
+    s({ trig = 'pp' }, { t '\\partial ', i(0) }),
+
     s({ trig = 'set' }, { t '\\{', i(1), t '\\}', i(0) }),
     s({ trig = 'void' }, { t '\\emptyset' }),
     s({ trig = 'tt' }, { t '\\text{', i(1), t '}', i(0) }),
@@ -233,23 +268,9 @@ local math_snippets = {
     s({ trig = 'forall' }, { t '\\forall ', i(0) }),
     s({ trig = 'any' }, { t '\\forall ', i(0) }),
     s({ trig = 'exists' }, { t '\\exists ', i(0) }),
-    s({ trig = 'transp' }, { t '^{\\intercal}', i(0) }),
-    s({ trig = '(\\?%w*_*%w*)vv', regTrig = true }, { sdn(1, '\\vec{', '}') }),
-    s({ trig = '(\\?%w*_*%w*)ht', regTrig = true }, { sdn(1, '\\hat{', '}') }),
-    s({ trig = '(\\?%w*_*%w*)td', regTrig = true }, { sdn(1, '\\tilde{', '}') }),
-    s({ trig = '(\\?%w*_*%w*)bar', regTrig = true }, { sdn(1, '\\bar{', '}') }),
-    s({ trig = '(\\?%w*_*%w*)ovl', regTrig = true }, { sdn(1, '\\overline{', '}') }),
-    s({ trig = '(\\?%w*_*%w*)ovs', regTrig = true }, {
-      d(1, function(_, snip)
-        local text = snip.captures[1]
-        if text == nil or not text:match('%S') then
-          return sn(nil, { t '\\overset{', i(2), t '}{', i(1), t '}' })
-        end
-        return sn(nil, { t '\\overset{', i(1), t '}{', t(text), t '}' })
-      end),
-    }),
 
     s({ trig = 'log' }, { t '\\mathrm{log}_{', i(1, '10'), t '}\\left(', i(2), t '\\right)', i(0) }),
+    s({ trig = 'lg', priority = 999 }, { t '\\mathrm{lg}', t '\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'ln', priority = 999 }, { t '\\mathrm{ln}', t '\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'min', priority = 999 }, { t '\\mathrm{min}', t '\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'max', priority = 999 }, { t '\\mathrm{max}', t '\\left(', i(1), t '\\right)', i(0) }),
@@ -263,16 +284,6 @@ local math_snippets = {
     s({ trig = 'acos' }, { t '\\mathrm{arccos}\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'atan' }, { t '\\mathrm{arctan}\\left(', i(1), t '\\right)', i(0) }),
     s({ trig = 'sc' }, { t '\\mathrm{sinc}\\left(', i(1), t '\\right)', i(0) }),
-
-    s({ trig = 'abs' }, { t '\\left\\vert ', i(1), t ' \\right\\vert', i(0) }),
-    s({ trig = 'lrv' }, { t '\\left\\vert ', i(1), t ' \\right\\vert', i(0) }),
-    s({ trig = 'lrb' }, { t '\\left(', i(1), t '\\right)', i(0) }),
-    s({ trig = 'lr)' }, { t '\\left(', i(1), t '\\right)', i(0) }),
-    s({ trig = 'lr]' }, { t '\\left[', i(1), t '\\right]', i(0) }),
-    s({ trig = 'lrB' }, { t '\\left{', i(1), t '\\right}', i(0) }),
-    s({ trig = 'lr}' }, { t '\\left{', i(1), t '\\right}', i(0) }),
-    s({ trig = 'lr>' }, { t '\\left<', i(1), t '\\right>', i(0) }),
-    s({ trig = 'norm' }, { t '\\left\\lVert ', i(1), t ' \\right\\lVert', i(0) }),
 
     s({ trig = 'flr' }, { t '\\left\\lfloor ', i(1), t ' \\right\\rfloor', i(0) }),
     s({ trig = 'clg' }, { t '\\left\\lceil ', i(1), t ' \\right\\rceil', i(0) }),
@@ -380,4 +391,4 @@ local math_snippets = {
   opts = { type = 'autosnippets' },
 }
 
-return math_snippets
+return M

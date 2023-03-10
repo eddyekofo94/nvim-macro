@@ -1,4 +1,3 @@
-local M = {}
 local funcs = require('snippets.utils.funcs')
 local ifn = funcs.ifn
 local fn = vim.fn
@@ -23,7 +22,7 @@ local fmta = require('luasnip.extras.fmt').fmta
 local types = require('luasnip.util.types')
 local conds = require('luasnip.extras.expand_conditions')
 
-M.math = require('snippets.shared.math')
+local M = require('snippets.shared.math')
 
 M.format = {
   snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
