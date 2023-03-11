@@ -27,7 +27,7 @@ palette.dark = {
   iron         = '#313742',
   deepsea      = '#293950',
   ocean        = '#1f2b3b',
-  jeans        = '#171d2b',
+  jeans        = '#1f2430',
   space        = '#13161f',
   black        = '#09080b',
 
