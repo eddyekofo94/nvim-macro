@@ -40,7 +40,7 @@ palette.dark = {
   earth_blend    = '#303032',
   smoke_blend    = '#272d3a',
   pigeon_blend   = '#262e3e',
-  ocean_blend    = '#1c2434',
+  ocean_blend    = '#1f2736',
 
   shadow = '#09080b',
 }
@@ -85,7 +85,7 @@ palette.light = {
   earth_blend    = '#ebe0ce',
   smoke_blend    = '#e4e4e2',
   pigeon_blend   = '#e6e6e3',
-  ocean_blend    = '#dcdad2',
+  ocean_blend    = '#f0e8e2',
 
   shadow = '#3c3935',
 }
