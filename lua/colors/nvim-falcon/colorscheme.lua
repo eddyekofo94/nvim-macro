@@ -71,7 +71,11 @@ sch.Number         = { fg = plt.purple } --   A number constant: 234, 0xff
 sch.Boolean        = { link = 'Constant' } --   A boolean     constant: TRUE, false
 sch.Array          = { fg = plt.orange }
 sch.Float          = { link = 'Number' } --   A floating point constant: 2.3e10
-sch.Identifier     = { fg = plt.pigeon } -- (*) Any variable name
+sch.Identifier     = { fg = plt.smoke } -- (*) Any variable name
+sch.Field          = { fg = plt.pigeon } -- (*) Any variable name
+sch.Enum           = { fg = plt.ochre }
+sch.Namespace      = { fg = plt.ochre }
+sch.Parameter      = { fg = plt.smoke }
 sch.Function       = { fg = plt.yellow } --   Function name (also: methods for classes)
 sch.Statement      = { fg = plt.smoke } -- (*) Any statement
 sch.Object         = { fg = plt.lavender } -- (*) Any statement
@@ -137,8 +141,8 @@ sch.DiagnosticSignInfo         = { link = 'DiagnosticInfo' } -- Used for 'Info' 
 sch.DiagnosticSignHint         = { link = 'DiagnosticHint' } -- Used for 'Hint' signs in sign column.
 
 sch.rainbowcol1               = { fg = plt.smoke } -- default light is too bright
-sch['@field']                 = { fg = plt.smoke }
-sch['@property']              = { fg = plt.smoke }
+sch['@field']                 = { link = 'Field' }
+sch['@property']              = { link = 'Field' }
 sch['@annotation']            = { link = 'Operator' }
 sch['@comment']               = { link = 'Comment' }
 sch['@none']                  = { bg = 'NONE', fg = 'NONE' }
@@ -164,7 +168,7 @@ sch['@function.macro']        = { link = 'Macro' }
 sch['@method']                = { link = 'Function' }
 sch['@method.call']           = { link = 'Function' }
 sch['@constructor']           = { link = 'Function' }
-sch['@parameter']             = { link = 'Identifier' }
+sch['@parameter']             = { link = 'Parameter' }
 sch['@keyword']               = { link = 'Keyword' }
 sch['@keyword.function']      = { link = 'Keyword' }
 sch['@keyword.return']        = { link = 'Keyword' }
@@ -179,15 +183,13 @@ sch['@type.builtin']          = { link = 'Type' }
 sch['@type.qualifier']        = { link = 'Type' }
 sch['@type.definition']       = { link = 'Typedef' }
 sch['@storageclass']          = { link = 'StorageClass' }
-sch['@attribute']             = { link = 'PreProc' }
-sch['@field']                 = { link = 'Identifier' }
-sch['@property']              = { link = 'Identifier' }
-sch['@variable']              = { link = 'Variable' }
+sch['@attribute']             = { link = 'Label' }
+sch['@variable']              = { link = 'Identifier' }
 sch['@variable.builtin']      = { link = 'Special' }
 sch['@constant']              = { link = 'Constant' }
 sch['@constant.builtin']      = { link = 'Special' }
 sch['@constant.macro']        = { link = 'Macro' }
-sch['@namespace']             = { fg = plt.ochre }
+sch['@namespace']             = { link = 'Namespace' }
 sch['@symbol']                = { link = 'Identifier' }
 sch['@text']                  = { link = 'String' }
 sch['@text.title']            = { link = 'Title' }
@@ -213,6 +215,22 @@ sch['@text.strike']           = { strikethrough = true }
 sch['@text.emphasis']         = { fg = plt.black, bg = plt.beige, bold = true, italic = true }
 sch['@text.underline']        = { underline = true }
 sch['@keyword.operator']      = { link = 'Operator' }
+
+sch['@lsp.type.enum']          = { link = 'Type' }
+sch['@lsp.type.type']          = { link = 'Type' }
+sch['@lsp.type.class']         = { link = 'Structure' }
+sch['@lsp.type.struct']        = { link = 'Structure' }
+sch['@lsp.type.macro']         = { link = 'Macro' }
+sch['@lsp.type.method']        = { link = 'Function' }
+sch['@lsp.type.function']      = { link = 'Function' }
+sch['@lsp.type.property']      = { link = 'Field' }
+sch['@lsp.type.variable']      = { link = 'Variable' }
+sch['@lsp.type.decorator']     = { link = 'Label' }
+sch['@lsp.type.interface']     = { link = 'Structure' }
+sch['@lsp.type.namespace']     = { link = 'Namespace' }
+sch['@lsp.type.parameter']     = { link = 'Parameter' }
+sch['@lsp.type.enumMember']    = { link = 'Enum' }
+sch['@lsp.type.typeParameter'] = { link = 'Parameter' }
 
 -- HTML
 sch.htmlArg            = { fg = plt.pigeon }
@@ -410,7 +428,7 @@ sch.DapUIStopNC                 = { fg = plt.scarlet }
 sch.DapUIStoppedThread          = { fg = plt.tea }
 sch.DapUIThread                 = { fg = plt.aqua }
 sch.DapUIType                   = { link = 'Type' }
-sch.DapUIVariable               = { link = 'Variable' }
+sch.DapUIVariable               = { link = 'Identifier' }
 sch.DapUIWatchesEmpty           = { link = 'Comment' }
 sch.DapUIWatchesError           = { link = 'Error' }
 sch.DapUIWatchesValue           = { fg = plt.orange }
