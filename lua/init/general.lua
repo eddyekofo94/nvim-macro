@@ -5,6 +5,7 @@ local opt = vim.opt
 
 opt.cursorline     = true
 opt.cursorlineopt  = 'number'
+opt.colorcolumn    = '80'
 opt.eb             = false
 opt.foldlevelstart = 99
 opt.guifont        = 'FiraCode Nerd Font:h13'
