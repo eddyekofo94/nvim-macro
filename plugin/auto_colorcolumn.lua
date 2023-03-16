@@ -138,7 +138,7 @@ api.nvim_create_autocmd({
 
     local length = #vim.api.nvim_get_current_line()
     local cc = tonumber(vim.o.cc)
-    local thresh = 60
+    local thresh = math.floor(cc * 0.75)
     -- Show colored column in insert mode only
     if vim.fn.mode():match('^i') then
       if length < cc then -- Show blended color when length < cc
