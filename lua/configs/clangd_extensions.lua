@@ -4,8 +4,9 @@ local default_config = require('configs.lsp-server-configs.shared.default')
 require('clangd_extensions').setup({
   server = default_config,
   extensions = {
+    autoSetHints = false,
     inlay_hints = {
-      highlight = 'LspInlayHint',
+      highlight = 'DiagnosticVirtualTextHint',
     },
     ast = {
       role_icons = {
