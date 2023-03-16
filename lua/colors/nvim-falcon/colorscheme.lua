@@ -4,7 +4,7 @@ local sch = {}
 
 -- Common highlight groups
 sch.Normal             = { fg = plt.smoke, bg = plt.jeans } -- Normal text
-sch.NormalFloat        = { fg = sch.smoke, bg = plt.ocean } -- Normal text in floating windows.
+sch.NormalFloat        = { fg = plt.smoke, bg = plt.ocean } -- Normal text in floating windows.
 sch.NormalNC           = { link = 'Normal' } -- normal text in non-current windows
 sch.ColorColumn        = { bg = plt.deepsea } -- Columns set with 'colorcolumn'
 sch.Conceal            = { fg = plt.smoke } -- Placeholder characters substituted for concealed text (see 'conceallevel')
