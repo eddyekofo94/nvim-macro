@@ -46,8 +46,8 @@ local function lualine_config()
     return string.format('[%s/%s]', info.current, info.total)
   end
 
-  local utils = require('colors.nvim-falcon.utils')
-  local palette = utils.reload('colors.nvim-falcon.palette')
+  package.loaded['colors.nvim-falcon.palette'] = nil
+  local palette = require('colors.nvim-falcon.palette')
 
   local function lsp_icon()
     if #vim.lsp.get_active_clients({

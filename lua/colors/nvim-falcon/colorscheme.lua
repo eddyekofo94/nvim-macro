@@ -1,5 +1,5 @@
-local utils = require('colors.nvim-falcon.utils')
-local plt = utils.reload('colors.nvim-falcon.palette')
+package.loaded['colors.nvim-falcon.palette'] = nil
+local plt = require('colors.nvim-falcon.palette')
 local sch = {}
 
 -- Common highlight groups

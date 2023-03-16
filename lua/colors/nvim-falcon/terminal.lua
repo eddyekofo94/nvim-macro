@@ -1,5 +1,4 @@
-local utils = require('colors.nvim-falcon.utils')
-local plt = utils.reload('colors.nvim-falcon.palette')
+local plt = require('colors.nvim-falcon.palette')
 
 local termcolors = {}
 
