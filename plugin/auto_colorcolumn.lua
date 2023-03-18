@@ -1,6 +1,3 @@
-local api = vim.api
-local g = vim.g
-
 local todec = {
   ['0'] = 0,
   ['1'] = 1,
@@ -117,44 +114,117 @@ end
 ---@param field string 'foreground' or 'background'
 ---@return string
 local function get_hl(hlgroup, field)
-  return dec2hex(api.nvim_get_hl_by_name(hlgroup, true)[field] or 0)
+  return dec2hex(vim.api.nvim_get_hl_by_name(hlgroup, true)[field] or 0)
 end
 
-api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
+-- colorcolumn is a window-local option, with some special rules:
+-- 1. When a window is created, it inherits the value of the previous window or
+--    the global option
+-- 2. When a different buffer is displayed in current window, window-local cc
+--    settings changes to the value when the buffer is displayed in the first
+--    time, if there's no such value, it uses value of the global option
+-- 3. Once the window-local cc is set, it's not changed by the global option
+--    or inheritance, it will only change when a different buffer is displayed
+--    or the option is set explicitly (via set or setlocal)
+
+-- Save original cc settings
+vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
   callback = function()
-    g.colorcolumn_bg = get_hl('ColorColumn', 'background')
-    api.nvim_set_hl(0, 'ColorColumn', {})
+    vim.g.cc = vim.go.cc
+    vim.w.cc = vim.wo.cc
+    vim.opt.cc = ''
+  end,
+  once = true,
+})
+
+-- Save previous window cc settings
+vim.api.nvim_create_autocmd({ 'WinLeave' }, {
+  callback = function()
+    vim.g.prevwincc = vim.w.cc
+  end,
+})
+
+-- Broadcast previous window or global cc settings to new windows
+vim.api.nvim_create_autocmd({ 'WinNew' }, {
+  callback = function()
+    vim.w.cc = vim.g.prevwincc or vim.g.cc
+  end,
+})
+
+-- Broadcast buffer or global cc settings
+-- when a different buffer is displayed in current window
+vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
+  callback = function()
+    vim.b.cc = vim.b.cc or vim.g.cc
+    vim.w.cc = vim.b.cc or vim.g.cc
+  end,
+})
+
+-- Save cc settings for each window
+vim.api.nvim_create_autocmd({ 'WinEnter' }, {
+  callback = function()
+    vim.w.cc = vim.w.cc or vim.wo.cc
+  end,
+})
+
+-- Update cc settings on option change
+vim.api.nvim_create_autocmd({ 'OptionSet' }, {
+  pattern = 'colorcolumn',
+  callback = function()
+    if vim.v.option_type == 'global' then
+      vim.g.cc = vim.go.cc
+      vim.w.cc = vim.go.cc
+      vim.b.cc = vim.go.cc
+    elseif vim.v.option_type == 'local' then
+      vim.w.cc = vim.wo.cc
+      vim.b.cc = vim.wo.cc
+    end
+    vim.go.cc = ''
+    vim.wo.cc = ''
   end
 })
 
-api.nvim_create_autocmd({
+-- Save Colorcolum background color
+vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
+  callback = function()
+    vim.g.colorcolumn_bg = get_hl('ColorColumn', 'background')
+  end
+})
+
+-- Show colored column
+vim.api.nvim_create_autocmd({
   'ModeChanged', 'TextChangedI',
   'CursorMovedI', 'ColorScheme',
 }, {
   callback = function ()
-    if vim.o.cc == '' then
+    local cc = tonumber(vim.w.cc)
+
+    if not cc then
       return
     end
 
     local length = #vim.api.nvim_get_current_line()
-    local cc = tonumber(vim.o.cc)
     local thresh = math.floor(cc * 0.75)
-    -- Show colored column in insert mode only
-    if vim.fn.mode():match('^i') then
-      if length < cc then -- Show blended color when length < cc
-        api.nvim_set_hl(0, 'ColorColumn', {
-          bg = '#' .. blend(g.colorcolumn_bg,
-                            get_hl('Normal', 'background'),
-                            math.max(0, (length - thresh) / (cc - thresh)))
-        })
-      else  -- Show error color when length >= cc
-        api.nvim_set_hl(0, 'ColorColumn', {
-          bg = '#' .. blend(get_hl('Normal', 'background'),
-                            get_hl('Error', 'foreground'), 0.6)
-        })
-      end
-    else  -- Hide colored column in other modes
-      api.nvim_set_hl(0, 'ColorColumn', {})
+
+    if length < thresh or not vim.fn.mode():match('^i') then
+      vim.opt.cc = ''
+      return
+    end
+
+    vim.wo.cc = vim.w.cc
+
+    -- Show blended color when length < cc
+    if length < cc then
+      vim.api.nvim_set_hl(0, 'ColorColumn', {
+        bg = '#' .. blend(vim.g.colorcolumn_bg,
+                          get_hl('Normal', 'background'),
+                          (length - thresh) / (cc - thresh))
+      })
+    else  -- Show error color when length >= cc
+      vim.api.nvim_set_hl(0, 'ColorColumn', {
+        bg = '#' .. blend(get_hl('Normal', 'background'),
+                          get_hl('Error', 'foreground'), 0.6)
+      })
     end
   end
 })
