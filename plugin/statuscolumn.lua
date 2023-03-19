@@ -38,10 +38,10 @@ end
 ---Return the sign at current line
 ---@param bufnum integer current buffer number
 ---@param lnum integer current line number
----@param prefix string prefix of the sign name
+---@param prefixes string[] prefixes of the sign name
 ---@param cachekey string key of the cache
 ---@return string sign string representation of the sign with highlight
-function GetSign(bufnum, lnum, prefix, cachekey)
+function GetSign(bufnum, lnum, prefixes, cachekey)
   local cur_signs = vim.fn.sign_getplaced(bufnum, {
     group = '*',
     lnum = lnum
@@ -49,8 +49,11 @@ function GetSign(bufnum, lnum, prefix, cachekey)
 
   local diag_signs = {}
   for _, sign in ipairs(cur_signs) do
-    if vim.startswith(sign.name, prefix) then
-      table.insert(diag_signs, sign)
+    for _, prefix in ipairs(prefixes) do
+      if vim.startswith(sign.name, prefix) then
+        table.insert(diag_signs, sign)
+        break
+      end
     end
   end
 
@@ -77,16 +80,16 @@ function GetStatuscol()
   local statuscol = {}
 
   local parts = {
-    ['diags'] = "%{%v:lua.GetSign(bufnr(),v:lnum,'Diagnostic','diags')%}",
+    ['dapdiags'] = "%{%v:lua.GetSign(bufnr(),v:lnum,['Dap','Diagnostic'],'dapdiags')%}",
     ['align'] = '%=',
     ['num'] = '%{v:relnum?v:relnum:v:lnum}',
     ['space'] = ' ',
     ['fold'] = '%C',
-    ['gitsigns'] = "%{%v:lua.GetSign(bufnr(),v:lnum,'GitSigns','gitsigns')%}",
+    ['gitsigns'] = "%{%v:lua.GetSign(bufnr(),v:lnum,['GitSigns'],'gitsigns')%}",
   }
 
   local order = {
-    'diags',
+    'dapdiags',
     'space',
     'align',
     'num',
