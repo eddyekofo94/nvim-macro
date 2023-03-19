@@ -24,7 +24,7 @@ sch.Directory          = { fg = plt.pigeon } -- Directory names (and other speci
 sch.EndOfBuffer        = { fg = plt.iron } -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
 sch.ErrorMsg           = { fg = plt.scarlet } -- Error messages on the command line
 sch.FoldColumn         = { fg = plt.iron } -- 'foldcolumn'
-sch.Folded             = { fg = plt.iron, italic = true } -- Line used for closed folds
+sch.Folded             = { fg = plt.iron, bg = plt.ocean_blend, italic = true } -- Line used for closed folds
 sch.FloatBorder        = { fg = plt.ocean, bg = plt.ocean } -- Border of floating windows.
 sch.FloatShadow        = { bg = plt.shadow, blend = 70 } -- Shadow of floating windows.
 sch.FloatShadowThrough = { bg = plt.shadow, blend = 100 } -- Shadow of floating windows
@@ -221,6 +221,7 @@ sch['@lsp.type.class']         = { link = 'Structure' }
 sch['@lsp.type.struct']        = { link = 'Structure' }
 sch['@lsp.type.macro']         = { link = 'Macro' }
 sch['@lsp.type.method']        = { link = 'Function' }
+sch['@lsp.type.comment']       = { link = 'Comment' }
 sch['@lsp.type.function']      = { link = 'Function' }
 sch['@lsp.type.property']      = { link = 'Field' }
 sch['@lsp.type.variable']      = { link = 'Variable' }
@@ -288,18 +289,23 @@ sch.CmpItemAbbrMatch       = { fg = plt.white, bold = true }
 sch.CmpItemAbbrMatchFuzzy  = { link = 'CmpItemAbbrMatch' }
 
 -- gitsigns
-sch.GitSignsAdd                = { fg = plt.tea }
-sch.GitSignsDelete             = { fg = plt.scarlet }
-sch.GitSignsChange             = { fg = plt.lavender }
-sch.GitSignsCurrentLineBlame   = { fg = plt.turquoise }
-sch.GitSignsAddInline          = { fg = plt.tea, bg = plt.tea_blend }
-sch.GitSignsAddLnInline        = { fg = plt.tea, bg = plt.tea_blend }
-sch.GitSignsChangeInline       = { fg = plt.lavender, bg = plt.lavender_blend }
-sch.GitSignsChangeLnInline     = { fg = plt.lavender, bg = plt.lavender_blend }
-sch.GitSignsDeleteInline       = { fg = plt.scarlet, bg = plt.scarlet_blend }
-sch.GitSignsDeleteLnInline     = { fg = plt.scarlet, bg = plt.scarlet_blend }
-sch.GitSignsDeleteVirtLnInLine = { fg = plt.scarlet, bg = plt.scarlet_blend }
-sch.GitSignsDeletePreview      = { fg = plt.scarlet, bg = plt.wine_blend }
+sch.GitSignsAdd                      = { fg = plt.tea }
+sch.GitSignsDelete                   = { fg = plt.scarlet }
+sch.GitSignsChange                   = { fg = plt.lavender }
+sch.GitSignsChangedelete             = { link = 'GitSignsDelete' }
+sch.GitSignsCurrentLineBlame         = { link = 'DiagnosticVirtualTextInfo' }
+sch.GitSignsAddInline                = { fg = plt.tea, bg = plt.tea_blend }
+sch.GitSignsAddLnInline              = { fg = plt.tea, bg = plt.tea_blend }
+sch.GitSignsChangeInline             = { fg = plt.lavender, bg = plt.lavender_blend }
+sch.GitSignsChangeLnInline           = { fg = plt.lavender, bg = plt.lavender_blend }
+sch.GitSignsDeleteInline             = { fg = plt.scarlet, bg = plt.scarlet_blend }
+sch.GitSignsDeleteLnInline           = { fg = plt.scarlet, bg = plt.scarlet_blend }
+sch.GitSignsDeleteVirtLnInLine       = { fg = plt.scarlet, bg = plt.scarlet_blend }
+sch.GitSignsDeletePreview            = { fg = plt.scarlet, bg = plt.wine_blend }
+sch.GitSignsChangedeleteInline       = { link = 'GitSignsDeleteInline' }
+sch.GitSignsChangedeleteLnInline     = { link = 'GitSignsDeleteLnInline' }
+sch.GitSignsChangedeleteVirtLnInLine = { link = 'GitSignsDeleteVirtLnInLine' }
+sch.GitSignsChangedeletePreview      = { link = 'GitSignsDeletePreview' }
 
 -- barbar
 sch.BufferCurrent        = { fg = plt.smoke }
