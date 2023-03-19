@@ -107,13 +107,12 @@ function GetStatuscol()
 end
 
 
-vim.api.nvim_create_autocmd({ 'FileType' }, {
-  callback = function()
-    local fts = require('utils.static').langs:list('ft')
-    if vim.bo.bt ~= '' or not vim.tbl_contains(fts, vim.bo.ft) then
-      vim.wo.statuscolumn = ''
+vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
+  callback = function(tbl)
+    if tbl.file and vim.loop.fs_stat(tbl.file) and vim.bo.bt == '' then
+      vim.wo.statuscolumn = '%!v:lua.GetStatuscol()'
       return
     end
-    vim.wo.statuscolumn = '%!v:lua.GetStatuscol()'
+    vim.wo.statuscolumn = ''
   end,
 })
