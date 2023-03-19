@@ -110,7 +110,16 @@ local function lualine_config()
       },
       lualine_b = {
         { 'branch', icon = { '', color = { fg = palette.turquoise } } },
-        { 'diff', cond = longer_than(50), padding = { left = 0, right = 1 } },
+        {
+          'diff',
+          cond = longer_than(50),
+          diff_color = {
+            added = { fg = palette.tea },
+            modified = { fg = palette.lavender },
+            removed = { fg = palette.scarlet },
+          },
+          padding = { left = 0, right = 1 }
+        },
         { 'diagnostics', cond = longer_than(50) },
       },
       lualine_c = {

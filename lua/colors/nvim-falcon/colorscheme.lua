@@ -289,10 +289,9 @@ sch.CmpItemAbbrMatch       = { fg = plt.white, bold = true }
 sch.CmpItemAbbrMatchFuzzy  = { link = 'CmpItemAbbrMatch' }
 
 -- gitsigns
-sch.GitSignsAdd                      = { fg = plt.tea }
-sch.GitSignsDelete                   = { fg = plt.scarlet }
-sch.GitSignsChange                   = { fg = plt.lavender }
-sch.GitSignsChangedelete             = { link = 'GitSignsDelete' }
+sch.GitSignsAdd                      = { fg = plt.tea_blend }
+sch.GitSignsDelete                   = { fg = plt.wine }
+sch.GitSignsChange                   = { fg = plt.lavender_blend }
 sch.GitSignsCurrentLineBlame         = { link = 'DiagnosticVirtualTextInfo' }
 sch.GitSignsAddInline                = { fg = plt.tea, bg = plt.tea_blend }
 sch.GitSignsAddLnInline              = { fg = plt.tea, bg = plt.tea_blend }
@@ -302,10 +301,6 @@ sch.GitSignsDeleteInline             = { fg = plt.scarlet, bg = plt.scarlet_blen
 sch.GitSignsDeleteLnInline           = { fg = plt.scarlet, bg = plt.scarlet_blend }
 sch.GitSignsDeleteVirtLnInLine       = { fg = plt.scarlet, bg = plt.scarlet_blend }
 sch.GitSignsDeletePreview            = { fg = plt.scarlet, bg = plt.wine_blend }
-sch.GitSignsChangedeleteInline       = { link = 'GitSignsDeleteInline' }
-sch.GitSignsChangedeleteLnInline     = { link = 'GitSignsDeleteLnInline' }
-sch.GitSignsChangedeleteVirtLnInLine = { link = 'GitSignsDeleteVirtLnInLine' }
-sch.GitSignsChangedeletePreview      = { link = 'GitSignsDeletePreview' }
 
 -- barbar
 sch.BufferCurrent        = { fg = plt.smoke }
