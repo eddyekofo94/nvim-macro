@@ -17,6 +17,7 @@ local function lspconfig_setui()
     { 'DiagnosticSignWarn', { text = icons.DiagnosticSignWarn, texthl = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn' } },
     { 'DiagnosticSignInfo', { text = icons.DiagnosticSignInfo, texthl = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo' } },
     { 'DiagnosticSignHint', { text = icons.DiagnosticSignHint, texthl = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint' } },
+    { 'DiagnosticSignOk', { text = icons.DiagnosticSignOk, texthl = 'DiagnosticSignOk', numhl = 'DiagnosticSignOk' } },
   }
   for _, sign_settings in ipairs(diagnostic_opts.signs) do
     vim.fn.sign_define(unpack(sign_settings))
