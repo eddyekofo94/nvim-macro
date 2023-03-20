@@ -46,6 +46,11 @@ return {
   {
     'jose-elias-alvarez/null-ls.nvim',
     ft = ft_list,
+    cmd = {
+      'NullLsLog',
+      'NullLsInfo',
+      'NullLsFormatOnSaveToggle',
+    },
     dependencies = { 'plenary.nvim' },
     config = function()
       require('configs.null-ls')
@@ -55,6 +60,10 @@ return {
   {
     'jay-babu/mason-null-ls.nvim',
     ft = ft_list,
+    cmd = {
+      'NullLsInstall',
+      'NullLsUninstall',
+    },
     dependencies = { 'mason.nvim', 'null-ls.nvim' },
     config = function()
       require('configs.mason-null-ls')
