@@ -156,7 +156,6 @@ cmp.setup({
     end, { 'i', 'c' }),
     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
     ['<C-d>'] = cmp.mapping.scroll_docs(4),
-    ['<C-e>'] = cmp.mapping.scroll_docs(1),
     ['<C-c>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.close()
