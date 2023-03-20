@@ -3,23 +3,23 @@ local function on_attach(client, bufnr)
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Use an on_attach function to only map the following keys
-  vim.keymap.set('n', 'gd',         vim.lsp.buf.definition,                                                                { buffer = true })
-  vim.keymap.set('n', 'gD',         vim.lsp.buf.type_definition,                                                           { buffer = true })
-  vim.keymap.set('n', 'K',          vim.lsp.buf.hover,                                                                     { buffer = true })
-  vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder,                                                      { buffer = true })
-  vim.keymap.set('n', '<Leader>wd', vim.lsp.buf.remove_workspace_folder,                                                   { buffer = true })
-  vim.keymap.set('n', '<Leader>wl', function() vim.print(vim.lsp.buf.list_workspace_folders()) end,                        { buffer = true })
-  vim.keymap.set('n', '<Leader>ca', vim.lsp.buf.code_action,                                                               { buffer = true })
-  vim.keymap.set('n', '<Leader>r',  vim.lsp.buf.rename,                                                                    { buffer = true })
-  vim.keymap.set('n', '<Leader>R',  vim.lsp.buf.references,                                                                { buffer = true })
-  vim.keymap.set('n', '<Leader>e',  vim.diagnostic.open_float,                                                             { buffer = true })
-  vim.keymap.set('n', '<leader>E',  vim.diagnostic.setloclist,                                                             { buffer = true })
-  vim.keymap.set('n', '[e',         vim.diagnostic.goto_prev,                                                              { buffer = true })
-  vim.keymap.set('n', ']e',         vim.diagnostic.goto_next,                                                              { buffer = true })
-  vim.keymap.set('n', '[E',         function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end, { buffer = true })
-  vim.keymap.set('n', ']E',         function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end, { buffer = true })
-  vim.keymap.set('n', '[W',         function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN }) end,  { buffer = true })
-  vim.keymap.set('n', ']W',         function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN }) end,  { buffer = true })
+  vim.keymap.set('n', 'gd',         vim.lsp.buf.definition,                                                                { buffer = bufnr })
+  vim.keymap.set('n', 'gD',         vim.lsp.buf.type_definition,                                                           { buffer = bufnr })
+  vim.keymap.set('n', 'K',          vim.lsp.buf.hover,                                                                     { buffer = bufnr })
+  vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder,                                                      { buffer = bufnr })
+  vim.keymap.set('n', '<Leader>wd', vim.lsp.buf.remove_workspace_folder,                                                   { buffer = bufnr })
+  vim.keymap.set('n', '<Leader>wl', function() vim.print(vim.lsp.buf.list_workspace_folders()) end,                        { buffer = bufnr })
+  vim.keymap.set('n', '<Leader>ca', vim.lsp.buf.code_action,                                                               { buffer = bufnr })
+  vim.keymap.set('n', '<Leader>r',  vim.lsp.buf.rename,                                                                    { buffer = bufnr })
+  vim.keymap.set('n', '<Leader>R',  vim.lsp.buf.references,                                                                { buffer = bufnr })
+  vim.keymap.set('n', '<Leader>e',  vim.diagnostic.open_float,                                                             { buffer = bufnr })
+  vim.keymap.set('n', '<leader>E',  vim.diagnostic.setloclist,                                                             { buffer = bufnr })
+  vim.keymap.set('n', '[e',         vim.diagnostic.goto_prev,                                                              { buffer = bufnr })
+  vim.keymap.set('n', ']e',         vim.diagnostic.goto_next,                                                              { buffer = bufnr })
+  vim.keymap.set('n', '[E',         function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end, { buffer = bufnr })
+  vim.keymap.set('n', ']E',         function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end, { buffer = bufnr })
+  vim.keymap.set('n', '[W',         function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN }) end,  { buffer = bufnr })
+  vim.keymap.set('n', ']W',         function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN }) end,  { buffer = bufnr })
   vim.keymap.set('x', '=',          vim.lsp.buf.format)
   vim.keymap.set('n', '=', function()
     if not client.supports_method('textDocument/formatting') then
@@ -35,7 +35,7 @@ local function on_attach(client, bufnr)
     end
     vim.opt.opfunc = 'v:lua.LspFormatMotion'
     return 'g@'
-  end, { expr = true, buffer = true })
+  end, { expr = true, buffer = bufnr })
   vim.keymap.set('n', '==', function()
     if not client.supports_method('textDocument/formatting') then
       vim.api.nvim_feedkeys('==', 'in', false)
@@ -49,7 +49,7 @@ local function on_attach(client, bufnr)
         ['end'] = endpos,
       }
     })
-  end, { buffer = true })
+  end, { buffer = bufnr })
 
   -- integration with nvim-navic
   if client and client.server_capabilities
