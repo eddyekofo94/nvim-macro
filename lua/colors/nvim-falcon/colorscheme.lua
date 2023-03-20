@@ -25,7 +25,7 @@ sch.EndOfBuffer        = { fg = plt.iron } -- Filler lines (~) after the end of 
 sch.ErrorMsg           = { fg = plt.scarlet } -- Error messages on the command line
 sch.FoldColumn         = { fg = plt.iron } -- 'foldcolumn'
 sch.Folded             = { fg = plt.iron, bg = plt.ocean_blend, italic = true } -- Line used for closed folds
-sch.FloatBorder        = { fg = plt.ocean, bg = plt.ocean } -- Border of floating windows.
+sch.FloatBorder        = { fg = plt.smoke, bg = plt.ocean } -- Border of floating windows.
 sch.FloatShadow        = { bg = plt.shadow, blend = 70 } -- Shadow of floating windows.
 sch.FloatShadowThrough = { bg = plt.shadow, blend = 100 } -- Shadow of floating windows
 sch.Search             = { fg = plt.flashlight, bg = plt.thunder, bold = true } -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
@@ -323,8 +323,8 @@ sch.TelescopeNormal               = { link = 'NormalFloat' }
 sch.TelescopePromptNormal         = { bg = plt.deepsea }
 sch.TelescopeTitle                = { fg = plt.space, bg = plt.turquoise, bold = true }
 sch.TelescopePromptTitle          = { fg = plt.space, bg = plt.yellow, bold = true }
-sch.TelescopeBorder               = { fg = plt.ocean, bg = plt.ocean }
-sch.TelescopePromptBorder         = { fg = plt.deepsea, bg = plt.deepsea }
+sch.TelescopeBorder               = { fg = plt.smoke, bg = plt.ocean }
+sch.TelescopePromptBorder         = { fg = plt.smoke, bg = plt.deepsea }
 sch.TelescopeSelection            = { bg = plt.thunder }
 sch.TelescopeMultiSelection       = { bg = plt.thunder, bold = true }
 sch.TelescopePreviewLine          = { bg = plt.thunder }
@@ -558,7 +558,7 @@ sch.MasonHighlightBlockBoldSecondary = { bg = plt.thunder, bold = true }
 
 -- vim-floaterm
 sch.Floaterm       = { bg = plt.ocean }
-sch.FloatermBorder = { fg = plt.ocean, bg = plt.ocean }
+sch.FloatermBorder = { fg = plt.smoke, bg = plt.ocean }
 
 -- copilot.lua
 sch.CopilotSuggestion = { fg = plt.steel, italic = true }
