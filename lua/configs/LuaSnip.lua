@@ -6,9 +6,9 @@ local icons = require('utils.static').icons
 local function lazy_load_snippets()
   local snippets_path
     = vim.split(fn.globpath(fn.stdpath('config') .. '/lua/snippets', '*.lua'), '\n')
+  vim.api.nvim_create_augroup('LuaSnipLazyLoadSnippets', { clear = true })
   for _, path in ipairs(snippets_path) do
     local ft = fn.fnamemodify(path, ':t:r')
-    vim.api.nvim_create_augroup('LuaSnipLazyLoadSnippets', { clear = true })
     vim.api.nvim_create_autocmd('FileType', {
       pattern = ft,
       once = true,
