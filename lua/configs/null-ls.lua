@@ -4,7 +4,7 @@ vim.g.null_ls_format_on_save = false
 
 vim.api.nvim_create_user_command('NullLsFormatOnSaveToggle', function()
   vim.g.null_ls_format_on_save = not vim.g.null_ls_format_on_save
-end, { desc = 'Toggle Null-LS format-on-save functionality' })
+end, { desc = 'Toggle Null-ls format-on-save functionality.' })
 
 null_ls.setup({
   sources = {
