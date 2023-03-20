@@ -22,6 +22,9 @@ local function on_attach(client, bufnr)
   vim.keymap.set('n', ']W',         function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN }) end,  { buffer = true })
   vim.keymap.set('x', '=',          vim.lsp.buf.format)
   vim.keymap.set('n', '=', function()
+    if not client.supports_method('textDocument/formatting') then
+      return '='
+    end
     function LspFormatMotion(_)
       vim.lsp.buf.format({
         range = {
@@ -34,6 +37,10 @@ local function on_attach(client, bufnr)
     return 'g@'
   end, { expr = true, buffer = true })
   vim.keymap.set('n', '==', function()
+    if not client.supports_method('textDocument/formatting') then
+      vim.api.nvim_feedkeys('==', 'in', false)
+      return
+    end
     local startpos = vim.api.nvim_win_get_cursor(0)
     local endpos = { startpos[1] + vim.v.count, 999 }
     vim.lsp.buf.format({
