@@ -35,3 +35,21 @@ require('clangd_extensions').setup({
     },
   },
 })
+
+-- Insert comparator in nvim-cmp's comparators list
+local cmp_ok, cmp = pcall(require, 'cmp')
+if cmp_ok then
+  cmp.setup({
+    sorting = {
+      comparators = {
+        require('clangd_extensions.cmp_scores'),
+        cmp.config.compare.kind,
+        cmp.config.compare.locality,
+        cmp.config.compare.recently_used,
+        cmp.config.compare.exact,
+        cmp.config.compare.score,
+      }
+    },
+  })
+end
+

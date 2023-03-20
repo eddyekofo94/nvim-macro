@@ -3,20 +3,6 @@ local luasnip = require('luasnip')
 local tabout = require('plugin.tabout')
 local icons = require('utils.static').icons
 
-local comparators = {
-  cmp.config.compare.kind,
-  cmp.config.compare.locality,
-  cmp.config.compare.recently_used,
-  cmp.config.compare.exact,
-  cmp.config.compare.score,
-}
-
-local clangd_ready, clangd_score =
-pcall(require, 'clangd_extensions.cmp_scores')
-if clangd_ready then
-  table.insert(comparators, 1, clangd_score)
-end
-
 local function choose_closest(dest1, dest2)
   if not dest1 then return dest2 end
   if not dest2 then return dest1 end
@@ -198,7 +184,13 @@ cmp.setup({
     { name = 'calc' },
   },
   sorting = {
-    comparators = comparators,
+    comparators = {
+      cmp.config.compare.kind,
+      cmp.config.compare.locality,
+      cmp.config.compare.recently_used,
+      cmp.config.compare.exact,
+      cmp.config.compare.score,
+    },
   },
   -- cmp floating window config
   window = {
