@@ -40,6 +40,9 @@ cmp.setup({
     fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, vim_item)
       vim_item.menu = string.format('[%s]', entry.source.name:upper())
+      if entry.source.name == 'nvim_lsp_signature_help' then
+        vim_item.menu = '[LSP_SIG]'
+      end
 
       -- Use a terminal icon for completions from cmp-cmdline
       if entry.source.name == 'cmdline' then
