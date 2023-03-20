@@ -128,7 +128,9 @@ end
 --    or the option is set explicitly (via set or setlocal)
 
 -- Save original cc settings
+vim.api.nvim_create_augroup('AutoColorColumn', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
+  group = 'AutoColorColumn',
   callback = function()
     vim.g.cc = vim.go.cc
     vim.w.cc = vim.wo.cc
@@ -139,6 +141,7 @@ vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
 
 -- Save previous window cc settings
 vim.api.nvim_create_autocmd({ 'WinLeave' }, {
+  group = 'AutoColorColumn',
   callback = function()
     vim.g.prevwincc = vim.w.cc
     vim.wo.cc = ''
@@ -147,6 +150,7 @@ vim.api.nvim_create_autocmd({ 'WinLeave' }, {
 
 -- Broadcast previous window or global cc settings to new windows
 vim.api.nvim_create_autocmd({ 'WinNew' }, {
+  group = 'AutoColorColumn',
   callback = function()
     vim.w.cc = vim.g.prevwincc or vim.g.cc
   end,
@@ -155,6 +159,7 @@ vim.api.nvim_create_autocmd({ 'WinNew' }, {
 -- Broadcast buffer or global cc settings
 -- when a different buffer is displayed in current window
 vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
+  group = 'AutoColorColumn',
   callback = function()
     vim.b.cc = vim.b.cc or vim.g.cc
     vim.w.cc = vim.b.cc or vim.g.cc
@@ -163,6 +168,7 @@ vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
 
 -- Save cc settings for each window
 vim.api.nvim_create_autocmd({ 'WinEnter' }, {
+  group = 'AutoColorColumn',
   callback = function()
     vim.w.cc = vim.w.cc or vim.wo.cc
   end,
@@ -171,6 +177,7 @@ vim.api.nvim_create_autocmd({ 'WinEnter' }, {
 -- Update cc settings on option change
 vim.api.nvim_create_autocmd({ 'OptionSet' }, {
   pattern = 'colorcolumn',
+  group = 'AutoColorColumn',
   callback = function()
     if vim.v.option_type == 'global' then
       vim.g.cc = vim.go.cc
@@ -187,6 +194,7 @@ vim.api.nvim_create_autocmd({ 'OptionSet' }, {
 
 -- Save Colorcolum background color
 vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
+  group = 'AutoColorColumn',
   callback = function()
     vim.g.colorcolumn_bg = get_hl('ColorColumn', 'background')
   end,
@@ -197,6 +205,7 @@ vim.api.nvim_create_autocmd({
   'ModeChanged', 'TextChangedI',
   'CursorMovedI', 'ColorScheme',
 }, {
+  group = 'AutoColorColumn',
   callback = function()
     local cc = tonumber(vim.w.cc)
 

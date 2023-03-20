@@ -8,9 +8,11 @@ local function lazy_load_snippets()
     = vim.split(fn.globpath(fn.stdpath('config') .. '/lua/snippets', '*.lua'), '\n')
   for _, path in ipairs(snippets_path) do
     local ft = fn.fnamemodify(path, ':t:r')
+    vim.api.nvim_create_augroup('LuaSnipLazyLoadSnippets', { clear = true })
     vim.api.nvim_create_autocmd('FileType', {
       pattern = ft,
       once = true,
+      group = 'LuaSnipLazyLoadSnippets',
       callback = function()
         local snip_groups = require('snippets.' .. ft)
         for _, snip_group in pairs(snip_groups) do
@@ -29,8 +31,10 @@ local function set_keymap()
 end
 
 local function set_ls_region_check_autocmd()
+  vim.api.nvim_create_augroup('LuaSnipRegionCheck', { clear = true })
   vim.api.nvim_create_autocmd('CursorMovedI', {
     pattern = '*',
+    group = 'LuaSnipRegionCheck',
     callback = function(ev)
       if not ls.session or not ls.session.current_nodes[ev.buf] then
         return

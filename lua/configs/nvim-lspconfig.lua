@@ -37,8 +37,10 @@ local function lspconfig_setui()
   -- setup LspInfo floating window border
   require('lspconfig.ui.windows').default_options.border = 'solid'
   -- reload LspInfo floating window on VimResized
+  vim.api.nvim_create_augroup('LspInfoResize', { clear = true })
   vim.api.nvim_create_autocmd('VimResized', {
     pattern = '*',
+    group = 'LspInfoResize',
     callback = function()
       if vim.bo.ft == 'lspinfo' then
         vim.api.nvim_win_close(0, true)

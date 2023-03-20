@@ -1,5 +1,8 @@
 local set_autocmds = function(autocmds)
   for _, autocmd in ipairs(autocmds) do
+    if autocmd[2].group and vim.fn.exists('#' .. autocmd[2].group) == 0 then
+      vim.api.nvim_create_augroup(autocmd[2].group, { clear = true })
+    end
     vim.api.nvim_create_autocmd(unpack(autocmd))
   end
 end
@@ -10,9 +13,10 @@ local autocmds = {
     { 'TextYankPost' },
     {
       pattern = '*',
+      group = 'YankHighlight',
       callback = function()
         vim.highlight.on_yank({ higroup = 'Visual', timeout = 200 })
-      end
+      end,
     },
   },
 
@@ -21,8 +25,9 @@ local autocmds = {
     { 'BufLeave', 'WinLeave', 'FocusLost' },
     {
       pattern = '*',
+      group = 'Autosave',
       command = 'silent! wall',
-      nested = true
+      nested = true,
     },
   },
 
@@ -31,7 +36,10 @@ local autocmds = {
     { 'WinEnter' },
     {
       pattern = '*',
-      callback = function() require('utils.funcs').win_close_jmp() end,
+      group = 'WinCloseJmp',
+      callback = function()
+        require('utils.funcs').win_close_jmp()
+      end,
     },
   },
 
@@ -40,7 +48,10 @@ local autocmds = {
     { 'BufReadPost' },
     {
       pattern = '*',
-      callback = function() require('utils.funcs').last_pos_jmp() end,
+      group = 'LastPosJmp',
+      callback = function()
+        require('utils.funcs').last_pos_jmp()
+      end,
     },
   },
 
@@ -49,8 +60,11 @@ local autocmds = {
     { 'WinEnter', 'BufWinEnter' },
     {
       pattern = '*',
+      group = 'AutoCwd',
       callback = function(tbl)
-        if tbl.file == '' then return end
+        if tbl.file == '' then
+          return
+        end
         local proj_dir = require('utils.funcs').proj_dir(tbl.file)
         if proj_dir then
           vim.cmd.tcd(proj_dir)
@@ -64,6 +78,7 @@ local autocmds = {
     { 'BufWritePre' },
     {
       pattern = '*',
+      group = 'AutoMkdir',
       callback = function()
         vim.fn.mkdir(vim.fn.expand('%:p:h'), 'p')
       end,
@@ -74,6 +89,7 @@ local autocmds = {
   {
     { 'BufReadPre', 'UIEnter' },
     {
+      group = 'RestoreBackground',
       callback = function()
         if not vim.g.background_restored then
           vim.opt.background = vim.g.BACKGROUND or 'dark'

@@ -249,8 +249,10 @@ function _G.get_winbar()
   return winbar_str
 end
 
+vim.api.nvim_create_augroup('NavicSetWinbar', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter', 'BufWritePost' }, {
   pattern = '*',
+  group = 'NavicSetWinbar',
   callback = function()
     if vim.api.nvim_win_get_config(0).zindex or vim.bo.buftype ~= ''
         or vim.fn.expand('%') == '' then

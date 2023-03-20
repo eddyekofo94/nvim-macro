@@ -35,13 +35,16 @@ vim.keymap.set({ 'n', 't' }, '<M-e>', function()
   vim.cmd('silent! RnvimrToggle')
 end, { noremap = true })
 
+vim.api.nvim_create_augroup('RnvimRSetHl', { clear = true })
 vim.api.nvim_create_autocmd({ 'TermOpen', 'ColorScheme' }, {
   pattern = '*',
+  group = 'RnvimRSetHl',
   callback = change_highlight_colorscheme,
 })
 
 vim.api.nvim_create_autocmd('VimLeave', {
   pattern = '*',
+  group = 'RnvimRSetHl',
   callback = function()
     os.execute('ln -fs ~/.highlight/themes/falcon-dark.theme '..
                '~/.highlight/themes/falcon.theme')

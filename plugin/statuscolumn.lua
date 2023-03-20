@@ -107,7 +107,9 @@ function GetStatuscol()
 end
 
 
+vim.api.nvim_create_augroup('StatusColumn', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
+  group = 'StatusColumn',
   callback = function(tbl)
     if tbl.file and vim.loop.fs_stat(tbl.file) and vim.bo.bt == '' then
       vim.wo.statuscolumn = '%!v:lua.GetStatuscol()'

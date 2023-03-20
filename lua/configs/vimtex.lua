@@ -6,8 +6,10 @@ vim.g.vimtex_quickfix_ignore_filters = {
   [[Package fontspec Warning]],
 }
 
+vim.api.nvim_create_augroup('VimTexInitMarkdown', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'markdown',
+  group = 'VimTexInitMarkdown',
   callback = function()
     vim.api.nvim_eval('vimtex#init()')
     vim.api.nvim_eval('vimtex#text_obj#init_buffer()')

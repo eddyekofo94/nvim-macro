@@ -104,6 +104,8 @@ local function format_title()
   end
 end
 
+api.nvim_create_augroup('MarkdownAutoFormatTitle', { clear = true })
 api.nvim_create_autocmd('TextChangedI', {
+  group = 'MarkdownAutoFormatTitle',
   callback = format_title,
 })

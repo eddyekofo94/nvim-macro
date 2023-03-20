@@ -20,6 +20,7 @@ null_ls.setup({
   },
   on_attach = function(client, bufnr)
     if client.supports_method('textDocument/formatting') then
+      vim.api.nvim_create_augroup('NullLsFormatOnSave', { clear = true })
       vim.api.nvim_create_autocmd('BufWritePre', {
         buffer = bufnr,
         callback = function()

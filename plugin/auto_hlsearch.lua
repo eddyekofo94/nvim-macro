@@ -19,7 +19,9 @@ end, vim.api.nvim_create_namespace('auto_hlsearch'))
 
 vim.keymap.set('n', '\\', '<Cmd>set hlsearch!<CR>', { noremap = true })
 
+vim.api.nvim_create_augroup('AutoHlSearch', { clear = true })
 vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
   pattern = '*',
+  group = 'AutoHlSearch',
   command = 'set nohlsearch'
 })

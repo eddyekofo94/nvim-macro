@@ -61,10 +61,17 @@ tnoremap <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
 nnoremap <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
 tnoremap <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
 
-autocmd User FloatermOpen nnoremap <buffer> <silent> <C-S-K> <Cmd>FloatermPrev<CR>
-autocmd User FloatermOpen tnoremap <buffer> <silent> <C-S-K> <Cmd>FloatermPrev<CR>
-autocmd User FloatermOpen nnoremap <buffer> <silent> <S-NL> <Cmd>FloatermNext<CR>
-autocmd User FloatermOpen tnoremap <buffer> <silent> <S-NL> <Cmd>FloatermNext<CR>
+augroup FloatermSetKeymaps
+  autocmd!
+  autocmd User FloatermOpen nnoremap <buffer> <silent> <C-S-K> <Cmd>FloatermPrev<CR>
+  autocmd User FloatermOpen tnoremap <buffer> <silent> <C-S-K> <Cmd>FloatermPrev<CR>
+  autocmd User FloatermOpen nnoremap <buffer> <silent> <S-NL> <Cmd>FloatermNext<CR>
+  autocmd User FloatermOpen tnoremap <buffer> <silent> <S-NL> <Cmd>FloatermNext<CR>
+augroup END
+
 " Auto resize floaterm when window is resized
-autocmd VimResized * if &filetype ==# 'floaterm' | exe 'FloatermHide' | exe 'FloatermShow' | endif
+augroup FloatermResize
+  autocmd!
+  autocmd VimResized * if &filetype ==# 'floaterm' | exe 'FloatermHide' | exe 'FloatermShow' | endif
+augroup END
 ]])
