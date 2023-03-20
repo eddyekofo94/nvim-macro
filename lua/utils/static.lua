@@ -18,14 +18,53 @@ function langs_mt:list(field)
 end
 
 M.langs = setmetatable({
-  bash = { ft = 'sh', lsp_server = 'bashls', dap = 'bash' },
-  c = { ts = 'c', ft = 'c', lsp_server = 'clangd', dap = 'codelldb' },
-  cpp = { ts = 'cpp', ft = 'cpp', lsp_server = 'clangd', dap = 'codelldb' },
-  lua = { ts = 'lua', ft = 'lua', lsp_server = 'lua_ls' },
-  make = { ts = 'make', ft = 'make' },
-  python = { ts = 'python', ft = 'python', lsp_server = 'pylsp', dap = 'python' },
-  vim = { ts = 'vim', ft = 'vim', lsp_server = 'vimls' },
-  latex = { ft = 'tex', lsp_server = 'texlab' },
+  bash = {
+    ft = 'sh',
+    lsp_server = 'bashls',
+    dap = 'bash',
+    formatter = 'shfmt',
+  },
+  c = {
+    ts = 'c',
+    ft = 'c',
+    lsp_server = 'clangd',
+    dap = 'codelldb',
+    formatter = 'clang-format',
+  },
+  cpp = {
+    ts = 'cpp',
+    ft = 'cpp',
+    lsp_server = 'clangd',
+    dap = 'codelldb',
+    formatter = 'clang-format',
+  },
+  lua = {
+    ts = 'lua',
+    ft = 'lua',
+    lsp_server = 'lua_ls',
+    formatter = 'stylua',
+  },
+  make = {
+    ts = 'make',
+    ft = 'make',
+  },
+  python = {
+    ts = 'python',
+    ft = 'python',
+    lsp_server = 'pylsp',
+    dap = 'python',
+    formatter = 'black',
+  },
+  vim = {
+    ts = 'vim',
+    ft = 'vim',
+    lsp_server = 'vimls',
+  },
+  latex = {
+    ft = 'tex',
+    lsp_server = 'texlab',
+    formatter = 'latexindent',
+  },
 }, langs_mt)
 
 M.borders = {
