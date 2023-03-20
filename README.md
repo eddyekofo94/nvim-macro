@@ -245,7 +245,7 @@ and it should work out of the box.
 
 ### Default Modules and Plugins of Choice
 
-Total # of plugins: 52 (package manager included).
+Total # of plugins: 54 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -267,6 +267,8 @@ Total # of plugins: 52 (package manager included).
     - [clangd_extensions.nvim](https://github.com/p00f/clangd_extensions.nvim)
     - [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim)
     - [fidget.nvim](https://github.com/j-hui/fidget.nvim)
+    - [null-lsp.nvim](https://github.com/jose-elias-alvarez/null-ls.nvim)
+    - [mason-null-ls.nvim](https://github.com/jay-babu/mason-null-ls.nvim)
 - **Markup**
     - [vimtex](https://github.com/lervag/vimtex)
     - [vim-markdown](https://github.com/preservim/vim-markdown)
