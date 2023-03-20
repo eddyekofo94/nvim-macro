@@ -105,7 +105,7 @@ local function blend(hex1, hex2, alpha)
   }
 
   local hex_blended = rgb2hex(rgb_blended)
-  hex_blended = string.rep('0', 6 - #hex_blended) .. hex_blended
+  hex_blended =  hex_blended .. string.rep('0', 6 - #hex_blended)
   return hex_blended
 end
 
@@ -141,6 +141,7 @@ vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
 vim.api.nvim_create_autocmd({ 'WinLeave' }, {
   callback = function()
     vim.g.prevwincc = vim.w.cc
+    vim.wo.cc = ''
   end,
 })
 

@@ -165,11 +165,8 @@ cmp.setup({
         end
       end
     end, { 'i', 'c' }),
-    ['<C-b>'] = cmp.mapping.scroll_docs(-8),
-    ['<C-f>'] = cmp.mapping.scroll_docs(8),
     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
     ['<C-d>'] = cmp.mapping.scroll_docs(4),
-    ['<C-y>'] = cmp.mapping.scroll_docs(-1),
     ['<C-e>'] = cmp.mapping.scroll_docs(1),
     ['<C-c>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
