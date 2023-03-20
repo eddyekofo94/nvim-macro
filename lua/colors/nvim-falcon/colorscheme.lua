@@ -592,5 +592,6 @@ sch.Deepsea    = { fg = plt.deepsea }
 sch.Ocean      = { fg = plt.ocean }
 sch.Space      = { fg = plt.space }
 sch.Black      = { fg = plt.black }
+sch.Ghost      = { fg = plt.steel, italic = true }
 
 return sch
