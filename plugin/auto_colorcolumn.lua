@@ -105,7 +105,7 @@ local function blend(hex1, hex2, alpha)
   }
 
   local hex_blended = rgb2hex(rgb_blended)
-  hex_blended =  hex_blended .. string.rep('0', 6 - #hex_blended)
+  hex_blended = hex_blended .. string.rep('0', 6 - #hex_blended)
   return hex_blended
 end
 
@@ -182,14 +182,14 @@ vim.api.nvim_create_autocmd({ 'OptionSet' }, {
     end
     vim.go.cc = ''
     vim.wo.cc = ''
-  end
+  end,
 })
 
 -- Save Colorcolum background color
 vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
   callback = function()
     vim.g.colorcolumn_bg = get_hl('ColorColumn', 'background')
-  end
+  end,
 })
 
 -- Show colored column
@@ -197,7 +197,7 @@ vim.api.nvim_create_autocmd({
   'ModeChanged', 'TextChangedI',
   'CursorMovedI', 'ColorScheme',
 }, {
-  callback = function ()
+  callback = function()
     local cc = tonumber(vim.w.cc)
 
     if not cc then
@@ -217,14 +217,19 @@ vim.api.nvim_create_autocmd({
     -- Show blended color when length < cc
     if length < cc then
       vim.api.nvim_set_hl(0, 'ColorColumn', {
-        bg = '#' .. blend(vim.g.colorcolumn_bg,
-                          get_hl('Normal', 'background'),
-                          (length - thresh) / (cc - thresh))
+        bg = '#' .. blend(
+          vim.g.colorcolumn_bg,
+          get_hl('Normal', 'background'),
+          (length - thresh) / (cc - thresh)
+        ),
       })
-    else  -- Show error color when length >= cc
+    else -- Show error color when length >= cc
       vim.api.nvim_set_hl(0, 'ColorColumn', {
-        bg = '#' .. blend(get_hl('Normal', 'background'),
-                          get_hl('Error', 'foreground'), 0.6)
+        bg = '#' .. blend(
+          get_hl('Normal', 'background'),
+          get_hl('Error', 'foreground'),
+          0.6
+        ),
       })
     end
   end
