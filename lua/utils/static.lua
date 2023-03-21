@@ -48,6 +48,10 @@ M.langs = setmetatable({
     ts = 'make',
     ft = 'make',
   },
+  markdown = {
+    ft = 'markdown',
+    formatter = 'prettierd',
+  },
   python = {
     ts = 'python',
     ft = 'python',
