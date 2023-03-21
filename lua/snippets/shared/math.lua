@@ -139,13 +139,14 @@ M.symbols = {
     s({ trig = '>>' }, { t '\\gg ', i(0) }),
     s({ trig = '<<' }, { t '\\ll ', i(0) }),
     s({ trig = '...' }, { t '\\ldots' }),
+    s({ trig = '\\ldots.' }, { t '\\cdots' }),
     s({ trig = ':..' }, { t '\\vdots' }),
     s({ trig = '\\..' }, { t '\\ddots' }),
     s({ trig = '~~' }, { t '\\sim ' }),
     s({ trig = '~=' }, { t '\\approx ' }),
     s({ trig = '+-' }, { t '\\pm ' }),
     s({ trig = '-+' }, { t '\\mp ' }),
-    s({ trig = '||' }, { t '\\mid ', i(0) }),
+    s({ trig = '%s*||', regTrig = true }, { t ' \\mid ', i(0) }),
     s({ trig = '(%[.*%])rt', regTrig = true, priority = 999 }, {
       d(1, function(_, snip)
         local order = snip.captures[1]
@@ -264,6 +265,7 @@ M.words = {
     s({ trig = 'nn' }, { t '\\cap ', i(0) }),
     s({ trig = 'land' }, { t '\\land ', i(0) }),
     s({ trig = 'lor' }, { t '\\lor ', i(0) }),
+    s({ trig = 'neg' }, { t '\\neg ', i(0) }),
     s({ trig = 'bigv' }, { t '\\big\\rvert_{', i(1), t '}' }),
     s({ trig = 'forall' }, { t '\\forall ', i(0) }),
     s({ trig = 'any' }, { t '\\forall ', i(0) }),
