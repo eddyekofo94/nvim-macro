@@ -2,16 +2,42 @@ local null_ls = require('null-ls')
 
 ---Toggle format-on-save functionality for null-ls
 ---@param tbl table
-local function null_ls_format_on_save(tbl)
-  if tbl.args == '' or tbl.args == 'toggle' then
-    vim.g.null_ls_format_on_save = not vim.g.null_ls_format_on_save
-  elseif tbl.args == 'on' then
-    vim.g.null_ls_format_on_save = true
-  elseif tbl.args == 'off' then
-    vim.g.null_ls_format_on_save = false
+local function null_ls_set_format_on_save(tbl)
+  if vim.tbl_contains(tbl.fargs, '?') then
+    vim.notify(
+      '[null-ls] format-on-save is turned '
+        .. (vim.b.null_ls_format_on_save and 'on' or 'off')
+        .. ' for this buffer'
+        .. ' and is globally'
+        .. (vim.g.null_ls_format_on_save and ' enabled' or ' disabled'),
+      vim.log.levels.INFO
+    )
+    return
   end
+
+  local global = not vim.tbl_contains(tbl.fargs, '--local')
+
+  if vim.tbl_contains(tbl.fargs, 'on') then
+    vim.b.null_ls_format_on_save = true
+    if global then
+      vim.g.null_ls_format_on_save = true
+    end
+  elseif vim.tbl_contains(tbl.fargs, 'off') then
+    vim.b.null_ls_format_on_save = false
+    if global then
+      vim.g.null_ls_format_on_save = false
+    end
+  else -- toggle
+    vim.b.null_ls_format_on_save = not vim.b.null_ls_format_on_save
+    vim.g.null_ls_format_on_save = vim.b.null_ls_format_on_save
+  end
+
   vim.notify(
-    vim.g.null_ls_format_on_save and 'on' or 'off',
+    '[null-ls] format-on-save is turned '
+      .. (vim.b.null_ls_format_on_save and 'on' or 'off')
+      .. ' for this buffer'
+      .. ' and is globally'
+      .. (vim.g.null_ls_format_on_save and ' enabled' or ' disabled'),
     vim.log.levels.INFO
   )
 end
@@ -29,33 +55,47 @@ local function null_ls_on_attach(client, bufnr)
     buffer = bufnr,
     group = 'NullLsFormatOnSave',
     callback = function()
-      if vim.g.null_ls_format_on_save then
+      if vim.b.null_ls_format_on_save then
         vim.lsp.buf.format({ bufnr = bufnr })
       end
     end,
   })
-
+  vim.b.null_ls_format_on_save = vim.g.null_ls_format_on_save
   vim.api.nvim_buf_create_user_command(
     bufnr,
     'NullLsFormatOnSave',
-    null_ls_format_on_save,
+    null_ls_set_format_on_save,
     {
-      nargs = '?',
-      complete = function()
-        return { 'on', 'off', 'toggle' }
+      nargs = '*',
+      complete = function(arg_before, _, _)
+        local completion = {
+          [''] = {
+            'on',
+            'off',
+            'toggle',
+            '--local',
+          },
+          ['--'] = {
+            'local',
+          },
+        }
+        return completion[arg_before] or {}
       end,
       desc = 'Toggle Null-ls format-on-save functionality.',
     }
   )
 end
 
+local formatters = vim.tbl_map(
+  function(formatter_name)
+    return null_ls.builtins.formatting[formatter_name]
+  end,
+  vim.tbl_map(function(formatter)
+    return formatter:gsub('-', '_')
+  end, require('utils.static').langs:list('formatter'))
+)
+
 null_ls.setup({
-  sources = {
-    null_ls.builtins.formatting.black,
-    null_ls.builtins.formatting.stylua,
-    null_ls.builtins.formatting.clang_format,
-    null_ls.builtins.formatting.latexindent,
-    null_ls.builtins.formatting.shfmt,
-  },
+  sources = formatters,
   on_attach = null_ls_on_attach,
 })
