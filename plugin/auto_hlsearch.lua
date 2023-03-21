@@ -10,10 +10,8 @@ local searchkeys = {
 }
 
 vim.on_key(function(char)
-  if vim.fn.mode() == 'n' then
-    if searchkeys[vim.fn.keytrans(char)] then
-      vim.opt.hlsearch = true
-    end
+  if vim.fn.mode() == 'n' and searchkeys[vim.fn.keytrans(char)] then
+    vim.opt.hlsearch = true
   end
 end, vim.api.nvim_create_namespace('auto_hlsearch'))
 
@@ -23,5 +21,5 @@ vim.api.nvim_create_augroup('AutoHlSearch', { clear = true })
 vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
   pattern = '*',
   group = 'AutoHlSearch',
-  command = 'set nohlsearch'
+  command = 'set nohlsearch',
 })
