@@ -2,7 +2,7 @@ vim.keymap.set({ 'n', 'x', 'x' }, '<Space>', '')
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-  -- Multi-window operations
+-- Multi-window operations
 vim.keymap.set('n', '<M-W>', '<C-w>W')
 vim.keymap.set('n', '<M-H>', '<C-w>H')
 vim.keymap.set('n', '<M-J>', '<C-w>J')
@@ -46,6 +46,9 @@ vim.keymap.set('n', '<M-l>', '<C-w><C-l>')
 vim.keymap.set('n', '<M-g><M-]>', '<C-w>g<C-]>')
 vim.keymap.set('n', '<M-g><Tab>', '<C-w>g<Tab>')
 
+-- Re-indent current buffer
+vim.keymap.set('n', 'g=', 'gg=G``zz')
+
 -- Buffer navigation
 vim.keymap.set('n', '<Tab>', '<cmd>bn<CR>')
 vim.keymap.set('n', '<S-Tab>', '<cmd>bp<CR>')
@@ -59,5 +62,10 @@ vim.keymap.set('i', '<C-l>', '<C-G>u<Esc>[s1z=`]a<C-G>u')
 -- Enter normal mode from arbitrary mode
 vim.keymap.set({ 'n', 't', 'v', 'i', 'c' }, '<M-\\>', '<C-\\><C-n>')
 
-vim.keymap.set('n', 'q', function() require('utils.funcs').close_all_floatings('q') end)
-vim.keymap.set('n', '<M-D>', function() require('utils.funcs').toggle_background() end)
+vim.keymap.set('n', 'q', function()
+  require('utils.funcs').close_all_floatings('q')
+end)
+
+vim.keymap.set('n', '<M-D>', function()
+  require('utils.funcs').toggle_background()
+end)
