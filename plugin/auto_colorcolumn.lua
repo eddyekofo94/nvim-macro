@@ -215,8 +215,19 @@ vim.api.nvim_create_autocmd({
 
     local length = #vim.api.nvim_get_current_line()
     local thresh = math.floor(cc * 0.75)
+    local modes = {
+      'i',
+      'ic',
+      'ix',
+      'R',
+      'Rc',
+      'Rx',
+      'Rv',
+      'Rvc',
+      'Rvx',
+    }
 
-    if length < thresh or not vim.fn.mode():match('^i') then
+    if length < thresh or not vim.tbl_contains(modes, vim.fn.mode()) then
       vim.opt.cc = ''
       return
     end
