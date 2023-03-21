@@ -38,7 +38,8 @@ local function on_attach(client, bufnr)
     end
     vim.lsp.buf.hover()
   end, { buffer = bufnr })
-  vim.keymap.set('x', '=',          vim.lsp.buf.format)
+  vim.keymap.set('n', 'g=', vim.lsp.buf.format)
+  vim.keymap.set('x', '=', vim.lsp.buf.format)
   vim.keymap.set('n', '=', function()
     if not client.supports_method('textDocument/formatting') then
       return '='
