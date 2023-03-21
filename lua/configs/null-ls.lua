@@ -30,7 +30,7 @@ local function null_ls_on_attach(client, bufnr)
     group = 'NullLsFormatOnSave',
     callback = function()
       if vim.g.null_ls_format_on_save then
-        vim.lsp.buf.format({ bufnr = bufnr, async = true })
+        vim.lsp.buf.format({ bufnr = bufnr })
       end
     end,
   })
