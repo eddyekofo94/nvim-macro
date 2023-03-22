@@ -311,16 +311,22 @@ M.words = {
       indent = ifn(1),
       text = i(2),
     }, { repeat_duplicates = true })),
-    s({ trig = 'cs' }, { t { '\\begin{cases}', '' }, ifn(1), i(1), t { '', '\\end{cases}' } }, i(0)),
+    s({ trig = 'case' }, { t { '\\begin{cases}', '' }, ifn(1), i(1), t { '', '\\end{cases}' } }, i(0)),
     s({ trig = 'part' }, { t { '\\frac{\\partial ' }, i(1), t { '}{\\partial ' }, i(2), t { '}' }, i(0) }),
     s({ trig = 'diff' }, { t '\\frac{\\mathrm{d}', i(1), t '}{\\mathrm{d}', i(2), t '} ', i(0) }),
     s({ trig = 'int', priority = 998 }, { t '\\int_{', i(1), t '}^{', i(2), t '} ', i(0) }),
     s({ trig = 'iint', priority = 999 }, { t '\\iint_{', i(1), t '}^{', i(2), t '} ', i(0) }),
     s({ trig = 'iiint' }, { t '\\iiint_{', i(1), t '}^{', i(2), t '} ', i(0) }),
+    s({ trig = 'prod' }, {
+      c(1, {
+        sn(nil, { t '\\prod \\limits_{', i(1, 'n=0'), t '}^{', i(2, 'N-1'), t '} ' }),
+        sn(nil, { t '\\prod \\limits_{', i(1, 'x'), t '} ' })
+      }),
+    }),
     s({ trig = 'sum' }, {
       c(1, {
-        sn(nil, { t '\\sum_{', i(1, 'n=0'), t '}^{', i(2, 'N-1'), t '} ' }),
-        sn(nil, { t '\\sum_{', i(1, 'x'), t '} ' })
+        sn(nil, { t '\\sum \\limits_{', i(1, 'n=0'), t '}^{', i(2, 'N-1'), t '} ' }),
+        sn(nil, { t '\\sum \\limits_{', i(1, 'x'), t '} ' })
       }),
     }),
     s({ trig = 'lim' }, { t '\\lim_{', i(1, 'n'), t '\\to ', i(2, '\\infty'), t '} ', i(0) }),
