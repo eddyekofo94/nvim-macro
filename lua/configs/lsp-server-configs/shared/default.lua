@@ -38,37 +38,6 @@ local function on_attach(client, bufnr)
     end
     vim.lsp.buf.hover()
   end, { buffer = bufnr })
-  vim.keymap.set('n', 'g=', vim.lsp.buf.format)
-  vim.keymap.set('x', '=', vim.lsp.buf.format)
-  vim.keymap.set('n', '=', function()
-    if not client.supports_method('textDocument/formatting') then
-      return '='
-    end
-    function LspFormatMotion(_)
-      vim.lsp.buf.format({
-        range = {
-          ['start'] = vim.api.nvim_buf_get_mark(0, '['),
-          ['end'] = vim.api.nvim_buf_get_mark(0, ']'),
-        }
-      })
-    end
-    vim.opt.opfunc = 'v:lua.LspFormatMotion'
-    return 'g@'
-  end, { expr = true, buffer = bufnr })
-  vim.keymap.set('n', '==', function()
-    if not client.supports_method('textDocument/formatting') then
-      vim.api.nvim_feedkeys('==', 'in', false)
-      return
-    end
-    local startpos = vim.api.nvim_win_get_cursor(0)
-    local endpos = { startpos[1] + vim.v.count, 999 }
-    vim.lsp.buf.format({
-      range = {
-        ['start'] = startpos,
-        ['end'] = endpos,
-      }
-    })
-  end, { buffer = bufnr })
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
