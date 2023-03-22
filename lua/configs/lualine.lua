@@ -48,22 +48,55 @@ local function lualine_config()
 
   package.loaded['colors.nvim-falcon.palette'] = nil
   local palette = require('colors.nvim-falcon.palette')
+  local icons = require('utils.static').icons
+
+  local function get_current_lsp()
+    return vim.tbl_map(
+      function(client_info)
+        return client_info.name
+      end,
+      vim.lsp.get_active_clients({
+        bufnr = vim.api.nvim_get_current_buf(),
+      })
+    )
+  end
+
+  local function formatter_icon()
+    if
+      vim.b.null_ls_format_on_save
+      and vim.tbl_contains(get_current_lsp(), 'null-ls')
+    then
+      return icons['Format']
+    end
+    return ''
+  end
+
+  local function formatter_text()
+    if
+      vim.b.null_ls_format_on_save
+      and vim.tbl_contains(get_current_lsp(), 'null-ls')
+    then
+      return 'auto-format'
+    end
+    return ''
+  end
 
   local function lsp_icon()
-    if #vim.lsp.get_active_clients({
-      bufnr = vim.api.nvim_get_current_buf()
-    }) > 0 then
-      return ' '
+    if not vim.tbl_isempty(get_current_lsp()) then
+      return icons['Lsp']
     end
     return ''
   end
 
   local function lsp_list()
-    local lsp_names = vim.tbl_map(function(client_info)
-      return client_info.name
-    end, vim.lsp.get_active_clients({
-      bufnr = vim.api.nvim_get_current_buf()
-    }))
+    local lsp_names = vim.tbl_map(
+      function(client_info)
+        return client_info.name
+      end,
+      vim.lsp.get_active_clients({
+        bufnr = vim.api.nvim_get_current_buf(),
+      })
+    )
 
     if #lsp_names == 0 then
       return ''
@@ -105,11 +138,16 @@ local function lualine_config()
         {
           reg_recording,
           color = { fg = palette.space, bg = palette.orange, gui = 'bold' },
-          cond = function() return vim.o.cmdheight == 0 end,
+          cond = function()
+            return vim.o.cmdheight == 0
+          end,
         },
       },
       lualine_b = {
-        { 'branch', icon = { '', color = { fg = palette.turquoise } } },
+        {
+          'branch',
+          icon = { '', color = { fg = palette.turquoise } },
+        },
         {
           'diff',
           cond = longer_than(50),
@@ -118,7 +156,7 @@ local function lualine_config()
             modified = { fg = palette.lavender },
             removed = { fg = palette.scarlet },
           },
-          padding = { left = 0, right = 1 }
+          padding = { left = 0, right = 1 },
         },
         { 'diagnostics', cond = longer_than(50) },
       },
@@ -158,26 +196,38 @@ local function lualine_config()
             dos = 'DOS',
             mac = 'Mac',
           },
-          cond = longer_than(70),
+          cond = longer_than(75),
+        },
+        {
+          formatter_icon,
+          cond = longer_than(75),
+          color = { fg = palette.ochre },
+          padding = { left = 1, right = 0 },
+        },
+        {
+          formatter_text,
+          cond = longer_than(120),
         },
         {
           lsp_icon,
-          cond = longer_than(70),
-          color = { fg = palette.lavender }
+          cond = longer_than(75),
+          color = { fg = palette.lavender },
         },
         {
           lsp_list,
-          cond = longer_than(105),
-          padding = { left = 0, right = 1 }
+          cond = longer_than(110),
+          padding = { left = 0, right = 1 },
         },
       },
       lualine_y = {
         {
           searchcount,
           padding = { left = 1, right = 0 },
-          cond = function() return vim.o.cmdheight == 0 end,
+          cond = function()
+            return vim.o.cmdheight == 0
+          end,
         },
-        location
+        location,
       },
       lualine_z = { 'progress' },
     },
