@@ -5,11 +5,11 @@ local null_ls = require('null-ls')
 local function null_ls_set_format_on_save(tbl)
   if vim.tbl_contains(tbl.fargs, '?') then
     vim.notify(
-      '[null-ls] format-on-save is turned '
+      '[null-ls] format-on-save: turned '
         .. (vim.b.null_ls_format_on_save and 'on' or 'off')
-        .. ' for this buffer'
-        .. ' and is globally'
-        .. (vim.g.null_ls_format_on_save and ' enabled' or ' disabled'),
+        .. ' locally, '
+        .. (vim.g.null_ls_format_on_save and 'enabled' or 'disabled')
+        .. ' globally',
       vim.log.levels.INFO
     )
     return
@@ -33,11 +33,8 @@ local function null_ls_set_format_on_save(tbl)
   end
 
   vim.notify(
-    '[null-ls] format-on-save is turned '
-      .. (vim.b.null_ls_format_on_save and 'on' or 'off')
-      .. ' for this buffer'
-      .. ' and is globally'
-      .. (vim.g.null_ls_format_on_save and ' enabled' or ' disabled'),
+    '[null-ls] format-on-save: '
+      .. (vim.b.null_ls_format_on_save and 'on' or 'off'),
     vim.log.levels.INFO
   )
 end
