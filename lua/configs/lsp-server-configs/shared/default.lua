@@ -69,15 +69,6 @@ local function on_attach(client, bufnr)
       }
     })
   end, { buffer = bufnr })
-
-  -- integration with nvim-navic
-  if client and client.server_capabilities
-            and client.server_capabilities.documentSymbolProvider then
-    local status, navic = pcall(require, 'nvim-navic')
-    if status then
-      navic.attach(client, bufnr)
-    end
-  end
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()

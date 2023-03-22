@@ -249,16 +249,28 @@ function _G.get_winbar()
   return winbar_str
 end
 
-vim.api.nvim_create_augroup('NavicSetWinbar', { clear = true })
+vim.api.nvim_create_augroup('Navic', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter', 'BufWritePost' }, {
   pattern = '*',
-  group = 'NavicSetWinbar',
+  group = 'Navic',
   callback = function()
-    if vim.api.nvim_win_get_config(0).zindex or vim.bo.buftype ~= ''
-        or vim.fn.expand('%') == '' then
+    if
+      vim.api.nvim_win_get_config(0).zindex
+      or vim.bo.buftype ~= ''
+      or vim.fn.expand('%') == ''
+    then
       vim.wo.winbar = nil
     else
-      vim.wo.winbar = "%{%v:lua.get_winbar()%}"
+      vim.wo.winbar = '%{%v:lua.get_winbar()%}'
+    end
+  end,
+})
+vim.api.nvim_create_autocmd({ 'LspAttach' }, {
+  group = 'Navic',
+  callback = function(tbl)
+    local client = vim.lsp.get_client_by_id(tbl.data.client_id)
+    if client and client.supports_method('textDocument/documentSymbol') then
+      navic.attach(client, tbl.buf)
     end
   end,
 })
