@@ -49,54 +49,50 @@ local function lualine_config()
   package.loaded['colors.nvim-falcon.palette'] = nil
   local palette = require('colors.nvim-falcon.palette')
   local icons = require('utils.static').icons
-
-  local function get_current_lsp()
-    return vim.tbl_map(
-      function(client_info)
-        return client_info.name
-      end,
-      vim.lsp.get_active_clients({
-        bufnr = vim.api.nvim_get_current_buf(),
-      })
-    )
-  end
+  local current_lsp_clients = {} -- cache for lsp clients
 
   local function formatter_icon()
-    if
-      vim.b.null_ls_format_on_save
-      and vim.tbl_contains(get_current_lsp(), 'null-ls')
-    then
-      return icons['Format']
+    if not vim.b.lsp_format_on_save then
+      return ''
+    end
+
+    for _, client in ipairs(current_lsp_clients) do
+      if client.supports_method('textDocument/formatting') then
+        return icons['Format']
+      end
     end
     return ''
   end
 
   local function formatter_text()
-    if
-      vim.b.null_ls_format_on_save
-      and vim.tbl_contains(get_current_lsp(), 'null-ls')
-    then
-      return 'auto-format'
+    if not vim.b.lsp_format_on_save then
+      return ''
+    end
+
+    for _, client in ipairs(current_lsp_clients) do
+      if client.supports_method('textDocument/formatting') then
+        return 'auto-format'
+      end
     end
     return ''
   end
 
   local function lsp_icon()
-    if not vim.tbl_isempty(get_current_lsp()) then
+    if not vim.tbl_isempty(current_lsp_clients) then
       return icons['Lsp']
     end
     return ''
   end
 
   local function lsp_list()
+    current_lsp_clients = vim.lsp.get_active_clients({
+      bufnr = vim.api.nvim_get_current_buf(),
+    })
+
     local lsp_names = vim.tbl_map(
       function(client_info)
         return client_info.name
-      end,
-      vim.lsp.get_active_clients({
-        bufnr = vim.api.nvim_get_current_buf(),
-      })
-    )
+      end, current_lsp_clients)
 
     if #lsp_names == 0 then
       return ''

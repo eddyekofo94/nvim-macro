@@ -1,98 +1,62 @@
 local null_ls = require('null-ls')
+local null_ls_sources = require('null-ls.sources')
 
----Toggle format-on-save functionality for null-ls
----@param tbl table
-local function null_ls_set_format_on_save(tbl)
-  if vim.tbl_contains(tbl.fargs, '?') then
-    vim.notify(
-      '[null-ls] format-on-save: turned '
-        .. (vim.b.null_ls_format_on_save and 'on' or 'off')
-        .. ' locally, '
-        .. (vim.g.null_ls_format_on_save and 'enabled' or 'disabled')
-        .. ' globally',
-      vim.log.levels.INFO
-    )
-    return
+local langs = require('utils.static').langs
+local source_names = {
+  formatter = langs:list('formatter'),
+  linter = langs:list('linter'),
+  code_action_provider = langs:list('code_action_provider'),
+  hover_provider = langs:list('hover_provider'),
+}
+local name_map = {
+  formatter = 'formatting',
+  linter = 'diagnostics',
+  code_action_provider = 'code_actions',
+  hover_provider = 'hover',
+}
+local sources = {}
+for name_type, names in pairs(source_names) do
+  for _, name in ipairs(names) do
+    name = name:gsub('-', '_')
+    table.insert(sources, null_ls.builtins[name_map[name_type]][name])
   end
-
-  local global = not vim.tbl_contains(tbl.fargs, '--local')
-
-  if vim.tbl_contains(tbl.fargs, 'on') then
-    vim.b.null_ls_format_on_save = true
-    if global then
-      vim.g.null_ls_format_on_save = true
-    end
-  elseif vim.tbl_contains(tbl.fargs, 'off') then
-    vim.b.null_ls_format_on_save = false
-    if global then
-      vim.g.null_ls_format_on_save = false
-    end
-  else -- toggle
-    vim.b.null_ls_format_on_save = not vim.b.null_ls_format_on_save
-    vim.g.null_ls_format_on_save = vim.b.null_ls_format_on_save
-  end
-
-  vim.notify(
-    '[null-ls] format-on-save: '
-      .. (vim.b.null_ls_format_on_save and 'on' or 'off'),
-    vim.log.levels.INFO
-  )
 end
+
+local lsp_default_config = require('configs.lsp-server-configs.shared.default')
 
 ---Null-ls on-attach function
 ---@param client table LSP client
 ---@param bufnr integer buffer number
 local function null_ls_on_attach(client, bufnr)
-  if not client.supports_method('textDocument/formatting') then
-    return
+  local null_ls_supports_formatting = not vim.tbl_isempty(
+    null_ls_sources.get_available(vim.bo[bufnr].ft, 'NULL_LS_FORMATTING')
+  )
+  local null_ls_supports_range_formatting = not vim.tbl_isempty(
+    null_ls_sources.get_available(vim.bo[bufnr].ft, 'NULL_LS_RANGE_FORMATTING')
+  )
+
+  if not null_ls_supports_formatting and not null_ls_supports_range_formatting then
+    return -- No formatters available for this filetype
   end
 
-  vim.api.nvim_create_augroup('NullLsFormatOnSave', { clear = false })
-  vim.api.nvim_create_autocmd('BufWritePre', {
-    buffer = bufnr,
-    group = 'NullLsFormatOnSave',
-    callback = function()
-      if vim.b.null_ls_format_on_save then
-        vim.lsp.buf.format({ bufnr = bufnr })
+  -- Disable other LSP's formatting capabilities if null-ls supports it
+  local active_clients = vim.lsp.buf_get_clients(bufnr)
+  for _, active_client in ipairs(active_clients) do
+    if active_client.name ~= 'null-ls' and active_client.capabilities then
+      if null_ls_supports_range_formatting then
+        active_client.capabilities.documentFormattingProvider = false
       end
-    end,
-  })
-  vim.b.null_ls_format_on_save = vim.g.null_ls_format_on_save
-  vim.api.nvim_buf_create_user_command(
-    bufnr,
-    'NullLsFormatOnSave',
-    null_ls_set_format_on_save,
-    {
-      nargs = '*',
-      complete = function(arg_before, _, _)
-        local completion = {
-          [''] = {
-            'on',
-            'off',
-            'toggle',
-            '--local',
-          },
-          ['--'] = {
-            'local',
-          },
-        }
-        return completion[arg_before] or {}
-      end,
-      desc = 'Toggle Null-ls format-on-save functionality.',
-    }
-  )
+      if null_ls_supports_range_formatting then
+        active_client.capabilities.documentRangeFormattingProvider = false
+      end
+    end
+  end
 end
 
-local formatters = vim.tbl_map(
-  function(formatter_name)
-    return null_ls.builtins.formatting[formatter_name]
-  end,
-  vim.tbl_map(function(formatter)
-    return formatter:gsub('-', '_')
-  end, require('utils.static').langs:list('formatter'))
-)
-
 null_ls.setup({
-  sources = formatters,
-  on_attach = null_ls_on_attach,
+  sources = sources,
+  on_attach = function(client, bufnr)
+    lsp_default_config.on_attach(client, bufnr)
+    null_ls_on_attach(client, bufnr)
+  end,
 })
