@@ -64,7 +64,7 @@ local function on_attach(client, bufnr)
   vim.b.lsp_format_on_save = vim.g.lsp_format_on_save
   vim.api.nvim_buf_create_user_command(
     bufnr,
-    'LspFormat',
+    'LspFormatOnSave',
     function(tbl)
       if vim.tbl_contains(tbl.fargs, '?') then
         vim.notify(
