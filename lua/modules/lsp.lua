@@ -4,13 +4,7 @@ return {
   {
     'neovim/nvim-lspconfig',
     ft = ft_list,
-    cmd = {
-      'LspInfo',
-      'LspStart',
-      'LspStop',
-      'LspRestart',
-      'LspFormat',
-    },
+    cmd = { 'LspInfo', 'LspStart' },
     config = function()
       require('configs.nvim-lspconfig')
     end,
