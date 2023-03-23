@@ -60,15 +60,6 @@ return {
   },
 
   {
-    'zbirenbaum/copilot-cmp',
-    event = 'InsertEnter',
-    dependencies = { 'copilot.lua', 'nvim-cmp' },
-    config = function()
-      require('configs.copilot-cmp')
-    end,
-  },
-
-  {
     'L3MON4D3/LuaSnip',
     event = 'InsertCharPre',
     config = function()

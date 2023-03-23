@@ -4,7 +4,11 @@ vim.defer_fn(function()
   end
   vim.g.loaded_coplilot = true
   require('copilot').setup({
-    suggestion = { enabled = false },
-    panel = { enabled = false },
+    suggestion = {
+      auto_trigger = true,
+      keymap = {
+        accept = '<C-j>',
+      },
+    },
   })
 end, 100)
