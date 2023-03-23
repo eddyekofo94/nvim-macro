@@ -1,7 +1,4 @@
 local function on_attach(client, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
   -- LSP clients should disable themselves' formatting capability
   -- if a null-ls formatter is attached
   if client.name ~= 'null-ls' then
@@ -138,12 +135,52 @@ local function on_attach(client, bufnr)
   })
 end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.offsetEncoding = 'utf-8'
-local cmp_nvim_lsp_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
-if cmp_nvim_lsp_ok then
-  capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
-end
+-- Merge default capabilities with extra capabilities provided by cmp-nvim-lsp
+local capabilities =
+  vim.tbl_deep_extend('force', vim.lsp.protocol.make_client_capabilities(), {
+    textDocument = {
+      completion = {
+        dynamicRegistration = false,
+        completionItem = {
+          snippetSupport = true,
+          commitCharactersSupport = true,
+          deprecatedSupport = true,
+          preselectSupport = true,
+          tagSupport = {
+            valueSet = {
+              1, -- Deprecated
+            },
+          },
+          insertReplaceSupport = true,
+          resolveSupport = {
+            properties = {
+              'documentation',
+              'detail',
+              'additionalTextEdits',
+            },
+          },
+          insertTextModeSupport = {
+            valueSet = {
+              1, -- asIs
+              2, -- adjustIndentation
+            },
+          },
+          labelDetailsSupport = true,
+        },
+        contextSupport = true,
+        insertTextMode = 1,
+        completionList = {
+          itemDefaults = {
+            'commitCharacters',
+            'editRange',
+            'insertTextFormat',
+            'insertTextMode',
+            'data',
+          },
+        },
+      },
+    },
+  })
 
 local default_config = {
   on_attach = on_attach,
