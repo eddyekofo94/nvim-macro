@@ -46,9 +46,6 @@ vim.keymap.set('n', '<M-l>', '<C-w><C-l>')
 vim.keymap.set('n', '<M-g><M-]>', '<C-w>g<C-]>')
 vim.keymap.set('n', '<M-g><Tab>', '<C-w>g<Tab>')
 
--- Re-indent current buffer
-vim.keymap.set('n', 'g=', 'gg=G``zz')
-
 -- Buffer navigation
 vim.keymap.set('n', '<Tab>', '<cmd>bn<CR>')
 vim.keymap.set('n', '<S-Tab>', '<cmd>bp<CR>')
