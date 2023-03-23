@@ -10,7 +10,7 @@ require('bufferline').setup({
   icon_close_tab = '',
   icon_close_tab_modified = '[+]',
   icon_pinned = '',
-  insert_at_end = false,
+  insert_at_end = true,
   insert_at_start = false,
   maximum_padding = 1,
   maximum_length = 30,
@@ -28,10 +28,11 @@ nnoremap('<Tab>', function() barbar_api.goto_buffer_relative(1) end)
 nnoremap('<S-Tab>', function() barbar_api.goto_buffer_relative(-1) end)
 nnoremap('<M-.>', function() barbar_api.move_current_buffer(1) end)
 nnoremap('<M-,>', function() barbar_api.move_current_buffer(-1) end)
+-- goto buffer in position 1..9
 for buf_number = 1, 9 do
-  -- goto buffer in position 1..9
-  nnoremap(string.format('<M-%d>', buf_number),
-    function() barbar_api.goto_buffer(buf_number) end)
+  nnoremap(string.format('<M-%d>', buf_number), function()
+    barbar_api.goto_buffer(buf_number)
+  end)
 end
 nnoremap('<M-0>', function() barbar_api.goto_buffer(-1) end)
 nnoremap('<M-(>', barbar_api.close_buffers_left)
