@@ -48,11 +48,16 @@ cmp.setup({
       else
         vim_item.kind = icons[vim_item.kind]
       end
-      -- Max word length visible
-      if #(vim_item.abbr) > 40 then
-        vim_item.abbr = string.format('%s…%s',
+      -- Max and min width of the popup menu
+      if #vim_item.abbr > 40 then
+        vim_item.abbr = string.format(
+          '%s…%s',
           string.sub(vim_item.abbr, 1, 29),
-          string.sub(vim_item.abbr, -10, -1))
+          string.sub(vim_item.abbr, -10, -1)
+        )
+      elseif #vim_item.abbr < vim.go.pumwidth then
+        vim_item.abbr = vim_item.abbr
+          .. string.rep(' ', vim.go.pumwidth - #vim_item.abbr)
       end
 
       return vim_item
