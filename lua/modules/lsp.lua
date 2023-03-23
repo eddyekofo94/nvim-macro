@@ -9,6 +9,7 @@ return {
       'LspStart',
       'LspStop',
       'LspRestart',
+      'LspFormat',
     },
     config = function()
       require('configs.nvim-lspconfig')
