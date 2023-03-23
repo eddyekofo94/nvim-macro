@@ -252,6 +252,9 @@ sch.htmlTitle          = { fg = plt.pigeon }
 -- Json
 sch.jsonKeyword        = { link = 'Keyword' }
 sch.jsonBraces         = { fg = plt.smoke }
+-- Markdown
+sch.markdownBold       = { fg = plt.aqua, bold = true }
+sch.markdownBoldItalic = { fg = plt.skyblue, bold = true, italic = true }
 
 -- Plugin highlights
 -- nvim-cmp
