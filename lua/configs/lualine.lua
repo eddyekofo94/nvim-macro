@@ -51,6 +51,13 @@ local function lualine_config()
   local icons = require('utils.static').icons
   local current_lsp_clients = {} -- cache for lsp clients
 
+  local function lsp_info_updater()
+    current_lsp_clients = vim.lsp.get_active_clients({
+      bufnr = vim.api.nvim_get_current_buf(),
+    })
+    return ''
+  end
+
   local function formatter_icon()
     if not vim.b.lsp_format_on_save then
       return ''
@@ -85,10 +92,6 @@ local function lualine_config()
   end
 
   local function lsp_list()
-    current_lsp_clients = vim.lsp.get_active_clients({
-      bufnr = vim.api.nvim_get_current_buf(),
-    })
-
     local lsp_names = vim.tbl_map(
       function(client_info)
         return client_info.name
@@ -193,6 +196,9 @@ local function lualine_config()
             mac = 'Mac',
           },
           cond = longer_than(75),
+        },
+        {
+          lsp_info_updater,
         },
         {
           formatter_icon,
