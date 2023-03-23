@@ -66,3 +66,9 @@ end)
 vim.keymap.set('n', '<M-D>', function()
   require('utils.funcs').toggle_background()
 end)
+
+-- Text object: current buffer
+vim.keymap.set('x', 'af', ':<C-u>keepjumps silent! normal! ggVG<CR>')
+vim.keymap.set('x', 'if', ':<C-u>keepjumps silent! normal! ggVG<CR>')
+vim.keymap.set('o', 'af', '<Cmd>silent! normal m`Vaf<CR><Cmd>silent! normal! ``<CR>', { noremap = false })
+vim.keymap.set('o', 'if', '<Cmd>silent! normal m`Vif<CR><Cmd>silent! normal! ``<CR>', { noremap = false })
