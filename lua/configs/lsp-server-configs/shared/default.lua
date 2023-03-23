@@ -120,10 +120,12 @@ local function on_attach(client, bufnr)
       desc = 'Set LSP format-on-save functionality.',
     }
   )
-  vim.api.nvim_create_augroup('LspFormat', { clear = false })
+
+  local augroup = 'LspFormat' .. bufnr
+  vim.api.nvim_create_augroup(augroup, { clear = true })
   vim.api.nvim_create_autocmd('BufWritePre', {
     buffer = bufnr,
-    group = 'LspFormat',
+    group = augroup,
     callback = function()
       if vim.b.lsp_format_on_save then
         vim.lsp.buf.format({
@@ -132,6 +134,7 @@ local function on_attach(client, bufnr)
         })
       end
     end,
+    desc = 'LSP format on save.',
   })
 end
 
