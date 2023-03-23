@@ -37,12 +37,8 @@ end
 
 cmp.setup({
   formatting = {
-    fields = { 'kind', 'abbr', 'menu' },
+    fields = { 'kind', 'abbr' },
     format = function(entry, vim_item)
-      vim_item.menu = string.format('[%s]', entry.source.name:upper())
-      if entry.source.name == 'nvim_lsp_signature_help' then
-        vim_item.menu = '[LSP_SIG]'
-      end
 
       -- Use a terminal icon for completions from cmp-cmdline
       if entry.source.name == 'cmdline' then
@@ -53,9 +49,9 @@ cmp.setup({
         vim_item.kind = icons[vim_item.kind]
       end
       -- Max word length visible
-      if #(vim_item.abbr) > 30 then
+      if #(vim_item.abbr) > 40 then
         vim_item.abbr = string.format('%s…%s',
-          string.sub(vim_item.abbr, 1, 19),
+          string.sub(vim_item.abbr, 1, 29),
           string.sub(vim_item.abbr, -10, -1))
       end
 
