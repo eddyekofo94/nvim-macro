@@ -22,7 +22,6 @@ local function manage_plugins(config)
         disabled_plugins = {
           'gzip',
           'matchit',
-          'netrwPlugin',
           'tarPlugin',
           'tohtml',
           'tutor',
