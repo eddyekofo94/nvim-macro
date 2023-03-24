@@ -36,6 +36,11 @@ local tohex = {
   [15] = 'F',
 }
 
+local store = {
+  previous_cc = '', ---@type string
+  colorcol_bg = '', ---@type string
+}
+
 ---Convert an integer from hexadecimal to decimal
 ---@param hex string
 ---@return integer dec
@@ -143,7 +148,7 @@ vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
 vim.api.nvim_create_autocmd({ 'WinLeave' }, {
   group = 'AutoColorColumn',
   callback = function()
-    vim.g.prevwincc = vim.w.cc
+    store.previous_cc = vim.w.cc
     vim.wo.cc = ''
   end,
 })
@@ -152,7 +157,7 @@ vim.api.nvim_create_autocmd({ 'WinLeave' }, {
 vim.api.nvim_create_autocmd({ 'WinNew' }, {
   group = 'AutoColorColumn',
   callback = function()
-    vim.w.cc = vim.g.prevwincc or vim.g.cc
+    vim.w.cc = store.previous_cc or vim.g.cc
   end,
 })
 
@@ -196,9 +201,38 @@ vim.api.nvim_create_autocmd({ 'OptionSet' }, {
 vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
   group = 'AutoColorColumn',
   callback = function()
-    vim.g.colorcolumn_bg = get_hl('ColorColumn', 'background')
+    store.colorcol_bg = get_hl('ColorColumn', 'background')
   end,
 })
+
+---Resolve the colorcolumn value
+---@param cc string|nil
+---@return integer|nil cc_number smallest integer >= 0 or nil
+local function resolve_cc(cc)
+  if not cc or cc == '' then
+    return nil
+  end
+  local cc_tbl = vim.split(cc, ',')
+  local cc_min = nil
+  for _, cc_str in ipairs(cc_tbl) do
+    local cc_number = nil
+    if vim.startswith(cc_str, '+') then
+      cc_number = vim.bo.tw > 0 and vim.bo.tw + tonumber(cc_str:sub(2))
+    elseif vim.startswith(cc_str, '-') then
+      cc_number = vim.bo.tw > 0 and vim.bo.tw - tonumber(cc_str:sub(2))
+    else
+      cc_number = tonumber(cc_str)
+    end
+    if
+      type(cc_number) == 'number'
+      and cc_number > 0
+      and (not cc_min or cc_number < cc_min)
+    then
+      cc_min = cc_number
+    end
+  end
+  return cc_min
+end
 
 -- Show colored column
 vim.api.nvim_create_autocmd({
@@ -207,8 +241,7 @@ vim.api.nvim_create_autocmd({
 }, {
   group = 'AutoColorColumn',
   callback = function()
-    local cc = tonumber(vim.w.cc)
-
+    local cc = resolve_cc(vim.w.cc)
     if not cc then
       return
     end
@@ -238,7 +271,7 @@ vim.api.nvim_create_autocmd({
     if length < cc then
       vim.api.nvim_set_hl(0, 'ColorColumn', {
         bg = '#' .. blend(
-          vim.g.colorcolumn_bg,
+          store.colorcol_bg,
           get_hl('Normal', 'background'),
           (length - thresh) / (cc - thresh)
         ),
