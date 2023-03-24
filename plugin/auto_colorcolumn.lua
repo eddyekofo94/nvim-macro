@@ -122,6 +122,70 @@ local function get_hl(hlgroup, field)
   return dec2hex(vim.api.nvim_get_hl_by_name(hlgroup, true)[field] or 0)
 end
 
+---Resolve the colorcolumn value
+---@param cc string|nil
+---@return integer|nil cc_number smallest integer >= 0 or nil
+local function resolve_cc(cc)
+  if not cc or cc == '' then
+    return nil
+  end
+  local cc_tbl = vim.split(cc, ',')
+  local cc_min = nil
+  for _, cc_str in ipairs(cc_tbl) do
+    local cc_number = nil
+    if vim.startswith(cc_str, '+') then
+      cc_number = vim.bo.tw > 0 and vim.bo.tw + tonumber(cc_str:sub(2))
+    elseif vim.startswith(cc_str, '-') then
+      cc_number = vim.bo.tw > 0 and vim.bo.tw - tonumber(cc_str:sub(2))
+    else
+      cc_number = tonumber(cc_str)
+    end
+    if
+      type(cc_number) == 'number'
+      and cc_number > 0
+      and (not cc_min or cc_number < cc_min)
+    then
+      cc_min = cc_number
+    end
+  end
+  return cc_min
+end
+
+---Show colorcolumn
+local function show_colorcolumn()
+  local cc = resolve_cc(vim.w.cc)
+  if not cc then
+    return
+  end
+  local length = #vim.api.nvim_get_current_line()
+  local thresh = math.floor(cc * 0.75)
+  local modes = { 'i', 'ic', 'ix', 'R', 'Rc', 'Rx', 'Rv', 'Rvc', 'Rvx' }
+  if length < thresh or not vim.tbl_contains(modes, vim.fn.mode()) then
+    vim.opt.cc = ''
+    return
+  end
+  vim.wo.cc = vim.w.cc
+
+  -- Show blended color when length < cc
+  if length < cc then
+    vim.api.nvim_set_hl(0, 'ColorColumn', {
+      bg = '#' .. blend(
+        store.colorcol_bg,
+        get_hl('Normal', 'background'),
+        (length - thresh) / (cc - thresh)
+      ),
+    })
+  else -- Show error color when length >= cc
+    vim.api.nvim_set_hl(0, 'ColorColumn', {
+      bg = '#' .. blend(
+        get_hl('Normal', 'background'),
+        get_hl('Error', 'foreground'),
+        0.6
+      ),
+    })
+  end
+end
+
 -- colorcolumn is a window-local option, with some special rules:
 -- 1. When a window is created, it inherits the value of the previous window or
 --    the global option
@@ -205,85 +269,13 @@ vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
   end,
 })
 
----Resolve the colorcolumn value
----@param cc string|nil
----@return integer|nil cc_number smallest integer >= 0 or nil
-local function resolve_cc(cc)
-  if not cc or cc == '' then
-    return nil
-  end
-  local cc_tbl = vim.split(cc, ',')
-  local cc_min = nil
-  for _, cc_str in ipairs(cc_tbl) do
-    local cc_number = nil
-    if vim.startswith(cc_str, '+') then
-      cc_number = vim.bo.tw > 0 and vim.bo.tw + tonumber(cc_str:sub(2))
-    elseif vim.startswith(cc_str, '-') then
-      cc_number = vim.bo.tw > 0 and vim.bo.tw - tonumber(cc_str:sub(2))
-    else
-      cc_number = tonumber(cc_str)
-    end
-    if
-      type(cc_number) == 'number'
-      and cc_number > 0
-      and (not cc_min or cc_number < cc_min)
-    then
-      cc_min = cc_number
-    end
-  end
-  return cc_min
-end
-
 -- Show colored column
-vim.api.nvim_create_autocmd({
-  'ModeChanged', 'TextChangedI',
-  'CursorMovedI', 'ColorScheme',
-}, {
+vim.api.nvim_create_autocmd(
+  { 'ModeChanged', 'TextChangedI', 'CursorMovedI', 'ColorScheme' },
+  { group = 'AutoColorColumn', callback = show_colorcolumn }
+)
+vim.api.nvim_create_autocmd({ 'OptionSet' }, {
+  pattern = { 'colorcolumn', 'textwidth' },
   group = 'AutoColorColumn',
-  callback = function()
-    local cc = resolve_cc(vim.w.cc)
-    if not cc then
-      return
-    end
-
-    local length = #vim.api.nvim_get_current_line()
-    local thresh = math.floor(cc * 0.75)
-    local modes = {
-      'i',
-      'ic',
-      'ix',
-      'R',
-      'Rc',
-      'Rx',
-      'Rv',
-      'Rvc',
-      'Rvx',
-    }
-
-    if length < thresh or not vim.tbl_contains(modes, vim.fn.mode()) then
-      vim.opt.cc = ''
-      return
-    end
-
-    vim.wo.cc = vim.w.cc
-
-    -- Show blended color when length < cc
-    if length < cc then
-      vim.api.nvim_set_hl(0, 'ColorColumn', {
-        bg = '#' .. blend(
-          store.colorcol_bg,
-          get_hl('Normal', 'background'),
-          (length - thresh) / (cc - thresh)
-        ),
-      })
-    else -- Show error color when length >= cc
-      vim.api.nvim_set_hl(0, 'ColorColumn', {
-        bg = '#' .. blend(
-          get_hl('Normal', 'background'),
-          get_hl('Error', 'foreground'),
-          0.6
-        ),
-      })
-    end
-  end
+  callback = show_colorcolumn,
 })
