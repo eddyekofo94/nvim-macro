@@ -36,30 +36,6 @@ local function on_attach(client, bufnr)
     vim.lsp.buf.hover()
   end, { buffer = bufnr })
 
-  -- LSP clients should disable themselves' formatting capability
-  -- if a null-ls formatter is attached
-  if client.name ~= 'null-ls' then
-    local null_ls_sources_ok, null_ls_sources =
-      pcall(require, 'null-ls.sources')
-    if null_ls_sources_ok then
-      local null_ls_supports_formatting = not vim.tbl_isempty(
-        null_ls_sources.get_available(vim.bo[bufnr].ft, 'NULL_LS_FORMATTING')
-      )
-      local null_ls_supports_range_formatting = not vim.tbl_isempty(
-        null_ls_sources.get_available(
-          vim.bo[bufnr].ft,
-          'NULL_LS_RANGE_FORMATTING'
-        )
-      )
-      if null_ls_supports_formatting then
-        client.server_capabilities.documentFormattingProvider = false
-      end
-      if null_ls_supports_range_formatting then
-        client.server_capabilities.documentRangeFormattingProvider = false
-      end
-    end
-  end
-
   -- Format on save
   vim.b.lsp_format_on_save = vim.g.lsp_format_on_save
   vim.api.nvim_buf_create_user_command(

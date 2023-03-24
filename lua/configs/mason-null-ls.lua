@@ -1,14 +1,15 @@
 local langs = require('utils.static').langs
-local client_names = {
-  formatter = langs:list('formatter'),
-  linter = langs:list('linter'),
-  code_action_provider = langs:list('code_action_provider'),
-  hover_provider = langs:list('hover_provider'),
+local null_ls_builtin_types = {
+  'formatting',
+  'diagnostics',
+  'code_actions',
+  'hover',
 }
 
 local ensure_installed = {}
-for _, names in pairs(client_names) do
-  for _, name in ipairs(names) do
+for _, type in ipairs(null_ls_builtin_types) do
+  local source_names = langs:list(type)
+  for _, name in ipairs(source_names) do
     table.insert(ensure_installed, name)
   end
 end
