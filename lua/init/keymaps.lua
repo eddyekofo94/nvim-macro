@@ -49,7 +49,6 @@ vim.keymap.set('n', '<M-g><Tab>', '<C-w>g<Tab>')
 -- Buffer navigation
 vim.keymap.set('n', '<Tab>', '<cmd>bn<CR>')
 vim.keymap.set('n', '<S-Tab>', '<cmd>bp<CR>')
-vim.keymap.set('n', '<M-C>', '<cmd>bd<CR>')
 vim.keymap.set('n', '<C-n>', '<C-i>')
 
 -- Correct misspelled word / mark as correct
