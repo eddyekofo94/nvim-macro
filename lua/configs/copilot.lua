@@ -10,5 +10,9 @@ vim.defer_fn(function()
         accept = '<C-j>',
       },
     },
+    filetypes = {
+      markdown = true,
+      help = true,
+    },
   })
 end, 100)
