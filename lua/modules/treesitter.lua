@@ -4,7 +4,7 @@ return {
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    ft = ft_list,
+    event = 'FileType',
     config = function()
       require('configs.nvim-treesitter')
     end,
