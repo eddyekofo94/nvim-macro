@@ -89,9 +89,17 @@ end
 ---@param rgb integer[]
 ---@return string
 local function rgb2hex(rgb)
-  return dec2hex(math.floor(rgb[1]))
-      .. dec2hex(math.floor(rgb[2]))
-      .. dec2hex(math.floor(rgb[3]))
+  local hex = {
+    dec2hex(math.floor(rgb[1])),
+    dec2hex(math.floor(rgb[2])),
+    dec2hex(math.floor(rgb[3])),
+  }
+  hex = {
+    string.rep('0', 2 - #hex[1]) .. hex[1],
+    string.rep('0', 2 - #hex[2]) .. hex[2],
+    string.rep('0', 2 - #hex[3]) .. hex[3],
+  }
+  return table.concat(hex, '')
 end
 
 ---Blend two hex colors
@@ -100,8 +108,8 @@ end
 ---@param alpha number between 0~1, weight of the first color
 ---@return string hex_blended blended hex color
 local function blend(hex1, hex2, alpha)
-  local rgb1 = hex2rgb(hex1)
-  local rgb2 = hex2rgb(hex2)
+  local rgb1 = hex2rgb(hex1:gsub('#', '', 1))
+  local rgb2 = hex2rgb(hex2:gsub('#', '', 1))
 
   local rgb_blended = {
     alpha * rgb1[1] + (1 - alpha) * rgb2[1],
@@ -109,17 +117,22 @@ local function blend(hex1, hex2, alpha)
     alpha * rgb1[3] + (1 - alpha) * rgb2[3],
   }
 
-  local hex_blended = rgb2hex(rgb_blended)
-  hex_blended = hex_blended .. string.rep('0', 6 - #hex_blended)
-  return hex_blended
+  return '#' .. rgb2hex(rgb_blended)
 end
 
 ---Get background color in hex
----@param hlgroup string
+---@param hlgroup_name string
 ---@param field string 'foreground' or 'background'
----@return string
-local function get_hl(hlgroup, field)
-  return dec2hex(vim.api.nvim_get_hl_by_name(hlgroup, true)[field] or 0)
+---@param fallback string|nil fallback color in hex, default to '#000000'
+---@return string hex color
+local function get_hl(hlgroup_name, field, fallback)
+  fallback = fallback or '#000000'
+  local has_hlgroup, hlgroup =
+    pcall(vim.api.nvim_get_hl_by_name, hlgroup_name, true)
+  if has_hlgroup and hlgroup[field] then
+    return dec2hex(hlgroup[field])
+  end
+  return fallback
 end
 
 ---Resolve the colorcolumn value
@@ -132,59 +145,69 @@ local function resolve_cc(cc)
   local cc_tbl = vim.split(cc, ',')
   local cc_min = nil
   for _, cc_str in ipairs(cc_tbl) do
-    local cc_number = nil
-    if vim.startswith(cc_str, '+') then
-      cc_number = vim.bo.tw > 0 and vim.bo.tw + tonumber(cc_str:sub(2))
-    elseif vim.startswith(cc_str, '-') then
-      cc_number = vim.bo.tw > 0 and vim.bo.tw - tonumber(cc_str:sub(2))
-    else
-      cc_number = tonumber(cc_str)
+    local cc_number = tonumber(cc_str)
+    if vim.startswith(cc_str, '+') or vim.startswith(cc_str, '-') then
+      cc_number = vim.bo.tw > 0 and vim.bo.tw + cc_number or nil
     end
-    if
-      type(cc_number) == 'number'
-      and cc_number > 0
-      and (not cc_min or cc_number < cc_min)
-    then
+    if cc_number and cc_number > 0 and (not cc_min or cc_number < cc_min) then
       cc_min = cc_number
     end
   end
   return cc_min
 end
 
+---Fallback to the first non-empty string
+---@vararg string
+---@return string|nil
+local function str_fallback(...)
+  local args = { ... }
+  for _, arg in pairs(args) do
+    if type(arg) == 'string' and arg ~= '' then
+      return arg
+    end
+  end
+  return nil
+end
+
 ---Show colorcolumn
 local function show_colorcolumn()
   local cc = resolve_cc(vim.w.cc)
   if not cc then
+    vim.wo.cc = ''
     return
   end
-  local length = #vim.api.nvim_get_current_line()
-  local thresh = math.floor(cc * 0.75)
-  local modes = { 'i', 'ic', 'ix', 'R', 'Rc', 'Rx', 'Rv', 'Rvc', 'Rvx' }
-  if length < thresh or not vim.tbl_contains(modes, vim.fn.mode()) then
+
+  local length = vim.fn.strdisplaywidth(vim.api.nvim_get_current_line())
+  local thresh = math.floor(0.75 * cc)
+  local mode = vim.fn.mode()
+  if
+    length < thresh
+    or (not vim.startswith(mode, 'i') and not vim.startswith(mode, 'R'))
+  then
     vim.opt.cc = ''
     return
   end
+
   vim.wo.cc = vim.w.cc
 
-  -- Show blended color when length < cc
+  -- Show blended color when len < cc
+  local normal_bg = get_hl('Normal', 'background')
   if length < cc then
     vim.api.nvim_set_hl(0, 'ColorColumn', {
-      bg = '#' .. blend(
+      bg = blend(
         store.colorcol_bg,
-        get_hl('Normal', 'background'),
+        normal_bg,
         (length - thresh) / (cc - thresh)
       ),
     })
   else -- Show error color when length >= cc
+    local warning_color = get_hl('Error', 'foreground', '#FF0000')
     vim.api.nvim_set_hl(0, 'ColorColumn', {
-      bg = '#' .. blend(
-        get_hl('Normal', 'background'),
-        get_hl('Error', 'foreground'),
-        0.6
-      ),
+      bg = blend(warning_color, normal_bg, 0.4),
     })
   end
 end
+
 
 -- colorcolumn is a window-local option, with some special rules:
 -- 1. When a window is created, it inherits the value of the previous window or
@@ -221,7 +244,45 @@ vim.api.nvim_create_autocmd({ 'WinLeave' }, {
 vim.api.nvim_create_autocmd({ 'WinNew' }, {
   group = 'AutoColorColumn',
   callback = function()
-    vim.w.cc = store.previous_cc or vim.g.cc
+    vim.w.cc = str_fallback(store.previous_cc, vim.g.cc)
+  end,
+})
+
+-- Handle cc settings from ftplugins
+-- Detect cc changes in a quite hacky way, because OptionSet autocmd is not
+-- triggered when cc is set in a ftplugin
+-- Quirk: these two commands are not the same in a ftplugin:
+--     setlocal cc=80 " vimscript
+--     vim.wo.cc = 80 -- lua
+-- The former (vimscript) will set the 'buffer-local' cc, i.e. it will set cc
+-- for current window BUT will be reset for a different buffer displayed in
+-- the same window.
+-- The latter (lua) will set the 'window-local' cc, i.e. it will set cc for
+-- current window and will NOT be reset for a different buffer displayed in
+-- the same window.
+-- Currently there is no way to tell which one is used in a ftplugin, since I
+-- prefer the vimscript way, I simulate its behavior here when a change is
+-- detected for cc in current window.
+vim.api.nvim_create_autocmd({ 'BufReadPre' }, {
+  group = 'AutoColorColumn',
+  callback = function()
+    vim.b._cc = vim.wo.cc
+    vim.g._cc = vim.go.cc
+  end,
+})
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+  group = 'AutoColorColumn',
+  callback = function()
+    -- If cc changes between BufReadPre and FileType, it is an ftplugin
+    -- that sets cc, so we accept it as a 'buffer-local' (phony) cc setting
+    -- Notice that we will do nothing if vim.b._cc is nil, which means the
+    -- buffer is not the same buffer that triggers BufReadPre
+    if vim.b._cc and vim.wo.cc ~= vim.b._cc then
+      vim.b.cc = vim.wo.cc
+      if vim.go.cc ~= vim.g._cc then
+        vim.g.cc = vim.go.cc
+      end
+    end
   end,
 })
 
@@ -230,8 +291,12 @@ vim.api.nvim_create_autocmd({ 'WinNew' }, {
 vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
   group = 'AutoColorColumn',
   callback = function()
-    vim.b.cc = vim.b.cc or vim.g.cc
-    vim.w.cc = vim.b.cc or vim.g.cc
+    vim.b.cc = str_fallback(vim.b.cc, vim.g.cc)
+    vim.w.cc = str_fallback(vim.b.cc, vim.g.cc)
+    local mode = vim.fn.mode()
+    if not vim.startswith(mode, 'i') or not vim.startswith(mode, 'R') then
+      vim.wo.cc = ''
+    end
   end,
 })
 
@@ -239,7 +304,7 @@ vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
 vim.api.nvim_create_autocmd({ 'WinEnter' }, {
   group = 'AutoColorColumn',
   callback = function()
-    vim.w.cc = vim.w.cc or vim.wo.cc
+    vim.w.cc = str_fallback(vim.w.cc, vim.wo.cc)
   end,
 })
 
