@@ -15,7 +15,10 @@ vim.api.nvim_create_autocmd({
 }, {
   pattern = { '*.txt', '*.md' },
   group = 'TableModeAutoEnable',
-  callback = function()
+  callback = function(tbl)
+    if vim.bo[tbl.buf].ft == 'help' then
+      return
+    end
     local line = vim.api.nvim_get_current_line()
     if line:match('^%s*|') then
       if not vim.g.tablemode_enabled then
