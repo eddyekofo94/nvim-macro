@@ -38,6 +38,10 @@ M.langs = setmetatable({
     dap = 'codelldb',
     formatting = 'clang-format',
   },
+  help = {
+    ts = 'help',
+    ft = 'help',
+  },
   lua = {
     ts = 'lua',
     ft = 'lua',
