@@ -1,9 +1,20 @@
-require('aerial').setup({
+local aerial = require('aerial')
+
+aerial.setup({
   keymaps = {
     ['<M-v>'] = 'actions.jump_vsplit',
     ['<M-s>'] = 'actions.jump_split',
     ['<Tab>'] = 'actions.scroll',
     ['p'] = 'actions.prev_up',
+    ['<CR>'] = {
+      callback = function()
+        local is_floating = vim.api.nvim_win_get_config(0).zindex ~= nil
+        aerial.select()
+        if is_floating then
+          aerial.close()
+        end
+      end,
+    },
 
     ['?'] = false,
     ['<C-v>'] = false,
@@ -36,7 +47,6 @@ require('aerial').setup({
     relative = 'editor',
     max_height = 0.6,
   },
-  close_on_select = true,
   show_guides = true,
   treesitter = { update_delay = 10 },
   markdown = { update_delay = 10 },
