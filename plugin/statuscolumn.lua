@@ -41,11 +41,9 @@ end
 ---@param prefixes string[] prefixes of the sign name
 ---@param cachekey string key of the cache
 ---@return string sign string representation of the sign with highlight
-function GetSign(bufnum, lnum, prefixes, cachekey)
-  local cur_signs = vim.fn.sign_getplaced(bufnum, {
-    group = '*',
-    lnum = lnum
-  })[1].signs
+function _G.get_sign(bufnum, lnum, prefixes, cachekey)
+  local cur_signs =
+    vim.fn.sign_getplaced(bufnum, { group = '*', lnum = lnum })[1].signs
 
   local diag_signs = {}
   for _, sign in ipairs(cur_signs) do
@@ -76,16 +74,16 @@ end
 
 ---Get statuscolumn string
 ---@return string statuscol statuscolumn string representation
-function GetStatuscol()
+function _G.get_statuscol()
   local statuscol = {}
 
   local parts = {
-    ['dapdiags'] = "%{%v:lua.GetSign(bufnr(),v:lnum,['Dap','Diagnostic'],'dapdiags')%}",
+    ['dapdiags'] = "%{%v:lua.get_sign(bufnr(),v:lnum,['Dap','Diagnostic'],'dapdiags')%}",
     ['align'] = '%=',
     ['num'] = '%{v:relnum?v:relnum:v:lnum}',
     ['space'] = ' ',
     ['fold'] = '%C',
-    ['gitsigns'] = "%{%v:lua.GetSign(bufnr(),v:lnum,['GitSigns'],'gitsigns')%}",
+    ['gitsigns'] = "%{%v:lua.get_sign(bufnr(),v:lnum,['GitSigns'],'gitsigns')%}",
   }
 
   local order = {
@@ -112,7 +110,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
   group = 'StatusColumn',
   callback = function(tbl)
     if tbl.file and vim.loop.fs_stat(tbl.file) and vim.bo.bt == '' then
-      vim.wo.statuscolumn = '%!v:lua.GetStatuscol()'
+      vim.wo.statuscolumn = '%!v:lua.get_statuscol()'
       return
     end
     vim.wo.statuscolumn = ''
