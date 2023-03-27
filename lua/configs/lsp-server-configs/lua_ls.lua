@@ -28,7 +28,7 @@ local function on_new_config(config, root_dir)
         },
         diagnostics = {
           enable = true,
-          globals = { 'vim', 'use' },
+          globals = { 'vim' },
         },
         workspace = {
           library = vim.api.nvim_get_runtime_file('', true),
