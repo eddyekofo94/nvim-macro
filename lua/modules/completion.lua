@@ -61,7 +61,7 @@ return {
 
   {
     'L3MON4D3/LuaSnip',
-    event = { 'FileType', 'InsertCharPre' },
+    event = 'InsertCharPre',
     config = function()
       require('configs.LuaSnip')
     end,
