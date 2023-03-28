@@ -40,7 +40,7 @@ palette.dark = {
   earth_blend    = '#303032',
   smoke_blend    = '#272d3a',
   pigeon_blend   = '#262e3e',
-  ocean_blend    = '#1f2736',
+  ocean_blend    = '#222a38',
 
   shadow = '#09080b',
 }
@@ -70,8 +70,8 @@ palette.light = {
   beige        = '#385372',
   steel        = '#9a978a',
   iron         = '#b8b7b3',
-  deepsea      = '#dfd6ce',
-  ocean        = '#e8ded6',
+  deepsea      = '#e6ded6',
+  ocean        = '#f0e7e1',
   jeans        = '#faf4ed',
   space        = '#faf7ee',
   black        = '#efefef',
@@ -84,7 +84,7 @@ palette.light = {
   wine_blend     = '#e6c9c3',
   earth_blend    = '#ebe0ce',
   smoke_blend    = '#e4e4e2',
-  pigeon_blend   = '#e6e6e3',
+  pigeon_blend   = '#f0eae4',
   ocean_blend    = '#f0e8e2',
 
   shadow = '#3c3935',
