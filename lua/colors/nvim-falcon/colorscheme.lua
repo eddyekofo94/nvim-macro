@@ -567,6 +567,10 @@ sch.FloatermBorder = { fg = plt.smoke, bg = plt.ocean }
 sch.CopilotSuggestion = { fg = plt.steel, italic = true }
 sch.CopilotAnnotation = { fg = plt.steel, italic = true }
 
+-- indent-blankline.nvim
+sch.IndentBlanklineIndent1 = { fg = plt.iron, bg = plt.jeans }
+sch.IndentBlanklineIndent2 = { fg = plt.iron, bg = plt.pigeon_blend }
+
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }
 sch.Earth      = { fg = plt.earth }
