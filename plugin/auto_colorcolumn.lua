@@ -184,7 +184,7 @@ local function show_colorcolumn()
     length < thresh
     or (not vim.startswith(mode, 'i') and not vim.startswith(mode, 'R'))
   then
-    vim.opt.cc = ''
+    vim.wo.cc = ''
     return
   end
 
