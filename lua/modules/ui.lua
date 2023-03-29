@@ -1,7 +1,7 @@
 return {
   {
     'romgrk/barbar.nvim',
-    event = 'VeryLazy',
+    event = { 'BufReadPost', 'BufWrite' },
     dependencies = 'nvim-web-devicons',
     config = function()
       require('configs.barbar')
@@ -55,5 +55,4 @@ return {
       require('configs.aerial')
     end,
   },
-
 }
