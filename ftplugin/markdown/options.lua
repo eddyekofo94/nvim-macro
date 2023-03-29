@@ -1,3 +1,4 @@
+vim.bo.sw = 4
 vim.api.nvim_create_augroup('MarkdownOpts', { clear = true })
 vim.api.nvim_create_autocmd({
   'InsertEnter',
@@ -11,7 +12,8 @@ vim.api.nvim_create_autocmd({
     if
       line:match('^%s*|') -- table
       or line:match('^#') -- heading
-      or vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
+      or vim.g.loaded_vimtex
+        and vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
     then
       vim.bo.textwidth = 0
       return
