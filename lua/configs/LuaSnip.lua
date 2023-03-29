@@ -3,21 +3,31 @@ local ls = require('luasnip')
 local ls_types = require('luasnip.util.types')
 local icons = require('utils.static').icons
 
+---Load snippets for a given filetype
+---@param ft string
+local function load_snippets(ft)
+  local snip_groups = require('snippets.' .. ft)
+  for _, snip_group in pairs(snip_groups) do
+    ls.add_snippets(ft, snip_group.snip or snip_group, snip_group.opts or {})
+  end
+end
+
 local function lazy_load_snippets()
   local snippets_path
     = vim.split(fn.globpath(fn.stdpath('config') .. '/lua/snippets', '*.lua'), '\n')
   vim.api.nvim_create_augroup('LuaSnipLazyLoadSnippets', { clear = true })
   for _, path in ipairs(snippets_path) do
     local ft = fn.fnamemodify(path, ':t:r')
+    -- Load snippet immediately if ft matches the filetype of current buffer
+    if ft == vim.bo.ft then
+      load_snippets(ft)
+    end
     vim.api.nvim_create_autocmd('FileType', {
       pattern = ft,
       once = true,
       group = 'LuaSnipLazyLoadSnippets',
       callback = function()
-        local snip_groups = require('snippets.' .. ft)
-        for _, snip_group in pairs(snip_groups) do
-          ls.add_snippets(ft, snip_group.snip or snip_group, snip_group.opts or {})
-        end
+        load_snippets(ft)
       end
     })
   end
