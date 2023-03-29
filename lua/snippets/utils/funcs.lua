@@ -31,7 +31,8 @@ local function add_attr(attr, snip_group)
 end
 
 local function in_mathzone()
-  return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
+  return vim.g.loaded_vimtex == 1
+    and vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
 end
 
 local function not_in_mathzone()

@@ -7,11 +7,13 @@ vim.api.nvim_create_autocmd({
   pattern = '*.tex',
   group = 'LatexOpts',
   callback = function()
-    if vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
+    if
+      vim.g.loaded_vimtex == 1
+      and vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
     then
       vim.bo.textwidth = 0
-      return
+    else
+      vim.bo.textwidth = 79
     end
-    vim.bo.textwidth = 79
   end,
 })
