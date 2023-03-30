@@ -181,18 +181,18 @@ end
 ---Redraw colorcolumn
 local function cc_redraw()
   local cc = resolve_cc(vim.w.cc)
-  if not cc then
+  local mode = vim.fn.mode()
+  if not cc
+    or not vim.startswith(mode, 'i')
+      and not vim.startswith(mode, 'R')
+  then
     vim.wo.cc = ''
     return
   end
 
   local length = vim.fn.strdisplaywidth(vim.api.nvim_get_current_line())
   local thresh = math.floor(0.75 * cc)
-  local mode = vim.fn.mode()
-  if
-    length < thresh
-    or (not vim.startswith(mode, 'i') and not vim.startswith(mode, 'R'))
-  then
+  if length < thresh then
     vim.wo.cc = ''
     return
   end
