@@ -1,5 +1,6 @@
 local M = {}
 local fn = vim.fn
+local api = vim.api
 local ls = require('luasnip')
 local ls_types = require('luasnip.util.types')
 local s = ls.snippet

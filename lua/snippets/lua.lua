@@ -2,6 +2,7 @@ local M = {}
 local funcs = require('snippets.utils.funcs')
 local ifn = funcs.ifn
 local fn = vim.fn
+local api = vim.api
 local ls = require('luasnip')
 local ls_types = require('luasnip.util.types')
 local s = ls.snippet

@@ -3,6 +3,7 @@ local funcs = require('snippets.utils.funcs')
 local ifn = funcs.ifn
 local sdn = funcs.sdn
 local fn = vim.fn
+local api = vim.api
 local ls = require('luasnip')
 local ls_types = require('luasnip.util.types')
 local s = ls.snippet
@@ -112,6 +113,7 @@ M.symbols = {
     s({ trig = 'x-->' }, { t '\\xrightarrow[', i(1), t ']{', i(2), t '} ', i(0) }),
     s({ trig = 'x&= >' }, { t '\\xRightarrow[', i(1), t ']{', i(2), t '} ', i(0) }),
     s({ trig = '->', priority = 998 }, { t '\\to ', i(0) }),
+    s({ trig = '<-', priority = 998 }, { t '\\gets ', i(0) }),
     s({ trig = '=>', priority = 998 }, { t '\\implies ', i(0) }),
     s({ trig = '|>' }, { t '\\mapsto ', i(0) }),
     s({ trig = '=>' }, t '\\implies ', i(0)),
@@ -232,7 +234,7 @@ M.words = {
         underscore = i(8, '_'),
         comma = i(9, ','),
     }, { repeat_duplicates = true })),
-    s({ trig = 'inf' }, { t '\\infty', i(0) }),
+    s({ trig = '\\in f' }, { t '\\infty', i(0) }),
     s({ trig = 'prop' }, t '\\propto ', i(0)),
     s({ trig = 'deg' }, { t '\\degree', i(0) }),
     s({ trig = 'ang' }, { t '\\angle ', i(0) }),
@@ -260,7 +262,7 @@ M.words = {
     s({ trig = '\\sqsubset%s*eq', regTrig = true }, { t '\\sqsubseteq ', i(0) }),
     s({ trig = 'c=' }, { t '\\subseteq ', i(0) }),
     s({ trig = 'notin' }, { t '\\notin ', i(0) }),
-    s({ trig = 'in ' }, { t '\\in ', i(0) }),
+    s({ trig = 'in', priority = 999 }, { t '\\in ', i(0) }),
     s({ trig = 'uu' }, { t '\\cup ', i(0) }),
     s({ trig = 'nn' }, { t '\\cap ', i(0) }),
     s({ trig = 'land' }, { t '\\land ', i(0) }),
@@ -291,8 +293,8 @@ M.words = {
     s({ trig = 'clg' }, { t '\\left\\lceil ', i(1), t ' \\right\\rceil', i(0) }),
     s({ trig = 'bmat' }, { t '\\begin{bmatrix} ', i(1), t ' \\end{bmatrix}', i(0) }),
     s({ trig = 'pmat' }, { t '\\begin{pmatrix} ', i(1), t ' \\end{pmatrix}', i(0) }),
-    s({ trig = 'Bmat' }, { t { '\\begin{bmatrix}', '' }, ifn(1), i(1), t { '', '\\end{bmatrix}', '' } }),
-    s({ trig = 'Pmat' }, { t { '\\begin{pmatrix}', '' }, ifn(1), i(1), t { '', '\\end{pmatrix}', '' } }),
+    s({ trig = 'Bmat' }, { t { '\\begin{bmatrix}', '' }, ifn(1), i(0), t { '', '\\end{bmatrix}', '' } }),
+    s({ trig = 'Pmat' }, { t { '\\begin{pmatrix}', '' }, ifn(1), i(0), t { '', '\\end{pmatrix}', '' } }),
     s({ trig = 'aln' }, fmta([[
 \begin{<env>}
 <indent><text>
@@ -300,7 +302,7 @@ M.words = {
     ]], {
       env = c(1, { i(nil, 'aligned'), i(nil, 'align*'), i(nil, 'align') }),
       indent = ifn(1),
-      text = i(2),
+      text = i(0),
     }, { repeat_duplicates = true })),
     s({ trig = 'eqt' }, fmta([[
 \begin{<env>}
@@ -309,12 +311,12 @@ M.words = {
     ]], {
       env = c(1, { i(nil, 'equation*'), i(nil, 'equation') }),
       indent = ifn(1),
-      text = i(2),
+      text = i(0),
     }, { repeat_duplicates = true })),
-    s({ trig = 'case' }, { t { '\\begin{cases}', '' }, ifn(1), i(1), t { '', '\\end{cases}' } }, i(0)),
+    s({ trig = 'case' }, { t { '\\begin{cases}', '' }, ifn(1), i(0), t { '', '\\end{cases}' } }),
     s({ trig = 'part' }, { t { '\\frac{\\partial ' }, i(1), t { '}{\\partial ' }, i(2), t { '}' }, i(0) }),
     s({ trig = 'diff' }, { t '\\frac{\\mathrm{d}', i(1), t '}{\\mathrm{d}', i(2), t '} ', i(0) }),
-    s({ trig = 'int', priority = 998 }, { t '\\int_{', i(1), t '}^{', i(2), t '} ', i(0) }),
+    s({ trig = '\\in t', priority = 998 }, { t '\\int_{', i(1), t '}^{', i(2), t '} ', i(0) }),
     s({ trig = 'iint', priority = 999 }, { t '\\iint_{', i(1), t '}^{', i(2), t '} ', i(0) }),
     s({ trig = 'iiint' }, { t '\\iiint_{', i(1), t '}^{', i(2), t '} ', i(0) }),
     s({ trig = 'prod' }, {
@@ -337,7 +339,7 @@ M.words = {
     ]] , {
       indent = ifn(1),
       env = i(1),
-      text = i(2),
+      text = i(0),
     }, { repeat_duplicates = true })),
 
     s({ trig = 'nabla' }, { t '\\nabla', i(0) }),
@@ -396,6 +398,24 @@ M.words = {
         cond_y = i(1, 'Y=y'),
     }, { repeat_duplicates = true })),
   }),
+  opts = { type = 'autosnippets' },
+}
+
+M.math_env = {
+  snip = {
+    s({
+      trig = '$',
+      condition = function()
+        local line = api.nvim_get_current_line()
+        local col = api.nvim_win_get_cursor(0)[2]
+        return line:sub(col + 1, col + 1) == '$'
+      end,
+    }, { t({ '$', '' }), ifn(1), i(0), t({ '', '$' }) }),
+    s(
+      { trig = '$$', priority = 999 },
+      { t('$'), i(0), t('$') }
+    ),
+  },
   opts = { type = 'autosnippets' },
 }
 

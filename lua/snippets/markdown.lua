@@ -1,6 +1,7 @@
 local funcs = require('snippets.utils.funcs')
 local ifn = funcs.ifn
 local fn = vim.fn
+local api = vim.api
 local ls = require('luasnip')
 local ls_types = require('luasnip.util.types')
 local s = ls.snippet
@@ -44,17 +45,21 @@ M.format = {
 }
 
 M.markers = {
-  snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
-    s({ trig = 'm' } , { t '$', i(1), t '$' }),
-    s({ trig = 'M' } , {
-      t { '$$', '' },
-      ifn(1), i(1),
-      t { '', '$$' }
-    }),
-    s({ trig = 'e' } , { t '*', i(1), t '*', i(0) }),
-    s({ trig = 'b' }, { t '**', i(1), t '**', i(0) }),
-    s({ trig = 'B' }, { t '***', i(1), t '***', i(0) }),
-  }),
+  snip = {
+    s({
+      trig = '*',
+      condition = function()
+        local line = api.nvim_get_current_line()
+        local col = api.nvim_win_get_cursor(0)[2]
+        return line:sub(col + 1, col + 1) == '*' and funcs.not_in_mathzone()
+      end,
+    }, { t('*'), i(0), t('*') }),
+    s(
+      { trig = '**', priority = 999, condition = funcs.not_in_mathzone },
+      { t('*'), i(0), t('*') }
+    ),
+  },
+  opts = { type = 'autosnippets' },
 }
 
 M.titles = {
