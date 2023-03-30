@@ -116,6 +116,7 @@ M.symbols = {
     s({ trig = '<-', priority = 998 }, { t '\\gets ', i(0) }),
     s({ trig = '=>', priority = 998 }, { t '\\implies ', i(0) }),
     s({ trig = '|>' }, { t '\\mapsto ', i(0) }),
+    s({ trig = '><' }, { t '\\bowtie ', i(0) }),
     s({ trig = '=>' }, t '\\implies ', i(0)),
 
     s({ trig = '%s*_', regTrig = true }, {
