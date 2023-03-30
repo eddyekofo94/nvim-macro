@@ -169,8 +169,17 @@ local function str_fallback(...)
   return nil
 end
 
----Show colorcolumn
-local function show_colorcolumn()
+---Set to be relative to textwidth if textwidth is set
+local function cc_set_relative()
+  if vim.bo.textwidth > 0 then
+    vim.w.cc = '+1'
+  else
+    vim.w.cc = str_fallback(vim.b.cc, vim.g.cc)
+  end
+end
+
+---Redraw colorcolumn
+local function cc_redraw()
   local cc = resolve_cc(vim.w.cc)
   if not cc then
     vim.wo.cc = ''
@@ -220,6 +229,7 @@ local function init()
   end
   vim.go.cc = ''
   store.colorcol_bg = get_hl('ColorColumn', 'background')
+  vim.api.nvim_create_augroup('AutoColorColumn', { clear = true })
 end
 
 -- colorcolumn is a window-local option, with some special rules:
@@ -231,9 +241,9 @@ end
 -- 3. Once the window-local cc is set, it's not changed by the global option
 --    or inheritance, it will only change when a different buffer is displayed
 --    or the option is set explicitly (via set or setlocal)
-local function make_autocmds()
-  -- Save original cc settings
-  vim.api.nvim_create_augroup('AutoColorColumn', { clear = true })
+
+---Make autocmds to track colorcolumn settings
+local function autocmd_track_cc()
   -- Save previous window cc settings
   vim.api.nvim_create_autocmd({ 'WinLeave' }, {
     group = 'AutoColorColumn',
@@ -248,6 +258,60 @@ local function make_autocmds()
     group = 'AutoColorColumn',
     callback = function()
       vim.w.cc = str_fallback(store.previous_cc, vim.g.cc)
+    end,
+  })
+
+  -- Save cc settings for each window
+  vim.api.nvim_create_autocmd({ 'WinEnter' }, {
+    group = 'AutoColorColumn',
+    callback = function()
+      vim.w.cc = str_fallback(vim.w.cc, vim.wo.cc)
+    end,
+  })
+
+  -- On entering a buffer, check and set vim.b.cc and vim.w.cc in the
+  -- following order:
+  -- 1. If vim.wo.cc is non empty, then it is set from a modeline, use it.
+  --    Notice that this is after the 'FileType' event, which applies ftplugin
+  --    settings
+  -- 2. If vim.b.cc if non empty, it is set previously by broadcasting or an
+  --    ftplugin, use it
+  -- 3. Else use vim.g.cc
+  -- We want to unset vim.wo.cc on leaving a buffer, so that vim.wo.cc reflects
+  -- changes from modelines
+  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+    group = 'AutoColorColumn',
+    callback = function()
+      vim.wo.cc = ''
+    end,
+  })
+  vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
+    group = 'AutoColorColumn',
+    callback = function()
+      vim.b.cc = str_fallback(vim.wo.cc, vim.b.cc, vim.g.cc)
+      vim.w.cc = str_fallback(vim.wo.cc, vim.b.cc, vim.g.cc)
+      local mode = vim.fn.mode()
+      if not vim.startswith(mode, 'i') or not vim.startswith(mode, 'R') then
+        vim.wo.cc = ''
+      end
+    end,
+  })
+
+  -- Update cc settings on option change
+  vim.api.nvim_create_autocmd({ 'OptionSet' }, {
+    pattern = 'colorcolumn',
+    group = 'AutoColorColumn',
+    callback = function()
+      if vim.v.option_type == 'global' then
+        vim.g.cc = vim.go.cc
+        vim.w.cc = vim.go.cc
+        vim.b.cc = vim.go.cc
+      elseif vim.v.option_type == 'local' then
+        vim.w.cc = vim.wo.cc
+        vim.b.cc = vim.wo.cc
+      end
+      vim.go.cc = ''
+      vim.wo.cc = ''
     end,
   })
 
@@ -288,61 +352,24 @@ local function make_autocmds()
       end
     end,
   })
+end
 
-  -- On entering a buffer, check and set vim.b.cc and vim.w.cc in the
-  -- following order:
-  -- 1. If vim.wo.cc is non empty, then it is set from a modeline, use it.
-  --    Notice that this is after the 'FileType' event, which applies ftplugin
-  --    settings
-  -- 2. If vim.b.cc if non empty, it is set previously by broadcasting or an
-  --    ftplugin, use it
-  -- 3. Else use vim.g.cc
-  -- We want to unset vim.wo.cc on leaving a buffer, so that vim.wo.cc reflects
-  -- changes from modelines
-  vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+---Make autocmds to set colorcolumn relative to textwidth
+local function autocmd_follow_tw()
+  -- Set cc to be relative to textwidth if textwidth is set
+  vim.api.nvim_create_autocmd({ 'OptionSet' }, {
+    pattern = 'textwidth',
     group = 'AutoColorColumn',
-    callback = function()
-      vim.wo.cc = ''
-    end,
+    callback = cc_set_relative,
   })
   vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
     group = 'AutoColorColumn',
-    callback = function()
-      vim.b.cc = str_fallback(vim.wo.cc, vim.b.cc, vim.g.cc)
-      vim.w.cc = str_fallback(vim.wo.cc, vim.b.cc, vim.g.cc)
-      local mode = vim.fn.mode()
-      if not vim.startswith(mode, 'i') or not vim.startswith(mode, 'R') then
-        vim.wo.cc = ''
-      end
-    end,
+    callback = cc_set_relative,
   })
+end
 
-  -- Save cc settings for each window
-  vim.api.nvim_create_autocmd({ 'WinEnter' }, {
-    group = 'AutoColorColumn',
-    callback = function()
-      vim.w.cc = str_fallback(vim.w.cc, vim.wo.cc)
-    end,
-  })
-
-  -- Update cc settings on option change
-  vim.api.nvim_create_autocmd({ 'OptionSet' }, {
-    pattern = 'colorcolumn',
-    group = 'AutoColorColumn',
-    callback = function()
-      if vim.v.option_type == 'global' then
-        vim.g.cc = vim.go.cc
-        vim.w.cc = vim.go.cc
-        vim.b.cc = vim.go.cc
-      elseif vim.v.option_type == 'local' then
-        vim.w.cc = vim.wo.cc
-        vim.b.cc = vim.wo.cc
-      end
-      vim.go.cc = ''
-      vim.wo.cc = ''
-    end,
-  })
-
+---Make autocmds to display colorcolumn
+local function autocmd_display_cc()
   -- Save Colorcolum background color
   vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
     group = 'AutoColorColumn',
@@ -353,15 +380,25 @@ local function make_autocmds()
 
   -- Show colored column
   vim.api.nvim_create_autocmd(
-    { 'ModeChanged', 'TextChangedI', 'CursorMovedI', 'ColorScheme' },
-    { group = 'AutoColorColumn', callback = show_colorcolumn }
+    {
+      'ModeChanged',
+      'TextChangedI',
+      'CursorMovedI',
+      'ColorScheme',
+    },
+    {
+      group = 'AutoColorColumn',
+      callback = cc_redraw
+    }
   )
   vim.api.nvim_create_autocmd({ 'OptionSet' }, {
     pattern = { 'colorcolumn', 'textwidth' },
     group = 'AutoColorColumn',
-    callback = show_colorcolumn,
+    callback = cc_redraw,
   })
 end
 
 init()
-make_autocmds()
+autocmd_track_cc()
+autocmd_follow_tw()
+autocmd_display_cc()
