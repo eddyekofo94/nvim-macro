@@ -93,7 +93,6 @@ local function on_attach(client, bufnr)
             'on',
             'off',
             'toggle',
-            '--local',
           },
           ['--'] = {
             'local',
