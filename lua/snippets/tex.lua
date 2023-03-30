@@ -65,17 +65,17 @@ M.env_standalone = {
 
 M.style = {
   snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
-    s({ trig = 'em' } , { t '\\emph{', i(1), t '}' }),
-    s({ trig = 'bf' }, { t '\\textbf{', i(1), t '}' }),
-    s({ trig = 'ul' }, { t '\\underline{', i(1), t '}' }),
+    s({ trig = 'em' } , { t('\\emph{'), i(1), t('}') }),
+    s({ trig = 'bf' }, { t('\\textbf{'), i(1), t('}') }),
+    s({ trig = 'ul' }, { t('\\underline{'), i(1), t('}') }),
   })
 }
 
 M.style_auto = {
   snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
-    s({ trig = '^[^\\]- ', regTrig = true }, { t '\\item' }),
+    s({ trig = '^[^\\]- ', regTrig = true }, { t('\\item') }),
     s({ trig = '\\item(%w)', regTrig = true }, d(1, function(_, snip)
-        return sn(nil, { t('\\item{' .. snip.captures[1]), i(1), t '}' })
+        return sn(nil, { t('\\item{' .. snip.captures[1]), i(1), t('}') })
       end))
     }),
   opts = { type = 'autosnippets' },
