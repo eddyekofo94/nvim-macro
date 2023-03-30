@@ -3,20 +3,35 @@ require('bufferline').setup({
   tabpages = true,
   closable = true,
   clickable = true,
-  icons = 'both',
-  icon_custom_colors = false,
-  icon_separator_active = '',
-  icon_separator_inactive = '',
-  icon_close_tab = '',
-  icon_close_tab_modified = '[+]',
-  icon_pinned = '',
+  icons = {
+    buffer_index = true,
+    diagnostics = {
+      [vim.diagnostic.severity.ERROR] = { enabled = false },
+      [vim.diagnostic.severity.HINT] = { enabled = false },
+      [vim.diagnostic.severity.INFO] = { enabled = false },
+      [vim.diagnostic.severity.WARN] = { enabled = false },
+    },
+    separator = {
+      left = '',
+      right = '',
+    },
+    modified = { button = '[+]' },
+    pinned = { button = '' },
+    inactive = {
+      button = '',
+      separator = {
+        left = '',
+        right = '',
+      },
+    },
+  },
   insert_at_end = true,
   insert_at_start = false,
   maximum_padding = 1,
   maximum_length = 30,
   semantic_letters = true,
   letters = 'asdfjkl;ghnmxcvbziowerutyqpASDFJKLGHNMXCVBZIOWERUTYQP',
-  no_name_title = nil
+  no_name_title = nil,
 })
 
 local barbar_api = require('bufferline.api')
