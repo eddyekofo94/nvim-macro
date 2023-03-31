@@ -88,7 +88,7 @@ function M.init()
 
   map('c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>')
   map('i', '<C-k>', function()
-    return end_of_line() and '<Del>' or '<C-o>D'
+    return end_of_line() and '<Del>' or '<Cmd>normal! D<CR>'
   end, { expr = true })
 
   map('!', '<C-t>', function()
@@ -137,12 +137,23 @@ function M.init()
 
   map('!', '<M-b>', '<S-Left>')
   map('c', '<M-f>', '<S-Right>')
-  map('i', '<M-f>', '<C-o>e<Right>')
-  map('i', '<M-d>', '<C-o>dw')
-  map('c', '<M-d>', '<S-Right><C-w>')
+  map('i', '<M-f>', '<Cmd>normal! e<Right><CR>')
   map('!', '<C-BS>', '<C-w>')
   map('!', '<M-BS>', '<C-w>')
   map('!', '<M-Del>', '<C-w>')
+  map('i', '<M-d>', '<Cmd>normal! dw<CR>')
+  map('c', '<M-d>', function()
+    local cmdline = fn.getcmdline()
+    local pos = fn.getcmdpos()
+    if pos >= #cmdline then
+      return ''
+    end
+    local _, _, to_del = cmdline:sub(pos + 1):find('^(%w*%s*)')
+    fn.setcmdline(
+      cmdline:sub(1, pos - 1) .. cmdline:sub(pos + #to_del + 1),
+      pos
+    )
+  end, { expr = true })
 end
 
 return M
