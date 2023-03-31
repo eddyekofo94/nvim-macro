@@ -156,6 +156,16 @@ local function resolve_cc(cc)
   return cc_min
 end
 
+---Set a window-local option safely without changing the window view
+---@param win integer window handle, 0 for current window
+---@param name string option name
+---@param value any option value
+local function win_safe_set_option(win, name, value)
+  local winview = vim.fn.winsaveview()
+  vim.wo[win][name] = value
+  vim.fn.winrestview(winview)
+end
+
 ---Fallback to the first non-empty string
 ---@vararg string
 ---@return string|nil
@@ -186,18 +196,18 @@ local function cc_redraw()
     or not vim.startswith(mode, 'i')
       and not vim.startswith(mode, 'R')
   then
-    vim.wo.cc = ''
+    win_safe_set_option(0, 'cc', '')
     return
   end
 
   local length = vim.fn.strdisplaywidth(vim.api.nvim_get_current_line())
   local thresh = math.floor(0.75 * cc)
   if length < thresh then
-    vim.wo.cc = ''
+    win_safe_set_option(0, 'cc', '')
     return
   end
 
-  vim.wo.cc = vim.w.cc
+  win_safe_set_option(0, 'cc', vim.w.cc)
 
   -- Show blended color when len < cc
   local normal_bg = get_hl('Normal', 'background')
@@ -249,7 +259,7 @@ local function autocmd_track_cc()
     group = 'AutoColorColumn',
     callback = function()
       store.previous_cc = vim.w.cc
-      vim.wo.cc = ''
+      win_safe_set_option(0, 'cc', '')
     end,
   })
 
@@ -282,7 +292,7 @@ local function autocmd_track_cc()
   vim.api.nvim_create_autocmd({ 'BufLeave' }, {
     group = 'AutoColorColumn',
     callback = function()
-      vim.wo.cc = ''
+      win_safe_set_option(0, 'cc', '')
     end,
   })
   vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
@@ -292,7 +302,7 @@ local function autocmd_track_cc()
       vim.w.cc = str_fallback(vim.wo.cc, vim.b.cc, vim.g.cc)
       local mode = vim.fn.mode()
       if not vim.startswith(mode, 'i') or not vim.startswith(mode, 'R') then
-        vim.wo.cc = ''
+        win_safe_set_option(0, 'cc', '')
       end
     end,
   })
@@ -311,7 +321,7 @@ local function autocmd_track_cc()
         vim.b.cc = vim.wo.cc
       end
       vim.go.cc = ''
-      vim.wo.cc = ''
+      win_safe_set_option(0, 'cc', '')
     end,
   })
 
