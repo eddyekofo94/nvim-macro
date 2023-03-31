@@ -91,17 +91,17 @@ ts_configs.setup({
     swap = {
       enable = true,
       swap_next = {
-        ['<C-l>'] = '@parameter.inner'
+        ['<C-S-L>'] = '@parameter.inner'
       },
       swap_previous = {
-        ['<C-h>'] = '@parameter.inner'
+        ['<C-S-H>'] = '@parameter.inner'
       },
     },
     lsp_interop = {
       enable = true,
       border = 'shadow',
       peek_definition_code = {
-        ['<leader>p'] = '@function.outer',
+        ['<C-k>'] = '@function.outer',
       },
     },
   },

@@ -4,15 +4,19 @@ local tabout = require('plugin.tabout')
 local icons = require('utils.static').icons
 
 local function choose_closest(dest1, dest2)
-  if not dest1 then return dest2 end
-  if not dest2 then return dest1 end
+  if not dest1 then
+    return dest2
+  end
+  if not dest2 then
+    return dest1
+  end
 
   local current_pos = vim.api.nvim_win_get_cursor(0)
   local line_width = vim.api.nvim_win_get_width(0)
-  local dist1 = math.abs(dest1[2] - current_pos[2]) +
-      math.abs(dest1[1] - current_pos[1]) * line_width
-  local dist2 = math.abs(dest2[2] - current_pos[2]) +
-      math.abs(dest2[1] - current_pos[1]) * line_width
+  local dist1 = math.abs(dest1[2] - current_pos[2])
+    + math.abs(dest1[1] - current_pos[1]) * line_width
+  local dist2 = math.abs(dest2[2] - current_pos[2])
+    + math.abs(dest2[1] - current_pos[1]) * line_width
   if dist1 <= dist2 then
     return dest1
   else
@@ -39,7 +43,6 @@ cmp.setup({
   formatting = {
     fields = { 'kind', 'abbr' },
     format = function(entry, vim_item)
-
       -- Use a terminal icon for completions from cmp-cmdline
       if entry.source.name == 'cmdline' then
         vim_item.kind = icons.Terminal
@@ -61,13 +64,13 @@ cmp.setup({
       end
 
       return vim_item
-    end
+    end,
   },
   experimental = { ghost_text = { hl_group = 'Ghost' } },
   snippet = {
     expand = function(args)
       require('luasnip').lsp_expand(args.body)
-    end
+    end,
   },
   mapping = {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
@@ -155,19 +158,45 @@ cmp.setup({
         end
       end
     end, { 'i', 'c' }),
+    ['<Down>'] = cmp.mapping(
+      cmp.mapping.select_next_item({
+        behavior = cmp.SelectBehavior.Select,
+      }),
+      { 'i' }
+    ),
+    ['<Up>'] = cmp.mapping(
+      cmp.mapping.select_prev_item({
+        behavior = cmp.SelectBehavior.Select,
+      }),
+      { 'i' }
+    ),
+    ['<PageDown>'] = cmp.mapping(
+      cmp.mapping.select_next_item({
+        behavior = cmp.SelectBehavior.Select,
+        count = vim.o.pumheight ~= 0 and math.ceil(vim.o.pumheight / 2) or 8,
+      }),
+      { 'i', 'c' }
+    ),
+    ['<PageUp>'] = cmp.mapping(
+      cmp.mapping.select_prev_item({
+        behavior = cmp.SelectBehavior.Select,
+        count = vim.o.pumheight ~= 0 and math.ceil(vim.o.pumheight / 2) or 8,
+      }),
+      { 'i', 'c' }
+    ),
     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
     ['<C-d>'] = cmp.mapping.scroll_docs(4),
-    ['<C-c>'] = cmp.mapping(function(fallback)
+    ['<C-e>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
-        cmp.close()
+        cmp.abort()
       else
         fallback()
       end
-    end, { 'i' }),
-    ['<C-y>'] = cmp.mapping.confirm {
+    end, { 'i', 'c' }),
+    ['<C-y>'] = cmp.mapping.confirm({
       behavior = cmp.ConfirmBehavior.Replace,
-      select = false
-    }
+      select = false,
+    }),
   },
   sources = {
     { name = 'luasnip', max_item_count = 3 },
@@ -179,7 +208,7 @@ cmp.setup({
       -- Suppress LSP completion when workspace is not ready yet
       entry_filter = function(entry, _)
         return not entry.completion_item.label:match('Workspace loading')
-      end
+      end,
     },
     { name = 'buffer', max_item_count = 8 },
     { name = 'spell', max_item_count = 8 },
@@ -204,18 +233,18 @@ cmp.setup({
     documentation = {
       max_width = 80,
       max_height = 16,
-    }
+    },
   },
 })
 
 -- Use buffer source for `/`.
 cmp.setup.cmdline('/', {
   enabled = true,
-  sources = { { name = 'buffer' } }
+  sources = { { name = 'buffer' } },
 })
 cmp.setup.cmdline('?', {
   enabled = true,
-  sources = { { name = 'buffer' } }
+  sources = { { name = 'buffer' } },
 })
 -- Use cmdline & path source for ':'.
 cmp.setup.cmdline(':', {
@@ -223,5 +252,5 @@ cmp.setup.cmdline(':', {
   sources = {
     { name = 'path', group_index = 1 },
     { name = 'cmdline', group_index = 2 },
-  }
+  },
 })
