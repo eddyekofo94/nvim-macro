@@ -180,7 +180,10 @@ local function str_fallback(...)
 end
 
 ---Set to be relative to textwidth if textwidth is set
-local function cc_set_relative()
+local function cc_set_relative(tbl)
+  if tbl.event == 'BufWinEnter' and vim.b._cc_last_set_by == 'modeline' then
+    return
+  end
   if vim.bo.textwidth > 0 then
     vim.w.cc = '+1'
   else
@@ -300,6 +303,9 @@ local function autocmd_track_cc()
     callback = function()
       vim.b.cc = str_fallback(vim.wo.cc, vim.b.cc, vim.g.cc)
       vim.w.cc = str_fallback(vim.wo.cc, vim.b.cc, vim.g.cc)
+      if vim.b.cc == vim.wo.cc then
+        vim.b._cc_last_set_by = 'modeline'
+      end
       local mode = vim.fn.mode()
       if not vim.startswith(mode, 'i') or not vim.startswith(mode, 'R') then
         win_safe_set_option(0, 'cc', '')
@@ -409,6 +415,6 @@ local function autocmd_display_cc()
 end
 
 init()
-autocmd_follow_tw()
 autocmd_track_cc()
+autocmd_follow_tw()
 autocmd_display_cc()
