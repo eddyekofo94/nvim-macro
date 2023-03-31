@@ -399,6 +399,6 @@ local function autocmd_display_cc()
 end
 
 init()
-autocmd_track_cc()
 autocmd_follow_tw()
+autocmd_track_cc()
 autocmd_display_cc()
