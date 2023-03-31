@@ -20,6 +20,20 @@ local autocmds = {
     },
   },
 
+  -- Append system clipboard to clipboard settings here because setting it on
+  -- startup dramatically slows down startup time
+  {
+    { 'TextYankPost' },
+    {
+      group = 'YankToSystemClipboard',
+      callback = function()
+        vim.opt.clipboard:append('unnamedplus')
+        vim.cmd('silent! let @+ = @' .. vim.v.register)
+      end,
+      once = true,
+    },
+  },
+
   -- Autosave on focus change
   {
     { 'BufLeave', 'WinLeave', 'FocusLost' },
