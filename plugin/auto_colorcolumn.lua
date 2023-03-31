@@ -381,7 +381,7 @@ end
 ---Make autocmds to display colorcolumn
 local function autocmd_display_cc()
   -- Save Colorcolum background color
-  vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
+  vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
     group = 'AutoColorColumn',
     callback = function()
       store.colorcol_bg = get_hl('ColorColumn', 'background')
