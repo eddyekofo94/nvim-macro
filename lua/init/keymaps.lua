@@ -62,12 +62,43 @@ vim.keymap.set('i', '<C-l>', '<C-G>u<Esc>[s1z=`]a<C-G>u')
 -- Enter normal mode from arbitrary mode
 vim.keymap.set({ 'n', 't', 'v', 'i', 'c' }, '<M-\\>', '<C-\\><C-n>')
 
+-- Close all floating windows
 vim.keymap.set('n', 'q', function()
-  require('utils.funcs').close_all_floatings('q')
+  local count = 0
+  local current_win = vim.api.nvim_get_current_win()
+  -- close current win only if it's a floating window
+  if vim.api.nvim_win_get_config(current_win).relative ~= '' then
+    vim.api.nvim_win_close(current_win, true)
+    return
+  end
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local config = vim.api.nvim_win_get_config(win)
+    -- close floating windows that can be focused
+    if config.relative ~= '' and config.focusable then
+      vim.api.nvim_win_close(win, false) -- do not force
+      count = count + 1
+    end
+  end
+  if count == 0 then -- Fallback
+    vim.api.nvim_feedkeys(
+      vim.api.nvim_replace_termcodes('q', true, true, true),
+      'n',
+      false
+    )
+  end
 end)
 
+---Toggle between light and dark background, set global variables accordingly
 vim.keymap.set('n', '<M-D>', function()
-  require('utils.funcs').toggle_background()
+  if vim.o.background == 'dark' then
+    vim.opt.background = 'light'
+    vim.opt.background = 'light' -- Flash cached dev icons
+    vim.g.BACKGROUND = 'light'
+  else
+    vim.opt.background = 'dark'
+    vim.opt.background = 'dark' -- Flash cached dev icons
+    vim.g.BACKGROUND = 'dark'
+  end
 end)
 
 -- Text object: current buffer

@@ -52,7 +52,28 @@ local autocmds = {
       pattern = '*',
       group = 'WinCloseJmp',
       callback = function()
-        require('utils.funcs').win_close_jmp()
+        if '' ~= vim.api.nvim_win_get_config(0).relative then
+          return
+        end
+        -- Record the window we jump from (previous) and to (current)
+        if nil == vim.t.winid_rec then
+          vim.t.winid_rec = {
+            prev = vim.fn.win_getid(),
+            current = vim.fn.win_getid(),
+          }
+        else
+          vim.t.winid_rec = {
+            prev = vim.t.winid_rec.current,
+            current = vim.fn.win_getid(),
+          }
+        end
+        -- Loop through all windows to check if the previous one has been closed
+        for winnr = 1, vim.fn.winnr('$') do
+          if vim.fn.win_getid(winnr) == vim.t.winid_rec.prev then
+            return -- Return if previous window is not closed
+          end
+        end
+        vim.cmd('wincmd p')
       end,
     },
   },
@@ -63,8 +84,20 @@ local autocmds = {
     {
       pattern = '*',
       group = 'LastPosJmp',
-      callback = function()
-        require('utils.funcs').last_pos_jmp()
+      callback = function(tbl)
+        local ft = vim.bo[tbl.buf].ft
+        -- don't apply to git messages
+        if ft:match('commit') or ft:match('rebase') then
+          return
+        end
+        -- get position of last saved edit
+        local markpos = vim.api.nvim_buf_get_mark(0, '"')
+        local line = markpos[1]
+        local col = markpos[2]
+        -- if in range, go there
+        if (line > 1) and (line <= vim.api.nvim_buf_line_count(0)) then
+          vim.api.nvim_win_set_cursor(0, { line, col })
+        end
       end,
     },
   },
@@ -123,7 +156,7 @@ local autocmds = {
         if vim.bo[tbl.buf].buftype == 'prompt' then
           vim.keymap.set('i', '<C-w>', '<C-S-W>', { buffer = tbl.buf })
         end
-      end
+      end,
     },
   },
 }
