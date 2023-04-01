@@ -46,7 +46,6 @@ opt.listchars = {
   lead       = '·',
   multispace = '·'
 }
--- Extra settings to show spaces hiding in tabs
 opt.conceallevel = 2
 
 opt.ts          = 4
