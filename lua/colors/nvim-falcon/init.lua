@@ -3,10 +3,10 @@ local M = {}
 function M.apply()
   vim.cmd('syntax reset')
   vim.cmd('hi clear')
-  package.loaded['colors.nvim-falcon.colorscheme'] = nil
-  local colorscheme = require('colors.nvim-falcon.colorscheme')
+  package.loaded['colors.nvim-falcon.hlgroups'] = nil
+  local hlgroups = require('colors.nvim-falcon.hlgroups')
 
-  for hl_name, hl_settings in pairs(colorscheme) do
+  for hl_name, hl_settings in pairs(hlgroups) do
     vim.api.nvim_set_hl(0, hl_name, hl_settings)
   end
 
