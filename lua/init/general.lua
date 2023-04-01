@@ -43,8 +43,6 @@ opt.listchars = {
   precedes   = '…',
   nbsp       = '⌴',
   trail      = '·',
-  lead       = '·',
-  multispace = '·'
 }
 opt.conceallevel = 2
 
