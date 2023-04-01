@@ -568,7 +568,7 @@ sch.CopilotSuggestion = { fg = plt.steel, italic = true }
 sch.CopilotAnnotation = { fg = plt.steel, italic = true }
 
 -- indent-blankline.nvim
-sch.IndentBlanklineIndent1 = { fg = plt.iron, bg = plt.jeans }
+sch.IndentBlanklineIndent1 = { fg = plt.iron }
 sch.IndentBlanklineIndent2 = { fg = plt.iron, bg = plt.pigeon_blend }
 
 -- Extra highlight groups
