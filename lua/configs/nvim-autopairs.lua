@@ -4,9 +4,10 @@ local cond = require('nvim-autopairs.conds')
 
 npairs.setup({
   check_ts = true,
+  enable_check_bracket_line = false,
   ignored_next_char = [=[[%w%%%'%[%"%.%`]]=],
   fast_wrap = {
-    map = '<C-c>',
+    map = '<M-c>',
     chars = { '{', '[', '(', '"', "'", '`' },
     pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], '%s+', ''),
     offset = 0, -- Offset from pattern match
