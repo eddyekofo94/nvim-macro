@@ -70,15 +70,6 @@ return {
 
   {
     'kevinhwang91/rnvimr',
-    cond = function()
-      if vim.fn.executable('ranger') == 1 then
-        vim.g.loaded_netrw = 1
-        vim.g.loaded_netrwPlugin = 1
-        vim.g.loaded_netrwSettings = 1
-        return true
-      end
-      return false
-    end,
     config = function()
       require('configs.rnvimr')
     end,

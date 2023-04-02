@@ -27,6 +27,7 @@ local function manage_plugins(config)
           'tutor',
           'zipPlugin',
           'health',
+          'netrwPlugin',
         },
       },
     },
@@ -55,7 +56,7 @@ if vim.g.vscode then
       { import = 'modules.base' },
       { import = 'modules.treesitter' },
       { import = 'modules.editor' },
-    }
+    },
   })
 else
   manage_plugins({
