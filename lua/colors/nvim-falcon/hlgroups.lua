@@ -44,7 +44,7 @@ sch.PmenuThumb         = { bg = plt.orange } -- Popup menu: Thumb of the scrollb
 sch.Question           = { fg = plt.smoke } -- |hit-enter| prompt and yes/no questions
 sch.QuickFixLine       = { link = 'Visual' } -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
 sch.SignColumn         = { fg = plt.smoke } -- Column where |signs| are displayed
-sch.SpecialKey         = { fg = plt.iron } -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
+sch.SpecialKey         = { fg = plt.orange } -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
 sch.SpellBad           = { underdotted = true } -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
 sch.SpellCap           = { link = 'SpellBad' } -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
 sch.SpellLocal         = { link = 'SpellBad' } -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
@@ -58,7 +58,7 @@ sch.VertSplit          = { fg = plt.deepsea } -- Column separating vertically sp
 sch.Visual             = { bg = plt.deepsea } -- Visual mode selection
 sch.VisualNOS          = { link = 'Visual' } -- Visual mode selection when vim is 'Not Owning the Selection'.
 sch.WarningMsg         = { fg = plt.yellow } -- Warning messages
-sch.Whitespace         = { link = 'SpecialKey' } -- 'nbsp', 'space', 'tab' and 'trail' in 'listchars'
+sch.Whitespace         = { link = 'NonText' } -- 'nbsp', 'space', 'tab' and 'trail' in 'listchars'
 sch.WildMenu           = { link = 'PmenuSel' } -- Current match in 'wildmenu' completion
 sch.Winseparator       = { link = 'VertSplit' } -- Separator between window splits. Inherts from |hl-VertSplit| by default, which it will replace eventually.
 
