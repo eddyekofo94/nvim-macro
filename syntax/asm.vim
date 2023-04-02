@@ -5,7 +5,7 @@
 " Version:      0.16
 " Remark:       Intel and AVR compatible instructions only (for now)
 " License:      BSD (3 clause), see LICENSE
-"
+" Modified by:  Bekaboo Zeng <18127878294@qq.com>
 
 if version < 600
 	syntax clear
@@ -26,7 +26,7 @@ syn match   gasSymbolRef	/\$[-_$.A-Za-z][-_$.A-Za-z0-9]*\>/
 syn match   gasSpecial		/\<[$.]\>/
 
 " constants
-syn region  gasString		start=/"/  end=/"/ skip=/[^\\]\\"/
+syn region  gasString		start=/"/  end=/"/ skip=/\\\\\|\\"/
 syn match   gasCharacter	/'\(?\|\\?\)/
 syn match   gasDecimalNumber	/\$\?-\?\d\+/
 syn match   gasBinaryNumber	/\$\?-\?0b[01]\+/
