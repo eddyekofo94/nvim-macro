@@ -15,12 +15,10 @@ aerial.setup({
         end
       end,
     },
-
+    ['g?'] = 'actions.show_help',
     ['?'] = false,
     ['<C-v>'] = false,
     ['<C-s>'] = false,
-    ['[['] = false,
-    [']]'] = false,
     ['l'] = false,
     ['L'] = false,
     ['h'] = false,
