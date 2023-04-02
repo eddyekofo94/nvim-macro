@@ -5,7 +5,7 @@ local cond = require('nvim-autopairs.conds')
 npairs.setup({
   check_ts = true,
   enable_check_bracket_line = false,
-  ignored_next_char = [=[[%w%%%'%[%"%.%`]]=],
+  ignored_next_char = [=[[%w%%%'%[%"%.%`%$]]=],
   fast_wrap = {
     map = '<M-c>',
     chars = { '{', '[', '(', '"', "'", '`' },
