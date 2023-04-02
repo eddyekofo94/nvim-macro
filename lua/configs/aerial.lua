@@ -37,8 +37,8 @@ aerial.setup({
   manage_folds = false,
   layout = {
     default_direction = 'float',
-    max_width = 0.5,
-    min_width = 0.25,
+    max_width = 0.4,
+    min_width = 0.2,
   },
   float = {
     border = 'shadow',
