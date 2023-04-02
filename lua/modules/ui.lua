@@ -55,4 +55,13 @@ return {
       require('configs.aerial')
     end,
   },
+
+  { -- Requires `sdl2_mixer` and `python-pysdl2`
+    'skywind3000/vim-keysound',
+    cmd = 'KeysoundEnable',
+    event = 'InsertEnter',
+    config = function()
+      require('configs.vim-keysound')
+    end,
+  },
 }
