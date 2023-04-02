@@ -98,8 +98,10 @@ indent_blankline.setup({
   max_indent_increase = 1,
   filetype_exclude = {
     '',
+    'asm',
     'man',
     'help',
+    'text',
     'markdown',
     'checkhealth',
   },
