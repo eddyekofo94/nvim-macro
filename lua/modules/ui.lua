@@ -32,7 +32,7 @@ return {
 
   {
     'lukas-reineke/indent-blankline.nvim',
-    event = { 'BufRead', 'BufWrite' },
+    event = { 'BufRead', 'BufNewFile' },
     config = function()
       require('configs.indent-blankline')
     end,
