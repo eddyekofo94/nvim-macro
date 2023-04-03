@@ -207,7 +207,9 @@ local function cc_redraw()
     return
   end
 
-  local length = vim.fn.strdisplaywidth(vim.api.nvim_get_current_line())
+  -- Fix 'E976: using Blob as a String' after select a snippet
+  -- entry from LSP server using omnifunc (<C-x><C-o>)
+  local length = vim.fn.strdisplaywidth(vim.fn.getline('.'))
   local thresh = math.floor(0.75 * cc)
   if length < thresh then
     win_safe_set_option(0, 'cc', '')
