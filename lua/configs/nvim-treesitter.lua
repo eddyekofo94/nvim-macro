@@ -11,6 +11,9 @@ ts_configs.setup({
   context_commentstring = {
     enable = true,
   },
+  endwise = {
+    enable = true,
+  },
   incremental_selection = {
     enable = true,
     keymaps = {

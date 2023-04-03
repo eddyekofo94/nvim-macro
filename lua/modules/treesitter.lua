@@ -41,4 +41,10 @@ return {
     cmd = 'CellularAutomaton',
     dependencies = 'nvim-treesitter',
   },
+
+  {
+    'RRethy/nvim-treesitter-endwise',
+    ft = ft_list,
+    dependencies = 'nvim-treesitter',
+  },
 }
