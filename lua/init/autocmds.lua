@@ -67,7 +67,8 @@ local autocmds = {
             current = vim.fn.win_getid(),
           }
         end
-        -- Loop through all windows to check if the previous one has been closed
+        -- Loop through all windows to check if the
+        -- previous one has been closed
         for winnr = 1, vim.fn.winnr('$') do
           if vim.fn.win_getid(winnr) == vim.t.winid_rec.prev then
             return -- Return if previous window is not closed
@@ -112,7 +113,43 @@ local autocmds = {
         if tbl.file == '' then
           return
         end
-        local proj_dir = require('utils.funcs').proj_dir(tbl.file)
+
+        ---Compute project directory for given path.
+        ---@param fpath string
+        ---@return string|nil
+        local function find_proj_dir(fpath)
+          if not fpath or fpath == '' then
+            return nil
+          end
+          local root_patterns = {
+            '.git',
+            '.svn',
+            '.bzr',
+            '.hg',
+            '.project',
+            '.pro',
+            '.sln',
+            '.vcxproj',
+            '.editorconfig',
+          }
+          local dirpath = vim.fs.dirname(fpath)
+          local root = vim.fs.find(root_patterns, {
+            path = dirpath,
+            upward = true,
+          })[1]
+          if root and vim.loop.fs_stat(root) then
+            return vim.fs.dirname(root)
+          end
+          if dirpath then
+            local dirstat = vim.loop.fs_stat(dirpath)
+            if dirstat and dirstat.type == 'directory' then
+              return dirpath
+            end
+          end
+          return nil
+        end
+
+        local proj_dir = find_proj_dir(tbl.file)
         if proj_dir then
           vim.cmd.tcd(proj_dir)
         end
