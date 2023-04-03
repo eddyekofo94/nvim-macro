@@ -159,6 +159,21 @@ local autocmds = {
       end,
     },
   },
+
+  {
+    { 'TermOpen', 'WinEnter' },
+    {
+      group = 'TermOptions',
+      callback = function(tbl)
+        if vim.bo[tbl.buf].buftype == 'terminal' then
+          vim.wo.statuscolumn = ''
+          vim.wo.number = false
+          vim.wo.relativenumber = false
+          vim.cmd.startinsert()
+        end
+      end,
+    },
+  },
 }
 
 set_autocmds(autocmds)

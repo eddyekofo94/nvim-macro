@@ -56,10 +56,12 @@ endfunction
 
 command! -nargs=? -count=0 -complete=customlist,floaterm#cmdline#complete_names1
     \ ToggleTool call ToggleTool(<q-args>, <count>)
-nnoremap <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
-tnoremap <silent> <M-i> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
-nnoremap <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
-tnoremap <silent> <C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
+nnoremap <silent> <C-\>g <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
+tnoremap <silent> <C-\>g <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
+nnoremap <silent> <C-\><C-g> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
+tnoremap <silent> <C-\><C-g> <Cmd>execute v:count . 'ToggleTool lazygit'<CR>
+nnoremap <silent> <C-\><C-\>  <Cmd>execute v:count . 'ToggleTool'<CR>
+tnoremap <silent> <C-\><C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
 
 augroup FloatermSetKeymaps
   autocmd!
