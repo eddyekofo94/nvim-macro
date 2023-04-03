@@ -26,6 +26,7 @@ opt.undofile       = true
 opt.updatetime     = 10
 opt.vb             = true
 opt.wrap           = false
+opt.completeopt    = 'menuone'
 
 -- Cursor shape
 -- opt.gcr = 'n-v:block,i-c-ci-ve:blinkoff500-blinkon500-block,r-cr-o:hor20'
