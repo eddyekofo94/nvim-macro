@@ -10,12 +10,12 @@ sch.ColorColumn        = { bg = plt.deepsea } -- Columns set with 'colorcolumn'
 sch.Conceal            = { fg = plt.smoke } -- Placeholder characters substituted for concealed text (see 'conceallevel')
 sch.Cursor             = { fg = plt.space, bg = plt.white } -- Character under the cursor
 sch.CursorColumn       = { bg = plt.ocean_blend } -- Screen-column at the cursor, when 'cursorcolumn' is set.
-sch.CursorIM           = { bg = plt.flashlight, fg = plt.black } -- Like Cursor, but used when in IME mode |CursorIM|
+sch.CursorIM           = { fg = plt.space, bg = plt.flashlight } -- Like Cursor, but used when in IME mode |CursorIM|
 sch.CursorLine         = { bg = plt.ocean_blend } -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
 sch.CursorLineNr       = { fg = plt.orange, bold = true } -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
 sch.lCursor            = { link = 'Cursor' } -- Character under the cursor when |language-mapping| is used (see 'guicursor')
-sch.TermCursor         = { reverse = true } -- Cursor in a focused terminal
-sch.TermCursorNC       = { bg = plt.smoke } -- Cursor in an unfocused terminal
+sch.TermCursor         = { fg = plt.space, bg = plt.orange } -- Cursor in a focused terminal
+sch.TermCursorNC       = { fg = plt.orange, bg = plt.ocean } -- Cursor in an unfocused terminal
 sch.DiffAdd            = { bg = plt.aqua_blend } -- Diff mode: Added line |diff.txt|
 sch.DiffChange         = { bg = plt.purple_blend } -- Diff mode: Changed line |diff.txt|
 sch.DiffDelete         = { fg = plt.wine_blend, bg = plt.wine_blend } -- Diff mode: Deleted line |diff.txt|

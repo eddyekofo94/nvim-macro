@@ -31,7 +31,7 @@ opt.completeopt    = 'menuone'
 -- Cursor shape
 -- opt.gcr = 'n-v:block,i-c-ci-ve:blinkoff500-blinkon500-block,r-cr-o:hor20'
 opt.gcr:append('n-v:block-Cursor/lCursor')
-opt.gcr:append('i-c-ci-ve:blinkoff500-blinkon500-block-Cursor/lCursor')
+opt.gcr:append('i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor/lCursor')
 opt.gcr:append('r-cr:hor20,o:hor50')
 
 opt.backup    = true
