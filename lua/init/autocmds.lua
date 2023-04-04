@@ -215,6 +215,21 @@ local autocmds = {
       end,
     },
   },
+
+  -- Open quickfix window if there are results
+  {
+    { 'QuickFixCmdPost' },
+    {
+      group = 'QuickFixAutoOpen',
+      callback = function(tbl)
+        if vim.startswith(tbl.match, 'l') then
+          vim.cmd.lwindow()
+        else
+          vim.cmd.cwindow()
+        end
+      end,
+    },
+  },
 }
 
 set_autocmds(autocmds)
