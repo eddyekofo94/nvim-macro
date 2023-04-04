@@ -20,17 +20,6 @@ return {
   },
 
   {
-    'goolord/alpha-nvim',
-    cond = function()
-      return vim.fn.argc() == 0 and
-      vim.o.lines >= 36 and vim.o.columns >= 80
-    end,
-    config = function()
-      require('configs.alpha-nvim')
-    end,
-  },
-
-  {
     'lukas-reineke/indent-blankline.nvim',
     event = { 'BufRead', 'BufNewFile' },
     config = function()
