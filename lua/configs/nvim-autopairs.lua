@@ -64,23 +64,24 @@ npairs.setup({
     keys = 'qwertyuiopzxcvbnmasdfghjkl',
     check_comma = true,
     highlight = 'Search',
-    highlight_grey = 'Comment'
-  }
+    highlight_grey = 'Comment',
+  },
 })
 
+-- stylua: ignore start
 npairs.add_rules({
   -- Add spaces between parenthesis
   Rule(' ', ' ')
-      :with_pair(function(opts)
-        local pair_single_char = opts.line:sub(opts.col - 1, opts.col)
-        local pair_double_char = opts.line:sub(opts.col - 2, opts.col + 1)
-        return vim.tbl_contains({ '()', '[]', '{}' }, pair_single_char) or
-            vim.tbl_contains({ '/**/' }, pair_double_char)
-      end)
-      :with_del(function(opts)
-        return vim.fn.match(opts.line:sub(1, opts.col):reverse(),
-          [[\s\((\|[\|{\|\*\/\)]]) == 0
-      end),
+    :with_pair(function(opts)
+      local pair_single_char = opts.line:sub(opts.col - 1, opts.col)
+      local pair_double_char = opts.line:sub(opts.col - 2, opts.col + 1)
+      return vim.tbl_contains({ '()', '[]', '{}' }, pair_single_char)
+        or vim.tbl_contains({ '/**/' }, pair_double_char)
+    end)
+    :with_del(function(opts)
+      return vim.fn.match(opts.line:sub(1, opts.col):reverse(),
+        [[\s\((\|[\|{\|\*\/\)]]) == 0
+    end),
 
   Rule('/*', '*/', { 'c', 'cpp' }),
   Rule('$', '$', { 'markdown', 'tex' })                              : with_pair(cond.none()),
@@ -97,3 +98,4 @@ npairs.add_rules({
   Rule('\\left\\lVert ', ' \\right\\lVert', { 'markdown', 'tex' })   : with_pair(cond.not_before_text('\\right\\lVert')),
   Rule('*', '*', { 'markdown' })                                     : with_pair(cond.none()),
 })
+-- stylua: ignore end
