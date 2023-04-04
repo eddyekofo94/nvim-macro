@@ -98,11 +98,11 @@ local function on_attach(client, bufnr)
     desc = 'Set LSP format-on-save functionality.',
   })
 
-  local augroup = 'LspFormat' .. bufnr
-  vim.api.nvim_create_augroup(augroup, { clear = true })
+  local augroup_fmt = 'LspFormat' .. bufnr
+  vim.api.nvim_create_augroup(augroup_fmt, { clear = true })
   vim.api.nvim_create_autocmd('BufWritePre', {
     buffer = bufnr,
-    group = augroup,
+    group = augroup_fmt,
     callback = function()
       if vim.b.lsp_format_on_save then
         vim.lsp.buf.format({
@@ -112,6 +112,23 @@ local function on_attach(client, bufnr)
       end
     end,
     desc = 'LSP format on save.',
+  })
+
+  -- Disable / enable diagnostics on mode change
+  local augroup_diagnostic = 'LspDiagnostic' .. bufnr
+  vim.api.nvim_create_augroup(augroup_diagnostic, { clear = true })
+  vim.api.nvim_create_autocmd('ModeChanged', {
+    buffer = bufnr,
+    group = augroup_diagnostic,
+    callback = function(tbl)
+      if vim.fn.match(tbl.match, '.*:[iRsS\x13].*') ~= -1 then
+        vim.diagnostic.disable(bufnr)
+        vim.b._lsp_diagnostics_temp_disabled = true
+      elseif vim.b._lsp_diagnostics_temp_disabled then
+        vim.diagnostic.enable(bufnr)
+        vim.b._lsp_diagnostics_temp_disabled = false
+      end
+    end,
   })
 end
 
