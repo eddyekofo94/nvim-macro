@@ -47,8 +47,8 @@ vim.keymap.set({ 'n', 't' }, '<M-g><M-]>', '<C-\\><C-n><C-w>g<C-]>')
 vim.keymap.set({ 'n', 't' }, '<M-g><Tab>', '<C-\\><C-n><C-w>g<Tab>')
 
 -- Up/down motions
-vim.keymap.set('n', 'j', 'v:count ? "j" : "gj"', { expr = true })
-vim.keymap.set('n', 'k', 'v:count ? "k" : "gk"', { expr = true })
+vim.keymap.set({ 'n', 'x' }, 'j', 'v:count ? "j" : "gj"', { expr = true })
+vim.keymap.set({ 'n', 'x' }, 'k', 'v:count ? "k" : "gk"', { expr = true })
 
 -- Buffer navigation
 vim.keymap.set('n', '<Tab>', '<Cmd>bn<CR>')
