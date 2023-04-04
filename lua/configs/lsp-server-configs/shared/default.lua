@@ -1,5 +1,6 @@
 local function on_attach(client, bufnr)
   -- Use an on_attach function to only map the following keys
+  -- stylua: ignore start
   vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder,                                                      { buffer = bufnr })
   vim.keymap.set('n', '<Leader>wd', vim.lsp.buf.remove_workspace_folder,                                                   { buffer = bufnr })
   vim.keymap.set('n', '<Leader>wl', function() vim.print(vim.lsp.buf.list_workspace_folders()) end,                        { buffer = bufnr })
@@ -14,6 +15,7 @@ local function on_attach(client, bufnr)
   vim.keymap.set('n', ']E',         function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end, { buffer = bufnr })
   vim.keymap.set('n', '[W',         function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN }) end,  { buffer = bufnr })
   vim.keymap.set('n', ']W',         function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN }) end,  { buffer = bufnr })
+  -- stylua: ignore end
   vim.keymap.set('n', 'gd', function()
     if not client.supports_method('textDocument/definition') then
       vim.api.nvim_feedkeys('gd', 'in', false)
@@ -38,80 +40,63 @@ local function on_attach(client, bufnr)
 
   -- Format on save
   vim.b.lsp_format_on_save = vim.g.lsp_format_on_save
-  vim.api.nvim_buf_create_user_command(
-    bufnr,
-    'LspFormat',
-    function(tbl)
-      vim.lsp.buf.format({
-        bufnr = bufnr,
-        range = {
-          ['start'] = { tbl.line1, 0 },
-          ['end'] = { tbl.line2, 999 },
-        }
-      })
-    end,
-    {
-      range = '%',
-      desc = 'Format current buffer with LSP.',
-    }
-  )
-  vim.api.nvim_buf_create_user_command(
-    bufnr,
-    'LspFormatOnSave',
-    function(tbl)
-      if vim.tbl_contains(tbl.fargs, '?') then
-        vim.notify(
-          '[LSP] format-on-save: turned '
-            .. (vim.b.lsp_format_on_save and 'on' or 'off')
-            .. ' locally, '
-            .. (vim.g.lsp_format_on_save and 'enabled' or 'disabled')
-            .. ' globally',
-          vim.log.levels.INFO
-        )
-        return
-      end
-
-      local global = not vim.tbl_contains(tbl.fargs, '--local')
-
-      if vim.tbl_contains(tbl.fargs, 'on') then
-        vim.b.lsp_format_on_save = true
-        if global then
-          vim.g.lsp_format_on_save = true
-        end
-      elseif vim.tbl_contains(tbl.fargs, 'off') then
-        vim.b.lsp_format_on_save = false
-        if global then
-          vim.g.lsp_format_on_save = false
-        end
-      else -- toggle
-        vim.b.lsp_format_on_save = not vim.b.lsp_format_on_save
-        vim.g.lsp_format_on_save = vim.b.lsp_format_on_save
-      end
-
+  vim.api.nvim_buf_create_user_command(bufnr, 'LspFormat', function(tbl)
+    vim.lsp.buf.format({
+      bufnr = bufnr,
+      range = {
+        ['start'] = { tbl.line1, 0 },
+        ['end'] = { tbl.line2, 999 },
+      },
+    })
+  end, {
+    range = '%',
+    desc = 'Format current buffer with LSP.',
+  })
+  vim.api.nvim_buf_create_user_command(bufnr, 'LspFormatOnSave', function(tbl)
+    if vim.tbl_contains(tbl.fargs, '?') then
       vim.notify(
-        '[LSP] format-on-save: '
-          .. (vim.b.lsp_format_on_save and 'on' or 'off'),
+        '[LSP] format-on-save: turned '
+          .. (vim.b.lsp_format_on_save and 'on' or 'off')
+          .. ' locally, '
+          .. (vim.g.lsp_format_on_save and 'enabled' or 'disabled')
+          .. ' globally',
         vim.log.levels.INFO
       )
+      return
+    end
+
+    local global = not vim.tbl_contains(tbl.fargs, '--local')
+
+    if vim.tbl_contains(tbl.fargs, 'on') then
+      vim.b.lsp_format_on_save = true
+      if global then
+        vim.g.lsp_format_on_save = true
+      end
+    elseif vim.tbl_contains(tbl.fargs, 'off') then
+      vim.b.lsp_format_on_save = false
+      if global then
+        vim.g.lsp_format_on_save = false
+      end
+    else -- toggle
+      vim.b.lsp_format_on_save = not vim.b.lsp_format_on_save
+      vim.g.lsp_format_on_save = vim.b.lsp_format_on_save
+    end
+
+    vim.notify(
+      '[LSP] format-on-save: ' .. (vim.b.lsp_format_on_save and 'on' or 'off'),
+      vim.log.levels.INFO
+    )
+  end, {
+    nargs = '*',
+    complete = function(arg_before, _, _)
+      local completion = {
+        [''] = { 'on', 'off', 'toggle' },
+        ['--'] = { 'local' },
+      }
+      return completion[arg_before] or {}
     end,
-    {
-      nargs = '*',
-      complete = function(arg_before, _, _)
-        local completion = {
-          [''] = {
-            'on',
-            'off',
-            'toggle',
-          },
-          ['--'] = {
-            'local',
-          },
-        }
-        return completion[arg_before] or {}
-      end,
-      desc = 'Set LSP format-on-save functionality.',
-    }
-  )
+    desc = 'Set LSP format-on-save functionality.',
+  })
 
   local augroup = 'LspFormat' .. bufnr
   vim.api.nvim_create_augroup(augroup, { clear = true })
