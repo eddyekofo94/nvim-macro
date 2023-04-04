@@ -42,7 +42,7 @@ function utils.is_in_quotes(line, pos, quote_type)
       result == false
       and utils.is_quote(char)
       and (not quote_type or char == quote_type)
-      and not char_before:match('%w')
+      and not (char == "'" and char_before:match('%w'))
     then
       last_char = quote_type or char
       result = true
