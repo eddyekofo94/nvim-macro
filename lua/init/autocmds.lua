@@ -176,8 +176,11 @@ local autocmds = {
       group = 'RestoreBackground',
       callback = function()
         if not vim.g.background_restored then
-          vim.opt.background = vim.g.BACKGROUND or 'dark'
           vim.g.background_restored = true
+          local background = vim.g.BACKGROUND or 'dark'
+          if vim.go.background ~= background then
+            vim.go.background = background
+          end
         end
       end,
       once = true,
