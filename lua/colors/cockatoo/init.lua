@@ -1,8 +1,7 @@
 local M = {}
 
 function M.apply()
-  vim.cmd('syntax reset')
-  vim.cmd('hi clear')
+  vim.cmd.hi('clear')
   package.loaded['colors.cockatoo.hlgroups'] = nil
   local hlgroups = require('colors.cockatoo.hlgroups')
 
