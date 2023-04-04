@@ -39,7 +39,7 @@ M.langs = setmetatable({
     formatting = 'clang-format',
   },
   help = {
-    ts = 'help',
+    ts = 'vimdoc',
     ft = 'help',
   },
   lua = {
