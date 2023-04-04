@@ -200,6 +200,7 @@ local autocmds = {
     },
   },
 
+  -- Terminal options
   {
     { 'TermOpen', 'WinEnter' },
     {
