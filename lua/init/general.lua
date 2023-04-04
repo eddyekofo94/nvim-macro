@@ -81,7 +81,7 @@ g.loaded_netrw           = 1
 g.loaded_netrwPlugin     = 1
 
 -- colorscheme
-cmd('colorscheme nvim-falcon')
+cmd('colorscheme cockatoo')
 
 -- abbreviations
 cmd('cnoreabbrev qa qa!')

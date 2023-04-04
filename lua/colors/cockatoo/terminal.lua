@@ -1,4 +1,4 @@
-local plt = require('colors.nvim-falcon.palette')
+local plt = require('colors.cockatoo.palette')
 
 local termcolors = {}
 

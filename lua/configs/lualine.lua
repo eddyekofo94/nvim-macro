@@ -1,4 +1,4 @@
-vim.opt.rtp:append(vim.fn.stdpath('config') .. '/lua/colors/nvim-falcon')
+vim.opt.rtp:append(vim.fn.stdpath('config') .. '/lua/colors/cockatoo')
 
 local function lualine_config()
   local function location()
@@ -46,8 +46,8 @@ local function lualine_config()
     return string.format('[%s/%s]', info.current, info.total)
   end
 
-  package.loaded['colors.nvim-falcon.palette'] = nil
-  local palette = require('colors.nvim-falcon.palette')
+  package.loaded['colors.cockatoo.palette'] = nil
+  local palette = require('colors.cockatoo.palette')
   local icons = require('utils.static').icons
   local current_lsp_clients = {} -- cache for lsp clients
 

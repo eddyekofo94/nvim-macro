@@ -1,5 +1,5 @@
-package.loaded['colors.nvim-falcon.palette'] = nil
-local plt = require('colors.nvim-falcon.palette')
+package.loaded['colors.cockatoo.palette'] = nil
+local plt = require('colors.cockatoo.palette')
 local sch = {}
 
 -- Common highlight groups

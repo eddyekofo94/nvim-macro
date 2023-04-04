@@ -15,7 +15,7 @@ local function manage_plugins(config)
       notify = false,
     },
     install = {
-      colorscheme = { 'nvim-falcon' },
+      colorscheme = { 'cockatoo' },
     },
     performance = {
       rtp = {
