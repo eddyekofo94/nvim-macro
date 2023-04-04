@@ -235,6 +235,7 @@ sch['@lsp.type.typeParameter'] = { link = 'Parameter' }
 -- HTML
 sch.htmlArg            = { fg = plt.pigeon }
 sch.htmlBold           = { bold = true }
+sch.htmlBoldItalic     = { bold = true, italic = true }
 sch.htmlTag            = { fg = plt.smoke }
 sch.htmlTagName        = { link = 'Tag' }
 sch.htmlSpecialTagName = { fg = plt.yellow }
