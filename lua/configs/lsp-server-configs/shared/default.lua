@@ -41,10 +41,19 @@ local function on_attach(client, bufnr)
   vim.api.nvim_buf_create_user_command(
     bufnr,
     'LspFormat',
-    function()
-      vim.lsp.buf.format({ bufnr = bufnr })
+    function(tbl)
+      vim.lsp.buf.format({
+        bufnr = bufnr,
+        range = {
+          ['start'] = { tbl.line1, 0 },
+          ['end'] = { tbl.line2, 999 },
+        }
+      })
     end,
-    { desc = 'Format current buffer with LSP.' }
+    {
+      range = '%',
+      desc = 'Format current buffer with LSP.',
+    }
   )
   vim.api.nvim_buf_create_user_command(
     bufnr,
