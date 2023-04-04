@@ -1,7 +1,7 @@
 local hl_spellbad = {}
 
 vim.api.nvim_create_augroup('AutoSpell', { clear = true })
-vim.api.nvim_create_autocmd({ 'ColorScheme', 'UIEnter' }, {
+vim.api.nvim_create_autocmd({ 'ColorScheme', 'BufWinEnter' }, {
   pattern = '*',
   group = 'AutoSpell',
   callback = function()
