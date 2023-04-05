@@ -193,7 +193,7 @@ sch['@symbol']                = { link = 'Identifier' }
 sch['@text']                  = { link = 'String' }
 sch['@text.title']            = { link = 'Title' }
 sch['@text.literal']          = { link = 'String' }
-sch['@text.uri']              = { link = 'Underlined' }
+sch['@text.uri']              = { link = 'htmlLink' }
 sch['@text.math']             = { link = 'Special' }
 sch['@text.environment']      = { link = 'Macro' }
 sch['@text.environment.name'] = { link = 'Type' }
