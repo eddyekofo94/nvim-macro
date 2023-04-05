@@ -256,6 +256,9 @@ sch.jsonBraces         = { fg = plt.smoke }
 -- Markdown
 sch.markdownBold       = { fg = plt.aqua, bold = true }
 sch.markdownBoldItalic = { fg = plt.skyblue, bold = true, italic = true }
+sch.markdownCode       = { fg = plt.pigeon }
+sch.markdownError      = { link = 'None' }
+sch.markdownListMarker = { fg = plt.yellow, bold = true }
 
 -- Plugin highlights
 -- nvim-cmp
