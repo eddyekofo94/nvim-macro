@@ -1,4 +1,21 @@
-local function on_attach(client, bufnr)
+---Check if there exists an LS that supports the given method
+---for the given buffer
+---@param method string the method to check for
+---@param bufnr number buffer handler
+local function supports_method(method, bufnr)
+  local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+  for _, client in ipairs(clients) do
+    if client.supports_method(method) then
+      return true
+    end
+  end
+  return false
+end
+
+---Set up keymaps and commands
+---@param _ table LS client, ignored
+---@param bufnr number buffer handler
+local function on_attach(_, bufnr)
   -- Use an on_attach function to only map the following keys
   -- stylua: ignore start
   vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder,                                                      { buffer = bufnr })
@@ -17,25 +34,25 @@ local function on_attach(client, bufnr)
   vim.keymap.set('n', ']W',         function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN }) end,  { buffer = bufnr })
   -- stylua: ignore end
   vim.keymap.set('n', 'gd', function()
-    if not client.supports_method('textDocument/definition') then
+    if supports_method('textDocument/definition', bufnr) then
+      vim.lsp.buf.definition()
+    else
       vim.api.nvim_feedkeys('gd', 'in', false)
-      return
     end
-    vim.lsp.buf.definition()
   end, { buffer = bufnr })
   vim.keymap.set('n', 'gD', function()
-    if not client.supports_method('textDocument/typeDefinition') then
+    if supports_method('textDocument/typeDefinition', bufnr) then
+      vim.lsp.buf.type_definition()
+    else
       vim.api.nvim_feedkeys('gD', 'in', false)
-      return
     end
-    vim.lsp.buf.type_definition()
   end, { buffer = bufnr })
   vim.keymap.set('n', 'K', function()
-    if not client.supports_method('textDocument/hover') then
+    if supports_method('textDocument/hover', bufnr) then
+      vim.lsp.buf.hover()
+    else
       vim.api.nvim_feedkeys('K', 'in', false)
-      return
     end
-    vim.lsp.buf.hover()
   end, { buffer = bufnr })
 
   -- Format on save
