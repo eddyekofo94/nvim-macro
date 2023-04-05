@@ -98,6 +98,7 @@ local autocmds = {
         -- if in range, go there
         if (line > 1) and (line <= vim.api.nvim_buf_line_count(0)) then
           vim.api.nvim_win_set_cursor(0, { line, col })
+          vim.cmd.normal({ 'zvzz', bang = true })
         end
       end,
     },
