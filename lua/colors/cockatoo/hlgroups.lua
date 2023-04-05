@@ -309,7 +309,7 @@ sch.GitSignsDeletePreview            = { fg = plt.scarlet, bg = plt.wine_blend }
 -- barbar
 sch.BufferCurrent        = { fg = plt.smoke }
 sch.BufferCurrentIndex   = { fg = plt.orange, bold = true }
-sch.BufferCurrentMod     = { fg = plt.orange, bold = true }
+sch.BufferCurrentMod     = { fg = plt.orange }
 sch.BufferCurrentSign    = { fg = plt.orange }
 sch.BufferInactive       = { fg = plt.pigeon, bg = plt.deepsea }
 sch.BufferInactiveIcon   = { link = 'StatusLine' }
@@ -319,7 +319,7 @@ sch.BufferInactiveSign   = { fg = plt.pigeon, bg = plt.deepsea }
 sch.BufferInactiveTarget = { fg = plt.wine, bg = plt.deepsea }
 sch.BufferVisible        = { fg = plt.pigeon }
 sch.BufferVisibleIndex   = { fg = plt.pigeon }
-sch.BufferVisibleMod     = { fg = plt.orange }
+sch.BufferVisibleMod     = { fg = plt.yellow }
 sch.BufferTabpageFill    = { fg = plt.pigeon, bg = plt.ocean }
 
 -- telescope
