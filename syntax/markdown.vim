@@ -103,14 +103,14 @@ syn cluster mkdNonListItem contains=@htmlTop,htmlItalic,htmlBold,htmlBoldItalic,
 
 "highlighting for Markdown groups
 HtmlHiLink mkdString           String
-HtmlHiLink mkdCode             String
-HtmlHiLink mkdCodeDelimiter    String
-HtmlHiLink mkdCodeStart        String
-HtmlHiLink mkdCodeEnd          String
+HtmlHiLink mkdCode             markdownCode
+HtmlHiLink mkdCodeDelimiter    Delimiter
+HtmlHiLink mkdCodeStart        markdownCode
+HtmlHiLink mkdCodeEnd          markdownCode
 HtmlHiLink mkdFootnote         Comment
 HtmlHiLink mkdBlockquote       Comment
-HtmlHiLink mkdListItem         Identifier
-HtmlHiLink mkdListItemCheckbox Identifier
+HtmlHiLink mkdListItem         markdownListMarker
+HtmlHiLink mkdListItemCheckbox markdownListMarker
 HtmlHiLink mkdRule             Identifier
 HtmlHiLink mkdLineBreak        Visual
 HtmlHiLink mkdFootnotes        htmlLink
