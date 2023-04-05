@@ -53,8 +53,10 @@ end
 
 npairs.setup({
   check_ts = true,
+  map_c_h = true,
+  map_c_w = true,
   enable_check_bracket_line = false,
-  ignored_next_char = [=[[%w%%%'%[%"%.%`%$]]=],
+  ignored_next_char = [=[[%w%%%'%[%"%.%`]]=],
   fast_wrap = {
     map = '<M-c>',
     chars = { '{', '[', '(', '"', "'", '`' },
