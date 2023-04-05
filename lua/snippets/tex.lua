@@ -73,11 +73,15 @@ M.style = {
 
 M.style_auto = {
   snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
-    s({ trig = '^[^\\]- ', regTrig = true }, { t('\\item') }),
-    s({ trig = '\\item(%w)', regTrig = true }, d(1, function(_, snip)
+    s({ trig = '^(%s*)- ', regTrig = true },
+      f(function(_, parent, _)
+        return parent.captures[1] .. '\\item'
+      end)),
+    s({ trig = '\\item(%w)', regTrig = true },
+      d(1, function(_, snip)
         return sn(nil, { t('\\item{' .. snip.captures[1]), i(1), t('}') })
-      end))
-    }),
+      end)),
+  }),
   opts = { type = 'autosnippets' },
 }
 
