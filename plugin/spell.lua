@@ -1,11 +1,15 @@
-local hl_spellbad = {}
+local hl_spellbad = nil
 
 vim.api.nvim_create_augroup('AutoSpell', { clear = true })
-vim.api.nvim_create_autocmd({ 'ColorScheme', 'UIEnter' }, {
+vim.api.nvim_create_autocmd({ 'ColorScheme', 'BufWinEnter', 'UIEnter' }, {
   pattern = '*',
   group = 'AutoSpell',
-  callback = function()
-    hl_spellbad = vim.api.nvim_get_hl(0, { name = 'SpellBad' })
+  callback = function(tbl)
+    if tbl.event == 'ColorScheme' then
+      hl_spellbad = vim.api.nvim_get_hl(0, { name = 'SpellBad' })
+    elseif not hl_spellbad then
+      hl_spellbad = vim.api.nvim_get_hl(0, { name = 'SpellBad' })
+    end
     local mode = vim.fn.mode()
     if not vim.startswith(mode, 'i') and not vim.startswith(mode, 'R') then
       vim.cmd.hi('clear SpellBad')
