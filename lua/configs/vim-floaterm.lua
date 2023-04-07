@@ -65,6 +65,10 @@ tnoremap <silent> <C-\><C-\> <Cmd>execute v:count . 'ToggleTool'<CR>
 
 augroup FloatermSetKeymaps
   autocmd!
+  autocmd User FloatermOpen nnoremap <buffer> <silent> <C-K> <Cmd>FloatermPrev<CR>
+  autocmd User FloatermOpen tnoremap <buffer> <silent> <C-K> <Cmd>FloatermPrev<CR>
+  autocmd User FloatermOpen nnoremap <buffer> <silent> <C-J> <Cmd>FloatermNext<CR>
+  autocmd User FloatermOpen tnoremap <buffer> <silent> <C-J> <Cmd>FloatermNext<CR>
   autocmd User FloatermOpen nnoremap <buffer> <silent> <C-S-K> <Cmd>FloatermPrev<CR>
   autocmd User FloatermOpen tnoremap <buffer> <silent> <C-S-K> <Cmd>FloatermPrev<CR>
   autocmd User FloatermOpen nnoremap <buffer> <silent> <S-NL> <Cmd>FloatermNext<CR>
