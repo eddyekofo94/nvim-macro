@@ -42,6 +42,11 @@ M.langs = setmetatable({
     ts = 'vimdoc',
     ft = 'help',
   },
+  javascript = {
+    ts = 'javascript',
+    ft = 'javascript',
+    lsp_server = 'tsserver',
+  },
   lua = {
     ts = 'lua',
     ft = 'lua',
