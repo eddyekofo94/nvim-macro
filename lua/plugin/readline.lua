@@ -137,7 +137,7 @@ function M.init()
 
   map('!', '<M-b>', '<S-Left>')
   map('c', '<M-f>', '<S-Right>')
-  map('i', '<M-f>', '<Cmd>normal! e<Right><CR>')
+  map('i', '<M-f>', '<Cmd>normal! e<CR><Right>')
   map('!', '<C-BS>', '<C-w>')
   map('!', '<M-BS>', '<C-w>')
   map('!', '<M-Del>', '<C-w>')
