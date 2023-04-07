@@ -95,10 +95,10 @@ ts_configs.setup({
     swap = {
       enable = true,
       swap_next = {
-        ['<C-S-L>'] = '@parameter.inner'
+        ['<M-C-L>']   = '@parameter.inner',
       },
       swap_previous = {
-        ['<C-S-H>'] = '@parameter.inner'
+        ['<M-C-H>']   = '@parameter.inner',
       },
     },
     lsp_interop = {
