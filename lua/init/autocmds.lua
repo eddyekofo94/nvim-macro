@@ -232,6 +232,15 @@ local autocmds = {
       end,
     },
   },
+
+  -- Make window equal size on VimResized
+  {
+    { 'VimResized' },
+    {
+      group = 'EqualWinSize',
+      command = 'wincmd =',
+    },
+  },
 }
 
 set_autocmds(autocmds)
