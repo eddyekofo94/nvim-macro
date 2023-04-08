@@ -60,10 +60,10 @@ local function on_attach(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'LspFormat', function(tbl)
     vim.lsp.buf.format({
       bufnr = bufnr,
-      range = {
+      range = tbl.range > 0 and {
         ['start'] = { tbl.line1, 0 },
         ['end'] = { tbl.line2, 999 },
-      },
+      } or nil,
     })
   end, {
     range = '%',
