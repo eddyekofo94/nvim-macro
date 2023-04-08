@@ -57,6 +57,18 @@ local function null_ls_on_attach(_, bufnr)
   })
 end
 
+---Get null-ls config for a given source
+---@param type string source type
+---@param name string source name
+local function null_ls_config_source(type, name)
+  local ok, config =
+    pcall(require, 'configs.null-ls-configs.' .. type .. '.' .. name)
+  if not ok then
+    return null_ls.builtins[type][name]
+  end
+  return config.config(null_ls.builtins[type][name])
+end
+
 ---Get null-ls sources
 ---@return table null-ls sources
 local function null_ls_get_sources()
@@ -72,7 +84,7 @@ local function null_ls_get_sources()
     local source_names = langs:list(type)
     for _, name in ipairs(source_names) do
       name = name:gsub('-', '_')
-      table.insert(sources, null_ls.builtins[type][name])
+      table.insert(sources, null_ls_config_source(type, name))
     end
   end
   return sources
