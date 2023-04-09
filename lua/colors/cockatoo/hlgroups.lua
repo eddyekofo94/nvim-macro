@@ -139,7 +139,6 @@ sch.DiagnosticSignWarn         = { link = 'DiagnosticWarn' } -- Used for 'Warn' 
 sch.DiagnosticSignInfo         = { link = 'DiagnosticInfo' } -- Used for 'Info' signs in sign column.
 sch.DiagnosticSignHint         = { link = 'DiagnosticHint' } -- Used for 'Hint' signs in sign column.
 
-sch.rainbowcol1               = { fg = plt.smoke } -- default light is too bright
 sch['@field']                 = { link = 'Field' }
 sch['@property']              = { link = 'Field' }
 sch['@annotation']            = { link = 'Operator' }
@@ -258,7 +257,7 @@ sch.markdownBold       = { fg = plt.aqua, bold = true }
 sch.markdownBoldItalic = { fg = plt.skyblue, bold = true, italic = true }
 sch.markdownCode       = { fg = plt.pigeon }
 sch.markdownError      = { link = 'None' }
-sch.markdownListMarker = { fg = plt.yellow, bold = true }
+sch.markdownListMarker = { fg = plt.orange }
 
 -- Plugin highlights
 -- nvim-cmp
