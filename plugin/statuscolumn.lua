@@ -78,9 +78,8 @@ function _G.get_statuscol()
   local statuscol = {}
 
   local parts = {
-    ['dapdiags'] = "%{%v:lua.get_sign(bufnr(),v:lnum,['Dap','Diagnostic'],'dapdiags')%}",
-    ['align'] = '%=',
-    ['num'] = '%{v:relnum?v:relnum:v:lnum}',
+    ['dapdiags'] = "%{%v:virtnum?'':v:lua.get_sign(bufnr(),v:lnum,['Dap','Diagnostic'],'dapdiags')%}",
+    ['num'] = "%=%{%v:virtnum?'':(&nu?(&rnu?(v:relnum?v:relnum:printf('%-'.len(line('$')).'S',v:lnum)):v:lnum):(&rnu?v:relnum:''))%}",
     ['space'] = ' ',
     ['fold'] = '%C',
     ['gitsigns'] = "%{%v:lua.get_sign(bufnr(),v:lnum,['GitSigns'],'gitsigns')%}",
@@ -89,7 +88,6 @@ function _G.get_statuscol()
   local order = {
     'dapdiags',
     'space',
-    'align',
     'num',
     'space',
     'gitsigns',
