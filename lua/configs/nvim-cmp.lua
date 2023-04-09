@@ -254,3 +254,11 @@ cmp.setup.cmdline(':', {
     { name = 'cmdline', group_index = 2 },
   },
 })
+
+-- Completion in DAP buffers
+cmp.setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
+  enabled = true,
+  sources = {
+    { name = 'dap' },
+  },
+})

@@ -45,6 +45,12 @@ return {
   },
 
   {
+    'rcarriga/cmp-dap',
+    event = 'InsertEnter',
+    dependencies = 'nvim-cmp',
+  },
+
+  {
     'saadparwaiz1/cmp_luasnip',
     event = { 'BufReadPost', 'InsertEnter' },
     dependencies = { 'nvim-cmp', 'LuaSnip' },
