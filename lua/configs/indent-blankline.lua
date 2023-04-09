@@ -60,9 +60,9 @@ end
 -- Disable indent-blankline when in visual mode
 vim.api.nvim_create_autocmd('ModeChanged', {
   group = 'IndentBlankLineFix',
-  pattern = { '[vV\x16]*:*', '*:[vV\x16]*' },
+  pattern = { '[vV\x16sS\x13]*:*', '*:[vV\x16sS\x13]*' },
   callback = function()
-    if vim.fn.match(vim.v.event.new_mode, '[vV\x16]') ~= -1 then
+    if vim.fn.match(vim.v.event.new_mode, '[vV\x16sS\x13]') ~= -1 then
       indent_blankline_temp_disable()
     else
       indent_blankline_recover()
