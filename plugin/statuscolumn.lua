@@ -68,44 +68,23 @@ function _G.get_sign(bufnum, lnum, prefixes, cachekey)
   return mk_hl(sign_def[1].texthl, sign_def[1].text)
 end
 
----Get statuscolumn string
----@return string statuscol statuscolumn string representation
-function _G.get_statuscol()
-  local statuscol = {}
-
-  local parts = {
-    ['dapdiags'] = "%{%v:virtnum?'':v:lua.get_sign(bufnr(),v:lnum,['Dap','Diagnostic'],'dapdiags')%}",
-    ['num'] = "%=%{%v:virtnum?'':(&nu?(&rnu?(v:relnum?v:relnum:printf('%-'.len(line('$')).'S',v:lnum)):v:lnum):(&rnu?v:relnum:''))%}",
-    ['space'] = ' ',
-    ['fold'] = '%C',
-    ['gitsigns'] = "%{%v:lua.get_sign(bufnr(),v:lnum,['GitSigns'],'gitsigns')%}",
-  }
-
-  local order = {
-    'dapdiags',
-    'space',
-    'num',
-    'space',
-    'gitsigns',
-    'fold',
-    'space',
-  }
-
-  for _, val in ipairs(order) do
-    table.insert(statuscol, parts[val])
-  end
-
-  return table.concat(statuscol)
-end
-
 vim.api.nvim_create_augroup('StatusColumn', {})
 vim.api.nvim_create_autocmd('BufWinEnter', {
   group = 'StatusColumn',
   callback = function(tbl)
     if tbl.file and vim.loop.fs_stat(tbl.file) and vim.bo.bt == '' then
-      vim.wo.statuscolumn = '%!v:lua.get_statuscol()'
-      return
+      -- 1. Diagnostic / Dap signs
+      -- 2. Line number
+      -- 3. Git signs
+      -- 4. Fold column
+      vim.wo.statuscolumn = table.concat({
+        "%{%v:virtnum?'':v:lua.get_sign(bufnr(),v:lnum,['Dap','Diagnostic'],'dapdiags')%} ",
+        "%=%{%v:virtnum?'':(&nu?(&rnu?(v:relnum?v:relnum:printf('%-'.len(line('$')).'S',v:lnum)):v:lnum):(&rnu?v:relnum:''))%} ",
+        "%{%v:lua.get_sign(bufnr(),v:lnum,['GitSigns'],'gitsigns')%}",
+        '%C ',
+      })
+    else
+      vim.wo.statuscolumn = ''
     end
-    vim.wo.statuscolumn = ''
   end,
 })
