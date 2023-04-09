@@ -212,7 +212,6 @@ local autocmds = {
           vim.wo.statuscolumn = ''
           vim.wo.number = false
           vim.wo.relativenumber = false
-          vim.cmd.startinsert()
         end
       end,
     },
