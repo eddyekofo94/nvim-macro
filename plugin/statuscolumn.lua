@@ -1,6 +1,5 @@
 local cache = {}
 
-
 ---Get string representation of sign with highlight
 ---@param hl string name of the highlight group
 ---@param sym string sign symbol
@@ -8,7 +7,6 @@ local cache = {}
 local function mk_hl(hl, sym)
   return table.concat({ '%#', hl, '#', sym, '%*' })
 end
-
 
 ---Get sign definition
 ---@param sign_name string sign name
@@ -33,7 +31,6 @@ local function get_sign_def(sign_name, cachekey)
 
   return sign_def
 end
-
 
 ---Return the sign at current line
 ---@param bufnum integer current buffer number
@@ -71,7 +68,6 @@ function _G.get_sign(bufnum, lnum, prefixes, cachekey)
   return mk_hl(sign_def[1].texthl, sign_def[1].text)
 end
 
-
 ---Get statuscolumn string
 ---@return string statuscol statuscolumn string representation
 function _G.get_statuscol()
@@ -101,7 +97,6 @@ function _G.get_statuscol()
 
   return table.concat(statuscol)
 end
-
 
 vim.api.nvim_create_augroup('StatusColumn', {})
 vim.api.nvim_create_autocmd('BufWinEnter', {
