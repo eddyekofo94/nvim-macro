@@ -25,7 +25,8 @@ return {
     },
     dependencies = {
       'plenary.nvim',
-      'telescope-fzf-native.nvim'
+      'telescope-fzf-native.nvim',
+      'telescope-undo.nvim',
     },
     config = function()
       require('configs.telescope')
