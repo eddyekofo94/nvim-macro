@@ -209,9 +209,9 @@ local autocmds = {
       group = 'TermOptions',
       callback = function(tbl)
         if vim.bo[tbl.buf].buftype == 'terminal' then
-          vim.wo.statuscolumn = ''
-          vim.wo.number = false
-          vim.wo.relativenumber = false
+          vim.cmd.setlocal('nonu')
+          vim.cmd.setlocal('nornu')
+          vim.cmd.setlocal('statuscolumn=')
         end
       end,
     },
