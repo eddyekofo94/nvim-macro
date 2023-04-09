@@ -10,6 +10,16 @@ vim.g.rnvimr_action = {
   ['gw'] = 'JumpNvimCwd',
   ['yw'] = 'EmitRangerCwd',
 }
+vim.g.rnvimr_layout = {
+  relative = 'editor',
+  anchor = 'NW',
+  row = math.floor(0.15 * vim.go.lines),
+  col = math.ceil(0.13 * vim.go.columns),
+  width = math.floor(0.74 * vim.go.columns),
+  height = math.floor(0.7 * vim.go.lines),
+  style = 'minimal',
+  border = 'shadow',
+}
 
 local function change_highlight_colorscheme()
   if vim.o.background == 'dark' then
