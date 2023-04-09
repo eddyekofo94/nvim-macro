@@ -79,7 +79,7 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
       -- 4. Fold column
       vim.wo.statuscolumn = table.concat({
         "%{%v:virtnum?'':v:lua.get_sign(bufnr(),v:lnum,['Dap','Diagnostic'],'dapdiags')%} ",
-        "%=%{%v:virtnum?'':(&nu?(&rnu?(v:relnum?v:relnum:printf('%-'.len(line('$')).'S',v:lnum)):v:lnum):(&rnu?v:relnum:''))%} ",
+        "%=%{%v:virtnum?'':(&nu?(&rnu?(v:relnum?v:relnum:printf('%-'.max([3,len(line('$'))]).'S',v:lnum)):v:lnum):(&rnu?v:relnum:''))%} ",
         "%{%v:lua.get_sign(bufnr(),v:lnum,['GitSigns'],'gitsigns')%}",
         '%C ',
       })
