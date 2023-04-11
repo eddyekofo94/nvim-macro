@@ -42,8 +42,8 @@ local function lspconfig_diagnostic()
     })
   end
 
-  vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
+  vim.lsp.handlers['textDocument/publishDiagnostics'] =
+    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
       -- Enable underline, use default values
       underline = true,
       -- Enable virtual text, override spacing to 4
@@ -72,12 +72,33 @@ local function lspconfig_info_win()
   })
 end
 
+local function lspconfig_goto_handers()
+  local handlers = {
+    ['textDocument/references'] = vim.lsp.handlers['textDocument/references'],
+    ['textDocument/definition'] = vim.lsp.handlers['textDocument/definition'],
+    ['textDocument/declaration'] = vim.lsp.handlers['textDocument/declaration'],
+    ['textDocument/implementation'] = vim.lsp.handlers['textDocument/implementation'],
+    ['textDocument/typeDefinition'] = vim.lsp.handlers['textDocument/typeDefinition'],
+  }
+  for method, handler in pairs(handlers) do
+    vim.lsp.handlers[method] = function(err, result, ctx, cfg)
+      if not result or type(result) == 'table' and vim.tbl_isempty(result) then
+        vim.notify(
+          '[LSP] no ' .. method:match('/(%w*)$') .. ' found',
+          vim.log.levels.WARN
+        )
+      end
+      handler(err, result, ctx, cfg)
+    end
+  end
+end
+
 ---Get LSP server default config from lspconfig
 ---@param server_name string LSP server name
 ---@return table config
 local function get_server_config(server_name)
   local status, config =
-      pcall(require, 'configs.lsp-server-configs.' .. server_name)
+    pcall(require, 'configs.lsp-server-configs.' .. server_name)
   if not status then
     return require('configs.lsp-server-configs.shared.default')
   else
@@ -95,4 +116,5 @@ end
 lspconfig_floating_win()
 lspconfig_diagnostic()
 lspconfig_info_win()
+lspconfig_goto_handers()
 lsp_setup()
