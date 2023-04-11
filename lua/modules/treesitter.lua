@@ -4,6 +4,21 @@ return {
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    cmd = {
+      'TSInstall',
+      'TSInstallSync',
+      'TSInstallInfo',
+      'TSUninstall',
+      'TSUpdate',
+      'TSUpdateSync',
+      'TSBufEnable',
+      'TSBufToggle',
+      'TSEnable',
+      'TSToggle',
+      'TSModuleInfo',
+      'TSEditQuery',
+      'TSEditQueryUserAfter',
+    },
     ft = ft_list,
     config = function()
       require('configs.nvim-treesitter')
@@ -29,6 +44,7 @@ return {
   {
     'CKolkey/ts-node-action',
     ft = ft_list,
+    keys = '<Leader><Leader>',
     dependencies = 'nvim-treesitter',
     config = function()
       require('configs.ts-node-action')
