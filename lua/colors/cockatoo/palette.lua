@@ -4,7 +4,7 @@ palette.dark = {
   yellow       = '#e6bb86',
   earth        = '#c1a575',
   orange       = '#ffa569',
-  pink         = '#dfa6a8',
+  pink         = '#f08591',
   ochre        = '#e87c69',
   scarlet      = '#d85959',
   wine         = '#a52929',
@@ -27,7 +27,7 @@ palette.dark = {
   iron         = '#313742',
   deepsea      = '#293950',
   ocean        = '#233040',
-  jeans        = '#1f2430',
+  jeans        = '#1c212c',
   space        = '#13161f',
   black        = '#09080b',
 
@@ -39,18 +39,18 @@ palette.dark = {
   wine_blend     = '#351f29',
   earth_blend    = '#303032',
   smoke_blend    = '#272d3a',
-  pigeon_blend   = '#222936',
+  pigeon_blend   = '#27323c',
   ocean_blend    = '#222a38',
 
   shadow = '#09080b',
 }
 
 palette.light = {
-  yellow       = '#a84a24',
+  yellow       = '#c88500',
   earth        = '#b48327',
-  orange       = '#bf7e24',
-  pink         = '#c27e81',
-  ochre        = '#ba4e33',
+  orange       = '#a84a24',
+  pink         = '#df6d73',
+  ochre        = '#c84b2b',
   scarlet      = '#d85959',
   wine         = '#a52929',
   tea          = '#5f8c3f',

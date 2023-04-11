@@ -13,6 +13,7 @@ sch.CursorColumn       = { bg = plt.ocean_blend } -- Screen-column at the cursor
 sch.CursorIM           = { fg = plt.space, bg = plt.flashlight } -- Like Cursor, but used when in IME mode |CursorIM|
 sch.CursorLine         = { bg = plt.ocean_blend } -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
 sch.CursorLineNr       = { fg = plt.orange, bold = true } -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
+sch.DebugPC            = { bg = plt.purple_blend } -- Used for highlighting the current program counter position.
 sch.lCursor            = { link = 'Cursor' } -- Character under the cursor when |language-mapping| is used (see 'guicursor')
 sch.TermCursor         = { fg = plt.space, bg = plt.orange } -- Cursor in a focused terminal
 sch.TermCursorNC       = { fg = plt.orange, bg = plt.ocean } -- Cursor in an unfocused terminal
@@ -63,47 +64,50 @@ sch.WildMenu           = { link = 'PmenuSel' } -- Current match in 'wildmenu' co
 sch.Winseparator       = { link = 'VertSplit' } -- Separator between window splits. Inherts from |hl-VertSplit| by default, which it will replace eventually.
 
 -- Syntax highlighting
-sch.Comment        = { fg = plt.steel } -- Any comment
-sch.Constant       = { fg = plt.turquoise } -- (*) Any constant
-sch.String         = { fg = plt.turquoise } --   A string constant: 'this is a string'
-sch.Character      = { fg = plt.orange } --   A character constant: 'c', '\n'
-sch.Number         = { fg = plt.purple } --   A number constant: 234, 0xff
-sch.Boolean        = { link = 'Constant' } --   A boolean     constant: TRUE, false
-sch.Array          = { fg = plt.orange }
-sch.Float          = { link = 'Number' } --   A floating point constant: 2.3e10
-sch.Identifier     = { fg = plt.smoke } -- (*) Any variable name
-sch.Field          = { fg = plt.pigeon } -- (*) Any variable name
-sch.Enum           = { fg = plt.ochre }
-sch.Namespace      = { fg = plt.ochre }
-sch.Parameter      = { fg = plt.smoke }
-sch.Function       = { fg = plt.yellow } --   Function name (also: methods for classes)
-sch.Statement      = { fg = plt.smoke } -- (*) Any statement
-sch.Object         = { fg = plt.lavender } -- (*) Any statement
-sch.Conditional    = { fg = plt.magenta } --   if, then, else, endif, switch, etc.
-sch.Repeat         = { fg = plt.magenta } --   for, do, while, etc.
-sch.Label          = { fg = plt.magenta } --   case, default, etc.
-sch.Operator       = { fg = plt.orange } --   'sizeof', '+', '*', etc.
-sch.Keyword        = { fg = plt.cerulean } --   any other keyword
-sch.Exception      = { fg = plt.magenta } --   try, catch, throw
-sch.PreProc        = { fg = plt.turquoise } -- (*) Generic Preprocessor
-sch.PreCondit      = { link = 'PreProc' } --   Preprocessor #if, #else, #endif, etc.
-sch.Include        = { link = 'PreProc' } --   Preprocessor #include
-sch.Define         = { link = 'PreProc' } --   Preprocessor #define
-sch.Macro          = { link = 'PreProc' } --   Same as Define
-sch.Type           = { fg = plt.lavender } -- (*) int, long, char, etc.
-sch.StorageClass   = { link = 'Keyword' } --   static, register, volatile, etc.
-sch.Structure      = { link = 'Type' } --   struct, union, enum, etc.
-sch.Typedef        = { fg = plt.beige } --   A typedef
-sch.Special        = { fg = plt.orange } -- (*) Any special symbol
-sch.SpecialChar    = { link = 'Special' } --   Special character in a constant
-sch.Tag            = { fg = plt.flashlight, underline = true } --   You can use CTRL-] on this
-sch.Delimiter      = { fg = plt.orange } --   Character that needs attention
-sch.SpecialComment = { link = 'SpecialChar' } --   Special things inside a comment (e.g. '\n')
-sch.Debug          = { link = 'Special' } --   Debugging statements
-sch.Underlined     = { underline = true } -- Text that stands out, HTML links
-sch.Ignore         = { fg = plt.iron } -- Left blank, hidden |hl-Ignore| (NOTE: May be invisible here in template)
-sch.Error          = { fg = plt.scarlet } -- Any erroneous construct
-sch.Todo           = { fg = plt.black, bg = plt.beige, bold = true } -- Anything that needs extra attention; mostly the keywords TODO FIXME and XXX
+sch.Comment           = { fg = plt.steel } -- Any comment
+sch.Constant          = { fg = plt.ochre } -- (*) Any constant
+sch.String            = { fg = plt.turquoise } --   A string constant: 'this is a string'
+sch.DocumentKeyword   = { fg = plt.tea } --   A keyword used to tag a block of documentation.
+sch.Character         = { fg = plt.orange } --   A character constant: 'c', '\n'
+sch.Number            = { fg = plt.purple } --   A number constant: 234, 0xff
+sch.Boolean           = { fg = plt.ochre } --   A boolean     constant: TRUE, false
+sch.Array             = { fg = plt.orange }
+sch.Float             = { link = 'Number' } --   A floating point constant: 2.3e10
+sch.Identifier        = { fg = plt.smoke } -- (*) Any variable name
+sch.IdentifierBuiltIn = { fg = plt.pink } -- (*) Builtin variable name
+sch.Field             = { fg = plt.pigeon } -- (*) Any variable name
+sch.Enum              = { fg = plt.ochre }
+sch.Namespace         = { fg = plt.ochre }
+sch.Parameter         = { fg = plt.smoke }
+sch.Function          = { fg = plt.yellow } --   Function name (also: methods for classes)
+sch.Statement         = { fg = plt.lavender } -- (*) Any statement
+sch.Object            = { fg = plt.lavender } -- (*) Any statement
+sch.Conditional       = { fg = plt.magenta } --   if, then, else, endif, switch, etc.
+sch.Repeat            = { fg = plt.magenta } --   for, do, while, etc.
+sch.Label             = { fg = plt.magenta } --   case, default, etc.
+sch.Operator          = { fg = plt.orange } --   'sizeof', '+', '*', etc.
+sch.Keyword           = { fg = plt.cerulean } --   any other keyword
+sch.Exception         = { fg = plt.magenta } --   try, catch, throw
+sch.PreProc           = { fg = plt.turquoise } -- (*) Generic Preprocessor
+sch.PreCondit         = { link = 'PreProc' } --   Preprocessor #if, #else, #endif, etc.
+sch.Include           = { link = 'PreProc' } --   Preprocessor #include
+sch.Define            = { link = 'PreProc' } --   Preprocessor #define
+sch.Macro             = { fg = plt.ochre } --   Same as Define
+sch.Type              = { fg = plt.lavender } -- (*) int, long, char, etc.
+sch.StorageClass      = { link = 'Keyword' } --   static, register, volatile, etc.
+sch.Structure         = { link = 'Type' } --   struct, union, enum, etc.
+sch.Typedef           = { fg = plt.beige } --   A typedef
+sch.Special           = { fg = plt.orange } -- (*) Any special symbol
+sch.SpecialChar       = { link = 'Special' } --   Special character in a constant
+sch.Tag               = { fg = plt.flashlight, underline = true } --   You can use CTRL-] on this
+sch.Delimiter         = { fg = plt.orange } --   Character that needs attention
+sch.Bracket           = { fg = plt.pigeon }
+sch.SpecialComment    = { link = 'SpecialChar' } --   Special things inside a comment (e.g. '\n')
+sch.Debug             = { link = 'Special' } --   Debugging statements
+sch.Underlined        = { underline = true } -- Text that stands out, HTML links
+sch.Ignore            = { fg = plt.iron } -- Left blank, hidden |hl-Ignore| (NOTE: May be invisible here in template)
+sch.Error             = { fg = plt.scarlet } -- Any erroneous construct
+sch.Todo              = { fg = plt.black, bg = plt.beige, bold = true } -- Anything that needs extra attention; mostly the keywords TODO FIXME and XXX
 
 -- LSP Highlighting
 sch.LspReferenceText            = { link = 'Identifier' } -- Used for highlighting 'text' references
@@ -143,12 +147,12 @@ sch['@field']                 = { link = 'Field' }
 sch['@property']              = { link = 'Field' }
 sch['@annotation']            = { link = 'Operator' }
 sch['@comment']               = { link = 'Comment' }
-sch['@none']                  = { bg = 'NONE', fg = 'NONE' }
+sch['@none']                  = { link = 'None' }
 sch['@preproc']               = { link = 'PreProc' }
 sch['@define']                = { link = 'Define' }
 sch['@operator']              = { link = 'Operator' }
 sch['@punctuation.delimiter'] = { link = 'Delimiter' }
-sch['@punctuation.bracket']   = { fg = plt.pigeon }
+sch['@punctuation.bracket']   = { link = 'Bracket' }
 sch['@punctuation.special']   = { link = 'Delimiter' }
 sch['@string']                = { link = 'String' }
 sch['@string.regex']          = { link = 'String' }
@@ -183,7 +187,7 @@ sch['@type.definition']       = { link = 'Typedef' }
 sch['@storageclass']          = { link = 'StorageClass' }
 sch['@attribute']             = { link = 'Label' }
 sch['@variable']              = { link = 'Identifier' }
-sch['@variable.builtin']      = { link = 'Special' }
+sch['@variable.builtin']      = { link = 'IdentifierBuiltIn' }
 sch['@constant']              = { link = 'Constant' }
 sch['@constant.builtin']      = { link = 'Special' }
 sch['@constant.macro']        = { link = 'Macro' }
@@ -214,22 +218,26 @@ sch['@text.emphasis']         = { fg = plt.black, bg = plt.beige, bold = true, i
 sch['@text.underline']        = { underline = true }
 sch['@keyword.operator']      = { link = 'Operator' }
 
-sch['@lsp.type.enum']          = { link = 'Type' }
-sch['@lsp.type.type']          = { link = 'Type' }
-sch['@lsp.type.class']         = { link = 'Structure' }
-sch['@lsp.type.struct']        = { link = 'Structure' }
-sch['@lsp.type.macro']         = { link = 'Macro' }
-sch['@lsp.type.method']        = { link = 'Function' }
-sch['@lsp.type.comment']       = { link = 'Comment' }
-sch['@lsp.type.function']      = { link = 'Function' }
-sch['@lsp.type.property']      = { link = 'Field' }
-sch['@lsp.type.variable']      = { link = 'Variable' }
-sch['@lsp.type.decorator']     = { link = 'Label' }
-sch['@lsp.type.interface']     = { link = 'Structure' }
-sch['@lsp.type.namespace']     = { link = 'Namespace' }
-sch['@lsp.type.parameter']     = { link = 'Parameter' }
-sch['@lsp.type.enumMember']    = { link = 'Enum' }
-sch['@lsp.type.typeParameter'] = { link = 'Parameter' }
+sch['@lsp.type.enum']                       = { link = 'Type' }
+sch['@lsp.type.type']                       = { link = 'Type' }
+sch['@lsp.type.class']                      = { link = 'Structure' }
+sch['@lsp.type.struct']                     = { link = 'Structure' }
+sch['@lsp.type.macro']                      = { link = 'Macro' }
+sch['@lsp.type.method']                     = { link = 'Function' }
+sch['@lsp.type.comment']                    = { link = 'Comment' }
+sch['@lsp.type.function']                   = { link = 'Function' }
+sch['@lsp.type.property']                   = { link = 'Field' }
+sch['@lsp.type.variable']                   = { link = 'Variable' }
+sch['@lsp.type.decorator']                  = { link = 'Label' }
+sch['@lsp.type.interface']                  = { link = 'Structure' }
+sch['@lsp.type.namespace']                  = { link = 'Namespace' }
+sch['@lsp.type.parameter']                  = { link = 'Parameter' }
+sch['@lsp.type.enumMember']                 = { link = 'Enum' }
+sch['@lsp.type.typeParameter']              = { link = 'Parameter' }
+sch['@lsp.typemod.keyword.documentation']   = { link = 'DocumentKeyword' }
+sch['@lsp.typemod.function.defaultLibrary'] = { link = 'Special' }
+sch['@lsp.typemod.variable.defaultLibrary'] = { fg = plt.orange, nocombine = true }
+sch['@lsp.typemod.variable.global']         = { fg = plt.orange, nocombine = true }
 
 -- HTML
 sch.htmlArg            = { fg = plt.pigeon }
@@ -258,6 +266,9 @@ sch.markdownBoldItalic = { fg = plt.skyblue, bold = true, italic = true }
 sch.markdownCode       = { fg = plt.pigeon }
 sch.markdownError      = { link = 'None' }
 sch.markdownListMarker = { fg = plt.orange }
+-- Shell
+sch.shDeref            = { link = 'Macro' }
+sch.shDerefVar         = { link = 'Macro' }
 
 -- Plugin highlights
 -- nvim-cmp
@@ -402,9 +413,6 @@ sch.AerialVariableIcon      = { link = 'CmpItemKindVariable' }
 -- fidget
 sch.FidgetTitle = { link = 'Title' }
 sch.FidgetTask  = { link = 'Comment' }
-
--- mini.indentscope
-sch.MiniIndentscopeSymbol = { fg = plt.pigeon }
 
 -- nvim-dap-ui
 sch.DapUIBreakpointsCurrentLine = { link = 'CursorLineNr' }
@@ -570,10 +578,6 @@ sch.FloatermBorder = { fg = plt.smoke, bg = plt.ocean }
 sch.CopilotSuggestion = { fg = plt.steel, italic = true }
 sch.CopilotAnnotation = { fg = plt.steel, italic = true }
 
--- indent-blankline.nvim
-sch.IndentBlanklineIndent1 = { fg = plt.iron }
-sch.IndentBlanklineIndent2 = { fg = plt.iron, bg = plt.pigeon_blend }
-
 -- Extra highlight groups
 sch.Yellow     = { fg = plt.yellow }
 sch.Earth      = { fg = plt.earth }
@@ -602,6 +606,7 @@ sch.Deepsea    = { fg = plt.deepsea }
 sch.Ocean      = { fg = plt.ocean }
 sch.Space      = { fg = plt.space }
 sch.Black      = { fg = plt.black }
+sch.None       = { fg = 'NONE', bg = 'NONE' }
 sch.Ghost      = { fg = plt.steel, italic = true }
 
 return sch
