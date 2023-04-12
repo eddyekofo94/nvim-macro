@@ -25,7 +25,11 @@ aerial.setup({
     ['H'] = false,
   },
   attach_mode = 'window',
-  backends = { 'lsp', 'treesitter', 'markdown', 'man' },
+  backends = {
+    ['_'] = { 'lsp', 'treesitter', 'man' },
+    ['python'] = { 'treesitter', 'lsp' },
+    ['markdown'] = { 'treesitter', 'markdown' },
+  },
   disable_max_lines = 8192,
   filter_kind = false,
   icons = require('utils.static').icons,
