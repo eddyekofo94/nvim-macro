@@ -20,14 +20,6 @@ return {
   },
 
   {
-    'lukas-reineke/indent-blankline.nvim',
-    event = { 'BufRead', 'BufNewFile' },
-    config = function()
-      require('configs.indent-blankline')
-    end,
-  },
-
-  {
     'SmiteshP/nvim-navic',
     dependencies = 'nvim-web-devicons',
     event = 'BufReadPost',
