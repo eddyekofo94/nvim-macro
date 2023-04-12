@@ -265,6 +265,7 @@ sch.markdownBold       = { fg = plt.aqua, bold = true }
 sch.markdownBoldItalic = { fg = plt.skyblue, bold = true, italic = true }
 sch.markdownCode       = { fg = plt.pigeon }
 sch.markdownError      = { link = 'None' }
+sch.markdownEscape     = { link = 'None' }
 sch.markdownListMarker = { fg = plt.orange }
 -- Shell
 sch.shDeref            = { link = 'Macro' }
@@ -394,6 +395,7 @@ sch.AerialEventIcon         = { link = 'CmpItemKindEvent' }
 sch.AerialFieldIcon         = { link = 'CmpItemKindField' }
 sch.AerialFileIcon          = { link = 'CmpItemKindFile' }
 sch.AerialFunctionIcon      = { link = 'CmpItemKindFunction' }
+sch.AerialGuide             = { link = 'Comment' }
 sch.AerialInterfaceIcon     = { link = 'CmpItemKindInterface' }
 sch.AerialKeyIcon           = { link = 'CmpItemKindKeyword' }
 sch.AerialMethodIcon        = { link = 'CmpItemKindMethod' }
