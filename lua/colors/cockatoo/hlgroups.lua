@@ -423,6 +423,7 @@ sch.DapUIBreakpointsPath        = { link = 'Directory' }
 sch.DapUICurrentFrameName       = { fg = plt.tea, bold = true }
 sch.DapUIDecoration             = { fg = plt.yellow }
 sch.DapUIFloatBorder            = { link = 'FloatBorder' }
+sch.DapUINormalFloat            = { link = 'NormalFloat' }
 sch.DapUILineNumber             = { link = 'LineNr' }
 sch.DapUIModifiedValue          = { fg = plt.skyblue, bold = true }
 sch.DapUIPlayPause              = { fg = plt.tea }
