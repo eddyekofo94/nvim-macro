@@ -7,12 +7,18 @@ return {
       program = '${file}',
       pythonPath = function()
         local cwd = vim.fn.getcwd()
-        if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
-          return cwd .. '/venv/bin/python'
-        elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
-          return cwd .. '/.venv/bin/python'
-        else
-          return '/usr/bin/python'
+        local fpath = vim.fn.expand('%:p:h')
+        local paths = {
+          fpath .. '/venv/bin/python',
+          fpath .. '/.venv/bin/python',
+          cwd .. '/venv/bin/python',
+          cwd .. '/.venv/bin/python',
+          '/usr/bin/python',
+        }
+        for _, path in ipairs(paths) do
+          if vim.fn.executable(path) == 1 then
+            return path
+          end
         end
       end,
     },
