@@ -260,13 +260,16 @@ local autocmds = {
     {
       group = 'AutoCursorLineOpt',
       callback = function()
-        if
-          vim.bo.buftype == ''
-          and not vim.wo.diff
-          and vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
-        then
-          vim.cmd.setlocal('cursorlineopt=both')
-        end
+        vim.defer_fn(function()
+          if
+            vim.bo.buftype == ''
+            and not vim.wo.diff
+            and vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
+            and vim.opt.cursorlineopt:get()[1] ~= 'both'
+          then
+            vim.cmd.setlocal('cursorlineopt=both')
+          end
+        end, 10)
       end,
     },
   },
@@ -289,7 +292,11 @@ local autocmds = {
           vim.bo.buftype == ''
           and vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
         then
-          vim.cmd.setlocal('cursorlineopt=both')
+          -- Fix cursorlineopt being set to 'both' for all
+          -- windows when leaving diff mode using ':diffoff!'
+          vim.defer_fn(function()
+            vim.cmd.setlocal('cursorlineopt=both')
+          end, 10)
         end
       end,
     },
