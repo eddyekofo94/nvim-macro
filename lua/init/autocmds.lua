@@ -240,6 +240,60 @@ local autocmds = {
       command = 'wincmd =',
     },
   },
+
+  -- Automatically set 'cursorlineopt'
+  {
+    { 'WinEnter' },
+    {
+      once = true,
+      group = 'AutoCursorLineOpt',
+      callback = function()
+        local winlist = vim.api.nvim_list_wins()
+        for _, win in ipairs(winlist) do
+          vim.api.nvim_win_set_option(win, 'cursorlineopt', 'number')
+        end
+      end,
+    },
+  },
+  {
+    { 'BufWinEnter', 'WinEnter', 'InsertLeave' },
+    {
+      group = 'AutoCursorLineOpt',
+      callback = function()
+        if
+          vim.bo.buftype == ''
+          and not vim.wo.diff
+          and vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
+        then
+          vim.cmd.setlocal('cursorlineopt=both')
+        end
+      end,
+    },
+  },
+  {
+    { 'WinLeave', 'InsertEnter' },
+    {
+      group = 'AutoCursorLineOpt',
+      command = "if &bt ==? '' | setlocal cursorlineopt=number",
+    },
+  },
+  {
+    { 'OptionSet' },
+    {
+      pattern = 'diff',
+      group = 'AutoCursorLineOpt',
+      callback = function()
+        if vim.v.option_new == '1' then
+          vim.cmd.setlocal('cursorlineopt=number')
+        elseif
+          vim.bo.buftype == ''
+          and vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
+        then
+          vim.cmd.setlocal('cursorlineopt=both')
+        end
+      end,
+    },
+  },
 }
 
 set_autocmds(autocmds)
