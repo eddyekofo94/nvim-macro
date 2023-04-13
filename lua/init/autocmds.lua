@@ -204,7 +204,7 @@ local autocmds = {
 
   -- Terminal options
   {
-    { 'TermOpen', 'WinEnter' },
+    { 'TermOpen' },
     {
       group = 'TermOptions',
       callback = function(tbl)
