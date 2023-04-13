@@ -212,9 +212,25 @@ local autocmds = {
           vim.cmd.setlocal('nonu')
           vim.cmd.setlocal('nornu')
           vim.cmd.setlocal('statuscolumn=')
+          vim.cmd.setlocal('signcolumn=no')
+          vim.cmd.startinsert()
         end
       end,
     },
+  },
+  {
+    { 'ModeChanged' },
+    {
+      group = 'TermOptions',
+      pattern = { '*:t', 't:*' },
+      callback = function(tbl)
+        if vim.fn.match(tbl.match, '.*:t$') ~= -1 then
+          vim.cmd.setlocal('matchpairs=')
+        else
+          vim.cmd.setlocal('matchpairs&')
+        end
+      end
+    }
   },
 
   -- Open quickfix window if there are results
