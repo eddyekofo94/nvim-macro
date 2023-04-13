@@ -49,14 +49,31 @@ return {
   },
 
   {
-    'voldikss/vim-floaterm',
-    keys = {
-      { '<C-\\>', mode = { 'n', 't' } },
-      { '<M-i>', mode = { 'n', 't' } },
-    },
-    cmd = { 'FloatermNew', 'FloatermToggle', 'ToggleTool' },
+    'willothy/flatten.nvim',
+    event = 'BufReadPre',
     config = function()
-      require('configs.vim-floaterm')
+      require('configs.flatten')
+    end,
+  },
+
+  {
+    'akinsho/toggleterm.nvim',
+    keys = {
+      { '<C-\\>g', mode = { 'n', 't' } },
+      { '<C-\\><C-g>', mode = { 'n', 't' } },
+      { '<C-\\><C-\\>', mode = { 'n', 't' } },
+    },
+    cmd = {
+      'TermExec',
+      'ToggleTerm',
+      'ToggleTermSetName',
+      'ToggleTermToggleAll',
+      'ToggleTermSendCurrentLine',
+      'ToggleTermSendVisualLines',
+      'ToggleTermSendVisualSelection',
+    },
+    config = function()
+      require('configs.toggleterm')
     end,
   },
 

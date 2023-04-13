@@ -62,6 +62,8 @@ sch.WarningMsg         = { fg = plt.yellow } -- Warning messages
 sch.Whitespace         = { link = 'NonText' } -- 'nbsp', 'space', 'tab' and 'trail' in 'listchars'
 sch.WildMenu           = { link = 'PmenuSel' } -- Current match in 'wildmenu' completion
 sch.Winseparator       = { link = 'VertSplit' } -- Separator between window splits. Inherts from |hl-VertSplit| by default, which it will replace eventually.
+sch.WinBar             = { fg = plt.pigeon }
+sch.WinBarNC           = { fg = plt.steel }
 
 -- Syntax highlighting
 sch.Comment           = { fg = plt.steel } -- Any comment

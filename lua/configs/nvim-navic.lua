@@ -255,13 +255,13 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter', 'BufWritePost' }, {
   group = 'Navic',
   callback = function()
     if
-      vim.api.nvim_win_get_config(0).zindex
-      or vim.bo.buftype ~= ''
-      or vim.fn.expand('%') == ''
+      not vim.api.nvim_win_get_config(0).zindex
+      and vim.bo.buftype == ''
+      and vim.fn.expand('%') ~= ''
     then
-      vim.wo.winbar = nil
-    else
       vim.wo.winbar = '%{%v:lua.get_winbar()%}'
+    elseif vim.bo.buftype ~= 'terminal' then
+      vim.wo.winbar = nil
     end
   end,
 })
