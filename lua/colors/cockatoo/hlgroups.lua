@@ -25,7 +25,7 @@ sch.Directory          = { fg = plt.pigeon } -- Directory names (and other speci
 sch.EndOfBuffer        = { fg = plt.iron } -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
 sch.ErrorMsg           = { fg = plt.scarlet } -- Error messages on the command line
 sch.FoldColumn         = { fg = plt.steel } -- 'foldcolumn'
-sch.Folded             = { fg = plt.steel, bg = plt.ocean_blend, italic = true } -- Line used for closed folds
+sch.Folded             = { fg = plt.steel, bg = plt.ocean_blend } -- Line used for closed folds
 sch.FloatBorder        = { fg = plt.smoke, bg = plt.ocean } -- Border of floating windows.
 sch.FloatShadow        = { bg = plt.shadow, blend = 70 } -- Shadow of floating windows.
 sch.FloatShadowThrough = { bg = plt.shadow, blend = 100 } -- Shadow of floating windows
