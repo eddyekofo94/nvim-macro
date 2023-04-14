@@ -160,6 +160,7 @@ M.symbols = {
     s({ trig = '\\\\\\' }, { t('\\setminus '), i(0) }),
     s({ trig = '%%' }, { t('\\%'), i(0) }),
     s({ trig = '##' }, { t('\\#') }),
+    s({ trig = ': ' }, { t('\\colon ') }),
 
     s({ trig = 'abs' }, { t('\\left\\vert '), i(1), t(' \\right\\vert'), i(0) }),
     s({ trig = 'lrv' }, { t('\\left\\vert '), i(1), t(' \\right\\vert'), i(0) }),
