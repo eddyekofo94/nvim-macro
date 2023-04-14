@@ -45,6 +45,13 @@ opt.listchars = {
   nbsp       = '⌴',
   trail      = '·',
 }
+opt.fillchars = {
+  fold = '·',
+  foldopen = '',
+  foldclose = '',
+  foldsep = ' ',
+  diff = '╱',
+}
 opt.conceallevel = 2
 
 opt.ts          = 4
