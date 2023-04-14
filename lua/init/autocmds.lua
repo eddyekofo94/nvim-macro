@@ -317,6 +317,15 @@ local autocmds = {
       end,
     },
   },
+
+  -- Update folds on BufEnter
+  {
+    { 'BufWinEnter', 'WinEnter' },
+    {
+      group = 'UpdateFolds',
+      command = 'normal! zx',
+    },
+  },
 }
 
 set_autocmds(autocmds)
