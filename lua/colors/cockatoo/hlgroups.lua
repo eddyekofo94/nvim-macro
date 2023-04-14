@@ -19,7 +19,7 @@ sch.TermCursor         = { fg = plt.space, bg = plt.orange } -- Cursor in a focu
 sch.TermCursorNC       = { fg = plt.orange, bg = plt.ocean } -- Cursor in an unfocused terminal
 sch.DiffAdd            = { bg = plt.aqua_blend } -- Diff mode: Added line |diff.txt|
 sch.DiffChange         = { bg = plt.purple_blend } -- Diff mode: Changed line |diff.txt|
-sch.DiffDelete         = { fg = plt.wine_blend, bg = plt.wine_blend } -- Diff mode: Deleted line |diff.txt|
+sch.DiffDelete         = { fg = plt.wine, bg = plt.wine_blend } -- Diff mode: Deleted line |diff.txt|
 sch.DiffText           = { bg = plt.lavender_blend } -- Diff mode: Changed text within a changed line |diff.txt|
 sch.Directory          = { fg = plt.pigeon } -- Directory names (and other special names in listings)
 sch.EndOfBuffer        = { fg = plt.iron } -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
