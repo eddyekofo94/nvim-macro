@@ -59,7 +59,10 @@ local function lualine_config()
   end
 
   local function formatter_icon()
-    if not vim.b.lsp_format_on_save then
+    if
+      vim.b.lsp_format_on_save == false
+      or not vim.b.lsp_format_on_save and not vim.g.lsp_format_on_save
+    then
       return ''
     end
 
@@ -72,7 +75,10 @@ local function lualine_config()
   end
 
   local function formatter_text()
-    if not vim.b.lsp_format_on_save then
+    if
+      vim.b.lsp_format_on_save == false
+      or not vim.b.lsp_format_on_save and not vim.g.lsp_format_on_save
+    then
       return ''
     end
 
@@ -92,10 +98,9 @@ local function lualine_config()
   end
 
   local function lsp_list()
-    local lsp_names = vim.tbl_map(
-      function(client_info)
-        return client_info.name
-      end, current_lsp_clients)
+    local lsp_names = vim.tbl_map(function(client_info)
+      return client_info.name
+    end, current_lsp_clients)
 
     if #lsp_names == 0 then
       return ''
