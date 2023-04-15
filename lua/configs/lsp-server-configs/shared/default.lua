@@ -828,7 +828,7 @@ local function diagnostic_command_complete(arglead, cmdline, cursorpos)
           return completion:match(arglead)
         end,
         vim.tbl_map(function(severity)
-          return '--severity=' .. severity
+          return arglead:match('^.-=') .. severity
         end, vim.tbl_keys(diagnostic_severity_map))
       )
     end
