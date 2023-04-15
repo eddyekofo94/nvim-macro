@@ -204,7 +204,8 @@ local lsp_subcommands = {
   rename = {
     ---@param args parsed_arg_t
     arg_handler = function(args)
-      return args.new_name, { filter = args.filter, name = args.name }
+      return args.new_name or args[1],
+        { filter = args.filter, name = args.name }
     end,
     opts = {
       '--new_name',
