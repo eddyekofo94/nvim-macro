@@ -134,7 +134,7 @@ local function parse_cmdline_args(fargs)
     end
     if key and val then -- '--key=value'
       local eval_valid, eval_result = pcall(vim.fn.eval, val)
-      parsed[key] = eval_valid and eval_result or val
+      parsed[key] = not eval_valid and val or eval_result
     elseif key and not val then -- '--key'
       parsed[key] = true
     else -- 'value'
