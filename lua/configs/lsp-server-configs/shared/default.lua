@@ -17,9 +17,6 @@ end
 ---@param bufnr number buffer handler
 local function setup_keymaps(_, bufnr)
   -- stylua: ignore start
-  vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder,                                                      { buffer = bufnr })
-  vim.keymap.set('n', '<Leader>wd', vim.lsp.buf.remove_workspace_folder,                                                   { buffer = bufnr })
-  vim.keymap.set('n', '<Leader>wl', function() vim.notify(vim.lsp.buf.list_workspace_folders()) end,                       { buffer = bufnr })
   vim.keymap.set('n', '<Leader>ca', vim.lsp.buf.code_action,                                                               { buffer = bufnr })
   vim.keymap.set('n', '<Leader>r',  vim.lsp.buf.rename,                                                                    { buffer = bufnr })
   vim.keymap.set('n', '<Leader>R',  vim.lsp.buf.references,                                                                { buffer = bufnr })
