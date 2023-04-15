@@ -125,11 +125,11 @@ local function parse_cmdline_args(fargs)
   local fn_name = table.remove(fargs, 1)
   local parsed = {}
   for _, arg in ipairs(fargs) do
-    local key, val = arg:match('^%-%-(%S+)=(%S+)$')
+    local key, val = arg:match('^%-%-(%S+)=(.*)$')
     if not key then
       key = arg:match('^%-%-(%S+)$')
     end
-    if type(val) == 'string' then
+    if type(val) == 'string' and vim.loop.fs_stat(vim.fn.expand(val)) then
       val = vim.fn.expand(val)
     end
     if key and val then -- '--key=value'
