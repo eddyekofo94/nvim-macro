@@ -176,6 +176,21 @@ end
 ---@field fn_override function|nil
 ---@field completion function|nil
 
+---Recursively delete a table if it is empty
+---@param tbl table
+---@return table|nil
+local function nil_if_empty(tbl)
+  for k, v in pairs(tbl) do
+    if type(v) == 'table' then
+      tbl[k] = nil_if_empty(v)
+    end
+  end
+  if vim.tbl_isempty(tbl) then
+    return nil
+  end
+  return tbl
+end
+
 ---LSP subcommands
 ---@type table<string, subcommand_info_t>
 local lsp_subcommands = {
@@ -321,19 +336,11 @@ local lsp_subcommands = {
   code_action = {
     ---@param args parsed_arg_t
     arg_handler = function(args, tbl)
-      local context = {
+      local context = nil_if_empty({
         diagnostics = args.diagnostics,
         only = args.only,
         triggerKind = args.triggerKind,
-      }
-      for opt, optval in pairs(context) do
-        if type(optval) == 'table' and vim.tbl_isempty(optval) then
-          context[opt] = nil
-        end
-      end
-      if vim.tbl_isempty(context) then
-        context = nil
-      end
+      })
       return {
         context = context,
         filter = args.filter,
@@ -472,7 +479,7 @@ local diagnostic_severity_map = {
 ---@return table|nil display_opts param 'opts' passed to vim.diagnostic.config
 ---@return number|nil namespace param 'namespace' passed to vim.diagnostic.config
 local function arg_handler_diagnostic_config(args)
-  local display_opts = {
+  local display_opts = nil_if_empty({
     underline = args.underline or {
       severity = diagnostic_severity_map[args['underline.severity']]
         or args['underline-severity'],
@@ -497,14 +504,8 @@ local function arg_handler_diagnostic_config(args)
     severity_sort = args.severity_sort or {
       reverse = args['severity_sort.reverse'],
     },
-  }
-  for opt, optval in pairs(display_opts) do
-    if type(optval) == 'table' and vim.tbl_isempty(optval) then
-      display_opts[opt] = nil
-    end
-  end
-  return not vim.tbl_isempty(display_opts) and display_opts or nil,
-    args.namespace
+  })
+  return display_opts, args.namespace
 end
 
 ---Diagnostic subcommands
