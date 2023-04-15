@@ -17,18 +17,34 @@ end
 ---@param bufnr number buffer handler
 local function setup_keymaps(_, bufnr)
   -- stylua: ignore start
-  vim.keymap.set('n', '<Leader>ca', vim.lsp.buf.code_action,                                                               { buffer = bufnr })
-  vim.keymap.set('n', '<Leader>r',  vim.lsp.buf.rename,                                                                    { buffer = bufnr })
-  vim.keymap.set('n', '<Leader>R',  vim.lsp.buf.references,                                                                { buffer = bufnr })
-  vim.keymap.set('n', '<Leader>e',  vim.diagnostic.open_float,                                                             { buffer = bufnr })
-  vim.keymap.set('n', '<leader>E',  vim.diagnostic.setloclist,                                                             { buffer = bufnr })
-  vim.keymap.set('n', '[e',         vim.diagnostic.goto_prev,                                                              { buffer = bufnr })
-  vim.keymap.set('n', ']e',         vim.diagnostic.goto_next,                                                              { buffer = bufnr })
-  vim.keymap.set('n', '[E',         function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end, { buffer = bufnr })
-  vim.keymap.set('n', ']E',         function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end, { buffer = bufnr })
-  vim.keymap.set('n', '[W',         function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN }) end,  { buffer = bufnr })
-  vim.keymap.set('n', ']W',         function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN }) end,  { buffer = bufnr })
+  vim.keymap.set('n', '<Leader>ca', vim.lsp.buf.code_action,   { buffer = bufnr })
+  vim.keymap.set('n', '<Leader>r',  vim.lsp.buf.rename,        { buffer = bufnr })
+  vim.keymap.set('n', '<Leader>R',  vim.lsp.buf.references,    { buffer = bufnr })
+  vim.keymap.set('n', '<Leader>e',  vim.diagnostic.open_float, { buffer = bufnr })
+  vim.keymap.set('n', '<leader>E',  vim.diagnostic.setloclist, { buffer = bufnr })
+  vim.keymap.set('n', '[e',         vim.diagnostic.goto_prev,  { buffer = bufnr })
+  vim.keymap.set('n', ']e',         vim.diagnostic.goto_next,  { buffer = bufnr })
   -- stylua: ignore end
+  vim.keymap.set('n', '[E', function()
+    vim.diagnostic.goto_prev({
+      severity = vim.diagnostic.severity.ERROR,
+    })
+  end, { buffer = bufnr })
+  vim.keymap.set('n', ']E', function()
+    vim.diagnostic.goto_next({
+      severity = vim.diagnostic.severity.ERROR,
+    })
+  end, { buffer = bufnr })
+  vim.keymap.set('n', '[W', function()
+    vim.diagnostic.goto_prev({
+      severity = vim.diagnostic.severity.WARN,
+    })
+  end, { buffer = bufnr })
+  vim.keymap.set('n', ']W', function()
+    vim.diagnostic.goto_next({
+      severity = vim.diagnostic.severity.WARN,
+    })
+  end, { buffer = bufnr })
   vim.keymap.set('n', 'gd', function()
     if supports_method('textDocument/definition', bufnr) then
       vim.lsp.buf.definition()
