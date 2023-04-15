@@ -481,30 +481,29 @@ local diagnostic_severity_map = {
 ---@return number|nil namespace param 'namespace' passed to vim.diagnostic.config
 local function arg_handler_diagnostic_config(args)
   local display_opts = nil_if_empty({
-    underline = args.underline or {
+    underline = nil_if_empty({
       severity = diagnostic_severity_map[args['underline.severity']]
         or args['underline-severity'],
-    },
-    virtual_text = args.virtual_text
-      or {
-        severity = diagnostic_severity_map[args['virtual_text.severity']]
-          or args['virtual_text.severity'],
-        source = args['virtual_text.source'],
-        spacing = args['virtual_text.spacing'],
-        prefix = args['virtual_text.prefix'],
-        suffix = args['virtual_text.suffix'],
-        format = args['virtual_text.format'],
-      },
-    signs = args.signs or {
+    }) or args.underline,
+    virtual_text = nil_if_empty({
+      severity = diagnostic_severity_map[args['virtual_text.severity']]
+        or args['virtual_text.severity'],
+      source = args['virtual_text.source'],
+      spacing = args['virtual_text.spacing'],
+      prefix = args['virtual_text.prefix'],
+      suffix = args['virtual_text.suffix'],
+      format = args['virtual_text.format'],
+    }) or args.virtual_text,
+    signs = nil_if_empty({
       severity = diagnostic_severity_map[args['signs.severity']]
         or args['signs.severity'],
       priority = args['signs.priority'],
-    },
+    }) or args.signs,
     float = args.float,
     update_in_insert = args.update_in_insert,
-    severity_sort = args.severity_sort or {
+    severity_sort = nil_if_empty({
       reverse = args['severity_sort.reverse'],
-    },
+    }) or args.severity_sort,
   })
   return display_opts, args.namespace
 end
