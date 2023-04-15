@@ -406,7 +406,7 @@ local lsp_subcommands = {
 ---@return string[] completion
 local function lsp_command_complete(arglead, cmdline, cursorpos)
   -- If subcommand is not specified, complete with subcommands
-  if cmdline:sub(1, cursorpos):match('^%s*Lsp%s+%S*$') then
+  if cmdline:sub(1, cursorpos):match('^%A*Lsp%s+%S*$') then
     return vim.tbl_filter(function(cmd)
       return cmd:find(arglead, 1, true) == 1
     end, vim.tbl_keys(lsp_subcommands))
@@ -801,7 +801,7 @@ local diagnostic_subcommands = {
 ---@return string[] completion
 local function diagnostic_command_complete(arglead, cmdline, cursorpos)
   -- If subcommand is not specified, complete with subcommands
-  if cmdline:sub(1, cursorpos):match('^%s*Diagnostic%s+%S*$') then
+  if cmdline:sub(1, cursorpos):match('^%A*Diagnostic%s+%S*$') then
     return vim.tbl_filter(function(cmd)
       return cmd:find(arglead, 1, true) == 1
     end, vim.tbl_keys(diagnostic_subcommands))
