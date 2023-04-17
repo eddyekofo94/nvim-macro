@@ -87,6 +87,15 @@ return {
   },
 
   {
+    'tpope/vim-fugitive',
+    cmd = { 'G', 'Git' },
+    event = { 'BufWritePost', 'BufReadPre' },
+    config = function()
+      require('configs.vim-fugitive')
+    end,
+  },
+
+  {
     'kevinhwang91/rnvimr',
     config = function()
       require('configs.rnvimr')
