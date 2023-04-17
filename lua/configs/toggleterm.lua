@@ -55,3 +55,13 @@ end
 
 vim.keymap.set({ 't', 'n' }, '<C-\\>g', lazygit_toggle)
 vim.keymap.set({ 't', 'n' }, '<C-\\><C-g>', lazygit_toggle)
+
+-- Hijack toggleterm's toggle_command function to set splitkeep option before
+-- opening a terminal and restore it after opening it
+local _toggle_command = toggleterm.toggle_command
+function toggleterm.toggle_command(args, count)
+  vim.g.splitkeep = vim.go.splitkeep
+  vim.go.splitkeep = 'screen'
+  _toggle_command(args, count)
+  vim.go.splitkeep = vim.g.splitkeep
+end
