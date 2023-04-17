@@ -111,7 +111,7 @@ local autocmds = {
       pattern = '*',
       group = 'AutoCwd',
       callback = function(tbl)
-        if tbl.file == '' then
+        if tbl.file == '' or not vim.bo[tbl.buf].ma then
           return
         end
 
