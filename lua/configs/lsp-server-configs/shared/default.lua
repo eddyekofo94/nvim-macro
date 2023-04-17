@@ -924,7 +924,7 @@ local function command_complete(meta, subcommand_info_list)
         'virtual_text',
       }
       for _, opt in ipairs(bool_opts) do
-        if arglead:find(opt .. '=', 1, true) == 1 then
+        if arglead:find(opt .. '=', 1, true) then
           return _opt_complete({ 'v:true', 'v:false' })
         end
       end
