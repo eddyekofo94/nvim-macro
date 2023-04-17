@@ -3,147 +3,149 @@ local plt = require('colors.cockatoo.palette')
 local sch = {}
 
 -- Common highlight groups
-sch.Normal             = { fg = plt.smoke, bg = plt.jeans } -- Normal text
-sch.NormalFloat        = { fg = plt.smoke, bg = plt.ocean } -- Normal text in floating windows.
-sch.NormalNC           = { link = 'Normal' } -- normal text in non-current windows
-sch.ColorColumn        = { bg = plt.deepsea } -- Columns set with 'colorcolumn'
-sch.Conceal            = { fg = plt.smoke } -- Placeholder characters substituted for concealed text (see 'conceallevel')
-sch.Cursor             = { fg = plt.space, bg = plt.white } -- Character under the cursor
-sch.CursorColumn       = { bg = plt.ocean_blend } -- Screen-column at the cursor, when 'cursorcolumn' is set.
-sch.CursorIM           = { fg = plt.space, bg = plt.flashlight } -- Like Cursor, but used when in IME mode |CursorIM|
-sch.CursorLine         = { bg = plt.ocean_blend } -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
-sch.CursorLineNr       = { fg = plt.orange, bold = true } -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
-sch.DebugPC            = { bg = plt.purple_blend } -- Used for highlighting the current program counter position.
-sch.lCursor            = { link = 'Cursor' } -- Character under the cursor when |language-mapping| is used (see 'guicursor')
-sch.TermCursor         = { fg = plt.space, bg = plt.orange } -- Cursor in a focused terminal
-sch.TermCursorNC       = { fg = plt.orange, bg = plt.ocean } -- Cursor in an unfocused terminal
-sch.DiffAdd            = { bg = plt.aqua_blend } -- Diff mode: Added line |diff.txt|
-sch.DiffChange         = { bg = plt.purple_blend } -- Diff mode: Changed line |diff.txt|
-sch.DiffDelete         = { fg = plt.wine, bg = plt.wine_blend } -- Diff mode: Deleted line |diff.txt|
-sch.DiffText           = { bg = plt.lavender_blend } -- Diff mode: Changed text within a changed line |diff.txt|
-sch.Directory          = { fg = plt.pigeon } -- Directory names (and other special names in listings)
-sch.EndOfBuffer        = { fg = plt.iron } -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
-sch.ErrorMsg           = { fg = plt.scarlet } -- Error messages on the command line
-sch.FoldColumn         = { fg = plt.steel } -- 'foldcolumn'
-sch.Folded             = { fg = plt.steel, bg = plt.ocean_blend } -- Line used for closed folds
-sch.FloatBorder        = { fg = plt.smoke, bg = plt.ocean } -- Border of floating windows.
-sch.FloatShadow        = { bg = plt.shadow, blend = 70 } -- Shadow of floating windows.
-sch.FloatShadowThrough = { bg = plt.shadow, blend = 100 } -- Shadow of floating windows
-sch.Search             = { fg = plt.flashlight, bg = plt.thunder, bold = true } -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
-sch.IncSearch          = { fg = plt.black, bg = plt.flashlight, bold = true } -- 'incsearch' highlighting; also used for the text replaced with ':s///c'
-sch.LineNr             = { fg = plt.steel } -- Line number for ':number' and ':#' commands, and when 'number' or 'relativenumber' option is set.
-sch.ModeMsg            = { fg = plt.smoke } -- 'showmode' message (e.g., '-- INSERT -- ')
-sch.MoreMsg            = { fg = plt.aqua } -- |more-prompt|
-sch.MsgArea            = { link = 'Normal' } -- Area for messages and cmdline
-sch.MsgSeparator       = { link = 'StatusLine' } -- Separator for scrolled messages, `msgsep` flag of 'display'
+sch.Normal             = { fg = plt.smoke, bg = plt.jeans }
+sch.NormalFloat        = { fg = plt.smoke, bg = plt.ocean }
+sch.NormalNC           = { link = 'Normal' }
+sch.ColorColumn        = { bg = plt.deepsea }
+sch.Conceal            = { fg = plt.smoke }
+sch.Cursor             = { fg = plt.space, bg = plt.white }
+sch.CursorColumn       = { bg = plt.ocean_blend }
+sch.CursorIM           = { fg = plt.space, bg = plt.flashlight }
+sch.CursorLine         = { bg = plt.ocean_blend }
+sch.CursorLineNr       = { fg = plt.orange, bold = true }
+sch.DebugPC            = { bg = plt.purple_blend }
+sch.lCursor            = { link = 'Cursor' }
+sch.TermCursor         = { fg = plt.space, bg = plt.orange }
+sch.TermCursorNC       = { fg = plt.orange, bg = plt.ocean }
+sch.DiffAdd            = { bg = plt.aqua_blend }
+sch.DiffAdded          = { fg = plt.tea, bg = plt.aqua_blend }
+sch.DiffChange         = { bg = plt.purple_blend }
+sch.DiffDelete         = { fg = plt.wine, bg = plt.wine_blend }
+sch.DiffRemoved        = { fg = plt.wine, bg = plt.wine_blend }
+sch.DiffText           = { bg = plt.lavender_blend }
+sch.Directory          = { fg = plt.pigeon }
+sch.EndOfBuffer        = { fg = plt.iron }
+sch.ErrorMsg           = { fg = plt.scarlet }
+sch.FoldColumn         = { fg = plt.steel }
+sch.Folded             = { fg = plt.steel, bg = plt.ocean_blend }
+sch.FloatBorder        = { fg = plt.smoke, bg = plt.ocean }
+sch.FloatShadow        = { bg = plt.shadow, blend = 70 }
+sch.FloatShadowThrough = { bg = plt.shadow, blend = 100 }
+sch.Search             = { fg = plt.flashlight, bg = plt.thunder, bold = true }
+sch.IncSearch          = { fg = plt.black, bg = plt.flashlight, bold = true }
+sch.LineNr             = { fg = plt.steel }
+sch.ModeMsg            = { fg = plt.smoke }
+sch.MoreMsg            = { fg = plt.aqua }
+sch.MsgArea            = { link = 'Normal' }
+sch.MsgSeparator       = { link = 'StatusLine' }
 sch.MatchParen         = { bg = plt.thunder, bold = true }
-sch.NonText            = { fg = plt.iron } -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., '>' displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
-sch.Pmenu              = { fg = plt.smoke, bg = plt.ocean } -- Popup menu: Normal item.
-sch.PmenuSbar          = { bg = plt.deepsea } -- Popup menu: Scrollbar.
-sch.PmenuSel           = { fg = plt.white, bg = plt.thunder } -- Popup menu: Selected item.
-sch.PmenuThumb         = { bg = plt.orange } -- Popup menu: Thumb of the scrollbar.
-sch.Question           = { fg = plt.smoke } -- |hit-enter| prompt and yes/no questions
-sch.QuickFixLine       = { link = 'Visual' } -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
-sch.SignColumn         = { fg = plt.smoke } -- Column where |signs| are displayed
-sch.SpecialKey         = { fg = plt.orange } -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
-sch.SpellBad           = { underdotted = true } -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
-sch.SpellCap           = { link = 'SpellBad' } -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
-sch.SpellLocal         = { link = 'SpellBad' } -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
-sch.SpellRare          = { link = 'SpellBad' } -- Word that is recognized by the spellchecker as one that is hardly ever used. |spell| Combined with the highlighting used otherwise.
-sch.StatusLine         = { bg = plt.deepsea } -- Status line of current window
-sch.StatusLineNC       = { bg = plt.space } -- Status lines of not-current windows. Note: If this is equal to 'StatusLine' Vim will use '^^^' in the status line of the current window.
-sch.Substitute         = { link = 'Search' } -- |:substitute| replacement text highlighting
-sch.TabLine            = { link = 'StatusLine' } -- Tab pages line, not active tab page label
-sch.Title              = { fg = plt.pigeon, bold = true } -- Titles for output from ':set all', ':autocmd' etc.
-sch.VertSplit          = { fg = plt.deepsea } -- Column separating vertically split windows
-sch.Visual             = { bg = plt.deepsea } -- Visual mode selection
-sch.VisualNOS          = { link = 'Visual' } -- Visual mode selection when vim is 'Not Owning the Selection'.
-sch.WarningMsg         = { fg = plt.yellow } -- Warning messages
-sch.Whitespace         = { link = 'NonText' } -- 'nbsp', 'space', 'tab' and 'trail' in 'listchars'
-sch.WildMenu           = { link = 'PmenuSel' } -- Current match in 'wildmenu' completion
-sch.Winseparator       = { link = 'VertSplit' } -- Separator between window splits. Inherts from |hl-VertSplit| by default, which it will replace eventually.
+sch.NonText            = { fg = plt.iron }
+sch.Pmenu              = { fg = plt.smoke, bg = plt.ocean }
+sch.PmenuSbar          = { bg = plt.deepsea }
+sch.PmenuSel           = { fg = plt.white, bg = plt.thunder }
+sch.PmenuThumb         = { bg = plt.orange }
+sch.Question           = { fg = plt.smoke }
+sch.QuickFixLine       = { link = 'Visual' }
+sch.SignColumn         = { fg = plt.smoke }
+sch.SpecialKey         = { fg = plt.orange }
+sch.SpellBad           = { underdotted = true }
+sch.SpellCap           = { link = 'SpellBad' }
+sch.SpellLocal         = { link = 'SpellBad' }
+sch.SpellRare          = { link = 'SpellBad' }
+sch.StatusLine         = { bg = plt.deepsea }
+sch.StatusLineNC       = { bg = plt.space }
+sch.Substitute         = { link = 'Search' }
+sch.TabLine            = { link = 'StatusLine' }
+sch.Title              = { fg = plt.pigeon, bold = true }
+sch.VertSplit          = { fg = plt.deepsea }
+sch.Visual             = { bg = plt.deepsea }
+sch.VisualNOS          = { link = 'Visual' }
+sch.WarningMsg         = { fg = plt.yellow }
+sch.Whitespace         = { link = 'NonText' }
+sch.WildMenu           = { link = 'PmenuSel' }
+sch.Winseparator       = { link = 'VertSplit' }
 sch.WinBar             = { fg = plt.pigeon }
 sch.WinBarNC           = { fg = plt.steel }
 
 -- Syntax highlighting
-sch.Comment           = { fg = plt.steel } -- Any comment
-sch.Constant          = { fg = plt.ochre } -- (*) Any constant
-sch.String            = { fg = plt.turquoise } --   A string constant: 'this is a string'
-sch.DocumentKeyword   = { fg = plt.tea } --   A keyword used to tag a block of documentation.
-sch.Character         = { fg = plt.orange } --   A character constant: 'c', '\n'
-sch.Number            = { fg = plt.purple } --   A number constant: 234, 0xff
-sch.Boolean           = { fg = plt.ochre } --   A boolean     constant: TRUE, false
+sch.Comment           = { fg = plt.steel }
+sch.Constant          = { fg = plt.ochre }
+sch.String            = { fg = plt.turquoise }
+sch.DocumentKeyword   = { fg = plt.tea }
+sch.Character         = { fg = plt.orange }
+sch.Number            = { fg = plt.purple }
+sch.Boolean           = { fg = plt.ochre }
 sch.Array             = { fg = plt.orange }
-sch.Float             = { link = 'Number' } --   A floating point constant: 2.3e10
-sch.Identifier        = { fg = plt.smoke } -- (*) Any variable name
-sch.IdentifierBuiltIn = { fg = plt.pink } -- (*) Builtin variable name
-sch.Field             = { fg = plt.pigeon } -- (*) Any variable name
+sch.Float             = { link = 'Number' }
+sch.Identifier        = { fg = plt.smoke }
+sch.IdentifierBuiltIn = { fg = plt.pink }
+sch.Field             = { fg = plt.pigeon }
 sch.Enum              = { fg = plt.ochre }
 sch.Namespace         = { fg = plt.ochre }
 sch.Parameter         = { fg = plt.smoke }
-sch.Function          = { fg = plt.yellow } --   Function name (also: methods for classes)
-sch.Statement         = { fg = plt.lavender } -- (*) Any statement
-sch.Object            = { fg = plt.lavender } -- (*) Any statement
-sch.Conditional       = { fg = plt.magenta } --   if, then, else, endif, switch, etc.
-sch.Repeat            = { fg = plt.magenta } --   for, do, while, etc.
-sch.Label             = { fg = plt.magenta } --   case, default, etc.
-sch.Operator          = { fg = plt.orange } --   'sizeof', '+', '*', etc.
-sch.Keyword           = { fg = plt.cerulean } --   any other keyword
-sch.Exception         = { fg = plt.magenta } --   try, catch, throw
-sch.PreProc           = { fg = plt.turquoise } -- (*) Generic Preprocessor
-sch.PreCondit         = { link = 'PreProc' } --   Preprocessor #if, #else, #endif, etc.
-sch.Include           = { link = 'PreProc' } --   Preprocessor #include
-sch.Define            = { link = 'PreProc' } --   Preprocessor #define
-sch.Macro             = { fg = plt.ochre } --   Same as Define
-sch.Type              = { fg = plt.lavender } -- (*) int, long, char, etc.
-sch.StorageClass      = { link = 'Keyword' } --   static, register, volatile, etc.
-sch.Structure         = { link = 'Type' } --   struct, union, enum, etc.
-sch.Typedef           = { fg = plt.beige } --   A typedef
-sch.Special           = { fg = plt.orange } -- (*) Any special symbol
-sch.SpecialChar       = { link = 'Special' } --   Special character in a constant
-sch.Tag               = { fg = plt.flashlight, underline = true } --   You can use CTRL-] on this
-sch.Delimiter         = { fg = plt.orange } --   Character that needs attention
+sch.Function          = { fg = plt.yellow }
+sch.Statement         = { fg = plt.lavender }
+sch.Object            = { fg = plt.lavender }
+sch.Conditional       = { fg = plt.magenta }
+sch.Repeat            = { fg = plt.magenta }
+sch.Label             = { fg = plt.magenta }
+sch.Operator          = { fg = plt.orange }
+sch.Keyword           = { fg = plt.cerulean }
+sch.Exception         = { fg = plt.magenta }
+sch.PreProc           = { fg = plt.turquoise }
+sch.PreCondit         = { link = 'PreProc' }
+sch.Include           = { link = 'PreProc' }
+sch.Define            = { link = 'PreProc' }
+sch.Macro             = { fg = plt.ochre }
+sch.Type              = { fg = plt.lavender }
+sch.StorageClass      = { link = 'Keyword' }
+sch.Structure         = { link = 'Type' }
+sch.Typedef           = { fg = plt.beige }
+sch.Special           = { fg = plt.orange }
+sch.SpecialChar       = { link = 'Special' }
+sch.Tag               = { fg = plt.flashlight, underline = true }
+sch.Delimiter         = { fg = plt.orange }
 sch.Bracket           = { fg = plt.pigeon }
-sch.SpecialComment    = { link = 'SpecialChar' } --   Special things inside a comment (e.g. '\n')
-sch.Debug             = { link = 'Special' } --   Debugging statements
-sch.Underlined        = { underline = true } -- Text that stands out, HTML links
-sch.Ignore            = { fg = plt.iron } -- Left blank, hidden |hl-Ignore| (NOTE: May be invisible here in template)
-sch.Error             = { fg = plt.scarlet } -- Any erroneous construct
-sch.Todo              = { fg = plt.black, bg = plt.beige, bold = true } -- Anything that needs extra attention; mostly the keywords TODO FIXME and XXX
+sch.SpecialComment    = { link = 'SpecialChar' }
+sch.Debug             = { link = 'Special' }
+sch.Underlined        = { underline = true }
+sch.Ignore            = { fg = plt.iron }
+sch.Error             = { fg = plt.scarlet }
+sch.Todo              = { fg = plt.black, bg = plt.beige, bold = true }
 
 -- LSP Highlighting
-sch.LspReferenceText            = { link = 'Identifier' } -- Used for highlighting 'text' references
-sch.LspReferenceRead            = { link = 'LspReferenceText' } -- Used for highlighting 'read' references
-sch.LspReferenceWrite           = { link = 'LspReferenceText' } -- Used for highlighting 'write' references
-sch.LspSignatureActiveParameter = { link = 'IncSearch' } -- Used to highlight the active parameter in the signature help. See |vim.lsp.handlers.signature_help()|.
-sch.LspInfoBorder               = { link = 'FloatBorder' } -- Used to color the border of the info box
+sch.LspReferenceText            = { link = 'Identifier' }
+sch.LspReferenceRead            = { link = 'LspReferenceText' }
+sch.LspReferenceWrite           = { link = 'LspReferenceText' }
+sch.LspSignatureActiveParameter = { link = 'IncSearch' }
+sch.LspInfoBorder               = { link = 'FloatBorder' }
 
 -- Diagnostic highlighting
-sch.DiagnosticOK               = { fg = plt.tea } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-sch.DiagnosticError            = { fg = plt.wine } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-sch.DiagnosticWarn             = { fg = plt.earth } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-sch.DiagnosticInfo             = { fg = plt.smoke } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-sch.DiagnosticHint             = { fg = plt.pigeon } -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-sch.DiagnosticVirtualTextOK    = { fg = plt.tea, bg = plt.tea_blend } -- Used for 'OK' diagnostic virtual text.
-sch.DiagnosticVirtualTextError = { fg = plt.wine, bg = plt.wine_blend } -- Used for 'Error' diagnostic virtual text.
-sch.DiagnosticVirtualTextWarn  = { fg = plt.earth, bg = plt.earth_blend } -- Used for 'Warn' diagnostic virtual text.
-sch.DiagnosticVirtualTextInfo  = { fg = plt.smoke, bg = plt.smoke_blend } -- Used for 'Info' diagnostic virtual text.
-sch.DiagnosticVirtualTextHint  = { fg = plt.pigeon, bg = plt.pigeon_blend } -- Used for 'Hint' diagnostic virtual text.
-sch.DiagnosticUnderlineOK      = { underline = true, sp = plt.tea } -- Used to underline 'OK' diagnostics.
-sch.DiagnosticUnderlineError   = { undercurl = true, sp = plt.wine } -- Used to underline 'Error' diagnostics.
-sch.DiagnosticUnderlineWarn    = { undercurl = true, sp = plt.earth } -- Used to underline 'Warn' diagnostics.
-sch.DiagnosticUnderlineInfo    = { undercurl = true, sp = plt.flashlight } -- Used to underline 'Info' diagnostics.
-sch.DiagnosticUnderlineHint    = { undercurl = true, sp = plt.white } -- Used to underline 'Hint' diagnostics.
-sch.DiagnosticFloatingOK       = { link = 'DiagnosticOK' } -- Used to color 'OK' diagnostic messages in diagnostics float. See |vim.diagnostic.open_float()|
-sch.DiagnosticFloatingError    = { link = 'DiagnosticError' } -- Used to color 'Error' diagnostic messages in diagnostics float. See |vim.diagnostic.open_float()|
-sch.DiagnosticFloatingWarn     = { link = 'DiagnosticWarn' } -- Used to color 'Warn' diagnostic messages in diagnostics float.
-sch.DiagnosticFloatingInfo     = { link = 'DiagnosticInfo' } -- Used to color 'Info' diagnostic messages in diagnostics float.
-sch.DiagnosticFloatingHint     = { link = 'DiagnosticHint' } -- Used to color 'Hint' diagnostic messages in diagnostics float.
-sch.DiagnosticSignOK           = { link = 'DiagnosticOK' } -- Used for 'Error' signs in sign column.
-sch.DiagnosticSignError        = { link = 'DiagnosticError' } -- Used for 'Error' signs in sign column.
-sch.DiagnosticSignWarn         = { link = 'DiagnosticWarn' } -- Used for 'Warn' signs in sign column.
-sch.DiagnosticSignInfo         = { link = 'DiagnosticInfo' } -- Used for 'Info' signs in sign column.
-sch.DiagnosticSignHint         = { link = 'DiagnosticHint' } -- Used for 'Hint' signs in sign column.
+sch.DiagnosticOK               = { fg = plt.tea }
+sch.DiagnosticError            = { fg = plt.wine }
+sch.DiagnosticWarn             = { fg = plt.earth }
+sch.DiagnosticInfo             = { fg = plt.smoke }
+sch.DiagnosticHint             = { fg = plt.pigeon }
+sch.DiagnosticVirtualTextOK    = { fg = plt.tea, bg = plt.tea_blend }
+sch.DiagnosticVirtualTextError = { fg = plt.wine, bg = plt.wine_blend }
+sch.DiagnosticVirtualTextWarn  = { fg = plt.earth, bg = plt.earth_blend }
+sch.DiagnosticVirtualTextInfo  = { fg = plt.smoke, bg = plt.smoke_blend }
+sch.DiagnosticVirtualTextHint  = { fg = plt.pigeon, bg = plt.pigeon_blend }
+sch.DiagnosticUnderlineOK      = { underline = true, sp = plt.tea }
+sch.DiagnosticUnderlineError   = { undercurl = true, sp = plt.wine }
+sch.DiagnosticUnderlineWarn    = { undercurl = true, sp = plt.earth }
+sch.DiagnosticUnderlineInfo    = { undercurl = true, sp = plt.flashlight }
+sch.DiagnosticUnderlineHint    = { undercurl = true, sp = plt.white }
+sch.DiagnosticFloatingOK       = { link = 'DiagnosticOK' }
+sch.DiagnosticFloatingError    = { link = 'DiagnosticError' }
+sch.DiagnosticFloatingWarn     = { link = 'DiagnosticWarn' }
+sch.DiagnosticFloatingInfo     = { link = 'DiagnosticInfo' }
+sch.DiagnosticFloatingHint     = { link = 'DiagnosticHint' }
+sch.DiagnosticSignOK           = { link = 'DiagnosticOK' }
+sch.DiagnosticSignError        = { link = 'DiagnosticError' }
+sch.DiagnosticSignWarn         = { link = 'DiagnosticWarn' }
+sch.DiagnosticSignInfo         = { link = 'DiagnosticInfo' }
+sch.DiagnosticSignHint         = { link = 'DiagnosticHint' }
 
 sch['@field']                 = { link = 'Field' }
 sch['@property']              = { link = 'Field' }
@@ -313,6 +315,7 @@ sch.GitSignsAdd                      = { fg = plt.tea_blend }
 sch.GitSignsDelete                   = { fg = plt.wine }
 sch.GitSignsChange                   = { fg = plt.lavender_blend }
 sch.GitSignsCurrentLineBlame         = { link = 'DiagnosticVirtualTextInfo' }
+sch.GitSignsAddPreview               = { link = 'DiffAdded' }
 sch.GitSignsAddInline                = { fg = plt.tea, bg = plt.tea_blend }
 sch.GitSignsAddLnInline              = { fg = plt.tea, bg = plt.tea_blend }
 sch.GitSignsChangeInline             = { fg = plt.lavender, bg = plt.lavender_blend }
