@@ -323,7 +323,12 @@ local autocmds = {
     { 'BufWinEnter', 'WinEnter' },
     {
       group = 'UpdateFolds',
-      command = 'normal! zx',
+      callback = function(tbl)
+        if not vim.b[tbl.buf].foldupdated then
+          vim.b[tbl.buf].foldupdated = true
+          vim.cmd.normal('zx')
+        end
+      end
     },
   },
 }
