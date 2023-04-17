@@ -19,7 +19,6 @@ opt.sidescrolloff  = 8
 opt.showtabline    = 0
 opt.signcolumn     = 'yes:1'
 opt.splitright     = true
-opt.splitkeep      = 'topline'
 opt.swapfile       = false
 opt.termguicolors  = true
 opt.undofile       = true
