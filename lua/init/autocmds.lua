@@ -320,7 +320,7 @@ local autocmds = {
 
   -- Update folds on BufEnter
   {
-    { 'BufWinEnter', 'WinEnter' },
+    { 'BufWinEnter', 'BufEnter' },
     {
       group = 'UpdateFolds',
       callback = function(tbl)
