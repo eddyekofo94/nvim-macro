@@ -442,7 +442,11 @@ local subcommands = {
       },
       incoming_calls = {},
       outgoing_calls = {},
-      server_ready = {},
+      server_ready = {
+        fn_override = function(...)
+          vim.notify(vim.inspect(vim.lsp.buf.server_ready(...)))
+        end,
+      },
       signature_help = {},
     },
   },
