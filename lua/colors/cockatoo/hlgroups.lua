@@ -21,7 +21,7 @@ sch.DiffAdd            = { bg = plt.aqua_blend }
 sch.DiffAdded          = { fg = plt.tea, bg = plt.aqua_blend }
 sch.DiffChange         = { bg = plt.purple_blend }
 sch.DiffDelete         = { fg = plt.wine, bg = plt.wine_blend }
-sch.DiffRemoved        = { fg = plt.wine, bg = plt.wine_blend }
+sch.DiffRemoved        = { fg = plt.scarlet, bg = plt.wine_blend }
 sch.DiffText           = { bg = plt.lavender_blend }
 sch.Directory          = { fg = plt.pigeon }
 sch.EndOfBuffer        = { fg = plt.iron }
@@ -328,7 +328,17 @@ sch.GitSignsDeleteVirtLnInLine       = { fg = plt.scarlet, bg = plt.scarlet_blen
 sch.GitSignsDeletePreview            = { fg = plt.scarlet, bg = plt.wine_blend }
 
 -- fugitive
-sch.fugitiveHash = { link = 'gitHash' }
+sch.fugitiveHash              = { link = 'gitHash' }
+sch.fugitiveHeader            = { link = 'Title' }
+sch.fugitiveHeading           = { fg = plt.orange, bold = true }
+sch.fugitiveHelpTag           = { fg = plt.orange }
+sch.fugitiveSymbolicRef       = { fg = plt.yellow }
+sch.fugitiveStagedModifier    = { fg = plt.tea, bold = true }
+sch.fugitiveUnstagedModifier  = { fg = plt.scarlet, bold = true }
+sch.fugitiveUntrackedModifier = { fg = plt.pigeon, bold = true }
+sch.fugitiveStagedHeading     = { fg = plt.aqua, bold = true }
+sch.fugitiveUnstagedHeading   = { fg = plt.ochre, bold = true }
+sch.fugitiveUntrackedHeading  = { fg = plt.lavender, bold = true }
 
 -- barbar
 sch.BufferCurrent        = { fg = plt.smoke }
