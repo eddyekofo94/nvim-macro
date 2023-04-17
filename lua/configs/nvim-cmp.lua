@@ -254,6 +254,15 @@ cmp.setup.cmdline(':', {
     { name = 'cmdline', group_index = 2 },
   },
 })
+-- Complete vim.ui.input()
+cmp.setup.cmdline('@', {
+  enabled = true,
+  sources = {
+    { name = 'path', group_index = 1 },
+    { name = 'cmdline', group_index = 2 },
+    { name = 'buffer', group_index = 3 },
+  },
+})
 
 -- Completion in DAP buffers
 cmp.setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
