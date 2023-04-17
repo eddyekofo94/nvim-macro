@@ -101,7 +101,27 @@ return {
 
   {
     'tpope/vim-fugitive',
-    cmd = { 'G', 'Git' },
+    cmd = {
+      'G',
+      'Gcd',
+      'Gclog',
+      'Gdiffsplit',
+      'Gdrop',
+      'Gedit',
+      'Ggrep',
+      'Git',
+      'Glcd',
+      'Glgrep',
+      'Gllog',
+      'Gpedit',
+      'Gread',
+      'Gsplit',
+      'Gtabedit',
+      'Gvdiffsplit',
+      'Gvsplit',
+      'Gwq',
+      'Gwrite',
+    },
     event = { 'BufWritePost', 'BufReadPre' },
     config = function()
       require('configs.vim-fugitive')
