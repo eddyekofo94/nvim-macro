@@ -55,8 +55,13 @@ local function get_file()
   end
 
   local fname = vim.fn.expand('%:t')
-  local icon, _ = require('nvim-web-devicons').get_icon(fname,
-    vim.fn.fnamemodify(fname, ':e'), { default = true })
+  local icon = vim.bo.bt == ''
+      and require('nvim-web-devicons').get_icon(
+        fname,
+        vim.fn.fnamemodify(fname, ':e'),
+        { default = true }
+      )
+    or ''
   return {
     icon = icon,
     name = fname,
@@ -249,24 +254,9 @@ function _G.get_winbar()
   return winbar_str
 end
 
-vim.api.nvim_create_augroup('Navic', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter', 'BufWritePost' }, {
-  pattern = '*',
-  group = 'Navic',
-  callback = function()
-    if
-      not vim.api.nvim_win_get_config(0).zindex
-      and vim.bo.buftype == ''
-      and vim.fn.expand('%') ~= ''
-    then
-      vim.wo.winbar = '%{%v:lua.get_winbar()%}'
-    elseif vim.bo.buftype ~= 'terminal' then
-      vim.wo.winbar = nil
-    end
-  end,
-})
+vim.opt.winbar = "%{%!&diff?v:lua.get_winbar():''%}"
 vim.api.nvim_create_autocmd({ 'LspAttach' }, {
-  group = 'Navic',
+  group = vim.api.nvim_create_augroup('Navic', {}),
   callback = function(tbl)
     local client = vim.lsp.get_client_by_id(tbl.data.client_id)
     if client and client.supports_method('textDocument/documentSymbol') then
