@@ -274,6 +274,8 @@ sch.markdownListMarker = { fg = plt.orange }
 -- Shell
 sch.shDeref            = { link = 'Macro' }
 sch.shDerefVar         = { link = 'Macro' }
+-- Git
+sch.gitHash = { fg = plt.pigeon }
 
 -- Plugin highlights
 -- nvim-cmp
@@ -324,6 +326,9 @@ sch.GitSignsDeleteInline             = { fg = plt.scarlet, bg = plt.scarlet_blen
 sch.GitSignsDeleteLnInline           = { fg = plt.scarlet, bg = plt.scarlet_blend }
 sch.GitSignsDeleteVirtLnInLine       = { fg = plt.scarlet, bg = plt.scarlet_blend }
 sch.GitSignsDeletePreview            = { fg = plt.scarlet, bg = plt.wine_blend }
+
+-- fugitive
+sch.fugitiveHash = { link = 'gitHash' }
 
 -- barbar
 sch.BufferCurrent        = { fg = plt.smoke }
