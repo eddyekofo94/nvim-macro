@@ -268,7 +268,7 @@ local subcommands = {
           '--show-status',
         },
         fn_override = function(opts)
-          if opts.show_status then
+          if opts['show-status'] then
             vim.notify(
               '[LSP] format-on-save: '
                 .. (vim.b.lsp_format_on_save and 'enabled' or 'disabled')
@@ -955,7 +955,13 @@ end
 ---@param meta string meta command name
 ---@param subcommand_info_list subcommand_info_t[] subcommands information
 ---@param fn_scope table scope of corresponding functions for subcommands
-local function setup_meta_commands(_, bufnr, meta, subcommand_info_list, fn_scope)
+local function setup_meta_commands(
+  _,
+  bufnr,
+  meta,
+  subcommand_info_list,
+  fn_scope
+)
   vim.api.nvim_buf_create_user_command(
     bufnr,
     meta,
@@ -997,13 +1003,7 @@ local function on_attach(client, bufnr)
   if not vim.b[bufnr].lsp_attached then
     vim.b[bufnr].lsp_attached = true
     setup_keymaps(client, bufnr)
-    setup_meta_commands(
-      client,
-      bufnr,
-      'Lsp',
-      subcommands.lsp.buf,
-      vim.lsp.buf
-    )
+    setup_meta_commands(client, bufnr, 'Lsp', subcommands.lsp.buf, vim.lsp.buf)
     setup_meta_commands(
       client,
       bufnr,
