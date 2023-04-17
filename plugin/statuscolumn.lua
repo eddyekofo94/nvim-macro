@@ -61,7 +61,12 @@ function _G.get_sign(bufnum, lnum, prefixes, cachekey)
 
   local sign_def = get_sign_def(max_priority_sign.name, cachekey)
 
-  if not sign_def then
+  if
+    not sign_def
+    or vim.v.virtnum ~= 0 -- Don't show git delete signs in virtual line
+      and sign_def[1]
+      and sign_def[1].name:match('Git%w*[Dd]elete$')
+  then
     return ' '
   end
 
