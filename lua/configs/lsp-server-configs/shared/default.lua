@@ -223,6 +223,7 @@ local subcommands = {
         opts = { '--query', '--options.on_list' },
       },
       format = {
+        arg_handler = arg_handler_range,
         opts = {
           '--formatting_options',
           '--formatting_options.tabSize',
