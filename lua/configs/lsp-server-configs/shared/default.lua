@@ -369,7 +369,7 @@ local subcommands = {
             vim.g.lsp_format_on_save_options = vim.tbl_deep_extend(
               'force',
               vim.g.lsp_format_on_save_options or {},
-              opts.fmt_opts or {}
+              opts.format or {}
             )
           end
 
