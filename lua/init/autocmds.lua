@@ -229,8 +229,8 @@ local autocmds = {
         else
           vim.cmd.setlocal('matchpairs&')
         end
-      end
-    }
+      end,
+    },
   },
 
   -- Open quickfix window if there are results
@@ -328,7 +328,48 @@ local autocmds = {
           vim.b[tbl.buf].foldupdated = true
           vim.cmd.normal('zx')
         end
-      end
+      end,
+    },
+  },
+
+  -- Smart expandtab: use tabs for indentation and spaces for alignment
+  {
+    { 'InsertEnter', 'CursorMovedI' },
+    {
+      group = 'SmartExpandtab',
+      callback = function(tbl)
+        local col = vim.api.nvim_win_get_cursor(0)[2]
+        local line = vim.api.nvim_get_current_line()
+        local after_non_blank = vim.fn.match(line:sub(1, col), [[\S]]) >= 0
+        -- An adjacent tab is a tab that can be joined with the tab
+        -- inserted before the cursor assuming 'noet' is set
+        local has_adjacent_tabs = vim.fn.match(
+          line:sub(1, col),
+          string.format([[\t\ \{,%d}$]], math.max(0, vim.bo[tbl.buf].ts - 1))
+        ) >= 0 or line:sub(col + 1, col + 1) == '\t'
+        if after_non_blank and not has_adjacent_tabs then
+          if vim.b[tbl.buf].expandtab == nil then
+            vim.b[tbl.buf].expandtab = vim.bo.expandtab
+          end
+          vim.bo[tbl.buf].expandtab = true
+        elseif vim.b[tbl.buf].expandtab ~= nil then
+          vim.bo[tbl.buf].expandtab = vim.b.expandtab
+          vim.b[tbl.buf].expandtab = nil
+        end
+      end,
+    },
+  },
+  {
+    { 'InsertLeave' },
+    {
+      group = 'SmartExpandtab',
+      callback = function(tbl)
+        -- Restore expandtab setting
+        if vim.b[tbl.buf].expandtab ~= nil then
+          vim.bo[tbl.buf].expandtab = vim.b.expandtab
+          vim.b[tbl.buf].expandtab = nil
+        end
+      end,
     },
   },
 }
