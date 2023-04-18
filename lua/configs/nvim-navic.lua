@@ -26,8 +26,8 @@ local function concat(tbl, padding, tbl_hl, padding_hl)
     -- Do not concat if str is empty or
     -- contains only white spaces
     if not str:match('^%s*$') then
-      result = result and result .. hl(padding, padding_hl) .. vim.trim(hl(str, tbl_hl[i]))
-          or vim.trim(hl(str, tbl_hl[i]))
+      result = result and result .. hl(padding, padding_hl)
+        .. vim.trim(hl(str, tbl_hl[i])) or vim.trim(hl(str, tbl_hl[i]))
     end
   end
   return vim.trim(result or '')
@@ -254,9 +254,35 @@ function _G.get_winbar()
   return winbar_str
 end
 
-vim.opt.winbar = "%{%!&diff?v:lua.get_winbar():''%}"
+local groupid = vim.api.nvim_create_augroup('NavicConfig', {})
+vim.api.nvim_create_autocmd({ 'BufWinEnter', 'WinEnter', 'BufWritePost' }, {
+  pattern = '*',
+  group = groupid,
+  callback = function()
+    if
+      not vim.api.nvim_win_get_config(0).zindex
+      and vim.bo.buftype == ''
+      and vim.fn.expand('%') ~= ''
+      and not vim.wo.diff
+    then
+      vim.wo.winbar = '%{%v:lua.get_winbar()%}'
+    end
+  end,
+})
+vim.api.nvim_create_autocmd({ 'OptionSet' }, {
+  pattern = 'diff',
+  group = groupid,
+  callback = function()
+    if vim.v.option_new then
+      vim.w.winbar = vim.wo.winbar
+      vim.wo.winbar = nil
+    elseif vim.w.winbar then
+      vim.wo.winbar = vim.w.winbar
+    end
+  end,
+})
 vim.api.nvim_create_autocmd({ 'LspAttach' }, {
-  group = vim.api.nvim_create_augroup('Navic', {}),
+  group = groupid,
   callback = function(tbl)
     local client = vim.lsp.get_client_by_id(tbl.data.client_id)
     if client and client.supports_method('textDocument/documentSymbol') then
