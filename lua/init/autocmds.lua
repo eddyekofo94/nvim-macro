@@ -164,9 +164,7 @@ local autocmds = {
     {
       pattern = '*',
       group = 'AutoMkdir',
-      callback = function()
-        vim.fn.mkdir(vim.fn.expand('%:p:h'), 'p')
-      end,
+      command = "silent! call mkdir(expand('%:p:h'), 'p')",
     },
   },
 
@@ -225,9 +223,11 @@ local autocmds = {
       pattern = { '*:t', 't:*' },
       callback = function(tbl)
         if vim.fn.match(tbl.match, '.*:t$') ~= -1 then
-          vim.cmd.setlocal('matchpairs=')
-        else
-          vim.cmd.setlocal('matchpairs&')
+          vim.b[tbl.buf].matchpairs = vim.bo[tbl.buf].matchpairs
+          vim.bo[tbl.buf].matchpairs = ''
+        elseif vim.b[tbl.buf].matchpairs then
+          vim.bo[tbl.buf].matchpairs = vim.b[tbl.buf].matchpairs
+          vim.b[tbl.buf].matchpairs = nil
         end
       end,
     },
