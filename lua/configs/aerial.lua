@@ -24,7 +24,7 @@ aerial.setup({
     ['h'] = false,
     ['H'] = false,
   },
-  attach_mode = 'window',
+  attach_mode = 'global',
   backends = {
     ['_'] = { 'lsp', 'treesitter', 'man' },
     ['python'] = { 'treesitter', 'lsp' },
