@@ -184,7 +184,7 @@ After creating the new module `bar`, enable it in [lua/init/plugins.lua](hub.com
 manage_plugins({
     spec = {
       -- ...
-      { import = 'bar' },
+      { import = 'modules.bar' },
     },
 })
 ```
@@ -203,7 +203,7 @@ corresponding plugin keymaps.
 ![image](https://user-images.githubusercontent.com/76579810/220518710-aa55a4cc-6855-471d-8ed8-627bbfdf617c.png)
 
 
-`nvim-falcon` is a builtin custom colorscheme, with seperate palettes for dark and light background.
+`cockatoo` is a builtin custom colorscheme, with seperate palettes for dark and light background.
 
 Use `<M-C-d>` to toggle dark/light background.
 
@@ -213,7 +213,7 @@ is no need to setup `vim.opt.bg` in the config.
 To disable the auto-restore feature, remove corresponding lines in
 [lua/init/autocmds.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/autocmds.lua)
 
-To tweak this colorscheme, see [lua/colors/nvim-falcon](https://github.com/Bekaboo/nvim/tree/master/lua/colors/nvim-falcon).
+To tweak this colorscheme, see [lua/colors/cockatoo](https://github.com/Bekaboo/nvim/tree/master/lua/colors/cockatoo).
 
 ### Auto Commands
 
@@ -245,7 +245,7 @@ and it should work out of the box.
 
 ### Default Modules and Plugins of Choice
 
-Total # of plugins: 54 (package manager included).
+Total # of plugins: 55 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -259,8 +259,8 @@ Total # of plugins: 54 (package manager included).
     - [cmp-buffer](https://github.com/hrsh7th/cmp-buffer)
     - [cmp_luasnip](https://github.com/saadparwaiz1/cmp_luasnip)
     - [cmp-nvim-lsp-signature-help](https://github.com/hrsh7th/cmp-nvim-lsp-signature-help)
+    - [cmp-dap](https://github.com/rcarriga/cmp-dap)
     - [copilot.lua](https://github.com/zbirenbaum/copilot.lua)
-    - [copilot-cmp](https://github.com/zbirenbaum/copilot-cmp)
     - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
 - **LSP**
     - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
@@ -271,7 +271,6 @@ Total # of plugins: 54 (package manager included).
     - [mason-null-ls.nvim](https://github.com/jay-babu/mason-null-ls.nvim)
 - **Markup**
     - [vimtex](https://github.com/lervag/vimtex)
-    - [vim-markdown](https://github.com/preservim/vim-markdown)
     - [clipboard-image.nvim](https://github.com/ekickx/clipboard-image.nvim)
     - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
     - [zk-nvim](https://github.com/mickael-menu/zk-nvim)
@@ -288,22 +287,24 @@ Total # of plugins: 54 (package manager included).
     - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
     - [telescope-fzf-native.nvim](https://github.com/nvim-telescope/telescope-fzf-native.nvim)
     - [telescope-undo.nvim](https://github.com/debugloop/telescope-undo.nvim)
-    - [vim-floaterm](https://github.com/voldikss/vim-floaterm)
+    - [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)
+    - [flatten.nvim](https://github.com/willothy/flatten.nvim)
     - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
     - [rnvimr](https://github.com/kevinhwang91/rnvimr)
     - [tmux.nvim](https://github.com/aserowy/tmux.nvim)
     - [nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua)
+    - [vim-fugitive](https://github.com/tpope/vim-fugitive)
 - **Treesitter**
     - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
     - [nvim-ts-rainbow](https://github.com/mrjones2014/nvim-ts-rainbow)
     - [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)
     - [nvim-ts-context-commentstring](https://github.com/JoosepAlviste/nvim-ts-context-commentstring)
+    - [nvim-treesitter-endwise](https://github.com/RRethy/nvim-treesitter-endwise)
     - [ts-node-action](https://github.com/CKolkey/ts-node-action)
     - [cellular-automaton.nvim](https://github.com/Eandrju/cellular-automaton.nvim)
 - **UI**
     - [barbar.nvim](https://github.com/romgrk/barbar.nvim)
     - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
-    - [alpha-nvim](https://github.com/goolord/alpha-nvim)
     - [nvim-navic](https://github.com/SmiteshP/nvim-navic)
     - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
 - **DEBUG**
