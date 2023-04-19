@@ -26,6 +26,7 @@ return {
     dependencies = {
       'nvim-treesitter-textobjects',
       'nvim-ts-context-commentstring',
+      'nvim-treesitter-endwise',
     }
   },
 
