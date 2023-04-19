@@ -74,7 +74,7 @@ function _G.get_sign(bufnum, lnum, prefixes, cachekey)
 end
 
 vim.api.nvim_create_augroup('StatusColumn', {})
-vim.api.nvim_create_autocmd('BufWinEnter', {
+vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
   group = 'StatusColumn',
   callback = function(tbl)
     if tbl.file and vim.loop.fs_stat(tbl.file) and vim.bo.bt == '' then
