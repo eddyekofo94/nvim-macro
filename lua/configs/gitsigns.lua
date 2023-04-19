@@ -5,7 +5,7 @@ require('gitsigns').setup({
   },
   signs = {
     add = { text = '┃' },
-    untracked = { text = '╏' },
+    untracked = { text = '┃' },
     change = { text = '┃' },
     delete = { text = '▁' },
     topdelete = { text = '▔' },

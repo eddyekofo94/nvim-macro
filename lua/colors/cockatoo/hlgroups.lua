@@ -314,18 +314,21 @@ sch.CmpItemAbbrMatchFuzzy  = { link = 'CmpItemAbbrMatch' }
 
 -- gitsigns
 sch.GitSignsAdd                      = { fg = plt.tea_blend }
-sch.GitSignsDelete                   = { fg = plt.wine }
-sch.GitSignsChange                   = { fg = plt.lavender_blend }
-sch.GitSignsCurrentLineBlame         = { link = 'DiagnosticVirtualTextInfo' }
-sch.GitSignsAddPreview               = { link = 'DiffAdded' }
 sch.GitSignsAddInline                = { fg = plt.tea, bg = plt.tea_blend }
 sch.GitSignsAddLnInline              = { fg = plt.tea, bg = plt.tea_blend }
+sch.GitSignsAddPreview               = { link = 'DiffAdded' }
+sch.GitSignsChange                   = { fg = plt.lavender_blend }
 sch.GitSignsChangeInline             = { fg = plt.lavender, bg = plt.lavender_blend }
 sch.GitSignsChangeLnInline           = { fg = plt.lavender, bg = plt.lavender_blend }
+sch.GitSignsCurrentLineBlame         = { fg = plt.smoke, bg = plt.smoke_blend }
+sch.GitSignsDelete                   = { fg = plt.wine }
 sch.GitSignsDeleteInline             = { fg = plt.scarlet, bg = plt.scarlet_blend }
 sch.GitSignsDeleteLnInline           = { fg = plt.scarlet, bg = plt.scarlet_blend }
-sch.GitSignsDeleteVirtLnInLine       = { fg = plt.scarlet, bg = plt.scarlet_blend }
 sch.GitSignsDeletePreview            = { fg = plt.scarlet, bg = plt.wine_blend }
+sch.GitSignsDeleteVirtLnInLine       = { fg = plt.scarlet, bg = plt.scarlet_blend }
+sch.GitSignsUntracked                = { fg = plt.scarlet_blend }
+sch.GitSignsUntrackedLn              = { bg = plt.scarlet_blend }
+sch.GitSignsUntrackedNr              = { fg = plt.pink }
 
 -- fugitive
 sch.fugitiveHash              = { link = 'gitHash' }
