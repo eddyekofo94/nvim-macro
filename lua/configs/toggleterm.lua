@@ -7,7 +7,7 @@ toggleterm.setup({
   hide_numbers = true,
   autochdir = true,
   persist_size = false,
-  direction = vim.go.columns >= 120 and 'vertical' or 'horizontal',
+  direction = 'horizontal',
   float_opts = {
     border = 'shadow',
     width = function()
@@ -32,10 +32,9 @@ toggleterm.setup({
     WinBarInactive = { link = 'WinBarNC' },
   },
   winbar = {
-    enabled = true,
+    enabled = false,
   },
   on_open = function()
-    vim.cmd('silent! stopinsert!')
     vim.cmd('silent! normal! 0')
     vim.cmd('silent! startinsert!')
   end,
