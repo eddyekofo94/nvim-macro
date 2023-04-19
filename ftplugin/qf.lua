@@ -1,6 +1,6 @@
-vim.bo.buflisted = false
-vim.wo.nu        = false
-vim.wo.rnu       = false
+vim.bo.buflisted  = false
+vim.opt_local.nu  = false
+vim.opt_local.rnu = false
 
 vim.keymap.set('n', '<Tab>', '<CR><C-w>p',  { buffer = true })
 vim.keymap.set('n', '<C-j>', 'j<CR><C-w>p', { buffer = true })

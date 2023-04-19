@@ -1,2 +1,2 @@
-vim.wo.list = false
-vim.wo.cursorcolumn = false
+vim.opt_local.list = false
+vim.opt_local.cursorcolumn = false
