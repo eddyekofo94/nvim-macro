@@ -34,13 +34,13 @@ vim.api.nvim_create_autocmd('VimResized', {
 local function change_highlight_colorscheme()
   if vim.o.background == 'dark' then
     os.execute(
-      'ln -fs ~/.highlight/themes/falcon-dark.theme '
-        .. '~/.highlight/themes/falcon.theme'
+      'ln -fs ~/.highlight/themes/cockatoo-dark.theme '
+        .. '~/.highlight/themes/cockatoo.theme'
     )
   else
     os.execute(
-      'ln -fs ~/.highlight/themes/falcon-light.theme '
-        .. '~/.highlight/themes/falcon.theme'
+      'ln -fs ~/.highlight/themes/cockatoo-light.theme '
+        .. '~/.highlight/themes/cockatoo.theme'
     )
   end
 end
@@ -76,8 +76,8 @@ vim.api.nvim_create_autocmd('VimLeave', {
   group = 'RnvimRSetHl',
   callback = function()
     os.execute(
-      'ln -fs ~/.highlight/themes/falcon-dark.theme '
-        .. '~/.highlight/themes/falcon.theme'
+      'ln -fs ~/.highlight/themes/cockatoo-dark.theme '
+        .. '~/.highlight/themes/cockatoo.theme'
     )
   end,
 })
