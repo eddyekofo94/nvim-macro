@@ -72,8 +72,16 @@ return {
   {
     'akinsho/toggleterm.nvim',
     keys = {
-      { '<C-\\>g', mode = { 'n', 't' } },
-      { '<C-\\><C-g>', mode = { 'n', 't' } },
+      { '<C-\\>v',      mode = { 'n', 't' } },
+      { '<C-\\>s',      mode = { 'n', 't' } },
+      { '<C-\\>t',      mode = { 'n', 't' } },
+      { '<C-\\>f',      mode = { 'n', 't' } },
+      { '<C-\\>g',      mode = { 'n', 't' } },
+      { '<C-\\><C-v>',  mode = { 'n', 't' } },
+      { '<C-\\><C-s>',  mode = { 'n', 't' } },
+      { '<C-\\><C-t>',  mode = { 'n', 't' } },
+      { '<C-\\><C-f>',  mode = { 'n', 't' } },
+      { '<C-\\><C-g>',  mode = { 'n', 't' } },
       { '<C-\\><C-\\>', mode = { 'n', 't' } },
     },
     cmd = {
