@@ -257,16 +257,23 @@ local autocmds = {
     },
   },
 
-  -- Automatically set 'cursorlineopt'
+  -- Show cursor line and cursor column only in current window
   {
     { 'WinEnter' },
     {
       once = true,
-      group = 'AutoCursorLineOpt',
+      group = 'AutoHlCursorLine',
       callback = function()
         local winlist = vim.api.nvim_list_wins()
         for _, win in ipairs(winlist) do
-          vim.api.nvim_win_set_option(win, 'cursorlineopt', 'number')
+          vim.wo[win].winhl = vim.wo[win].winhl
+            :gsub(',?CursorLine:%w*', '')
+            :gsub(',?CursorColumn:%w*', '')
+          vim.wo[win].winhl = (
+            vim.wo[win].winhl
+            .. ',CursorLine:'
+            .. ',CursorColumn:'
+          ):gsub('^,', '')
         end
       end,
     },
@@ -274,16 +281,17 @@ local autocmds = {
   {
     { 'BufWinEnter', 'WinEnter', 'InsertLeave' },
     {
-      group = 'AutoCursorLineOpt',
+      group = 'AutoHlCursorLine',
       callback = function()
         vim.defer_fn(function()
           if
-            vim.bo.buftype == ''
-            and not vim.wo.diff
+            not vim.wo.diff
             and vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
-            and vim.opt.cursorlineopt:get()[1] ~= 'both'
           then
-            vim.cmd.setlocal('cursorlineopt=both')
+            vim.opt_local.winhl:remove({
+              'CursorLine',
+              'CursorColumn',
+            })
           end
         end, 10)
       end,
@@ -292,28 +300,12 @@ local autocmds = {
   {
     { 'WinLeave', 'InsertEnter' },
     {
-      group = 'AutoCursorLineOpt',
-      command = "if &bt ==? '' | setlocal cursorlineopt=number",
-    },
-  },
-  {
-    { 'OptionSet' },
-    {
-      pattern = 'diff',
-      group = 'AutoCursorLineOpt',
+      group = 'AutoHlCursorLine',
       callback = function()
-        if vim.v.option_new == '1' then
-          vim.cmd.setlocal('cursorlineopt=number')
-        elseif
-          vim.bo.buftype == ''
-          and vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
-        then
-          -- Fix cursorlineopt being set to 'both' for all
-          -- windows when leaving diff mode using ':diffoff!'
-          vim.defer_fn(function()
-            vim.cmd.setlocal('cursorlineopt=both')
-          end, 10)
-        end
+        vim.opt_local.winhl:append({
+          CursorLine = '',
+          CursorColumn = '',
+        })
       end,
     },
   },
