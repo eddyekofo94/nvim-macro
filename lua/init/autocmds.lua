@@ -266,16 +266,16 @@ local autocmds = {
       callback = function()
         local winlist = vim.api.nvim_list_wins()
         for _, win in ipairs(winlist) do
-          vim.wo[win].winhl = vim.wo[win].winhl
+          -- stylua: ignore start
+          local new_winhl = (vim.wo[win].winhl
             :gsub('CursorLine:[^,]*', '')
             :gsub('CursorColumn:[^,]*', '')
-            :gsub('^,*', '')
-            :gsub(',*$', '')
-          vim.wo[win].winhl = (
-            vim.wo[win].winhl
-            .. ',CursorLine:'
-            .. ',CursorColumn:'
-          ):gsub('^,', '')
+              .. ',CursorLine:' .. ',CursorColumn:')
+            :gsub('^,*', ''):gsub(',*$', ''):gsub(',+', ',')
+          -- stylua: ignore end
+          if new_winhl ~= vim.wo[win].winhl then
+            vim.wo[win].winhl = new_winhl
+          end
         end
       end,
     },
