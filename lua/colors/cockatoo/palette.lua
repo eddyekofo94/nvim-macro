@@ -3,7 +3,7 @@ local palette = {}
 palette.dark = {
   yellow       = '#e6bb86',
   earth        = '#c1a575',
-  orange       = '#ffa569',
+  orange       = '#f0a16c',
   pink         = '#f08591',
   ochre        = '#e87c69',
   scarlet      = '#d85959',
@@ -27,7 +27,7 @@ palette.dark = {
   iron         = '#313742',
   deepsea      = '#293950',
   ocean        = '#233040',
-  jeans        = '#1c212c',
+  jeans        = '#20242e',
   space        = '#13161f',
   black        = '#09080b',
 
@@ -40,7 +40,7 @@ palette.dark = {
   earth_blend    = '#303032',
   smoke_blend    = '#272d3a',
   pigeon_blend   = '#27323c',
-  ocean_blend    = '#222a38',
+  ocean_blend    = '#262f3e',
 
   shadow = '#09080b',
 }
