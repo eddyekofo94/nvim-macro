@@ -284,8 +284,10 @@ local autocmds = {
       group = 'AutoHlCursorLine',
       callback = function()
         vim.defer_fn(function()
+          local winhl = vim.opt_local.winhl:get()
           if
-            not vim.wo.diff
+            (winhl['CursorLine'] or winhl['CursorColumn'])
+            and not vim.wo.diff
             and vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
           then
             vim.opt_local.winhl:remove({
