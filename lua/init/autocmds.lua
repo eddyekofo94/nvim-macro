@@ -267,8 +267,10 @@ local autocmds = {
         local winlist = vim.api.nvim_list_wins()
         for _, win in ipairs(winlist) do
           vim.wo[win].winhl = vim.wo[win].winhl
-            :gsub(',?CursorLine:%w*', '')
-            :gsub(',?CursorColumn:%w*', '')
+            :gsub('CursorLine:[^,]*', '')
+            :gsub('CursorColumn:[^,]*', '')
+            :gsub('^,*', '')
+            :gsub(',*$', '')
           vim.wo[win].winhl = (
             vim.wo[win].winhl
             .. ',CursorLine:'
