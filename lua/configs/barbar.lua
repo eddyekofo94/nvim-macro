@@ -24,6 +24,10 @@ require('bufferline').setup({
         right = '',
       },
     },
+    scroll = {
+      left = '',
+      right = '',
+    },
   },
   insert_at_end = true,
   insert_at_start = false,
