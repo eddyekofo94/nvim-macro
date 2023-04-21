@@ -245,7 +245,7 @@ and it should work out of the box.
 
 ### Default Modules and Plugins of Choice
 
-Total # of plugins: 55 (package manager included).
+Total # of plugins: 54 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -271,7 +271,6 @@ Total # of plugins: 55 (package manager included).
     - [mason-null-ls.nvim](https://github.com/jay-babu/mason-null-ls.nvim)
 - **Markup**
     - [vimtex](https://github.com/lervag/vimtex)
-    - [clipboard-image.nvim](https://github.com/ekickx/clipboard-image.nvim)
     - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
     - [zk-nvim](https://github.com/mickael-menu/zk-nvim)
     - [vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
