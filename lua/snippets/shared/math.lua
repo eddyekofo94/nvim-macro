@@ -118,6 +118,7 @@ M.symbols = {
     s({ trig = '|>' }, { t('\\mapsto '), i(0) }),
     s({ trig = '><' }, { t('\\bowtie '), i(0) }),
     s({ trig = '=>' }, t('\\implies '), i(0)),
+    s({ trig = '**' }, { t('\\cdot '), i(0) }),
 
     s({ trig = '%s*_', regTrig = true }, {
       d(1, function()
@@ -248,7 +249,6 @@ M.words = {
     s({ trig = 'mrm' }, { t('\\mathrm{'), i(1), t('}'), i(0) }),
     s({ trig = 'mit' }, { t('\\mathit{'), i(1), t('}'), i(0) }),
     s({ trig = 'xx' }, { t('\\times '), i(0) }),
-    s({ trig = '**' }, { t('\\cdot '), i(0) }),
     s({ trig = 'o*' }, { t('\\circledast '), i(0) }),
     s({ trig = 'dd' }, { t('\\mathrm{d}'), i(0) }),
     s({ trig = 'pp' }, { t('\\partial '), i(0) }),
