@@ -202,6 +202,7 @@ local function cc_autocmd()
     callback = function()
       local cc = cc_resolve(vim.wo.cc)
       if not cc or vim.api.nvim_win_get_config(0).zindex then
+        cc_conceal(0)
         return
       end
 
@@ -210,6 +211,7 @@ local function cc_autocmd()
       local length = vim.fn.strdisplaywidth(vim.fn.getline('.'))
       local thresh = math.floor(0.75 * cc)
       if length < thresh then
+        cc_conceal(0)
         return
       end
 
