@@ -351,9 +351,8 @@ sch.BufferCurrentSign    = { fg = plt.orange }
 sch.BufferInactive       = { fg = plt.pigeon, bg = plt.deepsea }
 sch.BufferInactiveIcon   = { link = 'StatusLine' }
 sch.BufferInactiveIndex  = { fg = plt.pigeon, bg = plt.deepsea }
-sch.BufferInactiveMod    = { fg = plt.wine, bg = plt.deepsea }
+sch.BufferInactiveMod    = { fg = plt.pigeon, bg = plt.deepsea }
 sch.BufferInactiveSign   = { fg = plt.pigeon, bg = plt.deepsea }
-sch.BufferInactiveTarget = { fg = plt.wine, bg = plt.deepsea }
 sch.BufferVisible        = { fg = plt.pigeon }
 sch.BufferVisibleIndex   = { fg = plt.pigeon }
 sch.BufferVisibleMod     = { fg = plt.yellow }
