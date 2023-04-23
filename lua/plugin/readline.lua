@@ -73,7 +73,7 @@ function M.init()
   map('c', '<C-b>', '<Left>')
   map('i', '<C-b>', function()
     if first_line() and start_of_line() then
-      return ''
+      return '<Ignore>'
     end
     return start_of_line() and '<Up><End>' or '<Left>'
   end, { expr = true })
@@ -81,7 +81,7 @@ function M.init()
   map('c', '<C-f>', '<Right>')
   map('i', '<C-f>', function()
     if last_line() and end_of_line() then
-      return ''
+      return '<Ignore>'
     end
     return end_of_line() and '<Down><Home>' or '<Right>'
   end, { expr = true })
@@ -146,7 +146,7 @@ function M.init()
     local cmdline = fn.getcmdline()
     local pos = fn.getcmdpos()
     if pos >= #cmdline then
-      return ''
+      return '<Ignore>'
     end
     local _, _, to_del = cmdline:sub(pos + 1):find('^(%w*%s*)')
     fn.setcmdline(

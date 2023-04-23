@@ -18,7 +18,7 @@ end, vim.api.nvim_create_namespace('auto_hlsearch'))
 vim.keymap.set('n', '<C-l>', function()
   if vim.go.hlsearch then
     vim.go.hlsearch = false
-    return ''
+    return '<Ignore>'
   else
     return '<C-l>'
   end
