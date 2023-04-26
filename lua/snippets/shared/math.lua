@@ -406,6 +406,7 @@ M.words = {
     s({ trig = 'tau' }, { t('\\tau'), i(0) }),
     s({ trig = 'ups' }, { t('\\upsilon'), i(0) }),
     s({ trig = 'phi' }, { t('\\phi'), i(0) }),
+    s({ trig = 'vphi' }, { t('\\varphi'), i(0) }),
     s({ trig = 'psi' }, { t('\\psi'), i(0) }),
     s({ trig = 'omg' }, { t('\\omega'), i(0) }),
     s({ trig = 'Alpha' }, { t('\\Alpha'), i(0) }),
