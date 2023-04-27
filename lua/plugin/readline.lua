@@ -88,7 +88,7 @@ function M.init()
 
   map('c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>')
   map('i', '<C-k>', function()
-    return end_of_line() and '<Del>' or '<Cmd>normal! D<CR>'
+    return end_of_line() and '<Del>' or '<Cmd>normal! D<CR><Right>'
   end, { expr = true })
 
   map('!', '<C-t>', function()
