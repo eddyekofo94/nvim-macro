@@ -255,6 +255,7 @@ M.words = {
 
     s({ trig = 'set' }, { t('\\{'), i(1), t('\\}'), i(0) }),
     s({ trig = 'void' }, { t('\\emptyset') }),
+    s({ trig = 'emptyset' }, { t('\\emptyset') }),
     s({ trig = 'tt' }, { t('\\text{'), i(1), t('}'), i(0) }),
     s({ trig = 'cc' }, { t('\\subset '), i(0) }),
     s({ trig = ']c' }, { t('\\sqsubset '), i(0) }),
