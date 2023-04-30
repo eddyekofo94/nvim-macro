@@ -368,6 +368,18 @@ local autocmds = {
       end,
     },
   },
+
+  -- Set colorcolumn according to textwidth
+  {
+    { 'OptionSet', 'FileType', 'BufReadPost' },
+    {
+      callback = function(tbl)
+        if vim.bo[tbl.buf].tw ~= 0 then
+          vim.cmd.setlocal('colorcolumn=' .. vim.bo[tbl.buf].tw + 1)
+        end
+      end,
+    },
+  },
 }
 
 set_autocmds(autocmds)
