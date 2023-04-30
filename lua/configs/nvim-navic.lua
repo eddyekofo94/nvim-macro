@@ -5,7 +5,7 @@ navic.setup({
     return vim.trim(icon)
   end, require('utils.static').icons),
   highlight = true,
-  separator = ' ► ',
+  separator = ' ▶ ',
   safe_output = true
 })
 
@@ -110,7 +110,7 @@ local function eval_len(dir_list, file, node_list)
 
   local dir_str = concat(vim.tbl_map(function(dir)
     return concat({ dir.icon or '', dir.name or '' })
-  end, dir_list), ' ► ')
+  end, dir_list), ' ▶ ')
 
   local file_str = concat({
     file.icon or '',
@@ -122,13 +122,13 @@ local function eval_len(dir_list, file, node_list)
       node.icon or '',
       node.name or ''
     })
-  end, node_list), ' ► ')
+  end, node_list), ' ▶ ')
 
   local winbar_str = concat({
     dir_str,
     file_str,
     node_str,
-  }, ' ► ')
+  }, ' ▶ ')
   if not winbar_str:match('^%s*$') then
     winbar_str = ' ' .. winbar_str .. ' '
   end
@@ -215,7 +215,7 @@ function _G.get_winbar()
       'Directory',
       'NavicPath',
     })
-  end, dir_list), ' ► ', nil, 'Tea')
+  end, dir_list), ' ▶ ', nil, 'Tea')
 
   -- apply highlights to file name
   local _, iconcolor = require('nvim-web-devicons').get_icon(file,
@@ -236,17 +236,17 @@ function _G.get_winbar()
       'NavicIcons' .. (node.type or ''),
       'NavicText'
     })
-  end, node_list), ' ► ', nil, 'Orange')
+  end, node_list), ' ▶ ', nil, 'Orange')
 
   -- concat three parts with highlighted separators and paddings
   local winbar_str = concat({
     dir_str,
     file_str,
-  }, ' ► ', nil, 'Tea')
+  }, ' ▶ ', nil, 'Tea')
   winbar_str = concat({
     winbar_str,
     node_str,
-  }, ' ► ', nil, 'Orange')
+  }, ' ▶ ', nil, 'Orange')
   if not winbar_str:match('^%s*$') then
     winbar_str = ' ' .. winbar_str .. ' '
   end
