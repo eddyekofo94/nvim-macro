@@ -123,13 +123,11 @@ end
 
 ---Parse arguments passed to LSP commands
 ---@param fargs string[] list of arguments
+---@param fn_name_alt string|nil alternative function name
 ---@return string|nil fn_name corresponding LSP / diagnostic function name
 ---@return parsed_arg_t parsed the parsed arguments
-local function parse_cmdline_args(fargs)
-  local fn_name = fargs[1]
-      and not vim.startswith(fargs[1], '--')
-      and table.remove(fargs, 1)
-    or nil
+local function parse_cmdline_args(fargs, fn_name_alt)
+  local fn_name = fn_name_alt or fargs[1] and table.remove(fargs, 1) or nil
   local parsed = {}
   -- First pass: parse arguments into a plain table
   for _, arg in ipairs(fargs) do
@@ -232,7 +230,7 @@ local subcommands = {
       rename = {
         ---@param args parsed_arg_t
         arg_handler = function(args)
-          return args.new_name, args.options
+          return args.new_name or args[1], args.options
         end,
         opts = {
           '--new_name',
@@ -873,10 +871,7 @@ local function command_meta(subcommand_info_list, fn_scope, fn_name_alt)
   ---Meta command function, calls the appropriate subcommand with args
   ---@param tbl table information passed to the command
   return function(tbl)
-    local fn_name, cmdline_args = parse_cmdline_args(tbl.fargs)
-    if not fn_name then
-      fn_name = fn_name_alt
-    end
+    local fn_name, cmdline_args = parse_cmdline_args(tbl.fargs, fn_name_alt)
     local fn = subcommand_info_list[fn_name].fn_override or fn_scope[fn_name]
     local arg_handler = subcommand_info_list[fn_name].arg_handler
       or function(args)
