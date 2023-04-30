@@ -135,7 +135,7 @@ sch.DiagnosticUnderlineOK      = { underline = true, sp = plt.tea }
 sch.DiagnosticUnderlineError   = { undercurl = true, sp = plt.wine }
 sch.DiagnosticUnderlineWarn    = { undercurl = true, sp = plt.earth }
 sch.DiagnosticUnderlineInfo    = { undercurl = true, sp = plt.flashlight }
-sch.DiagnosticUnderlineHint    = { undercurl = true, sp = plt.white }
+sch.DiagnosticUnderlineHint    = { undercurl = true, sp = plt.pigeon }
 sch.DiagnosticFloatingOK       = { link = 'DiagnosticOK' }
 sch.DiagnosticFloatingError    = { link = 'DiagnosticError' }
 sch.DiagnosticFloatingWarn     = { link = 'DiagnosticWarn' }
