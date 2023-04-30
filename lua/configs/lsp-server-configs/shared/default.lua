@@ -123,10 +123,13 @@ end
 
 ---Parse arguments passed to LSP commands
 ---@param fargs string[] list of arguments
----@return string fn_name corresponding LSP / diagnostic function name
+---@return string|nil fn_name corresponding LSP / diagnostic function name
 ---@return parsed_arg_t parsed the parsed arguments
 local function parse_cmdline_args(fargs)
-  local fn_name = table.remove(fargs, 1)
+  local fn_name = fargs[1]
+      and not vim.startswith(fargs[1], '--')
+      and table.remove(fargs, 1)
+    or nil
   local parsed = {}
   -- First pass: parse arguments into a plain table
   for _, arg in ipairs(fargs) do
@@ -158,6 +161,28 @@ local function parse_cmdline_args(fargs)
     end
   end
   return fn_name, parsed
+end
+
+---Convert a snake_case string to camelCase
+---@param str string
+---@return string|nil
+local function snake_to_camel(str)
+  if not str then
+    return nil
+  end
+  return (
+    str:gsub('^%l', string.upper):gsub('_%l', string.upper):gsub('_', '')
+  )
+end
+
+---Convert a camelCase string to snake_case
+---@param str string
+---@return string|nil
+local function camel_to_snake(str)
+  if not str then
+    return nil
+  end
+  return (str:gsub('%u', '_%1'):gsub('^_', ''):lower())
 end
 
 ---LSP command argument handler for functions that receive a range
@@ -207,7 +232,7 @@ local subcommands = {
       rename = {
         ---@param args parsed_arg_t
         arg_handler = function(args)
-          return args.new_name or args[1], args.options
+          return args.new_name, args.options
         end,
         opts = {
           '--new_name',
@@ -842,12 +867,16 @@ local subcommands = {
 ---Get meta command function
 ---@param subcommand_info_list subcommand_info_t[] subcommands information
 ---@param fn_scope table scope of corresponding functions for subcommands
+---@param fn_name_alt string|nil name of the function to call given no subcommand
 ---@return function meta_command_fn
-local function command_meta(subcommand_info_list, fn_scope)
+local function command_meta(subcommand_info_list, fn_scope, fn_name_alt)
   ---Meta command function, calls the appropriate subcommand with args
   ---@param tbl table information passed to the command
   return function(tbl)
     local fn_name, cmdline_args = parse_cmdline_args(tbl.fargs)
+    if not fn_name then
+      fn_name = fn_name_alt
+    end
     local fn = subcommand_info_list[fn_name].fn_override or fn_scope[fn_name]
     local arg_handler = subcommand_info_list[fn_name].arg_handler
       or function(args)
@@ -875,7 +904,8 @@ local function command_complete(meta, subcommand_info_list)
       end, vim.tbl_keys(subcommand_info_list))
     end
     -- If subcommand is specified, complete with its options or option values
-    local subcommand = cmdline:match('^%s*' .. meta .. '%s+(%S+)')
+    local subcommand = camel_to_snake(cmdline:match('^%s*' .. meta .. '(%w+)'))
+      or cmdline:match('^%s*' .. meta .. '%s+(%S+)')
     if not subcommand_info_list[subcommand] then
       return {}
     end
@@ -954,15 +984,10 @@ end
 ---@param _ table LS client, ignored
 ---@param bufnr number buffer handler
 ---@param meta string meta command name
----@param subcommand_info_list subcommand_info_t[] subcommands information
+---@param subcommand_info_list table<string, subcommand_info_t> subcommands information
 ---@param fn_scope table scope of corresponding functions for subcommands
-local function setup_meta_commands(
-  _,
-  bufnr,
-  meta,
-  subcommand_info_list,
-  fn_scope
-)
+local function setup_commands(_, bufnr, meta, subcommand_info_list, fn_scope)
+  -- MetaCommand Subcommand opts ...
   vim.api.nvim_buf_create_user_command(
     bufnr,
     meta,
@@ -973,6 +998,19 @@ local function setup_meta_commands(
       complete = command_complete(meta, subcommand_info_list),
     }
   )
+  -- MetaCommandSubcommand opts ...
+  for subcommand, _ in pairs(subcommand_info_list) do
+    vim.api.nvim_buf_create_user_command(
+      bufnr,
+      meta .. snake_to_camel(subcommand),
+      command_meta(subcommand_info_list, fn_scope, subcommand, subcommand),
+      {
+        range = true,
+        nargs = '*',
+        complete = command_complete(meta, subcommand_info_list),
+      }
+    )
+  end
 end
 
 ---Automatically enable / disable diagnostics on mode change
@@ -1004,8 +1042,8 @@ local function on_attach(client, bufnr)
   if not vim.b[bufnr].lsp_attached then
     vim.b[bufnr].lsp_attached = true
     setup_keymaps(client, bufnr)
-    setup_meta_commands(client, bufnr, 'Lsp', subcommands.lsp.buf, vim.lsp.buf)
-    setup_meta_commands(
+    setup_commands(client, bufnr, 'Lsp', subcommands.lsp.buf, vim.lsp.buf)
+    setup_commands(
       client,
       bufnr,
       'Diagnostic',
