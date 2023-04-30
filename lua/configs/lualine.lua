@@ -20,9 +20,9 @@ local function lualine_config()
     if vim.bo.expandtab then
       return '• ' .. sts
     elseif vim.bo.ts == sts then
-      return '⟼ ' .. vim.bo.tabstop
+      return '⟼  ' .. vim.bo.tabstop
     else
-      return '⟼ ' .. vim.bo.tabstop .. ' • ' .. sts
+      return '⟼  ' .. vim.bo.tabstop .. ' • ' .. sts
     end
   end
 
