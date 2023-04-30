@@ -68,7 +68,7 @@ sch.WinBar             = { fg = plt.pigeon }
 sch.WinBarNC           = { fg = plt.steel }
 
 -- Syntax highlighting
-sch.Comment           = { fg = plt.steel }
+sch.Comment           = { fg = plt.steel, italic = true }
 sch.Constant          = { fg = plt.ochre }
 sch.String            = { fg = plt.turquoise }
 sch.DocumentKeyword   = { fg = plt.tea }
@@ -78,7 +78,7 @@ sch.Boolean           = { fg = plt.ochre }
 sch.Array             = { fg = plt.orange }
 sch.Float             = { link = 'Number' }
 sch.Identifier        = { fg = plt.smoke }
-sch.IdentifierBuiltIn = { fg = plt.pink }
+sch.Builtin           = { fg = plt.pink, italic = true }
 sch.Field             = { fg = plt.pigeon }
 sch.Enum              = { fg = plt.ochre }
 sch.Namespace         = { fg = plt.ochre }
@@ -185,15 +185,15 @@ sch['@label']                 = { link = 'Keyword' }
 sch['@include']               = { link = 'Include' }
 sch['@exception']             = { link = 'Exception' }
 sch['@type']                  = { link = 'Type' }
-sch['@type.builtin']          = { link = 'Type' }
+sch['@type.Builtin']          = { link = 'Type' }
 sch['@type.qualifier']        = { link = 'Type' }
 sch['@type.definition']       = { link = 'Typedef' }
 sch['@storageclass']          = { link = 'StorageClass' }
 sch['@attribute']             = { link = 'Label' }
 sch['@variable']              = { link = 'Identifier' }
-sch['@variable.builtin']      = { link = 'IdentifierBuiltIn' }
+sch['@variable.Builtin']      = { link = 'Builtin' }
 sch['@constant']              = { link = 'Constant' }
-sch['@constant.builtin']      = { link = 'Special' }
+sch['@constant.Builtin']      = { link = 'Constant' }
 sch['@constant.macro']        = { link = 'Macro' }
 sch['@namespace']             = { link = 'Namespace' }
 sch['@symbol']                = { link = 'Identifier' }
@@ -240,8 +240,8 @@ sch['@lsp.type.enumMember']                 = { link = 'Enum' }
 sch['@lsp.type.typeParameter']              = { link = 'Parameter' }
 sch['@lsp.typemod.keyword.documentation']   = { link = 'DocumentKeyword' }
 sch['@lsp.typemod.function.defaultLibrary'] = { link = 'Special' }
-sch['@lsp.typemod.variable.defaultLibrary'] = { fg = plt.orange, nocombine = true }
-sch['@lsp.typemod.variable.global']         = { fg = plt.orange, nocombine = true }
+sch['@lsp.typemod.variable.defaultLibrary'] = { link = 'Builtin' }
+sch['@lsp.typemod.variable.global']         = { link = 'Identifier' }
 
 -- HTML
 sch.htmlArg            = { fg = plt.pigeon }
@@ -252,11 +252,11 @@ sch.htmlTagName        = { link = 'Tag' }
 sch.htmlSpecialTagName = { fg = plt.yellow }
 sch.htmlEndTag         = { fg = plt.yellow }
 sch.htmlH1             = { fg = plt.yellow, bold = true }
-sch.htmlH2             = { fg = plt.tea, bold = true }
-sch.htmlH3             = { fg = plt.cerulean, bold = true }
+sch.htmlH2             = { fg = plt.ochre, bold = true }
+sch.htmlH3             = { fg = plt.pink, bold = true }
 sch.htmlH4             = { fg = plt.lavender, bold = true }
-sch.htmlH5             = { fg = plt.purple, bold = true }
-sch.htmlH6             = { fg = plt.pink, bold = true }
+sch.htmlH5             = { fg = plt.cerulean, bold = true }
+sch.htmlH6             = { fg = plt.aqua, bold = true }
 sch.htmlItalic         = { italic = true }
 sch.htmlLink           = { fg = plt.flashlight, underline = true }
 sch.htmlSpecialChar    = { fg = plt.beige }
