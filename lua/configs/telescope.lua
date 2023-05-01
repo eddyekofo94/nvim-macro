@@ -2,8 +2,9 @@ local telescope = require('telescope')
 local telescope_builtin = require('telescope.builtin')
 local telescope_actions = require('telescope.actions')
 
-vim.keymap.set('n', '<Leader>F', function() telescope_builtin.builtin() end)
-vim.keymap.set('n', '<Leader>f', function() telescope_builtin.builtin() end)
+-- stylua: ignore start
+vim.keymap.set('n', '<Leader>F',  function() telescope_builtin.builtin() end)
+vim.keymap.set('n', '<Leader>f',  function() telescope_builtin.builtin() end)
 vim.keymap.set('n', '<Leader>ff', function() telescope_builtin.find_files() end)
 vim.keymap.set('n', '<Leader>fo', function() telescope_builtin.oldfiles() end)
 vim.keymap.set('n', '<Leader>f;', function() telescope_builtin.live_grep() end)
@@ -21,7 +22,8 @@ vim.keymap.set('n', '<Leader>fS', function() telescope_builtin.lsp_workspace_sym
 vim.keymap.set('n', '<Leader>fg', function() telescope_builtin.git_status() end)
 vim.keymap.set('n', '<Leader>fm', function() telescope_builtin.marks() end)
 vim.keymap.set('n', '<Leader>fu', function() telescope.extensions.undo.undo() end)
-vim.keymap.set('n', '<Leader>f<Esc>', '')
+vim.keymap.set('n', '<Leader>f<Esc>', '<Ignore>')
+-- stylua: ignore end
 
 telescope.setup({
   defaults = {
