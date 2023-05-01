@@ -57,6 +57,7 @@ sch.StatusLine         = { bg = plt.deepsea }
 sch.StatusLineNC       = { bg = plt.space }
 sch.Substitute         = { link = 'Search' }
 sch.TabLine            = { link = 'StatusLine' }
+sch.TabLineFill        = { fg = plt.pigeon, bg = plt.ocean }
 sch.Title              = { fg = plt.pigeon, bold = true }
 sch.VertSplit          = { fg = plt.deepsea }
 sch.Visual             = { bg = plt.deepsea }
