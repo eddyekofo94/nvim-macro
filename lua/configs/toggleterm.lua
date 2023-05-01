@@ -54,6 +54,7 @@ end
 
 vim.keymap.set({ 't', 'n' }, '<C-\\>g', lazygit_toggle)
 vim.keymap.set({ 't', 'n' }, '<C-\\><C-g>', lazygit_toggle)
+vim.api.nvim_create_user_command('Lazygit', lazygit_toggle, {})
 
 -- stylua: ignore start
 vim.keymap.set({ 't', 'n' }, '<C-\\>v',     function() toggleterm.toggle_command('direction=vertical',   vim.v.count) end)

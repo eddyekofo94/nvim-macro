@@ -85,6 +85,7 @@ return {
       { '<C-\\><C-\\>', mode = { 'n', 't' } },
     },
     cmd = {
+      'Lazygit',
       'TermExec',
       'ToggleTerm',
       'ToggleTermSetName',
