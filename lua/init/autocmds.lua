@@ -376,6 +376,8 @@ local autocmds = {
       callback = function(tbl)
         if vim.bo[tbl.buf].tw ~= 0 then
           vim.cmd.setlocal('colorcolumn=' .. vim.bo[tbl.buf].tw + 1)
+        else
+          vim.cmd.setlocal('colorcolumn=' .. vim.go.colorcolumn)
         end
       end,
     },
