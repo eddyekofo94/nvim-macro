@@ -30,15 +30,6 @@ return {
   },
 
   {
-    'j-hui/fidget.nvim',
-    ft = ft_list,
-    dependencies = 'nvim-lspconfig',
-    config = function()
-      require('configs.fidget')
-    end,
-  },
-
-  {
     'jose-elias-alvarez/null-ls.nvim',
     ft = ft_list,
     cmd = {

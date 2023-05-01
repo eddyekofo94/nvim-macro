@@ -29,11 +29,10 @@ return {
   },
 
   {
-    'stevearc/aerial.nvim',
-    keys = { '<Leader>O', '<Leader>o' },
-    cmd = { 'AerialToggle', 'AerialOpen', 'AerialOpenAll' },
+    'j-hui/fidget.nvim',
+    event = 'FileType',
     config = function()
-      require('configs.aerial')
+      require('configs.fidget')
     end,
   },
 }
