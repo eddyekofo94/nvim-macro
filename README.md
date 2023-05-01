@@ -8,6 +8,10 @@
 
 </center>
 
+*\*Plugin and relevant resources for the startup screen has been removed since
+commit `d49a2fa` to debloat this config. Revert this commit if you like the
+startup screen.*
+
 ## Table of Contents
 
 1. [Features](#features)
@@ -46,8 +50,8 @@
 - [Neovim Remote](https://github.com/mhinz/neovim-remote) and [Ranger](https://github.com/ranger/ranger) for file manager support
 - [Fd](https://github.com/sharkdp/fd) and [Ripgrep](https://github.com/BurntSushi/ripgrep) for the fuzzy finder `telescope`
 - [Git](https://git-scm.com/), of course
-- A decent terminal emulator, [Kitty](https://sw.kovidgoyal.net/kitty/) for example
-- A nerd font, I personally use [FiraCode](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode)
+- A decent terminal emulator
+- A nerd font, I personally use [FiraCode](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) & [JetbrainsMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono)
 
 For LSP support:
 
@@ -98,8 +102,8 @@ Optional:
 │   │   ├── tools.lua
 │   │   ├── treesitter.lua
 │   │   └── ui.lua
-│   ├── configs                 # configs for each plugin
-│   ├── snippets                # snippets
+│   ├── configs                 # configs for each plugin
+│   ├── snippets                # snippets
 │   ├── plugin                  # the actual implementation of custom plugins
 │   └── utils
 └── syntax                      # syntax files
