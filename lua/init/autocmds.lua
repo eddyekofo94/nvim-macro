@@ -85,8 +85,8 @@ local autocmds = {
     {
       pattern = '*',
       group = 'LastPosJmp',
-      callback = function(tbl)
-        local ft = vim.bo[tbl.buf].ft
+      callback = function(info)
+        local ft = vim.bo[info.buf].ft
         -- don't apply to git messages
         if ft:match('commit') or ft:match('rebase') then
           return
@@ -110,8 +110,8 @@ local autocmds = {
     {
       pattern = '*',
       group = 'AutoCwd',
-      callback = function(tbl)
-        if tbl.file == '' or not vim.bo[tbl.buf].ma then
+      callback = function(info)
+        if info.file == '' or not vim.bo[info.buf].ma then
           return
         end
 
@@ -150,7 +150,7 @@ local autocmds = {
           return nil
         end
 
-        local proj_dir = find_proj_dir(tbl.file)
+        local proj_dir = find_proj_dir(info.file)
         if proj_dir then
           vim.cmd.tcd(proj_dir)
         end
@@ -192,9 +192,9 @@ local autocmds = {
     { 'BufEnter' },
     {
       group = 'PromptBufKeymaps',
-      callback = function(tbl)
-        if vim.bo[tbl.buf].buftype == 'prompt' then
-          vim.keymap.set('i', '<C-w>', '<C-S-W>', { buffer = tbl.buf })
+      callback = function(info)
+        if vim.bo[info.buf].buftype == 'prompt' then
+          vim.keymap.set('i', '<C-w>', '<C-S-W>', { buffer = info.buf })
         end
       end,
     },
@@ -205,8 +205,8 @@ local autocmds = {
     { 'TermOpen' },
     {
       group = 'TermOptions',
-      callback = function(tbl)
-        if vim.bo[tbl.buf].buftype == 'terminal' then
+      callback = function(info)
+        if vim.bo[info.buf].buftype == 'terminal' then
           vim.cmd.setlocal('nonu')
           vim.cmd.setlocal('nornu')
           vim.cmd.setlocal('statuscolumn=')
@@ -221,13 +221,13 @@ local autocmds = {
     {
       group = 'TermOptions',
       pattern = { '*:t', 't:*' },
-      callback = function(tbl)
-        if vim.fn.match(tbl.match, '.*:t$') ~= -1 then
-          vim.b[tbl.buf].matchpairs = vim.bo[tbl.buf].matchpairs
-          vim.bo[tbl.buf].matchpairs = ''
-        elseif vim.b[tbl.buf].matchpairs then
-          vim.bo[tbl.buf].matchpairs = vim.b[tbl.buf].matchpairs
-          vim.b[tbl.buf].matchpairs = nil
+      callback = function(info)
+        if vim.fn.match(info.match, '.*:t$') ~= -1 then
+          vim.b[info.buf].matchpairs = vim.bo[info.buf].matchpairs
+          vim.bo[info.buf].matchpairs = ''
+        elseif vim.b[info.buf].matchpairs then
+          vim.bo[info.buf].matchpairs = vim.b[info.buf].matchpairs
+          vim.b[info.buf].matchpairs = nil
         end
       end,
     },
@@ -238,8 +238,8 @@ local autocmds = {
     { 'QuickFixCmdPost' },
     {
       group = 'QuickFixAutoOpen',
-      callback = function(tbl)
-        if vim.startswith(tbl.match, 'l') then
+      callback = function(info)
+        if vim.startswith(info.match, 'l') then
           vim.cmd.lwindow()
         else
           vim.cmd.cwindow()
@@ -319,9 +319,9 @@ local autocmds = {
     { 'BufWinEnter', 'BufEnter' },
     {
       group = 'UpdateFolds',
-      callback = function(tbl)
-        if not vim.b[tbl.buf].foldupdated then
-          vim.b[tbl.buf].foldupdated = true
+      callback = function(info)
+        if not vim.b[info.buf].foldupdated then
+          vim.b[info.buf].foldupdated = true
           vim.cmd.normal('zx')
         end
       end,
@@ -333,7 +333,7 @@ local autocmds = {
     { 'InsertEnter', 'CursorMovedI' },
     {
       group = 'SmartExpandtab',
-      callback = function(tbl)
+      callback = function(info)
         local col = vim.api.nvim_win_get_cursor(0)[2]
         local line = vim.api.nvim_get_current_line()
         local after_non_blank = vim.fn.match(line:sub(1, col), [[\S]]) >= 0
@@ -341,16 +341,16 @@ local autocmds = {
         -- inserted before the cursor assuming 'noet' is set
         local has_adjacent_tabs = vim.fn.match(
           line:sub(1, col),
-          string.format([[\t\ \{,%d}$]], math.max(0, vim.bo[tbl.buf].ts - 1))
+          string.format([[\t\ \{,%d}$]], math.max(0, vim.bo[info.buf].ts - 1))
         ) >= 0 or line:sub(col + 1, col + 1) == '\t'
         if after_non_blank and not has_adjacent_tabs then
-          if vim.b[tbl.buf].expandtab == nil then
-            vim.b[tbl.buf].expandtab = vim.bo.expandtab
+          if vim.b[info.buf].expandtab == nil then
+            vim.b[info.buf].expandtab = vim.bo.expandtab
           end
-          vim.bo[tbl.buf].expandtab = true
-        elseif vim.b[tbl.buf].expandtab ~= nil then
-          vim.bo[tbl.buf].expandtab = vim.b.expandtab
-          vim.b[tbl.buf].expandtab = nil
+          vim.bo[info.buf].expandtab = true
+        elseif vim.b[info.buf].expandtab ~= nil then
+          vim.bo[info.buf].expandtab = vim.b.expandtab
+          vim.b[info.buf].expandtab = nil
         end
       end,
     },
@@ -359,11 +359,11 @@ local autocmds = {
     { 'InsertLeave' },
     {
       group = 'SmartExpandtab',
-      callback = function(tbl)
+      callback = function(info)
         -- Restore expandtab setting
-        if vim.b[tbl.buf].expandtab ~= nil then
-          vim.bo[tbl.buf].expandtab = vim.b.expandtab
-          vim.b[tbl.buf].expandtab = nil
+        if vim.b[info.buf].expandtab ~= nil then
+          vim.bo[info.buf].expandtab = vim.b.expandtab
+          vim.b[info.buf].expandtab = nil
         end
       end,
     },
@@ -373,9 +373,9 @@ local autocmds = {
   {
     { 'OptionSet', 'FileType', 'BufReadPost' },
     {
-      callback = function(tbl)
-        if vim.bo[tbl.buf].tw ~= 0 then
-          vim.cmd.setlocal('colorcolumn=' .. vim.bo[tbl.buf].tw + 1)
+      callback = function(info)
+        if vim.bo[info.buf].tw ~= 0 then
+          vim.cmd.setlocal('colorcolumn=' .. vim.bo[info.buf].tw + 1)
         else
           vim.cmd.setlocal('colorcolumn=' .. vim.go.colorcolumn)
         end
