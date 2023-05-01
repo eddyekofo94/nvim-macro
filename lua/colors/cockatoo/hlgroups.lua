@@ -31,6 +31,7 @@ sch.Folded             = { fg = plt.steel, bg = plt.ocean_blend }
 sch.FloatBorder        = { fg = plt.smoke, bg = plt.ocean }
 sch.FloatShadow        = { bg = plt.shadow, blend = 70 }
 sch.FloatShadowThrough = { bg = plt.shadow, blend = 100 }
+sch.HealthSuccess      = { fg = plt.tea }
 sch.Search             = { fg = plt.flashlight, bg = plt.thunder, bold = true }
 sch.IncSearch          = { fg = plt.black, bg = plt.flashlight, bold = true }
 sch.LineNr             = { fg = plt.steel }
@@ -275,7 +276,13 @@ sch.markdownListMarker = { fg = plt.orange }
 sch.shDeref            = { link = 'Macro' }
 sch.shDerefVar         = { link = 'Macro' }
 -- Git
-sch.gitHash = { fg = plt.pigeon }
+sch.gitHash            = { fg = plt.pigeon }
+-- Checkhealth
+sch.helpHeader         = { fg = plt.pigeon, bold = true }
+sch.helpSectionDelim   = { fg = plt.ochre, bold = true }
+sch.helpCommand        = { fg = plt.turquoise }
+sch.helpBacktick       = { fg = plt.turquoise }
+
 
 -- Plugin highlights
 -- nvim-cmp
