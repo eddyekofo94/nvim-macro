@@ -51,9 +51,8 @@ vim.keymap.set({ 'n', 'x' }, 'j', 'v:count ? "j" : "gj"', { expr = true })
 vim.keymap.set({ 'n', 'x' }, 'k', 'v:count ? "k" : "gk"', { expr = true })
 
 -- Buffer navigation
-vim.keymap.set('n', '<Tab>', '<Cmd>bn<CR>')
-vim.keymap.set('n', '<S-Tab>', '<Cmd>bp<CR>')
-vim.keymap.set('n', '<C-n>', '<C-i>')
+vim.keymap.set('n', ']b', '<Cmd>exec v:count1 . "bn"<CR>')
+vim.keymap.set('n', '[b', '<Cmd>exec v:count1 . "bp"<CR>')
 
 -- Correct misspelled word / mark as correct
 vim.keymap.set('i', '<C-S-L>', '<Esc>[szg`]a')
@@ -99,7 +98,9 @@ vim.keymap.set('n', '<M-D>', function()
 end)
 
 -- Text object: current buffer
+-- stylua: ignore start
 vim.keymap.set('x', 'af', ':<C-u>keepjumps silent! normal! ggVG<CR>')
 vim.keymap.set('x', 'if', ':<C-u>keepjumps silent! normal! ggVG<CR>')
 vim.keymap.set('o', 'af', '<Cmd>silent! normal m`Vaf<CR><Cmd>silent! normal! ``<CR>', { noremap = false })
 vim.keymap.set('o', 'if', '<Cmd>silent! normal m`Vif<CR><Cmd>silent! normal! ``<CR>', { noremap = false })
+-- stylua: ignore end

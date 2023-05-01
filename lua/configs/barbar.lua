@@ -43,10 +43,11 @@ local function nnoremap(lhs, rhs)
   vim.keymap.set('n', lhs, rhs, { noremap = true, silent = true })
 end
 
-nnoremap('<Tab>', function() barbar_api.goto_buffer_relative(1) end)
-nnoremap('<S-Tab>', function() barbar_api.goto_buffer_relative(-1) end)
-nnoremap('<M-.>', function() barbar_api.move_current_buffer(1) end)
-nnoremap('<M-,>', function() barbar_api.move_current_buffer(-1) end)
+-- stylua: ignore start
+nnoremap(']b', function() barbar_api.goto_buffer_relative(vim.v.count1) end)
+nnoremap('[b', function() barbar_api.goto_buffer_relative(-vim.v.count1) end)
+nnoremap('<M-.>', function() barbar_api.move_current_buffer(vim.v.count1) end)
+nnoremap('<M-,>', function() barbar_api.move_current_buffer(-vim.v.count1) end)
 -- goto buffer in position 1..9
 for buf_number = 1, 9 do
   nnoremap(string.format('<M-%d>', buf_number), function()
@@ -58,3 +59,4 @@ nnoremap('<M-(>', barbar_api.close_buffers_left)
 nnoremap('<M-)>', barbar_api.close_buffers_right)
 nnoremap('<M-P>', barbar_api.toggle_pin)
 nnoremap('<M-O>', barbar_api.close_all_but_visible)
+-- stylua: ignore end
