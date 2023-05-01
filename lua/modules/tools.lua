@@ -25,6 +25,7 @@ return {
       '<Leader>f*',
       '<Leader>fh',
       '<Leader>fm',
+      '<Leader>f/',
       '<Leader>fb',
       '<Leader>fr',
       '<Leader>fa',
