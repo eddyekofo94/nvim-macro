@@ -1,9 +1,7 @@
-local ft_list = require('utils.static').langs:list('ft')
-
 return {
   {
     'neovim/nvim-lspconfig',
-    ft = ft_list,
+    event = { 'BufReadPre', 'FileType' },
     cmd = { 'LspInfo', 'LspStart' },
     config = function()
       require('configs.nvim-lspconfig')
@@ -22,7 +20,7 @@ return {
   {
     'williamboman/mason-lspconfig.nvim',
     dependencies = { 'mason.nvim', 'nvim-lspconfig', },
-    ft = ft_list,
+    event = { 'BufReadPre', 'FileType' },
     cmd = { 'LspInstall', 'LspUninstall' },
     config = function()
       require('configs.mason-lspconfig')
@@ -31,7 +29,7 @@ return {
 
   {
     'jose-elias-alvarez/null-ls.nvim',
-    ft = ft_list,
+    event = { 'BufReadPre', 'FileType' },
     cmd = {
       'NullLsLog',
       'NullLsInfo',
@@ -45,7 +43,7 @@ return {
 
   {
     'jay-babu/mason-null-ls.nvim',
-    ft = ft_list,
+    event = { 'BufReadPre', 'FileType' },
     cmd = {
       'NullLsInstall',
       'NullLsUninstall',
