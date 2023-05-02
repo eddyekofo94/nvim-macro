@@ -1,5 +1,7 @@
 local default_config = require('configs.lsp-server-configs.shared.default')
-local nvimlib = vim.api.nvim_get_runtime_file('', true)
+local nvimlib = {
+  vim.fn.expand('$VIMRUNTIME'),
+}
 local neodevok, neodevcfg = pcall(require, 'neodev.config')
 if neodevok then
   table.insert(nvimlib, neodevcfg.types())
