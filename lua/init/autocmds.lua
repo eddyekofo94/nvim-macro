@@ -158,16 +158,6 @@ local autocmds = {
     },
   },
 
-  -- Automatically create missing directories
-  {
-    { 'BufWritePre' },
-    {
-      pattern = '*',
-      group = 'AutoMkdir',
-      command = "silent! call mkdir(expand('%:p:h'), 'p')",
-    },
-  },
-
   -- Restore dark/light background from ShaDa
   {
     { 'BufReadPre', 'UIEnter' },
