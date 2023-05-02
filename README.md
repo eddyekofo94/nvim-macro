@@ -270,7 +270,6 @@ Total # of plugins: 54 (package manager included).
     - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
     - [clangd_extensions.nvim](https://github.com/p00f/clangd_extensions.nvim)
     - [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim)
-    - [fidget.nvim](https://github.com/j-hui/fidget.nvim)
     - [null-lsp.nvim](https://github.com/jose-elias-alvarez/null-ls.nvim)
     - [mason-null-ls.nvim](https://github.com/jay-babu/mason-null-ls.nvim)
 - **Markup**
@@ -297,6 +296,7 @@ Total # of plugins: 54 (package manager included).
     - [tmux.nvim](https://github.com/aserowy/tmux.nvim)
     - [nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua)
     - [vim-fugitive](https://github.com/tpope/vim-fugitive)
+    - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
 - **Treesitter**
     - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
     - [nvim-ts-rainbow](https://github.com/mrjones2014/nvim-ts-rainbow)
@@ -309,7 +309,7 @@ Total # of plugins: 54 (package manager included).
     - [barbar.nvim](https://github.com/romgrk/barbar.nvim)
     - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
     - [nvim-navic](https://github.com/SmiteshP/nvim-navic)
-    - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
+    - [fidget.nvim](https://github.com/j-hui/fidget.nvim)
 - **DEBUG**
     - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
     - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
