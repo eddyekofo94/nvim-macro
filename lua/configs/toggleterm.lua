@@ -30,6 +30,7 @@ toggleterm.setup({
     FloatBorder = { link = 'FloatBorder' },
     WinBarActive = { link = 'WinBar' },
     WinBarInactive = { link = 'WinBarNC' },
+    MatchParen = { link = 'None' },
   },
   winbar = {
     enabled = false,

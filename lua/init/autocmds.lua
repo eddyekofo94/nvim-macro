@@ -206,22 +206,6 @@ local autocmds = {
       end,
     },
   },
-  {
-    { 'ModeChanged' },
-    {
-      group = 'TermOptions',
-      pattern = { '*:t', 't:*' },
-      callback = function(info)
-        if vim.fn.match(info.match, '.*:t$') ~= -1 then
-          vim.b[info.buf].matchpairs = vim.bo[info.buf].matchpairs
-          vim.bo[info.buf].matchpairs = ''
-        elseif vim.b[info.buf].matchpairs then
-          vim.bo[info.buf].matchpairs = vim.b[info.buf].matchpairs
-          vim.b[info.buf].matchpairs = nil
-        end
-      end,
-    },
-  },
 
   -- Open quickfix window if there are results
   {
@@ -339,7 +323,7 @@ local autocmds = {
           end
           vim.bo[info.buf].expandtab = true
         elseif vim.b[info.buf].expandtab ~= nil then
-          vim.bo[info.buf].expandtab = vim.b.expandtab
+          vim.bo[info.buf].expandtab = vim.b[info.buf].expandtab
           vim.b[info.buf].expandtab = nil
         end
       end,
@@ -352,7 +336,7 @@ local autocmds = {
       callback = function(info)
         -- Restore expandtab setting
         if vim.b[info.buf].expandtab ~= nil then
-          vim.bo[info.buf].expandtab = vim.b.expandtab
+          vim.bo[info.buf].expandtab = vim.b[info.buf].expandtab
           vim.b[info.buf].expandtab = nil
         end
       end,
