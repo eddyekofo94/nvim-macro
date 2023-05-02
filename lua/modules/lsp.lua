@@ -55,4 +55,12 @@ return {
       require('configs.mason-null-ls')
     end,
   },
+
+  {
+    'folke/neodev.nvim',
+    ft = 'lua',
+    config = function()
+      require('configs.neodev')
+    end,
+  },
 }
