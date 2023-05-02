@@ -975,14 +975,14 @@ local function command_complete(meta, subcommand_info_list)
   end
 end
 
----Setup meta commands
+---Setup commands
 ---@param _ table LS client, ignored
 ---@param bufnr number buffer handler
 ---@param meta string meta command name
 ---@param subcommand_info_list table<string, subcommand_info_t> subcommands information
 ---@param fn_scope table scope of corresponding functions for subcommands
 local function setup_commands(_, bufnr, meta, subcommand_info_list, fn_scope)
-  -- MetaCommand Subcommand opts ...
+  -- Format: MetaCommand sub_command opts ...
   vim.api.nvim_buf_create_user_command(
     bufnr,
     meta,
@@ -993,7 +993,7 @@ local function setup_commands(_, bufnr, meta, subcommand_info_list, fn_scope)
       complete = command_complete(meta, subcommand_info_list),
     }
   )
-  -- MetaCommandSubcommand opts ...
+  -- Format: MetaCommandSubcommand opts ...
   for subcommand, _ in pairs(subcommand_info_list) do
     vim.api.nvim_buf_create_user_command(
       bufnr,
