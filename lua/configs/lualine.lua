@@ -1,11 +1,14 @@
 vim.opt.rtp:append(vim.fn.stdpath('config') .. '/lua/colors/cockatoo')
 
+---Lualine configuration
 local function lualine_config()
   local function location()
     local cursor_loc = vim.api.nvim_win_get_cursor(0)
     return cursor_loc[1] .. ',' .. cursor_loc[2] + 1
   end
 
+  ---Display indent style
+  ---@return string
   local function indent_style()
     -- Get softtabstop or equivalent fallback
     local sts
@@ -20,12 +23,14 @@ local function lualine_config()
     if vim.bo.expandtab then
       return '• ' .. sts
     elseif vim.bo.ts == sts then
-      return ' ' .. vim.bo.tabstop
+      return '→ ' .. vim.bo.tabstop
     else
-      return ' ' .. vim.bo.tabstop .. ' • ' .. sts
+      return '→ ' .. vim.bo.tabstop .. ' • ' .. sts
     end
   end
 
+  ---Display search count
+  ---@return string
   local function searchcount()
     local info = vim.fn.searchcount({ maxcount = 999 })
     if not vim.o.hlsearch then
@@ -51,6 +56,7 @@ local function lualine_config()
   local icons = require('utils.static').icons
   local current_lsp_clients = {} -- cache for lsp clients
 
+  ---Update attached lsp clients
   local function lsp_info_updater()
     current_lsp_clients = vim.lsp.get_active_clients({
       bufnr = vim.api.nvim_get_current_buf(),
@@ -58,6 +64,8 @@ local function lualine_config()
     return ''
   end
 
+  ---Display a formatter icon if format on save is enabled
+  ---@return string icon
   local function formatter_icon()
     if
       vim.b.lsp_format_on_save == false
@@ -74,6 +82,8 @@ local function lualine_config()
     return ''
   end
 
+  ---Display a message if format on save is enabled
+  ---@return string message
   local function formatter_text()
     if
       vim.b.lsp_format_on_save == false
@@ -90,6 +100,8 @@ local function lualine_config()
     return ''
   end
 
+  ---Display a connected icon if an LS is attached to current buffer
+  ---@return string icon
   local function lsp_icon()
     if not vim.tbl_isempty(current_lsp_clients) then
       return icons['Lsp']
@@ -97,6 +109,8 @@ local function lualine_config()
     return ''
   end
 
+  ---Display the names of attached LSs
+  ---@return string names
   local function lsp_list()
     local lsp_names = vim.tbl_map(function(client_info)
       return client_info.name
@@ -109,6 +123,8 @@ local function lualine_config()
     end
   end
 
+  ---Display a message if a macro is recording
+  ---@return string message
   local function reg_recording()
     local reg = vim.fn.reg_recording()
     if vim.fn.empty(reg) == 0 then
@@ -117,12 +133,18 @@ local function lualine_config()
     return ''
   end
 
+  ---Get a function that returns true if the window width is longer than len
+  ---@param len number
+  ---@return function
   local function longer_than(len)
     return function()
       return vim.o.columns > len
     end
   end
 
+  ---Get a function that returns true if the window width is shorter than len
+  ---@param len number
+  ---@return function
   local function shorter_than(len)
     return function()
       return vim.o.columns <= len
