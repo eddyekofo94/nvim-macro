@@ -15,7 +15,12 @@ startup screen.*
 ## Table of Contents
 
 1. [Features](#features)
-2. [Requirements](#requirements)
+2. [Requirements and Dependencies](#requirements-and-dependencies)
+    1. [Basic](#basic)
+    2. [Tree-sitter](#tree-sitter)
+    3. [LSP](#lsp)
+    4. [DAP](#dap)
+    5. [Other External Tools](#other-external-tools)
 3. [Installation](#installation)
 4. [Overview](#overview)
     1. [Config Structure](#config-structure)
@@ -44,24 +49,98 @@ startup screen.*
 - Fast Startup
     - Around [15 ~ 35 ms](#startuptime-statistics)
 
-## Requirements
+## Requirements and Dependencies
 
-- [Neovim](https://github.com/neovim/neovim) (***nightly***)
-- [Neovim Remote](https://github.com/mhinz/neovim-remote) and [Ranger](https://github.com/ranger/ranger) for file manager support
-- [Fd](https://github.com/sharkdp/fd) and [Ripgrep](https://github.com/BurntSushi/ripgrep) for the fuzzy finder `telescope`
-- [Git](https://git-scm.com/), of course
+### Basic
+
+- [Neovim](https://github.com/neovim/neovim) ***nightly***
+- [Git](https://git-scm.com/)
 - A decent terminal emulator
-- A nerd font, I personally use [FiraCode](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) & [JetbrainsMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono)
+- A nerd font, e.g. [JetbrainsMono Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono)
 
-For LSP support:
+### Tree-sitter
 
-- [Nodejs](https://nodejs.org/en/), for LSP support
-- Clangd requires Zip (**not** Gzip) to be installed
-- Some other LSP clients may requires Go, Cargo, etc.
+Tree-sitter installation and configuration is handled by [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
 
-Optional:
+To add or remove support for a language, install or uninstall the corresponding
+parser using `:TSInstall` or `:TSUninstall`.
+
+To make the change persistent, add or remove corresponding entries in `M.langs`
+in [lua/utils/static.lua](https://github.com/Bekaboo/nvim/blob/master/lua/utils/static.lua).
+
+### LSP
+
+For LSP support, install the following language servers manually use your
+favorite package manager:
+
+- Bash: install [BashLS](https://github.com/bash-lsp/bash-language-server)
+
+    Example for ArchLinux users:
+
+    ```sh
+    sudo pacman -S bash-language-server
+    ```
+
+- C/C++: install [Clang](https://clang.llvm.org/)
+- Lua: install [LuaLS](https://github.com/LuaLS/lua-language-server)
+- Python: install [PyLSP](https://github.com/python-lsp/python-lsp-server)
+- Rust: install [Rust Analyzer](https://rust-analyzer.github.io/)
+- LaTeX: install [TexLab](https://github.com/latex-lsp/texlab)
+- VimL: install [VimLS](https://github.com/iamcco/vim-language-server)
+
+To add support for other languages, install corresponding LS manually and
+append the language and its language server to `M.langs` in [lua/utils/static.lua](https://github.com/Bekaboo/nvim/blob/master/lua/utils/static.lua)
+so that [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) will pick them up.
+
+### DAP
+
+Install the following debug adapters manually:
+
+- Bash:
+
+    Go to [vscode-bash-debug release page](https://github.com/rogalmic/vscode-bash-debug/releases), download the lastest release
+    (`bash-debug-x.x.x.vsix`), extract the contents to a new directory
+    `vscode-bash-debug/` and put it under stdpath `data`
+    (see `:h stdpath`).
+
+    Make sure `node` is executable.
+
+- C/C++: install [CodeLLDB](https://github.com/vadimcn/codelldb).
+
+    Example for ArchLinux users:
+
+    ```sh
+    yay -S codelldb     # Install from AUR
+    ```
+
+- Python: install [DebugPy](https://github.com/microsoft/debugpy)
+
+    Example for ArchLinux users:
+
+    ```sh
+    sudo pacman -S python-debugpy
+    ```
+
+    or
+
+    ```sh
+    pip install --local debugpy # Install to user's home directory
+    ```
+
+### Formatter
+
+- Bash: install [Shfmt](https://github.com/mvdan/sh)
+- C/C++: install [Clang](https://clang.llvm.org/) to use `clang-format`
+- Lua: install [StyLua](https://github.com/JohnnyMorganz/StyLua)
+- Rust: install [Rust](https://www.rust-lang.org/tools/install) to use `rustfmt`
+- Python: install [Black](https://github.com/psf/black)
+- LaTeX: install [texlive-core](http://tug.org/texlive/) to use `latexindent`
+
+### Other External Tools
 
 - [Lazygit](https://github.com/jesseduffield/lazygit) for improved git integration
+- [Fd](https://github.com/sharkdp/fd) and [Ripgrep](https://github.com/BurntSushi/ripgrep) for the fuzzy finder `telescope`
+- [Neovim Remote](https://github.com/mhinz/neovim-remote) and [Ranger](https://github.com/ranger/ranger) for file manager support
 - [Pandoc](https://pandoc.org/), [custom scripts](https://github.com/Bekaboo/dot/tree/master/.scripts) and [TexLive](https://www.tug.org/texlive/) (for ArchLinux users, it is `texlive-core` and `texlive-extra`) for markdown → PDF conversion
 
 ## Installation
@@ -249,7 +328,7 @@ and it should work out of the box.
 
 ### Default Modules and Plugins of Choice
 
-Total # of plugins: 54 (package manager included).
+Total # of plugins: 50 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -269,9 +348,7 @@ Total # of plugins: 54 (package manager included).
 - **LSP**
     - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
     - [clangd_extensions.nvim](https://github.com/p00f/clangd_extensions.nvim)
-    - [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim)
     - [null-lsp.nvim](https://github.com/jose-elias-alvarez/null-ls.nvim)
-    - [mason-null-ls.nvim](https://github.com/jay-babu/mason-null-ls.nvim)
 - **Markup**
     - [vimtex](https://github.com/lervag/vimtex)
     - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
@@ -285,7 +362,6 @@ Total # of plugins: 54 (package manager included).
     - [fcitx.nvim](https://github.com/h-hg/fcitx.nvim)
     - [vim-easy-align](https://github.com/junegunn/vim-easy-align)
 - **Tools**
-    - [mason.nvim](https://github.com/williamboman/mason.nvim)
     - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
     - [telescope-fzf-native.nvim](https://github.com/nvim-telescope/telescope-fzf-native.nvim)
     - [telescope-undo.nvim](https://github.com/debugloop/telescope-undo.nvim)
@@ -313,7 +389,6 @@ Total # of plugins: 54 (package manager included).
 - **DEBUG**
     - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
     - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
-    - [mason-nvim-dap.nvim](https://github.com/jayp0521/mason-nvim-dap.nvim)
 
 ### Startuptime Statistics
 

@@ -21,7 +21,7 @@ M.langs = setmetatable({
   bash = {
     ft = 'sh',
     lsp_server = 'bashls',
-    dap = 'bash',
+    dap = 'bashdb',
     formatting = 'shfmt',
   },
   c = {
@@ -62,7 +62,7 @@ M.langs = setmetatable({
     ts = 'python',
     ft = 'python',
     lsp_server = 'pylsp',
-    dap = 'python',
+    dap = 'debugpy',
     formatting = 'black',
   },
   vim = {

@@ -8,8 +8,10 @@ adapters.python = {
 
 adapters.bashdb = {
   type = 'executable',
-  command = vim.fn.stdpath('data')
-    .. '/mason/packages/bash-debug-adapter/bash-debug-adapter',
+  command = 'node',
+  args = {
+    vim.fn.stdpath('data') .. '/vscode-bash-debug/extension/out/bashDebug.js',
+  },
   name = 'bashdb',
 }
 
@@ -17,8 +19,7 @@ adapters.codelldb = {
   type = 'server',
   port = '${port}',
   executable = {
-    command = vim.fn.stdpath('data')
-      .. '/mason/packages/codelldb/extension/adapter/codelldb',
+    command = 'codelldb',
     args = { '--port', '${port}' },
   },
 }

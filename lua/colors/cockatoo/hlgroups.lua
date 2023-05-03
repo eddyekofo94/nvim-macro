@@ -583,26 +583,6 @@ sch.LazyButton        = { bg = plt.ocean }
 sch.LazyButtonActive  = { bg = plt.thunder, bold = true }
 sch.LazyH1            = { fg = plt.space, bg = plt.yellow, bold = true }
 
--- mason.nivm
-sch.masonDoc                         = { fg = plt.pigeon }
-sch.masonPod                         = { fg = plt.pigeon }
-sch.MasonLink                        = { link = 'htmlLink' }
-sch.MasonError                       = { link = 'Error' }
-sch.MasonMuted                       = { fg = plt.smoke }
-sch.MasonHeader                      = { fg = plt.space, bg = plt.yellow, bold = true }
-sch.MasonNormal                      = { link = 'NormalFloat' }
-sch.MasonHeading                     = { link = 'Title' }
-sch.MasonHighlight                   = { fg = plt.orange }
-sch.MasonMutedBlock                  = { fg = plt.smoke, bg = plt.ocean }
-sch.MasonPerlComment                 = { link = 'Comment' }
-sch.MasonHighlightBlock              = { bg = plt.thunder }
-sch.MasonMutedBlockBold              = { fg = plt.smoke, bg = plt.ocean, bold = true }
-sch.MasonHeaderSecondary             = { fg = plt.space, bg = plt.turquoise, bold = true }
-sch.MasonHighlightBlockBold          = { bg = plt.thunder, bold = true }
-sch.MasonHighlightSecondary          = { fg = plt.turquoise }
-sch.MasonHighlightBlockSecondary     = { fg = plt.space, bg = plt.turquoise }
-sch.MasonHighlightBlockBoldSecondary = { bg = plt.thunder, bold = true }
-
 -- vim-floaterm
 sch.Floaterm       = { bg = plt.ocean }
 sch.FloatermBorder = { fg = plt.smoke, bg = plt.ocean }

@@ -1,19 +1,5 @@
 return {
   {
-    'williamboman/mason.nvim',
-    cmd = {
-      'Mason',
-      'MasonUninstall',
-      'MasonLog',
-      'MasonInstall',
-      'MasonUninstallAll',
-    },
-    config = function()
-      require('configs.mason')
-    end,
-  },
-
-  {
     'nvim-telescope/telescope.nvim',
     cmd = 'Telescope',
     keys = {

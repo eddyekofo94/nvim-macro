@@ -18,16 +18,6 @@ return {
   },
 
   {
-    'williamboman/mason-lspconfig.nvim',
-    dependencies = { 'mason.nvim', 'nvim-lspconfig', },
-    event = { 'BufReadPre', 'FileType' },
-    cmd = { 'LspInstall', 'LspUninstall' },
-    config = function()
-      require('configs.mason-lspconfig')
-    end,
-  },
-
-  {
     'jose-elias-alvarez/null-ls.nvim',
     event = { 'BufReadPre', 'FileType' },
     cmd = {
@@ -38,19 +28,6 @@ return {
     dependencies = { 'plenary.nvim' },
     config = function()
       require('configs.null-ls')
-    end,
-  },
-
-  {
-    'jay-babu/mason-null-ls.nvim',
-    event = { 'BufReadPre', 'FileType' },
-    cmd = {
-      'NullLsInstall',
-      'NullLsUninstall',
-    },
-    dependencies = { 'mason.nvim', 'null-ls.nvim' },
-    config = function()
-      require('configs.mason-null-ls')
     end,
   },
 }
