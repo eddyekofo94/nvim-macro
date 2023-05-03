@@ -200,7 +200,7 @@ manage_plugins({
     spec = {
       { import = 'modules.base' },
       { import = 'modules.treesitter' },
-      { import = 'modules.misc' },
+      { import = 'modules.editor' },
       -- ...
     },
 })
@@ -211,18 +211,18 @@ lazy.nvim's setup function.
 
 ### Installing Packages to an Existing Module
 
-To install plugin `foo` under module `misc`, just insert the
+To install plugin `foo` under module `bar`, just insert the
 corresponding specification to the big table
-`lua/modules/misc.lua` returns, for instance,
+`lua/modules/bar.lua` returns, for instance,
 
-`lua/modules/misc.lua`:
+`lua/modules/bar.lua`:
 
 ```lua
 return {
     -- ...
     {
         'foo/foo',
-        requires = 'foo_dep',
+        dependencies = 'foo_dep',
     },
 }
 ```
@@ -250,12 +250,12 @@ return {
       return vim.fn.argc() == 0 and
           vim.o.lines >= 36 and vim.o.columns >= 80
     end,
-    requires = 'nvim-web-devicons',
+    dependencies = 'nvim-web-devicons',
   },
 
   {
     'romgrk/barbar.nvim',
-    requries = 'nvim-web-devicons',
+    dependencies = 'nvim-web-devicons',
     config = function() require('bufferline').setup() end,
   },
 }
@@ -320,7 +320,7 @@ are defined under [lua/snippets](https://github.com/Bekaboo/nvim/tree/master/lua
 
 VSCode integration takes advantages of the modular design, allowing to use
 a different set of modules when Neovim is launched by VSCode, relevant code is
-in [plugin/vscode_neovim.vim](https://github.com/Bekaboo/nvim/blob/master/plugin/vscode_neovim.vim) and [lua/init/plugins.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua).
+in [plugin/vscode-neovim.vim](https://github.com/Bekaboo/nvim/blob/master/plugin/vscode-neovim.vim) and [lua/init/plugins.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua).
 
 To make VSCode integration work, please install [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) in VSCode
 and configure it correctly.
@@ -358,7 +358,7 @@ Total # of plugins: 50 (package manager included).
     - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
     - [zk-nvim](https://github.com/mickael-menu/zk-nvim)
     - [vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
-- **Misc**
+- **Editor**
     - [nvim-surround](https://github.com/kylechui/nvim-surround)
     - [Comment.nvim](https://github.com/numToStr/Comment.nvim)
     - [vim-sleuth](https://github.com/tpope/vim-sleuth)
@@ -379,7 +379,6 @@ Total # of plugins: 50 (package manager included).
     - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
 - **Treesitter**
     - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-    - [nvim-ts-rainbow](https://github.com/mrjones2014/nvim-ts-rainbow)
     - [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)
     - [nvim-ts-context-commentstring](https://github.com/JoosepAlviste/nvim-ts-context-commentstring)
     - [nvim-treesitter-endwise](https://github.com/RRethy/nvim-treesitter-endwise)
