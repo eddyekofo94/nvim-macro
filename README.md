@@ -32,8 +32,9 @@ startup screen.*
     6. [Colorscheme](#colorscheme)
     7. [Auto Commands](#auto-commands)
     8. [LSP Server Configurations](#lsp-server-configurations)
-    9. [Snippets](#snippets)
-    10. [Enabling VSCode Integration](#enabling-vscode-integration)
+    9. [DAP Configurations](#dap-configurations)
+    10. [Snippets](#snippets)
+    11. [Enabling VSCode Integration](#enabling-vscode-integration)
 6. [Appendix](#appendix)
     1. [Default Modules and Plugins of Choice](#default-modules-and-plugins-of-choice)
     2. [Startuptime Statistics](#startuptime-statistics)
@@ -304,6 +305,10 @@ See [lua/init/autocmds.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init
 ### LSP Server Configurations
 
 See [lua/configs/lsp-server-configs](https://github.com/Bekaboo/nvim/tree/master/lua/configs/lsp-server-configs) and [lua/configs/nvim-lspconfig.lua](https://github.com/Bekaboo/nvim/tree/master/lua/configs/nvim-lspconfig.lua).
+
+### DAP Configurations
+
+See [lua/configs/dap-configs](https://github.com/Bekaboo/nvim/tree/master/lua/configs/dap-configs), [lua/configs/nvim-dap.lua](https://github.com/Bekaboo/nvim/tree/master/lua/configs/nvim-dap.lua), and [lua/configs/nvim-dap-ui.lua](https://github.com/Bekaboo/nvim/tree/master/lua/configs/nvim-dap-ui.lua).
 
 ### Snippets
 
