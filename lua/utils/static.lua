@@ -42,16 +42,17 @@ M.langs = setmetatable({
     ts = 'vimdoc',
     ft = 'help',
   },
-  javascript = {
-    ts = 'javascript',
-    ft = 'javascript',
-    lsp_server = 'tsserver',
-  },
   lua = {
     ts = 'lua',
     ft = 'lua',
     lsp_server = 'lua_ls',
     formatting = 'stylua',
+  },
+  rust = {
+    ts = 'rust',
+    ft = 'rust',
+    lsp_server = 'rust_analyzer',
+    formatting = 'rustfmt',
   },
   make = {
     ts = 'make',
