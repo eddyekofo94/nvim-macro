@@ -1021,7 +1021,7 @@ local function setup_diagnostics_on_mode_change(_, bufnr)
       if vim.fn.match(tbl.match, '.*:[iRsS\x13].*') ~= -1 then
         vim.diagnostic.disable(bufnr)
         vim.b._lsp_diagnostics_temp_disabled = true
-      elseif vim.b._lsp_diagnostics_temp_disabled then
+      elseif not vim.wo.diff and vim.b._lsp_diagnostics_temp_disabled then
         vim.diagnostic.enable(bufnr)
         vim.b._lsp_diagnostics_temp_disabled = nil
       end

@@ -52,6 +52,25 @@ local function lspconfig_diagnostic()
         prefix = '',
       },
     })
+
+    -- Disable LSP diagnostics in diff mode
+    vim.api.nvim_create_autocmd('OptionSet', {
+      pattern = 'diff',
+      group = vim.api.nvim_create_augroup('DiagnosticDisableInDiff', {}),
+      callback = function(info)
+        if vim.v.option_new == '1' then
+          vim.diagnostic.disable(info.buf)
+          vim.b._lsp_diagnostics_temp_disabled = true
+        elseif
+          vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
+          and vim.b._lsp_diagnostics_temp_disabled
+        then
+          vim.diagnostic.enable(info.buf)
+          vim.b._lsp_diagnostics_temp_disabled = nil
+        end
+      end,
+      desc = 'Disable LSP diagnostics in diff mode.',
+    })
 end
 
 ---Customize LspInfo floating window
