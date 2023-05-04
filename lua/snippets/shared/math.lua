@@ -336,8 +336,8 @@ M.words = {
     s({ trig = 'clg' }, { t('\\left\\lceil '), i(1), t(' \\right\\rceil'), i(0) }),
     s({ trig = 'bmat' }, { t('\\begin{bmatrix} '), i(1), t(' \\end{bmatrix}'), i(0) }),
     s({ trig = 'pmat' }, { t('\\begin{pmatrix} '), i(1), t(' \\end{pmatrix}'), i(0) }),
-    s({ trig = 'Bmat' }, { t({ '\\begin{bmatrix}', '' }), ifn(1), i(0), t({ '', '\\end{bmatrix}', '' }) }),
-    s({ trig = 'Pmat' }, { t({ '\\begin{pmatrix}', '' }), ifn(1), i(0), t({ '', '\\end{pmatrix}', '' }) }),
+    s({ trig = 'Bmat' }, { t({ '\\begin{bmatrix}', '' }), ifn(1), i(1), t({ '', '\\end{bmatrix}', '' }) }),
+    s({ trig = 'Pmat' }, { t({ '\\begin{pmatrix}', '' }), ifn(1), i(1), t({ '', '\\end{pmatrix}', '' }) }),
     s({ trig = 'aln' }, fmta([[
 \begin{<env>}
 <indent><text>
@@ -345,7 +345,7 @@ M.words = {
     ]], {
       env = c(1, { i(nil, 'aligned'), i(nil, 'align*'), i(nil, 'align') }),
       indent = ifn(1),
-      text = i(0),
+      text = i(2),
     }, { repeat_duplicates = true })),
     s({ trig = 'eqt' }, fmta([[
 \begin{<env>}
@@ -354,7 +354,7 @@ M.words = {
     ]], {
       env = c(1, { i(nil, 'equation*'), i(nil, 'equation') }),
       indent = ifn(1),
-      text = i(0),
+      text = i(2),
     }, { repeat_duplicates = true })),
     s({ trig = 'case' }, { t({ '\\begin{cases}', '' }), ifn(1), i(0), t({ '', '\\end{cases}' }) }),
     s({ trig = 'part' }, { t('\\frac{\\partial '), i(1), t('}{\\partial '), i(2), t('}'), i(0) }),
@@ -452,9 +452,13 @@ M.math_env = {
       condition = function()
         local line = api.nvim_get_current_line()
         local col = api.nvim_win_get_cursor(0)[2]
-        return line:sub(col + 1, col + 1) == '$'
+        if line:sub(col + 1, col + 1) == '$' then
+          vim.api.nvim_set_current_line(line:sub(1, -2))
+          return true
+        end
+        return false
       end,
-    }, { t({ '$', '' }), ifn(1), i(0), t({ '', '$' }) }),
+    }, { t({ '$', '' }), ifn(1), i(1), t({ '', '$$' }) }),
     s(
       { trig = '$$', priority = 999 },
       { t('$'), i(0), t('$') }

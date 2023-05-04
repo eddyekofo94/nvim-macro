@@ -3,7 +3,11 @@ local luasnip = require('luasnip')
 local tabout = require('plugin.tabout')
 local icons = require('utils.static').icons
 
-local function choose_closest(dest1, dest2)
+---Choose the closer destination between two destinations
+---@param dest1 number[]|boolean
+---@param dest2 number[]|boolean
+---@return number[]|boolean
+local function choose_closer(dest1, dest2)
   if not dest1 then
     return dest2
   end
@@ -24,9 +28,31 @@ local function choose_closest(dest1, dest2)
   end
 end
 
-local function jump_to_closest(snip_dest, tabout_dest, direction)
+---Check if a node is valid (i.e. has a range)
+---@param node table
+---@return boolean
+local function node_is_valid(node)
+  local start_pos, end_pos = node:get_buf_position()
+  return start_pos[1] ~= end_pos[1] or start_pos[2] ~= end_pos[2]
+end
+
+---Check if the cursor is at the end of a node
+---@param node table
+---@param cursor number[]
+---@return boolean
+local function cursor_at_end_of_node(node, cursor)
+  local _, end_pos = node:get_buf_position()
+  return end_pos[1] + 1 == cursor[1] and end_pos[2] == cursor[2]
+end
+
+---Jump to the closer destination between a snippet and tabout
+---@param snip_dest number[]
+---@param tabout_dest number[]|boolean
+---@param direction number 1 or -1
+---@return boolean true if a jump is performed
+local function jump_to_closer(snip_dest, tabout_dest, direction)
   direction = direction or 1
-  local dest = choose_closest(snip_dest, tabout_dest)
+  local dest = choose_closer(snip_dest, tabout_dest)
   if not dest then
     return false
   end
@@ -75,12 +101,12 @@ cmp.setup({
   mapping = {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if vim.fn.mode() == 'i' then
-        if luasnip.in_snippet() then
-          local next_node = luasnip.jump_destination(-1)
-          local _, snip_dest_end = next_node:get_buf_position()
+        if luasnip.jumpable(-1) then
+          local prev = luasnip.jump_destination(-1)
+          local _, snip_dest_end = prev:get_buf_position()
           snip_dest_end[1] = snip_dest_end[1] + 1 -- (1, 0) indexed
           local tabout_dest = tabout.get_jump_pos('<S-Tab>')
-          if not jump_to_closest(snip_dest_end, tabout_dest, -1) then
+          if not jump_to_closer(snip_dest_end, tabout_dest, -1) then
             fallback()
           end
         else
@@ -103,11 +129,13 @@ cmp.setup({
             luasnip.jump(1)
           else
             local buf = vim.api.nvim_get_current_buf()
-            local current = luasnip.session.current_nodes[buf]
-            local _, current_end = current:get_buf_position()
-            current_end[1] = current_end[1] + 1 -- (1, 0) indexed
             local cursor = vim.api.nvim_win_get_cursor(0)
-            if current_end[1] == cursor[1] and current_end[2] == cursor[2] then
+            local current = luasnip.session.current_nodes[buf]
+            while current and not node_is_valid(current) do
+              luasnip.unlink_current()
+              current = luasnip.session.current_nodes[buf]
+            end
+            if current and cursor_at_end_of_node(current, cursor) then
               luasnip.jump(1)
             else
               fallback()
