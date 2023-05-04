@@ -273,7 +273,7 @@ vim.api.nvim_create_autocmd({ 'OptionSet' }, {
   pattern = 'diff',
   group = groupid,
   callback = function()
-    if vim.v.option_new then
+    if vim.v.option_new == '1' then
       vim.w.winbar = vim.wo.winbar
       vim.wo.winbar = nil
     elseif vim.w.winbar then
