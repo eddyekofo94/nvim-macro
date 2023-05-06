@@ -37,8 +37,13 @@ end
 
 local function set_keymap()
   vim.keymap.set({ 'n', 's' }, '<Tab>', function()
-    ls.jump(1)
-  end, { noremap = false })
+    if ls.jumpable(1) then
+      ls.jump(1)
+      return '<Ignore>'
+    else
+      return '<Tab>'
+    end
+  end, { noremap = false, expr = true })
   vim.keymap.set({ 'n', 's' }, '<S-Tab>', function()
     ls.jump(-1)
   end, { noremap = false })
