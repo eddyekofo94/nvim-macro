@@ -319,7 +319,7 @@ local autocmds = {
         ) >= 0 or line:sub(col + 1, col + 1) == '\t'
         if after_non_blank and not has_adjacent_tabs then
           if vim.b[info.buf].expandtab == nil then
-            vim.b[info.buf].expandtab = vim.bo.expandtab
+            vim.b[info.buf].expandtab = vim.bo[info.buf].expandtab
           end
           vim.bo[info.buf].expandtab = true
         elseif vim.b[info.buf].expandtab ~= nil then
