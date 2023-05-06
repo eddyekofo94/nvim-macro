@@ -1,8 +1,11 @@
 local default_config = require('configs.lsp-server-configs.shared.default')
 
 local function in_config_path(app)
-  return string.format('%s/.config/%s',
-    os.getenv('XDG_CONFIG_HOME') or os.getenv('HOME') or '', app)
+  return string.format(
+    '%s/.config/%s',
+    os.getenv('XDG_CONFIG_HOME') or os.getenv('HOME') or '',
+    app
+  )
 end
 
 local function inside_nvim_runtime_paths(path)
@@ -15,7 +18,9 @@ local function inside_nvim_runtime_paths(path)
 end
 
 local function on_new_config(config, root_dir)
-  if not root_dir then return end
+  if not root_dir then
+    return
+  end
   if inside_nvim_runtime_paths(root_dir) then
     config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
       Lua = {
@@ -31,7 +36,14 @@ local function on_new_config(config, root_dir)
           globals = { 'vim' },
         },
         workspace = {
-          library = vim.api.nvim_get_runtime_file('', true),
+          library = vim.list_extend(
+            vim.api.nvim_get_runtime_file('lua/', true),
+            vim.fs.find({ 'lua' }, {
+              type = 'directory',
+              limit = math.huge,
+              path = vim.fn.stdpath('data'),
+            })
+          ),
           checkThirdParty = false,
         },
         telemetry = {
