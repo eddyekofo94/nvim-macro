@@ -442,7 +442,7 @@ return {
 
   -- fidget
   FidgetTitle = { link = 'Title' },
-  FidgetTask  = { link = 'Comment' },
+  FidgetTask  = { fg = plt.pigeon },
 
   -- nvim-dap-ui
   DapUIBreakpointsCurrentLine = { link = 'CursorLineNr' },
