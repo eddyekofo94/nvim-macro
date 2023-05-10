@@ -590,7 +590,8 @@ return {
   CopilotAnnotation = { fg = plt.steel, italic = true },
 
   -- nvim-treesitter-context
-  TreesitterContext = { bg = plt.ocean },
+  TreesitterContext           = { bg = plt.darkened },
+  TreesitterContextLineNumber = { fg = plt.steel, bg = plt.darkened },
 
   -- Extra highlight groups
   Yellow     = { fg = plt.yellow },

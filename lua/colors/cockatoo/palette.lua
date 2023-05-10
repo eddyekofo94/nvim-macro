@@ -30,6 +30,7 @@ palette.dark = {
   jeans        = '#20242e',
   space        = '#13161f',
   black        = '#09080b',
+  darkened     = '#1a1e26',
 
   tea_blend      = '#425858',
   aqua_blend     = '#293a44',
@@ -74,6 +75,7 @@ palette.light = {
   jeans        = '#faf4ed',
   space        = '#faf7ee',
   black        = '#efefef',
+  darkened     = '#f0e8e2',
 
   tea_blend      = '#bdc8ad',
   aqua_blend     = '#c4cdc2',
