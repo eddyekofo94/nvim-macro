@@ -383,12 +383,12 @@ Total # of plugins: 51 (package manager included).
     - [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)
     - [nvim-ts-context-commentstring](https://github.com/JoosepAlviste/nvim-ts-context-commentstring)
     - [nvim-treesitter-endwise](https://github.com/RRethy/nvim-treesitter-endwise)
+    - [nvim-treesitter-context](https://github.com/nvim-treesitter/nvim-treesitter-context)
     - [ts-node-action](https://github.com/CKolkey/ts-node-action)
     - [cellular-automaton.nvim](https://github.com/Eandrju/cellular-automaton.nvim)
 - **UI**
     - [barbar.nvim](https://github.com/romgrk/barbar.nvim)
     - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
-    - [nvim-navic](https://github.com/SmiteshP/nvim-navic)
     - [fidget.nvim](https://github.com/j-hui/fidget.nvim)
 - **DEBUG**
     - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
