@@ -1,5 +1,3 @@
-local ft_list = require('utils.static').langs:list('ft')
-
 return {
   {
     'nvim-treesitter/nvim-treesitter',
@@ -19,7 +17,7 @@ return {
       'TSEditQuery',
       'TSEditQueryUserAfter',
     },
-    ft = ft_list,
+    event = 'FileType',
     config = function()
       require('configs.nvim-treesitter')
     end,
@@ -44,7 +42,7 @@ return {
 
   {
     'CKolkey/ts-node-action',
-    ft = ft_list,
+    event = 'FileType',
     keys = '<Leader><Leader>',
     dependencies = 'nvim-treesitter',
     config = function()
@@ -54,14 +52,14 @@ return {
 
   {
     'Eandrju/cellular-automaton.nvim',
-    ft = ft_list,
+    event = 'FileType',
     cmd = 'CellularAutomaton',
     dependencies = 'nvim-treesitter',
   },
 
   {
     'RRethy/nvim-treesitter-endwise',
-    ft = ft_list,
+    event = 'FileType',
     dependencies = 'nvim-treesitter',
   },
 }
