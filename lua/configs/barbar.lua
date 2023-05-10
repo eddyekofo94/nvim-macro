@@ -15,10 +15,10 @@ require('bufferline').setup({
       left = '',
       right = '',
     },
+    button = '',
     modified = { button = '[+]' },
     pinned = { button = '' },
     inactive = {
-      button = '',
       separator = {
         left = '',
         right = '',
