@@ -58,6 +58,7 @@ end
 local function enable_modules(module_names)
   local config = {
     root = vim.g.package_path,
+    lockfile = vim.g.package_lock,
     ui = {
       border = 'shadow',
       size = { width = 0.7, height = 0.74 },
