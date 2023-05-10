@@ -30,4 +30,12 @@ return {
       require('configs.null-ls')
     end,
   },
+
+  {
+    'folke/neodev.nvim',
+    ft = 'lua',
+    config = function()
+      require('configs.neodev')
+    end,
+  },
 }
