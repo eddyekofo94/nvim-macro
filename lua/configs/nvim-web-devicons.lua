@@ -3,7 +3,7 @@ require('nvim-web-devicons').setup({
     default_icon = {
       color = '#b4b4b9',
       cterm_color = '249',
-      icon = '',
+      icon = '󰈔',
       name = 'Default'
     },
     desktop = {
