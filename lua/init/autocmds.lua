@@ -348,6 +348,7 @@ local autocmds = {
     { 'OptionSet' },
     {
       pattern = 'textwidth',
+      group = 'TextwidthRelativeColorcolumn',
       callback = function()
         if vim.v.option_new ~= '0' then
           vim.opt_local.colorcolumn = '+1'
