@@ -20,15 +20,6 @@ return {
   },
 
   {
-    'SmiteshP/nvim-navic',
-    dependencies = 'nvim-web-devicons',
-    event = 'BufReadPost',
-    config = function()
-      require('configs.nvim-navic')
-    end,
-  },
-
-  {
     'j-hui/fidget.nvim',
     event = 'FileType',
     config = function()
