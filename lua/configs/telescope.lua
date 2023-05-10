@@ -101,5 +101,11 @@ telescope.setup({
 })
 
 -- load telescope extensions
-telescope.load_extension('fzf')
+if
+  not vim.tbl_isempty(
+    vim.fs.find({ 'libfzf.so' }, { path = vim.g.package_path, type = 'file' })
+  )
+then
+  telescope.load_extension('fzf')
+end
 telescope.load_extension('undo')
