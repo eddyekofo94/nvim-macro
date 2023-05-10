@@ -332,7 +332,7 @@ and it should work out of the box.
 
 ### Default Modules and Plugins of Choice
 
-Total # of plugins: 50 (package manager included).
+Total # of plugins: 51 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -353,6 +353,7 @@ Total # of plugins: 50 (package manager included).
     - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
     - [clangd_extensions.nvim](https://github.com/p00f/clangd_extensions.nvim)
     - [null-lsp.nvim](https://github.com/jose-elias-alvarez/null-ls.nvim)
+    - [neodev](https://github.com/folke/neodev.nvim)
 - **Markup**
     - [vimtex](https://github.com/lervag/vimtex)
     - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
