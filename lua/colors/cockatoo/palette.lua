@@ -26,7 +26,7 @@ palette.dark = {
   steel        = '#5e6379',
   iron         = '#313742',
   deepsea      = '#293950',
-  ocean        = '#233040',
+  ocean        = '#262f3e',
   jeans        = '#20242e',
   space        = '#13161f',
   black        = '#09080b',
@@ -40,7 +40,6 @@ palette.dark = {
   earth_blend    = '#303032',
   smoke_blend    = '#272d3a',
   pigeon_blend   = '#27323c',
-  ocean_blend    = '#262f3e',
 
   shadow = '#09080b',
 }
@@ -71,7 +70,7 @@ palette.light = {
   steel        = '#9a978a',
   iron         = '#b8b7b3',
   deepsea      = '#e6ded6',
-  ocean        = '#f0e7e1',
+  ocean        = '#f0e8e2',
   jeans        = '#faf4ed',
   space        = '#faf7ee',
   black        = '#efefef',
@@ -85,7 +84,6 @@ palette.light = {
   earth_blend    = '#ebe0ce',
   smoke_blend    = '#e4e4e2',
   pigeon_blend   = '#f4eee8',
-  ocean_blend    = '#f0e8e2',
 
   shadow = '#3c3935',
 }
