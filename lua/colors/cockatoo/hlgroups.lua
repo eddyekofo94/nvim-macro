@@ -589,6 +589,9 @@ return {
   CopilotSuggestion = { fg = plt.steel, italic = true },
   CopilotAnnotation = { fg = plt.steel, italic = true },
 
+  -- nvim-treesitter-context
+  TreesitterContext = { bg = plt.ocean },
+
   -- Extra highlight groups
   Yellow     = { fg = plt.yellow },
   Earth      = { fg = plt.earth },

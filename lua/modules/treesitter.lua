@@ -62,4 +62,14 @@ return {
     event = 'FileType',
     dependencies = 'nvim-treesitter',
   },
+
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    event = 'FileType',
+    cmd = { 'TSContextEnable', 'TSContextToggle' },
+    dependencies = 'nvim-treesitter',
+    config = function()
+      require('configs.nvim-treesitter-context')
+    end,
+  },
 }
