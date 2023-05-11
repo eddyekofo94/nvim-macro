@@ -379,37 +379,6 @@ return {
   TelescopePromptPrefix         = { fg = plt.orange },
   TelescopeSelectionCaret       = { fg = plt.orange, bg = plt.thunder },
 
-  -- nvim-navic
-  NavicIconsFile          = { link = 'File' },
-  NavicIconsModule        = { link = 'CmpItemKindModule' },
-  NavicIconsNamespace     = { fg = plt.ochre },
-  NavicIconsPackage       = { link = 'CmpItemKindModule' },
-  NavicIconsClass         = { link = 'CmpItemKindClass' },
-  NavicIconsMethod        = { link = 'CmpItemKindMethod' },
-  NavicIconsProperty      = { link = 'CmpItemKindProperty' },
-  NavicIconsField         = { link = 'CmpItemKindField' },
-  NavicIconsConstructor   = { link = 'CmpItemKindConstructor' },
-  NavicIconsEnum          = { link = 'CmpItemKindEnum' },
-  NavicIconsInterface     = { link = 'CmpItemKindInterface' },
-  NavicIconsFunction      = { link = 'Function' },
-  NavicIconsVariable      = { link = 'CmpItemKindVariable' },
-  NavicIconsConstant      = { link = 'Constant' },
-  NavicIconsString        = { link = 'String' },
-  NavicIconsNumber        = { link = 'Number' },
-  NavicIconsBoolean       = { link = 'Boolean' },
-  NavicIconsArray         = { link = 'Array' },
-  NavicIconsObject        = { link = 'Object' },
-  NavicIconsKey           = { link = 'Keyword' },
-  NavicIconsNull          = { link = 'Constant' },
-  NavicIconsEnumMember    = { link = 'CmpItemKindEnumMember' },
-  NavicIconsStruct        = { link = 'CmpItemKindStruct' },
-  NavicIconsEvent         = { link = 'CmpItemKindEvent' },
-  NavicIconsOperator      = { link = 'Operator' },
-  NavicIconsTypeParameter = { link = 'CmpItemKind' },
-  NavicPath               = { fg = plt.smoke },
-  NavicText               = { fg = plt.smoke },
-  NavicSeparator          = { fg = plt.orange },
-
   -- aerial
   AerialLine              = { fg = plt.white, bg = plt.thunder, bold = true },
   AerialArrayIcon         = { link = 'Array' },
@@ -580,10 +549,6 @@ return {
   LazyButton        = { bg = plt.ocean },
   LazyButtonActive  = { bg = plt.thunder, bold = true },
   LazyH1            = { fg = plt.space, bg = plt.yellow, bold = true },
-
-  -- vim-floaterm
-  Floaterm       = { bg = plt.ocean },
-  FloatermBorder = { fg = plt.smoke, bg = plt.ocean },
 
   -- copilot.lua
   CopilotSuggestion = { fg = plt.steel, italic = true },
