@@ -73,7 +73,7 @@ return vim.tbl_deep_extend('force', default_config, {
           },
         },
       })
-    elseif root_dir:match(config_path('awesome')) then
+    elseif vim.startswith(root_dir, config_path('awesome')) then
       config.settings = vim.tbl_deep_extend('force', settings, {
         Lua = {
           runtime = {
