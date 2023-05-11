@@ -43,6 +43,15 @@ vim.api.nvim_create_autocmd('WinLeave', {
   end,
 })
 
+-- Dropdown layout for telescope
+local layout_dropdown = {
+  previewer = false,
+  layout_config = {
+    width = 0.5,
+    height = 0.5,
+  },
+}
+
 telescope.setup({
   defaults = {
     prompt_prefix = '/ ',
@@ -90,9 +99,13 @@ telescope.setup({
     },
   },
   pickers = {
-    colorscheme = {
+    colorscheme = vim.tbl_deep_extend('force', layout_dropdown, {
       enable_preview = true,
-    },
+    }),
+    commands = layout_dropdown,
+    command_history = layout_dropdown,
+    filetypes = layout_dropdown,
+    keymaps = layout_dropdown,
     lsp_references = {
       include_current_line = true,
       jump_type = 'never',
@@ -100,6 +113,11 @@ telescope.setup({
     lsp_definitions = {
       jump_type = 'never',
     },
+    vim_options = layout_dropdown,
+    registers = layout_dropdown,
+    reloader = layout_dropdown,
+    search_history = layout_dropdown,
+    spell_suggest = layout_dropdown,
   },
   extensions = {
     undo = {
