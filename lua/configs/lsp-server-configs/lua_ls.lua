@@ -21,7 +21,7 @@ local nvimlib = vim.list_extend(
 )
 local neodevok, neodevcfg = pcall(require, 'neodev.config')
 if neodevok then
-  vim.list_extend(nvimlib, neodevcfg.types())
+  table.insert(nvimlib, neodevcfg.types())
 end
 
 ---Check if a path is inside nvim's runtime paths
@@ -37,35 +37,44 @@ local function inside_nvim_runtime_paths(path)
 end
 
 return vim.tbl_deep_extend('force', default_config, {
+  settings = {
+    Lua = {
+      completion = {
+        callSnippet = 'Replace',
+      },
+      diagnostics = {
+        enable = true,
+      },
+      workspace = {
+        checkThirdParty = false,
+      },
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
   on_new_config = function(config, root_dir)
     if not root_dir then
       return
     end
+    local settings = config.settings or {}
     if inside_nvim_runtime_paths(root_dir) then
-      config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
+      config.settings = vim.tbl_deep_extend('force', settings, {
         Lua = {
           runtime = {
             version = 'LuaJIT',
             path = vim.split(package.path, ';'),
           },
-          completion = {
-            callSnippet = 'Replace',
-          },
           diagnostics = {
-            enable = true,
             globals = { 'vim' },
           },
           workspace = {
             library = nvimlib,
-            checkThirdParty = false,
-          },
-          telemetry = {
-            enable = false,
           },
         },
       })
     elseif root_dir:match(config_path('awesome')) then
-      config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
+      config.settings = vim.tbl_deep_extend('force', settings, {
         Lua = {
           runtime = {
             path = {
@@ -74,7 +83,6 @@ return vim.tbl_deep_extend('force', default_config, {
             },
           },
           diagnostics = {
-            enable = true,
             globals = {
               'awesome',
               'client',
