@@ -103,6 +103,10 @@ M.borders = {
 
 M.icons = {
   Array = ' ',
+  ArrowDown = ' ',
+  ArrowLeft = ' ',
+  ArrowRight = ' ',
+  ArrowUp = ' ',
   Boolean = ' ',
   Calculator = ' ',
   Class = ' ',
