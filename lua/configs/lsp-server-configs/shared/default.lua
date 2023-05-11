@@ -532,7 +532,7 @@ local subcommands = {
       arg_handler = arg_handler_item,
       opts = { '--list' },
       fn_override = function(...)
-        vim.notify(vim.diagnostic.setqflist(...))
+        vim.diagnostic.show(nil, 0, vim.diagnostic.fromqflist(...))
       end,
     },
     get = {
