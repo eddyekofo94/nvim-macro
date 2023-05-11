@@ -125,7 +125,7 @@ end
 local function get_hl(hlgroup_name, field, fallback)
   fallback = fallback or '#000000'
   local has_hlgroup, hlgroup =
-    pcall(vim.api.nvim_get_hl_by_name, hlgroup_name, true)
+    pcall(vim.api.nvim_get_hl, 0, { name = hlgroup_name })
   if has_hlgroup and hlgroup[field] then
     return dec2hex(hlgroup[field])
   end
@@ -216,8 +216,8 @@ local function cc_autocmd()
       end
 
       -- Show blended color when len < cc
-      local normal_bg = get_hl('Normal', 'background')
-      local colorcolumn_bg = get_hl('ColorColumn', 'background')
+      local normal_bg = get_hl('Normal', 'bg')
+      local colorcolumn_bg = get_hl('ColorColumn', 'bg')
       if length < cc then
         vim.api.nvim_set_hl(0, '_ColorColumn', {
           bg = blend(
@@ -227,7 +227,7 @@ local function cc_autocmd()
           ),
         })
       else -- Show error color when length >= cc
-        local warning_color = get_hl('Error', 'foreground', '#FF0000')
+        local warning_color = get_hl('Error', 'fg', '#FF0000')
         vim.api.nvim_set_hl(0, '_ColorColumn', {
           bg = blend(warning_color, normal_bg, 0.4),
         })
