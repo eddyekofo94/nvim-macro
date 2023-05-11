@@ -169,7 +169,7 @@ end
 
 local get_jump_pos = {
   ---Getting the jump position for Tab
-  ---@return number[]|boolean cursor position after jump; false if no jump
+  ---@return number[]? cursor position after jump; false if no jump
   ['<Tab>'] = function()
     local cursor = api.nvim_win_get_cursor(0)
     local current_line = api.nvim_get_current_line()
@@ -178,7 +178,7 @@ local get_jump_pos = {
 
     -- Do not jump if the cursor is at the beginning/end of the current line
     if leading:match('^%s*$') or trailing == '' then
-      return false
+      return
     end
 
     for _, pattern in ipairs(patterns[vim.bo.ft or '']) do
@@ -187,12 +187,10 @@ local get_jump_pos = {
         return { cursor[1], cursor[2] + jump_pos }
       end
     end
-
-    return false
   end,
 
   ---Getting the jump position for Shift-Tab
-  ---@return number[]|boolean cursor position after jump; false if no jump
+  ---@return number[]? cursor position after jump; false if no jump
   ['<S-Tab>'] = function()
     local cursor = api.nvim_win_get_cursor(0)
     local current_line = api.nvim_get_current_line()
@@ -204,8 +202,6 @@ local get_jump_pos = {
         return jumpin_idx(leading:sub(1, closing_pattern_end), pattern, cursor)
       end
     end
-
-    return false
   end
 }
 

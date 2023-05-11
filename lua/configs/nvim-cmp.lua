@@ -4,9 +4,9 @@ local tabout = require('plugin.tabout')
 local icons = require('utils.static').icons
 
 ---Choose the closer destination between two destinations
----@param dest1 number[]|boolean
----@param dest2 number[]|boolean
----@return number[]|boolean
+---@param dest1 number[]?
+---@param dest2 number[]?
+---@return number[]|nil
 local function choose_closer(dest1, dest2)
   if not dest1 then
     return dest2
@@ -47,7 +47,7 @@ end
 
 ---Jump to the closer destination between a snippet and tabout
 ---@param snip_dest number[]
----@param tabout_dest number[]|boolean
+---@param tabout_dest number[]?
 ---@param direction number 1 or -1
 ---@return boolean true if a jump is performed
 local function jump_to_closer(snip_dest, tabout_dest, direction)
