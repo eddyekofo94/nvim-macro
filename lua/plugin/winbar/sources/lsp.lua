@@ -73,10 +73,18 @@ end
 ---@return boolean
 local function cursor_in_range(cursor, range)
   local cursor0 = { cursor[1] - 1, cursor[2] }
-  return cursor0[1] > range.start.line and cursor0[1] < range['end'].line
-    or cursor0[1] == range.start.line and cursor0[2] >= range.start.character
-    or cursor0[1] == range['end'].line
-      and cursor0[2] <= range['end'].character
+  -- stylua: ignore start
+  return (
+    cursor0[1] > range.start.line
+    or (cursor0[1] == range.start.line
+        and cursor0[2] >= range.start.character)
+  )
+    and (
+      cursor0[1] < range['end'].line
+      or (cursor0[1] == range['end'].line
+          and cursor0[2] <= range['end'].character)
+    )
+  -- stylua: ignore end
 end
 
 ---Parse LSP SymbolInformation[] into a list of winbar symbols
