@@ -1,6 +1,6 @@
 local static = require('utils.static')
 local groupid = vim.api.nvim_create_augroup('WinBarLsp', {})
-local lsp_buf_symbols = {}
+local lsp_buf_symbols = {} ---@type table<number, lsp_symbol_t[]>
 local initialized = false
 
 ---@alias lsp_client_t table
@@ -211,6 +211,7 @@ local function detach(buf)
   if vim.b[buf].winbar_lsp_attached then
     vim.api.nvim_del_autocmd(vim.b[buf].winbar_lsp_attached)
     vim.b[buf].winbar_lsp_attached = nil
+    lsp_buf_symbols[buf] = nil
   end
 end
 
