@@ -65,7 +65,7 @@ return {
 
   {
     'nvim-treesitter/nvim-treesitter-context',
-    event = 'FileType',
+    event = 'BufReadPost',
     cmd = { 'TSContextEnable', 'TSContextToggle' },
     dependencies = 'nvim-treesitter',
     config = function()
