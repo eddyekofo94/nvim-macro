@@ -1,8 +1,7 @@
-vim.api.nvim_create_autocmd({ 'BufWinEnter', 'BufWritePost' }, {
+vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
+  once = true,
   group = vim.api.nvim_create_augroup('WinBarSetup', {}),
-  callback = function(info)
-    if not vim.g.loaded_winbar and info.file ~= '' then
-      require('plugin.winbar').setup()
-    end
+  callback = function()
+    require('plugin.winbar').setup()
   end
 })
