@@ -1,39 +1,23 @@
-local funcs = require('snippets.utils.funcs')
-local ifn = funcs.ifn
-local fn = vim.fn
-local api = vim.api
+local uf = require('snippets.utils.funcs')
+local un = require('snippets.utils.nodes')
 local ls = require('luasnip')
-local ls_types = require('luasnip.util.types')
 local s = ls.snippet
-local sn = ls.snippet_node
 local t = ls.text_node
 local i = ls.insert_node
-local f = ls.function_node
-local c = ls.choice_node
-local d = ls.dynamic_node
-local r = ls.restore_node
 local l = require('luasnip.extras').lambda
-local rep = require('luasnip.extras').rep
-local p = require('luasnip.extras').partial
-local m = require('luasnip.extras').match
-local n = require('luasnip.extras').nonempty
 local dl = require('luasnip.extras').dynamic_lambda
-local fmt = require('luasnip.extras.fmt').fmt
-local fmta = require('luasnip.extras.fmt').fmta
-local types = require('luasnip.util.types')
-local conds = require('luasnip.extras.expand_conditions')
 
 local M = require('snippets.shared.math')
 
 local function in_normal_zone()
-  local cursor_lnum = api.nvim_win_get_cursor(0)[1]
-  local lines = api.nvim_buf_get_lines(0, 0, cursor_lnum, false)
-  return not funcs.in_mathzone()
+  local cursor_lnum = vim.api.nvim_win_get_cursor(0)[1]
+  local lines = vim.api.nvim_buf_get_lines(0, 0, cursor_lnum, false)
+  return not uf.in_mathzone()
     and not require('utils.fn').markdown_in_code_block(lines)
 end
 
 M.format = {
-  snip = funcs.add_attr({ condition = in_normal_zone }, {
+  snip = uf.add_attr({ condition = in_normal_zone }, {
     s({ trig = '^# ', regTrig = true, snippetType = 'autosnippet' }, {
       t('# '),
       dl(
@@ -46,13 +30,13 @@ M.format = {
     s('package', {
       t({ '---', '' }),
       t({ 'header-includes:', '' }),
-      ifn(1),
+      un.idnt(1),
       t({ '- \\usepackage{gensymb}', '' }),
-      ifn(1),
+      un.idnt(1),
       t({ '- \\usepackage{amsmath}', '' }),
-      ifn(1),
+      un.idnt(1),
       t({ '- \\usepackage{amssymb}', '' }),
-      ifn(1),
+      un.idnt(1),
       t({ '- \\usepackage{mathtools}', '' }),
       t({ '---', '' }),
     }),
@@ -60,17 +44,17 @@ M.format = {
 }
 
 M.markers = {
-  snip = funcs.add_attr({ condition = in_normal_zone }, {
+  snip = uf.add_attr({ condition = in_normal_zone }, {
     s({
       trig = '*',
       condition = function()
-        local line = api.nvim_get_current_line()
-        local col = api.nvim_win_get_cursor(0)[2]
-        return line:sub(col + 1, col + 1) == '*' and funcs.not_in_mathzone()
+        local line = vim.api.nvim_get_current_line()
+        local col = vim.api.nvim_win_get_cursor(0)[2]
+        return line:sub(col + 1, col + 1) == '*' and uf.not_in_mathzone()
       end,
     }, { t('*'), i(0), t('*') }),
     s(
-      { trig = '**', priority = 999, condition = funcs.not_in_mathzone },
+      { trig = '**', priority = 999, condition = uf.not_in_mathzone },
       { t('*'), i(0), t('*') }
     ),
   }),
@@ -78,7 +62,7 @@ M.markers = {
 }
 
 M.titles = {
-  snip = funcs.add_attr({ condition = in_normal_zone }, {
+  snip = uf.add_attr({ condition = in_normal_zone }, {
     s({ trig = 'h1' }, { t('# '), i(0) }),
     s({ trig = 'h2' }, { t('## '), i(0) }),
     s({ trig = 'h3' }, { t('### '), i(0) }),
@@ -89,7 +73,7 @@ M.titles = {
 }
 
 M.theorems = {
-  snip = funcs.add_attr({ condition = in_normal_zone }, {
+  snip = uf.add_attr({ condition = in_normal_zone }, {
     s({ trig = 'theo' }, { t('***'), i(1, 'Theorem'), t('***') }),
     s({ trig = 'def' }, { t('***'), i(1, 'Definition'), t('***') }),
     s({ trig = 'pro' }, { t('***'), i(1, 'Proof'), t('***') }),

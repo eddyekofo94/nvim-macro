@@ -1,32 +1,17 @@
 local M = {}
-local funcs = require('snippets.utils.funcs')
-local ifn = funcs.ifn
-local sdn = funcs.sdn
-local fn = vim.fn
-local api = vim.api
+local uf = require('snippets.utils.funcs')
+local un = require('snippets.utils.nodes')
 local ls = require('luasnip')
-local ls_types = require('luasnip.util.types')
 local s = ls.snippet
 local sn = ls.snippet_node
 local t = ls.text_node
 local i = ls.insert_node
-local f = ls.function_node
 local c = ls.choice_node
 local d = ls.dynamic_node
-local r = ls.restore_node
-local l = require('luasnip.extras').lambda
-local rep = require('luasnip.extras').rep
-local p = require('luasnip.extras').partial
-local m = require('luasnip.extras').match
-local n = require('luasnip.extras').nonempty
-local dl = require('luasnip.extras').dynamic_lambda
-local fmt = require('luasnip.extras.fmt').fmt
 local fmta = require('luasnip.extras.fmt').fmta
-local types = require('luasnip.util.types')
-local conds = require('luasnip.extras.expand_conditions')
 
 M.symbols = {
-  snip = funcs.add_attr({ condition = funcs.in_mathzone, wordTrig = false }, {
+  snip = uf.add_attr({ condition = uf.in_mathzone, wordTrig = false }, {
     s({ trig = '(%a)(%d)', regTrig = true }, {
       d(1, function(_, snip)
         local symbol = snip.captures[1]
@@ -65,13 +50,19 @@ M.symbols = {
         if idx > 0 then
           prefix = captured:sub(1, idx - 1)
         end
-        return sn(nil, { t(prefix), t('\\frac{'), t(numerator), t('}{'), i(1), t('}') })
+        return sn(
+          nil,
+          { t(prefix), t('\\frac{'), t(numerator), t('}{'), i(1), t('}') }
+        )
       end),
       i(0),
     }),
     s({ trig = '(\\%w+{%S+})//', regTrig = true }, {
       d(1, function(_, snip)
-        return sn(nil, { t('\\frac{'), t(snip.captures[1]), t('}{'), i(1), t('}') })
+        return sn(
+          nil,
+          { t('\\frac{'), t(snip.captures[1]), t('}{'), i(1), t('}') }
+        )
       end),
       i(0),
     }),
@@ -86,8 +77,12 @@ M.symbols = {
       i(0),
     }),
     -- matrix/vector bold font
-    s({ trig = ';(%a)', regTrig = true, priority = 999,
-        dscr = 'vector bold math font' }, {
+    s({
+      trig = ';(%a)',
+      regTrig = true,
+      priority = 999,
+      dscr = 'vector bold math font',
+    }, {
       d(1, function(_, snip)
         return sn(nil, { t(string.format('\\mathbf{%s}', snip.captures[1])) })
       end),
@@ -106,12 +101,30 @@ M.symbols = {
     s({ trig = '\\le =', priority = 999 }, { t('\\Leftarrow '), i(0) }),
     s({ trig = '-->', priority = 999 }, { t('\\rightarrow '), i(0) }),
     s({ trig = '&= >', priority = 999 }, { t('\\Rightarrow '), i(0) }),
-    s({ trig = 'x<->' }, { t('\\xleftrightarrow['), i(1), t(']{'), i(2), t('} '), i(0) }),
-    s({ trig = 'x\\le >' }, { t('\\xLeftrightarrow['), i(1), t(']{'), i(2), t('} '), i(0) }),
-    s({ trig = 'x<--' }, { t('\\xleftarrow['), i(1), t(']{'), i(2), t('} '), i(0) }),
-    s({ trig = 'x\\le =' }, { t('\\xLeftarrow['), i(1), t(']{'), i(2), t('} '), i(0) }),
-    s({ trig = 'x-->' }, { t('\\xrightarrow['), i(1), t(']{'), i(2), t('} '), i(0) }),
-    s({ trig = 'x&= >' }, { t('\\xRightarrow['), i(1), t(']{'), i(2), t('} '), i(0) }),
+    s(
+      { trig = 'x<->' },
+      { t('\\xleftrightarrow['), i(1), t(']{'), i(2), t('} '), i(0) }
+    ),
+    s(
+      { trig = 'x\\le >' },
+      { t('\\xLeftrightarrow['), i(1), t(']{'), i(2), t('} '), i(0) }
+    ),
+    s(
+      { trig = 'x<--' },
+      { t('\\xleftarrow['), i(1), t(']{'), i(2), t('} '), i(0) }
+    ),
+    s(
+      { trig = 'x\\le =' },
+      { t('\\xLeftarrow['), i(1), t(']{'), i(2), t('} '), i(0) }
+    ),
+    s(
+      { trig = 'x-->' },
+      { t('\\xrightarrow['), i(1), t(']{'), i(2), t('} '), i(0) }
+    ),
+    s(
+      { trig = 'x&= >' },
+      { t('\\xRightarrow['), i(1), t(']{'), i(2), t('} '), i(0) }
+    ),
     s({ trig = '->', priority = 998 }, { t('\\to '), i(0) }),
     s({ trig = '<-', priority = 998 }, { t('\\gets '), i(0) }),
     s({ trig = '=>', priority = 998 }, { t('\\implies '), i(0) }),
@@ -122,23 +135,23 @@ M.symbols = {
 
     s({ trig = '%s*_', regTrig = true }, {
       d(1, function()
-        local char_after = funcs.get_char_after()
+        local char_after = uf.get_char_after()
         if char_after == '_' or char_after == '{' then
           return sn(nil, { t('_') })
         else
           return sn(nil, { t('_{'), i(1), t('}') })
         end
-      end)
+      end),
     }),
     s({ trig = '%s*^', regTrig = true }, {
       d(1, function()
-        local char_after = funcs.get_char_after()
+        local char_after = uf.get_char_after()
         if char_after == '^' or char_after == '{' then
           return sn(nil, { t('^') })
         else
           return sn(nil, { t('^{'), i(1), t('}') })
         end
-      end)
+      end),
     }),
     s({ trig = '>>' }, { t('\\gg '), i(0) }),
     s({ trig = '<<' }, { t('\\ll '), i(0) }),
@@ -163,15 +176,24 @@ M.symbols = {
     s({ trig = '##' }, { t('\\#') }),
     s({ trig = ': ' }, { t('\\colon ') }),
 
-    s({ trig = 'abs' }, { t('\\left\\vert '), i(1), t(' \\right\\vert'), i(0) }),
-    s({ trig = 'lrv' }, { t('\\left\\vert '), i(1), t(' \\right\\vert'), i(0) }),
+    s(
+      { trig = 'abs' },
+      { t('\\left\\vert '), i(1), t(' \\right\\vert'), i(0) }
+    ),
+    s(
+      { trig = 'lrv' },
+      { t('\\left\\vert '), i(1), t(' \\right\\vert'), i(0) }
+    ),
     s({ trig = 'lrb' }, { t('\\left('), i(1), t('\\right)'), i(0) }),
     s({ trig = 'lr)' }, { t('\\left('), i(1), t('\\right)'), i(0) }),
     s({ trig = 'lr]' }, { t('\\left['), i(1), t('\\right]'), i(0) }),
     s({ trig = 'lrB' }, { t('\\left{'), i(1), t('\\right}'), i(0) }),
     s({ trig = 'lr}' }, { t('\\left{'), i(1), t('\\right}'), i(0) }),
     s({ trig = 'lr>' }, { t('\\left<'), i(1), t('\\right>'), i(0) }),
-    s({ trig = 'norm' }, { t('\\left\\lVert '), i(1), t(' \\right\\lVert'), i(0) }),
+    s(
+      { trig = 'norm' },
+      { t('\\left\\lVert '), i(1), t(' \\right\\lVert'), i(0) }
+    ),
 
     s({ trig = '(%s*)compl', regTrig = true }, { t('^{C} '), i(0) }),
     s({ trig = '(%s*)inv', regTrig = true }, { t('^{-1}'), i(0) }),
@@ -180,11 +202,26 @@ M.symbols = {
     s({ trig = '(%s*)ks', regTrig = true }, { t('^{*}'), i(0) }), -- Kleene star
 
     s({ trig = 'transp' }, { t('^{\\intercal}'), i(0) }),
-    s({ trig = '(\\?%w*_*%w*)vv', regTrig = true }, { sdn(1, '\\vec{', '}') }),
-    s({ trig = '(\\?%w*_*%w*)hat', regTrig = true }, { sdn(1, '\\hat{', '}') }),
-    s({ trig = '(\\?%w*_*%w*)td', regTrig = true }, { sdn(1, '\\tilde{', '}') }),
-    s({ trig = '(\\?%w*_*%w*)bar', regTrig = true }, { sdn(1, '\\bar{', '}') }),
-    s({ trig = '(\\?%w*_*%w*)ovl', regTrig = true }, { sdn(1, '\\overline{', '}') }),
+    s(
+      { trig = '(\\?%w*_*%w*)vv', regTrig = true },
+      { un.sdn(1, '\\vec{', '}') }
+    ),
+    s(
+      { trig = '(\\?%w*_*%w*)hat', regTrig = true },
+      { un.sdn(1, '\\hat{', '}') }
+    ),
+    s(
+      { trig = '(\\?%w*_*%w*)td', regTrig = true },
+      { un.sdn(1, '\\tilde{', '}') }
+    ),
+    s(
+      { trig = '(\\?%w*_*%w*)bar', regTrig = true },
+      { un.sdn(1, '\\bar{', '}') }
+    ),
+    s(
+      { trig = '(\\?%w*_*%w*)ovl', regTrig = true },
+      { un.sdn(1, '\\overline{', '}') }
+    ),
     s({ trig = '(\\?%w*_*%w*)ovs', regTrig = true }, {
       d(1, function(_, snip)
         local text = snip.captures[1]
@@ -199,44 +236,60 @@ M.symbols = {
 }
 
 M.words = {
-  snip = funcs.add_attr({ condition = funcs.in_mathzone, wordTrig = true }, {
+  snip = uf.add_attr({ condition = uf.in_mathzone, wordTrig = true }, {
     -- matrix/vector
-    s({ trig = 'vr', dscr = 'row vector' },
-      fmta('\\begin{bmatrix} <el><underscore>{0<mod>} & <el><underscore>{1<mod>} & \\ldots & <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
-        el = i(1, 'a'),
-        end_idx = i(2, 'N-1'),
-        underscore = i(3, '_'),
-        mod = i(4),
-      }, { repeat_duplicates = true })
+    s(
+      { trig = 'vr', dscr = 'row vector' },
+      fmta(
+        '\\begin{bmatrix} <el><underscore>{0<mod>} & <el><underscore>{1<mod>} & \\ldots & <el><underscore>{<end_idx><mod>} \\end{bmatrix}',
+        {
+          el = i(1, 'a'),
+          end_idx = i(2, 'N-1'),
+          underscore = i(3, '_'),
+          mod = i(4),
+        },
+        { repeat_duplicates = true }
+      )
     ),
-    s({ trig = 'vc', dscr = 'column vector' },
-      fmta('\\begin{bmatrix} <el><underscore>{0<mod>} \\\\ <el><underscore>{1,<mod>} \\\\ \\vdots \\\\ <el><underscore>{<end_idx><mod>} \\end{bmatrix}', {
-        el = i(1, 'a'),
-        end_idx = i(2, 'N-1'),
-        underscore = i(3, '_'),
-        mod = i(4),
-      }, { repeat_duplicates = true })
+    s(
+      { trig = 'vc', dscr = 'column vector' },
+      fmta(
+        '\\begin{bmatrix} <el><underscore>{0<mod>} \\\\ <el><underscore>{1,<mod>} \\\\ \\vdots \\\\ <el><underscore>{<end_idx><mod>} \\end{bmatrix}',
+        {
+          el = i(1, 'a'),
+          end_idx = i(2, 'N-1'),
+          underscore = i(3, '_'),
+          mod = i(4),
+        },
+        { repeat_duplicates = true }
+      )
     ),
-    s({ trig = 'mt', dscr = 'matrix' },
-      fmta([[
+    s(
+      { trig = 'mt', dscr = 'matrix' },
+      fmta(
+        [[
 \begin{bmatrix}
 <indent><el><underscore>{<row0><comma><col0>} & <el><underscore>{<row0><comma><col1>} & \ldots & <el><underscore>{<row0><comma><width>} \\
 <indent><el><underscore>{<row1><comma><col0>} & <el><underscore>{<row1><comma><col1>} & \ldots & <el><underscore>{<row1><comma><width>} \\
 <indent>\vdots & \vdots & \ddots & \vdots \\
 <indent><el><underscore>{<height><comma>0} & <el><underscore>{<height><comma>1} & \ldots & <el><underscore>{<height><comma><width>} \\
 \end{bmatrix}
-      ]], {
-        indent = ifn(1),
-        el = i(1, 'a'),
-        height = i(2, 'N-1'),
-        width = i(3, 'M-1'),
-        row0 = i(4, '0'),
-        col0 = i(5, '0'),
-        row1 = i(6, '1'),
-        col1 = i(7, '1'),
-        underscore = i(8, '_'),
-        comma = i(9, ','),
-    }, { repeat_duplicates = true })),
+      ]],
+        {
+          indent = un.idnt(1),
+          el = i(1, 'a'),
+          height = i(2, 'N-1'),
+          width = i(3, 'M-1'),
+          row0 = i(4, '0'),
+          col0 = i(5, '0'),
+          row1 = i(6, '1'),
+          col1 = i(7, '1'),
+          underscore = i(8, '_'),
+          comma = i(9, ','),
+        },
+        { repeat_duplicates = true }
+      )
+    ),
     s({ trig = '\\in f' }, { t('\\infty'), i(0) }),
     s({ trig = 'prop' }, t('\\propto '), i(0)),
     s({ trig = 'deg' }, { t('\\degree'), i(0) }),
@@ -261,8 +314,14 @@ M.words = {
     s({ trig = ']c' }, { t('\\sqsubset '), i(0) }),
     s({ trig = '\\subset%s*=', regTrig = true }, { t('\\subseteq '), i(0) }),
     s({ trig = '\\subset%s*eq', regTrig = true }, { t('\\subseteq '), i(0) }),
-    s({ trig = '\\sqsubset%s*=', regTrig = true }, { t('\\sqsubseteq '), i(0) }),
-    s({ trig = '\\sqsubset%s*eq', regTrig = true }, { t('\\sqsubseteq '), i(0) }),
+    s(
+      { trig = '\\sqsubset%s*=', regTrig = true },
+      { t('\\sqsubseteq '), i(0) }
+    ),
+    s(
+      { trig = '\\sqsubset%s*eq', regTrig = true },
+      { t('\\sqsubseteq '), i(0) }
+    ),
     s({ trig = 'c=' }, { t('\\subseteq '), i(0) }),
     s({ trig = 'notin' }, { t('\\notin '), i(0) }),
     s({ trig = 'in', priority = 999 }, { t('\\in '), i(0) }),
@@ -276,114 +335,226 @@ M.words = {
     s({ trig = 'any' }, { t('\\forall '), i(0) }),
     s({ trig = 'exists' }, { t('\\exists '), i(0) }),
 
-    s({ trig = 'log' }, { t('\\mathrm{log}_{'), i(1, '10'), t('}\\left('), i(2), t('\\right)'), i(0) }),
-    s({ trig = 'lg', priority = 999 }, { t('\\mathrm{lg}'), t('\\left('), i(1), t('\\right)'), i(0) }),
-    s({ trig = 'ln', priority = 999 }, { t('\\mathrm{ln}'), t('\\left('), i(1), t('\\right)'), i(0) }),
+    s({ trig = 'log' }, {
+      t('\\mathrm{log}_{'),
+      i(1, '10'),
+      t('}\\left('),
+      i(2),
+      t('\\right)'),
+      i(0),
+    }),
+    s(
+      { trig = 'lg', priority = 999 },
+      { t('\\mathrm{lg}'), t('\\left('), i(1), t('\\right)'), i(0) }
+    ),
+    s(
+      { trig = 'ln', priority = 999 },
+      { t('\\mathrm{ln}'), t('\\left('), i(1), t('\\right)'), i(0) }
+    ),
     s({ trig = 'argmin' }, { t('\\mathrm{argmin}_{'), i(1), t('}') }),
     s({ trig = 'argmax' }, { t('\\mathrm{argamx}_{'), i(1), t('}') }),
     s(
       { trig = 'min', priority = 999 },
-      c(
-        1, {
-          sn(nil, {
-            t('\\mathrm{min}'),
-            t('\\left('),
-            i(1),
-            t('\\right)'),
-          }),
-          sn(nil, {
-            t('\\mathrm{min}_{'),
-            i(1),
-            t('}'),
-            t('\\left('),
-            i(2),
-            t('\\right)'),
-          }),
-        }
-      )
+      c(1, {
+        sn(nil, {
+          t('\\mathrm{min}'),
+          t('\\left('),
+          i(1),
+          t('\\right)'),
+        }),
+        sn(nil, {
+          t('\\mathrm{min}_{'),
+          i(1),
+          t('}'),
+          t('\\left('),
+          i(2),
+          t('\\right)'),
+        }),
+      })
     ),
     s(
       { trig = 'max', priority = 999 },
-      c(
-        1, {
-          sn(nil, {
-            t('\\mathrm{max}'),
-            t('\\left('),
-            i(1),
-            t('\\right)'),
-          }),
-          sn(nil, {
-            t('\\mathrm{max}_{'),
-            i(1),
-            t('}'),
-            t('\\left('),
-            i(2),
-            t('\\right)'),
-          }),
-        }
-      )
+      c(1, {
+        sn(nil, {
+          t('\\mathrm{max}'),
+          t('\\left('),
+          i(1),
+          t('\\right)'),
+        }),
+        sn(nil, {
+          t('\\mathrm{max}_{'),
+          i(1),
+          t('}'),
+          t('\\left('),
+          i(2),
+          t('\\right)'),
+        }),
+      })
     ),
 
-    s({ trig = 'sin', priority = 999 }, { t('\\mathrm{sin}\\left('), i(1), t('\\right)'), i(0) }),
-    s({ trig = 'cos', priority = 999 }, { t('\\mathrm{cos}\\left('), i(1), t('\\right)'), i(0) }),
-    s({ trig = 'tan', priority = 999 }, { t('\\mathrm{tan}\\left('), i(1), t('\\right)'), i(0) }),
-    s({ trig = 'asin' }, { t('\\mathrm{arcsin}\\left('), i(1), t('\\right)'), i(0) }),
-    s({ trig = 'acos' }, { t('\\mathrm{arccos}\\left('), i(1), t('\\right)'), i(0) }),
-    s({ trig = 'atan' }, { t('\\mathrm{arctan}\\left('), i(1), t('\\right)'), i(0) }),
-    s({ trig = 'sc' }, { t('\\mathrm{sinc}\\left('), i(1), t('\\right)'), i(0) }),
+    s(
+      { trig = 'sin', priority = 999 },
+      { t('\\mathrm{sin}\\left('), i(1), t('\\right)'), i(0) }
+    ),
+    s(
+      { trig = 'cos', priority = 999 },
+      { t('\\mathrm{cos}\\left('), i(1), t('\\right)'), i(0) }
+    ),
+    s(
+      { trig = 'tan', priority = 999 },
+      { t('\\mathrm{tan}\\left('), i(1), t('\\right)'), i(0) }
+    ),
+    s(
+      { trig = 'asin' },
+      { t('\\mathrm{arcsin}\\left('), i(1), t('\\right)'), i(0) }
+    ),
+    s(
+      { trig = 'acos' },
+      { t('\\mathrm{arccos}\\left('), i(1), t('\\right)'), i(0) }
+    ),
+    s(
+      { trig = 'atan' },
+      { t('\\mathrm{arctan}\\left('), i(1), t('\\right)'), i(0) }
+    ),
+    s(
+      { trig = 'sc' },
+      { t('\\mathrm{sinc}\\left('), i(1), t('\\right)'), i(0) }
+    ),
 
-    s({ trig = 'flr' }, { t('\\left\\lfloor '), i(1), t(' \\right\\rfloor'), i(0) }),
-    s({ trig = 'clg' }, { t('\\left\\lceil '), i(1), t(' \\right\\rceil'), i(0) }),
-    s({ trig = 'bmat' }, { t('\\begin{bmatrix} '), i(1), t(' \\end{bmatrix}'), i(0) }),
-    s({ trig = 'pmat' }, { t('\\begin{pmatrix} '), i(1), t(' \\end{pmatrix}'), i(0) }),
-    s({ trig = 'Bmat' }, { t({ '\\begin{bmatrix}', '' }), ifn(1), i(1), t({ '', '\\end{bmatrix}', '' }) }),
-    s({ trig = 'Pmat' }, { t({ '\\begin{pmatrix}', '' }), ifn(1), i(1), t({ '', '\\end{pmatrix}', '' }) }),
-    s({ trig = 'aln' }, fmta([[
+    s(
+      { trig = 'flr' },
+      { t('\\left\\lfloor '), i(1), t(' \\right\\rfloor'), i(0) }
+    ),
+    s(
+      { trig = 'clg' },
+      { t('\\left\\lceil '), i(1), t(' \\right\\rceil'), i(0) }
+    ),
+    s(
+      { trig = 'bmat' },
+      { t('\\begin{bmatrix} '), i(1), t(' \\end{bmatrix}'), i(0) }
+    ),
+    s(
+      { trig = 'pmat' },
+      { t('\\begin{pmatrix} '), i(1), t(' \\end{pmatrix}'), i(0) }
+    ),
+    s({ trig = 'Bmat' }, {
+      t({ '\\begin{bmatrix}', '' }),
+      un.idnt(1),
+      i(1),
+      t({ '', '\\end{bmatrix}', '' }),
+    }),
+    s({ trig = 'Pmat' }, {
+      t({ '\\begin{pmatrix}', '' }),
+      un.idnt(1),
+      i(1),
+      t({ '', '\\end{pmatrix}', '' }),
+    }),
+    s(
+      { trig = 'aln' },
+      fmta(
+        [[
 \begin{<env>}
 <indent><text>
 \end{<env>}
-    ]], {
-      env = c(1, { i(nil, 'aligned'), i(nil, 'align*'), i(nil, 'align') }),
-      indent = ifn(1),
-      text = i(2),
-    }, { repeat_duplicates = true })),
-    s({ trig = 'eqt' }, fmta([[
+    ]],
+        {
+          env = c(1, { i(nil, 'aligned'), i(nil, 'align*'), i(nil, 'align') }),
+          indent = un.idnt(1),
+          text = i(2),
+        },
+        { repeat_duplicates = true }
+      )
+    ),
+    s(
+      { trig = 'eqt' },
+      fmta(
+        [[
 \begin{<env>}
 <indent><text>
 \end{<env>}
-    ]], {
-      env = c(1, { i(nil, 'equation*'), i(nil, 'equation') }),
-      indent = ifn(1),
-      text = i(2),
-    }, { repeat_duplicates = true })),
-    s({ trig = 'case' }, { t({ '\\begin{cases}', '' }), ifn(1), i(0), t({ '', '\\end{cases}' }) }),
-    s({ trig = 'part' }, { t('\\frac{\\partial '), i(1), t('}{\\partial '), i(2), t('}'), i(0) }),
-    s({ trig = 'diff' }, { t('\\frac{\\mathrm{d}'), i(1), t('}{\\mathrm{d}'), i(2), t('} '), i(0) }),
-    s({ trig = '\\in t', priority = 998 }, { t ('\\int_{'), i(1), t('}^{'), i(2), t('} '), i(0) }),
-    s({ trig = 'iint', priority = 999 }, { t('\\iint_{'), i(1), t('}^{'), i(2), t('} '), i(0) }),
-    s({ trig = 'iiint' }, { t('\\iiint_{'), i(1), t('}^{'), i(2), t('} '), i(0) }),
+    ]],
+        {
+          env = c(1, { i(nil, 'equation*'), i(nil, 'equation') }),
+          indent = un.idnt(1),
+          text = i(2),
+        },
+        { repeat_duplicates = true }
+      )
+    ),
+    s({ trig = 'case' }, {
+      t({ '\\begin{cases}', '' }),
+      un.idnt(1),
+      i(0),
+      t({ '', '\\end{cases}' }),
+    }),
+    s(
+      { trig = 'part' },
+      { t('\\frac{\\partial '), i(1), t('}{\\partial '), i(2), t('}'), i(0) }
+    ),
+    s({ trig = 'diff' }, {
+      t('\\frac{\\mathrm{d}'),
+      i(1),
+      t('}{\\mathrm{d}'),
+      i(2),
+      t('} '),
+      i(0),
+    }),
+    s(
+      { trig = '\\in t', priority = 998 },
+      { t('\\int_{'), i(1), t('}^{'), i(2), t('} '), i(0) }
+    ),
+    s(
+      { trig = 'iint', priority = 999 },
+      { t('\\iint_{'), i(1), t('}^{'), i(2), t('} '), i(0) }
+    ),
+    s(
+      { trig = 'iiint' },
+      { t('\\iiint_{'), i(1), t('}^{'), i(2), t('} '), i(0) }
+    ),
     s({ trig = 'prod' }, {
       c(1, {
-        sn(nil, { t('\\prod \\limits_{'), i(1, 'n=0'), t('}^{'), i(2, 'N-1'), t('} ') }),
-        sn(nil, { t('\\prod \\limits_{'), i(1, 'x'), t('} ') })
+        sn(nil, {
+          t('\\prod \\limits_{'),
+          i(1, 'n=0'),
+          t('}^{'),
+          i(2, 'N-1'),
+          t('} '),
+        }),
+        sn(nil, { t('\\prod \\limits_{'), i(1, 'x'), t('} ') }),
       }),
     }),
     s({ trig = 'sum' }, {
       c(1, {
-        sn(nil, { t('\\sum \\limits_{'), i(1, 'n=0'), t('}^{'), i(2, 'N-1'), t('} ') }),
-        sn(nil, { t('\\sum \\limits_{'), i(1, 'x'), t('} ') })
+        sn(nil, {
+          t('\\sum \\limits_{'),
+          i(1, 'n=0'),
+          t('}^{'),
+          i(2, 'N-1'),
+          t('} '),
+        }),
+        sn(nil, { t('\\sum \\limits_{'), i(1, 'x'), t('} ') }),
       }),
     }),
-    s({ trig = 'lim' }, { t('\\lim_{'), i(1, 'n'), t('\\to '), i(2, '\\infty'), t('} '), i(0) }),
-    s({ trig = 'env' }, fmta([[
+    s(
+      { trig = 'lim' },
+      { t('\\lim_{'), i(1, 'n'), t('\\to '), i(2, '\\infty'), t('} '), i(0) }
+    ),
+    s(
+      { trig = 'env' },
+      fmta(
+        [[
 \begin{<env>}
 <indent><text>
 \end{<env>}
-    ]] , {
-      indent = ifn(1),
-      env = i(1),
-      text = i(0),
-    }, { repeat_duplicates = true })),
+    ]],
+        {
+          indent = un.idnt(1),
+          env = i(1),
+          text = i(0),
+        },
+        { repeat_duplicates = true }
+      )
+    ),
 
     s({ trig = 'nabla' }, { t('\\nabla'), i(0) }),
     s({ trig = 'alpha' }, { t('\\alpha'), i(0) }),
@@ -433,14 +604,25 @@ M.words = {
     s({ trig = 'Omg' }, { t('\\Omega'), i(0) }),
 
     -- special functions and other notations
-    s({ trig = 'Cov' }, { t('\\mathrm{Cov}\\left('), i(1, 'X'), t(','), i(2, 'Y'), t('\\right)') }),
-    s({ trig = 'Var' }, { t('\\mathrm{Var}\\left('), i(1, 'X'), t('\\right)') }),
+    s({ trig = 'Cov' }, {
+      t('\\mathrm{Cov}\\left('),
+      i(1, 'X'),
+      t(','),
+      i(2, 'Y'),
+      t('\\right)'),
+    }),
+    s(
+      { trig = 'Var' },
+      { t('\\mathrm{Var}\\left('), i(1, 'X'), t('\\right)') }
+    ),
     s({ trig = 'MSE' }, { t('\\mathrm{MSE}') }),
-    s({ trig = 'bys', dscr = 'Bayes Formula' },
+    s(
+      { trig = 'bys', dscr = 'Bayes Formula' },
       fmta('\\frac{P(<cond_x> \\mid <cond_y>) P(<cond_y>)}{P(<cond_y>)}', {
         cond_x = i(2, 'X=x'),
         cond_y = i(1, 'Y=y'),
-    }, { repeat_duplicates = true })),
+      }, { repeat_duplicates = true })
+    ),
   }),
   opts = { type = 'autosnippets' },
 }
@@ -450,19 +632,16 @@ M.math_env = {
     s({
       trig = '$',
       condition = function()
-        local line = api.nvim_get_current_line()
-        local col = api.nvim_win_get_cursor(0)[2]
+        local line = vim.api.nvim_get_current_line()
+        local col = vim.api.nvim_win_get_cursor(0)[2]
         if line:sub(col + 1, col + 1) == '$' then
           vim.api.nvim_set_current_line(line:sub(1, -2))
           return true
         end
         return false
       end,
-    }, { t({ '$', '' }), ifn(1), i(1), t({ '', '$$' }) }),
-    s(
-      { trig = '$$', priority = 999 },
-      { t('$'), i(0), t('$') }
-    ),
+    }, { t({ '$', '' }), un.idnt(1), i(1), t({ '', '$$' }) }),
+    s({ trig = '$$', priority = 999 }, { t('$'), i(0), t('$') }),
   },
   opts = { type = 'autosnippets' },
 }
