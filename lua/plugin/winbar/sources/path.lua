@@ -54,7 +54,7 @@ end
 
 ---Get winbar symbols from buffer
 ---@param buf number buffer handler
----@return winbar_symbol_t[] winbar symbols
+---@return winbar_symbol_t[] symbols winbar symbols
 local function get_symbols(buf)
   local dir_symbols = get_dir_symbols(buf)
   local file_symbol = get_file_symbol(buf)
@@ -62,11 +62,6 @@ local function get_symbols(buf)
   return dir_symbols
 end
 
----Initialize path component
----@return nil
-local function init() end
-
 return {
-  init = init,
   get_symbols = get_symbols,
 }

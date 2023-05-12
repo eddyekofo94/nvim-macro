@@ -1,6 +1,7 @@
 local static = require('utils.static')
 local groupid = vim.api.nvim_create_augroup('WinBarLsp', {})
 local lsp_buf_symbols = {}
+local initialized = false
 
 ---@alias lsp_client_t table
 
@@ -205,16 +206,13 @@ local function detach(buf)
   end
 end
 
----Get winbar symbols from buffer
----@param buf number buffer handler
----@return winbar_symbol_t[] winbar symbols
-local function get_symbols(buf)
-  return parse_symbols(lsp_buf_symbols[buf] or {})
-end
-
----Initialize lsp component
+---Initialize lsp source
 ---@return nil
 local function init()
+  if initialized then
+    return
+  end
+  initialized = true
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     local clients = vim.tbl_filter(function(client)
       return client.supports_method('textDocument/documentSymbol')
@@ -254,7 +252,16 @@ local function init()
   })
 end
 
+---Get winbar symbols from buffer
+---@param buf number buffer handler
+---@return winbar_symbol_t[] symbols winbar symbols
+local function get_symbols(buf)
+  if not initialized then
+    init()
+  end
+  return parse_symbols(lsp_buf_symbols[buf] or {})
+end
+
 return {
-  init = init,
   get_symbols = get_symbols,
 }

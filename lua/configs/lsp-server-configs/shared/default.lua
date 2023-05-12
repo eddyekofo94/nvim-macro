@@ -1,3 +1,5 @@
+local utils_fn = require('utils.fn')
+
 ---Check if there exists an LS that supports the given method
 ---for the given buffer
 ---@param method string the method to check for
@@ -159,28 +161,6 @@ local function parse_cmdline_args(fargs, fn_name_alt)
     end
   end
   return fn_name, parsed
-end
-
----Convert a snake_case string to camelCase
----@param str string
----@return string|nil
-local function snake_to_camel(str)
-  if not str then
-    return nil
-  end
-  return (
-    str:gsub('^%l', string.upper):gsub('_%l', string.upper):gsub('_', '')
-  )
-end
-
----Convert a camelCase string to snake_case
----@param str string
----@return string|nil
-local function camel_to_snake(str)
-  if not str then
-    return nil
-  end
-  return (str:gsub('%u', '_%1'):gsub('^_', ''):lower())
 end
 
 ---LSP command argument handler for functions that receive a range
@@ -899,8 +879,9 @@ local function command_complete(meta, subcommand_info_list)
       end, vim.tbl_keys(subcommand_info_list))
     end
     -- If subcommand is specified, complete with its options or option values
-    local subcommand = camel_to_snake(cmdline:match('^%s*' .. meta .. '(%w+)'))
-      or cmdline:match('^%s*' .. meta .. '%s+(%S+)')
+    local subcommand = utils_fn.camel_to_snake(
+      cmdline:match('^%s*' .. meta .. '(%w+)')
+    ) or cmdline:match('^%s*' .. meta .. '%s+(%S+)')
     if not subcommand_info_list[subcommand] then
       return {}
     end
@@ -997,7 +978,7 @@ local function setup_commands(_, bufnr, meta, subcommand_info_list, fn_scope)
   for subcommand, _ in pairs(subcommand_info_list) do
     vim.api.nvim_buf_create_user_command(
       bufnr,
-      meta .. snake_to_camel(subcommand),
+      meta .. utils_fn.snake_to_camel(subcommand),
       command_meta(subcommand_info_list, fn_scope, subcommand, subcommand),
       {
         range = true,

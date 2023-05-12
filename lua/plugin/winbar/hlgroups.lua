@@ -24,6 +24,8 @@ local function init()
     WinBarIconKindOperator      = { link = 'Operator' },
     WinBarIconKindPackage       = { link = 'CmpItemKindModule' },
     WinBarIconKindProperty      = { link = 'CmpItemKindProperty' },
+    WinBarIconKindSpecifier     = { link = 'Specifier' },
+    WinBarIconKindStatement     = { link = 'Statement' },
     WinBarIconKindString        = { link = 'String' },
     WinBarIconKindStruct        = { link = 'CmpItemKindStruct' },
     WinBarIconKindTypeParameter = { link = 'CmpItemKindTypeParameter' },

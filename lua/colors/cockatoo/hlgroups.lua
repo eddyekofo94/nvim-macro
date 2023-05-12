@@ -87,6 +87,7 @@ return {
   Parameter         = { fg = plt.smoke },
   Function          = { fg = plt.yellow },
   Statement         = { fg = plt.lavender },
+  Specifier         = { fg = plt.lavender },
   Object            = { fg = plt.lavender },
   Conditional       = { fg = plt.magenta },
   Repeat            = { fg = plt.magenta },

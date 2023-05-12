@@ -33,6 +33,30 @@ local function proj_dir(fpath)
   return nil
 end
 
+---Convert a snake_case string to camelCase
+---@param str string
+---@return string|nil
+local function snake_to_camel(str)
+  if not str then
+    return nil
+  end
+  return (
+    str:gsub('^%l', string.upper):gsub('_%l', string.upper):gsub('_', '')
+  )
+end
+
+---Convert a camelCase string to snake_case
+---@param str string
+---@return string|nil
+local function camel_to_snake(str)
+  if not str then
+    return nil
+  end
+  return (str:gsub('%u', '_%1'):gsub('^_', ''):lower())
+end
+
 return {
   proj_dir = proj_dir,
+  snake_to_camel = snake_to_camel,
+  camel_to_snake = camel_to_snake,
 }

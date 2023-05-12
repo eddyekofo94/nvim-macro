@@ -22,12 +22,8 @@ end
 ---@field separator winbar_symbol_t
 ---@field extends winbar_symbol_t
 
----@alias source_t
----| "'path'"
----| "'lsp'"
-
 ---@class winbar_t
----@field sources source_t[]
+---@field sources table
 ---@field separator winbar_symbol_t
 ---@field extends winbar_symbol_t
 ---@field components winbar_symbol_t[]
@@ -44,7 +40,10 @@ function winbar_t:new(opts)
   local winbar = setmetatable(
     vim.tbl_deep_extend('force', {
       components = {},
-      sources = { 'path', 'lsp' },
+      sources = {
+        'path',
+        { 'lsp', fallbacks = { 'treesitter' } },
+      },
       separator = {
         icon = ' ' .. static.icons.ArrowRight,
         icon_hl = 'WinBarIconSeparator',
@@ -56,10 +55,6 @@ function winbar_t:new(opts)
     }, opts or {}),
     winbar_t
   )
-  for _, source in ipairs(winbar.sources) do
-    local source_module = require('plugin.winbar.sources.' .. source)
-    source_module.init()
-  end
   return winbar
 end
 
@@ -76,9 +71,6 @@ function winbar_t:truncate()
   local win_width = vim.api.nvim_win_get_width(0)
   local len = self:displen()
   local delta = len - win_width
-  if delta <= 0 then
-    return
-  end
   for _, component in ipairs(self.components) do
     if delta <= 0 then
       break
@@ -132,9 +124,28 @@ function winbar_t:__call(add_hl, truncate)
   local buf = vim.api.nvim_get_current_buf()
   self.components = {}
   for _, source in ipairs(self.sources) do
-    local source_module = require('plugin.winbar.sources.' .. source)
-    local components = source_module.get_symbols(buf)
-    vim.list_extend(self.components, components)
+    if type(source) == 'string' then
+      local source_module = require('plugin.winbar.sources.' .. source)
+      local components = source_module.get_symbols(buf)
+      vim.list_extend(self.components, components)
+    elseif type(source) == 'table' then
+      local source_module = require('plugin.winbar.sources.' .. source[1])
+      local components = source_module.get_symbols(buf)
+      if components and not vim.tbl_isempty(components) then
+        vim.list_extend(self.components, components)
+      elseif source.fallbacks then
+        for _, fallback in ipairs(source.fallbacks) do
+          local fallback_module = require('plugin.winbar.sources.' .. fallback)
+          local fallback_components = fallback_module.get_symbols(buf)
+          if
+            fallback_components and not vim.tbl_isempty(fallback_components)
+          then
+            vim.list_extend(self.components, fallback_components)
+            break
+          end
+        end
+      end
+    end
   end
   if truncate then
     self:truncate()
