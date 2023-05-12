@@ -79,9 +79,10 @@ function winbar_t:truncate()
     local min_len =
       vim.fn.strdisplaywidth(component.name:sub(1, 1) .. self.extends.icon)
     if name_len > min_len then
-      component.name = component.name:sub(
-        1,
-        -math.min(delta + 2, #component.name)
+      component.name = vim.fn.strcharpart(
+        component.name,
+        0,
+        math.max(1, name_len - delta - 1)
       ) .. self.extends.icon
       delta = delta - name_len + vim.fn.strdisplaywidth(component.name)
     end
