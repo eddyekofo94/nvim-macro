@@ -274,6 +274,12 @@ return {
   markdownError      = { link = 'None' },
   markdownEscape     = { link = 'None' },
   markdownListMarker = { fg = plt.orange },
+  markdownH1         = { link = 'htmlH1' },
+  markdownH2         = { link = 'htmlH2' },
+  markdownH3         = { link = 'htmlH3' },
+  markdownH4         = { link = 'htmlH4' },
+  markdownH5         = { link = 'htmlH5' },
+  markdownH6         = { link = 'htmlH6' },
   -- Shell
   shDeref            = { link = 'Macro' },
   shDerefVar         = { link = 'Macro' },
