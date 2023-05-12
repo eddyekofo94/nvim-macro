@@ -42,7 +42,7 @@ function winbar_t:new(opts)
       components = {},
       sources = {
         'path',
-        { 'lsp', fallbacks = { 'treesitter' } },
+        { 'lsp', fallbacks = { 'treesitter', 'markdown' } },
       },
       separator = {
         icon = ' ' .. static.icons.ArrowRight,
