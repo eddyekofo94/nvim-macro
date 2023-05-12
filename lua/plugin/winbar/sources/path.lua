@@ -13,18 +13,12 @@ local function get_dir_symbols(buf)
   local bufname = vim.api.nvim_buf_get_name(buf)
   local dir = require('utils.fn').proj_dir(bufname)
   if not dir then
-    return {
-      icon = '',
-      name = '',
-    }
+    return {}
   end
   dir = vim.fn.fnamemodify(bufname, ':p:h'):gsub('^' .. str_escape(dir), '')
   local dir_symbols = vim.split(dir, sep)
   if #dir_symbols == 0 or #dir_symbols == 1 and dir_symbols[1] == '.' then
-    return {
-      icon = '',
-      name = '',
-    }
+    return {}
   end
   return vim.tbl_map(function(dir_name)
     return {

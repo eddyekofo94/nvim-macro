@@ -135,6 +135,7 @@ M.icons = {
   Method = ' ',
   Module = '󰏗 ',
   Namespace = ' ',
+  Null = ' ',
   Number = ' ',
   Object = ' ',
   Operator = ' ',
