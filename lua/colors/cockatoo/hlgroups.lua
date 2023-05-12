@@ -66,8 +66,8 @@ return {
   Whitespace         = { link = 'NonText' },
   WildMenu           = { link = 'PmenuSel' },
   Winseparator       = { link = 'VertSplit' },
-  WinBar             = { fg = plt.pigeon },
-  WinBarNC           = { fg = plt.steel },
+  WinBar             = { fg = plt.smoke },
+  WinBarNC           = { fg = plt.pigeon },
 
   -- Syntax highlighting
   Comment           = { fg = plt.steel, italic = true },
@@ -555,8 +555,8 @@ return {
   CopilotAnnotation = { fg = plt.steel, italic = true },
 
   -- nvim-treesitter-context
-  TreesitterContext           = { bg = plt.darkened },
-  TreesitterContextLineNumber = { fg = plt.steel, bg = plt.darkened },
+  TreesitterContext           = { bg = plt.ocean },
+  TreesitterContextLineNumber = { fg = plt.steel, bg = plt.ocean },
 
   -- Extra highlight groups
   Yellow     = { fg = plt.yellow },
