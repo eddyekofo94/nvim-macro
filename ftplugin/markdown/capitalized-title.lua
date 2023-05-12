@@ -28,11 +28,12 @@ local lowercase_words = {
 }
 
 ---Given current line, determine if it is a title line
----@param current_line string current line
+---@param lines string[] buffer lines up to current line
 ---@return boolean
-local function on_title_line(current_line)
-  return vim.bo.ft == 'markdown'
-    and current_line:match('^#+') ~= nil
+local function on_title_line(lines)
+  local current_line = lines[#lines]
+  return not require('utils.fn').markdown_in_code_block(lines)
+    and current_line:match('^#+%s')
 end
 
 ---Given current cursor position (column) and current line, determine if
@@ -71,41 +72,42 @@ local function correct_word_before(line, col)
     return
   end
 
-  if lowercase_words[word_before:lower()]
+  if
+    lowercase_words[word_before:lower()]
     and not first_word(line, col, word_before)
   then
     word_before = word_before:lower()
-    line = line:sub(1, col - #word_before - 1)
-            .. word_before
-            .. line:sub(col)
+    line = line:sub(1, col - #word_before - 1) .. word_before .. line:sub(col)
     api.nvim_set_current_line(line)
   end
 end
 
 ---Capitalize the first letter of words on title line
-local function format_title()
-  local col = api.nvim_win_get_cursor(0)[2]
-  local line = api.nvim_get_current_line()
-  local char_current = line:sub(col, col)
-
-  if not on_title_line(line) then
+local function format_title(info)
+  if not vim.bo[info.buf].filetype == 'markdown' then
     return
   end
 
-  if on_word_boundary(line, col)
-    and char_current:match('%a')
-  then
-    line = line:sub(1, col - 1)
-            .. string.upper(line:sub(col, col))
-            .. line:sub(col + 1)
-    api.nvim_set_current_line(line)
+  local cursor = api.nvim_win_get_cursor(0)
+  local lines = api.nvim_buf_get_lines(info.buf, 0, cursor[1], false)
+  if not on_title_line(lines) then
+    return
+  end
+
+  local col = cursor[2]
+  local current_line = lines[#lines]
+  local char_current = current_line:sub(col, col)
+  if on_word_boundary(current_line, col) and char_current:match('%a') then
+    current_line = current_line:sub(1, col - 1)
+      .. string.upper(current_line:sub(col, col))
+      .. current_line:sub(col + 1)
+    api.nvim_set_current_line(current_line)
   elseif char_current:match('%W') and char_current ~= '-' then
-    correct_word_before(line, col)
+    correct_word_before(current_line, col)
   end
 end
 
-api.nvim_create_augroup('MarkdownAutoFormatTitle', { clear = true })
 api.nvim_create_autocmd('TextChangedI', {
-  group = 'MarkdownAutoFormatTitle',
+  group = api.nvim_create_augroup('MarkdownAutoFormatTitle', {}),
   callback = format_title,
 })

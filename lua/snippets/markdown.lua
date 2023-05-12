@@ -25,8 +25,15 @@ local conds = require('luasnip.extras.expand_conditions')
 
 local M = require('snippets.shared.math')
 
+local function in_normal_zone()
+  local cursor_lnum = api.nvim_win_get_cursor(0)[1]
+  local lines = api.nvim_buf_get_lines(0, 0, cursor_lnum, false)
+  return not funcs.in_mathzone()
+    and not require('utils.fn').markdown_in_code_block(lines)
+end
+
 M.format = {
-  snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
+  snip = funcs.add_attr({ condition = in_normal_zone }, {
     s({ trig = '^# ', regTrig = true, snippetType = 'autosnippet' }, {
       t('# '),
       dl(
@@ -53,7 +60,7 @@ M.format = {
 }
 
 M.markers = {
-  snip = {
+  snip = funcs.add_attr({ condition = in_normal_zone }, {
     s({
       trig = '*',
       condition = function()
@@ -66,12 +73,12 @@ M.markers = {
       { trig = '**', priority = 999, condition = funcs.not_in_mathzone },
       { t('*'), i(0), t('*') }
     ),
-  },
+  }),
   opts = { type = 'autosnippets' },
 }
 
 M.titles = {
-  snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
+  snip = funcs.add_attr({ condition = in_normal_zone }, {
     s({ trig = 'h1' }, { t('# '), i(0) }),
     s({ trig = 'h2' }, { t('## '), i(0) }),
     s({ trig = 'h3' }, { t('### '), i(0) }),
@@ -82,7 +89,7 @@ M.titles = {
 }
 
 M.theorems = {
-  snip = funcs.add_attr({ condition = funcs.not_in_mathzone }, {
+  snip = funcs.add_attr({ condition = in_normal_zone }, {
     s({ trig = 'theo' }, { t('***'), i(1, 'Theorem'), t('***') }),
     s({ trig = 'def' }, { t('***'), i(1, 'Definition'), t('***') }),
     s({ trig = 'pro' }, { t('***'), i(1, 'Proof'), t('***') }),

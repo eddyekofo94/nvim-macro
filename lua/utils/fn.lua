@@ -55,8 +55,21 @@ local function camel_to_snake(str)
   return (str:gsub('%u', '_%1'):gsub('^_', ''):lower())
 end
 
+---Check if the current line is a markdown code block
+---@param lines string[]
+local function markdown_in_code_block(lines)
+  local result = false
+  for _, line in ipairs(lines) do
+    if line:match('^```') then
+      result = not result
+    end
+  end
+  return result
+end
+
 return {
   proj_dir = proj_dir,
   snake_to_camel = snake_to_camel,
   camel_to_snake = camel_to_snake,
+  markdown_in_code_block = markdown_in_code_block,
 }
