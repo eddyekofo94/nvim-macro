@@ -28,6 +28,7 @@ local function init()
     WinBarIconKindStatement     = { link = 'Statement' },
     WinBarIconKindString        = { link = 'String' },
     WinBarIconKindStruct        = { link = 'CmpItemKindStruct' },
+    WinBarIconKindType          = { link = 'CmpItemKindClass' },
     WinBarIconKindTypeParameter = { link = 'CmpItemKindTypeParameter' },
     WinBarIconKindVariable      = { link = 'CmpItemKindVariable' },
     WinBarIconSeparator         = { link = 'SpecialChar' },
