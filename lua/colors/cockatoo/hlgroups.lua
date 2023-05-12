@@ -108,7 +108,7 @@ return {
   SpecialChar       = { link = 'Special' },
   Tag               = { fg = plt.flashlight, underline = true },
   Delimiter         = { fg = plt.orange },
-  Bracket           = { fg = plt.pigeon },
+  Bracket           = { fg = plt.cumulonimbus },
   SpecialComment    = { link = 'SpecialChar' },
   Debug             = { link = 'Special' },
   Underlined        = { underline = true },
