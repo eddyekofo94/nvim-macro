@@ -1,10 +1,12 @@
 local funcs = require('utils.funcs')
 local static = require('utils.static')
+local bar = require('plugin.winbar.bar')
 
 -- Valid treesitter types to get symbols from
 local types = vim.tbl_map(function(type_name)
   return funcs.string.camel_to_snake(type_name)
 end, vim.tbl_keys(static.icons))
+table.sort(types)
 
 ---Get treesitter symbols from buffer
 ---@param buf number buffer handler
@@ -26,16 +28,20 @@ local function get_symbols(buf, cursor)
     for _, type in ipairs(types) do
       if ts_type:find(type, 1, true) then
         local lsp_type = funcs.string.snake_to_camel(type)
-        table.insert(symbols, 1, {
-          icon = static.icons[lsp_type],
-          name = vim.trim(
-            vim.treesitter
-              .get_node_text(current_node, buf)
-              :match('[%w%._]*%s*[%w%._]*%s*[%w%._]*')
-              :gsub('\n.*', '')
-          ),
-          icon_hl = 'WinBarIconKind' .. lsp_type,
-        })
+        table.insert(
+          symbols,
+          1,
+          bar.winbar_symbol_t:new({
+            icon = static.icons[lsp_type],
+            name = vim.trim(
+              vim.treesitter
+                .get_node_text(current_node, buf)
+                :match('[%w%._%-!]*%s*[%w%._%-!]*%s*[%w%._%-!]*')
+                :gsub('\n.*', '')
+            ),
+            icon_hl = 'WinBarIconKind' .. lsp_type,
+          })
+        )
         break
       end
     end

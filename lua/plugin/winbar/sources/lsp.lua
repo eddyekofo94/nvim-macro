@@ -1,7 +1,15 @@
 local static = require('utils.static')
 local groupid = vim.api.nvim_create_augroup('WinBarLsp', {})
-local lsp_buf_symbols = {} ---@type table<number, lsp_symbol_t[]>
 local initialized = false
+
+---@type lsp_symbol_t[][]
+local lsp_buf_symbols = {}
+setmetatable(lsp_buf_symbols, {
+  __index = function(_, k)
+    lsp_buf_symbols[k] = {}
+    return lsp_buf_symbols[k]
+  end,
+})
 
 ---@alias lsp_client_t table
 
@@ -119,7 +127,9 @@ end
 ---@param winbar_symbols winbar_symbol_t[] (reference to) winbar symbols
 ---@param cursor integer[] cursor position
 local function convert_document_symbol(lsp_symbols, winbar_symbols, cursor)
-  for _, symbol in ipairs(lsp_symbols) do
+  -- Parse in reverse order so that the symbol with the largest start position
+  -- is preferred
+  for symbol in vim.iter(lsp_symbols):rev() do
     if symbol.range and cursor_in_range(cursor, symbol.range) then
       table.insert(winbar_symbols, {
         name = symbol.name,
@@ -148,15 +158,13 @@ local function convert(symbols, cursor)
   return symbol_path
 end
 
-local TTL = 60
----Get LSP symbols from an LSP client
+---Update LSP symbols from an LSP client
 ---Side effect: update symbol_list
 ---@param buf number buffer handler
 ---@param client lsp_client_t LSP client
----@param symbol_list lsp_symbol_t[] (reference to) symbols
----@param ttl number? limit the number of recursive requests
-local function update_symbols(buf, client, symbol_list, ttl)
-  ttl = ttl or TTL
+---@param ttl number? limit the number of recursive requests, default 60
+local function update_symbols(buf, client, ttl)
+  ttl = ttl or 60
   if ttl <= 0 or not vim.b[buf].winbar_lsp_attached then
     return
   end
@@ -167,13 +175,10 @@ local function update_symbols(buf, client, symbol_list, ttl)
     function(err, symbols, _)
       if err or not symbols then
         vim.defer_fn(function()
-          update_symbols(buf, client, symbol_list, ttl - 1)
+          update_symbols(buf, client, ttl - 1)
         end, 1000)
       elseif symbols then -- Update symbol_list
-        while not vim.tbl_isempty(symbol_list) do
-          table.remove(symbol_list)
-        end
-        vim.list_extend(symbol_list, symbols)
+        lsp_buf_symbols[buf] = symbols
         vim.cmd.redrawstatus() -- Redraw winbar after updating symbol_list
       end
     end,
@@ -191,8 +196,7 @@ local function attach(buf)
     local client = vim.tbl_filter(function(client)
       return client.supports_method('textDocument/documentSymbol')
     end, vim.lsp.get_active_clients({ bufnr = buf }))[1]
-    lsp_buf_symbols[buf] = lsp_buf_symbols[buf] or {}
-    update_symbols(buf, client, lsp_buf_symbols[buf])
+    update_symbols(buf, client)
   end
   vim.b[buf].winbar_lsp_attached = vim.api.nvim_create_autocmd(
     { 'TextChanged', 'TextChangedI' },
@@ -244,10 +248,12 @@ local function init()
     desc = 'Detach LSP symbol getter from buffer when no LS supporting documentSymbol is attached.',
     group = groupid,
     callback = function(info)
-      local clients = vim.tbl_filter(function(client)
-        return client.supports_method('textDocument/documentSymbol')
-      end, vim.lsp.get_active_clients({ bufnr = info.buf }))
-      if vim.tbl_isempty(clients) then
+      if
+        vim.tbl_isempty(vim.tbl_filter(function(client)
+          return client.supports_method('textDocument/documentSymbol')
+            and client.id ~= info.data.client_id
+        end, vim.lsp.get_active_clients({ bufnr = info.buf })))
+      then
         detach(info.buf)
       end
     end,
@@ -269,7 +275,7 @@ local function get_symbols(buf, cursor)
   if not initialized then
     init()
   end
-  return convert(lsp_buf_symbols[buf] or {}, cursor)
+  return convert(lsp_buf_symbols[buf], cursor)
 end
 
 return {

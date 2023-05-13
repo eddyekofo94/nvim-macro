@@ -1,7 +1,15 @@
 local hlgroups = require('plugin.winbar.hlgroups')
 local bar = require('plugin.winbar.bar')
-local bars = {} ---@type winbar_t[]
 _G.winbar = {}
+
+---@type winbar_t[]
+local bars = {}
+setmetatable(bars, {
+  __index = function(k)
+    bars[k] = bar.winbar_t:new()
+    return bars[k]
+  end,
+})
 
 ---Get winbar string for current window
 ---@return string
@@ -59,6 +67,7 @@ local function setup()
         vim.wo.winbar = vim.w.winbar
       end
     end,
+    desc = 'Disable winbar in diff mode.',
   })
   vim.g.loaded_winbar = true
 end

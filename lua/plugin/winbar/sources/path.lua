@@ -1,3 +1,8 @@
+local bar = require('plugin.winbar.bar')
+local funcs = require('utils.funcs')
+
+local sep = vim.loop.os_uname().sysname == 'Windows' and '\\' or '/'
+
 ---Escape a string
 ---@param str string
 ---@return string
@@ -9,9 +14,8 @@ end
 ---@param buf number buffer handler
 ---@return winbar_symbol_t[] winbar symbols
 local function get_dir_symbols(buf)
-  local sep = vim.loop.os_uname().sysname == 'Windows' and '\\' or '/'
   local bufname = vim.api.nvim_buf_get_name(buf)
-  local dir = require('utils.funcs').fs.proj_dir(bufname)
+  local dir = funcs.fs.proj_dir(bufname)
   if not dir then
     return {}
   end
@@ -21,10 +25,7 @@ local function get_dir_symbols(buf)
     return {}
   end
   return vim.tbl_map(function(dir_name)
-    return {
-      icon = '',
-      name = dir_name,
-    }
+    return bar.winbar_symbol_t:new({ name = dir_name })
   end, dir_symbols)
 end
 
@@ -34,10 +35,7 @@ end
 local function get_file_symbol(buf)
   local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ':t')
   if fname == '' then
-    return {
-      icon = '',
-      name = '',
-    }
+    return bar.winbar_symbol_t:new()
   end
   local extension = vim.fn.fnamemodify(fname, ':e')
   local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
@@ -45,11 +43,11 @@ local function get_file_symbol(buf)
   if vim.bo[buf].bt == '' and devicons_ok then
     icon, icon_hl = devicons.get_icon(fname, extension)
   end
-  return {
+  return bar.winbar_symbol_t:new({
+    name = fname,
     icon = icon and icon .. ' ' or '',
     icon_hl = icon_hl,
-    name = fname,
-  }
+  })
 end
 
 ---Get winbar symbols from buffer

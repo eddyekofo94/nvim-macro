@@ -5,6 +5,21 @@ local static = require('utils.static')
 ---@field icon string
 ---@field name_hl string?
 ---@field icon_hl string?
+local winbar_symbol_t = {}
+winbar_symbol_t.__index = winbar_symbol_t
+
+---Create a winbar symbol instance
+---@param opts winbar_symbol_t?
+---@return winbar_symbol_t
+function winbar_symbol_t:new(opts)
+  return setmetatable(
+    vim.tbl_deep_extend('force', {
+      name = '',
+      icon = '',
+    }, opts or {}),
+    winbar_symbol_t
+  )
+end
 
 ---Add highlight to a string
 ---@param str string
@@ -32,6 +47,7 @@ end
 ---@field displen fun(): number
 ---@operator call: string
 local winbar_t = {}
+winbar_t.__index = winbar_t
 
 ---Create a winbar instance
 ---@param opts winbar_opts_t?
@@ -45,14 +61,14 @@ function winbar_t:new(opts)
         'path',
         { 'lsp', fallbacks = { 'treesitter', 'markdown' } },
       },
-      separator = {
+      separator = winbar_symbol_t:new({
         icon = ' ' .. static.icons.ArrowRight,
         icon_hl = 'WinBarIconSeparator',
-      },
-      extends = {
+      }),
+      extends = winbar_symbol_t:new({
         icon = vim.opt.listchars:get().extends or '…',
         icon_hl = 'WinBar',
-      },
+      }),
     }, opts or {}),
     winbar_t
   )
@@ -162,11 +178,7 @@ function winbar_t:__call(add_hl, truncate)
   return self.string_cache
 end
 
----@param key string|number
-function winbar_t:__index(key)
-  return winbar_t[key]
-end
-
 return {
   winbar_t = winbar_t,
+  winbar_symbol_t = winbar_symbol_t,
 }
