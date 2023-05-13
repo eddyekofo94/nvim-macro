@@ -116,6 +116,7 @@ M.icons = {
   Constructor         = ' ',
   Copilot             = ' ',
   Cross               = ' ',
+  Desktop             = 'ﲾ ',
   DiagnosticSignError = ' ',
   DiagnosticSignHint  = '󰌶 ',
   DiagnosticSignInfo  = '󰋽 ',
