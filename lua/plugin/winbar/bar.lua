@@ -31,7 +31,6 @@ end
 ---@field new fun(table): winbar_t
 ---@field displen fun(): number
 ---@operator call: string
----@operation tostring: string
 local winbar_t = {}
 
 ---Create a winbar instance
