@@ -3,8 +3,8 @@ local static = require('utils.static')
 ---@class winbar_symbol_t
 ---@field name string
 ---@field icon string
----@field name_hl string
----@field icon_hl string
+---@field name_hl string?
+---@field icon_hl string?
 
 ---Add highlight to a string
 ---@param str string
@@ -18,9 +18,9 @@ local function hl(str, hlgroup)
 end
 
 ---@class winbar_opts_t
----@field sources string[]
----@field separator winbar_symbol_t
----@field extends winbar_symbol_t
+---@field sources string[]?
+---@field separator winbar_symbol_t?
+---@field extends winbar_symbol_t?
 
 ---@class winbar_t
 ---@field sources table
