@@ -108,9 +108,8 @@ function winbar_t:concat(add_hl)
         or hl(component.icon, component.icon_hl)
       local component_name = not add_hl and component.name
         or hl(component.name, component.name_hl)
-      result = result
-          and result .. sep_icon .. component_icon .. component_name
-        or component_icon .. component_name
+      local component_str = vim.trim(component_icon .. component_name)
+      result = result and result .. sep_icon .. component_str or component_str
     end
   end
   return result or ''
