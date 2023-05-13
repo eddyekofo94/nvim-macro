@@ -173,11 +173,11 @@ local function update_symbols(buf, client, ttl)
     'textDocument/documentSymbol',
     { textDocument = textdocument_params },
     function(err, symbols, _)
-      if err or not symbols then
+      if err or not symbols or vim.tbl_isempty(symbols) then
         vim.defer_fn(function()
           update_symbols(buf, client, ttl - 1)
         end, 1000)
-      elseif symbols then -- Update symbol_list
+      else -- Update symbol_list
         lsp_buf_symbols[buf] = symbols
         vim.cmd.redrawstatus() -- Redraw winbar after updating symbol_list
       end
