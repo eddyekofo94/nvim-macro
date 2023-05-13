@@ -2,23 +2,35 @@ local hlgroups = require('plugin.winbar.hlgroups')
 local bar = require('plugin.winbar.bar')
 _G.winbar = {}
 
+-- Winbar init params for each filetype
+local winbar_ft_configs = {
+  lua = {
+    sources = {
+      'path',
+      {
+        'lsp',
+        fallbacks = { 'treesitter' },
+      },
+    },
+  },
+  markdown = {
+    sources = { 'path', 'markdown' },
+  },
+}
+
 ---@type winbar_t[]
 local bars = {}
 setmetatable(bars, {
-  __index = function(k)
-    bars[k] = bar.winbar_t:new()
-    return bars[k]
+  __index = function(_, buf)
+    bars[buf] = bar.winbar_t:new(winbar_ft_configs[vim.bo[buf].filetype])
+    return bars[buf]
   end,
 })
 
 ---Get winbar string for current window
 ---@return string
 function winbar.get_winbar()
-  local buf = vim.api.nvim_get_current_buf()
-  if not bars[buf] then
-    bars[buf] = bar.winbar_t:new()
-  end
-  return bars[buf]()
+  return bars[vim.api.nvim_get_current_buf()]()
 end
 
 ---Setup winbar

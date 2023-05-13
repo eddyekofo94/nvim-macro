@@ -7,6 +7,7 @@ local function init()
     WinBarIconKindClass         = { link = 'CmpItemKindClass' },
     WinBarIconKindConstant      = { link = 'Constant' },
     WinBarIconKindConstructor   = { link = 'CmpItemKindConstructor' },
+    WinBarIconKindDot           = { link = 'Operator' },
     WinBarIconKindEnum          = { link = 'CmpItemKindEnum' },
     WinBarIconKindEnumMember    = { link = 'CmpItemKindEnumMember' },
     WinBarIconKindEvent         = { link = 'CmpItemKindEvent' },

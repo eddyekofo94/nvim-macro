@@ -59,7 +59,10 @@ function winbar_t:new(opts)
       string_cache = '',
       sources = {
         'path',
-        { 'lsp', fallbacks = { 'treesitter', 'markdown' } },
+        {
+          'treesitter',
+          fallbacks = { 'lsp' },
+        },
       },
       separator = winbar_symbol_t:new({
         icon = ' ' .. static.icons.DirectionRight,

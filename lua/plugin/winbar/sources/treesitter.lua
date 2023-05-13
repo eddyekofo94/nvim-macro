@@ -36,7 +36,7 @@ local function get_symbols(buf, cursor)
             name = vim.trim(
               vim.treesitter
                 .get_node_text(current_node, buf)
-                :match('[%w%._%-!]*%s*[%w%._%-!]*%s*[%w%._%-!]*')
+                :match('[%w%._%-!>]*%s*[%w%._%-!>]*%s*[%w%._%-!>]*')
                 :gsub('\n.*', '')
             ),
             icon_hl = 'WinBarIconKind' .. lsp_type,
