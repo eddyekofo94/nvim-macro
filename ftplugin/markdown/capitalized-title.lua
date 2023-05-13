@@ -32,7 +32,7 @@ local lowercase_words = {
 ---@return boolean
 local function on_title_line(lines)
   local current_line = lines[#lines]
-  return not require('utils.fn').markdown_in_code_block(lines)
+  return not require('utils.funcs').ft.markdown.in_code_block(lines)
     and current_line:match('^#+%s')
 end
 

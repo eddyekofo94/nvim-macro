@@ -11,7 +11,7 @@ end
 local function get_dir_symbols(buf)
   local sep = vim.loop.os_uname().sysname == 'Windows' and '\\' or '/'
   local bufname = vim.api.nvim_buf_get_name(buf)
-  local dir = require('utils.fn').proj_dir(bufname)
+  local dir = require('utils.funcs').fs.proj_dir(bufname)
   if not dir then
     return {}
   end
@@ -41,7 +41,7 @@ local function get_file_symbol(buf)
   end
   local extension = vim.fn.fnamemodify(fname, ':e')
   local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
-  local icon, icon_hl  = '', ''
+  local icon, icon_hl = '', ''
   if vim.bo[buf].bt == '' and devicons_ok then
     icon, icon_hl = devicons.get_icon(fname, extension)
   end

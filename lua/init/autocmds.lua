@@ -114,7 +114,7 @@ local autocmds = {
         if info.file == '' or not vim.bo[info.buf].ma then
           return
         end
-        local proj_dir = require('utils.fn').proj_dir(info.file)
+        local proj_dir = require('utils.funcs').fs.proj_dir(info.file)
         if proj_dir then
           vim.cmd.tcd(proj_dir)
         end

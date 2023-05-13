@@ -1,9 +1,9 @@
-local fn = require('utils.fn')
+local funcs = require('utils.funcs')
 local static = require('utils.static')
 
 -- Valid treesitter types to get symbols from
 local types = vim.tbl_map(function(type_name)
-  return fn.camel_to_snake(type_name)
+  return funcs.string.camel_to_snake(type_name)
 end, vim.tbl_keys(static.icons))
 
 ---Get treesitter symbols from buffer
@@ -25,7 +25,7 @@ local function get_symbols(buf)
     local ts_type = current_node:type()
     for _, type in ipairs(types) do
       if ts_type:find(type, 1, true) then
-        local lsp_type = fn.snake_to_camel(type)
+        local lsp_type = funcs.string.snake_to_camel(type)
         table.insert(symbols, 1, {
           icon = static.icons[lsp_type],
           name = vim.trim(

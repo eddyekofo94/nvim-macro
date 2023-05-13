@@ -13,7 +13,7 @@ local function in_normal_zone()
   local cursor_lnum = vim.api.nvim_win_get_cursor(0)[1]
   local lines = vim.api.nvim_buf_get_lines(0, 0, cursor_lnum, false)
   return not uf.in_mathzone()
-    and not require('utils.fn').markdown_in_code_block(lines)
+    and not require('utils.funcs').ft.markdown.in_code_block(lines)
 end
 
 M.format = {
