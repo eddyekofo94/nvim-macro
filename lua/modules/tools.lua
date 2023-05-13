@@ -1,3 +1,4 @@
+-- stylua: ignore start
 return {
   {
     'nvim-telescope/telescope.nvim',
@@ -156,3 +157,4 @@ return {
     end,
   },
 }
+-- stylua: ignore end

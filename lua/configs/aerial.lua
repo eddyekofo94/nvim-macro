@@ -54,5 +54,15 @@ aerial.setup({
   markdown = { update_delay = 10 },
 })
 
-vim.keymap.set('n', '<Leader>o', '<Cmd>AerialToggle float<CR>', { noremap = true })
-vim.keymap.set('n', '<Leader>O', '<Cmd>AerialToggle right<CR>', { noremap = true })
+vim.keymap.set(
+  'n',
+  '<Leader>o',
+  '<Cmd>AerialToggle float<CR>',
+  { noremap = true }
+)
+vim.keymap.set(
+  'n',
+  '<Leader>O',
+  '<Cmd>AerialToggle right<CR>',
+  { noremap = true }
+)

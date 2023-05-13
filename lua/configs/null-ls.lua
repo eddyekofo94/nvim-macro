@@ -42,7 +42,8 @@ local function null_ls_on_attach(_, bufnr)
   if null_ls_supports(ft, 'NULL_LS_RANGE_FORMATTING') then
     for _, active_client in ipairs(active_clients) do
       if active_client.name ~= 'null-ls' then
-        active_client.server_capabilities.documentRangeFormattingProvider = false
+        active_client.server_capabilities.documentRangeFormattingProvider =
+          false
       end
     end
   end

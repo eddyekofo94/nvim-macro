@@ -101,8 +101,8 @@ function M.init()
       if char_under_cur ~= '' then
         return '<Del><Up><End>' .. char_under_cur .. '<Down><Home>'
       else
-        local prev_line = api.nvim_buf_get_lines(0, line('.') - 2,
-          line('.') - 1, false)[1]
+        local prev_line =
+          api.nvim_buf_get_lines(0, line('.') - 2, line('.') - 1, false)[1]
         local char_end_of_prev_line = prev_line:sub(-1)
         if char_end_of_prev_line ~= '' then
           return '<Up><End><BS><Down><Home>' .. char_end_of_prev_line

@@ -4,13 +4,13 @@ require('nvim-web-devicons').setup({
       color = '#b4b4b9',
       cterm_color = '249',
       icon = '󰈔',
-      name = 'Default'
+      name = 'Default',
     },
     desktop = {
       color = '#563d7c',
       cterm_color = '60',
       icon = 'ﲾ',
-      name = 'DesktopEntry'
+      name = 'DesktopEntry',
     },
   },
 })

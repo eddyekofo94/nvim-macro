@@ -3,6 +3,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Multi-window operations
+-- stylua: ignore start
 vim.keymap.set({ 'x', 'n' }, '<M-W>',      '<C-w>W')
 vim.keymap.set({ 'x', 'n' }, '<M-H>',      '<C-w>H')
 vim.keymap.set({ 'x', 'n' }, '<M-J>',      '<C-w>J')
@@ -45,6 +46,7 @@ vim.keymap.set({ 'x', 'n' }, '<M-k>',      '<C-w><C-k>')
 vim.keymap.set({ 'x', 'n' }, '<M-l>',      '<C-w><C-l>')
 vim.keymap.set({ 'x', 'n' }, '<M-g><M-]>', '<C-w>g<C-]>')
 vim.keymap.set({ 'x', 'n' }, '<M-g><Tab>', '<C-w>g<Tab>')
+-- stylua: ignore end
 
 -- Up/down motions
 vim.keymap.set({ 'n', 'x' }, 'j', 'v:count ? "j" : "gj"', { expr = true })

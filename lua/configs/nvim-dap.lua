@@ -19,11 +19,17 @@ vim.keymap.set('n', '<F45>', function()
   dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))
 end, { noremap = true })
 
-vim.api.nvim_create_user_command('DapClear', dap.clear_breakpoints,
-  { desc = 'Clear all breakpoints' })
+vim.api.nvim_create_user_command(
+  'DapClear',
+  dap.clear_breakpoints,
+  { desc = 'Clear all breakpoints' }
+)
 
 vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'Tea' })
-vim.fn.sign_define('DapBreakpointCondition', { text = '', texthl = 'Conditional' })
+vim.fn.sign_define(
+  'DapBreakpointCondition',
+  { text = '', texthl = 'Conditional' }
+)
 vim.fn.sign_define('DapLogPoint', { text = '', texthl = 'Skyblue' })
 vim.fn.sign_define('DapStopped', { text = '→', texthl = 'yellow' })
 vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'Iron' })

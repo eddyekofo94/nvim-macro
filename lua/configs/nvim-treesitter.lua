@@ -114,10 +114,10 @@ ts_configs.setup({
     swap = {
       enable = true,
       swap_next = {
-        ['<M-C-L>']   = '@parameter.inner',
+        ['<M-C-L>'] = '@parameter.inner',
       },
       swap_previous = {
-        ['<M-C-H>']   = '@parameter.inner',
+        ['<M-C-H>'] = '@parameter.inner',
       },
     },
     lsp_interop = {

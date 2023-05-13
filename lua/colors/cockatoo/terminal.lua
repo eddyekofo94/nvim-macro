@@ -2,6 +2,7 @@ local plt = require('colors.cockatoo.palette')
 
 local termcolors = {}
 
+-- stylua: ignore start
 termcolors.dark = {
   terminal_color_0  = plt.ocean,
   terminal_color_8  = plt.white,
@@ -20,7 +21,9 @@ termcolors.dark = {
   terminal_color_7  = plt.white,
   terminal_color_15 = plt.pigeon,
 }
+-- stylua: ignore end
 
+-- stylua: ignore start
 termcolors.light = {
   terminal_color_0  = plt.ocean,
   terminal_color_8  = plt.white,
@@ -39,5 +42,6 @@ termcolors.light = {
   terminal_color_7  = plt.white,
   terminal_color_15 = plt.pigeon,
 }
+-- stylua: ignore end
 
 return termcolors[vim.o.background or 'dark']

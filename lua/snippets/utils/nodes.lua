@@ -10,9 +10,13 @@ local d = ls.dynamic_node
 ---@return string
 local function get_indent_str(depth)
   local sts
-  if vim.bo.sts > 0 then sts = vim.bo.sts
-  elseif vim.bo.sw > 0 then sts = vim.bo.sw
-  else sts = vim.bo.ts end
+  if vim.bo.sts > 0 then
+    sts = vim.bo.sts
+  elseif vim.bo.sw > 0 then
+    sts = vim.bo.sw
+  else
+    sts = vim.bo.ts
+  end
 
   if vim.bo.expandtab then
     return string.rep(' ', sts * depth)
@@ -29,7 +33,9 @@ end
 ---@param depth number
 ---@return table node
 local function function_indent_node(depth)
-  return f(function() return get_indent_str(depth) end, {}, {})
+  return f(function()
+    return get_indent_str(depth)
+  end, {}, {})
 end
 
 ---Returns a dynamic node for suffix snippet

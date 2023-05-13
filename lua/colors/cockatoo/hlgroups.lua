@@ -1,6 +1,7 @@
 package.loaded['colors.cockatoo.palette'] = nil
 local plt = require('colors.cockatoo.palette')
 
+-- stylua: ignore start
 return {
   -- Common highlight groups
   Normal             = { fg = plt.smoke, bg = plt.jeans },
@@ -596,3 +597,4 @@ return {
   None       = { fg = 'NONE', bg = 'NONE' },
   Ghost      = { fg = plt.steel, italic = true },
 }
+-- stylua: ignore end

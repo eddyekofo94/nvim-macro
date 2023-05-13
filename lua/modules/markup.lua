@@ -43,6 +43,6 @@ return {
     event = { 'BufReadPost', 'BufNew' },
     config = function()
       require('configs.vim-table-mode')
-    end
+    end,
   },
 }

@@ -158,8 +158,7 @@ end
 local function cc_conceal(winid)
   winid = winid or 0
   local new_winhl = (
-    vim.wo[winid].winhl:gsub('ColorColumn:[^,]*', '')
-    .. ',ColorColumn:'
+    vim.wo[winid].winhl:gsub('ColorColumn:[^,]*', '') .. ',ColorColumn:'
   ):gsub(',*$', ''):gsub('^,*', ''):gsub(',+', ',')
   if new_winhl ~= vim.wo[winid].winhl then
     vim.wo[winid].winhl = new_winhl

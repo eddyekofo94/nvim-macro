@@ -3,6 +3,7 @@ local fn = vim.fn
 local g = vim.g
 local opt = vim.opt
 
+-- stylua: ignore start
 opt.cursorline     = true
 opt.colorcolumn    = '80'
 opt.eb             = false
@@ -26,6 +27,8 @@ opt.updatetime     = 10
 opt.vb             = true
 opt.wrap           = false
 opt.completeopt    = 'menuone'
+opt.conceallevel   = 2
+-- stylua: ignore end
 
 -- Cursor shape
 -- opt.gcr = 'n-v:block,i-c-ci-ve:blinkoff500-blinkon500-block,r-cr-o:hor20'
@@ -33,25 +36,25 @@ opt.gcr:append('n-v:block-Cursor/lCursor')
 opt.gcr:append('i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor/lCursor')
 opt.gcr:append('r-cr:hor20,o:hor50')
 
-opt.backup    = true
+opt.backup = true
 opt.backupdir = fn.stdpath('data') .. '/backup//'
 
+-- stylua: ignore start
 opt.list = true
 opt.listchars = {
-  tab        = '→ ',
-  extends    = '…',
-  precedes   = '…',
-  nbsp       = '␣',
-  trail      = '·',
+  tab      = '→ ',
+  extends  = '…',
+  precedes = '…',
+  nbsp     = '␣',
+  trail    = '·',
 }
 opt.fillchars = {
-  fold = '·',
-  foldopen = '',
+  fold      = '·',
+  foldopen  = '',
   foldclose = '',
-  foldsep = ' ',
-  diff = '╱',
+  foldsep   = ' ',
+  diff      = '╱',
 }
-opt.conceallevel = 2
 
 opt.ts          = 4
 opt.softtabstop = 4
@@ -85,6 +88,7 @@ g.loaded_logiPat         = 1
 g.loaded_rrhelper        = 1
 g.loaded_netrw           = 1
 g.loaded_netrwPlugin     = 1
+-- stylua: ignore start
 
 -- colorscheme
 cmd('colorscheme cockatoo')

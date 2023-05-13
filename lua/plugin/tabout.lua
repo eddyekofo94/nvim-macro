@@ -46,6 +46,7 @@ function fallbak_tbl_t:new(init_tbl)
   return setmetatable(shared_tbl, self)
 end
 
+-- stylua: ignore start
 local patterns = fallbak_tbl_t:new({
   ['']         = { '%)', '%]', '}', '"', "'", '`', ',', ';', '%.' },
   ['c']        = { '%*/' },
@@ -71,7 +72,7 @@ local patterns = fallbak_tbl_t:new({
     '%$',
     '|',
   },
-  ['tex']      = {
+  ['tex'] = {
     '\\right\\rfloor',
     '\\right\\rceil',
     '\\right\\vert',
@@ -119,6 +120,7 @@ local opening_pattern_lookup_tbl = {
   ['\\right\\rceil']  = '\\left\\lceil',
   ['\\right\\rfloor'] = '\\left\\lfloor',
 }
+-- stylua: ignore end
 
 ---Get the index where Shift-Tab should jump to
 ---1. If there is only whitespace characters or no character in between
@@ -138,11 +140,11 @@ local function jumpin_idx(leading, closing_pattern, cursor)
   local opening_pattern = opening_pattern_lookup_tbl[closing_pattern]
 
   -- Case 1
-  local _, _, content_str, closing_pattern_str
-    = leading:find(fmt('%s(%s)(%s)$', opening_pattern, '%s*', closing_pattern))
+  local _, _, content_str, closing_pattern_str =
+    leading:find(fmt('%s(%s)(%s)$', opening_pattern, '%s*', closing_pattern))
   if content_str == nil or closing_pattern_str == nil then
-    _, _, content_str, closing_pattern_str
-      = leading:find(fmt('^(%s)(%s)$', '%s*', closing_pattern))
+    _, _, content_str, closing_pattern_str =
+      leading:find(fmt('^(%s)(%s)$', '%s*', closing_pattern))
   end
 
   if content_str and closing_pattern_str then
@@ -155,13 +157,18 @@ local function jumpin_idx(leading, closing_pattern, cursor)
   end
 
   -- Case 2
-  _, _, _, closing_pattern_str
-    = leading:find(fmt('%s%s(%s)$',
-      opening_pattern .. '%s*', '.*%S', '%s*' .. closing_pattern .. '%s*'))
+  _, _, _, closing_pattern_str = leading:find(
+    fmt(
+      '%s%s(%s)$',
+      opening_pattern .. '%s*',
+      '.*%S',
+      '%s*' .. closing_pattern .. '%s*'
+    )
+  )
 
   if content_str == nil or closing_pattern_str == nil then
-    _, _, closing_pattern_str
-      = leading:find(fmt('%s(%s)$', '%S', '%s*' .. closing_pattern .. '%s*'))
+    _, _, closing_pattern_str =
+      leading:find(fmt('%s(%s)$', '%S', '%s*' .. closing_pattern .. '%s*'))
   end
 
   return { cursor[1], cursor[2] - #closing_pattern_str }
@@ -202,7 +209,7 @@ local get_jump_pos = {
         return jumpin_idx(leading:sub(1, closing_pattern_end), pattern, cursor)
       end
     end
-  end
+  end,
 }
 
 ---Get the position to jump for Tab or Shift-Tab, perform the jump if
