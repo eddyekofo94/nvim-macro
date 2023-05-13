@@ -19,37 +19,36 @@ local function bootstrap()
   local lazy_path = vim.g.package_path .. '/lazy.nvim'
   vim.opt.rtp:prepend(lazy_path)
   vim.opt.pp:prepend(lazy_path)
-  if not vim.loop.fs_stat(lazy_path) then
-    local lock = read_file(vim.g.package_lock)
-    local lock_data = lock and vim.json.decode(lock) or nil
-    local commit = lock_data
-        and lock_data['lazy.nvim']
-        and lock_data['lazy.nvim'].commit
-      or nil
-    local url = 'https://github.com/folke/lazy.nvim.git'
-    vim.notify('Installing lazy.nvim...', vim.log.levels.INFO)
-    vim.fn.mkdir(vim.g.package_path, 'p')
-    local cloned = os.execute(
-      table.concat(
-        { 'git', 'clone', '--filter=blob:none', url, lazy_path },
-        ' '
-      )
-    )
-    if commit then
-      os.execute(table.concat({
-        'git',
-        '--git-dir=' .. lazy_path .. '/.git',
-        '--work-tree=' .. lazy_path,
-        'checkout',
-        commit,
-      }, ' '))
-    end
-    if cloned ~= 0 then
-      vim.notify('Failed to clone lazy.nvim', vim.log.levels.ERROR)
-      return false
-    end
-    vim.notify('lazy.nvim cloned to ' .. lazy_path, vim.log.levels.INFO)
+  if vim.loop.fs_stat(lazy_path) then
+    return true
   end
+
+  local lock = read_file(vim.g.package_lock)
+  local lock_data = lock and vim.json.decode(lock) or nil
+  local commit = lock_data
+      and lock_data['lazy.nvim']
+      and lock_data['lazy.nvim'].commit
+    or nil
+  local url = 'https://github.com/folke/lazy.nvim.git'
+  vim.notify('Installing lazy.nvim...', vim.log.levels.INFO)
+  vim.fn.mkdir(vim.g.package_path, 'p')
+  local cloned = os.execute(
+    table.concat({ 'git', 'clone', '--filter=blob:none', url, lazy_path }, ' ')
+  )
+  if commit then
+    os.execute(table.concat({
+      'git',
+      '--git-dir=' .. lazy_path .. '/.git',
+      '--work-tree=' .. lazy_path,
+      'checkout',
+      commit,
+    }, ' '))
+  end
+  if cloned ~= 0 then
+    vim.notify('Failed to clone lazy.nvim', vim.log.levels.WARN)
+    return false
+  end
+  vim.notify('lazy.nvim cloned to ' .. lazy_path, vim.log.levels.INFO)
   return true
 end
 
