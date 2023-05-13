@@ -1,4 +1,6 @@
 local dap, dapui = require('dap'), require('dapui')
+local static = require('utils.static')
+
 -- stylua: ignore start
 dap.listeners.after.event_initialized['dapui_config'] = dapui.open
 dap.listeners.before.event_terminated['dapui_config'] = dapui.close
@@ -50,9 +52,9 @@ dapui.setup({
     },
   },
   icons = {
-    expanded = '▼',
-    collapsed = '▶',
-    current_frame = '▶',
+    expanded = vim.trim(static.icons.TriangleDown),
+    collapsed = vim.trim(static.icons.TriangleRight),
+    current_frame = vim.trim(static.icons.StackFrameCurrent),
   },
   mappings = {
     -- Use a table to apply multiple mappings

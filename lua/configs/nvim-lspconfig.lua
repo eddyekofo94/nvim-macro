@@ -49,7 +49,7 @@ local function lspconfig_diagnostic()
       -- Enable virtual text, override spacing to 4
       virtual_text = {
         spacing = 4,
-        prefix = vim.trim(static.icons.ArrowLeft),
+        prefix = vim.trim(static.icons.DirectionLeft),
       },
     })
 

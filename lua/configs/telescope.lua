@@ -1,6 +1,7 @@
 local telescope = require('telescope')
 local telescope_builtin = require('telescope.builtin')
 local telescope_actions = require('telescope.actions')
+local static = require('utils.static')
 
 -- stylua: ignore start
 vim.keymap.set('n', '<Leader>F',  function() telescope_builtin.builtin() end)
@@ -55,7 +56,7 @@ local layout_dropdown = {
 telescope.setup({
   defaults = {
     prompt_prefix = '/ ',
-    selection_caret = '→ ',
+    selection_caret = static.icons.ArrowRight,
     borderchars = require('utils.static').borders.empty,
     layout_strategy = 'flex',
     layout_config = {

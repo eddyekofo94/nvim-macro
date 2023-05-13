@@ -1,3 +1,5 @@
+local static = require('utils.static')
+
 require('bufferline').setup({
   auto_hide = true,
   tabpages = true,
@@ -15,9 +17,9 @@ require('bufferline').setup({
       left = '',
       right = '',
     },
-    button = '',
+    button = vim.trim(static.icons.Cross),
     modified = { button = '[+]' },
-    pinned = { button = '' },
+    pinned = { button = vim.trim(static.icons.Pin) },
     inactive = {
       separator = {
         left = '',

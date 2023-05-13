@@ -1,4 +1,6 @@
 local dap = require('dap')
+local static = require('utils.static')
+
 vim.keymap.set('n', '<F1>', dap.up, { noremap = true })
 vim.keymap.set('n', '<F2>', dap.down, { noremap = true })
 vim.keymap.set('n', '<F5>', dap.continue, { noremap = true })
@@ -25,14 +27,13 @@ vim.api.nvim_create_user_command(
   { desc = 'Clear all breakpoints' }
 )
 
-vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'Tea' })
-vim.fn.sign_define(
-  'DapBreakpointCondition',
-  { text = '', texthl = 'Conditional' }
-)
-vim.fn.sign_define('DapLogPoint', { text = '', texthl = 'Skyblue' })
-vim.fn.sign_define('DapStopped', { text = '→', texthl = 'yellow' })
-vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'Iron' })
+-- stylua: ignore start
+vim.fn.sign_define('DapBreakpoint',          { text = vim.trim(static.icons.Dot), texthl = 'Tea' })
+vim.fn.sign_define('DapBreakpointCondition', { text = vim.trim(static.icons.Diamond), texthl = 'Conditional' })
+vim.fn.sign_define('DapBreakpointRejected',  { text = vim.trim(static.icons.Dot), texthl = 'Iron' })
+vim.fn.sign_define('DapLogPoint',            { text = vim.trim(static.icons.Log), texthl = 'Skyblue' })
+vim.fn.sign_define('DapStopped',             { text = vim.trim(static.icons.ArrowRight), texthl = 'yellow' })
+-- stylua: ignore end
 
 dap.adapters = require('configs.dap-configs.adapters')
 dap.configurations = require('configs.dap-configs.configurations')

@@ -62,11 +62,12 @@ function winbar_t:new(opts)
         { 'lsp', fallbacks = { 'treesitter', 'markdown' } },
       },
       separator = winbar_symbol_t:new({
-        icon = ' ' .. static.icons.ArrowRight,
+        icon = ' ' .. static.icons.DirectionRight,
         icon_hl = 'WinBarIconSeparator',
       }),
       extends = winbar_symbol_t:new({
-        icon = vim.opt.listchars:get().extends or '…',
+        icon = vim.opt.listchars:get().extends
+          or vim.trim(static.icons.Ellipsis),
         icon_hl = 'WinBar',
       }),
     }, opts or {}),

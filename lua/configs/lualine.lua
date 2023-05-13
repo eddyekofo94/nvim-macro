@@ -1,3 +1,6 @@
+local palette = require('colors.cockatoo.palette')
+local icons = require('utils.static').icons
+
 vim.opt.rtp:append(vim.fn.stdpath('config') .. '/lua/colors/cockatoo')
 
 ---Lualine configuration
@@ -21,11 +24,11 @@ local function lualine_config()
     end
 
     if vim.bo.expandtab then
-      return '• ' .. sts
+      return icons.DotSmall .. sts
     elseif vim.bo.ts == sts then
-      return '→ ' .. vim.bo.tabstop
+      return icons.ArrowRight .. vim.bo.tabstop
     else
-      return '→ ' .. vim.bo.tabstop .. ' • ' .. sts
+      return icons.ArrowRight .. vim.bo.tabstop .. ' ' .. icons.DotSmall .. sts
     end
   end
 
@@ -52,8 +55,6 @@ local function lualine_config()
   end
 
   package.loaded['colors.cockatoo.palette'] = nil
-  local palette = require('colors.cockatoo.palette')
-  local icons = require('utils.static').icons
   local current_lsp_clients = {} -- cache for lsp clients
 
   ---Update attached lsp clients
@@ -172,7 +173,7 @@ local function lualine_config()
       lualine_b = {
         {
           'branch',
-          icon = { '', color = { fg = palette.turquoise } },
+          icon = { icons.GitBranch, color = { fg = palette.turquoise } },
         },
         {
           'diff',
