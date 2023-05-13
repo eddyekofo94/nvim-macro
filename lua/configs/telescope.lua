@@ -99,9 +99,7 @@ telescope.setup({
     },
   },
   pickers = {
-    colorscheme = vim.tbl_deep_extend('force', layout_dropdown, {
-      enable_preview = true,
-    }),
+    colorscheme = { enable_preview = true },
     commands = layout_dropdown,
     command_history = layout_dropdown,
     filetypes = layout_dropdown,
