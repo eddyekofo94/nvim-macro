@@ -20,7 +20,7 @@ local markdown_heading_buf_symbols = {}
 ---@param symbols_parsed markdown_heading_symbols_parsed_t (reference to) parsed symbols
 ---@param lnum_end? number update symbols backward from this line
 ---@return nil
-local function update_symbols(buf, symbols_parsed, lnum_end)
+local function parse_buf(buf, symbols_parsed, lnum_end)
   symbols_parsed.symbols = {}
   symbols_parsed['end'] = lnum_end
   lnum_end = lnum_end or vim.api.nvim_buf_line_count(buf)
@@ -44,15 +44,16 @@ local function update_symbols(buf, symbols_parsed, lnum_end)
   end
 end
 
----Parse markdown heading symbols into a list of winbar symbols
+---Convert markdown heading symbols into a list of winbar symbols according to
+---cursor position
 ---@param symbols markdown_heading_symbol_t[] markdown heading symbols
+---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[]
-local function parse_symbols(symbols)
-  local cursor_lnum = vim.api.nvim_win_get_cursor(0)[1]
+local function convert(symbols, cursor)
   local result = {}
   local current_level = 7
   for symbol in vim.iter(symbols):rev() do
-    if symbol.lnum <= cursor_lnum and symbol.level < current_level then
+    if symbol.lnum <= cursor[1] and symbol.level < current_level then
       current_level = symbol.level
       table.insert(result, 1, {
         icon = heading_icons[symbol.level],
@@ -76,7 +77,7 @@ local function attach(buf)
   end
   local function _update()
     markdown_heading_buf_symbols[buf] = markdown_heading_buf_symbols[buf] or {}
-    update_symbols(buf, markdown_heading_buf_symbols[buf])
+    parse_buf(buf, markdown_heading_buf_symbols[buf])
   end
   vim.b[buf].winbar_markdown_heading_parser_attached = vim.api.nvim_create_autocmd(
     { 'TextChanged', 'TextChangedI' },
@@ -155,24 +156,24 @@ local function init()
   })
 end
 
----Get winbar symbols from buffer
+---Get winbar symbols from buffer according to cursor position
 ---@param buf number buffer handler
+---@param cursor number[] cursor position
 ---@return winbar_symbol_t[] symbols winbar symbols
-local function get_symbols(buf)
+local function get_symbols(buf, cursor)
   if vim.bo[buf].filetype ~= 'markdown' then
     return {}
   end
   if not initialized then
     init()
   end
-  local cursor_lnum = vim.api.nvim_win_get_cursor(0)[1]
   local buf_symbols = markdown_heading_buf_symbols[buf] or {}
   if -- Update heading symbols if cursor is out of range
-    not buf_symbols['end'] or buf_symbols['end'] < cursor_lnum
+    not buf_symbols['end'] or buf_symbols['end'] < cursor[1]
   then
-    update_symbols(buf, buf_symbols, cursor_lnum)
+    parse_buf(buf, buf_symbols, cursor[1])
   end
-  return parse_symbols(buf_symbols.symbols or {})
+  return convert(buf_symbols.symbols or {}, cursor)
 end
 
 return {

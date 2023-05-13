@@ -123,21 +123,22 @@ function winbar_t:__call(add_hl, truncate)
   add_hl = add_hl == nil and true or add_hl
   truncate = truncate == nil and true or truncate
   local buf = vim.api.nvim_get_current_buf()
+  local cursor = vim.api.nvim_win_get_cursor(0)
   self.components = {}
   for _, source in ipairs(self.sources) do
     if type(source) == 'string' then
       local source_module = require('plugin.winbar.sources.' .. source)
-      local components = source_module.get_symbols(buf)
+      local components = source_module.get_symbols(buf, cursor)
       vim.list_extend(self.components, components)
     elseif type(source) == 'table' then
       local source_module = require('plugin.winbar.sources.' .. source[1])
-      local components = source_module.get_symbols(buf)
+      local components = source_module.get_symbols(buf, cursor)
       if components and not vim.tbl_isempty(components) then
         vim.list_extend(self.components, components)
       elseif source.fallbacks then
         for _, fallback in ipairs(source.fallbacks) do
           local fallback_module = require('plugin.winbar.sources.' .. fallback)
-          local fallback_components = fallback_module.get_symbols(buf)
+          local fallback_components = fallback_module.get_symbols(buf, cursor)
           if
             fallback_components and not vim.tbl_isempty(fallback_components)
           then

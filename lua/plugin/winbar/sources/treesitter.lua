@@ -8,15 +8,15 @@ end, vim.tbl_keys(static.icons))
 
 ---Get treesitter symbols from buffer
 ---@param buf number buffer handler
+---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[] symbols winbar symbols
-local function get_symbols(buf)
+local function get_symbols(buf, cursor)
   local parsers_ok, parsers = pcall(require, 'nvim-treesitter.parsers')
   if not parsers_ok or not parsers.has_parser() then
     return {}
   end
 
   local symbols = {}
-  local cursor = vim.api.nvim_win_get_cursor(0)
   local current_node = vim.treesitter.get_node({
     bufnr = buf,
     pos = { cursor[1] - 1, cursor[2] },

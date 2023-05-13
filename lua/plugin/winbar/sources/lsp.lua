@@ -87,7 +87,7 @@ local function cursor_in_range(cursor, range)
   -- stylua: ignore end
 end
 
----Parse LSP SymbolInformation[] into a list of winbar symbols
+---Convert LSP SymbolInformation[] into a list of winbar symbols
 ---Each SymbolInformation in the list is sorted by the start position of its
 ---range, so just need to traverse the list in order and add each symbol that
 ---contains the cursor to the winbar_symbols list.
@@ -96,7 +96,7 @@ end
 ---@param lsp_symbols lsp_symbol_t[] LSP symbols of type SymbolInformation
 ---@param winbar_symbols winbar_symbol_t[] (reference to) winbar symbols
 ---@param cursor integer[] cursor position
-local function parse_symbol_information(lsp_symbols, winbar_symbols, cursor)
+local function convert_symbol_information(lsp_symbols, winbar_symbols, cursor)
   for _, symbol in ipairs(lsp_symbols) do
     if
       symbol.location
@@ -112,13 +112,13 @@ local function parse_symbol_information(lsp_symbols, winbar_symbols, cursor)
   end
 end
 
----Parse LSP DocumentSymbol[] into a list of winbar symbols
+---Convert LSP DocumentSymbol[] into a list of winbar symbols
 ---Side effect: change winbar_symbols
 ---LSP Specification document: https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/
 ---@param lsp_symbols lsp_symbol_t[] LSP symbols of type DocumentSymbol
 ---@param winbar_symbols winbar_symbol_t[] (reference to) winbar symbols
 ---@param cursor integer[] cursor position
-local function parse_document_symbol(lsp_symbols, winbar_symbols, cursor)
+local function convert_document_symbol(lsp_symbols, winbar_symbols, cursor)
   for _, symbol in ipairs(lsp_symbols) do
     if symbol.range and cursor_in_range(cursor, symbol.range) then
       table.insert(winbar_symbols, {
@@ -127,23 +127,23 @@ local function parse_document_symbol(lsp_symbols, winbar_symbols, cursor)
         icon_hl = 'WinBarIconKind' .. symbol_kind_names[symbol.kind],
       })
       if symbol.children then
-        parse_document_symbol(symbol.children, winbar_symbols, cursor)
+        convert_document_symbol(symbol.children, winbar_symbols, cursor)
       end
       return
     end
   end
 end
 
----Parse LSP symbols into a list of winbar symbols
+---Convert LSP symbols into a list of winbar symbols
 ---@param symbols lsp_symbol_t[] LSP symbols
+---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[] symbol_path winbar symbols
-local function parse_symbols(symbols)
-  local cursor = vim.api.nvim_win_get_cursor(0)
+local function convert(symbols, cursor)
   local symbol_path = {}
   if symbol_type(symbols) == 'SymbolInformation' then
-    parse_symbol_information(symbols, symbol_path, cursor)
+    convert_symbol_information(symbols, symbol_path, cursor)
   elseif symbol_type(symbols) == 'DocumentSymbol' then
-    parse_document_symbol(symbols, symbol_path, cursor)
+    convert_document_symbol(symbols, symbol_path, cursor)
   end
   return symbol_path
 end
@@ -261,14 +261,15 @@ local function init()
   })
 end
 
----Get winbar symbols from buffer
+---Get winbar symbols from buffer according to cursor position
 ---@param buf number buffer handler
+---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[] symbols winbar symbols
-local function get_symbols(buf)
+local function get_symbols(buf, cursor)
   if not initialized then
     init()
   end
-  return parse_symbols(lsp_buf_symbols[buf] or {})
+  return convert(lsp_buf_symbols[buf] or {}, cursor)
 end
 
 return {

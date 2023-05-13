@@ -54,8 +54,9 @@ end
 
 ---Get winbar symbols from buffer
 ---@param buf number buffer handler
+---@param _ integer[] cursor position, ignored
 ---@return winbar_symbol_t[] symbols winbar symbols
-local function get_symbols(buf)
+local function get_symbols(buf, _)
   local dir_symbols = get_dir_symbols(buf)
   local file_symbol = get_file_symbol(buf)
   table.insert(dir_symbols, file_symbol)
