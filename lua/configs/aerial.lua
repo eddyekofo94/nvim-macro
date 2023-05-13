@@ -32,7 +32,7 @@ aerial.setup({
   },
   disable_max_lines = 8192,
   filter_kind = false,
-  icons = require('utils.static').icons,
+  icons = require('utils.static').icons:flatten(),
   ignore = {
     filetypes = { 'aerial', 'help', 'alpha', 'undotree', 'TelescopePrompt' },
   },

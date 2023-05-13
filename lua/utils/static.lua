@@ -2,6 +2,7 @@ local M = {}
 
 local langs_mt = {}
 langs_mt.__index = langs_mt
+
 function langs_mt:list(field)
   local deduplist = {}
   local result = {}
@@ -19,6 +20,7 @@ end
 
 M.langs = setmetatable({
   bash = {
+    ts = 'bash',
     ft = 'sh',
     lsp_server = 'bashls',
     dap = 'bashdb',
@@ -101,7 +103,32 @@ M.borders = {
   vintage_clc           = { '+', '-', '+', '|', '+', '-', '+', '|' },
   empty                 = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
 }
+-- stylua: ignore end
 
+local icons_mt = {}
+
+function icons_mt:__index(key)
+  return self.debug[key]
+    or self.diagnostics[key]
+    or self.files[key]
+    or self.kinds[key]
+    or self.ui[key]
+    or icons_mt[key]
+end
+
+---Flatten the layered icons table into a single type-icon table.
+---@return table<string, string>
+function icons_mt:flatten()
+  local result = {}
+  for _, icons in pairs(self) do
+    for type, icon in pairs(icons) do
+      result[type] = icon
+    end
+  end
+  return result
+end
+
+-- stylua: ignore start
 M.icons = setmetatable({
   debug = {
     StackFrame          = ' ',
@@ -187,15 +214,7 @@ M.icons = setmetatable({
     TriangleRight       = '▶ ',
     TriangleUp          = '▲ ',
   },
-}, {
-  __index = function(self, key)
-    return self.debug[key]
-      or self.diagnostics[key]
-      or self.files[key]
-      or self.kinds[key]
-      or self.ui[key]
-  end,
-})
+}, icons_mt)
 -- stylua: ignore end
 
 return M
