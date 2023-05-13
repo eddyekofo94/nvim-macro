@@ -27,6 +27,7 @@ end
 ---@field separator winbar_symbol_t
 ---@field extends winbar_symbol_t
 ---@field components winbar_symbol_t[]
+---@field string_cache string
 ---@field new fun(table): winbar_t
 ---@field displen fun(): number
 ---@operator call: string
@@ -40,6 +41,7 @@ function winbar_t:new(opts)
   local winbar = setmetatable(
     vim.tbl_deep_extend('force', {
       components = {},
+      string_cache = '',
       sources = {
         'path',
         { 'lsp', fallbacks = { 'treesitter', 'markdown' } },
@@ -120,10 +122,15 @@ end
 ---@param truncate boolean? default true
 ---@return string
 function winbar_t:__call(add_hl, truncate)
+  if vim.fn.reg_executing() ~= '' then
+    return self.string_cache -- Do not update when executing a macro
+  end
+
   add_hl = add_hl == nil and true or add_hl
   truncate = truncate == nil and true or truncate
   local buf = vim.api.nvim_get_current_buf()
   local cursor = vim.api.nvim_win_get_cursor(0)
+
   self.components = {}
   for _, source in ipairs(self.sources) do
     if type(source) == 'string' then
@@ -149,10 +156,12 @@ function winbar_t:__call(add_hl, truncate)
       end
     end
   end
+
   if truncate then
     self:truncate()
   end
-  return ' ' .. self:concat(add_hl) .. ' ' -- Add one-space padding
+  self.string_cache = ' ' .. self:concat(add_hl) .. ' '
+  return self.string_cache
 end
 
 ---@param key string|number
