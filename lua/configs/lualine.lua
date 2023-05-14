@@ -173,7 +173,10 @@ local function lualine_config()
       lualine_b = {
         {
           'branch',
-          icon = { icons.GitBranch, color = { fg = palette.turquoise } },
+          icon = {
+            vim.trim(icons.GitBranch),
+            color = { fg = palette.turquoise },
+          },
         },
         {
           'diff',
