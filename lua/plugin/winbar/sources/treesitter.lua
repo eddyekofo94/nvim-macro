@@ -9,7 +9,7 @@ end, vim.tbl_keys(icons))
 table.sort(types)
 
 ---Get treesitter symbols from buffer
----@param buf number buffer handler
+---@param buf integer buffer handler
 ---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[] symbols winbar symbols
 local function get_symbols(buf, cursor)

@@ -11,7 +11,7 @@ local function str_escape(str)
 end
 
 ---Get list of winbar symbols of the parent directories of given buffer
----@param buf number buffer handler
+---@param buf integer buffer handler
 ---@return winbar_symbol_t[] winbar symbols
 local function get_dir_symbols(buf)
   local bufname = vim.api.nvim_buf_get_name(buf)
@@ -30,7 +30,7 @@ local function get_dir_symbols(buf)
 end
 
 ---Get winbar symbol of given buffer
----@param buf number buffer handler
+---@param buf integer buffer handler
 ---@return winbar_symbol_t winbar symbol
 local function get_file_symbol(buf)
   local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ':t')
@@ -51,7 +51,7 @@ local function get_file_symbol(buf)
 end
 
 ---Get winbar symbols from buffer
----@param buf number buffer handler
+---@param buf integer buffer handler
 ---@param _ integer[] cursor position, ignored
 ---@return winbar_symbol_t[] symbols winbar symbols
 local function get_symbols(buf, _)

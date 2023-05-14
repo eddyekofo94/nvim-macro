@@ -56,8 +56,8 @@ setmetatable(markdown_heading_buf_symbols, {
 
 ---Parse markdown file and update markdown heading symbols
 ---Side effect: change markdown_heading_buf_symbols
----@param buf number buffer handler
----@param lnum_end number update symbols backward from this line (1-based, inclusive)
+---@param buf integer buffer handler
+---@param lnum_end integer update symbols backward from this line (1-based, inclusive)
 ---@param incremental? boolean incremental parsing
 ---@return nil
 local function parse_buf(buf, lnum_end, incremental)
@@ -122,7 +122,7 @@ local function convert(symbols, cursor)
 end
 
 ---Attach markdown heading parser to buffer
----@param buf number buffer handler
+---@param buf integer buffer handler
 ---@return nil
 local function attach(buf)
   if vim.b[buf].winbar_markdown_heading_parser_attached then
@@ -147,7 +147,7 @@ local function attach(buf)
 end
 
 ---Detach markdown heading parser from buffer
----@param buf number buffer handler
+---@param buf integer buffer handler
 ---@return nil
 local function detach(buf)
   if vim.b[buf].winbar_markdown_heading_parser_attached then
@@ -194,8 +194,8 @@ local function init()
 end
 
 ---Get winbar symbols from buffer according to cursor position
----@param buf number buffer handler
----@param cursor number[] cursor position
+---@param buf integer buffer handler
+---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[] symbols winbar symbols
 local function get_symbols(buf, cursor)
   if vim.bo[buf].filetype ~= 'markdown' then

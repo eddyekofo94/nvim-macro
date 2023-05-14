@@ -47,6 +47,7 @@ setmetatable(bars, {
 })
 
 ---Get winbar string for current window
+---@param buf integer buffer handler
 ---@return string
 function winbar.get_winbar()
   return bars[vim.api.nvim_get_current_buf()]()
@@ -57,8 +58,8 @@ local function setup()
   hlgroups.init()
   local groupid = vim.api.nvim_create_augroup('WinBar', {})
   ---Init winbar
-  ---@param win number
-  ---@param buf number
+  ---@param win integer
+  ---@param buf integer
   local function _init(win, buf)
     if
       not vim.api.nvim_win_get_config(win).zindex

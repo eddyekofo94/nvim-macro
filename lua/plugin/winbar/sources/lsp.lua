@@ -167,9 +167,9 @@ end
 
 ---Update LSP symbols from an LSP client
 ---Side effect: update symbol_list
----@param buf number buffer handler
+---@param buf integer buffer handler
 ---@param client lsp_client_t LSP client
----@param ttl number? limit the number of recursive requests, default 60
+---@param ttl integer? limit the number of recursive requests, default 60
 local function update_symbols(buf, client, ttl)
   ttl = ttl or 60
   if ttl <= 0 or not vim.b[buf].winbar_lsp_attached then
@@ -194,7 +194,7 @@ local function update_symbols(buf, client, ttl)
 end
 
 ---Attach LSP symbol getter to buffer
----@param buf number buffer handler
+---@param buf integer buffer handler
 local function attach(buf)
   if vim.b[buf].winbar_lsp_attached then
     return
@@ -217,7 +217,7 @@ local function attach(buf)
 end
 
 ---Detach LSP symbol getter from buffer
----@param buf number buffer handler
+---@param buf integer buffer handler
 local function detach(buf)
   if vim.b[buf].winbar_lsp_attached then
     vim.api.nvim_del_autocmd(vim.b[buf].winbar_lsp_attached)
@@ -275,7 +275,7 @@ local function init()
 end
 
 ---Get winbar symbols from buffer according to cursor position
----@param buf number buffer handler
+---@param buf integer buffer handler
 ---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[] symbols winbar symbols
 local function get_symbols(buf, cursor)
