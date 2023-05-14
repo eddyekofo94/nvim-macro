@@ -13,6 +13,15 @@ local winbar_ft_configs = {
       },
     },
   },
+  python = {
+    sources = {
+      'path',
+      {
+        'lsp',
+        fallbacks = { 'treesitter' },
+      },
+    },
+  },
   markdown = {
     sources = { 'path', 'markdown' },
   },
