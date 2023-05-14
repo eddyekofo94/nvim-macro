@@ -1,29 +1,39 @@
 local hlgroups = require('plugin.winbar.hlgroups')
 local bar = require('plugin.winbar.bar')
+local sources = require('plugin.winbar.sources')
 _G.winbar = {}
 
--- Winbar init params for each filetype
-local winbar_ft_configs = {
+---@type winbar_source_t
+local prefer_lsp = {
+  get_symbols = function(buf, cursor)
+    local symbols = sources.lsp.get_symbols(buf, cursor)
+    if vim.tbl_isempty(symbols) then
+      symbols = sources.treesitter.get_symbols(buf, cursor)
+    end
+    return symbols
+  end,
+}
+
+---Winbar init params for each filetype
+---@type table<string, winbar_opts_t>
+local ft_configs = {
   lua = {
     sources = {
-      'path',
-      {
-        'lsp',
-        fallbacks = { 'treesitter' },
-      },
+      sources.path,
+      prefer_lsp,
     },
   },
   python = {
     sources = {
-      'path',
-      {
-        'lsp',
-        fallbacks = { 'treesitter' },
-      },
+      sources.path,
+      prefer_lsp,
     },
   },
   markdown = {
-    sources = { 'path', 'markdown' },
+    sources = {
+      sources.path,
+      sources.markdown,
+    },
   },
 }
 
@@ -31,7 +41,7 @@ local winbar_ft_configs = {
 local bars = {}
 setmetatable(bars, {
   __index = function(_, buf)
-    bars[buf] = bar.winbar_t:new(winbar_ft_configs[vim.bo[buf].filetype])
+    bars[buf] = bar.winbar_t:new(ft_configs[vim.bo[buf].filetype])
     return bars[buf]
   end,
 })

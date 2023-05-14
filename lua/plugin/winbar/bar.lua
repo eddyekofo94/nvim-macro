@@ -32,19 +32,22 @@ local function hl(str, hlgroup)
   return string.format('%%#%s#%s%%*', hlgroup, str or '')
 end
 
+---@class winbar_source_t
+---@field get_symbols fun(buf: integer, cursor: integer[]): winbar_symbol_t[]
+
 ---@class winbar_opts_t
----@field sources string[]?
+---@field sources winbar_source_t[]?
 ---@field separator winbar_symbol_t?
 ---@field extends winbar_symbol_t?
 
 ---@class winbar_t
----@field sources table
+---@field sources winbar_source_t[]
 ---@field separator winbar_symbol_t
 ---@field extends winbar_symbol_t
 ---@field components winbar_symbol_t[]
 ---@field string_cache string
----@field new fun(table): winbar_t
----@field displen fun(): number
+---@field new fun(winbar_opts_t?): winbar_t
+---@field displen fun(): integer
 ---@operator call: string
 local winbar_t = {}
 winbar_t.__index = winbar_t
@@ -53,15 +56,21 @@ winbar_t.__index = winbar_t
 ---@param opts winbar_opts_t?
 ---@return winbar_t
 function winbar_t:new(opts)
+  local sources = require('plugin.winbar.sources')
   local winbar = setmetatable(
     vim.tbl_deep_extend('force', {
       components = {},
       string_cache = '',
       sources = {
-        'path',
+        sources.path,
         {
-          'treesitter',
-          fallbacks = { 'lsp' },
+          get_symbols = function(buf, cursor)
+            local symbols = sources.treesitter.get_symbols(buf, cursor)
+            if vim.tbl_isempty(symbols) then
+              symbols = sources.lsp.get_symbols(buf, cursor)
+            end
+            return symbols
+          end,
         },
       },
       separator = winbar_symbol_t:new({
@@ -120,7 +129,7 @@ function winbar_t:concat(add_hl)
   add_hl = add_hl == nil and true or add_hl
   local result = nil
   for _, component in ipairs(self.components) do
-    -- Do not concat if str is empty or contains only white spaces
+    -- Do not concatenate if str is empty or contains only white spaces
     if not component.name:match('^%s*$') then
       local sep_icon = not add_hl and self.separator.icon
         or hl(self.separator.icon, self.separator.icon_hl)
@@ -151,28 +160,7 @@ function winbar_t:__call(add_hl, truncate)
 
   self.components = {}
   for _, source in ipairs(self.sources) do
-    if type(source) == 'string' then
-      local source_module = require('plugin.winbar.sources.' .. source)
-      local components = source_module.get_symbols(buf, cursor)
-      vim.list_extend(self.components, components)
-    elseif type(source) == 'table' then
-      local source_module = require('plugin.winbar.sources.' .. source[1])
-      local components = source_module.get_symbols(buf, cursor)
-      if components and not vim.tbl_isempty(components) then
-        vim.list_extend(self.components, components)
-      elseif source.fallbacks then
-        for _, fallback in ipairs(source.fallbacks) do
-          local fallback_module = require('plugin.winbar.sources.' .. fallback)
-          local fallback_components = fallback_module.get_symbols(buf, cursor)
-          if
-            fallback_components and not vim.tbl_isempty(fallback_components)
-          then
-            vim.list_extend(self.components, fallback_components)
-            break
-          end
-        end
-      end
-    end
+    vim.list_extend(self.components, source.get_symbols(buf, cursor))
   end
 
   if truncate then

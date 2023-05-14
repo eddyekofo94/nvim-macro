@@ -1,3 +1,4 @@
+local bar = require('plugin.winbar.bar')
 local static = require('utils.static')
 local groupid = vim.api.nvim_create_augroup('WinBarLsp', {})
 local initialized = false
@@ -111,11 +112,14 @@ local function convert_symbol_information(lsp_symbols, winbar_symbols, cursor)
       and symbol.location.range
       and cursor_in_range(cursor, symbol.location.range)
     then
-      table.insert(winbar_symbols, {
-        name = symbol.name,
-        icon = static.icons[symbol_kind_names[symbol.kind]],
-        icon_hl = 'WinBarIconKind' .. symbol_kind_names[symbol.kind],
-      })
+      table.insert(
+        winbar_symbols,
+        bar.winbar_symbol_t:new({
+          name = symbol.name,
+          icon = static.icons[symbol_kind_names[symbol.kind]],
+          icon_hl = 'WinBarIconKind' .. symbol_kind_names[symbol.kind],
+        })
+      )
     end
   end
 end
@@ -131,11 +135,14 @@ local function convert_document_symbol(lsp_symbols, winbar_symbols, cursor)
   -- is preferred
   for symbol in vim.iter(lsp_symbols):rev() do
     if symbol.range and cursor_in_range(cursor, symbol.range) then
-      table.insert(winbar_symbols, {
-        name = symbol.name,
-        icon = static.icons[symbol_kind_names[symbol.kind]],
-        icon_hl = 'WinBarIconKind' .. symbol_kind_names[symbol.kind],
-      })
+      table.insert(
+        winbar_symbols,
+        bar.winbar_symbol_t:new({
+          name = symbol.name,
+          icon = static.icons[symbol_kind_names[symbol.kind]],
+          icon_hl = 'WinBarIconKind' .. symbol_kind_names[symbol.kind],
+        })
+      )
       if symbol.children then
         convert_document_symbol(symbol.children, winbar_symbols, cursor)
       end
