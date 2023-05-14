@@ -1,90 +1,94 @@
-local api = vim.api
 local fmt = string.format
 
 ---@class fallbak_tbl_t each key shares a default / fallback pattern table
 ---that can be used for pattern matching if corresponding key is not present
 ---or non patterns stored in the key are matched
 ---@field __content table closing patterns for each filetype
-local fallbak_tbl_t = {}
+---@field __default table
+local fallback_tbl_t = {}
 
-function fallbak_tbl_t:__index(k)
-  return fallbak_tbl_t[k] or self:concat(k, '')
+function fallback_tbl_t:__index(k)
+  return fallback_tbl_t[k] or self:fallback(k)
 end
 
----Concatenate two pattern tables
----@param k1 string filetype (key) of the first table
----@param k2 string filetype (key) of the second table
+function fallback_tbl_t:__newindex(k, v)
+  self.__content[k] = v
+end
+
+---Get the table with the fallback patterns for kdest
+---@param k string key
 ---@return table concatenated table
-function fallbak_tbl_t:concat(k1, k2)
-  if k1 == k2 then
-    return rawget(self.__content, k1) or {}
-  end
-
-  local tbl1 = rawget(self.__content, k1)
-  local tbl2 = rawget(self.__content, k2)
-  if tbl1 and tbl2 then
-    for _, v in ipairs(tbl2) do
-      table.insert(tbl1, v)
+function fallback_tbl_t:fallback(k)
+  local dest = self.__content[k]
+  local default = self.__default
+  if dest and default then
+    if vim.tbl_islist(dest) and vim.tbl_islist(default) then
+      return vim.list_extend(dest, default)
+    else
+      dest = vim.tbl_deep_extend('keep', dest, default)
+      return dest
     end
-    return tbl1
-  elseif tbl1 then
-    return tbl1
-  elseif tbl2 then
-    return tbl2
+  elseif dest then
+    return dest
+  elseif default then
+    return default
   end
-
   return {}
 end
 
 ---Create a new shared table
----@param init_tbl table|nil initial table
+---@param args table
 ---@return fallbak_tbl_t
-function fallbak_tbl_t:new(init_tbl)
-  local shared_tbl = {
-    __content = init_tbl or {},
+function fallback_tbl_t:new(args)
+  args = args or {}
+  local fallback_tbl = {
+    __content = args.content or {},
+    __default = args.default or {},
   }
-  return setmetatable(shared_tbl, self)
+  return setmetatable(fallback_tbl, self)
 end
 
 -- stylua: ignore start
-local patterns = fallbak_tbl_t:new({
-  ['']         = { '%)', '%]', '}', '"', "'", '`', ',', ';', '%.' },
-  ['c']        = { '%*/' },
-  ['cpp']      = { '%*/' },
-  ['lua']      = { '%]%]' },
-  ['python']   = { '"""', "'''" },
-  ['markdown'] = {
-    '\\right\\rfloor',
-    '\\right\\rceil',
-    '\\right\\vert',
-    '\\right\\Vert',
-    '\\right%)',
-    '\\right%]',
-    '\\right}',
-    '\\right>',
-    '\\%]',
-    '\\%)',
-    '\\}',
-    '-->',
-    '%*%*%*',
-    '%*%*',
-    '%*',
-    '%$',
-    '|',
-  },
-  ['tex'] = {
-    '\\right\\rfloor',
-    '\\right\\rceil',
-    '\\right\\vert',
-    '\\right\\Vert',
-    '\\right%)',
-    '\\right%]',
-    '\\right}',
-    '\\right>',
-    '\\%]',
-    '\\%)',
-    '\\}',
-    '%$',
+local patterns = fallback_tbl_t:new({
+  default = { '%)', '%]', '}', '"', "'", '`', ',', ';', '%.' },
+  content = {
+    c = { '%*/' },
+    cpp = { '%*/' },
+    lua = { '%]%]' },
+    python = { '"""', "'''" },
+    markdown = {
+      '\\right\\rfloor',
+      '\\right\\rceil',
+      '\\right\\vert',
+      '\\right\\Vert',
+      '\\right%)',
+      '\\right%]',
+      '\\right}',
+      '\\right>',
+      '\\%]',
+      '\\%)',
+      '\\}',
+      '-->',
+      '%*%*%*',
+      '%*%*',
+      '%*',
+      '%$',
+      '|',
+    },
+    tex = {
+      '\\right\\rfloor',
+      '\\right\\rceil',
+      '\\right\\vert',
+      '\\right\\Vert',
+      '\\right%)',
+      '\\right%]',
+      '\\right}',
+      '\\right>',
+      '\\%]',
+      '\\%)',
+      '\\}',
+      '%$',
+    },
   },
 })
 
@@ -178,8 +182,8 @@ local get_jump_pos = {
   ---Getting the jump position for Tab
   ---@return number[]? cursor position after jump; false if no jump
   ['<Tab>'] = function()
-    local cursor = api.nvim_win_get_cursor(0)
-    local current_line = api.nvim_get_current_line()
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    local current_line = vim.api.nvim_get_current_line()
     local trailing = current_line:sub(cursor[2] + 1, -1)
     local leading = current_line:sub(1, cursor[2])
 
@@ -199,8 +203,8 @@ local get_jump_pos = {
   ---Getting the jump position for Shift-Tab
   ---@return number[]? cursor position after jump; false if no jump
   ['<S-Tab>'] = function()
-    local cursor = api.nvim_win_get_cursor(0)
-    local current_line = api.nvim_get_current_line()
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    local current_line = vim.api.nvim_get_current_line()
     local leading = current_line:sub(1, cursor[2])
 
     for _, pattern in ipairs(patterns[vim.bo.ft or '']) do
@@ -218,10 +222,10 @@ local get_jump_pos = {
 local function do_key(key)
   local pos = get_jump_pos[key]()
   if pos then
-    api.nvim_win_set_cursor(0, pos)
+    vim.api.nvim_win_set_cursor(0, pos)
   else
-    local termcode = api.nvim_replace_termcodes(key, true, true, true)
-    api.nvim_feedkeys(termcode, 'in', false)
+    local termcode = vim.api.nvim_replace_termcodes(key, true, true, true)
+    vim.api.nvim_feedkeys(termcode, 'in', false)
   end
 end
 
