@@ -20,7 +20,6 @@ end
 
 M.langs = setmetatable({
   bash = {
-    ts = 'bash',
     ft = 'sh',
     lsp_server = 'bashls',
     dap = 'bashdb',
