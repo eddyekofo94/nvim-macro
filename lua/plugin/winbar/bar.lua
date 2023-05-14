@@ -65,7 +65,7 @@ function winbar_t:new(opts)
         },
       },
       separator = winbar_symbol_t:new({
-        icon = ' ' .. static.icons.AngleRight,
+        icon = static.icons.AngleRight,
         icon_hl = 'WinBarIconSeparator',
       }),
       extends = winbar_symbol_t:new({
