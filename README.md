@@ -332,7 +332,7 @@ and it should work out of the box.
 
 ### Default Modules and Plugins of Choice
 
-Total # of plugins: 51 (package manager included).
+Total # of plugins: 50 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -387,7 +387,6 @@ Total # of plugins: 51 (package manager included).
     - [ts-node-action](https://github.com/CKolkey/ts-node-action)
     - [cellular-automaton.nvim](https://github.com/Eandrju/cellular-automaton.nvim)
 - **UI**
-    - [barbar.nvim](https://github.com/romgrk/barbar.nvim)
     - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
     - [fidget.nvim](https://github.com/j-hui/fidget.nvim)
 - **DEBUG**

@@ -1,14 +1,5 @@
 return {
   {
-    'romgrk/barbar.nvim',
-    event = { 'BufReadPost', 'BufWrite' },
-    dependencies = 'nvim-web-devicons',
-    config = function()
-      require('configs.barbar')
-    end,
-  },
-
-  {
     'nvim-lualine/lualine.nvim',
     -- load lualine only when a real
     -- file is about to open

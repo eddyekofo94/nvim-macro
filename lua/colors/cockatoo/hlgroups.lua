@@ -357,21 +357,6 @@ return {
   fugitiveUnstagedHeading   = { fg = plt.ochre, bold = true },
   fugitiveUntrackedHeading  = { fg = plt.lavender, bold = true },
 
-  -- barbar
-  BufferCurrent        = { fg = plt.smoke },
-  BufferCurrentIndex   = { fg = plt.orange, bold = true },
-  BufferCurrentMod     = { fg = plt.orange },
-  BufferCurrentSign    = { fg = plt.orange },
-  BufferInactive       = { fg = plt.pigeon, bg = plt.deepsea },
-  BufferInactiveIcon   = { link = 'StatusLine' },
-  BufferInactiveIndex  = { fg = plt.pigeon, bg = plt.deepsea },
-  BufferInactiveMod    = { fg = plt.pigeon, bg = plt.deepsea },
-  BufferInactiveSign   = { fg = plt.pigeon, bg = plt.deepsea },
-  BufferVisible        = { fg = plt.pigeon },
-  BufferVisibleIndex   = { fg = plt.pigeon },
-  BufferVisibleMod     = { fg = plt.yellow },
-  BufferTabpageFill    = { fg = plt.pigeon, bg = plt.ocean },
-
   -- telescope
   TelescopeNormal               = { link = 'NormalFloat' },
   TelescopePromptNormal         = { bg = plt.deepsea },

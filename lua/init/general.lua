@@ -17,7 +17,6 @@ opt.relativenumber = true
 opt.ruler          = true
 opt.scrolloff      = 4
 opt.sidescrolloff  = 8
-opt.showtabline    = 0
 opt.signcolumn     = 'yes:1'
 opt.splitright     = true
 opt.swapfile       = false
