@@ -1,3 +1,4 @@
+_G.statuscol = {}
 local cache = {}
 
 ---Get string representation of sign with highlight
@@ -38,7 +39,7 @@ end
 ---@param prefixes string[] prefixes of the sign name
 ---@param cachekey string key of the cache
 ---@return string sign string representation of the sign with highlight
-function _G.get_sign(bufnum, lnum, prefixes, cachekey)
+function _G.statuscol.get_sign(bufnum, lnum, prefixes, cachekey)
   local cur_signs =
     vim.fn.sign_getplaced(bufnum, { group = '*', lnum = lnum })[1].signs
 
@@ -73,9 +74,8 @@ function _G.get_sign(bufnum, lnum, prefixes, cachekey)
   return mk_hl(sign_def[1].texthl, sign_def[1].text)
 end
 
-vim.api.nvim_create_augroup('StatusColumn', {})
 vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
-  group = 'StatusColumn',
+  group = vim.api.nvim_create_augroup('StatusColumn', {}),
   callback = function(tbl)
     if tbl.file and vim.loop.fs_stat(tbl.file) and vim.bo.bt == '' then
       -- 1. Diagnostic / Dap signs
@@ -83,9 +83,9 @@ vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
       -- 3. Git signs
       -- 4. Fold column
       vim.wo.statuscolumn = table.concat({
-        "%{%&scl=='no'?'':(v:virtnum?'':v:lua.get_sign(bufnr(),v:lnum,['Dap','Diagnostic'],'dapdiags'))%} ",
+        "%{%&scl=='no'?'':(v:virtnum?'':v:lua.statuscol.get_sign(bufnr(),v:lnum,['Dap','Diagnostic'],'dapdiags'))%} ",
         "%=%{%v:virtnum?'':(&nu?(&rnu?(v:relnum?v:relnum:printf('%-'.max([3,len(line('$'))]).'S',v:lnum)):v:lnum):(&rnu?v:relnum:''))%} ",
-        "%{%&scl=='no'?'':(v:lua.get_sign(bufnr(),v:lnum,['GitSigns'],'gitsigns'))%}",
+        "%{%&scl=='no'?'':(v:lua.statuscol.get_sign(bufnr(),v:lnum,['GitSigns'],'gitsigns'))%}",
         '%C ',
       })
     else
