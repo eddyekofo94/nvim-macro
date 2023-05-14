@@ -3,30 +3,43 @@ local bar = require('plugin.winbar.bar')
 local sources = require('plugin.winbar.sources')
 _G.winbar = {}
 
----@type winbar_source_t
-local prefer_lsp = {
-  get_symbols = function(buf, cursor)
-    local symbols = sources.lsp.get_symbols(buf, cursor)
-    if vim.tbl_isempty(symbols) then
-      symbols = sources.treesitter.get_symbols(buf, cursor)
-    end
-    return symbols
-  end,
-}
+---Create a winbar source instance with fallback
+---@param source_list winbar_source_t[]
+---@return winbar_source_t
+local function source_fallback(source_list)
+  return {
+    get_symbols = function(buf, cursor)
+      local symbols = {}
+      for _, source in ipairs(source_list) do
+        symbols = source.get_symbols(buf, cursor)
+        if not vim.tbl_isempty(symbols) then
+          break
+        end
+      end
+      return symbols
+    end,
+  }
+end
 
 ---Winbar init params for each filetype
 ---@type table<string, winbar_opts_t>
-local ft_configs = {
+local ft_configs = setmetatable({
   lua = {
     sources = {
       sources.path,
-      prefer_lsp,
+      source_fallback({
+        sources.lsp,
+        sources.treesitter,
+      }),
     },
   },
   python = {
     sources = {
       sources.path,
-      prefer_lsp,
+      source_fallback({
+        sources.lsp,
+        sources.treesitter,
+      }),
     },
   },
   markdown = {
@@ -35,14 +48,25 @@ local ft_configs = {
       sources.markdown,
     },
   },
-}
+}, {
+  __index = function(_, _)
+    return {
+      sources = {
+        sources.path,
+        source_fallback({
+          sources.treesitter,
+          sources.lsp,
+        }),
+      },
+    }
+  end,
+})
 
 ---@type winbar_t[]
-local bars = {}
-setmetatable(bars, {
-  __index = function(_, buf)
-    bars[buf] = bar.winbar_t:new(ft_configs[vim.bo[buf].filetype])
-    return bars[buf]
+local bars = setmetatable({}, {
+  __index = function(self, buf)
+    self[buf] = bar.winbar_t:new(ft_configs[vim.bo[buf].filetype])
+    return self[buf]
   end,
 })
 

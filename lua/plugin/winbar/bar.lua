@@ -56,23 +56,11 @@ winbar_t.__index = winbar_t
 ---@param opts winbar_opts_t?
 ---@return winbar_t
 function winbar_t:new(opts)
-  local sources = require('plugin.winbar.sources')
   local winbar = setmetatable(
     vim.tbl_deep_extend('force', {
       components = {},
       string_cache = '',
-      sources = {
-        sources.path,
-        {
-          get_symbols = function(buf, cursor)
-            local symbols = sources.treesitter.get_symbols(buf, cursor)
-            if vim.tbl_isempty(symbols) then
-              symbols = sources.lsp.get_symbols(buf, cursor)
-            end
-            return symbols
-          end,
-        },
-      },
+      sources = {},
       separator = winbar_symbol_t:new({
         icon = static.icons.AngleRight,
         icon_hl = 'WinBarIconSeparator',
