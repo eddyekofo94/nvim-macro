@@ -28,9 +28,9 @@ vim.api.nvim_create_user_command(
 )
 
 -- stylua: ignore start
-vim.fn.sign_define('DapBreakpoint',          { text = vim.trim(static.icons.Dot), texthl = 'Tea' })
+vim.fn.sign_define('DapBreakpoint',          { text = vim.trim(static.icons.DotLarge), texthl = 'Tea' })
 vim.fn.sign_define('DapBreakpointCondition', { text = vim.trim(static.icons.Diamond), texthl = 'Conditional' })
-vim.fn.sign_define('DapBreakpointRejected',  { text = vim.trim(static.icons.Dot), texthl = 'Iron' })
+vim.fn.sign_define('DapBreakpointRejected',  { text = vim.trim(static.icons.DotLarge), texthl = 'Iron' })
 vim.fn.sign_define('DapLogPoint',            { text = vim.trim(static.icons.Log), texthl = 'Skyblue' })
 vim.fn.sign_define('DapStopped',             { text = vim.trim(static.icons.ArrowRight), texthl = 'yellow' })
 -- stylua: ignore end
