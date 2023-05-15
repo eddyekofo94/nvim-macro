@@ -3,10 +3,54 @@ local icons = require('utils.static').icons.kinds
 local bar = require('plugin.winbar.bar')
 
 -- Valid treesitter types to get symbols from
-local types = vim.tbl_map(function(type_name)
-  return funcs.string.camel_to_snake(type_name)
-end, vim.tbl_keys(icons))
-table.sort(types)
+local types = {
+  'array',
+  'boolean',
+  'call',
+  'class',
+  'color',
+  'constant',
+  'constructor',
+  'copilot',
+  'enum',
+  'enum_member',
+  'event',
+  'function',
+  'interface',
+  'keyword',
+  'list',
+  'log',
+  'lsp',
+  'macro',
+  'method',
+  'module',
+  'namespace',
+  'null',
+  'number',
+  'operator',
+  'package',
+  'property',
+  'reference',
+  'regex',
+  'repeat',
+  'scope',
+  'snippet',
+  'specifier',
+  'string',
+  'struct',
+  'terminal',
+  'type',
+  'type_parameter',
+  'unit',
+  'value',
+  'variable',
+  'declaration',
+  'field',
+  'identifier',
+  'object',
+  'statement',
+  'text',
+}
 
 ---Get treesitter symbols from buffer
 ---@param buf integer buffer handler
