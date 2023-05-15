@@ -4,6 +4,7 @@ local function init()
   local hlgroups = {
     WinBarIconKindArray         = { link = 'Array' },
     WinBarIconKindBoolean       = { link = 'Boolean' },
+    WinBarIconKindCall          = { link = 'Function' },
     WinBarIconKindClass         = { link = 'CmpItemKindClass' },
     WinBarIconKindConstant      = { link = 'Constant' },
     WinBarIconKindConstructor   = { link = 'CmpItemKindConstructor' },
@@ -19,13 +20,16 @@ local function init()
     WinBarIconKindMacro         = { link = 'Macro' },
     WinBarIconKindMethod        = { link = 'CmpItemKindMethod' },
     WinBarIconKindModule        = { link = 'CmpItemKindModule' },
-    WinBarIconKindNamespace     = { link = 'CmpItemKindNamespace' },
+    WinBarIconKindUnit          = { link = 'CmpItemKindUnit' },
+    WinBarIconKindNamespace     = { link = 'NameSpace' },
     WinBarIconKindNull          = { link = 'Constant' },
     WinBarIconKindNumber        = { link = 'Number' },
-    WinBarIconKindObject        = { link = 'Object' },
+    WinBarIconKindObject        = { link = 'Statement' },
     WinBarIconKindOperator      = { link = 'Operator' },
     WinBarIconKindPackage       = { link = 'CmpItemKindModule' },
     WinBarIconKindProperty      = { link = 'CmpItemKindProperty' },
+    WinBarIconKindReference     = { link = 'CmpItemKindReference' },
+    WinBarIconKindScope         = { link = 'NameSpace' },
     WinBarIconKindSpecifier     = { link = 'Specifier' },
     WinBarIconKindStatement     = { link = 'Statement' },
     WinBarIconKindString        = { link = 'String' },
@@ -34,6 +38,7 @@ local function init()
     WinBarIconKindTypeParameter = { link = 'CmpItemKindTypeParameter' },
     WinBarIconKindVariable      = { link = 'CmpItemKindVariable' },
     WinBarIconSeparator         = { link = 'SpecialChar' },
+    WinbarIconKindDeclaration   = { link = 'CmpItemKindSnippet' },
   }
   -- stylua: ignore end
   for hl_name, hl_settings in pairs(hlgroups) do

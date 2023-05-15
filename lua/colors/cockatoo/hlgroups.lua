@@ -323,6 +323,7 @@ return {
   CmpItemKindInterface   = { fg = plt.flashlight },
   CmpItemKindFile        = { fg = plt.smoke },
   CmpItemKindFolder      = { fg = plt.pigeon },
+  CmpItemKindUnit        = { fg = plt.cerulean },
   CmpItemKind            = { fg = plt.smoke },
   CmpItemMenu            = { fg = plt.smoke },
 
