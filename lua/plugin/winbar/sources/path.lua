@@ -1,8 +1,6 @@
 local bar = require('plugin.winbar.bar')
 local funcs = require('utils.funcs')
 
-local sep = vim.loop.os_uname().sysname == 'Windows' and '\\' or '/'
-
 ---Escape a string
 ---@param str string
 ---@return string
@@ -15,18 +13,31 @@ end
 ---@return winbar_symbol_t[] winbar symbols
 local function get_dir_symbols(buf)
   local bufname = vim.api.nvim_buf_get_name(buf)
-  local dir = funcs.fs.proj_dir(bufname)
-  if not dir then
+  local proj_dir = funcs.fs.proj_dir(bufname)
+  if not proj_dir then
     return {}
   end
-  dir = vim.fn.fnamemodify(bufname, ':p:h'):gsub('^' .. str_escape(dir), '')
-  local dir_symbols = vim.split(dir, sep)
-  if #dir_symbols == 0 or #dir_symbols == 1 and dir_symbols[1] == '.' then
-    return {}
-  end
-  return vim.tbl_map(function(dir_name)
-    return bar.winbar_symbol_t:new({ name = dir_name })
-  end, dir_symbols)
+  return vim.tbl_map(
+    function(dir_name)
+      return bar.winbar_symbol_t:new({ name = dir_name })
+    end,
+    vim.tbl_filter(
+      function(str)
+        return not (str == '.')
+      end,
+      vim.split(
+        vim.fs.normalize(
+          (
+            vim.fn
+              .fnamemodify(bufname, ':p:h')
+              :gsub('^' .. str_escape(proj_dir), '')
+          )
+        ),
+        '/',
+        { plain = true, trimempty = true }
+      )
+    )
+  )
 end
 
 ---Get winbar symbol of given buffer
