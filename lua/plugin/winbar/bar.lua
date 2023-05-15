@@ -32,9 +32,6 @@ local function hl(str, hlgroup)
   return string.format('%%#%s#%s%%*', hlgroup, str or '')
 end
 
----@class winbar_source_t
----@field get_symbols fun(buf: integer, cursor: integer[]): winbar_symbol_t[]
-
 ---@class winbar_opts_t
 ---@field sources winbar_source_t[]?
 ---@field separator winbar_symbol_t?

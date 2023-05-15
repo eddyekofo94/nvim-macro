@@ -71,7 +71,6 @@ local bars = setmetatable({}, {
 })
 
 ---Get winbar string for current window
----@param buf integer buffer handler
 ---@return string
 function winbar.get_winbar()
   return bars[vim.api.nvim_get_current_buf()]()

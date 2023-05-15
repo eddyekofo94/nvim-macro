@@ -3,7 +3,7 @@ local static = require('utils.static')
 local groupid = vim.api.nvim_create_augroup('WinBarLsp', {})
 local initialized = false
 
----@type lsp_symbol_t[][]
+---@type table<integer, lsp_document_symbol_t[]>
 local lsp_buf_symbols = {}
 setmetatable(lsp_buf_symbols, {
   __index = function(_, k)
@@ -22,16 +22,25 @@ setmetatable(lsp_buf_symbols, {
 ---@field uri string
 ---@field range lsp_range_t
 
----@class lsp_symbol_t
+---@class lsp_document_symbol_t
 ---@field name string
 ---@field kind integer
----@field tags table
----@field deprecated boolean
+---@field tags? table
+---@field deprecated? boolean
 ---@field detail? string
----@field location? lsp_location_t
 ---@field range? lsp_range_t
 ---@field selectionRange? lsp_range_t
----@field children? lsp_symbol_t[]
+---@field children? lsp_document_symbol_t[]
+
+---@class lsp_symbol_information_t
+---@field name string
+---@field kind integer
+---@field tags? table
+---@field deprecated? boolean
+---@field location? lsp_location_t
+---@field containerName? string
+
+---@alias lsp_symbol_t lsp_document_symbol_t|lsp_symbol_information_t
 
 -- Map symbol number to symbol kind
 -- stylua: ignore start
@@ -102,21 +111,17 @@ end
 ---contains the cursor to the winbar_symbols list.
 ---Side effect: change winbar_symbols
 ---LSP Specification document: https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/
----@param lsp_symbols lsp_symbol_t[] LSP symbols of type SymbolInformation
+---@param lsp_symbols lsp_symbol_information_t[]
 ---@param winbar_symbols winbar_symbol_t[] (reference to) winbar symbols
 ---@param cursor integer[] cursor position
 local function convert_symbol_information(lsp_symbols, winbar_symbols, cursor)
   for _, symbol in ipairs(lsp_symbols) do
-    if
-      symbol.location
-      and symbol.location.range
-      and cursor_in_range(cursor, symbol.location.range)
-    then
+    if cursor_in_range(cursor, symbol.location.range) then
       table.insert(
         winbar_symbols,
         bar.winbar_symbol_t:new({
           name = symbol.name,
-          icon = static.icons[symbol_kind_names[symbol.kind]],
+          icon = static.icons.kinds[symbol_kind_names[symbol.kind]],
           icon_hl = 'WinBarIconKind' .. symbol_kind_names[symbol.kind],
         })
       )
@@ -127,19 +132,19 @@ end
 ---Convert LSP DocumentSymbol[] into a list of winbar symbols
 ---Side effect: change winbar_symbols
 ---LSP Specification document: https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/
----@param lsp_symbols lsp_symbol_t[] LSP symbols of type DocumentSymbol
+---@param lsp_symbols lsp_document_symbol_t[]
 ---@param winbar_symbols winbar_symbol_t[] (reference to) winbar symbols
 ---@param cursor integer[] cursor position
 local function convert_document_symbol(lsp_symbols, winbar_symbols, cursor)
   -- Parse in reverse order so that the symbol with the largest start position
   -- is preferred
   for symbol in vim.iter(lsp_symbols):rev() do
-    if symbol.range and cursor_in_range(cursor, symbol.range) then
+    if cursor_in_range(cursor, symbol.range) then
       table.insert(
         winbar_symbols,
         bar.winbar_symbol_t:new({
           name = symbol.name,
-          icon = static.icons[symbol_kind_names[symbol.kind]],
+          icon = static.icons.kinds[symbol_kind_names[symbol.kind]],
           icon_hl = 'WinBarIconKind' .. symbol_kind_names[symbol.kind],
         })
       )

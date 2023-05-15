@@ -1,3 +1,6 @@
+---@class winbar_source_t
+---@field get_symbols fun(buf: integer, cursor: integer[]): winbar_symbol_t[]
+
 return {
   lsp = require('plugin.winbar.sources.lsp'),
   markdown = require('plugin.winbar.sources.markdown'),
