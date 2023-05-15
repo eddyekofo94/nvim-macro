@@ -1,5 +1,16 @@
 local static = require('utils.static')
 
+---Add highlight to a string
+---@param str string
+---@param hlgroup string?
+---@return string
+local function hl(str, hlgroup)
+  if not hlgroup or hlgroup:match('^%s*$') then
+    return str
+  end
+  return string.format('%%#%s#%s%%*', hlgroup, str or '')
+end
+
 ---@class winbar_symbol_t
 ---@field name string
 ---@field icon string
@@ -21,15 +32,14 @@ function winbar_symbol_t:new(opts)
   )
 end
 
----Add highlight to a string
----@param str string
----@param hlgroup string?
+---Concatenate inside a winbar symbol to get the final string
+---@param add_hl boolean? default true
 ---@return string
-local function hl(str, hlgroup)
-  if not hlgroup or hlgroup:match('^%s*$') then
-    return str
-  end
-  return string.format('%%#%s#%s%%*', hlgroup, str or '')
+function winbar_symbol_t:cat(add_hl)
+  add_hl = add_hl == nil or add_hl
+  local name_hl = add_hl and self.name_hl or nil
+  local icon_hl = add_hl and self.icon_hl or nil
+  return hl(self.icon, icon_hl) .. hl(self.name, name_hl)
 end
 
 ---@class winbar_opts_t
@@ -107,24 +117,16 @@ end
 ---Concatenate winbar into a string with separator and highlight
 ---@param add_hl boolean? default true
 ---@return string
-function winbar_t:concat(add_hl)
+function winbar_t:cat(add_hl)
   if vim.tbl_isempty(self.components) then
     return ''
   end
-  add_hl = add_hl == nil and true or add_hl
+  add_hl = add_hl == nil or add_hl
   local result = nil
   for _, component in ipairs(self.components) do
-    -- Do not concatenate if str is empty or contains only white spaces
-    if not component.name:match('^%s*$') then
-      local sep_icon = not add_hl and self.separator.icon
-        or hl(self.separator.icon, self.separator.icon_hl)
-      local component_icon = not add_hl and component.icon
-        or hl(component.icon, component.icon_hl)
-      local component_name = not add_hl and component.name
-        or hl(component.name, component.name_hl)
-      local component_str = vim.trim(component_icon .. component_name)
-      result = result and result .. sep_icon .. component_str or component_str
-    end
+    result = result
+        and result .. self.separator:cat(add_hl) .. component:cat(add_hl)
+      or component:cat(add_hl)
   end
   return result or ''
 end
@@ -151,7 +153,7 @@ function winbar_t:__call(add_hl, truncate)
   if truncate then
     self:truncate()
   end
-  self.string_cache = ' ' .. self:concat(add_hl) .. ' '
+  self.string_cache = ' ' .. self:cat(add_hl) .. ' '
   return self.string_cache
 end
 

@@ -130,8 +130,6 @@ local function attach(buf)
   end
   local function _update()
     local cursor = vim.api.nvim_win_get_cursor(0)
-    markdown_heading_buf_symbols[buf] = markdown_heading_buf_symbols[buf]
-      or markdown_heading_symbols_parsed_list_t:new()
     parse_buf(buf, cursor[1])
   end
   vim.b[buf].winbar_markdown_heading_parser_attached = vim.api.nvim_create_autocmd(
