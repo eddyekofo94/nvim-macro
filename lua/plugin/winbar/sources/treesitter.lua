@@ -8,10 +8,8 @@ local types = {
   'boolean',
   'call',
   'class',
-  'color',
   'constant',
   'constructor',
-  'copilot',
   'enum',
   'enum_member',
   'event',
@@ -19,8 +17,6 @@ local types = {
   'interface',
   'keyword',
   'list',
-  'log',
-  'lsp',
   'macro',
   'method',
   'module',
@@ -31,14 +27,11 @@ local types = {
   'package',
   'property',
   'reference',
-  'regex',
   'repeat',
   'scope',
-  'snippet',
   'specifier',
   'string',
   'struct',
-  'terminal',
   'type',
   'type_parameter',
   'unit',
@@ -63,38 +56,58 @@ local function get_symbols(buf, cursor)
   end
 
   local symbols = {}
+  local prev_type_rank = math.huge
   local current_node = vim.treesitter.get_node({
     bufnr = buf,
     pos = { cursor[1] - 1, cursor[2] },
   })
   while current_node do
     local ts_type = current_node:type()
-    for _, type in ipairs(types) do
+    for type_rank, type in ipairs(types) do
       if ts_type:find(type, 1, true) then
         local lsp_type = funcs.string.snake_to_camel(type)
-        table.insert(
-          symbols,
-          1,
-          bar.winbar_symbol_t:new({
-            icon = icons[lsp_type],
-            name = vim.trim(
-              vim.treesitter
-                .get_node_text(current_node, buf)
-                :match('[%w%._%-!>]*%s*[%w%._%-!>]*%s*[%w%._%-!>]*')
-                :gsub('\n.*', '')
-            ),
-            icon_hl = 'WinBarIconKind' .. lsp_type,
-          })
+        local name = vim.trim(
+          vim.treesitter
+            .get_node_text(current_node, buf)
+            :match(string.rep('[#~%w%._%->!]*', 4, '%s*'))
+            :gsub('\n.*', '')
         )
-        break
+        if
+          vim.tbl_isempty(symbols)
+          or symbols[1].name ~= name
+          or vim.tbl_contains({
+            'if',
+            'for',
+            'while',
+            'do',
+            'try',
+            'catch',
+            'finally',
+            'switch',
+            'case',
+            'default',
+          }, name)
+        then
+          table.insert(
+            symbols,
+            1,
+            bar.winbar_symbol_t:new({
+              icon = icons[lsp_type],
+              name = name,
+              icon_hl = 'WinBarIconKind' .. lsp_type,
+            })
+          )
+          prev_type_rank = type_rank
+          break
+        elseif symbols[1].name == name and type_rank < prev_type_rank then
+          symbols[1].icon = icons[lsp_type]
+          symbols[1].icon_hl = 'WinBarIconKind' .. lsp_type
+          prev_type_rank = type_rank
+          break
+        end
       end
     end
-    -- Eliminate duplicate symbols
-    local prev_node = current_node
-    while current_node and current_node:type() == prev_node:type() do
-      prev_node = current_node
-      current_node = current_node:parent()
-    end
+    current_node = current_node:parent()
   end
   return symbols
 end
