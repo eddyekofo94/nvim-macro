@@ -53,6 +53,14 @@ local layout_dropdown = {
   },
 }
 
+---Send selected entries to quickfix list and then open qflist
+---at the bottom of the screen
+---@param prompt_bufnr integer
+local function toqflist(prompt_bufnr)
+  telescope_actions.smart_send_to_qflist(prompt_bufnr)
+  vim.cmd('botright copen')
+end
+
 telescope.setup({
   defaults = {
     prompt_prefix = '/ ',
@@ -81,8 +89,7 @@ telescope.setup({
         ['<M-s>'] = telescope_actions.select_horizontal,
         ['<M-v>'] = telescope_actions.select_vertical,
         ['<M-t>'] = telescope_actions.select_tab,
-        ['<M-Q>'] = telescope_actions.send_to_qflist
-          + telescope_actions.open_qflist,
+        ['<M-q>'] = toqflist,
       },
 
       n = {
@@ -94,8 +101,7 @@ telescope.setup({
         ['<M-s>'] = telescope_actions.select_horizontal,
         ['<M-v>'] = telescope_actions.select_vertical,
         ['<M-t>'] = telescope_actions.select_tab,
-        ['<M-Q>'] = telescope_actions.send_to_qflist
-          + telescope_actions.open_qflist,
+        ['<M-q>'] = toqflist,
       },
     },
   },
