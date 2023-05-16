@@ -291,6 +291,13 @@ return {
   helpSectionDelim   = { fg = plt.ochre, bold = true },
   helpCommand        = { fg = plt.turquoise },
   helpBacktick       = { fg = plt.turquoise },
+  -- Man
+  manBold            = { fg = plt.ochre, bold = true },
+  manItalic          = { fg = plt.turquoise, italic = true },
+  manOptionDesc      = { fg = plt.ochre },
+  manReference       = { link = 'htmlLink' },
+  manSectionHeading  = { link = 'manBold' },
+  manUnderline       = { fg = plt.cerulean, italic = true },
 
 
   -- Plugin highlights

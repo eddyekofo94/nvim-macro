@@ -87,7 +87,7 @@ local function enable_modules(module_names)
   require('lazy').setup(modules, config)
 end
 
-if not bootstrap() then
+if vim.env.NVIM_MANPAGER or not bootstrap() then
   return
 end
 if vim.g.vscode then
