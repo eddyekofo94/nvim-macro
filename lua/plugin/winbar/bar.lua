@@ -55,9 +55,6 @@ end
 ---@field extends winbar_symbol_t
 ---@field components winbar_symbol_t[]
 ---@field string_cache string
----@field new fun(winbar_opts_t?): winbar_t
----@field displen fun(): integer
----@operator call: string
 local winbar_t = {}
 winbar_t.__index = winbar_t
 
@@ -92,7 +89,7 @@ end
 ---Get the display length of the winbar
 ---@return number
 function winbar_t:displen()
-  return vim.fn.strdisplaywidth(self(false, false))
+  return vim.fn.strdisplaywidth(self:tostring(false, false))
 end
 
 ---Truncate the winbar to fit the window width
@@ -145,13 +142,13 @@ end
 ---@param add_hl boolean? default true
 ---@param truncate boolean? default true
 ---@return string
-function winbar_t:__call(add_hl, truncate)
+function winbar_t:tostring(add_hl, truncate)
   if vim.fn.reg_executing() ~= '' then
     return self.string_cache -- Do not update when executing a macro
   end
 
-  add_hl = add_hl == nil and true or add_hl
-  truncate = truncate == nil and true or truncate
+  add_hl = add_hl == nil or add_hl
+  truncate = truncate == nil or truncate
   local buf = vim.api.nvim_get_current_buf()
   local cursor = vim.api.nvim_win_get_cursor(0)
 

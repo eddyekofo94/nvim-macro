@@ -73,7 +73,7 @@ local bars = setmetatable({}, {
 ---Get winbar string for current window
 ---@return string
 function winbar.get_winbar()
-  return bars[vim.api.nvim_get_current_buf()]()
+  return bars[vim.api.nvim_get_current_buf()]:tostring()
 end
 
 ---Setup winbar
