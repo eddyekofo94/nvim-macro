@@ -46,10 +46,12 @@ end
 ---@field sources winbar_source_t[]?
 ---@field separator winbar_symbol_t?
 ---@field extends winbar_symbol_t?
+---@field padding {left: integer, right: integer}?
 
 ---@class winbar_t
 ---@field sources winbar_source_t[]
 ---@field separator winbar_symbol_t
+---@field padding {left: integer, right: integer}
 ---@field extends winbar_symbol_t
 ---@field components winbar_symbol_t[]
 ---@field string_cache string
@@ -77,6 +79,10 @@ function winbar_t:new(opts)
           or vim.trim(static.icons.Ellipsis),
         icon_hl = 'WinBar',
       }),
+      padding = {
+        left = 1,
+        right = 1,
+      },
     }, opts or {}),
     winbar_t
   )
@@ -128,7 +134,11 @@ function winbar_t:cat(add_hl)
         and result .. self.separator:cat(add_hl) .. component:cat(add_hl)
       or component:cat(add_hl)
   end
-  return result or ''
+  -- Must add highlights to padding, else nvim will automatically truncate it
+  local padding_hl = add_hl and 'WinBar' or nil
+  local padding_left = hl(string.rep(' ', self.padding.left), padding_hl)
+  local padding_right = hl(string.rep(' ', self.padding.right), padding_hl)
+  return result and padding_left .. result .. padding_right or ''
 end
 
 ---Update the components and return the string representation of the winbar
@@ -153,7 +163,7 @@ function winbar_t:__call(add_hl, truncate)
   if truncate then
     self:truncate()
   end
-  self.string_cache = ' ' .. self:cat(add_hl) .. ' '
+  self.string_cache = self:cat(add_hl)
   return self.string_cache
 end
 
