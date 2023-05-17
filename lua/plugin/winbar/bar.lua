@@ -88,8 +88,8 @@ end
 
 ---Get the display length of the winbar
 ---@return number
-function winbar_t:displen()
-  return vim.fn.strdisplaywidth(self:tostring(false, false))
+function winbar_t:displaywidth()
+  return vim.fn.strdisplaywidth(self:cat(false))
 end
 
 ---Truncate the winbar to fit the window width
@@ -97,7 +97,7 @@ end
 ---@return nil
 function winbar_t:truncate()
   local win_width = vim.api.nvim_win_get_width(0)
-  local len = self:displen()
+  local len = self:displaywidth()
   local delta = len - win_width
   for _, component in ipairs(self.components) do
     if delta <= 0 then
@@ -138,17 +138,13 @@ function winbar_t:cat(add_hl)
   return result and padding_left .. result .. padding_right or ''
 end
 
----Update the components and return the string representation of the winbar
----@param add_hl boolean? default true
----@param truncate boolean? default true
+---Get the string representation of the winbar
 ---@return string
-function winbar_t:tostring(add_hl, truncate)
+function winbar_t:__tostring()
   if vim.fn.reg_executing() ~= '' then
     return self.string_cache -- Do not update when executing a macro
   end
 
-  add_hl = add_hl == nil or add_hl
-  truncate = truncate == nil or truncate
   local buf = vim.api.nvim_get_current_buf()
   local cursor = vim.api.nvim_win_get_cursor(0)
 
@@ -157,10 +153,8 @@ function winbar_t:tostring(add_hl, truncate)
     vim.list_extend(self.components, source.get_symbols(buf, cursor))
   end
 
-  if truncate then
-    self:truncate()
-  end
-  self.string_cache = self:cat(add_hl)
+  self:truncate()
+  self.string_cache = self:cat()
   return self.string_cache
 end
 
