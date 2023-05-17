@@ -78,8 +78,10 @@ local function get_symbols(buf, cursor)
         :match(string.rep('[#~%w%._%->!]*', 4, '%s*'))
         :gsub('\n.*', '')
     )
-    local start_row = (current_node:range())
-    if name ~= '' then
+    local range = { current_node:range() } ---@type Range4
+    local start_row = range[1]
+    local end_row = range[3]
+    if name ~= '' and not (start_row == 0 and end_row == vim.fn.line('$')) then
       for type_rank, type in ipairs(types) do
         if ts_type:find(type, 1, true) then
           local lsp_type = funcs.string.snake_to_camel(type)
