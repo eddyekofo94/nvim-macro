@@ -11,11 +11,22 @@ local function hl(str, hlgroup)
   return string.format('%%#%s#%s%%*', hlgroup, str or '')
 end
 
+---Make a winbar string clickable
+---@param str string
+---@param callback string
+---@return string
+local function make_clickable(str, callback)
+  return string.format('%%@%s@%s%%X', callback, str)
+end
+
 ---@class winbar_symbol_t
 ---@field name string
 ---@field icon string
 ---@field name_hl string?
 ---@field icon_hl string?
+---@field data table? any data associated with the symbol
+---@field idx integer? index of the symbol in the winbar
+---@field on_click fun(this: winbar_symbol_t, min_width: integer, n_clicks: integer, button: string, modifiers: string)?
 local winbar_symbol_t = {}
 winbar_symbol_t.__index = winbar_symbol_t
 
@@ -33,13 +44,25 @@ function winbar_symbol_t:new(opts)
 end
 
 ---Concatenate inside a winbar symbol to get the final string
----@param add_hl boolean? default true
+---@param plain boolean?
 ---@return string
-function winbar_symbol_t:cat(add_hl)
-  add_hl = add_hl == nil or add_hl
-  local name_hl = add_hl and self.name_hl or nil
-  local icon_hl = add_hl and self.icon_hl or nil
-  return hl(self.icon, icon_hl) .. hl(self.name, name_hl)
+function winbar_symbol_t:cat(plain)
+  if plain then
+    return self.icon .. self.name
+  end
+  local icon_highlighted = hl(self.icon, self.icon_hl)
+  local name_highlighted = hl(self.name, self.name_hl)
+  if self.on_click and self.idx then
+    return make_clickable(
+      icon_highlighted .. name_highlighted,
+      string.format(
+        'v:lua.winbar.on_click_callbacks.buf%s.fn%s',
+        vim.api.nvim_get_current_buf(),
+        self.idx
+      )
+    )
+  end
+  return icon_highlighted .. name_highlighted
 end
 
 ---@class winbar_opts_t
@@ -89,7 +112,7 @@ end
 ---Get the display length of the winbar
 ---@return number
 function winbar_t:displaywidth()
-  return vim.fn.strdisplaywidth(self:cat(false))
+  return vim.fn.strdisplaywidth(self:cat(true))
 end
 
 ---Truncate the winbar to fit the window width
@@ -118,21 +141,20 @@ function winbar_t:truncate()
 end
 
 ---Concatenate winbar into a string with separator and highlight
----@param add_hl boolean? default true
+---@param plain boolean?
 ---@return string
-function winbar_t:cat(add_hl)
+function winbar_t:cat(plain)
   if vim.tbl_isempty(self.components) then
     return ''
   end
-  add_hl = add_hl == nil or add_hl
   local result = nil
   for _, component in ipairs(self.components) do
     result = result
-        and result .. self.separator:cat(add_hl) .. component:cat(add_hl)
-      or component:cat(add_hl)
+        and result .. self.separator:cat(plain) .. component:cat(plain)
+      or component:cat(plain)
   end
   -- Must add highlights to padding, else nvim will automatically truncate it
-  local padding_hl = add_hl and 'WinBar' or nil
+  local padding_hl = not plain and 'WinBar' or nil
   local padding_left = hl(string.rep(' ', self.padding.left), padding_hl)
   local padding_right = hl(string.rep(' ', self.padding.right), padding_hl)
   return result and padding_left .. result .. padding_right or ''
@@ -149,8 +171,29 @@ function winbar_t:__tostring()
   local cursor = vim.api.nvim_win_get_cursor(0)
 
   self.components = {}
+  _G.winbar.on_click_callbacks['buf' .. buf] = {}
   for _, source in ipairs(self.sources) do
-    vim.list_extend(self.components, source.get_symbols(buf, cursor))
+    local symbols = source.get_symbols(buf, cursor)
+    for _, symbol in ipairs(symbols) do
+      symbol.idx = #self.components + 1
+      table.insert(self.components, symbol)
+      -- Register on_click callback for each symbol
+      if symbol.on_click then
+        ---@param min_width integer 0 if no N specified
+        ---@param n_clicks integer number of clicks
+        ---@param button string mouse button used
+        ---@param modifiers string modifiers used
+        ---@return nil
+        _G.winbar.on_click_callbacks['buf' .. buf]['fn' .. symbol.idx] = function(
+          min_width,
+          n_clicks,
+          button,
+          modifiers
+        )
+          symbol:on_click(min_width, n_clicks, button, modifiers)
+        end
+      end
+    end
   end
 
   self:truncate()

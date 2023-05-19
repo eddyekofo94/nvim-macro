@@ -3,6 +3,15 @@ local bar = require('plugin.winbar.bar')
 local sources = require('plugin.winbar.sources')
 _G.winbar = {}
 
+---@type table<string, table<string, function>>
+---@see winbar_t:__tostring
+_G.winbar.on_click_callbacks = setmetatable({}, {
+  __index = function(self, k)
+    self[k] = {}
+    return self[k]
+  end,
+})
+
 ---Create a winbar source instance with fallback
 ---@param source_list winbar_source_t[]
 ---@return winbar_source_t
@@ -72,7 +81,7 @@ local bars = setmetatable({}, {
 
 ---Get winbar string for current window
 ---@return string
-function winbar.get_winbar()
+function _G.winbar.get_winbar()
   return tostring(bars[vim.api.nvim_get_current_buf()])
 end
 
@@ -107,6 +116,7 @@ local function setup()
     group = groupid,
     callback = function(info)
       bars[info.buf] = nil
+      _G.winbar.on_click_callbacks['buf' .. info.buf] = nil
     end,
     desc = 'Remove winbar from cache on buffer delete/unload/wipeout.',
   })
