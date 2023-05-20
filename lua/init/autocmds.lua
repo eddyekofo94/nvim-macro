@@ -141,6 +141,37 @@ local autocmds = {
     },
   },
 
+  -- Change background on receiving signal SIGUSER1
+  {
+    { 'Signal' },
+    {
+      group = 'SwitchBackground',
+      callback = function(info)
+        vim.opt.background = info.match == 'SIGUSR1' and 'light' or 'dark'
+        vim.g.BACKGROUND = vim.go.background
+        vim.cmd.wshada()
+        vim.cmd.doautocmd('ColorScheme') -- reload plugin colorschemes
+      end,
+    },
+  },
+  {
+    { 'OptionSet' },
+    {
+      group = 'SwitchBackground',
+      pattern = 'background',
+      callback = function()
+        vim.g.BACKGROUND = vim.go.background
+        vim.cmd.wshada()
+        if vim.fn.executable('setbg') == 1 then
+          vim.loop.spawn('setbg', {
+            args = { vim.go.background },
+            stdio = { nil, nil, nil },
+          })
+        end
+      end,
+    },
+  },
+
   -- Undo automatic <C-w> remap in prompt buffers
   {
     { 'BufEnter' },

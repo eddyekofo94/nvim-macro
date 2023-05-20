@@ -31,20 +31,6 @@ vim.api.nvim_create_autocmd('VimResized', {
   callback = rnvimr_update_layout,
 })
 
-local function change_highlight_colorscheme()
-  if vim.o.background == 'dark' then
-    os.execute(
-      'ln -fs ~/.highlight/themes/cockatoo-dark.theme '
-        .. '~/.highlight/themes/cockatoo.theme'
-    )
-  else
-    os.execute(
-      'ln -fs ~/.highlight/themes/cockatoo-light.theme '
-        .. '~/.highlight/themes/cockatoo.theme'
-    )
-  end
-end
-
 local function rnvimr_toggle()
   local winlist = vim.api.nvim_list_wins()
   for _, winnr in ipairs(winlist) do
@@ -57,27 +43,8 @@ local function rnvimr_toggle()
       vim.api.nvim_win_close(winnr, true)
     end
   end
-  change_highlight_colorscheme()
   vim.cmd('silent! RnvimrToggle')
 end
 
 vim.keymap.set({ 'n', 't' }, '<C-\\>e', rnvimr_toggle)
 vim.keymap.set({ 'n', 't' }, '<C-\\><C-e>', rnvimr_toggle)
-
-vim.api.nvim_create_augroup('RnvimRSetHl', { clear = true })
-vim.api.nvim_create_autocmd({ 'TermOpen', 'ColorScheme' }, {
-  pattern = '*',
-  group = 'RnvimRSetHl',
-  callback = change_highlight_colorscheme,
-})
-
-vim.api.nvim_create_autocmd('VimLeave', {
-  pattern = '*',
-  group = 'RnvimRSetHl',
-  callback = function()
-    os.execute(
-      'ln -fs ~/.highlight/themes/cockatoo-dark.theme '
-        .. '~/.highlight/themes/cockatoo.theme'
-    )
-  end,
-})

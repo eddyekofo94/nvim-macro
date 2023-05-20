@@ -90,12 +90,8 @@ end)
 vim.keymap.set('n', '<M-D>', function()
   if vim.o.background == 'dark' then
     vim.opt.background = 'light'
-    vim.opt.background = 'light' -- Flash cached dev icons
-    vim.g.BACKGROUND = 'light'
   else
     vim.opt.background = 'dark'
-    vim.opt.background = 'dark' -- Flash cached dev icons
-    vim.g.BACKGROUND = 'dark'
   end
 end)
 
