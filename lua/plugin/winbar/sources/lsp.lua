@@ -177,7 +177,12 @@ end
 ---@param ttl integer? limit the number of recursive requests, default 60
 local function update_symbols(buf, client, ttl)
   ttl = ttl or 60
-  if ttl <= 0 or not vim.b[buf].winbar_lsp_attached then
+  if
+    ttl <= 0
+    or not vim.api.nvim_buf_is_valid(buf)
+    or not vim.b[buf].winbar_lsp_attached
+  then
+    lsp_buf_symbols[buf] = nil
     return
   end
   local textdocument_params = vim.lsp.util.make_text_document_params(buf)
