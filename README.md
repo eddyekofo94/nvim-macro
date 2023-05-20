@@ -288,8 +288,6 @@ corresponding plugin keymaps.
 
 `cockatoo` is a builtin custom colorscheme, with seperate palettes for dark and light background.
 
-Use `<M-C-d>` to toggle dark/light background.
-
 Neovim is configured to restore the background settings on startup, so there
 is no need to setup `vim.opt.bg` in the config.
 

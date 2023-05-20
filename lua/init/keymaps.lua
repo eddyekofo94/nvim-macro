@@ -86,15 +86,6 @@ vim.keymap.set('n', 'q', function()
   end
 end)
 
----Toggle between light and dark background, set global variables accordingly
-vim.keymap.set('n', '<M-D>', function()
-  if vim.o.background == 'dark' then
-    vim.opt.background = 'light'
-  else
-    vim.opt.background = 'dark'
-  end
-end)
-
 -- Text object: current buffer
 -- stylua: ignore start
 vim.keymap.set('x', 'af', ':<C-u>keepjumps silent! normal! ggVG<CR>')
