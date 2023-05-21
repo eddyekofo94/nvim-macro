@@ -15,11 +15,18 @@ local function bound(value, min, max)
   return math.min(math.max(value, lower_bound), upper_bound)
 end
 
+---@class winbar_menu_hl_info_t
+---@field start integer
+---@field end integer
+---@field hlgroup string
+---@field ns integer? namespace id, nil if using default namespace
+
 ---@class winbar_menu_entry_t
 ---@field separator winbar_symbol_t
 ---@field padding {left: integer, right: integer}
 ---@field components winbar_symbol_t[]
----@field menu winbar_menu_t the menu the entry belongs to
+---@field menu winbar_menu_t? the menu the entry belongs to
+---@field idx integer? the index of the entry in the menu
 local winbar_menu_entry_t = {}
 winbar_menu_entry_t.__index = winbar_menu_entry_t
 
@@ -50,7 +57,7 @@ end
 ---Concatenate inside a winbar menu entry to get the final string
 ---and highlight information of the entry
 ---@return string str
----@return {start: integer, end: integer, hlgroup: string}[] hl_info
+---@return winbar_menu_hl_info_t[] hl_info
 function winbar_menu_entry_t:cat()
   local components_with_sep = {} ---@type winbar_symbol_t[]
   for component_idx, component in ipairs(self.components) do
@@ -155,8 +162,9 @@ function winbar_menu_t:new(opts)
     }, opts or {}),
     winbar_menu_t
   )
-  for _, entry in ipairs(winbar_menu.entries) do
+  for idx, entry in ipairs(winbar_menu.entries) do
     entry.menu = winbar_menu
+    entry.idx = idx
   end
   return winbar_menu
 end
@@ -211,9 +219,51 @@ function winbar_menu_t:get_component_at(pos)
   return nil
 end
 
+---Add highlight to a range in the menu buffer
+---@param line integer 1-indexed
+---@param hl_info winbar_menu_hl_info_t
+---@return nil
+function winbar_menu_t:hl_line_range(line, hl_info)
+  if not self.buf then
+    return
+  end
+  vim.api.nvim_buf_add_highlight(
+    self.buf,
+    hl_info.ns or -1,
+    hl_info.hlgroup,
+    line - 1, -- 0-indexed
+    hl_info.start,
+    hl_info['end']
+  )
+end
+
+---Used to add background highlight to a single line in the menu buffer
+---Notice that all other highlight added using this function will be deleted
+---@param line integer 1-indexed
+---@param hlgroup string? default to 'WinBarMenuCurrentContext'
+---@return nil
+function winbar_menu_t:hl_line_single(line, hlgroup)
+  if not self.buf then
+    return
+  end
+  hlgroup = hlgroup or 'WinBarMenuCurrentContext'
+  -- Use namespace to delete highlights conveniently
+  local ns = vim.api.nvim_create_namespace('WinBarMenu')
+  vim.api.nvim_set_hl(ns, hlgroup, vim.api.nvim_get_hl(0, { name = hlgroup }))
+  vim.api.nvim_buf_clear_namespace(self.buf, ns, 0, -1)
+  vim.api.nvim_buf_add_highlight(
+    self.buf,
+    ns,
+    hlgroup,
+    line - 1, -- 0-indexed
+    0,
+    -1
+  )
+end
+
 ---Make a buffer for the menu and set buffer-local keymaps
 ---Must be called after the popup window is created
----Side effect: change self.buf
+---Side effect: change self.buf, self.hl_info
 ---@return nil
 function winbar_menu_t:make_buf()
   if self.buf then
@@ -240,24 +290,10 @@ function winbar_menu_t:make_buf()
   vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
   for entry_idx, entry_hl_info in ipairs(hl_info) do
     for _, hl in ipairs(entry_hl_info) do
-      vim.api.nvim_buf_add_highlight(
-        self.buf,
-        -1,
-        hl.hlgroup,
-        entry_idx - 1, -- 0-indexed
-        hl.start,
-        hl['end']
-      )
+      self:hl_line_range(entry_idx, hl)
     end
     if self.cursor and entry_idx == self.cursor[1] then
-      vim.api.nvim_buf_add_highlight(
-        self.buf,
-        -1,
-        'WinBarMenuCurrentContext',
-        entry_idx - 1, -- 0-indexed
-        0,
-        -1
-      )
+      self:hl_line_single(entry_idx)
     end
   end
   vim.bo[self.buf].ma = false

@@ -150,13 +150,20 @@ local function convert_document_symbol(symbol, opts)
     },
     ---@param self winbar_symbol_t
     on_click = function(self, _, _, _, _)
+      -- If currently inside a menu, highlight the current line
+      if self.entry and self.entry.menu then
+        self.entry.menu:hl_line_single(self.entry.idx)
+      end
+
+      -- Toggle menu on click, create one if not exist
+      -- Return if no symbol in list
       if
         not self.data.lsp.symbols_list
         or vim.tbl_isempty(self.data.lsp.symbols_list)
       then
         return
       end
-      -- Toggle menu on click, create one if not exist
+      -- Create menu if not exist
       if not self.menu then
         -- Create a new menu for the symbol
         self.menu = menu.winbar_menu_t:new({
