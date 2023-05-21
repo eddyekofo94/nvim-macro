@@ -250,6 +250,7 @@ end
 ---@param modifiers string? default ''
 function winbar_menu_t:click_at(pos, min_width, n_clicks, button, modifiers)
   self.clicked_at = pos
+  vim.api.nvim_win_set_cursor(self.win, pos)
   local component = self:get_component_at(pos)
   if component then
     min_width = min_width or 0
