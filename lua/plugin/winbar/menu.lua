@@ -276,8 +276,8 @@ function winbar_menu_t:make_buf()
       end
       return
     end
-    local component = self:get_component_at({ mouse.winrow, mouse.wincol })
-    vim.api.nvim_win_set_cursor(mouse.winid, { mouse.winrow, mouse.wincol })
+    local component = self:get_component_at({ mouse.line, mouse.wincol })
+    vim.api.nvim_win_set_cursor(mouse.winid, { mouse.line, mouse.wincol })
     if component and component.on_click then
       component:on_click(0, 1, 'l', '')
     end
