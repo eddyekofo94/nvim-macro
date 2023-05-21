@@ -103,6 +103,7 @@ end
 ---@field win_configs table window configuration
 ---@field cursor integer[]? initial cursor position
 ---@field prev_win integer previous window
+---@field submenu winbar_menu_t? submenu
 local winbar_menu_t = {}
 winbar_menu_t.__index = winbar_menu_t
 
@@ -154,6 +155,10 @@ end
 ---Delete a winbar menu
 ---@return nil
 function winbar_menu_t:del()
+  if self.submenu then
+    self.submenu:del()
+    self.submenu = nil
+  end
   self:close()
   if self.buf then
     vim.api.nvim_buf_delete(self.buf, {})
@@ -276,6 +281,9 @@ function winbar_menu_t:open()
   self.win = vim.api.nvim_open_win(self.buf, true, self.win_configs)
   vim.wo[self.win].sidescrolloff = 0
   _G.winbar.menus[self.win] = self
+  if _G.winbar.menus[self.prev_win] then
+    _G.winbar.menus[self.prev_win].submenu = self
+  end
   -- Initialize cursor position
   if self.win_configs.focusable ~= false and self.cursor then
     vim.api.nvim_win_set_cursor(self.win, self.cursor)
