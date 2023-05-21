@@ -90,6 +90,13 @@ function winbar_menu_entry_t:displaywidth()
   return vim.fn.strdisplaywidth((self:cat()))
 end
 
+---@class winbar_menu_opts_t
+---@field is_open boolean?
+---@field entries winbar_menu_entry_t[]?
+---@field win_configs table? window configuration
+---@field cursor integer[]? initial cursor position
+---@field prev_win integer? previous window
+
 ---@class winbar_menu_t
 ---@field is_open boolean?
 ---@field entries winbar_menu_entry_t[]
@@ -100,7 +107,7 @@ local winbar_menu_t = {}
 winbar_menu_t.__index = winbar_menu_t
 
 ---Create a winbar menu instance
----@param opts winbar_menu_t?
+---@param opts winbar_menu_opts_t?
 ---@return winbar_menu_t
 function winbar_menu_t:new(opts)
   local winbar_menu = setmetatable(
