@@ -257,6 +257,17 @@ function winbar_menu_t:make_buf()
   -- Set buffer-local keymaps
   vim.keymap.set({ 'x', 'n' }, '<LeftMouse>', function()
     local mouse = vim.fn.getmousepos()
+    if mouse.winid ~= self.win then
+      if
+        _G.winbar.menus[mouse.winid] and _G.winbar.menus[mouse.winid].submenu
+      then
+        _G.winbar.menus[mouse.winid].submenu:close()
+      end
+      if vim.api.nvim_win_is_valid(mouse.winid) then
+        vim.api.nvim_set_current_win(mouse.winid)
+      end
+      return
+    end
     local component = self:get_component_at({ mouse.winrow, mouse.wincol })
     vim.api.nvim_win_set_cursor(mouse.winid, { mouse.winrow, mouse.wincol })
     if component and component.on_click then
@@ -296,8 +307,13 @@ function winbar_menu_t:close()
   if not self.is_open then
     return
   end
+  if self.submenu then
+    self.submenu:close()
+  end
   self.is_open = false
-  vim.api.nvim_set_current_win(self.prev_win)
+  if self.win and vim.api.nvim_win_is_valid(self.prev_win) then
+    vim.api.nvim_set_current_win(self.prev_win)
+  end
   _G.winbar.menus[self.win] = nil
   if self.win and vim.api.nvim_win_is_valid(self.win) then
     vim.api.nvim_win_close(self.win, true)
