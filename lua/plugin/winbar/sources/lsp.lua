@@ -157,18 +157,16 @@ local function convert_document_symbol(symbol, opts)
       end
       -- Toggle menu on click, create one if not exist
       if not self.menu then
-        ---Entries of the menu
-        ---@type winbar_menu_entry_t[]
-        local entries = {}
-        for _, sibling in ipairs(self.data.lsp.symbols_list) do
-          table.insert(
-            entries,
-            menu.winbar_menu_entry_t:new({
+        -- Create a new menu for the symbol
+        self.menu = menu.winbar_menu_t:new({
+          cursor = self.data.lsp.idx and { self.data.lsp.idx, 0 } or nil,
+          entries = vim.tbl_map(function(lsp_symbol)
+            return menu.winbar_menu_entry_t:new({
               components = {
                 -- Indicator to show if the symbol has children
-                convert_document_symbol(sibling, {
+                convert_document_symbol(lsp_symbol, {
                   name = '',
-                  icon = sibling.children and static.icons.ui.AngleRight
+                  icon = lsp_symbol.children and static.icons.ui.AngleRight
                     or string.rep(
                       ' ',
                       vim.fn.strdisplaywidth(static.icons.ui.AngleRight)
@@ -176,12 +174,12 @@ local function convert_document_symbol(symbol, opts)
                   icon_hl = 'WinBarIconSeparator',
                   data = {
                     lsp = {
-                      symbols_list = sibling.children,
+                      symbols_list = lsp_symbol.children,
                     },
                   },
                 }),
                 -- Icon and texts for the LSP symbol
-                convert_document_symbol(sibling, {
+                convert_document_symbol(lsp_symbol, {
                   ---Goto the location of the symbol on click
                   ---@param this winbar_symbol_t
                   on_click = function(this, _, _, _, _)
@@ -205,12 +203,7 @@ local function convert_document_symbol(symbol, opts)
                 }),
               },
             })
-          )
-        end
-        -- Create a new menu for the symbol
-        self.menu = menu.winbar_menu_t:new({
-          cursor = self.data.lsp.idx and { self.data.lsp.idx, 0 } or nil,
-          entries = entries,
+          end, self.data.lsp.symbols_list),
         })
       end
       self.menu:toggle()
