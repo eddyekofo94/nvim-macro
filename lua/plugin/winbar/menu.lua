@@ -290,6 +290,7 @@ function winbar_menu_t:open()
   self:eval_win_config()
   self:make_buf()
   self.win = vim.api.nvim_open_win(self.buf, true, self.win_configs)
+  vim.wo[self.win].scrolloff = 0
   vim.wo[self.win].sidescrolloff = 0
   _G.winbar.menus[self.win] = self
   if _G.winbar.menus[self.prev_win] then
