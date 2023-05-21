@@ -173,7 +173,7 @@ function winbar_menu_t:new(opts)
           return bound(
             math.max(unpack(entry_lengths)),
             vim.go.pumwidth,
-            math.floor(vim.go.columns / 4)
+            math.floor(vim.go.columns / 2)
           )
         end,
       },
