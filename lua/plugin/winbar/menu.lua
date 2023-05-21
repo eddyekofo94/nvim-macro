@@ -98,6 +98,12 @@ function winbar_menu_entry_t:displaywidth()
   return vim.fn.strdisplaywidth((self:cat()))
 end
 
+---Get the byte length of the winbar menu entry
+---@return number
+function winbar_menu_entry_t:bytewidth()
+  return #(self:cat())
+end
+
 ---@class winbar_menu_opts_t
 ---@field is_open boolean?
 ---@field entries winbar_menu_entry_t[]?
@@ -108,11 +114,13 @@ end
 ---@class winbar_menu_t
 ---@field is_open boolean?
 ---@field entries winbar_menu_entry_t[]
----@field win_configs table window configuration
+---@field win_configs table window configuration, value can be a function
+---@field _win_configs table evaluated window configuration
 ---@field cursor integer[]? initial cursor position
 ---@field prev_win integer? previous window, assigned when calling new() or automatically determined in open()
 ---@field sub_menu winbar_menu_t? submenu, assigned when calling new() or automatically determined when a new menu opens
 ---@field parent_menu winbar_menu_t? parent menu, assigned when calling new() or automatically determined in open()
+---@field clicked_at integer[]? last position where the menu was clicked
 local winbar_menu_t = {}
 winbar_menu_t.__index = winbar_menu_t
 
@@ -126,25 +134,35 @@ function winbar_menu_t:new(opts)
       win_configs = {
         ---@param this winbar_menu_t
         row = function(this)
-          return this.parent_menu and this.parent_menu.win_configs.row[false]
+          return this.parent_menu
+              and this.parent_menu.clicked_at
+              and this.parent_menu.clicked_at[1] - vim.fn.line('w0')
             or 1
         end,
+        ---@param this winbar_menu_t
         col = function(this)
-          return this.parent_menu and this.parent_menu.win_configs.width or 0
+          return this.parent_menu and this.parent_menu._win_configs.width or 0
         end,
+        ---@param this winbar_menu_t
         relative = function(this)
           return this.parent_menu and 'win' or 'mouse'
         end,
+        ---@param this winbar_menu_t
+        win = function(this)
+          return this.parent_menu and this.parent_menu.win or nil
+        end,
         border = 'none',
         style = 'minimal',
+        ---@param this winbar_menu_t
         height = function(this)
           return bound(
             #this.entries,
-            2,
+            1,
             vim.go.pumheight ~= 0 and vim.go.pumheight
               or math.floor(vim.go.lines / 4)
           )
         end,
+        ---@param this winbar_menu_t
         width = function(this)
           local entry_lengths = vim.tbl_map(function(entry)
             return entry:displaywidth()
@@ -184,19 +202,23 @@ function winbar_menu_t:del()
 end
 
 ---Evaluate window configurations
+---Side effects: update self._win_configs
+---@return nil
 ---@see vim.api.nvim_open_win
 function winbar_menu_t:eval_win_config()
   -- Evaluate function-valued window configurations
+  self._win_configs = {}
   for k, config in pairs(self.win_configs) do
     if type(config) == 'function' then
-      self.win_configs[k] = config(self)
+      self._win_configs[k] = config(self)
+    else
+      self._win_configs[k] = config
     end
   end
-  return self.win_configs
 end
 
 ---Get the component at the given position in the winbar menu
----@param pos integer[] {row: integer, col: integer}, 1-indexed
+---@param pos integer[] {row: integer, col: integer}, 1-indexed, byte-indexed
 ---@return winbar_symbol_t?
 function winbar_menu_t:get_component_at(pos)
   if not self.entries or vim.tbl_isempty(self.entries) then
@@ -210,13 +232,32 @@ function winbar_menu_t:get_component_at(pos)
   end
   local col_offset = entry.padding.left
   for _, component in ipairs(entry.components) do
-    local component_len = component:displaywidth()
-    if col > col_offset and col <= col_offset + component_len then
+    local component_len = component:bytewidth()
+    if col <= col_offset + component_len then -- Look-ahead
       return component
     end
     col_offset = col_offset + component_len
   end
   return nil
+end
+
+---"Click" the component at the given position in the winbar menu
+---Side effects: update self.clicked_at
+---@param pos integer[] {row: integer, col: integer}, 1-indexed
+---@param min_width integer? default 0
+---@param n_clicks integer? default 1
+---@param button string? default 'l'
+---@param modifiers string? default ''
+function winbar_menu_t:click_at(pos, min_width, n_clicks, button, modifiers)
+  self.clicked_at = pos
+  local component = self:get_component_at(pos)
+  if component then
+    min_width = min_width or 0
+    n_clicks = n_clicks or 1
+    button = button or 'l'
+    modifiers = modifiers or ''
+    component:on_click(min_width, n_clicks, button, modifiers)
+  end
 end
 
 ---Add highlight to a range in the menu buffer
@@ -282,7 +323,7 @@ function winbar_menu_t:make_buf()
       line
         .. string.rep(
           ' ',
-          self.win_configs.width - vim.fn.strdisplaywidth(line)
+          self._win_configs.width - vim.fn.strdisplaywidth(line)
         )
     )
     table.insert(hl_info, entry_hl_info)
@@ -312,14 +353,11 @@ function winbar_menu_t:make_buf()
       end
       return
     end
-    local component = self:get_component_at({ mouse.line, mouse.wincol })
-    vim.api.nvim_win_set_cursor(mouse.winid, { mouse.line, mouse.wincol })
-    if component and component.on_click then
-      component:on_click(0, 1, 'l', '')
-    end
+    self:click_at({ mouse.line, mouse.column })
   end, { buffer = self.buf })
-  vim.keymap.set({ 'x', 'n' }, 'q', function()
-    self:close()
+  vim.keymap.set({ 'x', 'n' }, '<CR>', function()
+    local cursor = vim.api.nvim_win_get_cursor(self.win)
+    self:click_at({ cursor[1], cursor[2] + 1 })
   end, { buffer = self.buf })
 
   -- Set buffer-local autocmds
@@ -343,22 +381,22 @@ function winbar_menu_t:open()
   end
   self.is_open = true
 
-  self.prev_win = self.prev_win or vim.api.nvim_get_current_win()
+  self.prev_win = vim.api.nvim_get_current_win()
   local parent_menu = _G.winbar.menus[self.prev_win]
   if parent_menu then
     parent_menu.sub_menu = self
     self.parent_menu = parent_menu
+    self.prev_win = parent_menu.win
   end
 
   self:eval_win_config()
   self:make_buf()
-  self.win = vim.api.nvim_open_win(self.buf, true, self.win_configs)
-  self.win_configs = vim.api.nvim_win_get_config(self.win)
+  self.win = vim.api.nvim_open_win(self.buf, true, self._win_configs)
   vim.wo[self.win].scrolloff = 0
   vim.wo[self.win].sidescrolloff = 0
   _G.winbar.menus[self.win] = self
   -- Initialize cursor position
-  if self.win_configs.focusable ~= false and self.cursor then
+  if self._win_configs.focusable ~= false and self.cursor then
     vim.api.nvim_win_set_cursor(self.win, self.cursor)
   end
 end
@@ -369,16 +407,19 @@ function winbar_menu_t:close()
   if not self.is_open then
     return
   end
+  self.is_open = false
+
   if self.sub_menu then
     self.sub_menu:close()
   end
-  self.is_open = false
   if self.win and vim.api.nvim_win_is_valid(self.prev_win) then
     vim.api.nvim_set_current_win(self.prev_win)
   end
   _G.winbar.menus[self.win] = nil
-  if self.win and vim.api.nvim_win_is_valid(self.win) then
+  if vim.api.nvim_win_is_valid(self.win) then
     vim.api.nvim_win_close(self.win, true)
+  end
+  if self.win then
     self.win = nil
   end
 end
