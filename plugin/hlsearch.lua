@@ -1,21 +1,17 @@
 -- automatically set and unset hlsearch
 
-local searchkeys = {
-  ['n'] = true,
-  ['N'] = true,
-  ['*'] = true,
-  ['#'] = true,
-  ['?'] = true,
-  ['/'] = true,
-}
+-- stylua: ignore start
+vim.keymap.set({ 'n', 'x' }, 'n',  '<Cmd>set hlsearch<CR>n')
+vim.keymap.set({ 'n', 'x' }, 'N',  '<Cmd>set hlsearch<CR>N')
+vim.keymap.set({ 'n', 'x' }, '/',  '<Cmd>set hlsearch<CR>/')
+vim.keymap.set({ 'n', 'x' }, '?',  '<Cmd>set hlsearch<CR>?')
+vim.keymap.set({ 'n', 'x' }, '*',  '<Cmd>set hlsearch<CR>*')
+vim.keymap.set({ 'n', 'x' }, '#',  '<Cmd>set hlsearch<CR>#')
+vim.keymap.set({ 'n', 'x' }, 'g*', '<Cmd>set hlsearch<CR>g*')
+vim.keymap.set({ 'n', 'x' }, 'g#', '<Cmd>set hlsearch<CR>g#')
+-- stylua: ignore end
 
-vim.on_key(function(char)
-  if vim.fn.mode() == 'n' and searchkeys[vim.fn.keytrans(char)] then
-    vim.opt.hlsearch = true
-  end
-end, vim.api.nvim_create_namespace('auto_hlsearch'))
-
-vim.keymap.set('n', '<C-l>', function()
+vim.keymap.set({ 'n', 'x' }, '<C-l>', function()
   if vim.go.hlsearch then
     vim.go.hlsearch = false
     return '<Ignore>'
@@ -24,9 +20,8 @@ vim.keymap.set('n', '<C-l>', function()
   end
 end, { expr = true })
 
-vim.api.nvim_create_augroup('AutoHlSearch', { clear = true })
-vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
+vim.api.nvim_create_autocmd('InsertEnter', {
   pattern = '*',
-  group = 'AutoHlSearch',
+  group = vim.api.nvim_create_augroup('AutoHlSearch', {}),
   command = 'set nohlsearch',
 })
