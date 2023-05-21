@@ -167,8 +167,8 @@ local function convert_document_symbol(symbol, opts)
       if not self.menu then
         -- Create a new menu for the symbol
         self.menu = menu.winbar_menu_t:new({
-          prev_win = self.bar and self.bar.win or nil,
-          cursor = self.data.lsp.idx and { self.data.lsp.idx, 0 } or nil,
+          prev_win = self.bar and self.bar.win,
+          cursor = self.data.lsp.idx and { self.data.lsp.idx, 0 },
           entries = vim.tbl_map(function(lsp_symbol)
             return menu.winbar_menu_entry_t:new({
               components = {

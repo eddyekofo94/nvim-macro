@@ -149,7 +149,7 @@ function winbar_menu_t:new(opts)
         end,
         ---@param this winbar_menu_t
         win = function(this)
-          return this.parent_menu and this.parent_menu.win or nil
+          return this.parent_menu and this.parent_menu.win
         end,
         border = 'none',
         style = 'minimal',
