@@ -1,4 +1,5 @@
 local bar = require('plugin.winbar.bar')
+local groupid = vim.api.nvim_create_augroup('WinBarMenu', {})
 
 ---Lookup table for winbar menus
 ---@type table<integer, winbar_menu_t>
@@ -102,8 +103,9 @@ end
 ---@field entries winbar_menu_entry_t[]
 ---@field win_configs table window configuration
 ---@field cursor integer[]? initial cursor position
----@field prev_win integer previous window
----@field submenu winbar_menu_t? submenu
+---@field prev_win integer? previous window, assigned when calling new() or automatically determined in open()
+---@field sub_menu winbar_menu_t? submenu, assigned when calling new() or automatically determined when a new menu opens
+---@field parent_menu winbar_menu_t? parent menu, assigned when calling new() or automatically determined in open()
 local winbar_menu_t = {}
 winbar_menu_t.__index = winbar_menu_t
 
@@ -114,12 +116,19 @@ function winbar_menu_t:new(opts)
   local winbar_menu = setmetatable(
     vim.tbl_deep_extend('force', {
       entries = {},
-      prev_win = vim.api.nvim_get_current_win(),
       win_configs = {
-        row = 1,
-        col = 0,
-        relative = 'mouse',
-        border = 'shadow',
+        ---@param this winbar_menu_t
+        row = function(this)
+          return this.parent_menu and this.parent_menu.win_configs.row[false]
+            or 1
+        end,
+        col = function(this)
+          return this.parent_menu and this.parent_menu.win_configs.width or 0
+        end,
+        relative = function(this)
+          return this.parent_menu and 'win' or 'mouse'
+        end,
+        border = 'none',
         style = 'minimal',
         height = function(this)
           return bound(
@@ -155,9 +164,9 @@ end
 ---Delete a winbar menu
 ---@return nil
 function winbar_menu_t:del()
-  if self.submenu then
-    self.submenu:del()
-    self.submenu = nil
+  if self.sub_menu then
+    self.sub_menu:del()
+    self.sub_menu = nil
   end
   self:close()
   if self.buf then
@@ -258,10 +267,9 @@ function winbar_menu_t:make_buf()
   vim.keymap.set({ 'x', 'n' }, '<LeftMouse>', function()
     local mouse = vim.fn.getmousepos()
     if mouse.winid ~= self.win then
-      if
-        _G.winbar.menus[mouse.winid] and _G.winbar.menus[mouse.winid].submenu
-      then
-        _G.winbar.menus[mouse.winid].submenu:close()
+      local parent_menu = _G.winbar.menus[mouse.winid]
+      if parent_menu and parent_menu.sub_menu then
+        parent_menu.sub_menu:close()
       end
       if vim.api.nvim_win_is_valid(mouse.winid) then
         vim.api.nvim_set_current_win(mouse.winid)
@@ -277,6 +285,17 @@ function winbar_menu_t:make_buf()
   vim.keymap.set({ 'x', 'n' }, 'q', function()
     self:close()
   end, { buffer = self.buf })
+
+  -- Set buffer-local autocmds
+  vim.api.nvim_create_autocmd('WinClosed', {
+    group = groupid,
+    buffer = self.buf,
+    callback = function()
+      -- Trigger self:close() when the popup window is closed
+      -- to ensure the cursor is set to the correct previous window
+      self:close()
+    end,
+  })
 end
 
 ---Open the menu
@@ -287,15 +306,21 @@ function winbar_menu_t:open()
     return
   end
   self.is_open = true
+
+  self.prev_win = self.prev_win or vim.api.nvim_get_current_win()
+  local parent_menu = _G.winbar.menus[self.prev_win]
+  if parent_menu then
+    parent_menu.sub_menu = self
+    self.parent_menu = parent_menu
+  end
+
   self:eval_win_config()
   self:make_buf()
   self.win = vim.api.nvim_open_win(self.buf, true, self.win_configs)
+  self.win_configs = vim.api.nvim_win_get_config(self.win)
   vim.wo[self.win].scrolloff = 0
   vim.wo[self.win].sidescrolloff = 0
   _G.winbar.menus[self.win] = self
-  if _G.winbar.menus[self.prev_win] then
-    _G.winbar.menus[self.prev_win].submenu = self
-  end
   -- Initialize cursor position
   if self.win_configs.focusable ~= false and self.cursor then
     vim.api.nvim_win_set_cursor(self.win, self.cursor)
@@ -308,8 +333,8 @@ function winbar_menu_t:close()
   if not self.is_open then
     return
   end
-  if self.submenu then
-    self.submenu:close()
+  if self.sub_menu then
+    self.sub_menu:close()
   end
   self.is_open = false
   if self.win and vim.api.nvim_win_is_valid(self.prev_win) then

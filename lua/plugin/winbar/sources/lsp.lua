@@ -187,19 +187,15 @@ local function convert_document_symbol(symbol, opts)
                   on_click = function(this, _, _, _, _)
                     local dest_pos = this.data.lsp.symbol.range.start
                     local current_menu = this.entry.menu
-                    local dest_win = current_menu.win
-                    local menus_to_close = {}
-                    while current_menu do
-                      table.insert(menus_to_close, current_menu)
-                      dest_win = current_menu.prev_win
-                      current_menu = _G.winbar.menus[dest_win]
+                    while current_menu and current_menu.parent_menu do
+                      current_menu = current_menu.parent_menu
                     end
-                    vim.api.nvim_win_set_cursor(dest_win, {
-                      dest_pos.line + 1,
-                      dest_pos.character,
-                    })
-                    for _, menu_to_close in ipairs(menus_to_close) do
-                      menu_to_close:close()
+                    if current_menu then
+                      vim.api.nvim_win_set_cursor(current_menu.prev_win, {
+                        dest_pos.line + 1,
+                        dest_pos.character,
+                      })
+                      current_menu:close()
                     end
                   end,
                 }),
