@@ -1,4 +1,5 @@
 local bar = require('plugin.winbar.bar')
+local menu = require('plugin.winbar.menu')
 local static = require('utils.static')
 local groupid = vim.api.nvim_create_augroup('WinBarLsp', {})
 local initialized = false
@@ -114,7 +115,11 @@ end
 ---@param lsp_symbols lsp_symbol_information_t[]
 ---@param winbar_symbols winbar_symbol_t[] (reference to) winbar symbols
 ---@param cursor integer[] cursor position
-local function convert_symbol_information(lsp_symbols, winbar_symbols, cursor)
+local function convert_symbol_information_list(
+  lsp_symbols,
+  winbar_symbols,
+  cursor
+)
   for _, symbol in ipairs(lsp_symbols) do
     if cursor_in_range(cursor, symbol.location.range) then
       table.insert(
@@ -129,27 +134,118 @@ local function convert_symbol_information(lsp_symbols, winbar_symbols, cursor)
   end
 end
 
+---Convert an LSP DocumentSymbol into a winbar symbol
+---@param symbol lsp_document_symbol_t LSP DocumentSymbol
+---@param opts winbar_symbol_t? winbar symbol options to override
+---@return winbar_symbol_t
+local function convert_document_symbol(symbol, opts)
+  return bar.winbar_symbol_t:new(vim.tbl_deep_extend('force', {
+    name = symbol.name,
+    icon = static.icons.kinds[symbol_kind_names[symbol.kind]],
+    icon_hl = 'WinBarIconKind' .. symbol_kind_names[symbol.kind],
+    data = {
+      lsp = {
+        symbol = symbol,
+      },
+    },
+    on_click = function(self, _, _, _, _)
+      if
+        not self.data.lsp.symbols_list
+        or vim.tbl_isempty(self.data.lsp.symbols_list)
+      then
+        return
+      end
+      -- Toggle menu on click, create one if not exist
+      if not self.menu then
+        ---Entries of the menu
+        ---@type winbar_menu_entry_t[]
+        local entries = {}
+        for _, sibling in ipairs(self.data.lsp.symbols_list) do
+          table.insert(
+            entries,
+            menu.winbar_menu_entry_t:new({
+              components = {
+                -- Indicator to show if the symbol has children
+                convert_document_symbol(sibling, {
+                  name = '',
+                  icon = sibling.children and static.icons.ui.AngleRight
+                    or string.rep(
+                      ' ',
+                      vim.fn.strdisplaywidth(static.icons.ui.AngleRight)
+                    ),
+                  icon_hl = 'WinBarIconSeparator',
+                  data = {
+                    lsp = {
+                      symbols_list = sibling.children,
+                    },
+                  },
+                }),
+                -- Icon and texts for the LSP symbol
+                convert_document_symbol(sibling, {
+                  ---Goto the location of the symbol on click
+                  ---@param this winbar_symbol_t
+                  on_click = function(this, _, _, _, _)
+                    local dest_pos = this.data.lsp.symbol.range.start
+                    local current_menu = this.entry.menu
+                    local dest_win = current_menu.win
+                    local menus_to_close = {}
+                    while current_menu do
+                      table.insert(menus_to_close, current_menu)
+                      dest_win = current_menu.prev_win
+                      current_menu = _G.winbar.menus[dest_win]
+                    end
+                    vim.api.nvim_win_set_cursor(dest_win, {
+                      dest_pos.line + 1,
+                      dest_pos.character,
+                    })
+                    for _, menu_to_close in ipairs(menus_to_close) do
+                      menu_to_close:close()
+                    end
+                  end,
+                }),
+              },
+            })
+          )
+        end
+        -- Create a new menu for the symbol
+        self.menu = menu.winbar_menu_t:new({
+          cursor = self.data.lsp.idx and { self.data.lsp.idx, 0 } or nil,
+          entries = entries,
+        })
+      end
+      self.menu:toggle()
+    end,
+  }, opts or {}))
+end
+
 ---Convert LSP DocumentSymbol[] into a list of winbar symbols
 ---Side effect: change winbar_symbols
 ---LSP Specification document: https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/
 ---@param lsp_symbols lsp_document_symbol_t[]
 ---@param winbar_symbols winbar_symbol_t[] (reference to) winbar symbols
 ---@param cursor integer[] cursor position
-local function convert_document_symbol(lsp_symbols, winbar_symbols, cursor)
+local function convert_document_symbol_list(
+  lsp_symbols,
+  winbar_symbols,
+  cursor
+)
   -- Parse in reverse order so that the symbol with the largest start position
   -- is preferred
-  for symbol in vim.iter(lsp_symbols):rev() do
+  for idx, symbol in vim.iter(lsp_symbols):enumerate():rev() do
     if cursor_in_range(cursor, symbol.range) then
       table.insert(
         winbar_symbols,
-        bar.winbar_symbol_t:new({
-          name = symbol.name,
-          icon = static.icons.kinds[symbol_kind_names[symbol.kind]],
-          icon_hl = 'WinBarIconKind' .. symbol_kind_names[symbol.kind],
+        convert_document_symbol(symbol, {
+          data = {
+            lsp = {
+              idx = idx,
+              symbols_list = lsp_symbols,
+            },
+          },
         })
       )
       if symbol.children then
-        convert_document_symbol(symbol.children, winbar_symbols, cursor)
+        convert_document_symbol_list(symbol.children, winbar_symbols, cursor)
       end
       return
     end
@@ -163,9 +259,9 @@ end
 local function convert(symbols, cursor)
   local symbol_path = {}
   if symbol_type(symbols) == 'SymbolInformation' then
-    convert_symbol_information(symbols, symbol_path, cursor)
+    convert_symbol_information_list(symbols, symbol_path, cursor)
   elseif symbol_type(symbols) == 'DocumentSymbol' then
-    convert_document_symbol(symbols, symbol_path, cursor)
+    convert_document_symbol_list(symbols, symbol_path, cursor)
   end
   return symbol_path
 end
@@ -196,7 +292,9 @@ local function update_symbols(buf, client, ttl)
         end, 1000)
       else -- Update symbol_list
         lsp_buf_symbols[buf] = symbols
-        vim.cmd.redrawstatus() -- Redraw winbar after updating symbol_list
+        for _, winbar in pairs(_G.winbar.bars[buf]) do
+          winbar:update() -- Redraw winbar after updating symbols
+        end
       end
     end,
     buf

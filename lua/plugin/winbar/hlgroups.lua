@@ -11,6 +11,7 @@ local function init()
     WinBarIconKindConstant          = { link = 'Constant' },
     WinBarIconKindConstructor       = { link = 'CmpItemKindConstructor' },
     WinBarIconKindContinueStatement = { link = 'Repeat' },
+    WinBarIconKindDeclaration       = { link = 'CmpItemKindSnippet' },
     WinBarIconKindDelete            = { link = 'Error' },
     WinBarIconKindDoStatement       = { link = 'Repeat' },
     WinBarIconKindElseStatement     = { link = 'Conditional' },
@@ -50,7 +51,7 @@ local function init()
     WinBarIconKindVariable          = { link = 'CmpItemKindVariable' },
     WinBarIconKindWhileStatement    = { link = 'Repeat' },
     WinBarIconSeparator             = { link = 'SpecialChar' },
-    WinbarIconKindDeclaration       = { link = 'CmpItemKindSnippet' },
+    WinBarMenuCurrentContext        = { link = 'PmenuSel' },
   }
   -- stylua: ignore end
   for hl_name, hl_settings in pairs(hlgroups) do
