@@ -50,9 +50,9 @@ local function init()
     WinBarIconKindValue             = { link = 'Number' },
     WinBarIconKindVariable          = { link = 'CmpItemKindVariable' },
     WinBarIconKindWhileStatement    = { link = 'Repeat' },
-    WinBarIconSeparator             = { link = 'SpecialChar' },
+    WinBarIconUIIndicator           = { link = 'SpecialChar' },
+    WinBarIconUISeparator           = { link = 'SpecialChar' },
     WinBarMenuCurrentContext        = { link = 'PmenuSel' },
-    WinBarMenuIconIndicator         = { link = 'SpecialChar' },
   }
   -- stylua: ignore end
   for hl_name, hl_settings in pairs(hlgroups) do

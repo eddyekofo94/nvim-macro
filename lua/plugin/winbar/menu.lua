@@ -38,7 +38,7 @@ function winbar_menu_entry_t:new(opts)
     vim.tbl_deep_extend('force', {
       separator = bar.winbar_symbol_t:new({
         icon = ' ',
-        icon_hl = 'WinBarMenuSeparator',
+        icon_hl = 'WinBarIconUISeparator',
       }),
       padding = {
         left = 1,

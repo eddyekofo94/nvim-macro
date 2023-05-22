@@ -155,7 +155,7 @@ function winbar_t:new(opts)
       sources = {},
       separator = winbar_symbol_t:new({
         icon = static.icons.AngleRight,
-        icon_hl = 'WinBarIconSeparator',
+        icon_hl = 'WinBarIconUISeparator',
       }),
       extends = winbar_symbol_t:new({
         icon = vim.opt.listchars:get().extends
