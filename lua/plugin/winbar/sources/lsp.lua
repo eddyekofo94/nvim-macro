@@ -105,6 +105,7 @@ local function cursor_in_range(cursor, range)
 end
 
 ---Check if range1 contains range2
+---Strict indexing -- if range1 == range2, return false
 ---@param range1 lsp_range_t 0-based range
 ---@param range2 lsp_range_t 0-based range
 ---@return boolean
@@ -113,45 +114,72 @@ local function range_contains(range1, range2)
   return (
     range2.start.line > range1.start.line
     or (range2.start.line == range1.start.line
-        and range2.start.character >= range1.start.character)
+        and range2.start.character > range1.start.character)
     )
     and (
       range2.start.line < range1['end'].line
       or (range2.start.line == range1['end'].line
-          and range2.start.character <= range1['end'].character)
+          and range2.start.character < range1['end'].character)
     )
     and (
       range2['end'].line > range1.start.line
       or (range2['end'].line == range1.start.line
-          and range2['end'].character >= range1.start.character)
+          and range2['end'].character > range1.start.character)
     )
     and (
       range2['end'].line < range1['end'].line
       or (range2['end'].line == range1['end'].line
-          and range2['end'].character <= range1['end'].character)
+          and range2['end'].character < range1['end'].character)
     )
   -- stylua: ignore end
 end
 
----Get symbol information siblings and its index among them
----@param symbol lsp_symbol_information_t LSP SymbolInformation
----@param symbols lsp_symbol_information_t[] SymbolInformation[]
----@param list_idx integer index of the symbol in SymbolInformation[]
----@return lsp_symbol_information_t[], integer
-local function symbol_information_siblings(symbol, symbols, list_idx)
-  local siblings = {}
-  local sib_idx = 1
-  local range = symbol.location.range
-  for i, current_symbol in ipairs(symbols) do
-    if not range_contains(current_symbol.location.range, range) then
-      range = current_symbol.location.range
-      table.insert(siblings, current_symbol)
-      if i < list_idx then
-        sib_idx = sib_idx + 1
-      end
+---Find the parent of a LSP SymbolInformation in a tree
+---@param symbol lsp_symbol_information_t
+---@param root winbar_symbol_tree_t
+---@return winbar_symbol_tree_t? parent nil if parent not found in the subtree rooted at 'root'
+local function symbol_information_find_parent(symbol, root)
+  if not range_contains(root.range, symbol.location.range) then
+    return nil
+  end
+  root.children = root.children or {}
+  for _, child in ipairs(root.children) do
+    local parent = symbol_information_find_parent(symbol, child)
+    if parent then
+      return parent
     end
   end
-  return siblings, sib_idx
+  return root
+end
+
+---Build tree from SymbolInformation[] plain list
+---@param symbols lsp_symbol_information_t[]
+---@return winbar_symbol_tree_t root
+local function symbol_information_build_tree(symbols)
+  local root = {
+    range = {
+      start = { line = 0, character = 0 },
+      ['end'] = { line = math.huge, character = math.huge },
+    },
+    children = {},
+  }
+  for list_idx, symbol in ipairs(symbols) do
+    local parent = symbol_information_find_parent(symbol, root)
+    if parent then
+      parent.children = parent.children or {}
+      table.insert(
+        parent.children,
+        utils.winbar_symbol_tree_t:new(nil, {
+          name = symbol.name,
+          kind = symbol_kind_names[symbol.kind],
+          range = symbol.location.range,
+          idx = #parent.children + 1,
+          data = { list_idx = list_idx },
+        })
+      )
+    end
+  end
+  return root
 end
 
 ---Unify LSP SymbolInformation into winbar symbol tree structure
@@ -166,39 +194,24 @@ local function unify_symbol_information(symbol, symbols, list_idx)
     range = symbol.location.range,
   }, {
     __index = function(self, k)
-      if k == 'children' then
-        local children = {}
-        local range = vim.deepcopy(self.range) ---@type lsp_range_t
-        for i, current_symbol in vim.iter(symbols):enumerate():skip(list_idx) do
-          if range_contains(range, current_symbol.location.range) then
-            table.insert(
-              children,
-              utils.winbar_symbol_tree_t:new(
-                unify_symbol_information,
-                current_symbol,
-                symbols,
-                i
-              )
-            )
-            range.start = current_symbol.location.range['end']
+      if k == 'children' or k == 'siblings' or k == 'idx' then
+        local tree = symbol_information_build_tree(symbols)
+        local parent = symbol_information_find_parent(symbol, tree)
+        if not parent then
+          return nil
+        end
+        self.siblings = vim.tbl_map(function(child)
+          return utils.winbar_symbol_tree_t:new(nil, child)
+        end, parent.children or {})
+        for sib_idx, sibling in ipairs(parent.children) do
+          if sibling.data and sibling.data.list_idx == list_idx then
+            self.idx = sib_idx
+            self.children = vim.tbl_map(function(child)
+              return utils.winbar_symbol_tree_t:new(nil, child)
+            end, sibling.children or {})
+            break
           end
         end
-        if not vim.tbl_isempty(children) then
-          self.children = children
-          return children
-        end
-      elseif k == 'siblings' or k == 'idx' then
-        local siblings, sib_idx =
-          symbol_information_siblings(symbol, symbols, list_idx)
-        self.siblings = vim.tbl_map(function(sibling)
-          return utils.winbar_symbol_tree_t:new(
-            unify_symbol_information,
-            sibling,
-            symbols,
-            sib_idx
-          )
-        end, siblings)
-        self.idx = sib_idx
         return self[k]
       end
     end,

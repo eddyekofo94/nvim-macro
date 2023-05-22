@@ -12,6 +12,7 @@ local static = require('utils.static')
 ---@field siblings winbar_symbol_tree_t[]?
 ---@field idx integer? index of the symbol in its siblings
 ---@field range winbar_symbol_range_t?
+---@field data any? extra data
 local winbar_symbol_tree_t = {}
 
 function winbar_symbol_tree_t:__index(k)
@@ -20,10 +21,10 @@ function winbar_symbol_tree_t:__index(k)
 end
 
 ---Crease a new winbar source symbol from ...
----@param unification fun(...): winbar_symbol_tree_t
+---@param unification fun(...)?: winbar_symbol_tree_t
 ---@return winbar_symbol_tree_t
 function winbar_symbol_tree_t:new(unification, ...)
-  local symbol = unification(...)
+  local symbol = unification and unification(...) or (...)
   return setmetatable({ _orig = symbol }, winbar_symbol_tree_t)
 end
 
