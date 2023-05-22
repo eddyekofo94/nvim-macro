@@ -235,6 +235,10 @@ end
 ---Not updating when executing a macro
 ---@return nil
 function winbar_t:update()
+  if not self.win or not vim.api.nvim_win_is_valid(self.win) then
+    self:del()
+    return
+  end
   if vim.fn.reg_executing() ~= '' then
     return self.string_cache -- Do not update when executing a macro
   end
