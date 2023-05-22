@@ -106,10 +106,13 @@ function winbar_menu_entry_t:bytewidth()
 end
 
 ---Get the first clickable component in the winbar menu entry
+---@param offset integer? offset from the beginning of the entry, default 0
 ---@return winbar_symbol_t?
-function winbar_menu_entry_t:first_clickable()
+function winbar_menu_entry_t:first_clickable(offset)
+  offset = offset or 0
   for _, component in ipairs(self.components) do
-    if component.on_click then
+    offset = offset - component:bytewidth()
+    if offset <= 0 and component.on_click then
       return component
     end
   end
@@ -391,7 +394,7 @@ function winbar_menu_t:make_buf()
   end, { buffer = self.buf })
   vim.keymap.set({ 'x', 'n' }, '<CR>', function()
     local cursor = vim.api.nvim_win_get_cursor(self.win)
-    local component = self.entries[cursor[1]]:first_clickable()
+    local component = self.entries[cursor[1]]:first_clickable(cursor[2])
     if component then
       self:click_on(component)
     end
