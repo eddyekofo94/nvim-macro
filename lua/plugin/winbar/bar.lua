@@ -29,8 +29,8 @@ end
 ---@field entry winbar_menu_entry_t? the winbar entry the symbol belongs to, if the symbol is shown inside a menu
 ---@field data table? any data associated with the symbol
 ---@field bar_idx integer? index of the symbol in the winbar
----@field menu_idx integer? index of the symbol in the menu
----@field on_click fun(this: winbar_symbol_t, min_width: integer, n_clicks: integer, button: string, modifiers: string)?
+---@field entry_idx integer? index of the symbol in the menu entry
+---@field on_click fun(this: winbar_symbol_t?, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false? force disable on_click when false
 local winbar_symbol_t = {}
 winbar_symbol_t.__index = winbar_symbol_t
 

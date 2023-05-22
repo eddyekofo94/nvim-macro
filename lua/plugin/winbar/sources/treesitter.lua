@@ -1,4 +1,5 @@
 local funcs = require('utils.funcs')
+local utils = require('plugin.winbar.sources.utils')
 local icons = require('utils.static').icons.kinds
 local bar = require('plugin.winbar.bar')
 
@@ -54,6 +55,70 @@ local types = {
   'text',
 }
 
+---Get short name of treesitter symbols in buffer buf
+---@param node TSNode
+---@param buf integer buffer handler
+local function get_node_short_name(node, buf)
+  return vim.trim(
+    vim.treesitter
+      .get_node_text(node, buf)
+      :match(string.rep('[#~%w%._%->!]*', 4, '%s*'))
+      :gsub('\n.*', '')
+  )
+end
+
+---Get valid treesitter node type name
+---@param node TSNode
+---@return string type_name
+---@return integer rank type rank
+local function get_node_short_type(node)
+  local ts_type = node:type()
+  for i, type in ipairs(types) do
+    if ts_type:find(type, 1, true) then
+      return type, i
+    end
+  end
+  return 'statement', math.huge
+end
+
+---Convert TSNode to winbar symbol tree format
+---@param ts_node TSNode
+---@param buf integer buffer handler
+---@return winbar_symbol_tree_t
+local function convert(ts_node, buf)
+  local range = { ts_node:range() }
+  local converted = setmetatable({
+    node = ts_node,
+    name = get_node_short_name(ts_node, buf),
+    kind = funcs.string.snake_to_camel(get_node_short_type(ts_node)),
+    range = {
+      start = {
+        line = range[1],
+        character = range[2],
+      },
+      ['end'] = {
+        line = range[3],
+        character = range[4],
+      },
+    },
+  }, {
+    __index = function(self, k)
+      if k == 'children' then
+        local children = {}
+        for child in self.node:iter_children() do
+          table.insert(
+            children,
+            utils.winbar_source_symbol_t:new(convert, child, buf)
+          )
+        end
+        self.children = children
+        return children
+      end
+    end,
+  })
+  return converted
+end
+
 ---Get treesitter symbols from buffer
 ---@param buf integer buffer handler
 ---@param cursor integer[] cursor position
@@ -71,45 +136,32 @@ local function get_symbols(buf, cursor)
     pos = { cursor[1] - 1, cursor[2] },
   })
   while current_node do
-    local ts_type = current_node:type()
-    local name = vim.trim(
-      vim.treesitter
-        .get_node_text(current_node, buf)
-        :match(string.rep('[#~%w%._%->!]*', 4, '%s*'))
-        :gsub('\n.*', '')
-    )
+    local name = get_node_short_name(current_node, buf)
     local range = { current_node:range() } ---@type Range4
     local start_row = range[1]
     local end_row = range[3]
     if name ~= '' and not (start_row == 0 and end_row == vim.fn.line('$')) then
-      for type_rank, type in ipairs(types) do
-        if ts_type:find(type, 1, true) then
-          local lsp_type = funcs.string.snake_to_camel(type)
-          if
-            vim.tbl_isempty(symbols)
-            or symbols[1].name ~= name
-            or start_row < prev_row
-          then
-            table.insert(
-              symbols,
-              1,
-              bar.winbar_symbol_t:new({
-                icon = icons[lsp_type],
-                name = name,
-                icon_hl = 'WinBarIconKind' .. lsp_type,
-              })
-            )
-            prev_type_rank = type_rank
-            prev_row = start_row
-            break
-          elseif type_rank < prev_type_rank then
-            symbols[1].icon = icons[lsp_type]
-            symbols[1].icon_hl = 'WinBarIconKind' .. lsp_type
-            prev_type_rank = type_rank
-            prev_row = start_row
-            break
-          end
-        end
+      local type, type_rank = get_node_short_type(current_node)
+      local lsp_type = funcs.string.snake_to_camel(type)
+      if
+        vim.tbl_isempty(symbols)
+        or symbols[1].name ~= name
+        or start_row < prev_row
+      then
+        table.insert(
+          symbols,
+          1,
+          utils.winbar_source_symbol_t
+            :new(convert, current_node, buf)
+            :to_winbar_symbol()
+        )
+        prev_type_rank = type_rank
+        prev_row = start_row
+      elseif type_rank < prev_type_rank then
+        symbols[1].icon = icons[lsp_type]
+        symbols[1].icon_hl = 'WinBarIconKind' .. lsp_type
+        prev_type_rank = type_rank
+        prev_row = start_row
       end
     end
     current_node = current_node:parent()

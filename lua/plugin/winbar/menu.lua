@@ -48,8 +48,9 @@ function winbar_menu_entry_t:new(opts)
     }, opts),
     self
   )
-  for _, component in ipairs(entry.components) do
+  for idx, component in ipairs(entry.components) do
     component.entry = entry
+    component.entry_idx = idx
   end
   return entry
 end
@@ -102,6 +103,16 @@ end
 ---@return number
 function winbar_menu_entry_t:bytewidth()
   return #(self:cat())
+end
+
+---Get the first clickable component in the winbar menu entry
+---@return winbar_symbol_t?
+function winbar_menu_entry_t:first_clickable()
+  for _, component in ipairs(self.components) do
+    if component.on_click then
+      return component
+    end
+  end
 end
 
 ---@class winbar_menu_opts_t
@@ -244,20 +255,42 @@ end
 ---"Click" the component at the given position in the winbar menu
 ---Side effects: update self.clicked_at
 ---@param pos integer[] {row: integer, col: integer}, 1-indexed
----@param min_width integer? default 0
----@param n_clicks integer? default 1
----@param button string? default 'l'
----@param modifiers string? default ''
+---@param min_width integer?
+---@param n_clicks integer?
+---@param button string?
+---@param modifiers string?
 function winbar_menu_t:click_at(pos, min_width, n_clicks, button, modifiers)
   self.clicked_at = pos
   vim.api.nvim_win_set_cursor(self.win, pos)
   local component = self:get_component_at(pos)
   if component then
-    min_width = min_width or 0
-    n_clicks = n_clicks or 1
-    button = button or 'l'
-    modifiers = modifiers or ''
-    component:on_click(min_width, n_clicks, button, modifiers)
+    if component.on_click then
+      component:on_click(min_width, n_clicks, button, modifiers)
+    end
+  end
+end
+
+---"Click" the component in the winbar menu
+---Side effects: update self.clicked_at
+---@param symbol winbar_symbol_t
+---@param min_width integer?
+---@param n_clicks integer?
+---@param button string?
+---@param modifiers string?
+function winbar_menu_t:click_on(symbol, min_width, n_clicks, button, modifiers)
+  local row = symbol.entry.idx
+  local col = 0
+  for idx, component in ipairs(symbol.entry.components) do
+    if idx == symbol.entry_idx then
+      break
+    end
+    col = col + component:bytewidth()
+  end
+  self.clicked_at = { row, col }
+  if symbol then
+    if symbol.on_click then
+      symbol:on_click(min_width, n_clicks, button, modifiers)
+    end
   end
 end
 
@@ -358,7 +391,10 @@ function winbar_menu_t:make_buf()
   end, { buffer = self.buf })
   vim.keymap.set({ 'x', 'n' }, '<CR>', function()
     local cursor = vim.api.nvim_win_get_cursor(self.win)
-    self:click_at({ cursor[1], cursor[2] + 1 })
+    local component = self.entries[cursor[1]]:first_clickable()
+    if component then
+      self:click_on(component)
+    end
   end, { buffer = self.buf })
 
   -- Set buffer-local autocmds
