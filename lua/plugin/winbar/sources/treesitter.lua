@@ -81,6 +81,17 @@ local function get_node_short_type(node)
   return 'statement', math.huge
 end
 
+---Get treesitter node children
+---@param node TSNode
+---@return TSNode[] children
+local function get_node_children(node)
+  local children = {}
+  for child in node:iter_children() do
+    table.insert(children, child)
+  end
+  return children
+end
+
 ---Convert TSNode to winbar symbol tree format
 ---@param ts_node TSNode
 ---@param buf integer buffer handler
@@ -104,15 +115,10 @@ local function convert(ts_node, buf)
   }, {
     __index = function(self, k)
       if k == 'children' then
-        local children = {}
-        for child in self.node:iter_children() do
-          table.insert(
-            children,
-            utils.winbar_source_symbol_t:new(convert, child, buf)
-          )
-        end
-        self.children = children
-        return children
+        self.children = vim.tbl_map(function(child)
+          return utils.winbar_source_symbol_t:new(convert, child, buf)
+        end, get_node_children(ts_node))
+        return self.children
       end
     end,
   })
@@ -148,12 +154,33 @@ local function get_symbols(buf, cursor)
         or symbols[1].name ~= name
         or start_row < prev_row
       then
+        local siblings = get_node_children(current_node:parent())
+        local idx = 0
+        for i, sibling in ipairs(siblings) do
+          if sibling:id() == current_node:id() then
+            idx = i
+            break
+          end
+        end
         table.insert(
           symbols,
           1,
           utils.winbar_source_symbol_t
             :new(convert, current_node, buf)
-            :to_winbar_symbol()
+            :to_winbar_symbol({
+              data = {
+                menu = {
+                  idx = idx,
+                  symbols_list = vim.tbl_map(function(child)
+                    return utils.winbar_source_symbol_t:new(
+                      convert,
+                      child,
+                      buf
+                    )
+                  end, siblings),
+                },
+              },
+            })
         )
         prev_type_rank = type_rank
         prev_row = start_row
