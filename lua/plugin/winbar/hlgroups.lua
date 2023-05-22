@@ -52,6 +52,7 @@ local function init()
     WinBarIconKindWhileStatement    = { link = 'Repeat' },
     WinBarIconSeparator             = { link = 'SpecialChar' },
     WinBarMenuCurrentContext        = { link = 'PmenuSel' },
+    WinBarMenuIconIndicator         = { link = 'SpecialChar' },
   }
   -- stylua: ignore end
   for hl_name, hl_settings in pairs(hlgroups) do
