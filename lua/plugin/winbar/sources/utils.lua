@@ -90,7 +90,7 @@ function winbar_symbol_tree_t:to_winbar_symbol(opts)
               symbol:to_winbar_symbol({
                 name = '',
                 icon = menu_indicator_icon,
-                icon_hl = 'WinBarMenuIconIndicator',
+                icon_hl = 'WinBarIconUIIndicator',
                 on_click = menu_indicator_on_click,
               }),
               symbol:to_winbar_symbol({
