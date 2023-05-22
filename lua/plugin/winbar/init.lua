@@ -49,6 +49,7 @@ _G.winbar.bars = setmetatable({}, {
             source_fallback({
               sources.lsp,
               sources.treesitter,
+              sources.markdown,
             }),
           },
         })

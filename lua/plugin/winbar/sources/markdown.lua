@@ -1,7 +1,6 @@
-local bar = require('plugin.winbar.bar')
+local utils = require('plugin.winbar.sources.utils')
 
 local initialized = false
-local heading_icons = { '󰉫 ', '󰉬 ', '󰉭 ', '󰉮 ', '󰉯 ', '󰉰 ' }
 local groupid = vim.api.nvim_create_augroup('WinBarMarkdown', {})
 
 ---@class markdown_heading_symbol_t
@@ -93,25 +92,107 @@ local function parse_buf(buf, lnum_end, incremental)
   end
 end
 
+---Unify markdown heading symbol into winbar symbol tree format
+---@param symbol markdown_heading_symbol_t markdown heading symbol
+---@param symbols markdown_heading_symbol_t[] markdown heading symbols
+---@param list_idx integer index of the symbol in the symbols list
+---@param buf integer buffer handler
+---@return winbar_symbol_tree_t
+local function unify(symbol, symbols, list_idx, buf)
+  return setmetatable({
+    name = symbol.name,
+    kind = 'MarkdownH' .. symbol.level,
+    data = { symbol = symbol },
+  }, {
+    ---@param self winbar_symbol_tree_t
+    __index = function(self, k)
+      parse_buf(buf, -1, true) -- Parse whole buffer before opening menu
+      if k == 'children' then
+        self.children = {}
+        local depth = 0
+        local lev = symbol.level
+        for i, heading in vim.iter(symbols):enumerate():skip(list_idx) do
+          if heading.level <= symbol.level then
+            break
+          end
+          local delta = lev - heading.level
+          local gain = delta < 0 and -1 or delta > 0 and 1 or 0
+          if depth + gain >= -1 then
+            table.insert(self.children, unify(heading, symbols, i, buf))
+            depth = depth + gain
+            lev = heading.level
+          end
+        end
+        return self.children
+      end
+      if k == 'siblings' or k == 'idx' then
+        self.siblings = { self }
+        for i = list_idx - 1, 1, -1 do
+          if symbols[i].level < symbol.level then
+            break
+          end
+          if symbols[i].level < self.siblings[1].data.symbol.level then
+            while symbols[i].level < self.siblings[1].data.symbol.level do
+              table.remove(self.siblings, 1)
+            end
+            table.insert(self.siblings, 1, unify(symbols[i], symbols, i, buf))
+          else
+            table.insert(self.siblings, 1, unify(symbols[i], symbols, i, buf))
+          end
+        end
+        self.idx = #self.siblings
+        for i = list_idx + 1, #symbols do
+          if symbols[i].level < symbol.level then
+            break
+          end
+          if symbols[i].level == symbol.level then
+            table.insert(self.siblings, unify(symbols[i], symbols, i, buf))
+          end
+        end
+        return self[k]
+      end
+      if k == 'range' then
+        self.range = {
+          start = {
+            line = symbol.lnum - 1,
+            character = 0,
+          },
+          ['end'] = {
+            line = symbol.lnum - 1,
+            character = 0,
+          },
+        }
+        for heading in vim.iter(symbols):skip(list_idx) do
+          if heading.level <= symbol.level then
+            self.range['end'] = {
+              line = heading.lnum - 2,
+              character = 0,
+            }
+            break
+          end
+        end
+        return self.range
+      end
+    end,
+  })
+end
+
 ---Convert markdown heading symbols into a list of winbar symbols according to
 ---cursor position
 ---@param symbols markdown_heading_symbol_t[] markdown heading symbols
+---@param buf integer buffer handler
 ---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[]
-local function convert(symbols, cursor)
+local function convert(symbols, buf, cursor)
   local result = {}
   local current_level = 7
-  for symbol in vim.iter(symbols):rev() do
+  for idx, symbol in vim.iter(symbols):enumerate():rev() do
     if symbol.lnum <= cursor[1] and symbol.level < current_level then
       current_level = symbol.level
       table.insert(
         result,
         1,
-        bar.winbar_symbol_t:new({
-          icon = heading_icons[symbol.level],
-          name = symbol.name,
-          icon_hl = 'markdownH' .. symbol.level,
-        })
+        utils.to_winbar_symbol(unify(symbol, symbols, idx, buf))
       )
       if current_level == 1 then
         break
@@ -206,7 +287,7 @@ local function get_symbols(buf, cursor)
   if buf_symbols['end'].lnum < cursor[1] then
     parse_buf(buf, cursor[1] + 200, true)
   end
-  return convert(buf_symbols.symbols, cursor)
+  return convert(buf_symbols.symbols, buf, cursor)
 end
 
 return {

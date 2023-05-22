@@ -105,7 +105,7 @@ end
 ---@param opts winbar_symbol_t? extra options to override or pass to winbar_symbol_t:new()
 ---@return winbar_symbol_t
 local function to_winbar_symbol_from_path(symbol, opts)
-  local icon = static.icons.files.Folder
+  local icon = static.icons.kinds.Folder
   local icon_hl = 'WinBarIconKindFolder'
   local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
   local stat = vim.loop.fs_stat(symbol.data.path)
