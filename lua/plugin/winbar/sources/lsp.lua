@@ -263,6 +263,7 @@ local function unify_document_symbol(document_symbol, siblings, idx)
             siblings
           )
         end, siblings)
+        return self.siblings
       end
     end,
   })
