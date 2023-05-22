@@ -115,6 +115,8 @@ local function setup()
     'TextChanged',
     'TextChangedI',
     'WinScrolled',
+    'WinResized',
+    'VimResized',
   }, {
     group = groupid,
     callback = function(info)
