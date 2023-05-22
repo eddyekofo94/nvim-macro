@@ -1,8 +1,8 @@
 local M = {}
 
 ---Convert a snake_case string to camelCase
----@param str string
----@return string|nil
+---@param str string?
+---@return string?
 function M.snake_to_camel(str)
   if not str then
     return nil
