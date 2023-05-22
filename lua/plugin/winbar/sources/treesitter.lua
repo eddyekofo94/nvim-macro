@@ -92,6 +92,27 @@ local function get_node_children(node)
   return children
 end
 
+---Get treesitter node siblings
+---@param node TSNode
+---@return TSNode[] siblings
+---@return integer idx index of the node in its siblings
+local function get_node_siblings(node)
+  local siblings = {}
+  local idx = 0
+  local current = node
+  while current do
+    table.insert(siblings, 1, current)
+    current = current:prev_sibling()
+    idx = idx + 1
+  end
+  current = node
+  while current do
+    table.insert(siblings, current)
+    current = current:next_sibling()
+  end
+  return siblings, idx
+end
+
 ---Unify TSNode into winbar symbol tree format
 ---@param ts_node TSNode
 ---@param buf integer buffer handler
@@ -154,14 +175,7 @@ local function get_symbols(buf, cursor)
         or symbols[1].name ~= name
         or start_row < prev_row
       then
-        local siblings = get_node_children(current_node:parent())
-        local idx = 0
-        for i, sibling in ipairs(siblings) do
-          if sibling:id() == current_node:id() then
-            idx = i
-            break
-          end
-        end
+        local siblings, idx = get_node_siblings(current_node)
         table.insert(
           symbols,
           1,
