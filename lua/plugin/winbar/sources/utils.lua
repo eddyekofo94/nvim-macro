@@ -4,6 +4,7 @@ local static = require('utils.static')
 
 ---@alias winbar_symbol_range_t lsp_range_t
 
+---For unify the symbols from different sources
 ---@class winbar_symbol_tree_t
 ---@field name string
 ---@field kind string
