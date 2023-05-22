@@ -53,9 +53,6 @@ end
 function winbar_symbol_t:del()
   if self.menu then
     self.menu:del()
-    if self.menu.win then
-      _G.winbar.menus[self.menu.win] = nil
-    end
   end
 end
 
@@ -175,6 +172,8 @@ end
 ---Delete a winbar instance
 ---@return nil
 function winbar_t:del()
+  _G.winbar.bars[self.buf][self.win] = nil
+  _G.winbar.on_click_callbacks[self.buf][self.win] = nil
   for _, component in ipairs(self.components) do
     component:del()
   end

@@ -213,6 +213,9 @@ function winbar_menu_t:del()
     vim.api.nvim_buf_delete(self.buf, {})
     self.buf = nil
   end
+  if self.win then
+    _G.winbar.menus[self.win] = nil
+  end
 end
 
 ---Evaluate window configurations

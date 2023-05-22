@@ -97,13 +97,11 @@ local function setup()
   vim.api.nvim_create_autocmd({ 'BufDelete', 'BufUnload', 'BufWipeOut' }, {
     group = groupid,
     callback = function(info)
-      if not vim.tbl_contains(vim.tbl_keys(_G.winbar.bars), info.buf) then
+      if not rawget(_G.winbar.bars, info.buf) then
         return
       end
       for win, _ in pairs(_G.winbar.bars[info.buf]) do
         _G.winbar.bars[info.buf][win]:del()
-        _G.winbar.bars[info.buf][win] = nil
-        _G.winbar.on_click_callbacks['buf' .. info.buf][win] = nil
       end
       _G.winbar.bars[info.buf] = nil
     end,
@@ -123,7 +121,7 @@ local function setup()
       local win = info.event == 'WinScrolled' and tonumber(info.match)
         or vim.api.nvim_get_current_win()
       local buf = vim.api.nvim_win_get_buf(win)
-      if vim.tbl_contains(vim.tbl_keys(_G.winbar.bars), buf) then
+      if rawget(_G.winbar.bars, buf) and rawget(_G.winbar.bars[buf], win) then
         _G.winbar.bars[buf][win]:update()
       end
     end,
@@ -132,14 +130,13 @@ local function setup()
   vim.api.nvim_create_autocmd({ 'WinClosed' }, {
     group = groupid,
     callback = function(info)
-      if not vim.tbl_contains(vim.tbl_keys(_G.winbar.bars), info.buf) then
+      if not rawget(_G.winbar.bars, info.buf) then
         return
       end
       local win = tonumber(info.match)
-      _G.winbar.bars[info.buf][win]:del()
-      ---@diagnostic disable-next-line: need-check-nil
-      _G.winbar.bars[info.buf][win] = nil
-      _G.winbar.on_click_callbacks['buf' .. info.buf]['win' .. win] = nil
+      if win then
+        _G.winbar.bars[info.buf][win]:del()
+      end
     end,
     desc = 'Remove winbar from cache on window closed.',
   })
