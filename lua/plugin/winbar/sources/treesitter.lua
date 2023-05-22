@@ -92,11 +92,11 @@ local function get_node_children(node)
   return children
 end
 
----Convert TSNode to winbar symbol tree format
+---Unify TSNode into winbar symbol tree format
 ---@param ts_node TSNode
 ---@param buf integer buffer handler
 ---@return winbar_symbol_tree_t
-local function convert(ts_node, buf)
+local function unify(ts_node, buf)
   local range = { ts_node:range() }
   local converted = setmetatable({
     node = ts_node,
@@ -116,7 +116,7 @@ local function convert(ts_node, buf)
     __index = function(self, k)
       if k == 'children' then
         self.children = vim.tbl_map(function(child)
-          return utils.winbar_source_symbol_t:new(convert, child, buf)
+          return utils.winbar_source_symbol_t:new(unify, child, buf)
         end, get_node_children(ts_node))
         return self.children
       end
@@ -166,17 +166,13 @@ local function get_symbols(buf, cursor)
           symbols,
           1,
           utils.winbar_source_symbol_t
-            :new(convert, current_node, buf)
+            :new(unify, current_node, buf)
             :to_winbar_symbol({
               data = {
                 menu = {
                   idx = idx,
                   symbols_list = vim.tbl_map(function(child)
-                    return utils.winbar_source_symbol_t:new(
-                      convert,
-                      child,
-                      buf
-                    )
+                    return utils.winbar_source_symbol_t:new(unify, child, buf)
                   end, siblings),
                 },
               },

@@ -17,11 +17,11 @@ function winbar_symbol_tree_t:__index(k)
   return winbar_symbol_tree_t[k] or self._orig[k]
 end
 
----Crease a new winbar source symbol from obj
----@param convert fun(...): winbar_symbol_tree_t
+---Crease a new winbar source symbol from ...
+---@param unification fun(...): winbar_symbol_tree_t
 ---@return winbar_symbol_tree_t
-function winbar_symbol_tree_t:new(convert, ...)
-  local symbol = convert(...)
+function winbar_symbol_tree_t:new(unification, ...)
+  local symbol = unification(...)
   return setmetatable({ _orig = symbol }, winbar_symbol_tree_t)
 end
 
