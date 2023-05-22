@@ -19,6 +19,8 @@ local function init()
     WinBarIconKindEnumMember        = { link = 'CmpItemKindEnumMember' },
     WinBarIconKindEvent             = { link = 'CmpItemKindEvent' },
     WinBarIconKindField             = { link = 'CmpItemKindField' },
+    WinBarIconKindFile              = { link = 'NormalFloat' },
+    WinBarIconKindFolder            = { link = 'Directory' },
     WinBarIconKindForStatement      = { link = 'Repeat' },
     WinBarIconKindFunction          = { link = 'Function' },
     WinBarIconKindIdentifier        = { link = 'CmpItemKindVariable' },

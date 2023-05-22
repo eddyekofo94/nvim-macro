@@ -1,75 +1,58 @@
-local bar = require('plugin.winbar.bar')
 local funcs = require('utils.funcs')
+local utils = require('plugin.winbar.sources.utils')
 
----Escape a string
----@param str string
----@return string
-local function str_escape(str)
-  return (str:gsub('%%', '%%%%'):gsub('([%^%$%(%)%.%[%]%*%+%-%?])', '%%%1'))
+---Unify a path into a winbar tree symbol tree structure
+---@param path string full path
+---@return winbar_path_symbol_tree_t
+local function unify(path)
+  return setmetatable({
+    name = vim.fs.basename(path),
+    kind = '',
+    data = { path = path },
+  }, {
+    ---@param self winbar_symbol_tree_t
+    __index = function(self, k)
+      if k == 'children' then
+        self.children = {}
+        for name in vim.fs.dir(path) do
+          table.insert(self.children, unify(path .. '/' .. name))
+        end
+        return self.children
+      end
+      if k == 'siblings' or k == 'idx' then
+        local parent_dir = vim.fs.dirname(path)
+        self.siblings = {}
+        for idx, name in vim.iter(vim.fs.dir(parent_dir)):enumerate() do
+          table.insert(self.siblings, unify(parent_dir .. '/' .. name))
+          if name == self.name then
+            self.idx = idx
+          end
+        end
+        return self[k]
+      end
+    end,
+  })
 end
 
 ---Get list of winbar symbols of the parent directories of given buffer
 ---@param buf integer buffer handler
----@return winbar_symbol_t[] winbar symbols
-local function get_dir_symbols(buf)
-  local bufname = vim.api.nvim_buf_get_name(buf)
-  local proj_dir = funcs.fs.proj_dir(bufname)
-  if not proj_dir then
-    return {}
-  end
-  return vim.tbl_map(
-    function(dir_name)
-      return bar.winbar_symbol_t:new({ name = dir_name })
-    end,
-    vim.tbl_filter(
-      function(str)
-        return not (str == '.')
-      end,
-      vim.split(
-        vim.fs.normalize(
-          (
-            vim.fn
-              .fnamemodify(bufname, ':p:h')
-              :gsub('^' .. str_escape(proj_dir), '')
-          )
-        ),
-        '/',
-        { plain = true, trimempty = true }
-      )
-    )
-  )
-end
-
----Get winbar symbol of given buffer
----@param buf integer buffer handler
----@return winbar_symbol_t winbar symbol
-local function get_file_symbol(buf)
-  local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ':t')
-  if fname == '' then
-    return bar.winbar_symbol_t:new()
-  end
-  local extension = vim.fn.fnamemodify(fname, ':e')
-  local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
-  local icon, icon_hl = '', ''
-  if vim.bo[buf].bt == '' and devicons_ok then
-    icon, icon_hl = devicons.get_icon(fname, extension)
-  end
-  return bar.winbar_symbol_t:new({
-    name = fname,
-    icon = icon and icon .. ' ' or '',
-    icon_hl = icon_hl,
-  })
-end
-
----Get winbar symbols from buffer
----@param buf integer buffer handler
 ---@param _ integer[] cursor position, ignored
----@return winbar_symbol_t[] symbols winbar symbols
+---@return winbar_symbol_t[] winbar symbols
 local function get_symbols(buf, _)
-  local dir_symbols = get_dir_symbols(buf)
-  local file_symbol = get_file_symbol(buf)
-  table.insert(dir_symbols, file_symbol)
-  return dir_symbols
+  local symbols = {} ---@type winbar_symbol_t[]
+  local current_path = vim.fs.normalize(
+    vim.fn.fnamemodify((vim.api.nvim_buf_get_name(buf)), ':p')
+  )
+  local proj_dir = funcs.fs.proj_dir(current_path) or ''
+  while current_path ~= '.' and current_path ~= proj_dir do
+    table.insert(
+      symbols,
+      1,
+      utils.to_winbar_symbol_from_path(unify(current_path))
+    )
+    current_path = vim.fs.dirname(current_path)
+  end
+  return symbols
 end
 
 return {
