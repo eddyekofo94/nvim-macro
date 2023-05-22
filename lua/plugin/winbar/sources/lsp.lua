@@ -1,5 +1,3 @@
-local bar = require('plugin.winbar.bar')
-local static = require('utils.static')
 local utils = require('plugin.winbar.sources.utils')
 local groupid = vim.api.nvim_create_augroup('WinBarLsp', {})
 local initialized = false
@@ -106,39 +104,102 @@ local function cursor_in_range(cursor, range)
   -- stylua: ignore end
 end
 
----Unify LSP SymbolInformation into winbar symbol tree structure
----@param lsp_symbol_information lsp_symbol_information_t LSP SymbolInformation
----@param idx integer index of the symbol in SymbolInformation[]
+---Check if range1 contains range2
+---@param range1 lsp_range_t 0-based range
+---@param range2 lsp_range_t 0-based range
+---@return boolean
+local function range_contains(range1, range2)
+  -- stylua: ignore start
+  return (
+    range2.start.line > range1.start.line
+    or (range2.start.line == range1.start.line
+        and range2.start.character >= range1.start.character)
+    )
+    and (
+      range2.start.line < range1['end'].line
+      or (range2.start.line == range1['end'].line
+          and range2.start.character <= range1['end'].character)
+    )
+    and (
+      range2['end'].line > range1.start.line
+      or (range2['end'].line == range1.start.line
+          and range2['end'].character >= range1.start.character)
+    )
+    and (
+      range2['end'].line < range1['end'].line
+      or (range2['end'].line == range1['end'].line
+          and range2['end'].character <= range1['end'].character)
+    )
+  -- stylua: ignore end
+end
+
+---Get symbol information siblings and its index among them
+---@param symbol lsp_symbol_information_t LSP SymbolInformation
 ---@param symbols lsp_symbol_information_t[] SymbolInformation[]
+---@param list_idx integer index of the symbol in SymbolInformation[]
+---@return lsp_symbol_information_t[], integer
+local function symbol_information_siblings(symbol, symbols, list_idx)
+  local siblings = {}
+  local sib_idx = 1
+  local range = symbol.location.range
+  for i, current_symbol in ipairs(symbols) do
+    if not range_contains(current_symbol.location.range, range) then
+      range = current_symbol.location.range
+      table.insert(siblings, current_symbol)
+      if i < list_idx then
+        sib_idx = sib_idx + 1
+      end
+    end
+  end
+  return siblings, sib_idx
+end
+
+---Unify LSP SymbolInformation into winbar symbol tree structure
+---@param symbol lsp_symbol_information_t LSP SymbolInformation
+---@param symbols lsp_symbol_information_t[] SymbolInformation[]
+---@param list_idx integer index of the symbol in SymbolInformation[]
 ---@return winbar_symbol_tree_t
-local function unify_symbol_information(lsp_symbol_information, idx, symbols)
+local function unify_symbol_information(symbol, symbols, list_idx)
   return setmetatable({
-    name = lsp_symbol_information.name,
-    kind = symbol_kind_names[lsp_symbol_information.kind],
-    range = lsp_symbol_information.location.range,
+    name = symbol.name,
+    kind = symbol_kind_names[symbol.kind],
+    range = symbol.location.range,
   }, {
     __index = function(self, k)
       if k == 'children' then
         local children = {}
-        for symbol in vim.iter(symbols):skip(idx) do
-          local start_pos = symbol.location.range.start
-          local end_pos = symbol.location.range['end']
-          start_pos = { start_pos.line + 1, start_pos.character }
-          end_pos = { end_pos.line + 1, end_pos.character }
-          if
-            cursor_in_range(start_pos, self.range)
-            and cursor_in_range(end_pos, self.range)
-          then
-            table.insert(children, unify_symbol_information(symbol))
-          else
-            break
+        local range = vim.deepcopy(self.range) ---@type lsp_range_t
+        for i, current_symbol in vim.iter(symbols):enumerate():skip(list_idx) do
+          if range_contains(range, current_symbol.location.range) then
+            table.insert(
+              children,
+              utils.winbar_symbol_tree_t:new(
+                unify_symbol_information,
+                current_symbol,
+                symbols,
+                i
+              )
+            )
+            range.start = current_symbol.location.range['end']
           end
         end
         if not vim.tbl_isempty(children) then
           self.children = children
           return children
         end
-        self.children = false
+      elseif k == 'siblings' or k == 'idx' then
+        local siblings, sib_idx =
+          symbol_information_siblings(symbol, symbols, list_idx)
+        self.siblings = vim.tbl_map(function(sibling)
+          return utils.winbar_symbol_tree_t:new(
+            unify_symbol_information,
+            sibling,
+            symbols,
+            sib_idx
+          )
+        end, siblings)
+        self.idx = sib_idx
+        return self[k]
       end
     end,
   })
@@ -158,15 +219,13 @@ local function convert_symbol_information_list(
   winbar_symbols,
   cursor
 )
-  for _, symbol in ipairs(lsp_symbols) do
+  for idx, symbol in ipairs(lsp_symbols) do
     if cursor_in_range(cursor, symbol.location.range) then
       table.insert(
         winbar_symbols,
-        bar.winbar_symbol_t:new({
-          name = symbol.name,
-          icon = static.icons.kinds[symbol_kind_names[symbol.kind]],
-          icon_hl = 'WinBarIconKind' .. symbol_kind_names[symbol.kind],
-        })
+        utils.winbar_symbol_tree_t
+          :new(unify_symbol_information, symbol, lsp_symbols, idx)
+          :to_winbar_symbol()
       )
     end
   end
@@ -174,23 +233,36 @@ end
 
 ---Unify LSP DocumentSymbol into winbar symbol tree structure
 ---@param document_symbol lsp_document_symbol_t LSP DocumentSymbol
+---@param siblings lsp_document_symbol_t[]? siblings of the symbol
+---@param idx integer? index of the symbol in siblings
 ---@return winbar_symbol_tree_t
-local function unify_document_symbol(document_symbol)
+local function unify_document_symbol(document_symbol, siblings, idx)
   return setmetatable({
     name = document_symbol.name,
     kind = symbol_kind_names[document_symbol.kind],
     range = document_symbol.range,
+    idx = idx,
   }, {
     __index = function(self, k)
       if k == 'children' then
         if not document_symbol.children then
           return nil
         end
-        ---@type winbar_symbol_tree_t[]
         self.children = vim.tbl_map(function(child)
           return utils.winbar_symbol_tree_t:new(unify_document_symbol, child)
         end, document_symbol.children)
         return self.children
+      elseif k == 'siblings' then
+        if not siblings then
+          return nil
+        end
+        self.siblings = vim.tbl_map(function(sibling)
+          return utils.winbar_symbol_tree_t:new(
+            unify_document_symbol,
+            sibling,
+            siblings
+          )
+        end, siblings)
       end
     end,
   })
@@ -214,20 +286,8 @@ local function convert_document_symbol_list(
       table.insert(
         winbar_symbols,
         utils.winbar_symbol_tree_t
-          :new(unify_document_symbol, symbol)
-          :to_winbar_symbol({
-            data = {
-              menu = {
-                idx = idx,
-                symbols_list = vim.tbl_map(function(sibling)
-                  return utils.winbar_symbol_tree_t:new(
-                    unify_document_symbol,
-                    sibling
-                  )
-                end, lsp_symbols),
-              },
-            },
-          })
+          :new(unify_document_symbol, symbol, lsp_symbols, idx)
+          :to_winbar_symbol()
       )
       if symbol.children then
         convert_document_symbol_list(symbol.children, winbar_symbols, cursor)

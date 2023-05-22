@@ -38,53 +38,20 @@ local function source_fallback(source_list)
   }
 end
 
----Winbar init params for each filetype
----@type table<string, winbar_opts_t>
-local ft_configs = setmetatable({
-  lua = {
-    sources = {
-      sources.path,
-      source_fallback({
-        sources.lsp,
-        sources.treesitter,
-      }),
-    },
-  },
-  python = {
-    sources = {
-      sources.path,
-      source_fallback({
-        sources.lsp,
-        sources.treesitter,
-      }),
-    },
-  },
-  markdown = {
-    sources = {
-      sources.path,
-      sources.markdown,
-    },
-  },
-}, {
-  __index = function(_, _)
-    return {
-      sources = {
-        sources.path,
-        source_fallback({
-          sources.treesitter,
-          sources.lsp,
-        }),
-      },
-    }
-  end,
-})
-
 ---@type table<integer, table<integer, winbar_t>>
 _G.winbar.bars = setmetatable({}, {
   __index = function(self, buf)
     self[buf] = setmetatable({}, {
       __index = function(this, win)
-        this[win] = bar.winbar_t:new(ft_configs[vim.bo[buf].filetype])
+        this[win] = bar.winbar_t:new({
+          sources = {
+            sources.path,
+            source_fallback({
+              sources.lsp,
+              sources.treesitter,
+            }),
+          },
+        })
         return this[win]
       end,
     })

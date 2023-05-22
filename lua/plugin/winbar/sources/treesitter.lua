@@ -140,6 +140,13 @@ local function unify(ts_node, buf)
           return utils.winbar_symbol_tree_t:new(unify, child, buf)
         end, get_node_children(ts_node))
         return self.children
+      elseif k == 'siblings' or k == 'idx' then
+        local siblings, idx = get_node_siblings(ts_node)
+        self.siblings = vim.tbl_map(function(sibling)
+          return utils.winbar_symbol_tree_t:new(unify, sibling, buf)
+        end, siblings)
+        self.idx = idx
+        return self[k]
       end
     end,
   })
@@ -175,22 +182,12 @@ local function get_symbols(buf, cursor)
         or symbols[1].name ~= name
         or start_row < prev_row
       then
-        local siblings, idx = get_node_siblings(current_node)
         table.insert(
           symbols,
           1,
           utils.winbar_symbol_tree_t
             :new(unify, current_node, buf)
-            :to_winbar_symbol({
-              data = {
-                menu = {
-                  idx = idx,
-                  symbols_list = vim.tbl_map(function(child)
-                    return utils.winbar_symbol_tree_t:new(unify, child, buf)
-                  end, siblings),
-                },
-              },
-            })
+            :to_winbar_symbol()
         )
         prev_type_rank = type_rank
         prev_row = start_row

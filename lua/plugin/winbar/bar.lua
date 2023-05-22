@@ -27,6 +27,7 @@ end
 ---@field bar winbar_t? the winbar the symbol belongs to, if the symbol is shown inside a winbar
 ---@field menu winbar_menu_t? menu associated with the winbar symbol, if the symbol is shown inside a winbar
 ---@field entry winbar_menu_entry_t? the winbar entry the symbol belongs to, if the symbol is shown inside a menu
+---@field symbol winbar_symbol_tree_t? the symbol associated with the winbar symbol
 ---@field data table? any data associated with the symbol
 ---@field bar_idx integer? index of the symbol in the winbar
 ---@field entry_idx integer? index of the symbol in the menu entry
@@ -91,6 +92,34 @@ end
 ---@return number
 function winbar_symbol_t:bytewidth()
   return #self:cat(true)
+end
+
+---Goto the start location of the symbol associated with the winbar symbol
+---@return nil
+function winbar_symbol_t:goto_start()
+  if not self.symbol or not self.symbol.range then
+    return
+  end
+  local dest_pos = self.symbol.range.start
+  if not self.entry then -- symbol is not shown inside a menu
+    vim.api.nvim_win_set_cursor(self.bar.win, {
+      dest_pos.line + 1,
+      dest_pos.character,
+    })
+    return
+  end
+  -- symbol is shown inside a menu
+  local current_menu = self.entry.menu
+  while current_menu and current_menu.parent_menu do
+    current_menu = current_menu.parent_menu
+  end
+  if current_menu then
+    vim.api.nvim_win_set_cursor(current_menu.prev_win, {
+      dest_pos.line + 1,
+      dest_pos.character,
+    })
+    current_menu:close()
+  end
 end
 
 ---@class winbar_opts_t
