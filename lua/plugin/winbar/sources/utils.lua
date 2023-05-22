@@ -13,30 +13,18 @@ local static = require('utils.static')
 ---@field idx integer? index of the symbol in its siblings
 ---@field range winbar_symbol_range_t?
 ---@field data any? extra data
-local winbar_symbol_tree_t = {}
+---@field winbar_symbol_override winbar_symbol_t?
 
-function winbar_symbol_tree_t:__index(k)
-  ---@diagnostic disable-next-line: undefined-field
-  return winbar_symbol_tree_t[k] or self._orig[k]
-end
-
----Crease a new winbar source symbol from ...
----@param unification fun(...)?: winbar_symbol_tree_t
----@return winbar_symbol_tree_t
-function winbar_symbol_tree_t:new(unification, ...)
-  local symbol = unification and unification(...) or (...)
-  return setmetatable({ _orig = symbol }, winbar_symbol_tree_t)
-end
-
----Convert a winbar source symbol to a winbar symbol
+---Convert a winbar tree symbol structure to a winbar symbol
+---@param symbol winbar_symbol_tree_t
 ---@param opts winbar_symbol_t? extra options to override or pass to winbar_symbol_t:new()
 ---@return winbar_symbol_t
-function winbar_symbol_tree_t:to_winbar_symbol(opts)
+local function to_winbar_symbol(symbol, opts)
   return bar.winbar_symbol_t:new(vim.tbl_deep_extend('force', {
-    name = self.name,
-    icon = static.icons.kinds[self.kind],
-    icon_hl = 'WinBarIconKind' .. self.kind,
-    symbol = self,
+    name = symbol.name,
+    icon = static.icons.kinds[symbol.kind],
+    icon_hl = 'WinBarIconKind' .. symbol.kind,
+    symbol = symbol,
     ---@param this winbar_symbol_t
     on_click = function(this, _, _, _, _)
       -- If currently inside a menu, highlight the current line
@@ -75,11 +63,11 @@ function winbar_symbol_tree_t:to_winbar_symbol(opts)
         prev_win = menu_prev_win,
         cursor = menu_cursor_init,
 
-        ---@param symbol winbar_symbol_tree_t
-        entries = vim.tbl_map(function(symbol)
+        ---@param sym winbar_symbol_tree_t
+        entries = vim.tbl_map(function(sym)
           local menu_indicator_icon = static.icons.ui.AngleRight
           local menu_indicator_on_click = nil
-          if not symbol.children or vim.tbl_isempty(symbol.children) then
+          if not sym.children or vim.tbl_isempty(sym.children) then
             menu_indicator_icon =
               string.rep(' ', vim.fn.strdisplaywidth(menu_indicator_icon))
             menu_indicator_on_click = false
@@ -87,13 +75,13 @@ function winbar_symbol_tree_t:to_winbar_symbol(opts)
 
           return menu.winbar_menu_entry_t:new({
             components = {
-              symbol:to_winbar_symbol({
+              to_winbar_symbol(sym, {
                 name = '',
                 icon = menu_indicator_icon,
                 icon_hl = 'WinBarIconUIIndicator',
                 on_click = menu_indicator_on_click,
               }),
-              symbol:to_winbar_symbol({
+              to_winbar_symbol(sym, {
                 ---Goto the location of the symbol on click
                 ---@param winbar_symbol winbar_symbol_t
                 on_click = function(winbar_symbol, _, _, _, _)
@@ -106,9 +94,9 @@ function winbar_symbol_tree_t:to_winbar_symbol(opts)
       })
       this.menu:toggle()
     end,
-  }, opts or {}))
+  }, symbol.winbar_symbol_override or {}, opts or {}))
 end
 
 return {
-  winbar_symbol_tree_t = winbar_symbol_tree_t,
+  to_winbar_symbol = to_winbar_symbol,
 }

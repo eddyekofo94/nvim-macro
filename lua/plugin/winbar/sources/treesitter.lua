@@ -1,7 +1,6 @@
 local funcs = require('utils.funcs')
 local utils = require('plugin.winbar.sources.utils')
 local icons = require('utils.static').icons.kinds
-local bar = require('plugin.winbar.bar')
 
 -- Valid treesitter types to get symbols from
 local types = {
@@ -119,7 +118,7 @@ end
 ---@return winbar_symbol_tree_t
 local function unify(ts_node, buf)
   local range = { ts_node:range() }
-  local converted = setmetatable({
+  return setmetatable({
     node = ts_node,
     name = get_node_short_name(ts_node, buf),
     kind = funcs.string.snake_to_camel(get_node_short_type(ts_node)),
@@ -137,20 +136,19 @@ local function unify(ts_node, buf)
     __index = function(self, k)
       if k == 'children' then
         self.children = vim.tbl_map(function(child)
-          return utils.winbar_symbol_tree_t:new(unify, child, buf)
+          return unify(child, buf)
         end, get_node_children(ts_node))
         return self.children
       elseif k == 'siblings' or k == 'idx' then
         local siblings, idx = get_node_siblings(ts_node)
         self.siblings = vim.tbl_map(function(sibling)
-          return utils.winbar_symbol_tree_t:new(unify, sibling, buf)
+          return unify(sibling, buf)
         end, siblings)
         self.idx = idx
         return self[k]
       end
     end,
   })
-  return converted
 end
 
 ---Get treesitter symbols from buffer
@@ -185,9 +183,7 @@ local function get_symbols(buf, cursor)
         table.insert(
           symbols,
           1,
-          utils.winbar_symbol_tree_t
-            :new(unify, current_node, buf)
-            :to_winbar_symbol()
+          utils.to_winbar_symbol(unify(current_node, buf))
         )
         prev_type_rank = type_rank
         prev_row = start_row
