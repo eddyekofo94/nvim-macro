@@ -113,5 +113,5 @@ function winbar_symbol_tree_t:to_winbar_symbol(opts)
 end
 
 return {
-  winbar_source_symbol_t = winbar_symbol_tree_t,
+  winbar_symbol_tree_t = winbar_symbol_tree_t,
 }

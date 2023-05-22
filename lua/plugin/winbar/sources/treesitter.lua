@@ -137,7 +137,7 @@ local function unify(ts_node, buf)
     __index = function(self, k)
       if k == 'children' then
         self.children = vim.tbl_map(function(child)
-          return utils.winbar_source_symbol_t:new(unify, child, buf)
+          return utils.winbar_symbol_tree_t:new(unify, child, buf)
         end, get_node_children(ts_node))
         return self.children
       end
@@ -179,14 +179,14 @@ local function get_symbols(buf, cursor)
         table.insert(
           symbols,
           1,
-          utils.winbar_source_symbol_t
+          utils.winbar_symbol_tree_t
             :new(unify, current_node, buf)
             :to_winbar_symbol({
               data = {
                 menu = {
                   idx = idx,
                   symbols_list = vim.tbl_map(function(child)
-                    return utils.winbar_source_symbol_t:new(unify, child, buf)
+                    return utils.winbar_symbol_tree_t:new(unify, child, buf)
                   end, siblings),
                 },
               },
