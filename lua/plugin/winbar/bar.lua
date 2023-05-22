@@ -190,7 +190,7 @@ end
 ---Side effect: change winbar.components
 ---@return nil
 function winbar_t:truncate()
-  local win_width = vim.api.nvim_win_get_width(0)
+  local win_width = vim.api.nvim_win_get_width(self.win)
   local len = self:displaywidth()
   local delta = len - win_width
   for _, component in ipairs(self.components) do
