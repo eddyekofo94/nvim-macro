@@ -304,18 +304,27 @@ function winbar_t:update()
   self:redraw()
 end
 
----Entering pick mode
+---Pick a component from winbar
 ---Side effect: change winbar.in_pick_mode, winbar.components
 ---@return nil
 function winbar_t:pick()
+  if #self.components == 0 then
+    return
+  end
   self.in_pick_mode = true
-  -- Assign the chars on each component
+  -- If has only one component, pick it directly
+  if #self.components == 1 then
+    self.components[1]:on_click()
+    self.in_pick_mode = false
+    return
+  end
+  -- Else Assign the chars on each component and wait for user input to pick
   local shortcuts = {}
   local pivots = {}
   for i = 1, #configs.opts.bar.pick.pivots do
     table.insert(pivots, configs.opts.bar.pick.pivots:sub(i, i))
   end
-  local n_chars = math.max(1, math.ceil(math.log(#self.components, #pivots)))
+  local n_chars = math.ceil(math.log(#self.components, #pivots))
   for exp = 0, n_chars - 1 do
     for i = 1, #self.components do
       local new_char =
