@@ -22,6 +22,7 @@ local function unify(path)
       if k == 'siblings' or k == 'idx' then
         local parent_dir = vim.fs.dirname(path)
         self.siblings = {}
+        self.idx = 1
         for idx, name in vim.iter(vim.fs.dir(parent_dir)):enumerate() do
           table.insert(self.siblings, unify(parent_dir .. '/' .. name))
           if name == self.name then
@@ -43,7 +44,7 @@ local function get_symbols(buf, _)
   local current_path = vim.fs.normalize(
     vim.fn.fnamemodify((vim.api.nvim_buf_get_name(buf)), ':p')
   )
-  local proj_dir = funcs.fs.proj_dir(current_path) or ''
+  local proj_dir = funcs.fs.proj_dir(current_path) or vim.fn.getcwd()
   while current_path ~= '.' and current_path ~= proj_dir do
     table.insert(
       symbols,
