@@ -90,6 +90,8 @@ local function setup(opts)
     'WinScrolled',
     'WinResized',
     'VimResized',
+    'DirChanged',
+    'FileChangedShellPost',
   }, {
     group = groupid,
     callback = function(info)
