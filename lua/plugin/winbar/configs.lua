@@ -1,11 +1,23 @@
+local static = require('utils.static')
+
 ---@class winbar_configs_t
 local opts = {
+  symbol = {
+    icons = static.icons.kinds,
+  },
   bar = {
+    icons = {
+      separator = static.icons.ui.AngleRight,
+      extends = vim.opt.listchars:get().extends or static.icons.ui.Ellipsis,
+    },
     pick = {
       pivots = 'abcdefghijklmnopqrstuvwxyz',
     },
   },
   menu = {
+    icons = {
+      indicator = static.icons.ui.AngleRight,
+    },
     keymaps = {
       ['<LeftMouse>'] = function()
         local menu = require('plugin.winbar.api').get_current_winbar_menu()

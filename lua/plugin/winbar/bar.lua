@@ -1,4 +1,3 @@
-local static = require('utils.static')
 local configs = require('plugin.winbar.configs')
 
 ---Add highlight to a string
@@ -174,13 +173,11 @@ function winbar_t:new(opts)
       string_cache = '',
       sources = {},
       separator = winbar_symbol_t:new({
-        icon = static.icons.AngleRight,
+        icon = configs.opts.bar.icons.separator,
         icon_hl = 'WinBarIconUISeparator',
       }),
       extends = winbar_symbol_t:new({
-        icon = vim.opt.listchars:get().extends
-          or vim.trim(static.icons.Ellipsis),
-        icon_hl = 'WinBar',
+        icon = configs.opts.bar.icons.extends,
       }),
       padding = {
         left = 1,

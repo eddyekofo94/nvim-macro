@@ -1,6 +1,6 @@
 local bar = require('plugin.winbar.bar')
 local menu = require('plugin.winbar.menu')
-local static = require('utils.static')
+local configs = require('plugin.winbar.configs')
 
 ---@alias winbar_symbol_range_t lsp_range_t
 
@@ -22,7 +22,7 @@ local static = require('utils.static')
 local function to_winbar_symbol(symbol, opts)
   return bar.winbar_symbol_t:new(vim.tbl_deep_extend('force', {
     name = symbol.name,
-    icon = static.icons.kinds[symbol.kind],
+    icon = configs.opts.symbol.icons[symbol.kind] or '',
     icon_hl = 'WinBarIconKind' .. symbol.kind,
     symbol = symbol,
     ---@param this winbar_symbol_t
@@ -85,7 +85,7 @@ local function to_winbar_symbol(symbol, opts)
 
         ---@param sym winbar_symbol_tree_t
         entries = vim.tbl_map(function(sym)
-          local menu_indicator_icon = static.icons.ui.AngleRight
+          local menu_indicator_icon = configs.opts.menu.icons.indicator
           local menu_indicator_on_click = nil
           if not sym.children or vim.tbl_isempty(sym.children) then
             menu_indicator_icon =
@@ -125,7 +125,7 @@ end
 ---@param opts winbar_symbol_t? extra options to override or pass to winbar_symbol_t:new()
 ---@return winbar_symbol_t
 local function to_winbar_symbol_from_path(symbol, opts)
-  local icon = static.icons.kinds.Folder
+  local icon = configs.opts.symbol.icons.Folder
   local icon_hl = 'WinBarIconKindFolder'
   local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
   local stat = vim.loop.fs_stat(symbol.data.path)
@@ -203,7 +203,7 @@ local function to_winbar_symbol_from_path(symbol, opts)
 
         ---@param sym winbar_path_symbol_tree_t
         entries = vim.tbl_map(function(sym)
-          local menu_indicator_icon = static.icons.ui.AngleRight
+          local menu_indicator_icon = configs.opts.menu.icons.indicator
           local menu_indicator_icon_hl = 'WinBarIconUIIndicator'
           local menu_indicator_on_click = nil
           local menu_entry_text_on_click = nil
