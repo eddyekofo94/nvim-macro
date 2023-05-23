@@ -1,6 +1,6 @@
 local funcs = require('utils.funcs')
 local utils = require('plugin.winbar.sources.utils')
-local icons = require('utils.static').icons.kinds
+local icons = require('utils.static').icons
 
 -- Valid treesitter types to get symbols from
 local types = {

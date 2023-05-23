@@ -173,11 +173,11 @@ function winbar_t:new(opts)
       string_cache = '',
       sources = {},
       separator = winbar_symbol_t:new({
-        icon = configs.opts.bar.icons.separator,
+        icon = configs.opts.symbol.icons.ui.Separator,
         icon_hl = 'WinBarIconUISeparator',
       }),
       extends = winbar_symbol_t:new({
-        icon = configs.opts.bar.icons.extends,
+        icon = configs.opts.symbol.icons.ui.Extends,
       }),
       padding = {
         left = 1,

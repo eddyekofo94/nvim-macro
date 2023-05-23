@@ -13,7 +13,10 @@ M.opts = {
     end,
   },
   symbol = {
-    icons = static.icons.kinds,
+    icons = {
+      kinds = static.icons.kinds,
+      ui = static.icons.ui,
+    },
   },
   bar = {
     ---@type winbar_source_t[]|fun(buf: integer, win: integer): winbar_source_t[]
@@ -38,18 +41,11 @@ M.opts = {
         },
       }
     end,
-    icons = {
-      separator = static.icons.ui.AngleRight,
-      extends = vim.opt.listchars:get().extends or static.icons.ui.Ellipsis,
-    },
     pick = {
       pivots = 'abcdefghijklmnopqrstuvwxyz',
     },
   },
   menu = {
-    icons = {
-      indicator = static.icons.ui.AngleRight,
-    },
     ---@type table<string, function|table<string, function>>
     keymaps = {
       ['<LeftMouse>'] = function()
