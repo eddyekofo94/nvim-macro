@@ -38,6 +38,15 @@ local opts = {
       end,
     },
   },
+  sources = {
+    path = {
+      relative_to = function(buf)
+        return require('utils.funcs.fs').proj_dir(
+          vim.api.nvim_buf_get_name(buf)
+        ) or vim.fn.getcwd()
+      end,
+    },
+  },
 }
 
 ---Set winbar options

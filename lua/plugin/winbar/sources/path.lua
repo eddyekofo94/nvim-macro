@@ -1,5 +1,5 @@
-local funcs = require('utils.funcs')
 local utils = require('plugin.winbar.sources.utils')
+local configs = require('plugin.winbar.configs')
 
 ---Unify a path into a winbar tree symbol tree structure
 ---@param path string full path
@@ -44,8 +44,8 @@ local function get_symbols(buf, _)
   local current_path = vim.fs.normalize(
     vim.fn.fnamemodify((vim.api.nvim_buf_get_name(buf)), ':p')
   )
-  local proj_dir = funcs.fs.proj_dir(current_path) or vim.fn.getcwd()
-  while current_path ~= '.' and current_path ~= proj_dir do
+  local relative_to = configs.opts.sources.path.relative_to(buf) or '/'
+  while current_path ~= '.' and current_path ~= relative_to do
     table.insert(
       symbols,
       1,
