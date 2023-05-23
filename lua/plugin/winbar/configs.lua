@@ -1,7 +1,8 @@
 local static = require('utils.static')
+local M = {}
 
 ---@class winbar_configs_t
-local opts = {
+M.opts = {
   general = {
     ---@type boolean|fun(buf: integer, win: integer): boolean
     enable = function(buf, win)
@@ -96,11 +97,8 @@ local opts = {
 
 ---Set winbar options
 ---@param new_opts winbar_configs_t?
-local function set(new_opts)
-  opts = vim.tbl_deep_extend('force', opts, new_opts or {})
+function M.set(new_opts)
+  M.opts = vim.tbl_deep_extend('force', M.opts, new_opts or {})
 end
 
-return {
-  opts = opts,
-  set = set,
-}
+return M
