@@ -334,7 +334,7 @@ function winbar_t:pick()
       'icon',
       shortcut .. string.rep(' ', icon_width - #shortcut)
     )
-    component:swap_field('icon_hl', 'WinBarIconUIPickLetter')
+    component:swap_field('icon_hl', 'WinBarIconUIPickPivot')
   end
   self:redraw()
   -- Read the input from user
