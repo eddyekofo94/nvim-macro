@@ -25,12 +25,8 @@ _G.winbar.bars = setmetatable({}, {
   __index = function(self, buf)
     self[buf] = setmetatable({}, {
       __index = function(this, win)
-        local sources_list = type(configs.opts.bar.sources) == 'function'
-            and configs.opts.bar.sources(buf, win)
-          or configs.opts.bar.sources
         this[win] = bar.winbar_t:new({
-          ---@diagnostic disable-next-line: assign-type-mismatch
-          sources = sources_list,
+          sources = configs.eval(configs.opts.bar.sources, buf, win),
         })
         return this[win]
       end,
@@ -57,14 +53,7 @@ local function setup(opts)
   ---@param win integer
   ---@param buf integer
   local function _switch(buf, win)
-    local should_enable = false
-    local enable = configs.opts.general.enable
-    if type(enable) == 'function' then
-      should_enable = enable(buf, win)
-    else
-      should_enable = enable
-    end
-    if should_enable then
+    if configs.eval(configs.opts.general.enable, buf, win) then
       vim.wo.winbar = '%{%v:lua.winbar.get_winbar()%}'
     else
       vim.wo.winbar = nil

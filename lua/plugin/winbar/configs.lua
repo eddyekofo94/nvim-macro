@@ -97,4 +97,15 @@ function M.set(new_opts)
   M.opts = vim.tbl_deep_extend('force', M.opts, new_opts or {})
 end
 
+---Evaluate a dynamic option value (with type T|fun(...): T)
+---@generic T
+---@param opt T|fun(...): T
+---@return T
+function M.eval(opt, ...)
+  if type(opt) == 'function' then
+    return opt(...)
+  end
+  return opt
+end
+
 return M
