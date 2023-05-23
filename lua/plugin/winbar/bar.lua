@@ -318,7 +318,7 @@ function winbar_t:pick()
   for i = 1, #configs.opts.bar.pick.pivots do
     table.insert(pivots, configs.opts.bar.pick.pivots:sub(i, i))
   end
-  local n_chars = math.ceil(math.log(#self.components, #pivots))
+  local n_chars = math.max(1, math.ceil(math.log(#self.components, #pivots)))
   for exp = 0, n_chars - 1 do
     for i = 1, #self.components do
       local new_char =
