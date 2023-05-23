@@ -75,28 +75,32 @@ local function setup(opts)
   configs.set(opts)
   hlgroups.init()
   local groupid = vim.api.nvim_create_augroup('WinBar', {})
-  ---Init winbar
+  ---Enable/disable winbar
   ---@param win integer
   ---@param buf integer
-  local function _init(win, buf)
-    if
-      not vim.api.nvim_win_get_config(win).zindex
-      and vim.bo[buf].buftype == ''
-      and vim.api.nvim_buf_get_name(buf) ~= ''
-      and not vim.wo[win].diff
-    then
+  local function _switch(buf, win)
+    local should_enable = false
+    local enable = configs.opts.general.enable
+    if type(enable) == 'function' then
+      should_enable = enable(buf, win)
+    else
+      should_enable = enable
+    end
+    if should_enable then
       vim.wo.winbar = '%{%v:lua.winbar.get_winbar()%}'
+    else
+      vim.wo.winbar = nil
     end
   end
   for _, win in ipairs(vim.api.nvim_list_wins()) do
-    _init(win, vim.api.nvim_win_get_buf(win))
+    _switch(vim.api.nvim_win_get_buf(win), win)
   end
-  vim.api.nvim_create_autocmd({ 'BufWinEnter', 'BufWritePost' }, {
+  vim.api.nvim_create_autocmd({ 'OptionSet', 'BufWinEnter', 'BufWritePost' }, {
     group = groupid,
     callback = function(info)
-      _init(0, info.buf)
+      _switch(info.buf, 0)
     end,
-    desc = 'Set winbar on buffer/window enter and write post.',
+    desc = 'Enable/disable winbar',
   })
   vim.api.nvim_create_autocmd({ 'BufDelete', 'BufUnload', 'BufWipeOut' }, {
     group = groupid,
@@ -143,20 +147,6 @@ local function setup(opts)
       end
     end,
     desc = 'Remove winbar from cache on window closed.',
-  })
-  -- Disable winbar in diff mode
-  vim.api.nvim_create_autocmd({ 'OptionSet' }, {
-    pattern = 'diff',
-    group = groupid,
-    callback = function()
-      if vim.v.option_new == '1' then
-        vim.w.winbar = vim.wo.winbar
-        vim.wo.winbar = nil
-      elseif vim.w.winbar then
-        vim.wo.winbar = vim.w.winbar
-      end
-    end,
-    desc = 'Disable winbar in diff mode.',
   })
   vim.g.loaded_winbar = true
 end

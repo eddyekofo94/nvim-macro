@@ -2,6 +2,17 @@ local static = require('utils.static')
 
 ---@class winbar_configs_t
 local opts = {
+  general = {
+    ---@param buf integer
+    ---@param win integer
+    ---@return boolean
+    enable = function(buf, win)
+      return not vim.api.nvim_win_get_config(win).zindex
+        and vim.bo[buf].buftype == ''
+        and vim.api.nvim_buf_get_name(buf) ~= ''
+        and not vim.wo[win].diff
+    end,
+  },
   symbol = {
     icons = static.icons.kinds,
   },
@@ -52,6 +63,8 @@ local opts = {
   },
   sources = {
     path = {
+      ---@param buf integer
+      ---@return string?
       relative_to = function(buf)
         return require('utils.funcs.fs').proj_dir(
           vim.api.nvim_buf_get_name(buf)
