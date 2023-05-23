@@ -44,7 +44,11 @@ local function get_symbols(buf, _)
   local current_path = vim.fs.normalize(
     vim.fn.fnamemodify((vim.api.nvim_buf_get_name(buf)), ':p')
   )
-  local relative_to = configs.opts.sources.path.relative_to(buf) or '/'
+  local relative_to = ''
+  ---@diagnostic disable-next-line: cast-local-type
+  relative_to = type(configs.opts.sources.path.relative_to) == 'function'
+      and configs.opts.sources.path.relative_to(buf)
+    or configs.opts.sources.path.relative_to
   while current_path ~= '.' and current_path ~= relative_to do
     table.insert(
       symbols,

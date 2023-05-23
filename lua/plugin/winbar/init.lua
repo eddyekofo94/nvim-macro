@@ -1,7 +1,6 @@
 _G.winbar = {}
 local hlgroups = require('plugin.winbar.hlgroups')
 local bar = require('plugin.winbar.bar')
-local sources = require('plugin.winbar.sources')
 local configs = require('plugin.winbar.configs')
 
 ---Store the on_click callbacks for each winbar symbol
@@ -26,13 +25,9 @@ _G.winbar.bars = setmetatable({}, {
   __index = function(self, buf)
     self[buf] = setmetatable({}, {
       __index = function(this, win)
-        local sources_list = {} ---@type winbar_source_t[]
-        if type(configs.opts.bar.sources) == 'function' then
-          sources_list = configs.opts.bar.sources(buf, win)
-        else
-          ---@diagnostic disable-next-line: cast-local-type
-          sources_list = configs.opts.bar.sources
-        end
+        local sources_list = type(configs.opts.bar.sources) == 'function'
+            and configs.opts.bar.sources(buf, win)
+          or configs.opts.bar.sources
         this[win] = bar.winbar_t:new({
           ---@diagnostic disable-next-line: assign-type-mismatch
           sources = sources_list,

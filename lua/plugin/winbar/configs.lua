@@ -3,9 +3,7 @@ local static = require('utils.static')
 ---@class winbar_configs_t
 local opts = {
   general = {
-    ---@param buf integer
-    ---@param win integer
-    ---@return boolean
+    ---@type boolean|fun(buf: integer, win: integer): boolean
     enable = function(buf, win)
       return not vim.api.nvim_win_get_config(win).zindex
         and vim.bo[buf].buftype == ''
@@ -17,7 +15,7 @@ local opts = {
     icons = static.icons.kinds,
   },
   bar = {
-    ---@return winbar_source_t[]
+    ---@type winbar_source_t[]|fun(buf: integer, win: integer): winbar_source_t[]
     sources = function(_, _)
       local sources = require('plugin.winbar.sources')
       return {
@@ -51,6 +49,7 @@ local opts = {
     icons = {
       indicator = static.icons.ui.AngleRight,
     },
+    ---@type table<string, function|table<string, function>>
     keymaps = {
       ['<LeftMouse>'] = function()
         local menu = require('plugin.winbar.api').get_current_winbar_menu()
@@ -85,8 +84,7 @@ local opts = {
   },
   sources = {
     path = {
-      ---@param buf integer
-      ---@return string?
+      ---@type string|fun(buf: integer): string
       relative_to = function(buf)
         return require('utils.funcs.fs').proj_dir(
           vim.api.nvim_buf_get_name(buf)
