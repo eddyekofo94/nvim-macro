@@ -21,38 +21,21 @@ _G.winbar.on_click_callbacks = setmetatable({}, {
   end,
 })
 
----Create a winbar source instance with fallback
----@param source_list winbar_source_t[]
----@return winbar_source_t
-local function source_fallback(source_list)
-  return {
-    get_symbols = function(buf, cursor)
-      local symbols = {}
-      for _, source in ipairs(source_list) do
-        symbols = source.get_symbols(buf, cursor)
-        if not vim.tbl_isempty(symbols) then
-          break
-        end
-      end
-      return symbols
-    end,
-  }
-end
-
 ---@type table<integer, table<integer, winbar_t>>
 _G.winbar.bars = setmetatable({}, {
   __index = function(self, buf)
     self[buf] = setmetatable({}, {
       __index = function(this, win)
+        local sources_list = {} ---@type winbar_source_t[]
+        if type(configs.opts.bar.sources) == 'function' then
+          sources_list = configs.opts.bar.sources(buf, win)
+        else
+          ---@diagnostic disable-next-line: cast-local-type
+          sources_list = configs.opts.bar.sources
+        end
         this[win] = bar.winbar_t:new({
-          sources = {
-            sources.path,
-            source_fallback({
-              sources.lsp,
-              sources.treesitter,
-              sources.markdown,
-            }),
-          },
+          ---@diagnostic disable-next-line: assign-type-mismatch
+          sources = sources_list,
         })
         return this[win]
       end,

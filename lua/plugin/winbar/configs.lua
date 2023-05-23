@@ -17,6 +17,28 @@ local opts = {
     icons = static.icons.kinds,
   },
   bar = {
+    ---@return winbar_source_t[]
+    sources = function(_, _)
+      local sources = require('plugin.winbar.sources')
+      return {
+        sources.path,
+        {
+          get_symbols = function(buf, cursor)
+            for _, source in ipairs({
+              sources.lsp,
+              sources.treesitter,
+              sources.markdown,
+            }) do
+              local symbols = source.get_symbols(buf, cursor)
+              if not vim.tbl_isempty(symbols) then
+                return symbols
+              end
+            end
+            return {}
+          end,
+        },
+      }
+    end,
     icons = {
       separator = static.icons.ui.AngleRight,
       extends = vim.opt.listchars:get().extends or static.icons.ui.Ellipsis,
