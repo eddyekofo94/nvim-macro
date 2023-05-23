@@ -3,12 +3,9 @@
 ---@param win integer
 ---@return winbar_t?
 local function get_winbar(buf, win)
-  if
-    not rawget(_G.winbar.bars, buf) or not rawget(_G.winbar.bars[buf], win)
-  then
-    return nil
+  if rawget(_G.winbar.bars, buf) then
+    return rawget(_G.winbar.bars[buf], win)
   end
-  return _G.winbar.bars[buf][win]
 end
 
 ---Get current winbar
