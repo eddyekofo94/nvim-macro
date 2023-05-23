@@ -1,5 +1,10 @@
 ---@class winbar_configs_t
 local opts = {
+  bar = {
+    pick = {
+      pivots = 'abcdefghijklmnopqrstuvwxyz',
+    },
+  },
   menu = {
     keymaps = {
       ['<LeftMouse>'] = function()

@@ -1,4 +1,5 @@
 local static = require('utils.static')
+local configs = require('plugin.winbar.configs')
 
 ---Add highlight to a string
 ---@param str string
@@ -306,36 +307,6 @@ function winbar_t:update()
   self:redraw()
 end
 
----Character indicators to show in pick mode
-local pivots = {
-  'a',
-  'b',
-  'c',
-  'd',
-  'e',
-  'f',
-  'g',
-  'h',
-  'i',
-  'j',
-  'k',
-  'l',
-  'm',
-  'n',
-  'o',
-  'p',
-  'q',
-  'r',
-  's',
-  't',
-  'u',
-  'v',
-  'w',
-  'x',
-  'y',
-  'z',
-}
-
 ---Entering pick mode
 ---Side effect: change winbar.in_pick_mode, winbar.components
 ---@return nil
@@ -343,6 +314,10 @@ function winbar_t:pick()
   self.in_pick_mode = true
   -- Assign the chars on each component
   local shortcuts = {}
+  local pivots = {}
+  for i = 1, #configs.opts.bar.pick.pivots do
+    table.insert(pivots, configs.opts.bar.pick.pivots:sub(i, i))
+  end
   local n_chars = math.ceil(math.log(#self.components, #pivots))
   for exp = 0, n_chars - 1 do
     for i = 1, #self.components do
