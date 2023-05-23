@@ -2,6 +2,7 @@ _G.winbar = {}
 local hlgroups = require('plugin.winbar.hlgroups')
 local bar = require('plugin.winbar.bar')
 local sources = require('plugin.winbar.sources')
+local configs = require('plugin.winbar.configs')
 
 ---Store the on_click callbacks for each winbar symbol
 ---Make it assessable from global only because nvim's viml-lua interface
@@ -69,7 +70,9 @@ function _G.winbar.get_winbar()
 end
 
 ---Setup winbar
-local function setup()
+---@param opts winbar_configs_t?
+local function setup(opts)
+  configs.set(opts)
   hlgroups.init()
   local groupid = vim.api.nvim_create_augroup('WinBar', {})
   ---Init winbar

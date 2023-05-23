@@ -59,9 +59,29 @@ local function to_winbar_symbol(symbol, opts)
         return
       end
 
+      -- Called in winbar pick mode, open the menu relative to the symbol
+      -- position in the winbar
+      local menu_win_configs = nil
+      if this.bar and this.bar.in_pick_mode then
+        local col = 0
+        for i, component in ipairs(this.bar.components) do
+          if i < this.bar_idx then
+            col = col
+              + component:displaywidth()
+              + this.bar.separator:displaywidth()
+          end
+        end
+        menu_win_configs = {
+          relative = 'win',
+          row = 0,
+          col = col,
+        }
+      end
+
       this.menu = menu.winbar_menu_t:new({
         prev_win = menu_prev_win,
         cursor = menu_cursor_init,
+        win_configs = menu_win_configs,
 
         ---@param sym winbar_symbol_tree_t
         entries = vim.tbl_map(function(sym)
@@ -157,9 +177,29 @@ local function to_winbar_symbol_from_path(symbol, opts)
         return
       end
 
+      -- Called in winbar pick mode, open the menu relative to the symbol
+      -- position in the winbar
+      local menu_win_configs = nil
+      if this.bar and this.bar.in_pick_mode then
+        local col = 0
+        for i, component in ipairs(this.bar.components) do
+          if i < this.bar_idx then
+            col = col
+              + component:displaywidth()
+              + this.bar.separator:displaywidth()
+          end
+        end
+        menu_win_configs = {
+          relative = 'win',
+          row = 0,
+          col = col,
+        }
+      end
+
       this.menu = menu.winbar_menu_t:new({
         prev_win = menu_prev_win,
         cursor = menu_cursor_init,
+        win_configs = menu_win_configs,
 
         ---@param sym winbar_path_symbol_tree_t
         entries = vim.tbl_map(function(sym)

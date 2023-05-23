@@ -59,6 +59,7 @@ local function init()
     WinBarIconKindVariable          = { link = 'CmpItemKindVariable' },
     WinBarIconKindWhileStatement    = { link = 'Repeat' },
     WinBarIconUIIndicator           = { link = 'SpecialChar' },
+    WinBarIconUIPickLetter          = { link = 'Error' },
     WinBarIconUISeparator           = { link = 'SpecialChar' },
     WinBarMenuCurrentContext        = { link = 'PmenuSel' },
   }

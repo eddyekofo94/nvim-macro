@@ -31,7 +31,7 @@ end
 ---@field data table? any data associated with the symbol
 ---@field bar_idx integer? index of the symbol in the winbar
 ---@field entry_idx integer? index of the symbol in the menu entry
----@field on_click fun(this: winbar_symbol_t?, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false? force disable on_click when false
+---@field on_click fun(this: winbar_symbol_t, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false? force disable on_click when false
 local winbar_symbol_t = {}
 winbar_symbol_t.__index = winbar_symbol_t
 
@@ -119,6 +119,27 @@ function winbar_symbol_t:goto_start()
   end
 end
 
+---Temporarily change the content of a winbar symbol
+---@param field string
+---@param new_val any
+function winbar_symbol_t:swap_field(field, new_val)
+  self.data = self.data or {}
+  self.data.swap = self.data.swap or {}
+  self.data.swap[field] = self.data.swap[field] or self[field]
+  self[field] = new_val
+end
+
+---Restore the content of a winbar symbol
+function winbar_symbol_t:restore()
+  if not self.data or not self.data.swap then
+    return
+  end
+  for field, val in pairs(self.data.swap) do
+    self[field] = val
+  end
+  self.data.swap = nil
+end
+
 ---@class winbar_opts_t
 ---@field buf integer?
 ---@field win integer?
@@ -136,6 +157,7 @@ end
 ---@field extends winbar_symbol_t
 ---@field components winbar_symbol_t[]
 ---@field string_cache string
+---@field in_pick_mode boolean?
 local winbar_t = {}
 winbar_t.__index = winbar_t
 
@@ -230,6 +252,14 @@ function winbar_t:cat(plain)
   return result and padding_left .. result .. padding_right or ''
 end
 
+---Reevaluate winbar string from components and redraw winbar
+---@return nil
+function winbar_t:redraw()
+  self:truncate()
+  self.string_cache = self:cat()
+  vim.cmd.redrawstatus()
+end
+
 ---Update winbar components from sources and redraw winbar, supposed to be
 ---called at CursorMoved, CurosrMovedI, TextChanged, and TextChangedI
 ---Not updating when executing a macro
@@ -273,10 +303,83 @@ function winbar_t:update()
       end
     end
   end
+  self:redraw()
+end
 
-  self:truncate()
-  self.string_cache = self:cat()
-  vim.cmd.redrawstatus()
+---Character indicators to show in pick mode
+local pivots = {
+  'a',
+  'b',
+  'c',
+  'd',
+  'e',
+  'f',
+  'g',
+  'h',
+  'i',
+  'j',
+  'k',
+  'l',
+  'm',
+  'n',
+  'o',
+  'p',
+  'q',
+  'r',
+  's',
+  't',
+  'u',
+  'v',
+  'w',
+  'x',
+  'y',
+  'z',
+}
+
+---Entering pick mode
+---Side effect: change winbar.in_pick_mode, winbar.components
+---@return nil
+function winbar_t:pick()
+  self.in_pick_mode = true
+  -- Assign the chars on each component
+  local shortcuts = {}
+  local n_chars = math.ceil(math.log(#self.components, #pivots))
+  for exp = 0, n_chars - 1 do
+    for i = 1, #self.components do
+      local new_char =
+        pivots[math.floor((i - 1) / (#pivots) ^ exp) % #pivots + 1]
+      shortcuts[i] = new_char .. (shortcuts[i] or '')
+    end
+  end
+  -- Display the chars on each component
+  for i, component in ipairs(self.components) do
+    local shortcut = shortcuts[i]
+    local icon_width = vim.fn.strdisplaywidth(component.icon)
+    component:swap_field(
+      'icon',
+      shortcut .. string.rep(' ', icon_width - #shortcut)
+    )
+    component:swap_field('icon_hl', 'WinBarIconUIPickLetter')
+  end
+  self:redraw()
+  -- Read the input from user
+  local shortcut_read = ''
+  for _ = 1, n_chars do
+    shortcut_read = shortcut_read .. vim.fn.nr2char(vim.fn.getchar())
+  end
+  -- Restore the original content of each component
+  for _, component in ipairs(self.components) do
+    component:restore()
+  end
+  self:redraw()
+  -- Execute the on_click callback of the component
+  for i, shortcut in ipairs(shortcuts) do
+    if shortcut == shortcut_read then
+      self.components[i]:on_click()
+      break
+    end
+  end
+  self.in_pick_mode = false
 end
 
 ---Get the string representation of the winbar

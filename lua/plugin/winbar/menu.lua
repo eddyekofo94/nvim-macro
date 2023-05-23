@@ -1,5 +1,6 @@
 local bar = require('plugin.winbar.bar')
 local groupid = vim.api.nvim_create_augroup('WinBarMenu', {})
+local configs = require('plugin.winbar.configs')
 
 ---Lookup table for winbar menus
 ---@type table<integer, winbar_menu_t>
@@ -381,27 +382,9 @@ function winbar_menu_t:make_buf()
   vim.bo[self.buf].ft = 'winbar_menu'
 
   -- Set buffer-local keymaps
-  vim.keymap.set({ 'x', 'n' }, '<LeftMouse>', function()
-    local mouse = vim.fn.getmousepos()
-    if mouse.winid ~= self.win then
-      local parent_menu = _G.winbar.menus[mouse.winid]
-      if parent_menu and parent_menu.sub_menu then
-        parent_menu.sub_menu:close()
-      end
-      if vim.api.nvim_win_is_valid(mouse.winid) then
-        vim.api.nvim_set_current_win(mouse.winid)
-      end
-      return
-    end
-    self:click_at({ mouse.line, mouse.column })
-  end, { buffer = self.buf })
-  vim.keymap.set({ 'x', 'n' }, '<CR>', function()
-    local cursor = vim.api.nvim_win_get_cursor(self.win)
-    local component = self.entries[cursor[1]]:first_clickable(cursor[2])
-    if component then
-      self:click_on(component)
-    end
-  end, { buffer = self.buf })
+  for key, callback in pairs(configs.opts.menu.keymaps) do
+    vim.keymap.set('n', key, callback, { buffer = self.buf })
+  end
 
   -- Set buffer-local autocmds
   vim.api.nvim_create_autocmd('WinClosed', {
