@@ -269,8 +269,8 @@ function winbar_t:update()
     self:del()
     return
   end
-  if vim.fn.reg_executing() ~= '' then
-    return self.string_cache -- Do not update when executing a macro
+  if vim.fn.reg_executing() ~= '' or self.in_pick_mode then
+    return self.string_cache
   end
 
   local cursor = vim.api.nvim_win_get_cursor(0)
