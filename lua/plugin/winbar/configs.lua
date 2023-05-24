@@ -56,6 +56,12 @@ M.opts = {
     },
   },
   menu = {
+    entry = {
+      padding = {
+        left = 1,
+        right = 1,
+      },
+    },
     ---@type table<string, function|table<string, function>>
     keymaps = {
       ['<LeftMouse>'] = function()
