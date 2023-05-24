@@ -13,7 +13,6 @@ local configs = require('plugin.winbar.configs')
 ---@field idx integer? index of the symbol in its siblings
 ---@field range winbar_symbol_range_t?
 ---@field data any? extra data
----@field winbar_symbol_override winbar_symbol_t?
 
 ---Convert a winbar tree symbol structure to a winbar symbol
 ---@param symbol winbar_symbol_tree_t
@@ -114,7 +113,7 @@ local function to_winbar_symbol(symbol, opts)
       })
       this.menu:toggle()
     end,
-  }, symbol.winbar_symbol_override or {}, opts or {}))
+  }, opts or {}))
 end
 
 ---@class winbar_path_symbol_tree_t: winbar_symbol_tree_t
@@ -243,7 +242,7 @@ local function to_winbar_symbol_from_path(symbol, opts)
       })
       this.menu:toggle()
     end,
-  }, symbol.winbar_symbol_override or {}, opts or {}))
+  }, opts or {}))
 end
 
 return {
