@@ -59,13 +59,14 @@ M.opts = {
     ---@type table<string, function|table<string, function>>
     keymaps = {
       ['<LeftMouse>'] = function()
-        local menu = require('plugin.winbar.api').get_current_winbar_menu()
+        local api = require('plugin.winbar.api')
+        local menu = api.get_current_winbar_menu()
         if not menu then
           return
         end
         local mouse = vim.fn.getmousepos()
         if mouse.winid ~= menu.win then
-          local parent_menu = _G.winbar.menus[mouse.winid]
+          local parent_menu = api.get_winbar_menu(mouse.winid)
           if parent_menu and parent_menu.sub_menu then
             parent_menu.sub_menu:close()
           end
