@@ -6,16 +6,6 @@ local configs = require('plugin.winbar.configs')
 ---@type table<integer, winbar_menu_t>
 _G.winbar.menus = {}
 
----@param value number
----@param min number
----@param max number
-local function bound(value, min, max)
-  -- In case min > max
-  local lower_bound = math.min(min, max)
-  local upper_bound = math.max(min, max)
-  return math.min(math.max(value, lower_bound), upper_bound)
-end
-
 ---@class winbar_menu_hl_info_t
 ---@field start integer
 ---@field end integer
@@ -146,52 +136,7 @@ function winbar_menu_t:new(opts)
   local winbar_menu = setmetatable(
     vim.tbl_deep_extend('force', {
       entries = {},
-      win_configs = {
-        ---@param this winbar_menu_t
-        row = function(this)
-          return this.parent_menu
-              and this.parent_menu.clicked_at
-              and this.parent_menu.clicked_at[1] - vim.fn.line('w0')
-            or 1
-        end,
-        ---@param this winbar_menu_t
-        col = function(this)
-          return this.parent_menu and this.parent_menu._win_configs.width or 0
-        end,
-        ---@param this winbar_menu_t
-        relative = function(this)
-          return this.parent_menu and 'win' or 'mouse'
-        end,
-        ---@param this winbar_menu_t
-        win = function(this)
-          return this.parent_menu and this.parent_menu.win
-        end,
-        border = 'none',
-        style = 'minimal',
-        ---@param this winbar_menu_t
-        height = function(this)
-          return bound(
-            #this.entries,
-            1,
-            vim.go.pumheight ~= 0 and vim.go.pumheight
-              or math.floor(vim.go.lines / 4)
-          )
-        end,
-        ---@param this winbar_menu_t
-        width = function(this)
-          local entry_lengths = vim.tbl_map(function(entry)
-            return entry:displaywidth()
-          end, this.entries)
-          if vim.tbl_isempty(entry_lengths) then
-            return vim.go.pumwidth
-          end
-          return bound(
-            math.max(unpack(entry_lengths)),
-            vim.go.pumwidth,
-            math.floor(vim.go.columns / 2)
-          )
-        end,
-      },
+      win_configs = configs.opts.menu.win_configs,
     }, opts or {}),
     winbar_menu_t
   )

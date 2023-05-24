@@ -88,6 +88,50 @@ M.opts = {
         end
       end,
     },
+    ---@alias winbar_menu_win_config_opts_t any|fun(menu: winbar_menu_t):any
+    ---@type table<string, winbar_menu_win_config_opts_t>
+    ---@see vim.api.nvim_open_win
+    win_configs = {
+      border = 'none',
+      style = 'minimal',
+      row = function(menu)
+        return menu.parent_menu
+            and menu.parent_menu.clicked_at
+            and menu.parent_menu.clicked_at[1] - vim.fn.line('w0')
+          or 1
+      end,
+      col = function(menu)
+        return menu.parent_menu and menu.parent_menu._win_configs.width or 0
+      end,
+      relative = function(menu)
+        return menu.parent_menu and 'win' or 'mouse'
+      end,
+      win = function(menu)
+        return menu.parent_menu and menu.parent_menu.win
+      end,
+      height = function(menu)
+        return math.max(
+          1,
+          math.min(
+            #menu.entries,
+            vim.go.pumheight ~= 0 and vim.go.pumheight
+              or math.ceil(vim.go.lines / 4)
+          )
+        )
+      end,
+      width = function(menu)
+        local min_width = vim.go.pumwidth ~= 0 and vim.go.pumwidth or 8
+        if vim.tbl_isempty(menu.entries) then
+          return min_width
+        end
+        return math.max(
+          min_width,
+          math.max(unpack(vim.tbl_map(function(entry)
+            return entry:displaywidth()
+          end, menu.entries)))
+        )
+      end,
+    },
   },
   sources = {
     path = {
