@@ -304,63 +304,75 @@ function winbar_t:update()
   self:redraw()
 end
 
+---Execute a function in pick mode
+---Side effect: change winbar.in_pick_mode
+---@generic T
+---@param fn fun(): T?
+---@return T?
+function winbar_t:pick_mode_wrap(fn)
+  local pick_mode = self.in_pick_mode
+  self.in_pick_mode = true
+  local result = fn()
+  self.in_pick_mode = pick_mode
+  return result
+end
+
 ---Pick a component from winbar
 ---Side effect: change winbar.in_pick_mode, winbar.components
 ---@return nil
 function winbar_t:pick()
-  if #self.components == 0 then
-    return
-  end
-  self.in_pick_mode = true
-  -- If has only one component, pick it directly
-  if #self.components == 1 then
-    self.components[1]:on_click()
-    self.in_pick_mode = false
-    return
-  end
-  -- Else Assign the chars on each component and wait for user input to pick
-  local shortcuts = {}
-  local pivots = {}
-  for i = 1, #configs.opts.bar.pick.pivots do
-    table.insert(pivots, configs.opts.bar.pick.pivots:sub(i, i))
-  end
-  local n_chars = math.ceil(math.log(#self.components, #pivots))
-  for exp = 0, n_chars - 1 do
-    for i = 1, #self.components do
-      local new_char =
-        pivots[math.floor((i - 1) / (#pivots) ^ exp) % #pivots + 1]
-      shortcuts[i] = new_char .. (shortcuts[i] or '')
+  self:pick_mode_wrap(function()
+    if #self.components == 0 then
+      return
     end
-  end
-  -- Display the chars on each component
-  for i, component in ipairs(self.components) do
-    local shortcut = shortcuts[i]
-    local icon_width = vim.fn.strdisplaywidth(component.icon)
-    component:swap_field(
-      'icon',
-      shortcut .. string.rep(' ', icon_width - #shortcut)
-    )
-    component:swap_field('icon_hl', 'WinBarIconUIPickPivot')
-  end
-  self:redraw()
-  -- Read the input from user
-  local shortcut_read = ''
-  for _ = 1, n_chars do
-    shortcut_read = shortcut_read .. vim.fn.nr2char(vim.fn.getchar())
-  end
-  -- Restore the original content of each component
-  for _, component in ipairs(self.components) do
-    component:restore()
-  end
-  self:redraw()
-  -- Execute the on_click callback of the component
-  for i, shortcut in ipairs(shortcuts) do
-    if shortcut == shortcut_read then
-      self.components[i]:on_click()
-      break
+    -- If has only one component, pick it directly
+    if #self.components == 1 then
+      self.components[1]:on_click()
+      return
     end
-  end
-  self.in_pick_mode = false
+    -- Else Assign the chars on each component and wait for user input to pick
+    local shortcuts = {}
+    local pivots = {}
+    for i = 1, #configs.opts.bar.pick.pivots do
+      table.insert(pivots, configs.opts.bar.pick.pivots:sub(i, i))
+    end
+    local n_chars = math.ceil(math.log(#self.components, #pivots))
+    for exp = 0, n_chars - 1 do
+      for i = 1, #self.components do
+        local new_char =
+          pivots[math.floor((i - 1) / (#pivots) ^ exp) % #pivots + 1]
+        shortcuts[i] = new_char .. (shortcuts[i] or '')
+      end
+    end
+    -- Display the chars on each component
+    for i, component in ipairs(self.components) do
+      local shortcut = shortcuts[i]
+      local icon_width = vim.fn.strdisplaywidth(component.icon)
+      component:swap_field(
+        'icon',
+        shortcut .. string.rep(' ', icon_width - #shortcut)
+      )
+      component:swap_field('icon_hl', 'WinBarIconUIPickPivot')
+    end
+    self:redraw()
+    -- Read the input from user
+    local shortcut_read = ''
+    for _ = 1, n_chars do
+      shortcut_read = shortcut_read .. vim.fn.nr2char(vim.fn.getchar())
+    end
+    -- Restore the original content of each component
+    for _, component in ipairs(self.components) do
+      component:restore()
+    end
+    self:redraw()
+    -- Execute the on_click callback of the component
+    for i, shortcut in ipairs(shortcuts) do
+      if shortcut == shortcut_read then
+        self.components[i]:on_click()
+        break
+      end
+    end
+  end)
 end
 
 ---Get the string representation of the winbar

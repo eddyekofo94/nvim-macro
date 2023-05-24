@@ -74,9 +74,9 @@ local function select_next_context()
   if not bar or not bar.components or vim.tbl_isempty(bar.components) then
     return
   end
-  bar.in_pick_mode = true
-  bar.components[#bar.components]:on_click()
-  bar.in_pick_mode = false
+  bar:pick_mode_wrap(function()
+    bar.components[#bar.components]:on_click()
+  end)
 end
 
 ---Pick a component from current winbar
