@@ -82,17 +82,7 @@ local function setup(opts)
     end,
     desc = 'Remove winbar from cache on buffer delete/unload/wipeout.',
   })
-  vim.api.nvim_create_autocmd({
-    'CursorMoved',
-    'CursorMovedI',
-    'TextChanged',
-    'TextChangedI',
-    'WinScrolled',
-    'WinResized',
-    'VimResized',
-    'DirChanged',
-    'FileChangedShellPost',
-  }, {
+  vim.api.nvim_create_autocmd(configs.opts.general.update_events, {
     group = groupid,
     callback = function(info)
       local win = info.event == 'WinScrolled' and tonumber(info.match)

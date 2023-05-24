@@ -11,6 +11,16 @@ M.opts = {
         and vim.api.nvim_buf_get_name(buf) ~= ''
         and not vim.wo[win].diff
     end,
+    update_events = {
+      'CursorHold',
+      'CursorHoldI',
+      'DirChanged',
+      'FileChangedShellPost',
+      'TextChanged',
+      'VimResized',
+      'WinResized',
+      'WinScrolled',
+    },
   },
   symbol = {
     icons = {
