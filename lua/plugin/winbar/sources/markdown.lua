@@ -1,4 +1,5 @@
 local utils = require('plugin.winbar.sources.utils')
+local configs = require('plugin.winbar.configs')
 
 local initialized = false
 local groupid = vim.api.nvim_create_augroup('WinBarMarkdown', {})
@@ -285,7 +286,11 @@ local function get_symbols(buf, cursor)
   end
   local buf_symbols = markdown_heading_buf_symbols[buf]
   if buf_symbols['end'].lnum < cursor[1] then
-    parse_buf(buf, cursor[1] + 200, true)
+    parse_buf(
+      buf,
+      cursor[1] + configs.opts.sources.markdown.parse.look_ahead,
+      true
+    )
   end
   return convert(buf_symbols.symbols, buf, cursor)
 end

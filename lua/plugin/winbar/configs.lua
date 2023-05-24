@@ -159,6 +159,84 @@ M.opts = {
           vim.api.nvim_buf_get_name(buf)
         ) or vim.fn.getcwd()
       end,
+      ---Can be used to filter out files or directories
+      ---based on their name
+      ---@type fun(name: string): boolean
+      filter = function(_)
+        return true
+      end,
+    },
+    treesitter = {
+      -- Lua pattern used to extract a short name from the node text
+      -- Be aware that the match result must not be nil!
+      name_pattern = string.rep('[#~%w%._%->!]*', 4, '%s*'),
+      -- The order matters! The first match is used as the type
+      -- of the treesitter symbol and used to show the icon
+      -- Types listed below must have corresponding icons
+      -- in the `icons.kinds.symbols` table for the icon to be shown
+      valid_types = {
+        'array',
+        'boolean',
+        'break_statement',
+        'call',
+        'case_statement',
+        'class',
+        'constant',
+        'constructor',
+        'continue_statement',
+        'delete',
+        'do_statement',
+        'enum',
+        'enum_member',
+        'event',
+        'for_statement',
+        'function',
+        'if_statement',
+        'interface',
+        'keyword',
+        'list',
+        'macro',
+        'method',
+        'module',
+        'namespace',
+        'null',
+        'number',
+        'operator',
+        'package',
+        'property',
+        'reference',
+        'repeat',
+        'scope',
+        'specifier',
+        'string',
+        'struct',
+        'switch_statement',
+        'type',
+        'type_parameter',
+        'unit',
+        'value',
+        'variable',
+        'while_statement',
+        'declaration',
+        'field',
+        'identifier',
+        'object',
+        'statement',
+        'text',
+      },
+    },
+    lsp = {
+      request = {
+        -- Times to retry a request before giving up
+        ttl_init = 60,
+        interval = 1000, -- in ms
+      },
+    },
+    markdown = {
+      parse = {
+        -- Number of lines to update when cursor moves out of the parsed range
+        look_ahead = 200,
+      },
     },
   },
 }

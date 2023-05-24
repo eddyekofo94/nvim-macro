@@ -1,4 +1,5 @@
 local utils = require('plugin.winbar.sources.utils')
+local configs = require('plugin.winbar.configs')
 local groupid = vim.api.nvim_create_augroup('WinBarLsp', {})
 local initialized = false
 
@@ -318,7 +319,7 @@ end
 ---@param client lsp_client_t LSP client
 ---@param ttl integer? limit the number of recursive requests, default 60
 local function update_symbols(buf, client, ttl)
-  ttl = ttl or 60
+  ttl = ttl or configs.opts.sources.lsp.request.ttl_init
   if
     ttl <= 0
     or not vim.api.nvim_buf_is_valid(buf)
@@ -335,7 +336,7 @@ local function update_symbols(buf, client, ttl)
       if err or not symbols or vim.tbl_isempty(symbols) then
         vim.defer_fn(function()
           update_symbols(buf, client, ttl - 1)
-        end, 1000)
+        end, configs.opts.sources.lsp.request.interval)
       else -- Update symbol_list
         lsp_buf_symbols[buf] = symbols
         for _, winbar in pairs(_G.winbar.bars[buf]) do

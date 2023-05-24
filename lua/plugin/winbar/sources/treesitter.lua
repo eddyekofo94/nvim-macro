@@ -1,58 +1,7 @@
 local funcs = require('utils.funcs')
 local utils = require('plugin.winbar.sources.utils')
 local icons = require('utils.static').icons
-
--- Valid treesitter types to get symbols from
-local types = {
-  'array',
-  'boolean',
-  'break_statement',
-  'call',
-  'case_statement',
-  'class',
-  'constant',
-  'constructor',
-  'continue_statement',
-  'delete',
-  'do_statement',
-  'enum',
-  'enum_member',
-  'event',
-  'for_statement',
-  'function',
-  'if_statement',
-  'interface',
-  'keyword',
-  'list',
-  'macro',
-  'method',
-  'module',
-  'namespace',
-  'null',
-  'number',
-  'operator',
-  'package',
-  'property',
-  'reference',
-  'repeat',
-  'scope',
-  'specifier',
-  'string',
-  'struct',
-  'switch_statement',
-  'type',
-  'type_parameter',
-  'unit',
-  'value',
-  'variable',
-  'while_statement',
-  'declaration',
-  'field',
-  'identifier',
-  'object',
-  'statement',
-  'text',
-}
+local configs = require('plugin.winbar.configs')
 
 ---Get short name of treesitter symbols in buffer buf
 ---@param node TSNode
@@ -61,7 +10,7 @@ local function get_node_short_name(node, buf)
   return vim.trim(
     vim.treesitter
       .get_node_text(node, buf)
-      :match(string.rep('[#~%w%._%->!]*', 4, '%s*'))
+      :match(configs.opts.sources.treesitter.name_pattern)
       :gsub('\n.*', '')
   )
 end
@@ -72,7 +21,7 @@ end
 ---@return integer rank type rank
 local function get_node_short_type(node)
   local ts_type = node:type()
-  for i, type in ipairs(types) do
+  for i, type in ipairs(configs.opts.sources.treesitter.valid_types) do
     if ts_type:find(type, 1, true) then
       return type, i
     end

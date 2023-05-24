@@ -15,7 +15,9 @@ local function unify(path)
       if k == 'children' then
         self.children = {}
         for name in vim.fs.dir(path) do
-          table.insert(self.children, unify(path .. '/' .. name))
+          if configs.opts.sources.path.filter(name) then
+            table.insert(self.children, unify(path .. '/' .. name))
+          end
         end
         return self.children
       end
@@ -24,9 +26,11 @@ local function unify(path)
         self.siblings = {}
         self.idx = 1
         for idx, name in vim.iter(vim.fs.dir(parent_dir)):enumerate() do
-          table.insert(self.siblings, unify(parent_dir .. '/' .. name))
-          if name == self.name then
-            self.idx = idx
+          if configs.opts.sources.path.filter(name) then
+            table.insert(self.siblings, unify(parent_dir .. '/' .. name))
+            if name == self.name then
+              self.idx = idx
+            end
           end
         end
         return self[k]
