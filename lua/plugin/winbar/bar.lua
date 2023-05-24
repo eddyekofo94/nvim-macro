@@ -177,7 +177,8 @@ function winbar_t:new(opts)
         icon_hl = 'WinBarIconUISeparator',
       }),
       extends = winbar_symbol_t:new({
-        icon = configs.opts.symbol.icons.ui.Extends,
+        icon = configs.opts.symbol.icons.ui.Extends
+          or vim.opt.listchars:get().extends,
       }),
       padding = {
         left = 1,
