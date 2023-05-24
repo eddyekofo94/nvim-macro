@@ -173,12 +173,11 @@ function winbar_t:new(opts)
       string_cache = '',
       sources = {},
       separator = winbar_symbol_t:new({
-        icon = configs.opts.symbol.icons.ui.Separator,
+        icon = configs.opts.icons.ui.bar.separator,
         icon_hl = 'WinBarIconUISeparator',
       }),
       extends = winbar_symbol_t:new({
-        icon = configs.opts.symbol.icons.ui.Extends
-          or vim.opt.listchars:get().extends,
+        icon = configs.opts.icons.ui.bar.extends,
       }),
       padding = {
         left = 1,

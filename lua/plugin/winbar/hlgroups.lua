@@ -61,6 +61,7 @@ local function init()
     WinBarIconUIIndicator           = { link = 'SpecialChar' },
     WinBarIconUIPickPivot           = { link = 'Error' },
     WinBarIconUISeparator           = { link = 'SpecialChar' },
+    WinBarIconUISeparatorMenu       = { link = 'WinBarIconUISeparator' },
     WinBarMenuCurrentContext        = { link = 'PmenuSel' },
   }
   -- stylua: ignore end

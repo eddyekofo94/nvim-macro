@@ -21,7 +21,7 @@ local configs = require('plugin.winbar.configs')
 local function to_winbar_symbol(symbol, opts)
   return bar.winbar_symbol_t:new(vim.tbl_deep_extend('force', {
     name = symbol.name,
-    icon = configs.opts.symbol.icons.kinds[symbol.kind] or '',
+    icon = configs.opts.icons.kinds.symbols[symbol.kind],
     icon_hl = 'WinBarIconKind' .. symbol.kind,
     symbol = symbol,
     ---@param this winbar_symbol_t
@@ -84,7 +84,7 @@ local function to_winbar_symbol(symbol, opts)
 
         ---@param sym winbar_symbol_tree_t
         entries = vim.tbl_map(function(sym)
-          local menu_indicator_icon = configs.opts.symbol.icons.ui.Indicator
+          local menu_indicator_icon = configs.opts.icons.ui.menu.indicator
           local menu_indicator_on_click = nil
           if not sym.children or vim.tbl_isempty(sym.children) then
             menu_indicator_icon =
@@ -124,18 +124,20 @@ end
 ---@param opts winbar_symbol_t? extra options to override or pass to winbar_symbol_t:new()
 ---@return winbar_symbol_t
 local function to_winbar_symbol_from_path(symbol, opts)
-  local icon = configs.opts.symbol.icons.kinds.Folder
+  local icon = configs.opts.icons.kinds.symbols.Folder
   local icon_hl = 'WinBarIconKindFolder'
-  local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
   local stat = vim.loop.fs_stat(symbol.data.path)
-  if devicons_ok and stat and stat.type ~= 'directory' then
-    local devicon, devicon_hl = devicons.get_icon(
-      vim.fs.basename(symbol.data.path),
-      vim.fn.fnamemodify(symbol.data.path, ':e'),
-      { default = true }
-    )
-    icon = devicon and devicon .. ' ' or icon
-    icon_hl = devicon_hl
+  if configs.opts.icons.kinds.use_devicons then
+    local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
+    if devicons_ok and stat and stat.type ~= 'directory' then
+      local devicon, devicon_hl = devicons.get_icon(
+        vim.fs.basename(symbol.data.path),
+        vim.fn.fnamemodify(symbol.data.path, ':e'),
+        { default = true }
+      )
+      icon = devicon and devicon .. ' ' or icon
+      icon_hl = devicon_hl
+    end
   end
   return bar.winbar_symbol_t:new(vim.tbl_deep_extend('force', {
     name = symbol.name,
@@ -202,7 +204,7 @@ local function to_winbar_symbol_from_path(symbol, opts)
 
         ---@param sym winbar_path_symbol_tree_t
         entries = vim.tbl_map(function(sym)
-          local menu_indicator_icon = configs.opts.symbol.icons.ui.Indicator
+          local menu_indicator_icon = configs.opts.icons.ui.menu.indicator
           local menu_indicator_icon_hl = 'WinBarIconUIIndicator'
           local menu_indicator_on_click = nil
           local menu_entry_text_on_click = nil

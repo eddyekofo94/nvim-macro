@@ -28,8 +28,8 @@ function winbar_menu_entry_t:new(opts)
   local entry = setmetatable(
     vim.tbl_deep_extend('force', {
       separator = bar.winbar_symbol_t:new({
-        icon = ' ',
-        icon_hl = 'WinBarIconUISeparator',
+        icon = configs.opts.icons.ui.menu.separator,
+        icon_hl = 'WinBarIconUISeparatorMenu',
       }),
       padding = configs.opts.menu.entry.padding,
       components = {},

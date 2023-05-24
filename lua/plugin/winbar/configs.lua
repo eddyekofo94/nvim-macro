@@ -22,10 +22,21 @@ M.opts = {
       'WinScrolled',
     },
   },
-  symbol = {
-    icons = {
-      kinds = static.icons.kinds,
-      ui = static.icons.ui,
+  icons = {
+    kinds = {
+      use_devicons = true,
+      symbols = static.icons.kinds,
+    },
+    ui = {
+      bar = {
+        separator = static.icons.ui.AngleRight,
+        extends = vim.opt.listchars:get().extends
+          or vim.trim(static.icons.ui.Ellipsis),
+      },
+      menu = {
+        separator = ' ',
+        indicator = static.icons.ui.AngleRight,
+      },
     },
   },
   bar = {
