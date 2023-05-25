@@ -92,7 +92,7 @@ M.opts = {
           end
           return
         end
-        menu:click_at({ mouse.line, mouse.column })
+        menu:click_at({ mouse.line, mouse.column }, nil, 1, 'l')
       end,
       ['<CR>'] = function()
         local menu = require('plugin.winbar.api').get_current_winbar_menu()
@@ -102,7 +102,7 @@ M.opts = {
         local cursor = vim.api.nvim_win_get_cursor(menu.win)
         local component = menu.entries[cursor[1]]:first_clickable(cursor[2])
         if component then
-          menu:click_on(component)
+          menu:click_on(component, nil, 1, 'l')
         end
       end,
     },
