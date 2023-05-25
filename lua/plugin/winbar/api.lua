@@ -80,10 +80,11 @@ local function select_next_context()
 end
 
 ---Pick a component from current winbar
-local function pick()
+---@param idx integer?
+local function pick(idx)
   local bar = get_current_winbar()
   if bar then
-    bar:pick()
+    bar:pick(idx)
   end
 end
 

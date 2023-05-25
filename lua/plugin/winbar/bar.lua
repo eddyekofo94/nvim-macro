@@ -319,10 +319,17 @@ end
 
 ---Pick a component from winbar
 ---Side effect: change winbar.in_pick_mode, winbar.components
+---@param idx integer? index of the component to pick
 ---@return nil
-function winbar_t:pick()
+function winbar_t:pick(idx)
   self:pick_mode_wrap(function()
     if #self.components == 0 then
+      return
+    end
+    if idx then
+      if self.components[idx] then
+        self.components[idx]:on_click()
+      end
       return
     end
     -- If has only one component, pick it directly
