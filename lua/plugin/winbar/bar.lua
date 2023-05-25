@@ -179,10 +179,7 @@ function winbar_t:new(opts)
       extends = winbar_symbol_t:new({
         icon = configs.opts.icons.ui.bar.extends,
       }),
-      padding = {
-        left = 1,
-        right = 1,
-      },
+      padding = configs.opts.bar.padding,
     }, opts or {}),
     winbar_t
   )
