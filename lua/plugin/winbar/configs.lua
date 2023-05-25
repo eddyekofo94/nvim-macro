@@ -47,10 +47,12 @@ M.opts = {
         sources.path,
         {
           get_symbols = function(buf, cursor)
+            if vim.bo[buf].ft == 'markdown' then
+              return sources.markdown.get_symbols(buf, cursor)
+            end
             for _, source in ipairs({
               sources.lsp,
               sources.treesitter,
-              sources.markdown,
             }) do
               local symbols = source.get_symbols(buf, cursor)
               if not vim.tbl_isempty(symbols) then
