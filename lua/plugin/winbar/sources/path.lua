@@ -50,6 +50,7 @@ local function get_symbols(buf, _)
   )
   while
     current_path ~= '.'
+    and current_path ~= '/'
     and current_path
       ~= configs.eval(configs.opts.sources.path.relative_to, buf)
   do
