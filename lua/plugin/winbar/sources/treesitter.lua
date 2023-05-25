@@ -1,6 +1,5 @@
 local funcs = require('utils.funcs')
 local utils = require('plugin.winbar.sources.utils')
-local icons = require('utils.static').icons
 local configs = require('plugin.winbar.configs')
 
 ---Get short name of treesitter symbols in buffer buf
@@ -137,7 +136,7 @@ local function get_symbols(buf, cursor)
         prev_type_rank = type_rank
         prev_row = start_row
       elseif type_rank < prev_type_rank then
-        symbols[1].icon = icons[lsp_type]
+        symbols[1].icon = configs.opts.icons.kinds.symbols[lsp_type]
         symbols[1].icon_hl = 'WinBarIconKind' .. lsp_type
         prev_type_rank = type_rank
         prev_row = start_row
