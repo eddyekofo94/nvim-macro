@@ -31,7 +31,7 @@ local function get_current_winbar_menu()
 end
 
 ---Goto the start of context
----If `count` is 0, goto the start of current context, or the start ot
+---If `count` is 0, goto the start of current context, or the start at
 ---prev context if cursor is already at the start of current context;
 ---If `count` is positive, goto the start of `count` prev context
 ---@param count integer? default vim.v.count

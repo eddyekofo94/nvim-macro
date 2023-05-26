@@ -79,8 +79,7 @@ M.opts = {
         right = 1,
       },
     },
-    ---@alias nvim_keymap_rhs_t function|string
-    ---@type table<string, nvim_keymap_rhs_t|table<string, nvim_keymap_rhs_t>>
+    ---@type table<string, string|function|table<string, string|function>>
     keymaps = {
       ['<LeftMouse>'] = function()
         local api = require('plugin.winbar.api')
