@@ -252,7 +252,7 @@ end
 function winbar_t:redraw()
   self:truncate()
   self.string_cache = self:cat()
-  vim.cmd.redrawstatus()
+  vim.cmd('silent! redrawstatus')
 end
 
 ---Update winbar components from sources and redraw winbar, supposed to be
