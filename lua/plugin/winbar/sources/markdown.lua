@@ -6,8 +6,8 @@ local groupid = vim.api.nvim_create_augroup('WinBarMarkdown', {})
 
 ---@class markdown_heading_symbol_t
 ---@field name string
----@field level number
----@field lnum number
+---@field level integer
+---@field lnum integer
 local markdown_heading_symbol_t = {}
 markdown_heading_symbol_t.__index = markdown_heading_symbol_t
 
@@ -26,7 +26,7 @@ function markdown_heading_symbol_t:new(opts)
 end
 
 ---@class markdown_heading_symbols_parsed_list_t
----@field end { lnum: number, inside_code_block: boolean }
+---@field end { lnum: integer, inside_code_block: boolean }
 ---@field symbols markdown_heading_symbol_t[]
 local markdown_heading_symbols_parsed_list_t = {}
 markdown_heading_symbols_parsed_list_t.__index =
@@ -62,14 +62,14 @@ setmetatable(markdown_heading_buf_symbols, {
 ---@return nil
 local function parse_buf(buf, lnum_end, incremental)
   local symbols_parsed = markdown_heading_buf_symbols[buf]
-  local lnum_start = symbols_parsed['end'].lnum + 1
+  local lnum_start = symbols_parsed['end'].lnum
   if not incremental then
     lnum_start = 0
     symbols_parsed.symbols = {}
     symbols_parsed['end'] = { lnum = 0, inside_code_block = false }
   end
   local lines = vim.api.nvim_buf_get_lines(buf, lnum_start, lnum_end, false)
-  symbols_parsed['end'].lnum = lnum_start + #lines
+  symbols_parsed['end'].lnum = lnum_start + #lines + 1
 
   for idx, line in ipairs(lines) do
     if line:match('^```') then
@@ -110,18 +110,16 @@ local function unify(symbol, symbols, list_idx, buf)
       parse_buf(buf, -1, true) -- Parse whole buffer before opening menu
       if k == 'children' then
         self.children = {}
-        local depth = 0
         local lev = symbol.level
         for i, heading in vim.iter(symbols):enumerate():skip(list_idx) do
           if heading.level <= symbol.level then
             break
           end
-          local delta = lev - heading.level
-          local gain = delta < 0 and -1 or delta > 0 and 1 or 0
-          if depth + gain >= -1 then
-            table.insert(self.children, unify(heading, symbols, i, buf))
-            depth = depth + gain
+          if i == list_idx + 1 or heading.level < lev then
             lev = heading.level
+          end
+          if heading.level <= lev then
+            table.insert(self.children, unify(heading, symbols, i, buf))
           end
         end
         return self.children
