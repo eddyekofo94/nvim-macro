@@ -230,12 +230,12 @@ end
 ---@param modifiers string?
 function winbar_menu_t:click_on(symbol, min_width, n_clicks, button, modifiers)
   local row = symbol.entry.idx
-  local col = 0
+  local col = symbol.entry.padding.left + 1
   for idx, component in ipairs(symbol.entry.components) do
     if idx == symbol.entry_idx then
       break
     end
-    col = col + component:bytewidth()
+    col = col + component:bytewidth() + symbol.entry.separator:bytewidth()
   end
   self.clicked_at = { row, col }
   if symbol then
