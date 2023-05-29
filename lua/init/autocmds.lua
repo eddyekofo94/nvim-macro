@@ -106,7 +106,7 @@ local autocmds = {
 
   -- Automatically change local current directory
   {
-    { 'BufReadPost', 'FileChangedShellPost' },
+    { 'BufReadPost', 'BufEnter', 'FileChangedShellPost' },
     {
       pattern = '*',
       group = 'AutoCwd',
