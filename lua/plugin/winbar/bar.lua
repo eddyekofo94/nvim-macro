@@ -80,13 +80,13 @@ function winbar_symbol_t:cat(plain)
 end
 
 ---Get the display length of the winbar symbol
----@return number
+---@return integer
 function winbar_symbol_t:displaywidth()
   return vim.fn.strdisplaywidth(self:cat(true))
 end
 
 ---Get the byte length of the winbar symbol
----@return number
+---@return integer
 function winbar_symbol_t:bytewidth()
   return #self:cat(true)
 end

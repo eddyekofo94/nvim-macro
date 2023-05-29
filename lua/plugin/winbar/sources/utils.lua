@@ -12,7 +12,7 @@ local configs = require('plugin.winbar.configs')
 ---@field siblings winbar_symbol_tree_t[]?
 ---@field idx integer? index of the symbol in its siblings
 ---@field range winbar_symbol_range_t?
----@field data any? extra data
+---@field data table? extra data
 
 ---Convert a winbar tree symbol structure to a winbar symbol
 ---@param symbol winbar_symbol_tree_t
