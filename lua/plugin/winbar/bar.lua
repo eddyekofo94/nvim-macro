@@ -120,6 +120,7 @@ function winbar_symbol_t:goto_start()
 end
 
 ---Temporarily change the content of a winbar symbol
+---Currently does not support replacing nil values
 ---@param field string
 ---@param new_val any
 function winbar_symbol_t:swap_field(field, new_val)
@@ -130,6 +131,7 @@ function winbar_symbol_t:swap_field(field, new_val)
 end
 
 ---Restore the content of a winbar symbol
+---Currently does not support restoring nil values
 function winbar_symbol_t:restore()
   if not self.data or not self.data.swap then
     return
