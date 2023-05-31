@@ -356,11 +356,14 @@ function winbar_menu_t:open()
   if self.is_opened then
     return
   end
-  self.is_opened = true
 
   self.prev_win = vim.api.nvim_get_current_win()
   local parent_menu = _G.winbar.menus[self.prev_win]
   if parent_menu then
+    -- if the parent menu has an existing sub-menu, close the sub-menu first
+    if parent_menu.sub_menu then
+      parent_menu.sub_menu:close()
+    end
     parent_menu.sub_menu = self
     self.parent_menu = parent_menu
     self.prev_win = parent_menu.win
@@ -369,6 +372,7 @@ function winbar_menu_t:open()
   self:eval_win_config()
   self:make_buf()
   self.win = vim.api.nvim_open_win(self.buf, true, self._win_configs)
+  self.is_opened = true
   vim.wo[self.win].scrolloff = 0
   vim.wo[self.win].sidescrolloff = 0
   _G.winbar.menus[self.win] = self
