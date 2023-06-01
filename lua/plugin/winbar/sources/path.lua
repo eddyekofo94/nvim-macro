@@ -1,14 +1,51 @@
-local utils = require('plugin.winbar.sources.utils')
 local configs = require('plugin.winbar.configs')
+local bar = require('plugin.winbar.bar')
+
+---Get icon and icon highlight group of a path
+---@param path string
+---@return string icon
+---@return string? icon_hl
+local function get_icon(path)
+  local icon = configs.opts.icons.kinds.symbols.Folder
+  local icon_hl = 'WinBarIconKindFolder'
+  local stat = vim.loop.fs_stat(path)
+  if configs.opts.icons.kinds.use_devicons then
+    local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
+    if devicons_ok and stat and stat.type ~= 'directory' then
+      local devicon, devicon_hl = devicons.get_icon(
+        vim.fs.basename(path),
+        vim.fn.fnamemodify(path, ':e'),
+        { default = true }
+      )
+      icon = devicon and devicon .. ' ' or icon
+      icon_hl = devicon_hl
+    end
+  end
+  return icon, icon_hl
+end
 
 ---Unify a path into a winbar tree symbol tree structure
 ---@param path string full path
 ---@return winbar_path_symbol_tree_t
 local function unify(path)
+  local icon, icon_hl = get_icon(path)
   return setmetatable({
     name = vim.fs.basename(path),
-    kind = '',
-    data = { path = path },
+    icon = icon,
+    icon_hl = icon_hl,
+    actions = {
+      ---@param symbol winbar_symbol_t
+      jump = function(symbol)
+        if symbol.entry then
+          local current_menu = symbol.entry.menu
+          while current_menu do
+            current_menu:close()
+            current_menu = current_menu.parent_menu
+          end
+          vim.cmd.edit(path)
+        end
+      end,
+    },
   }, {
     ---@param self winbar_symbol_tree_t
     __index = function(self, k)
@@ -59,7 +96,7 @@ local function get_symbols(buf, _)
     table.insert(
       symbols,
       1,
-      utils.to_winbar_symbol_from_path(unify(current_path))
+      bar.winbar_symbol_t:new_from_tree(unify(current_path))
     )
     current_path = vim.fs.dirname(current_path)
   end

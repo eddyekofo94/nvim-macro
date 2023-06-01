@@ -7,7 +7,10 @@ local configs = require('plugin.winbar.configs')
 ---For unify the symbols from different sources
 ---@class winbar_symbol_tree_t
 ---@field name string
----@field kind string
+---@field icon string
+---@field name_hl string
+---@field icon_hl string
+---@field actions table<string, fun(this: winbar_symbol_t)>? select, preview, jump, etc
 ---@field children winbar_symbol_tree_t[]?
 ---@field siblings winbar_symbol_tree_t[]?
 ---@field idx integer? index of the symbol in its siblings
