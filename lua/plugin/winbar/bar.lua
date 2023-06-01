@@ -27,125 +27,111 @@ end
 ---@field bar winbar_t? the winbar the symbol belongs to, if the symbol is shown inside a winbar
 ---@field menu winbar_menu_t? menu associated with the winbar symbol, if the symbol is shown inside a winbar
 ---@field entry winbar_menu_entry_t? the winbar entry the symbol belongs to, if the symbol is shown inside a menu
----@field symbol winbar_symbol_tree_t? the symbol associated with the winbar symbol
----@field data table? any data associated with the symbol
+---@field children winbar_symbol_t[]? children of the symbol
+---@field siblings winbar_symbol_t[]? siblings of the symbol
 ---@field bar_idx integer? index of the symbol in the winbar
 ---@field entry_idx integer? index of the symbol in the menu entry
+---@field sibling_idx integer? index of the symbol in its siblings
 ---@field on_click fun(this: winbar_symbol_t, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false? force disable on_click when false
 ---@field actions table<string, fun(this: winbar_symbol_t)>? select, preview, jump, etc.
+---@field data table? any data associated with the symbol
 local winbar_symbol_t = {}
 winbar_symbol_t.__index = winbar_symbol_t
 
----Create a winbar symbol instance
----@param opts winbar_symbol_t?
----@return winbar_symbol_t
+---Create a winbar symbol instance, with drop-down menu support
+---@param opts winbar_symbol_t
 function winbar_symbol_t:new(opts)
   return setmetatable(
     vim.tbl_deep_extend('force', {
       name = '',
       icon = '',
-    }, opts or {}),
-    winbar_symbol_t
-  )
-end
-
----Create a winbar symbol instance from a winbar symbol tree,
----with drop-down menu support
----@param tree winbar_symbol_tree_t
----@param opts winbar_symbol_t? additional options to override
-function winbar_symbol_t:new_from_tree(tree, opts)
-  return winbar_symbol_t:new(vim.tbl_deep_extend('force', {
-    symbol = tree,
-    name = tree.name,
-    icon = tree.icon,
-    name_hl = tree.name_hl,
-    icon_hl = tree.icon_hl,
-    actions = tree.actions,
-    on_click = function(this, _, _, _, _)
-      if this.entry and this.entry.menu then
-        this.entry.menu:hl_line_single(this.entry.idx)
-      end
-      -- Toggle menu on click, or create one if menu don't exist:
-      -- 1. If symbol inside a winbar, create a menu with entries containing
-      --    the symbol's siblings
-      -- 2. Else if symbol inside a menu, create menu with entries containing
-      --    the symbol's children
-      if this.menu then
-        this.menu:toggle()
-        return
-      end
-      if not this.symbol then
-        return
-      end
-
-      local menu_prev_win = nil ---@type integer?
-      local menu_entries_source = nil ---@type winbar_symbol_tree_t[]?
-      local menu_cursor_init = nil ---@type integer[]?
-      if this.bar then -- If symbol inside a winbar
-        menu_prev_win = this.bar and this.bar.win
-        menu_entries_source = this.symbol.siblings
-        menu_cursor_init = this.symbol.idx and { this.symbol.idx, 0 }
-      elseif this.entry and this.entry.menu then -- If symbol inside a menu
-        menu_prev_win = this.entry.menu.win
-        menu_entries_source = this.symbol.children
-      end
-      if not menu_entries_source or vim.tbl_isempty(menu_entries_source) then
-        return
-      end
-
-      -- Called in winbar pick mode, open the menu relative to the symbol
-      -- position in the winbar
-      local menu_win_configs = nil
-      if this.bar and this.bar.in_pick_mode then
-        local col = 0
-        for i, component in ipairs(this.bar.components) do
-          if i < this.bar_idx then
-            col = col
-              + component:displaywidth()
-              + this.bar.separator:displaywidth()
+      on_click = opts
+        and function(this, _, _, _, _)
+          if this.entry and this.entry.menu then
+            this.entry.menu:hl_line_single(this.entry.idx)
           end
-        end
-        menu_win_configs = {
-          relative = 'win',
-          row = 0,
-          col = col,
-        }
-      end
-
-      local menu = require('plugin.winbar.menu')
-      this.menu = menu.winbar_menu_t:new({
-        prev_win = menu_prev_win,
-        cursor = menu_cursor_init,
-        win_configs = menu_win_configs,
-        ---@param sym winbar_symbol_tree_t
-        entries = vim.tbl_map(function(sym)
-          local menu_indicator_icon = configs.opts.icons.ui.menu.indicator
-          local menu_indicator_on_click = nil
-          if not sym.children or vim.tbl_isempty(sym.children) then
-            menu_indicator_icon =
-              string.rep(' ', vim.fn.strdisplaywidth(menu_indicator_icon))
-            menu_indicator_on_click = false
+          -- Toggle menu on click, or create one if menu don't exist:
+          -- 1. If symbol inside a winbar, create a menu with entries containing
+          --    the symbol's siblings
+          -- 2. Else if symbol inside a menu, create menu with entries containing
+          --    the symbol's children
+          if this.menu then
+            this.menu:toggle()
+            return
           end
-          return menu.winbar_menu_entry_t:new({
-            components = {
-              winbar_symbol_t:new_from_tree(sym, {
-                name = '',
-                icon = menu_indicator_icon,
-                name_hl = 'WinBarMenuNormalFloat',
-                icon_hl = 'WinBarIconUIIndicator',
-                on_click = menu_indicator_on_click,
-              }),
-              winbar_symbol_t:new_from_tree(sym, {
-                name_hl = 'WinBarMenuNormalFloat',
-                on_click = sym.actions and sym.actions.jump,
-              }),
-            },
+
+          local menu_prev_win = nil ---@type integer?
+          local menu_entries_source = nil ---@type winbar_symbol_tree_t[]?
+          local menu_cursor_init = nil ---@type integer[]?
+          if this.bar then -- If symbol inside a winbar
+            menu_prev_win = this.bar and this.bar.win
+            menu_entries_source = opts.siblings
+            menu_cursor_init = opts.idx and { opts.idx, 0 }
+          elseif this.entry and this.entry.menu then -- If symbol inside a menu
+            menu_prev_win = this.entry.menu.win
+            menu_entries_source = opts.children
+          end
+          if
+            not menu_entries_source or vim.tbl_isempty(menu_entries_source)
+          then
+            return
+          end
+
+          -- Called in winbar pick mode, open the menu relative to the symbol
+          -- position in the winbar
+          local menu_win_configs = nil
+          if this.bar and this.bar.in_pick_mode then
+            local col = 0
+            for i, component in ipairs(this.bar.components) do
+              if i < this.bar_idx then
+                col = col
+                  + component:displaywidth()
+                  + this.bar.separator:displaywidth()
+              end
+            end
+            menu_win_configs = {
+              relative = 'win',
+              row = 0,
+              col = col,
+            }
+          end
+
+          local menu = require('plugin.winbar.menu')
+          this.menu = menu.winbar_menu_t:new({
+            prev_win = menu_prev_win,
+            cursor = menu_cursor_init,
+            win_configs = menu_win_configs,
+            ---@param sym winbar_symbol_tree_t
+            entries = vim.tbl_map(function(sym)
+              local menu_indicator_icon = configs.opts.icons.ui.menu.indicator
+              local menu_indicator_on_click = nil
+              if not sym.children or vim.tbl_isempty(sym.children) then
+                menu_indicator_icon =
+                  string.rep(' ', vim.fn.strdisplaywidth(menu_indicator_icon))
+                menu_indicator_on_click = false
+              end
+              return menu.winbar_menu_entry_t:new({
+                components = {
+                  winbar_symbol_t:new(vim.tbl_deep_extend('force', sym, {
+                    name = '',
+                    icon = menu_indicator_icon,
+                    name_hl = 'WinBarMenuNormalFloat',
+                    icon_hl = 'WinBarIconUIIndicator',
+                    on_click = menu_indicator_on_click,
+                  })),
+                  winbar_symbol_t:new(vim.tbl_deep_extend('force', sym, {
+                    name_hl = 'WinBarMenuNormalFloat',
+                    on_click = sym.actions and sym.actions.jump,
+                  })),
+                },
+              })
+            end, menu_entries_source),
           })
-        end, menu_entries_source),
-      })
-      this.menu:toggle()
-    end,
-  }, opts or {}))
+          this.menu:toggle()
+        end,
+    }, opts),
+    self
+  )
 end
 
 ---Delete a winbar symbol instance

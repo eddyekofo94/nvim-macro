@@ -4,21 +4,8 @@ local configs = require('plugin.winbar.configs')
 
 ---@alias winbar_symbol_range_t lsp_range_t
 
----For unify the symbols from different sources
----@class winbar_symbol_tree_t
----@field name string
----@field icon string
----@field name_hl string
----@field icon_hl string
----@field actions table<string, fun(this: winbar_symbol_t)>? select, preview, jump, etc
----@field children winbar_symbol_tree_t[]?
----@field siblings winbar_symbol_tree_t[]?
----@field idx integer? index of the symbol in its siblings
----@field range winbar_symbol_range_t?
----@field data table? extra data
-
 ---Convert a winbar tree symbol structure to a winbar symbol
----@param symbol winbar_symbol_tree_t
+---@param symbol winbar_symbol_t
 ---@param opts winbar_symbol_t? extra options to override or pass to winbar_symbol_t:new()
 ---@return winbar_symbol_t
 local function to_winbar_symbol(symbol, opts)
@@ -47,7 +34,7 @@ local function to_winbar_symbol(symbol, opts)
       end
 
       local menu_prev_win = nil ---@type integer?
-      local menu_entries_source = nil ---@type winbar_symbol_tree_t[]?
+      local menu_entries_source = nil ---@type winbar_symbol_t[]?
       local menu_cursor_init = nil ---@type integer[]?
       if this.bar then -- If symbol inside a winbar
         menu_prev_win = this.bar and this.bar.win
@@ -85,7 +72,7 @@ local function to_winbar_symbol(symbol, opts)
         cursor = menu_cursor_init,
         win_configs = menu_win_configs,
 
-        ---@param sym winbar_symbol_tree_t
+        ---@param sym winbar_symbol_t
         entries = vim.tbl_map(function(sym)
           local menu_indicator_icon = configs.opts.icons.ui.menu.indicator
           local menu_indicator_on_click = nil
@@ -109,7 +96,7 @@ local function to_winbar_symbol(symbol, opts)
                 ---Goto the location of the symbol on click
                 ---@param winbar_symbol winbar_symbol_t
                 on_click = function(winbar_symbol, _, _, _, _)
-                  winbar_symbol:goto_start()
+                  winbar_symbol:goto_range_start()
                 end,
               }),
             },
@@ -121,11 +108,8 @@ local function to_winbar_symbol(symbol, opts)
   }, opts or {}))
 end
 
----@class winbar_path_symbol_tree_t: winbar_symbol_tree_t
----@field data {path: string}
-
 ---Convert a winbar tree symbol structure from source 'path' to a winbar symbol
----@param symbol winbar_path_symbol_tree_t
+---@param symbol winbar_symbol_t
 ---@param opts winbar_symbol_t? extra options to override or pass to winbar_symbol_t:new()
 ---@return winbar_symbol_t
 local function to_winbar_symbol_from_path(symbol, opts)
@@ -169,7 +153,7 @@ local function to_winbar_symbol_from_path(symbol, opts)
       end
 
       local menu_prev_win = nil ---@type integer?
-      local menu_entries_source = nil ---@type winbar_symbol_tree_t[]?
+      local menu_entries_source = nil ---@type winbar_symbol_t[]?
       local menu_cursor_init = nil ---@type integer[]?
       if this.bar then -- If symbol inside a winbar
         menu_prev_win = this.bar and this.bar.win
@@ -207,7 +191,7 @@ local function to_winbar_symbol_from_path(symbol, opts)
         cursor = menu_cursor_init,
         win_configs = menu_win_configs,
 
-        ---@param sym winbar_path_symbol_tree_t
+        ---@param sym winbar_symbol_t
         entries = vim.tbl_map(function(sym)
           local menu_indicator_icon = configs.opts.icons.ui.menu.indicator
           local menu_indicator_icon_hl = 'WinBarIconUIIndicator'

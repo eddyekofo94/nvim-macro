@@ -63,7 +63,7 @@ end
 ---Unify TSNode into winbar symbol tree format
 ---@param ts_node TSNode
 ---@param buf integer buffer handler
----@return winbar_symbol_tree_t
+---@return winbar_symbol_t
 local function unify(ts_node, buf)
   local range = { ts_node:range() }
   return setmetatable({

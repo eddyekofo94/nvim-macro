@@ -24,10 +24,10 @@ local function get_icon(path)
   return icon, icon_hl
 end
 
----Unify a path into a winbar tree symbol tree structure
+---Convert a path to the winbar symbol structure
 ---@param path string full path
----@return winbar_path_symbol_tree_t
-local function unify(path)
+---@return winbar_symbol_t
+local function convert(path)
   local icon, icon_hl = get_icon(path)
   return setmetatable({
     name = vim.fs.basename(path),
@@ -47,13 +47,13 @@ local function unify(path)
       end,
     },
   }, {
-    ---@param self winbar_symbol_tree_t
+    ---@param self winbar_symbol_t
     __index = function(self, k)
       if k == 'children' then
         self.children = {}
         for name in vim.fs.dir(path) do
           if configs.opts.sources.path.filter(name) then
-            table.insert(self.children, unify(path .. '/' .. name))
+            table.insert(self.children, convert(path .. '/' .. name))
           end
         end
         return self.children
@@ -64,7 +64,7 @@ local function unify(path)
         self.idx = 1
         for idx, name in vim.iter(vim.fs.dir(parent_dir)):enumerate() do
           if configs.opts.sources.path.filter(name) then
-            table.insert(self.siblings, unify(parent_dir .. '/' .. name))
+            table.insert(self.siblings, convert(parent_dir .. '/' .. name))
             if name == self.name then
               self.idx = idx
             end
@@ -93,11 +93,7 @@ local function get_symbols(buf, _)
         configs.eval(configs.opts.sources.path.relative_to, buf)
       )
   do
-    table.insert(
-      symbols,
-      1,
-      bar.winbar_symbol_t:new_from_tree(unify(current_path))
-    )
+    table.insert(symbols, 1, bar.winbar_symbol_t:new(convert(current_path)))
     current_path = vim.fs.dirname(current_path)
   end
   return symbols

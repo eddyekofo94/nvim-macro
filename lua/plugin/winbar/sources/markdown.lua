@@ -98,14 +98,14 @@ end
 ---@param symbols markdown_heading_symbol_t[] markdown heading symbols
 ---@param list_idx integer index of the symbol in the symbols list
 ---@param buf integer buffer handler
----@return winbar_symbol_tree_t
+---@return winbar_symbol_t
 local function unify(symbol, symbols, list_idx, buf)
   return setmetatable({
     name = symbol.name,
     kind = 'MarkdownH' .. symbol.level,
     data = { symbol = symbol },
   }, {
-    ---@param self winbar_symbol_tree_t
+    ---@param self winbar_symbol_t
     __index = function(self, k)
       parse_buf(buf, -1, true) -- Parse whole buffer before opening menu
       if k == 'children' then
