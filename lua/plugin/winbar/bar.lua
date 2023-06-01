@@ -61,12 +61,12 @@ function winbar_symbol_t:new(opts)
           end
 
           local menu_prev_win = nil ---@type integer?
-          local menu_entries_source = nil ---@type winbar_symbol_tree_t[]?
+          local menu_entries_source = nil ---@type winbar_symbol_t[]?
           local menu_cursor_init = nil ---@type integer[]?
           if this.bar then -- If symbol inside a winbar
             menu_prev_win = this.bar and this.bar.win
             menu_entries_source = opts.siblings
-            menu_cursor_init = opts.idx and { opts.idx, 0 }
+            menu_cursor_init = opts.sibling_idx and { opts.sibling_idx, 0 }
           elseif this.entry and this.entry.menu then -- If symbol inside a menu
             menu_prev_win = this.entry.menu.win
             menu_entries_source = opts.children
@@ -101,7 +101,7 @@ function winbar_symbol_t:new(opts)
             prev_win = menu_prev_win,
             cursor = menu_cursor_init,
             win_configs = menu_win_configs,
-            ---@param sym winbar_symbol_tree_t
+            ---@param sym winbar_symbol_t
             entries = vim.tbl_map(function(sym)
               local menu_indicator_icon = configs.opts.icons.ui.menu.indicator
               local menu_indicator_on_click = nil
@@ -179,11 +179,11 @@ end
 
 ---Goto the start location of the symbol associated with the winbar symbol
 ---@return nil
-function winbar_symbol_t:goto_start()
-  if not self.symbol or not self.symbol.range then
+function winbar_symbol_t:goto_range_start()
+  if not self.data or not self.data.range then
     return
   end
-  local dest_pos = self.symbol.range.start
+  local dest_pos = self.data.range.start
   if not self.entry then -- symbol is not shown inside a menu
     vim.api.nvim_win_set_cursor(self.bar.win, {
       dest_pos.line + 1,
