@@ -97,10 +97,12 @@ local function to_winbar_symbol(symbol, opts)
               to_winbar_symbol(sym, {
                 name = '',
                 icon = menu_indicator_icon,
+                name_hl = 'WinBarMenuNormalFloat',
                 icon_hl = 'WinBarIconUIIndicator',
                 on_click = menu_indicator_on_click,
               }),
               to_winbar_symbol(sym, {
+                name_hl = 'WinBarMenuNormalFloat',
                 ---Goto the location of the symbol on click
                 ---@param winbar_symbol winbar_symbol_t
                 on_click = function(winbar_symbol, _, _, _, _)
@@ -232,10 +234,12 @@ local function to_winbar_symbol_from_path(symbol, opts)
               to_winbar_symbol_from_path(sym, {
                 name = '',
                 icon = menu_indicator_icon,
+                name_hl = 'WinBarMenuNormalFloat',
                 icon_hl = menu_indicator_icon_hl,
                 on_click = menu_indicator_on_click,
               }),
               to_winbar_symbol_from_path(sym, {
+                name_hl = 'WinBarMenuNormalFloat',
                 on_click = menu_entry_text_on_click,
               }),
             },
