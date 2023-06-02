@@ -1,5 +1,5 @@
-local utils = require('plugin.winbar.sources.utils')
 local configs = require('plugin.winbar.configs')
+local bar = require('plugin.winbar.bar')
 
 local initialized = false
 local groupid = vim.api.nvim_create_augroup('WinBarMarkdown', {})
@@ -93,19 +93,54 @@ local function parse_buf(buf, lnum_end, incremental)
   end
 end
 
----Unify markdown heading symbol into winbar symbol tree format
+---Convert markdown heading symbol into winbar symbol tree format
 ---@param symbol markdown_heading_symbol_t markdown heading symbol
 ---@param symbols markdown_heading_symbol_t[] markdown heading symbols
 ---@param list_idx integer index of the symbol in the symbols list
 ---@param buf integer buffer handler
----@return winbar_symbol_tree_t
-local function unify(symbol, symbols, list_idx, buf)
+---@return winbar_symbol_t
+local function convert(symbol, symbols, list_idx, buf)
+  local kind = 'MarkdownH' .. symbol.level
   return setmetatable({
     name = symbol.name,
-    kind = 'MarkdownH' .. symbol.level,
-    data = { symbol = symbol },
+    icon = configs.opts.icons.kinds.symbols[kind],
+    icon_hl = 'WinBarIconKind' .. kind,
+    data = setmetatable({
+      heading_symbol = symbol,
+    }, {
+      __index = function(self, k)
+        if k == 'range' then
+          self.range = {
+            start = {
+              line = symbol.lnum - 1,
+              character = 0,
+            },
+            ['end'] = {
+              line = symbol.lnum - 1,
+              character = 0,
+            },
+          }
+          for heading in vim.iter(symbols):skip(list_idx) do
+            if heading.level <= symbol.level then
+              self.range['end'] = {
+                line = heading.lnum - 2,
+                character = 0,
+              }
+              break
+            end
+          end
+          return self.range
+        end
+      end,
+    }),
+    actions = {
+      ---@param sym winbar_symbol_t
+      jump = function(sym)
+        sym:goto_range_start()
+      end,
+    },
   }, {
-    ---@param self winbar_symbol_tree_t
+    ---@param self winbar_symbol_t
     __index = function(self, k)
       parse_buf(buf, -1, true) -- Parse whole buffer before opening menu
       if k == 'children' then
@@ -119,7 +154,7 @@ local function unify(symbol, symbols, list_idx, buf)
             lev = heading.level
           end
           if heading.level <= lev then
-            table.insert(self.children, unify(heading, symbols, i, buf))
+            table.insert(self.children, convert(heading, symbols, i, buf))
           end
         end
         return self.children
@@ -130,75 +165,39 @@ local function unify(symbol, symbols, list_idx, buf)
           if symbols[i].level < symbol.level then
             break
           end
-          if symbols[i].level < self.siblings[1].data.symbol.level then
-            while symbols[i].level < self.siblings[1].data.symbol.level do
+          if symbols[i].level < self.siblings[1].data.heading_symbol.level then
+            while
+              symbols[i].level
+              < self.siblings[1].data.heading_symbol.level
+            do
               table.remove(self.siblings, 1)
             end
-            table.insert(self.siblings, 1, unify(symbols[i], symbols, i, buf))
+            table.insert(
+              self.siblings,
+              1,
+              convert(symbols[i], symbols, i, buf)
+            )
           else
-            table.insert(self.siblings, 1, unify(symbols[i], symbols, i, buf))
+            table.insert(
+              self.siblings,
+              1,
+              convert(symbols[i], symbols, i, buf)
+            )
           end
         end
-        self.idx = #self.siblings
+        self.sibling_idx = #self.siblings
         for i = list_idx + 1, #symbols do
           if symbols[i].level < symbol.level then
             break
           end
           if symbols[i].level == symbol.level then
-            table.insert(self.siblings, unify(symbols[i], symbols, i, buf))
+            table.insert(self.siblings, convert(symbols[i], symbols, i, buf))
           end
         end
         return self[k]
       end
-      if k == 'range' then
-        self.range = {
-          start = {
-            line = symbol.lnum - 1,
-            character = 0,
-          },
-          ['end'] = {
-            line = symbol.lnum - 1,
-            character = 0,
-          },
-        }
-        for heading in vim.iter(symbols):skip(list_idx) do
-          if heading.level <= symbol.level then
-            self.range['end'] = {
-              line = heading.lnum - 2,
-              character = 0,
-            }
-            break
-          end
-        end
-        return self.range
-      end
     end,
   })
-end
-
----Convert markdown heading symbols into a list of winbar symbols according to
----cursor position
----@param symbols markdown_heading_symbol_t[] markdown heading symbols
----@param buf integer buffer handler
----@param cursor integer[] cursor position
----@return winbar_symbol_t[]
-local function convert(symbols, buf, cursor)
-  local result = {}
-  local current_level = 7
-  for idx, symbol in vim.iter(symbols):enumerate():rev() do
-    if symbol.lnum <= cursor[1] and symbol.level < current_level then
-      current_level = symbol.level
-      table.insert(
-        result,
-        1,
-        utils.to_winbar_symbol(unify(symbol, symbols, idx, buf))
-      )
-      if current_level == 1 then
-        break
-      end
-    end
-  end
-  return result
 end
 
 ---Attach markdown heading parser to buffer
@@ -290,7 +289,22 @@ local function get_symbols(buf, cursor)
       true
     )
   end
-  return convert(buf_symbols.symbols, buf, cursor)
+  local result = {}
+  local current_level = 7
+  for idx, symbol in vim.iter(buf_symbols.symbols):enumerate():rev() do
+    if symbol.lnum <= cursor[1] and symbol.level < current_level then
+      current_level = symbol.level
+      table.insert(
+        result,
+        1,
+        bar.winbar_symbol_t:new(convert(symbol, buf_symbols.symbols, idx, buf))
+      )
+      if current_level == 1 then
+        break
+      end
+    end
+  end
+  return result
 end
 
 return {
