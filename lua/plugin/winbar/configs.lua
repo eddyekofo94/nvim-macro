@@ -12,6 +12,7 @@ M.opts = {
         and not vim.wo[win].diff
     end,
     update_events = {
+      'BufModifiedSet',
       'CursorMoved',
       'CursorMovedI',
       'DirChanged',
@@ -19,6 +20,8 @@ M.opts = {
       'TextChanged',
       'TextChangedI',
       'VimResized',
+      'WinEnter',
+      'WinLeave',
       'WinResized',
       'WinScrolled',
     },
@@ -171,6 +174,12 @@ M.opts = {
       ---@type fun(name: string): boolean
       filter = function(_)
         return true
+      end,
+      ---Symbol of current buf is modified
+      ---@param sym winbar_symbol_t
+      ---@return winbar_symbol_t
+      modified = function(sym)
+        return sym
       end,
     },
     treesitter = {
