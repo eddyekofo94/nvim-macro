@@ -16,7 +16,6 @@ M.opts = {
         'CursorMoved',
         'CursorMovedI',
         'WinEnter',
-        'WinLeave',
         'WinResized',
         'WinScrolled',
       },
