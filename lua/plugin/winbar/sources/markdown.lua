@@ -101,7 +101,7 @@ end
 ---@return winbar_symbol_t
 local function convert(symbol, symbols, list_idx, buf)
   local kind = 'MarkdownH' .. symbol.level
-  return setmetatable({
+  return bar.winbar_symbol_t:new(setmetatable({
     name = symbol.name,
     icon = configs.opts.icons.kinds.symbols[kind],
     icon_hl = 'WinBarIconKind' .. kind,
@@ -197,7 +197,7 @@ local function convert(symbol, symbols, list_idx, buf)
         return self[k]
       end
     end,
-  })
+  }))
 end
 
 ---Attach markdown heading parser to buffer
@@ -294,11 +294,7 @@ local function get_symbols(buf, cursor)
   for idx, symbol in vim.iter(buf_symbols.symbols):enumerate():rev() do
     if symbol.lnum <= cursor[1] and symbol.level < current_level then
       current_level = symbol.level
-      table.insert(
-        result,
-        1,
-        bar.winbar_symbol_t:new(convert(symbol, buf_symbols.symbols, idx, buf))
-      )
+      table.insert(result, 1, convert(symbol, buf_symbols.symbols, idx, buf))
       if current_level == 1 then
         break
       end

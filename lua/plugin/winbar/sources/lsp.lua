@@ -187,7 +187,7 @@ end
 ---@return winbar_symbol_t
 local function convert_symbol_information(symbol, symbols, list_idx)
   local kind = symbol_kind_names[symbol.kind]
-  return setmetatable({
+  return bar.winbar_symbol_t:new(setmetatable({
     name = symbol.name,
     icon = configs.opts.icons.kinds.symbols[kind],
     icon_hl = 'WinBarIconKind' .. kind,
@@ -217,7 +217,7 @@ local function convert_symbol_information(symbol, symbols, list_idx)
         return self[k]
       end
     end,
-  })
+  }))
 end
 
 ---Convert LSP SymbolInformation[] into a list of winbar symbols
@@ -238,9 +238,7 @@ local function convert_symbol_information_list(
     if cursor_in_range(cursor, symbol.location.range) then
       table.insert(
         winbar_symbols,
-        bar.winbar_symbol_t:new(
-          convert_symbol_information(symbol, lsp_symbols, idx)
-        )
+        convert_symbol_information(symbol, lsp_symbols, idx)
       )
     end
   end
@@ -253,7 +251,7 @@ end
 ---@return winbar_symbol_t
 local function convert_document_symbol(document_symbol, siblings, idx)
   local kind = symbol_kind_names[document_symbol.kind]
-  return setmetatable({
+  return bar.winbar_symbol_t:new(setmetatable({
     name = document_symbol.name,
     icon = configs.opts.icons.kinds.symbols[kind],
     icon_hl = 'WinBarIconKind' .. kind,
@@ -285,7 +283,7 @@ local function convert_document_symbol(document_symbol, siblings, idx)
         return self.siblings
       end
     end,
-  })
+  }))
 end
 
 ---Convert LSP DocumentSymbol[] into a list of winbar symbols
@@ -305,9 +303,7 @@ local function convert_document_symbol_list(
     if cursor_in_range(cursor, symbol.range) then
       table.insert(
         winbar_symbols,
-        bar.winbar_symbol_t:new(
-          convert_document_symbol(symbol, lsp_symbols, idx)
-        )
+        convert_document_symbol(symbol, lsp_symbols, idx)
       )
       if symbol.children then
         convert_document_symbol_list(symbol.children, winbar_symbols, cursor)
