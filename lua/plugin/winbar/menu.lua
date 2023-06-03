@@ -60,6 +60,12 @@ function winbar_menu_entry_t:cat()
   local str = string.rep(' ', self.padding.left)
   local hl_info = {}
   for _, component in ipairs(components_with_sep) do
+    component.data = component.data or {}
+    -- byte-indexed, 0-indexed, start inclusive, end exclusive
+    component.data.entry_range = {
+      start = #str,
+      ['end'] = #str + component:bytewidth(),
+    }
     if component.icon_hl then
       table.insert(hl_info, {
         start = #str,
@@ -94,15 +100,16 @@ end
 ---Get the first clickable component in the winbar menu entry
 ---@param offset integer? offset from the beginning of the entry, default 0
 ---@return winbar_symbol_t?
+---@return {start: integer, end: integer}? range of the clickable component in the menu, byte-indexed, 0-indexed, start-inclusive, end-exclusive
 function winbar_menu_entry_t:first_clickable(offset)
-  offset = (offset or 0) - self.padding.left
-  for i, component in ipairs(self.components) do
-    offset = offset
-      - component:bytewidth()
-      - (i > 1 and self.separator:bytewidth() or 0)
-    if offset < 0 and component.on_click then
-      return component
+  offset = offset or 0
+  local col_start = self.padding.left
+  for _, component in ipairs(self.components) do
+    local col_end = col_start + component:bytewidth()
+    if offset < col_end and component.on_click then
+      return component, { start = col_start, ['end'] = col_end }
     end
+    col_start = col_end + self.separator:bytewidth()
   end
 end
 
@@ -263,9 +270,39 @@ function winbar_menu_t:hl_line_range(line, hl_info)
   )
 end
 
+---Used to add background highlight to a single range in the menu buffer
+---Notice that all other highlight added using this function will be deleted
+---@param line integer? 1-indexed
+---@param range {start: integer, end: integer}? 0-indexed, byte-indexed, start inclusive, end exclusive
+---@param hlgroup string? default to 'WinBarMenuCurrentSymbol'
+---@return nil
+function winbar_menu_t:hl_range_single(line, range, hlgroup)
+  if not self.buf then
+    return
+  end
+  hlgroup = hlgroup or 'WinBarMenuCurrentSymbol'
+  local ns = vim.api.nvim_create_namespace(hlgroup)
+  vim.api.nvim_buf_clear_namespace(self.buf, ns, 0, -1)
+  if line and range then
+    vim.api.nvim_set_hl(
+      ns,
+      hlgroup,
+      vim.api.nvim_get_hl(0, { name = hlgroup })
+    )
+    vim.api.nvim_buf_add_highlight(
+      self.buf,
+      ns,
+      hlgroup,
+      line - 1,
+      range.start,
+      range['end']
+    )
+  end
+end
+
 ---Used to add background highlight to a single line in the menu buffer
 ---Notice that all other highlight added using this function will be deleted
----@param line integer 1-indexed
+---@param line integer? 1-indexed
 ---@param hlgroup string? default to 'WinBarMenuCurrentContext'
 ---@return nil
 function winbar_menu_t:hl_line_single(line, hlgroup)
@@ -274,17 +311,23 @@ function winbar_menu_t:hl_line_single(line, hlgroup)
   end
   hlgroup = hlgroup or 'WinBarMenuCurrentContext'
   -- Use namespace to delete highlights conveniently
-  local ns = vim.api.nvim_create_namespace('WinBarMenu')
-  vim.api.nvim_set_hl(ns, hlgroup, vim.api.nvim_get_hl(0, { name = hlgroup }))
+  local ns = vim.api.nvim_create_namespace(hlgroup)
   vim.api.nvim_buf_clear_namespace(self.buf, ns, 0, -1)
-  vim.api.nvim_buf_add_highlight(
-    self.buf,
-    ns,
-    hlgroup,
-    line - 1, -- 0-indexed
-    0,
-    -1
-  )
+  if line then
+    vim.api.nvim_set_hl(
+      ns,
+      hlgroup,
+      vim.api.nvim_get_hl(0, { name = hlgroup })
+    )
+    vim.api.nvim_buf_add_highlight(
+      self.buf,
+      ns,
+      hlgroup,
+      line - 1, -- 0-indexed
+      0,
+      -1
+    )
+  end
 end
 
 ---Make a buffer for the menu and set buffer-local keymaps
@@ -345,6 +388,25 @@ function winbar_menu_t:make_buf()
       -- Trigger self:close() when the popup window is closed
       -- to ensure the cursor is set to the correct previous window
       self:close()
+    end,
+  })
+  vim.api.nvim_create_autocmd('CursorMoved', {
+    group = groupid,
+    buffer = self.buf,
+    callback = function()
+      local cursor = vim.api.nvim_win_get_cursor(self.win)
+      local component, range =
+        self.entries[cursor[1]]:first_clickable(cursor[2])
+      self:hl_range_single(component and component.entry.idx, range)
+      self:hl_line_single(cursor[1], 'WinBarMenuCurrentEntry')
+    end,
+  })
+  vim.api.nvim_create_autocmd('BufLeave', {
+    group = groupid,
+    buffer = self.buf,
+    callback = function()
+      self:hl_range_single(nil, nil)
+      self:hl_line_single(nil, 'WinBarMenuCurrentEntry')
     end,
   })
 end

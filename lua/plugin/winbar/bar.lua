@@ -139,12 +139,10 @@ function winbar_symbol_t:new(opts)
                     sym:merge({
                       name = '',
                       icon = menu_indicator_icon,
-                      name_hl = 'WinBarMenuNormalFloat',
                       icon_hl = 'WinBarIconUIIndicator',
                       on_click = menu_indicator_on_click,
                     }),
                     sym:merge({
-                      name_hl = 'WinBarMenuNormalFloat',
                       on_click = sym.actions and sym.actions.jump,
                     }),
                   },

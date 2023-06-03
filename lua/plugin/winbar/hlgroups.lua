@@ -63,7 +63,8 @@ local function init()
     WinBarIconUISeparator           = { link = 'SpecialChar' },
     WinBarIconUISeparatorMenu       = { link = 'WinBarIconUISeparator' },
     WinBarMenuCurrentContext        = { link = 'PmenuSel' },
-    WinBarMenuNormalFloat           = { link = 'WinBar' },
+    WinBarMenuCurrentEntry          = { link = 'Visual' },
+    -- WinBarMenuCurrentSymbol         = { link = 'PmenuSel' },
   }
   -- stylua: ignore end
   for hl_name, hl_settings in pairs(hlgroups) do
