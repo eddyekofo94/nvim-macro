@@ -384,7 +384,7 @@ function winbar_t:update()
     return self.string_cache
   end
 
-  local cursor = vim.api.nvim_win_get_cursor(0)
+  local cursor = vim.api.nvim_win_get_cursor(self.win)
   for _, component in ipairs(self.components) do
     component:del()
   end
