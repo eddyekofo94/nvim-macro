@@ -82,18 +82,48 @@ local function setup(opts)
     end,
     desc = 'Remove winbar from cache on buffer delete/unload/wipeout.',
   })
-  vim.api.nvim_create_autocmd(configs.opts.general.update_events, {
-    group = groupid,
-    callback = function(info)
-      local win = info.event == 'WinScrolled' and tonumber(info.match)
-        or vim.api.nvim_get_current_win()
-      local buf = vim.api.nvim_win_get_buf(win)
-      if rawget(_G.winbar.bars, buf) and rawget(_G.winbar.bars[buf], win) then
-        _G.winbar.bars[buf][win]:update()
-      end
-    end,
-    desc = 'Update winbar on cursor move, window/buffer enter, text change.',
-  })
+  if not vim.tbl_isempty(configs.opts.general.update_events.win) then
+    vim.api.nvim_create_autocmd(configs.opts.general.update_events.win, {
+      group = groupid,
+      callback = function(info)
+        local win = info.event == 'WinScrolled' and tonumber(info.match)
+          or vim.api.nvim_get_current_win()
+        local buf = vim.api.nvim_win_get_buf(win)
+        if
+          rawget(_G.winbar.bars, buf) and rawget(_G.winbar.bars[buf], win)
+        then
+          _G.winbar.bars[buf][win]:update()
+        end
+      end,
+      desc = 'Update a single winbar.',
+    })
+  end
+  if not vim.tbl_isempty(configs.opts.general.update_events.buf) then
+    vim.api.nvim_create_autocmd(configs.opts.general.update_events.buf, {
+      group = groupid,
+      callback = function(info)
+        if rawget(_G.winbar.bars, info.buf) then
+          for win, _ in pairs(_G.winbar.bars[info.buf]) do
+            _G.winbar.bars[info.buf][win]:update()
+          end
+        end
+      end,
+      desc = 'Update all winbars associated with buf.',
+    })
+  end
+  if not vim.tbl_isempty(configs.opts.general.update_events.global) then
+    vim.api.nvim_create_autocmd(configs.opts.general.update_events.global, {
+      group = groupid,
+      callback = function()
+        for buf, _ in pairs(_G.winbar.bars) do
+          for win, _ in pairs(_G.winbar.bars[buf]) do
+            _G.winbar.bars[buf][win]:update()
+          end
+        end
+      end,
+      desc = 'Update all winbars.',
+    })
+  end
   vim.api.nvim_create_autocmd({ 'WinClosed' }, {
     group = groupid,
     callback = function(info)

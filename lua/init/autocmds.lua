@@ -106,7 +106,7 @@ local autocmds = {
 
   -- Automatically change local current directory
   {
-    { 'BufReadPost', 'BufEnter', 'FileChangedShellPost' },
+    { 'BufReadPost', 'BufWinEnter', 'FileChangedShellPost' },
     {
       pattern = '*',
       group = 'AutoCwd',
@@ -116,12 +116,12 @@ local autocmds = {
         end
         local proj_dir = require('utils.funcs').fs.proj_dir(info.file)
         if proj_dir then
-          vim.cmd.tcd(proj_dir)
+          vim.cmd.lcd(proj_dir)
         else
           local dirname = vim.fs.dirname(info.file)
           local stat = vim.loop.fs_stat(dirname)
           if stat and stat.type == 'directory' then
-            vim.cmd.tcd(dirname)
+            vim.cmd.lcd(dirname)
           end
         end
       end,
