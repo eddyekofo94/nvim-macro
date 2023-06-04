@@ -132,7 +132,7 @@ M.opts = {
         if mouse.winid ~= menu.win then
           return
         end
-        menu:update_hover_hl({ mouse.line, mouse.column })
+        menu:update_hover_hl({ mouse.line, mouse.column - 1 })
       end,
     },
     ---@alias winbar_menu_win_config_opts_t any|fun(menu: winbar_menu_t):any
