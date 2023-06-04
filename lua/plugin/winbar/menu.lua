@@ -279,13 +279,13 @@ end
 ---Notice that all other highlight added using this function will be deleted
 ---@param line integer|false? 1-indexed
 ---@param range {start: integer, end: integer}? 0-indexed, byte-indexed, start inclusive, end exclusive
----@param hlgroup string? default to 'WinBarMenuCurrentSymbol'
+---@param hlgroup string? default to 'WinBarMenuHoverSymbol'
 ---@return nil
 function winbar_menu_t:hl_range_single(line, range, hlgroup)
   if not self.buf then
     return
   end
-  hlgroup = hlgroup or 'WinBarMenuCurrentSymbol'
+  hlgroup = hlgroup or 'WinBarMenuHoverSymbol'
   local ns = vim.api.nvim_create_namespace(hlgroup)
   vim.api.nvim_buf_clear_namespace(self.buf, ns, 0, -1)
   if line and range then
@@ -333,6 +333,26 @@ function winbar_menu_t:hl_line_single(line, hlgroup)
       -1
     )
   end
+end
+
+---Update WinBarMenuHover* highlights according to pos
+---@param pos integer[]? byte-indexed, 1,0-indexed cursor/mouse position
+---@return nil
+function winbar_menu_t:update_hover_hl(pos)
+  self:hl_range_single(nil, nil)
+  self:hl_range_single(nil, nil, 'WinBarMenuHoverIcon')
+  self:hl_line_single(nil, 'WinBarMenuHoverEntry')
+  if not pos then
+    return
+  end
+  local component, range = self:get_component_at({ pos[1], pos[2] })
+  self:hl_range_single(
+    component and component.on_click and component.entry.idx,
+    range,
+    component and component.name == '' and 'WinBarMenuHoverIcon'
+      or 'WinBarMenuHoverSymbol'
+  )
+  self:hl_line_single(pos[1], 'WinBarMenuHoverEntry')
 end
 
 ---Make a buffer for the menu and set buffer-local keymaps
@@ -399,19 +419,14 @@ function winbar_menu_t:make_buf()
     group = groupid,
     buffer = self.buf,
     callback = function()
-      local cursor = vim.api.nvim_win_get_cursor(self.win)
-      local component, range =
-        self.entries[cursor[1]]:first_clickable(cursor[2])
-      self:hl_range_single(component and component.entry.idx, range)
-      self:hl_line_single(cursor[1], 'WinBarMenuCurrentEntry')
+      self:update_hover_hl(vim.api.nvim_win_get_cursor(self.win))
     end,
   })
   vim.api.nvim_create_autocmd('BufLeave', {
     group = groupid,
     buffer = self.buf,
     callback = function()
-      self:hl_range_single(nil, nil)
-      self:hl_line_single(nil, 'WinBarMenuCurrentEntry')
+      self:update_hover_hl()
     end,
   })
 end

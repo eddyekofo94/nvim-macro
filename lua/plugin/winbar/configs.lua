@@ -126,22 +126,10 @@ M.opts = {
           return
         end
         local mouse = vim.fn.getmousepos()
-        if menu.win ~= mouse.winid then
-          if vim.api.nvim_buf_is_valid(menu.buf) then
-            menu:hl_range_single(nil, nil)
-            menu:hl_line_single(nil, 'WinBarMenuCurrentEntry')
-          end
+        if mouse.winid ~= menu.win then
           return
         end
-        local component, range =
-          menu:get_component_at({ mouse.line, mouse.column })
-        menu:hl_range_single(
-          component
-            and component.on_click
-            and component.entry.idx,
-          range
-        )
-        menu:hl_line_single(mouse.line, 'WinBarMenuCurrentEntry')
+        menu:update_hover_hl({ mouse.line, mouse.column })
       end,
     },
     ---@alias winbar_menu_win_config_opts_t any|fun(menu: winbar_menu_t):any
