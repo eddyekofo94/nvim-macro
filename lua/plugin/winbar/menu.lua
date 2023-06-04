@@ -60,12 +60,6 @@ function winbar_menu_entry_t:cat()
   local str = string.rep(' ', self.padding.left)
   local hl_info = {}
   for _, component in ipairs(components_with_sep) do
-    component.data = component.data or {}
-    -- byte-indexed, 0-indexed, start inclusive, end exclusive
-    component.data.entry_range = {
-      start = #str,
-      ['end'] = #str + component:bytewidth(),
-    }
     if component.icon_hl then
       table.insert(hl_info, {
         start = #str,
