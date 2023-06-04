@@ -64,7 +64,7 @@ local function init()
     WinBarIconUISeparatorMenu       = { link = 'WinBarIconUISeparator' },
     WinBarMenuCurrentContext        = { link = 'PmenuSel' },
     WinBarMenuCurrentEntry          = { link = 'Visual' },
-    WinBarMenuCurrentSymbol         = { link = 'PmenuSel' },
+    WinBarMenuCurrentSymbol         = { bold = true },
   }
   -- stylua: ignore end
   for hl_name, hl_settings in pairs(hlgroups) do
