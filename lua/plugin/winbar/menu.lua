@@ -189,25 +189,30 @@ end
 ---Get the component at the given position in the winbar menu
 ---@param pos integer[] {row: integer, col: integer}, 1-indexed, byte-indexed
 ---@return winbar_symbol_t?
+---@return {start: integer, end: integer}? range of the component in the menu, byte-indexed, 0-indexed, start-inclusive, end-exclusive
 function winbar_menu_t:get_component_at(pos)
   if not self.entries or vim.tbl_isempty(self.entries) then
-    return nil
+    return nil, nil
   end
   local row = pos[1]
   local col = pos[2]
   local entry = self.entries[row]
   if not entry or not entry.components then
-    return nil
+    return nil, nil
   end
   local col_offset = entry.padding.left
   for _, component in ipairs(entry.components) do
     local component_len = component:bytewidth()
     if col <= col_offset + component_len then -- Look-ahead
-      return component
+      return component,
+        {
+          start = col_offset,
+          ['end'] = col_offset + component_len,
+        }
     end
-    col_offset = col_offset + component_len
+    col_offset = col_offset + component_len + entry.separator:bytewidth()
   end
-  return nil
+  return nil, nil
 end
 
 ---"Click" the component at the given position in the winbar menu

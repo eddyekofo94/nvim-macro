@@ -120,6 +120,30 @@ M.opts = {
           menu:click_on(component, nil, 1, 'l')
         end
       end,
+      ['<MouseMove>'] = function()
+        local menu = require('plugin.winbar.api').get_current_winbar_menu()
+        if not menu then
+          return
+        end
+        local mouse = vim.fn.getmousepos()
+        if menu.win ~= mouse.winid then
+          if vim.api.nvim_buf_is_valid(menu.buf) then
+            menu:hl_range_single(nil, nil)
+            menu:hl_line_single(nil, 'WinBarMenuCurrentEntry')
+          end
+          return
+        end
+        local component, range =
+          menu:get_component_at({ mouse.line, mouse.column })
+        menu:hl_range_single(
+          ---@diagnostic disable-next-line: param-type-mismatch
+          component
+            and component.on_click
+            and component.entry.idx,
+          range
+        )
+        menu:hl_line_single(mouse.line, 'WinBarMenuCurrentEntry')
+      end,
     },
     ---@alias winbar_menu_win_config_opts_t any|fun(menu: winbar_menu_t):any
     ---@type table<string, winbar_menu_win_config_opts_t>
