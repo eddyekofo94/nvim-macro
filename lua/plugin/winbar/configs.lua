@@ -136,7 +136,6 @@ M.opts = {
         local component, range =
           menu:get_component_at({ mouse.line, mouse.column })
         menu:hl_range_single(
-          ---@diagnostic disable-next-line: param-type-mismatch
           component
             and component.on_click
             and component.entry.idx,

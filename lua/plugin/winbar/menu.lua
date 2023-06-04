@@ -277,7 +277,7 @@ end
 
 ---Used to add background highlight to a single range in the menu buffer
 ---Notice that all other highlight added using this function will be deleted
----@param line integer? 1-indexed
+---@param line integer|false? 1-indexed
 ---@param range {start: integer, end: integer}? 0-indexed, byte-indexed, start inclusive, end exclusive
 ---@param hlgroup string? default to 'WinBarMenuCurrentSymbol'
 ---@return nil
