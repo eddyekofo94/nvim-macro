@@ -33,15 +33,20 @@ return {
   },
 
   {
-    'hrsh7th/cmp-path',
-    event = { 'CmdlineEnter', 'InsertEnter' },
-    dependencies = 'nvim-cmp',
+    'tzachar/fuzzy.nvim',
+    lazy = true,
   },
 
   {
-    'hrsh7th/cmp-buffer',
+    'tzachar/cmp-fuzzy-path',
     event = { 'CmdlineEnter', 'InsertEnter' },
-    dependencies = 'nvim-cmp',
+    dependencies = { 'fuzzy.nvim', 'nvim-cmp' },
+  },
+
+  {
+    'tzachar/cmp-fuzzy-buffer',
+    event = { 'CmdlineEnter', 'InsertEnter' },
+    dependencies = { 'fuzzy.nvim', 'nvim-cmp' },
   },
 
   {

@@ -238,9 +238,14 @@ cmp.setup({
         return not entry.completion_item.label:match('Workspace loading')
       end,
     },
-    { name = 'buffer', max_item_count = 8 },
+    { name = 'fuzzy_buffer', max_item_count = 8 },
     { name = 'spell', max_item_count = 8 },
-    { name = 'path' },
+    {
+      name = 'fuzzy_path',
+      entry_filter = function(entry, _)
+        return not entry.completion_item.label:match('No matches found')
+      end,
+    },
     { name = 'calc' },
   },
   sorting = {
@@ -268,17 +273,23 @@ cmp.setup({
 -- Use buffer source for `/`.
 cmp.setup.cmdline('/', {
   enabled = true,
-  sources = { { name = 'buffer' } },
+  sources = { { name = 'fuzzy_buffer' } },
 })
 cmp.setup.cmdline('?', {
   enabled = true,
-  sources = { { name = 'buffer' } },
+  sources = { { name = 'fuzzy_buffer' } },
 })
 -- Use cmdline & path source for ':'.
 cmp.setup.cmdline(':', {
   enabled = true,
   sources = {
-    { name = 'path', group_index = 1 },
+    {
+      name = 'fuzzy_path',
+      group_index = 1,
+      entry_filter = function(entry, _)
+        return not entry.completion_item.label:match('No matches found')
+      end,
+    },
     { name = 'cmdline', group_index = 2 },
   },
 })
@@ -286,9 +297,15 @@ cmp.setup.cmdline(':', {
 cmp.setup.cmdline('@', {
   enabled = true,
   sources = {
-    { name = 'path', group_index = 1 },
+    {
+      name = 'fuzzy_path',
+      group_index = 1,
+      entry_filter = function(entry, _)
+        return not entry.completion_item.label:match('No matches found')
+      end,
+    },
     { name = 'cmdline', group_index = 2 },
-    { name = 'buffer', group_index = 3 },
+    { name = 'fuzzy_buffer', group_index = 3 },
   },
 })
 
