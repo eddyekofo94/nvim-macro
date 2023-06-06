@@ -1,4 +1,5 @@
 local configs = require('plugin.winbar.configs')
+local utils = require('plugin.winbar.utils')
 
 ---Add highlight to a string
 ---@param str string
@@ -34,7 +35,6 @@ end
 ---@field entry_idx integer? index of the symbol in the menu entry
 ---@field sibling_idx integer? index of the symbol in its siblings
 ---@field on_click fun(this: winbar_symbol_t, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false? force disable on_click when false
----@field actions table<string, fun(this: winbar_symbol_t)>? select, preview, jump, etc.
 ---@field data table? any data associated with the symbol
 local winbar_symbol_t = {}
 
@@ -127,6 +127,10 @@ function winbar_symbol_t:new(opts)
             end
             local menu = require('plugin.winbar.menu')
             this.menu = menu.winbar_menu_t:new({
+              source = {
+                buf = this.bar and this.bar.buf or this.entry.menu.source.buf,
+                win = this.bar and this.bar.win or this.entry.menu.source.win,
+              },
               prev_win = prev_win,
               cursor = init_cursor,
               win_configs = win_configs,
@@ -151,7 +155,7 @@ function winbar_symbol_t:new(opts)
                       on_click = menu_indicator_on_click,
                     }),
                     sym:merge({
-                      on_click = sym.actions and sym.actions.jump,
+                      on_click = sym.jump,
                     }),
                   },
                 })
@@ -208,14 +212,14 @@ function winbar_symbol_t:bytewidth()
   return #self:cat(true)
 end
 
----Goto the start location of the symbol associated with the winbar symbol
+---Jump to the start of the symbol associated with the winbar symbol
 ---@return nil
-function winbar_symbol_t:goto_range_start()
+function winbar_symbol_t:jump()
   if not self.data or not self.data.range then
     return
   end
   local dest_pos = self.data.range.start
-  if not self.entry then -- symbol is not shown inside a menu
+  if self.bar then -- symbol is shown inside a winbar
     vim.api.nvim_win_set_cursor(self.bar.win, {
       dest_pos.line + 1,
       dest_pos.character,
@@ -227,13 +231,61 @@ function winbar_symbol_t:goto_range_start()
   while current_menu and current_menu.parent_menu do
     current_menu = current_menu.parent_menu
   end
-  if current_menu then
-    vim.api.nvim_win_set_cursor(current_menu.prev_win, {
+  if current_menu and current_menu.source then
+    vim.api.nvim_win_set_cursor(current_menu.source.win, {
       dest_pos.line + 1,
       dest_pos.character,
     })
-    current_menu:close()
+    current_menu:close(false)
   end
+end
+
+---Preview the symbol in the source window
+---@return nil
+function winbar_symbol_t:preview()
+  if not self.data or not self.data.range then
+    return
+  end
+  local win = self.bar and self.bar.win
+    or self.entry and self.entry.menu and self.entry.menu.source.win
+  local buf = self.bar and self.bar.buf
+    or self.entry and self.entry.menu and self.entry.menu.source.buf
+  if not win or not buf then
+    return
+  end
+  local ns = vim.api.nvim_create_namespace('WinBarPreview')
+  vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+  vim.api.nvim_set_hl(
+    ns,
+    'WinBarPreview',
+    vim.api.nvim_get_hl(0, { name = 'WinBarPreview' })
+  )
+  for linenr = self.data.range.start.line, self.data.range['end'].line do
+    local start_col = linenr == self.data.range.start.line
+        and self.data.range.start.character
+      or 0
+    local end_col = linenr == self.data.range['end'].line
+        and self.data.range['end'].character
+      or -1
+    vim.api.nvim_buf_add_highlight(
+      buf,
+      ns,
+      'WinBarPreview',
+      linenr,
+      start_col,
+      end_col
+    )
+  end
+  vim.api.nvim_win_set_cursor(win, {
+    self.data.range.start.line + 1,
+    self.data.range.start.character,
+  })
+  utils.win_execute(
+    win,
+    configs.opts.menu.preview.reorient,
+    win,
+    self.data.range
+  )
 end
 
 ---Temporarily change the content of a winbar symbol

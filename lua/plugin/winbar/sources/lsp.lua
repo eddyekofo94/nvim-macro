@@ -192,12 +192,6 @@ local function convert_symbol_information(symbol, symbols, list_idx)
     icon = configs.opts.icons.kinds.symbols[kind],
     icon_hl = 'WinBarIconKind' .. kind,
     data = { range = symbol.location.range },
-    actions = {
-      ---@param sym winbar_symbol_t
-      jump = function(sym)
-        sym:goto_range_start()
-      end,
-    },
   }, {
     __index = function(self, k)
       if k == 'children' or k == 'siblings' or k == 'idx' then
@@ -257,12 +251,6 @@ local function convert_document_symbol(document_symbol, siblings, idx)
     icon_hl = 'WinBarIconKind' .. kind,
     data = { range = document_symbol.range },
     sibling_idx = idx,
-    actions = {
-      ---@param sym winbar_symbol_t
-      jump = function(sym)
-        sym:goto_range_start()
-      end,
-    },
   }, {
     __index = function(self, k)
       if k == 'children' then

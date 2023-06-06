@@ -133,12 +133,6 @@ local function convert(symbol, symbols, list_idx, buf)
         end
       end,
     }),
-    actions = {
-      ---@param sym winbar_symbol_t
-      jump = function(sym)
-        sym:goto_range_start()
-      end,
-    },
   }, {
     ---@param self winbar_symbol_t
     __index = function(self, k)

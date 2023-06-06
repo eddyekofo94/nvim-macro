@@ -33,19 +33,18 @@ local function convert(path)
     name = vim.fs.basename(path),
     icon = icon,
     icon_hl = icon_hl,
-    actions = {
-      ---@param symbol winbar_symbol_t
-      jump = function(symbol)
-        if symbol.entry then
-          local current_menu = symbol.entry.menu
-          while current_menu do
-            current_menu:close()
-            current_menu = current_menu.parent_menu
-          end
-          vim.cmd.edit(path)
+    ---Override the default jump function
+    ---@param symbol winbar_symbol_t
+    jump = function(symbol)
+      if symbol.entry then
+        local current_menu = symbol.entry.menu
+        while current_menu do
+          current_menu:close()
+          current_menu = current_menu.parent_menu
         end
-      end,
-    },
+        vim.cmd.edit(path)
+      end
+    end,
   }, {
     ---@param self winbar_symbol_t
     __index = function(self, k)

@@ -17,7 +17,6 @@ M.opts = {
         'CursorMovedI',
         'WinEnter',
         'WinResized',
-        'WinScrolled',
       },
       buf = {
         'BufModifiedSet',
@@ -82,6 +81,19 @@ M.opts = {
     },
   },
   menu = {
+    -- When on, preview the symbol in the source window
+    preview = {
+      enable = true,
+      ---Reorient the preview window on previewing a new symbol
+      ---@param win integer source window
+      ---@param range {start: {line: integer}, end: {line: integer}} 0-indexed
+      reorient = function(win, range)
+        local view = vim.fn.winsaveview()
+        view.topline = range.start.line
+          - math.floor(1 / 4 * vim.api.nvim_win_get_height(win))
+        vim.fn.winrestview(view)
+      end,
+    },
     -- When on, set the cursor to the closest clickable component
     -- on CursorMoved
     quick_navigation = true,
@@ -130,7 +142,32 @@ M.opts = {
         end
         local mouse = vim.fn.getmousepos()
         if mouse.winid ~= menu.win then
+          -- Find the root menu
+          while menu and menu.parent_menu do
+            menu = menu.parent_menu
+          end
+          if menu then
+            if menu.source then
+              vim.api.nvim_buf_clear_namespace(
+                menu.source.buf,
+                vim.api.nvim_create_namespace('WinBarPreview'),
+                0,
+                -1
+              )
+              require('plugin.winbar.utils').win_execute(
+                menu.source.win,
+                vim.fn.winrestview,
+                menu.source.view
+              )
+            end
+          end
           return
+        end
+        if M.opts.menu.preview.enable then
+          local component = menu:get_component_at({ mouse.line, mouse.column })
+          if component and component.preview then
+            component:preview()
+          end
         end
         menu:update_hover_hl({ mouse.line, mouse.column - 1 })
       end,

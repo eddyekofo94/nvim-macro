@@ -64,6 +64,7 @@ local hlgroups = {
   WinBarMenuHoverEntry            = { link = 'Visual' },
   WinBarMenuHoverIcon             = { reverse = true },
   WinBarMenuHoverSymbol           = { bold = true },
+  WinBarPreview                   = { link = 'Visual' },
 }
 --stylua: ignore end
 

@@ -1,4 +1,5 @@
 local bar = require('plugin.winbar.bar')
+local utils = require('plugin.winbar.utils')
 local groupid = vim.api.nvim_create_augroup('WinBarMenu', {})
 local configs = require('plugin.winbar.configs')
 
@@ -175,6 +176,7 @@ end
 ---@field win_configs table window configuration, value can be a function
 ---@field _win_configs table evaluated window configuration
 ---@field cursor integer[]? initial cursor position
+---@field source { buf: integer, win: integer, view: table? }?
 ---@field prev_win integer? previous window, assigned when calling new() or automatically determined in open()
 ---@field sub_menu winbar_menu_t? submenu, assigned when calling new() or automatically determined when a new menu opens
 ---@field parent_menu winbar_menu_t? parent menu, assigned when calling new() or automatically determined in open()
@@ -456,13 +458,21 @@ function winbar_menu_t:make_buf()
     buffer = self.buf,
     callback = function()
       local cursor = vim.api.nvim_win_get_cursor(self.win)
-      local entry = self.entries and self.entries[cursor[1]]
-      if not entry or not configs.opts.menu.quick_navigation then
-        goto update_hover_hl
+
+      -- Code for preview
+      if
+        configs.opts.menu.preview.enable
+        and not vim.deep_equal(cursor, self.prev_cursor)
+      then
+        local component = self:get_component_at({ cursor[1], cursor[2] + 1 })
+        if component and component.preview then
+          component:preview()
+        end
       end
 
       -- Code for quick navigation
-      do
+      if configs.opts.menu.quick_navigation then
+        local entry = self.entries and self.entries[cursor[1]]
         local target_component, range
         if not self.prev_cursor then
           target_component, range =
@@ -485,7 +495,6 @@ function winbar_menu_t:make_buf()
       end
 
       -- Update hover highlights
-      ::update_hover_hl::
       self:update_hover_hl(cursor)
     end,
   })
@@ -506,16 +515,17 @@ function winbar_menu_t:open()
     return
   end
 
-  local parent_menu = _G.winbar.menus[self.prev_win]
-  if parent_menu then
+  self.parent_menu = _G.winbar.menus[self.prev_win]
+  if self.parent_menu then
     -- if the parent menu has an existing sub-menu, close the sub-menu first
-    if parent_menu.sub_menu then
-      parent_menu.sub_menu:close()
+    if self.parent_menu.sub_menu then
+      self.parent_menu.sub_menu:close()
     end
-    parent_menu.sub_menu = self
-    self.parent_menu = parent_menu
-    self.prev_win = parent_menu.win
+    self.parent_menu.sub_menu = self
   end
+
+  -- Save source win view
+  self.source.view = utils.win_execute(self.source.win, vim.fn.winsaveview)
 
   self:eval_win_configs()
   self:make_buf()
@@ -535,29 +545,46 @@ function winbar_menu_t:open()
 end
 
 ---Close the menu
+---@param restore_view boolean? whether to restore the source win view, default true
 ---@return nil
-function winbar_menu_t:close()
+function winbar_menu_t:close(restore_view)
   if not self.is_opened then
     return
   end
   self.is_opened = false
+  restore_view = restore_view == nil and true
 
+  -- Close sub-menus
   if self.sub_menu then
-    self.sub_menu:close()
+    self.sub_menu:close(restore_view)
   end
-  if
-    self.win
-    and self.prev_win
-    and vim.api.nvim_win_is_valid(self.prev_win)
-  then
+
+  -- Move cursor to the previous window
+  if self.prev_win and vim.api.nvim_win_is_valid(self.prev_win) then
     vim.api.nvim_set_current_win(self.prev_win)
   end
-  _G.winbar.menus[self.win] = nil
-  if vim.api.nvim_win_is_valid(self.win) then
-    vim.api.nvim_win_close(self.win, true)
-  end
+
+  -- Close the menu window and dereference it in the lookup table
   if self.win then
+    if vim.api.nvim_win_is_valid(self.win) then
+      vim.api.nvim_win_close(self.win, true)
+    end
+    _G.winbar.menus[self.win] = nil
     self.win = nil
+  end
+
+  -- Clear preview highlights and restore view
+  if self.source then
+    -- Clear preview highlights
+    vim.api.nvim_buf_clear_namespace(
+      self.source.buf,
+      vim.api.nvim_create_namespace('WinBarPreview'),
+      0,
+      -1
+    )
+    if restore_view then
+      utils.win_execute(self.source.win, vim.fn.winrestview, self.source.view)
+    end
   end
 end
 

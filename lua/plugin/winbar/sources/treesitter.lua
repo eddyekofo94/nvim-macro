@@ -83,12 +83,6 @@ local function convert(ts_node, buf)
       },
     },
   },
-  actions = {
-    ---@param symbol winbar_symbol_t
-    jump = function(symbol)
-      symbol:goto_range_start()
-    end,
-  },
 }, {
   ---@param self winbar_symbol_t
   ---@param k string|number
