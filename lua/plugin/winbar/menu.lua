@@ -220,15 +220,12 @@ end
 
 ---Evaluate window configurations
 ---Side effects: update self._win_configs
----@param win_configs table? window configurations
 ---@return nil
 ---@see vim.api.nvim_open_win
-function winbar_menu_t:eval_win_configs(win_configs)
+function winbar_menu_t:eval_win_configs()
   -- Evaluate function-valued window configurations
   self._win_configs = {}
-  for k, config in
-    pairs(vim.tbl_deep_extend('force', self.win_configs, win_configs or {}))
-  do
+  for k, config in pairs(self.win_configs) do
     if type(config) == 'function' then
       self._win_configs[k] = config(self)
     else
@@ -503,14 +500,12 @@ end
 
 ---Open the menu
 ---Side effect: change self.win and self.buf
----@param win_configs table? window configurations to override
 ---@return nil
-function winbar_menu_t:open(win_configs)
+function winbar_menu_t:open()
   if self.is_opened then
     return
   end
 
-  self.prev_win = vim.api.nvim_get_current_win()
   local parent_menu = _G.winbar.menus[self.prev_win]
   if parent_menu then
     -- if the parent menu has an existing sub-menu, close the sub-menu first
@@ -522,7 +517,7 @@ function winbar_menu_t:open(win_configs)
     self.prev_win = parent_menu.win
   end
 
-  self:eval_win_configs(win_configs)
+  self:eval_win_configs()
   self:make_buf()
   self.win = vim.api.nvim_open_win(self.buf, true, self._win_configs)
   self.is_opened = true
@@ -550,7 +545,11 @@ function winbar_menu_t:close()
   if self.sub_menu then
     self.sub_menu:close()
   end
-  if self.win and vim.api.nvim_win_is_valid(self.prev_win) then
+  if
+    self.win
+    and self.prev_win
+    and vim.api.nvim_win_is_valid(self.prev_win)
+  then
     vim.api.nvim_set_current_win(self.prev_win)
   end
   _G.winbar.menus[self.win] = nil
@@ -563,13 +562,12 @@ function winbar_menu_t:close()
 end
 
 ---Toggle the menu
----@param win_configs table? window configurations to override when opening the menu
 ---@return nil
-function winbar_menu_t:toggle(win_configs)
+function winbar_menu_t:toggle()
   if self.is_opened then
     self:close()
   else
-    self:open(win_configs)
+    self:open()
   end
 end
 
