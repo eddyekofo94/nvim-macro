@@ -30,31 +30,38 @@ end
 
 ---Get treesitter node children
 ---@param node TSNode
+---@param buf integer buffer handler
 ---@return TSNode[] children
-local function get_node_children(node)
+local function get_node_children(node, buf)
   local children = {}
   for child in node:iter_children() do
-    table.insert(children, child)
+    if get_node_short_name(child, buf) ~= '' then
+      table.insert(children, child)
+    end
   end
   return children
 end
 
 ---Get treesitter node siblings
 ---@param node TSNode
+---@param buf integer buffer handler
 ---@return TSNode[] siblings
 ---@return integer idx index of the node in its siblings
-local function get_node_siblings(node)
+local function get_node_siblings(node, buf)
   local siblings = {}
-  local idx = 0
   local current = node
   while current do
-    table.insert(siblings, 1, current)
+    if get_node_short_name(current, buf) ~= '' then
+      table.insert(siblings, 1, current)
+    end
     current = current:prev_sibling()
-    idx = idx + 1
   end
-  current = node
+  local idx = #siblings
+  current = node:next_sibling()
   while current do
-    table.insert(siblings, current)
+    if get_node_short_name(current, buf) ~= '' then
+      table.insert(siblings, 1, current)
+    end
     current = current:next_sibling()
   end
   return siblings, idx
@@ -90,10 +97,10 @@ local function convert(ts_node, buf)
     if k == 'children' then
       self.children = vim.tbl_map(function(child)
         return convert(child, buf)
-      end, get_node_children(ts_node))
+      end, get_node_children(ts_node, buf))
       return self.children
     elseif k == 'siblings' or k == 'sibling_idx' then
-      local siblings, idx = get_node_siblings(ts_node)
+      local siblings, idx = get_node_siblings(ts_node, buf)
       self.siblings = vim.tbl_map(function(sibling)
         return convert(sibling, buf)
       end, siblings)
