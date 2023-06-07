@@ -88,10 +88,12 @@ M.opts = {
       ---@param win integer source window
       ---@param range {start: {line: integer}, end: {line: integer}} 0-indexed
       reorient = function(win, range)
-        local view = vim.fn.winsaveview()
-        view.topline = range.start.line
-          - math.floor(1 / 4 * vim.api.nvim_win_get_height(win))
-        vim.fn.winrestview(view)
+        if vim.fn.line('w$') <= range['end'].line then
+          local view = vim.fn.winsaveview()
+          view.topline = range.start.line
+            - math.floor(1 / 4 * vim.api.nvim_win_get_height(win))
+          vim.fn.winrestview(view)
+        end
       end,
     },
     -- When on, set the cursor to the closest clickable component
