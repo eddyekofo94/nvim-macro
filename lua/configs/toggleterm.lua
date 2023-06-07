@@ -4,6 +4,7 @@ local terminal = require('toggleterm.terminal')
 toggleterm.setup({
   open_mapping = '<C-\\><C-\\>',
   shade_terminals = false,
+  start_in_insert = false,
   hide_numbers = true,
   autochdir = true,
   persist_size = false,
@@ -37,7 +38,6 @@ toggleterm.setup({
   },
   on_open = function()
     vim.cmd('silent! normal! 0')
-    vim.cmd('silent! startinsert!')
   end,
 })
 
@@ -46,6 +46,10 @@ local lazygit = terminal.Terminal:new({
   cmd = 'lazygit',
   direction = 'float',
   hidden = true,
+  on_open = function()
+    vim.cmd('silent! normal! 0')
+    vim.cmd('silent! startinsert!')
+  end,
 })
 
 ---Toggle lazygit
@@ -58,19 +62,22 @@ vim.keymap.set({ 't', 'n' }, '<C-\\><C-g>', lazygit_toggle)
 vim.api.nvim_create_user_command('Lazygit', lazygit_toggle, {})
 
 -- stylua: ignore start
-vim.keymap.set({ 't', 'n' }, '<C-\\>v',     function() toggleterm.toggle_command('direction=vertical',   vim.v.count) end)
-vim.keymap.set({ 't', 'n' }, '<C-\\>s',     function() toggleterm.toggle_command('direction=horizontal', vim.v.count) end)
-vim.keymap.set({ 't', 'n' }, '<C-\\>t',     function() toggleterm.toggle_command('direction=tab',        vim.v.count) end)
-vim.keymap.set({ 't', 'n' }, '<C-\\>f',     function() toggleterm.toggle_command('direction=float',      vim.v.count) end)
-vim.keymap.set({ 't', 'n' }, '<C-\\><C-v>', function() toggleterm.toggle_command('direction=vertical',   vim.v.count) end)
-vim.keymap.set({ 't', 'n' }, '<C-\\><C-s>', function() toggleterm.toggle_command('direction=horizontal', vim.v.count) end)
-vim.keymap.set({ 't', 'n' }, '<C-\\><C-t>', function() toggleterm.toggle_command('direction=tab',        vim.v.count) end)
-vim.keymap.set({ 't', 'n' }, '<C-\\><C-f>', function() toggleterm.toggle_command('direction=float',      vim.v.count) end)
+vim.keymap.set({ 't', 'n' }, '<C-\\><C-\\>', function() toggleterm.toggle_command(nil,                    vim.v.count) end)
+vim.keymap.set({ 't', 'n' }, '<C-\\>v',      function() toggleterm.toggle_command('direction=vertical',   vim.v.count) end)
+vim.keymap.set({ 't', 'n' }, '<C-\\>s',      function() toggleterm.toggle_command('direction=horizontal', vim.v.count) end)
+vim.keymap.set({ 't', 'n' }, '<C-\\>t',      function() toggleterm.toggle_command('direction=tab',        vim.v.count) end)
+vim.keymap.set({ 't', 'n' }, '<C-\\>f',      function() toggleterm.toggle_command('direction=float',      vim.v.count) end)
+vim.keymap.set({ 't', 'n' }, '<C-\\><C-v>',  function() toggleterm.toggle_command('direction=vertical',   vim.v.count) end)
+vim.keymap.set({ 't', 'n' }, '<C-\\><C-s>',  function() toggleterm.toggle_command('direction=horizontal', vim.v.count) end)
+vim.keymap.set({ 't', 'n' }, '<C-\\><C-t>',  function() toggleterm.toggle_command('direction=tab',        vim.v.count) end)
+vim.keymap.set({ 't', 'n' }, '<C-\\><C-f>',  function() toggleterm.toggle_command('direction=float',      vim.v.count) end)
 -- stylua: ignore end
 
 -- Hijack toggleterm's toggle_command function to set splitkeep option before
 -- opening a terminal and restore it after opening it
 local _toggle_command = toggleterm.toggle_command
+
+---@diagnostic disable-next-line: duplicate-set-field
 function toggleterm.toggle_command(args, count)
   vim.g.splitkeep = vim.go.splitkeep
   vim.go.splitkeep = 'screen'
