@@ -16,7 +16,7 @@ end
 
 ---Get valid treesitter node type name
 ---@param node TSNode
----@return string type_name
+---@return string? type_name
 ---@return integer rank type rank
 local function get_node_short_type(node)
   local ts_type = node:type()
@@ -25,7 +25,15 @@ local function get_node_short_type(node)
       return type, i
     end
   end
-  return 'statement', math.huge
+  return nil, math.huge
+end
+
+---Check if treesitter node is valid
+---@param node TSNode
+---@param buf integer buffer handler
+---@return boolean
+local function valid_node(node, buf)
+  return get_node_short_type(node) ~= nil and get_node_short_name(node, buf) ~= ''
 end
 
 ---Get treesitter node children
@@ -35,8 +43,10 @@ end
 local function get_node_children(node, buf)
   local children = {}
   for child in node:iter_children() do
-    if get_node_short_name(child, buf) ~= '' then
+    if valid_node(child, buf) then
       table.insert(children, child)
+    else
+      vim.list_extend(children, get_node_children(child, buf))
     end
   end
   return children
@@ -51,16 +61,20 @@ local function get_node_siblings(node, buf)
   local siblings = {}
   local current = node
   while current do
-    if get_node_short_name(current, buf) ~= '' then
+    if valid_node(current, buf) then
       table.insert(siblings, 1, current)
+    else
+      vim.list_extend(siblings, get_node_children(current, buf))
     end
     current = current:prev_sibling()
   end
   local idx = #siblings
   current = node:next_sibling()
   while current do
-    if get_node_short_name(current, buf) ~= '' then
+    if valid_node(current, buf) then
       table.insert(siblings, 1, current)
+    else
+      vim.list_extend(siblings, get_node_children(current, buf))
     end
     current = current:next_sibling()
   end
@@ -70,10 +84,13 @@ end
 ---Convert TSNode into winbar symbol structure
 ---@param ts_node TSNode
 ---@param buf integer buffer handler
----@return winbar_symbol_t
+---@return winbar_symbol_t?
 local function convert(ts_node, buf)
-  local range = { ts_node:range() }
+  if not valid_node(ts_node, buf) then
+    return nil
+  end
   local kind = funcs.string.snake_to_camel(get_node_short_type(ts_node))
+  local range = { ts_node:range() }
   return bar.winbar_symbol_t:new(setmetatable({
     name = get_node_short_name(ts_node, buf),
     icon = configs.opts.icons.kinds.symbols[kind],
@@ -127,11 +144,14 @@ local function get_symbols(buf, cursor)
   })
   while current_node do
     local name = get_node_short_name(current_node, buf)
+    local type, type_rank = get_node_short_type(current_node)
     local range = { current_node:range() } ---@type Range4
     local start_row = range[1]
     local end_row = range[3]
-    if name ~= '' and not (start_row == 0 and end_row == vim.fn.line('$')) then
-      local type, type_rank = get_node_short_type(current_node)
+    if
+      valid_node(current_node, buf)
+      and not (start_row == 0 and end_row == vim.fn.line('$'))
+    then
       local lsp_type = funcs.string.snake_to_camel(type)
       if
         vim.tbl_isempty(symbols)
