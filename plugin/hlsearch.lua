@@ -1,14 +1,16 @@
 -- automatically set and unset hlsearch
 
 -- stylua: ignore start
-vim.keymap.set({ 'n', 'x' }, 'n',  '<Cmd>set hlsearch<CR>n')
-vim.keymap.set({ 'n', 'x' }, 'N',  '<Cmd>set hlsearch<CR>N')
-vim.keymap.set({ 'n', 'x' }, '/',  '<Cmd>set hlsearch<CR>/')
-vim.keymap.set({ 'n', 'x' }, '?',  '<Cmd>set hlsearch<CR>?')
-vim.keymap.set({ 'n', 'x' }, '*',  '<Cmd>set hlsearch<CR>*')
-vim.keymap.set({ 'n', 'x' }, '#',  '<Cmd>set hlsearch<CR>#')
-vim.keymap.set({ 'n', 'x' }, 'g*', '<Cmd>set hlsearch<CR>g*')
-vim.keymap.set({ 'n', 'x' }, 'g#', '<Cmd>set hlsearch<CR>g#')
+vim.keymap.set({ 'n', 'x' }, 'n',  'n<Cmd>set hlsearch<CR>')
+vim.keymap.set({ 'n', 'x' }, 'N',  'N<Cmd>set hlsearch<CR>')
+vim.keymap.set({ 'n', 'x' }, '/',  '/<Cmd>set hlsearch<CR>')
+vim.keymap.set({ 'n', 'x' }, '?',  '?<Cmd>set hlsearch<CR>')
+vim.keymap.set({ 'n', 'x' }, 'g*', 'g*<Cmd>set hlsearch<CR>')
+vim.keymap.set({ 'n', 'x' }, 'g#', 'g#<Cmd>set hlsearch<CR>')
+vim.keymap.set('n', '*',  '*<Cmd>set hlsearch<CR>')
+vim.keymap.set('n', '#',  '#<Cmd>set hlsearch<CR>')
+vim.keymap.set('x', '*',  'y/\\V<C-R>=escape(@",\'/\')<CR><CR><Cmd>set hlsearch<CR>')
+vim.keymap.set('x', '#',  'y?\\V<C-R>=escape(@",\'/\')<CR><CR><Cmd>set hlsearch<CR>')
 -- stylua: ignore end
 
 vim.keymap.set({ 'n', 'x' }, '<C-l>', function()
