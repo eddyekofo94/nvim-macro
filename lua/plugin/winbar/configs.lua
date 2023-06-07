@@ -147,27 +147,13 @@ M.opts = {
             menu = menu.parent_menu
           end
           if menu then
-            if menu.source then
-              vim.api.nvim_buf_clear_namespace(
-                menu.source.buf,
-                vim.api.nvim_create_namespace('WinBarPreview'),
-                0,
-                -1
-              )
-              require('plugin.winbar.utils').win_execute(
-                menu.source.win,
-                vim.fn.winrestview,
-                menu.source.view
-              )
-            end
+            menu:preview_clear_hl()
+            menu:preview_restore_view()
           end
           return
         end
         if M.opts.menu.preview.enable then
-          local component = menu:get_component_at({ mouse.line, mouse.column })
-          if component and component.preview then
-            component:preview()
-          end
+          menu:preview_symbol_at({ mouse.line, mouse.column })
         end
         menu:update_hover_hl({ mouse.line, mouse.column - 1 })
       end,

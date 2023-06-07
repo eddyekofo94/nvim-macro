@@ -114,13 +114,10 @@ function winbar_symbol_t:new(opts)
 
             -- Toggle existing menu
             if this.menu then
-              this.menu.win_configs = vim.tbl_deep_extend(
-                'force',
-                this.menu.win_configs,
-                win_configs
-              )
-              this.menu.prev_win = prev_win
-              this.menu:toggle()
+              this.menu:toggle({
+                prev_win = prev_win,
+                win_configs = win_configs,
+              })
               return
             end
 

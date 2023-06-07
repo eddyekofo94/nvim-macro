@@ -117,7 +117,9 @@ function winbar_menu_entry_t:get_component_at(col, look_ahead)
   local col_offset = self.padding.left
   for _, component in ipairs(self.components) do
     local component_len = component:bytewidth()
-    if (look_ahead or col > col_offset) and col <= col_offset + component_len then
+    if
+      (look_ahead or col > col_offset) and col <= col_offset + component_len
+    then
       return component,
         {
           start = col_offset,
@@ -162,13 +164,6 @@ function winbar_menu_entry_t:next_clickable(col)
   end
 end
 
----@class winbar_menu_opts_t
----@field is_opened boolean?
----@field entries winbar_menu_entry_t[]?
----@field win_configs table? window configuration
----@field cursor integer[]? initial cursor position
----@field prev_win integer? previous window
-
 ---@class winbar_menu_t
 ---@field buf integer?
 ---@field win integer?
@@ -187,7 +182,7 @@ local winbar_menu_t = {}
 winbar_menu_t.__index = winbar_menu_t
 
 ---Create a winbar menu instance
----@param opts winbar_menu_opts_t?
+---@param opts winbar_menu_t?
 ---@return winbar_menu_t
 function winbar_menu_t:new(opts)
   local winbar_menu = setmetatable(
@@ -466,7 +461,8 @@ function winbar_menu_t:make_buf()
         configs.opts.menu.preview.enable
         and not vim.deep_equal(cursor, self.prev_cursor)
       then
-        local component = self:get_component_at({ cursor[1], cursor[2] + 1 }, true)
+        local component =
+          self:get_component_at({ cursor[1], cursor[2] + 1 }, true)
         if component then
           component:preview()
         end
@@ -509,13 +505,35 @@ function winbar_menu_t:make_buf()
   })
 end
 
+---Override menu options
+---@param opts winbar_menu_t?
+---@return nil
+function winbar_menu_t:override(opts)
+  if not opts then
+    return
+  end
+  for k, v in pairs(opts) do
+    if type(v) == 'table' then
+      if type(self[k]) == 'table' then
+        self[k] = vim.tbl_extend('force', self[k], v)
+      else
+        self[k] = v
+      end
+    else
+      self[k] = v
+    end
+  end
+end
+
 ---Open the menu
 ---Side effect: change self.win and self.buf
+---@param opts winbar_menu_t?
 ---@return nil
-function winbar_menu_t:open()
+function winbar_menu_t:open(opts)
   if self.is_opened then
     return
   end
+  self:override(opts)
 
   self.parent_menu = _G.winbar.menus[self.prev_win]
   if self.parent_menu then
@@ -575,28 +593,49 @@ function winbar_menu_t:close(restore_view)
     self.win = nil
   end
 
-  -- Clear preview highlights and restore view
-  if self.source then
-    -- Clear preview highlights
-    vim.api.nvim_buf_clear_namespace(
-      self.source.buf,
-      vim.api.nvim_create_namespace('WinBarPreview'),
-      0,
-      -1
-    )
-    if restore_view then
-      utils.win_execute(self.source.win, vim.fn.winrestview, self.source.view)
-    end
+  self:preview_clear_hl()
+  if restore_view then
+    self:preview_restore_view()
   end
 end
 
----Toggle the menu
+---Preview the symbol at the given position
+---@param pos integer[] 1-indexed, byte-indexed position
+---@param look_ahead boolean? whether to look ahead for a component
 ---@return nil
-function winbar_menu_t:toggle()
+function winbar_menu_t:preview_symbol_at(pos, look_ahead)
+  local symbol = self:get_component_at(pos, look_ahead)
+  if symbol then
+    symbol:preview()
+  end
+end
+
+---Clear preview highlights in the source buffer
+---@return nil
+function winbar_menu_t:preview_clear_hl()
+  -- Clear preview highlights
+  vim.api.nvim_buf_clear_namespace(
+    self.source.buf,
+    vim.api.nvim_create_namespace('WinBarPreview'),
+    0,
+    -1
+  )
+end
+
+---Restore the view of the source window
+---@return nil
+function winbar_menu_t:preview_restore_view()
+  utils.win_execute(self.source.win, vim.fn.winrestview, self.source.view)
+end
+
+---Toggle the menu
+---@param opts winbar_menu_t? menu options passed to self:open()
+---@return nil
+function winbar_menu_t:toggle(opts)
   if self.is_opened then
     self:close()
   else
-    self:open()
+    self:open(opts)
   end
 end
 
