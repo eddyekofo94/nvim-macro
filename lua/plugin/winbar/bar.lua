@@ -20,6 +20,8 @@ local function make_clickable(str, callback)
   return string.format('%%@%s@%s%%X', callback, str)
 end
 
+---@alias winbar_symbol_range_t lsp_range_t
+
 ---@class winbar_symbol_t
 ---@field _ winbar_symbol_t
 ---@field name string
@@ -34,6 +36,7 @@ end
 ---@field bar_idx integer? index of the symbol in the winbar
 ---@field entry_idx integer? index of the symbol in the menu entry
 ---@field sibling_idx integer? index of the symbol in its siblings
+---@field range winbar_symbol_range_t?
 ---@field on_click fun(this: winbar_symbol_t, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false? force disable on_click when false
 ---@field data table? any data associated with the symbol
 local winbar_symbol_t = {}
@@ -215,10 +218,10 @@ end
 ---Jump to the start of the symbol associated with the winbar symbol
 ---@return nil
 function winbar_symbol_t:jump()
-  if not self.data or not self.data.range then
+  if not self.range then
     return
   end
-  local dest_pos = self.data.range.start
+  local dest_pos = self.range.start
   if self.bar then -- symbol is shown inside a winbar
     vim.api.nvim_win_set_cursor(self.bar.win, {
       dest_pos.line + 1,
@@ -243,7 +246,7 @@ end
 ---Preview the symbol in the source window
 ---@return nil
 function winbar_symbol_t:preview()
-  if not self.data or not self.data.range then
+  if not self.range then
     return
   end
   local win = self.bar and self.bar.win
@@ -260,12 +263,12 @@ function winbar_symbol_t:preview()
     'WinBarPreview',
     vim.api.nvim_get_hl(0, { name = 'WinBarPreview' })
   )
-  for linenr = self.data.range.start.line, self.data.range['end'].line do
-    local start_col = linenr == self.data.range.start.line
-        and self.data.range.start.character
+  for linenr = self.range.start.line, self.range['end'].line do
+    local start_col = linenr == self.range.start.line
+        and self.range.start.character
       or 0
-    local end_col = linenr == self.data.range['end'].line
-        and self.data.range['end'].character
+    local end_col = linenr == self.range['end'].line
+        and self.range['end'].character
       or -1
     vim.api.nvim_buf_add_highlight(
       buf,
@@ -277,14 +280,14 @@ function winbar_symbol_t:preview()
     )
   end
   vim.api.nvim_win_set_cursor(win, {
-    self.data.range.start.line + 1,
-    self.data.range.start.character,
+    self.range.start.line + 1,
+    self.range.start.character,
   })
   utils.win_execute(
     win,
     configs.opts.menu.preview.reorient,
     win,
-    self.data.range
+    self.range
   )
 end
 

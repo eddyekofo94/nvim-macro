@@ -40,6 +40,11 @@ setmetatable(lsp_buf_symbols, {
 ---@field location? lsp_location_t
 ---@field containerName? string
 
+---@class lsp_symbol_information_tree_t: lsp_symbol_information_t
+---@field parent? lsp_symbol_information_tree_t
+---@field children? lsp_symbol_information_tree_t[]
+---@field siblings? lsp_symbol_information_tree_t[]
+
 ---@alias lsp_symbol_t lsp_document_symbol_t|lsp_symbol_information_t
 
 -- Map symbol number to symbol kind
@@ -135,109 +140,6 @@ local function range_contains(range1, range2)
   -- stylua: ignore end
 end
 
----Find the parent of a LSP SymbolInformation in a tree
----@param symbol lsp_symbol_information_t
----@param root winbar_symbol_t
----@return winbar_symbol_t? parent nil if parent not found in the subtree rooted at 'root'
-local function symbol_information_find_parent(symbol, root)
-  if not range_contains(root.data.range, symbol.location.range) then
-    return nil
-  end
-  root.children = root.children or {}
-  for _, child in ipairs(root.children) do
-    local parent = symbol_information_find_parent(symbol, child)
-    if parent then
-      return parent
-    end
-  end
-  return root
-end
-
----Build tree from SymbolInformation[] plain list
----@param symbols lsp_symbol_information_t[]
----@return winbar_symbol_t root
-local function symbol_information_build_tree(symbols)
-  local root = {
-    range = {
-      start = { line = 0, character = 0 },
-      ['end'] = { line = math.huge, character = math.huge },
-    },
-    children = {},
-  }
-  for list_idx, symbol in ipairs(symbols) do
-    local parent = symbol_information_find_parent(symbol, root)
-    if parent then
-      parent.children = parent.children or {}
-      table.insert(parent.children, {
-        name = symbol.name,
-        kind = symbol_kind_names[symbol.kind],
-        range = symbol.location.range,
-        idx = #parent.children + 1,
-        data = { list_idx = list_idx },
-      })
-    end
-  end
-  return root
-end
-
----Convert LSP SymbolInformation into winbar symbol structure
----@param symbol lsp_symbol_information_t LSP SymbolInformation
----@param symbols lsp_symbol_information_t[] SymbolInformation[]
----@param list_idx integer index of the symbol in SymbolInformation[]
----@return winbar_symbol_t
-local function convert_symbol_information(symbol, symbols, list_idx)
-  local kind = symbol_kind_names[symbol.kind]
-  return bar.winbar_symbol_t:new(setmetatable({
-    name = symbol.name,
-    icon = configs.opts.icons.kinds.symbols[kind],
-    icon_hl = 'WinBarIconKind' .. kind,
-    data = { range = symbol.location.range },
-  }, {
-    __index = function(self, k)
-      if k == 'children' or k == 'siblings' or k == 'idx' then
-        local tree = symbol_information_build_tree(symbols)
-        local parent = symbol_information_find_parent(symbol, tree)
-        if not parent then
-          return nil
-        end
-        self.siblings = parent.children
-        for sibing_idx, sibling in ipairs(parent.children) do
-          if sibling.data and sibling.data.list_idx == list_idx then
-            self.sibling_idx = sibing_idx
-            self.children = sibling.children
-            break
-          end
-        end
-        return self[k]
-      end
-    end,
-  }))
-end
-
----Convert LSP SymbolInformation[] into a list of winbar symbols
----Each SymbolInformation in the list is sorted by the start position of its
----range, so just need to traverse the list in order and add each symbol that
----contains the cursor to the winbar_symbols list.
----Side effect: change winbar_symbols
----LSP Specification document: https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/
----@param lsp_symbols lsp_symbol_information_t[]
----@param winbar_symbols winbar_symbol_t[] (reference to) winbar symbols
----@param cursor integer[] cursor position
-local function convert_symbol_information_list(
-  lsp_symbols,
-  winbar_symbols,
-  cursor
-)
-  for idx, symbol in ipairs(lsp_symbols) do
-    if cursor_in_range(cursor, symbol.location.range) then
-      table.insert(
-        winbar_symbols,
-        convert_symbol_information(symbol, lsp_symbols, idx)
-      )
-    end
-  end
-end
-
 ---Convert LSP DocumentSymbol into winbar symbol structure
 ---@param document_symbol lsp_document_symbol_t LSP DocumentSymbol
 ---@param siblings lsp_document_symbol_t[]? siblings of the symbol
@@ -249,7 +151,7 @@ local function convert_document_symbol(document_symbol, siblings, idx)
     name = document_symbol.name,
     icon = configs.opts.icons.kinds.symbols[kind],
     icon_hl = 'WinBarIconKind' .. kind,
-    data = { range = document_symbol.range },
+    range = document_symbol.range,
     sibling_idx = idx,
   }, {
     __index = function(self, k)
@@ -301,18 +203,39 @@ local function convert_document_symbol_list(
   end
 end
 
----Convert LSP symbols into a list of winbar symbols
----@param symbols lsp_symbol_t[] LSP symbols
----@param cursor integer[] cursor position
----@return winbar_symbol_t[] symbol_path winbar symbols
-local function convert(symbols, cursor)
-  local symbol_path = {}
-  if symbol_type(symbols) == 'SymbolInformation' then
-    convert_symbol_information_list(symbols, symbol_path, cursor)
-  elseif symbol_type(symbols) == 'DocumentSymbol' then
-    convert_document_symbol_list(symbols, symbol_path, cursor)
+---Convert LSP SymbolInformation[] into DocumentSymbol[]
+---@param symbols lsp_symbol_t LSP symbols
+---@return lsp_document_symbol_t[]
+local function unify(symbols)
+  if symbol_type(symbols) == 'DocumentSymbol' or vim.tbl_isempty(symbols) then
+    return symbols
   end
-  return symbol_path
+  -- Convert SymbolInformation[] to DocumentSymbol[]
+  for _, sym in ipairs(symbols) do
+    sym.range = sym.location.range
+  end
+  local document_symbols = { symbols[1] }
+  -- According to the result get from pylsp, the SymbolInformation list is
+  -- ordered in increasing order by the start position of the range, so a
+  -- symbol can only be a child or a sibling of the previous symbol in the
+  -- same list
+  for list_idx, sym in vim.iter(symbols):enumerate():skip(1) do
+    -- print('list_idx', list_idx, 'sym', sym)
+    local prev = symbols[list_idx - 1] --[[@as lsp_symbol_information_tree_t]]
+    -- If the symbol is a child of the previous symbol
+    if range_contains(prev.location.range, sym.location.range) then
+      sym.parent = prev
+    else -- Else the symbol is a sibling of the previous symbol
+      sym.parent = prev.parent
+    end
+    if sym.parent then
+      sym.parent.children = sym.parent.children or {}
+      table.insert(sym.parent.children, sym)
+    else
+      table.insert(document_symbols, sym)
+    end
+  end
+  return document_symbols
 end
 
 ---Update LSP symbols from an LSP client
@@ -340,7 +263,7 @@ local function update_symbols(buf, client, ttl)
           update_symbols(buf, client, ttl - 1)
         end, configs.opts.sources.lsp.request.interval)
       else -- Update symbol_list
-        lsp_buf_symbols[buf] = symbols
+        lsp_buf_symbols[buf] = unify(symbols)
         for _, winbar in pairs(_G.winbar.bars[buf]) do
           winbar:update() -- Redraw winbar after updating symbols
         end
@@ -442,7 +365,9 @@ local function get_symbols(buf, cursor)
   if not initialized then
     init()
   end
-  return convert(lsp_buf_symbols[buf], cursor)
+  local result = {}
+  convert_document_symbol_list(lsp_buf_symbols[buf], result, cursor)
+  return result
 end
 
 return {

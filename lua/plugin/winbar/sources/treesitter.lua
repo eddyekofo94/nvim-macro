@@ -78,37 +78,35 @@ local function convert(ts_node, buf)
     name = get_node_short_name(ts_node, buf),
     icon = configs.opts.icons.kinds.symbols[kind],
     icon_hl = 'WinBarIconKind' .. kind,
-    data = {
-      range = {
-        start = {
-          line = range[1],
-          character = range[2],
-        },
-        ['end'] = {
+    range = {
+      start = {
+        line = range[1],
+        character = range[2],
+      },
+      ['end'] = {
         line = range[3],
         character = range[4],
       },
     },
-  },
-}, {
-  ---@param self winbar_symbol_t
-  ---@param k string|number
-  __index = function(self, k)
-    if k == 'children' then
-      self.children = vim.tbl_map(function(child)
-        return convert(child, buf)
-      end, get_node_children(ts_node, buf))
-      return self.children
-    elseif k == 'siblings' or k == 'sibling_idx' then
-      local siblings, idx = get_node_siblings(ts_node, buf)
-      self.siblings = vim.tbl_map(function(sibling)
-        return convert(sibling, buf)
-      end, siblings)
-      self.sibling_idx = idx
-      return self[k]
-    end
-  end,
-}))
+  }, {
+    ---@param self winbar_symbol_t
+    ---@param k string|number
+    __index = function(self, k)
+      if k == 'children' then
+        self.children = vim.tbl_map(function(child)
+          return convert(child, buf)
+        end, get_node_children(ts_node, buf))
+        return self.children
+      elseif k == 'siblings' or k == 'sibling_idx' then
+        local siblings, idx = get_node_siblings(ts_node, buf)
+        self.siblings = vim.tbl_map(function(sibling)
+          return convert(sibling, buf)
+        end, siblings)
+        self.sibling_idx = idx
+        return self[k]
+      end
+    end,
+  }))
 end
 
 ---Get treesitter symbols from buffer
@@ -140,11 +138,7 @@ local function get_symbols(buf, cursor)
         or symbols[1].name ~= name
         or start_row < prev_row
       then
-        table.insert(
-          symbols,
-          1,
-          convert(current_node, buf)
-        )
+        table.insert(symbols, 1, convert(current_node, buf))
         prev_type_rank = type_rank
         prev_row = start_row
       elseif type_rank < prev_type_rank then

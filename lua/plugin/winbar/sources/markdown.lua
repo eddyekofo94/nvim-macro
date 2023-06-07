@@ -105,34 +105,9 @@ local function convert(symbol, symbols, list_idx, buf)
     name = symbol.name,
     icon = configs.opts.icons.kinds.symbols[kind],
     icon_hl = 'WinBarIconKind' .. kind,
-    data = setmetatable({
+    data = {
       heading_symbol = symbol,
-    }, {
-      __index = function(self, k)
-        if k == 'range' then
-          self.range = {
-            start = {
-              line = symbol.lnum - 1,
-              character = 0,
-            },
-            ['end'] = {
-              line = symbol.lnum - 1,
-              character = 0,
-            },
-          }
-          for heading in vim.iter(symbols):skip(list_idx) do
-            if heading.level <= symbol.level then
-              self.range['end'] = {
-                line = heading.lnum - 2,
-                character = 0,
-              }
-              break
-            end
-          end
-          return self.range
-        end
-      end,
-    }),
+    },
   }, {
     ---@param self winbar_symbol_t
     __index = function(self, k)
@@ -189,6 +164,28 @@ local function convert(symbol, symbols, list_idx, buf)
           end
         end
         return self[k]
+      end
+      if k == 'range' then
+        self.range = {
+          start = {
+            line = symbol.lnum - 1,
+            character = 0,
+          },
+          ['end'] = {
+            line = symbol.lnum - 1,
+            character = 0,
+          },
+        }
+        for heading in vim.iter(symbols):skip(list_idx) do
+          if heading.level <= symbol.level then
+            self.range['end'] = {
+              line = heading.lnum - 2,
+              character = 0,
+            }
+            break
+          end
+        end
+        return self.range
       end
     end,
   }))
