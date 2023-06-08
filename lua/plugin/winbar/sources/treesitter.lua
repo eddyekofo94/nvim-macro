@@ -84,14 +84,17 @@ end
 ---Convert TSNode into winbar symbol structure
 ---@param ts_node TSNode
 ---@param buf integer buffer handler
+---@param win integer window handler
 ---@return winbar_symbol_t?
-local function convert(ts_node, buf)
+local function convert(ts_node, buf, win)
   if not valid_node(ts_node, buf) then
     return nil
   end
   local kind = funcs.string.snake_to_camel(get_node_short_type(ts_node))
   local range = { ts_node:range() }
   return bar.winbar_symbol_t:new(setmetatable({
+    buf = buf,
+    win = win,
     name = get_node_short_name(ts_node, buf),
     icon = configs.opts.icons.kinds.symbols[kind],
     icon_hl = 'WinBarIconKind' .. kind,
@@ -111,13 +114,13 @@ local function convert(ts_node, buf)
     __index = function(self, k)
       if k == 'children' then
         self.children = vim.tbl_map(function(child)
-          return convert(child, buf)
+          return convert(child, buf, win)
         end, get_node_children(ts_node, buf))
         return self.children
       elseif k == 'siblings' or k == 'sibling_idx' then
         local siblings, idx = get_node_siblings(ts_node, buf)
         self.siblings = vim.tbl_map(function(sibling)
-          return convert(sibling, buf)
+          return convert(sibling, buf, win)
         end, siblings)
         self.sibling_idx = idx
         return self[k]
@@ -128,9 +131,10 @@ end
 
 ---Get treesitter symbols from buffer
 ---@param buf integer buffer handler
+---@param win integer window handler
 ---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[] symbols winbar symbols
-local function get_symbols(buf, cursor)
+local function get_symbols(buf, win, cursor)
   if not vim.treesitter.highlighter.active[buf] then
     return {}
   end
@@ -158,7 +162,7 @@ local function get_symbols(buf, cursor)
         or symbols[1].name ~= name
         or start_row < prev_row
       then
-        table.insert(symbols, 1, convert(current_node, buf))
+        table.insert(symbols, 1, convert(current_node, buf, win))
         prev_type_rank = type_rank
         prev_row = start_row
       elseif type_rank < prev_type_rank then

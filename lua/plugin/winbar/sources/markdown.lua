@@ -98,10 +98,13 @@ end
 ---@param symbols markdown_heading_symbol_t[] markdown heading symbols
 ---@param list_idx integer index of the symbol in the symbols list
 ---@param buf integer buffer handler
+---@param win integer window handler
 ---@return winbar_symbol_t
-local function convert(symbol, symbols, list_idx, buf)
+local function convert(symbol, symbols, list_idx, buf, win)
   local kind = 'MarkdownH' .. symbol.level
   return bar.winbar_symbol_t:new(setmetatable({
+    buf = buf,
+    win = win,
     name = symbol.name,
     icon = configs.opts.icons.kinds.symbols[kind],
     icon_hl = 'WinBarIconKind' .. kind,
@@ -123,13 +126,13 @@ local function convert(symbol, symbols, list_idx, buf)
             lev = heading.level
           end
           if heading.level <= lev then
-            table.insert(self.children, convert(heading, symbols, i, buf))
+            table.insert(self.children, convert(heading, symbols, i, buf, win))
           end
         end
         return self.children
       end
       if k == 'siblings' or k == 'idx' then
-        self.siblings = { convert(symbol, symbols, list_idx, buf) }
+        self.siblings = { convert(symbol, symbols, list_idx, buf, win) }
         for i = list_idx - 1, 1, -1 do
           if symbols[i].level < symbol.level then
             break
@@ -144,13 +147,13 @@ local function convert(symbol, symbols, list_idx, buf)
             table.insert(
               self.siblings,
               1,
-              convert(symbols[i], symbols, i, buf)
+              convert(symbols[i], symbols, i, buf, win)
             )
           else
             table.insert(
               self.siblings,
               1,
-              convert(symbols[i], symbols, i, buf)
+              convert(symbols[i], symbols, i, buf, win)
             )
           end
         end
@@ -160,7 +163,7 @@ local function convert(symbol, symbols, list_idx, buf)
             break
           end
           if symbols[i].level == symbol.level then
-            table.insert(self.siblings, convert(symbols[i], symbols, i, buf))
+            table.insert(self.siblings, convert(symbols[i], symbols, i, buf, win))
           end
         end
         return self[k]
@@ -263,9 +266,10 @@ end
 
 ---Get winbar symbols from buffer according to cursor position
 ---@param buf integer buffer handler
+---@param win integer window handler
 ---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[] symbols winbar symbols
-local function get_symbols(buf, cursor)
+local function get_symbols(buf, win, cursor)
   if vim.bo[buf].filetype ~= 'markdown' then
     return {}
   end
@@ -285,7 +289,7 @@ local function get_symbols(buf, cursor)
   for idx, symbol in vim.iter(buf_symbols.symbols):enumerate():rev() do
     if symbol.lnum <= cursor[1] and symbol.level < current_level then
       current_level = symbol.level
-      table.insert(result, 1, convert(symbol, buf_symbols.symbols, idx, buf))
+      table.insert(result, 1, convert(symbol, buf_symbols.symbols, idx, buf, win))
       if current_level == 1 then
         break
       end

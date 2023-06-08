@@ -28,6 +28,9 @@ end
 ---@field icon string
 ---@field name_hl string?
 ---@field icon_hl string?
+---@field win integer? the window of the source code
+---@field buf integer? the buffer of the source code
+---@field view table? original view of the source code window
 ---@field bar winbar_t? the winbar the symbol belongs to, if the symbol is shown inside a winbar
 ---@field menu winbar_menu_t? menu associated with the winbar symbol, if the symbol is shown inside a winbar
 ---@field entry winbar_menu_entry_t? the winbar entry the symbol belongs to, if the symbol is shown inside a menu
@@ -72,10 +75,6 @@ function winbar_symbol_t:new(opts)
         on_click = opts
           ---@param this winbar_symbol_t
           and function(this, _, _, _, _)
-            if this.entry and this.entry.menu then
-              this.entry.menu:hl_line_single(this.entry.idx)
-            end
-
             -- Determine menu configs
             local prev_win = nil ---@type integer?
             local entries_source = nil ---@type winbar_symbol_t[]?
@@ -127,10 +126,6 @@ function winbar_symbol_t:new(opts)
             end
             local menu = require('plugin.winbar.menu')
             this.menu = menu.winbar_menu_t:new({
-              source = {
-                buf = this.bar and this.bar.buf or this.entry.menu.source.buf,
-                win = this.bar and this.bar.win or this.entry.menu.source.win,
-              },
               prev_win = prev_win,
               cursor = init_cursor,
               win_configs = win_configs,
@@ -155,7 +150,16 @@ function winbar_symbol_t:new(opts)
                       on_click = menu_indicator_on_click,
                     }),
                     sym:merge({
-                      on_click = sym.jump,
+                      on_click = function()
+                        sym:jump()
+                        local current_menu = this.menu
+                        while current_menu and current_menu.prev_menu do
+                          current_menu = current_menu.prev_menu
+                        end
+                        if current_menu then
+                          current_menu:close(false)
+                        end
+                      end,
                     }),
                   },
                 })
@@ -218,26 +222,10 @@ function winbar_symbol_t:jump()
   if not self.range then
     return
   end
-  local dest_pos = self.range.start
-  if self.bar then -- symbol is shown inside a winbar
-    vim.api.nvim_win_set_cursor(self.bar.win, {
-      dest_pos.line + 1,
-      dest_pos.character,
-    })
-    return
-  end
-  -- symbol is shown inside a menu
-  local current_menu = self.entry.menu
-  while current_menu and current_menu.parent_menu do
-    current_menu = current_menu.parent_menu
-  end
-  if current_menu and current_menu.source then
-    vim.api.nvim_win_set_cursor(current_menu.source.win, {
-      dest_pos.line + 1,
-      dest_pos.character,
-    })
-    current_menu:close(false)
-  end
+  vim.api.nvim_win_set_cursor(self.win, {
+    self.range.start.line + 1,
+    self.range.start.character,
+  })
 end
 
 ---Preview the symbol in the source window
@@ -246,46 +234,35 @@ function winbar_symbol_t:preview()
   if not self.range then
     return
   end
-  local win = self.bar and self.bar.win
-    or self.entry and self.entry.menu and self.entry.menu.source.win
-  local buf = self.bar and self.bar.buf
-    or self.entry and self.entry.menu and self.entry.menu.source.buf
-  if not win or not buf then
+  if not self.win or not self.buf then
     return
   end
-  local ns = vim.api.nvim_create_namespace('WinBarPreview')
-  vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
-  vim.api.nvim_set_hl(
-    ns,
-    'WinBarPreview',
-    vim.api.nvim_get_hl(0, { name = 'WinBarPreview' })
-  )
-  for linenr = self.range.start.line, self.range['end'].line do
-    local start_col = linenr == self.range.start.line
-        and self.range.start.character
-      or 0
-    local end_col = linenr == self.range['end'].line
-        and self.range['end'].character
-      or -1
-    vim.api.nvim_buf_add_highlight(
-      buf,
-      ns,
-      'WinBarPreview',
-      linenr,
-      start_col,
-      end_col
-    )
-  end
-  vim.api.nvim_win_set_cursor(win, {
+  self.view = utils.win_execute(self.win, vim.fn.winsaveview)
+  utils.hl_range_single(self.buf, 'WinBarPreview', self.range)
+  vim.api.nvim_win_set_cursor(self.win, {
     self.range.start.line + 1,
     self.range.start.character,
   })
   utils.win_execute(
-    win,
-    configs.opts.menu.preview.reorient,
-    win,
+    self.win,
+    configs.opts.symbol.preview.reorient,
+    self.win,
     self.range
   )
+end
+
+---Clear the preview highlight of the source window
+---@return nil
+function winbar_symbol_t:preview_restore_hl()
+  utils.hl_range_single(self.buf, 'WinBarPreview')
+end
+
+---Restore the source window to its original view
+---@return nil
+function winbar_symbol_t:preview_restore_view()
+  if self.view then
+    utils.win_execute(self.win, vim.fn.winrestview, self.view)
+  end
 end
 
 ---Temporarily change the content of a winbar symbol
@@ -449,7 +426,7 @@ function winbar_t:update()
   self.components = {}
   _G.winbar.on_click_callbacks['buf' .. self.buf]['win' .. self.win] = {}
   for _, source in ipairs(self.sources) do
-    local symbols = source.get_symbols(self.buf, cursor)
+    local symbols = source.get_symbols(self.buf, self.win, cursor)
     for _, symbol in ipairs(symbols) do
       symbol.bar_idx = #self.components + 1
       symbol.bar = self
@@ -478,12 +455,12 @@ end
 ---Execute a function in pick mode
 ---Side effect: change winbar.in_pick_mode
 ---@generic T
----@param fn fun(): T?
+---@param fn fun(...): T?
 ---@return T?
-function winbar_t:pick_mode_wrap(fn)
+function winbar_t:pick_mode_wrap(fn, ...)
   local pick_mode = self.in_pick_mode
   self.in_pick_mode = true
-  local result = fn()
+  local result = fn(...)
   self.in_pick_mode = pick_mode
   return result
 end

@@ -140,14 +140,24 @@ local function range_contains(range1, range2)
   -- stylua: ignore end
 end
 
----Convert LSP DocumentSymbol into winbar symbol structure
+---Convert LSP DocumentSymbol into winbar symbol
 ---@param document_symbol lsp_document_symbol_t LSP DocumentSymbol
+---@param buf integer buffer number
+---@param win integer window number
 ---@param siblings lsp_document_symbol_t[]? siblings of the symbol
 ---@param idx integer? index of the symbol in siblings
 ---@return winbar_symbol_t
-local function convert_document_symbol(document_symbol, siblings, idx)
+local function convert_document_symbol(
+  document_symbol,
+  buf,
+  win,
+  siblings,
+  idx
+)
   local kind = symbol_kind_names[document_symbol.kind]
   return bar.winbar_symbol_t:new(setmetatable({
+    buf = buf,
+    win = win,
     name = document_symbol.name,
     icon = configs.opts.icons.kinds.symbols[kind],
     icon_hl = 'WinBarIconKind' .. kind,
@@ -160,7 +170,7 @@ local function convert_document_symbol(document_symbol, siblings, idx)
           return nil
         end
         self.children = vim.tbl_map(function(child)
-          return convert_document_symbol(child)
+          return convert_document_symbol(child, buf, win)
         end, document_symbol.children)
         return self.children
       elseif k == 'siblings' then
@@ -168,7 +178,7 @@ local function convert_document_symbol(document_symbol, siblings, idx)
           return nil
         end
         self.siblings = vim.tbl_map(function(sibling)
-          return convert_document_symbol(sibling, siblings)
+          return convert_document_symbol(sibling, buf, win, siblings)
         end, siblings)
         return self.siblings
       end
@@ -181,10 +191,14 @@ end
 ---LSP Specification document: https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/
 ---@param lsp_symbols lsp_document_symbol_t[]
 ---@param winbar_symbols winbar_symbol_t[] (reference to) winbar symbols
+---@param buf integer buffer number
+---@param win integer window number
 ---@param cursor integer[] cursor position
 local function convert_document_symbol_list(
   lsp_symbols,
   winbar_symbols,
+  buf,
+  win,
   cursor
 )
   -- Parse in reverse order so that the symbol with the largest start position
@@ -193,10 +207,16 @@ local function convert_document_symbol_list(
     if cursor_in_range(cursor, symbol.range) then
       table.insert(
         winbar_symbols,
-        convert_document_symbol(symbol, lsp_symbols, idx)
+        convert_document_symbol(symbol, buf, win, lsp_symbols, idx)
       )
       if symbol.children then
-        convert_document_symbol_list(symbol.children, winbar_symbols, cursor)
+        convert_document_symbol_list(
+          symbol.children,
+          winbar_symbols,
+          buf,
+          win,
+          cursor
+        )
       end
       return
     end
@@ -220,7 +240,6 @@ local function unify(symbols)
   -- symbol can only be a child or a sibling of the previous symbol in the
   -- same list
   for list_idx, sym in vim.iter(symbols):enumerate():skip(1) do
-    -- print('list_idx', list_idx, 'sym', sym)
     local prev = symbols[list_idx - 1] --[[@as lsp_symbol_information_tree_t]]
     -- If the symbol is a child of the previous symbol
     if range_contains(prev.location.range, sym.location.range) then
@@ -359,14 +378,15 @@ end
 
 ---Get winbar symbols from buffer according to cursor position
 ---@param buf integer buffer handler
+---@param win integer window handler
 ---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[] symbols winbar symbols
-local function get_symbols(buf, cursor)
+local function get_symbols(buf, win, cursor)
   if not initialized then
     init()
   end
   local result = {}
-  convert_document_symbol_list(lsp_buf_symbols[buf], result, cursor)
+  convert_document_symbol_list(lsp_buf_symbols[buf], result, buf, win, cursor)
   return result
 end
 
