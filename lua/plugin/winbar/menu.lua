@@ -501,7 +501,9 @@ function winbar_menu_t:close(restore_view)
     self.win = nil
   end
   -- Finish preview
-  self:finish_preview(restore_view)
+  if configs.opts.symbol.preview.enable then
+    self:finish_preview(restore_view)
+  end
 end
 
 ---Preview the symbol at the given position
@@ -529,7 +531,7 @@ function winbar_menu_t:finish_preview(restore_view)
   if self.symbol_previewed then
     self.symbol_previewed:preview_restore_hl()
     if restore_view then
-      self.symbol_previewed:preview_restore_view(restore_view)
+      self.symbol_previewed:preview_restore_view()
     end
     self.symbol_previewed = nil
   end
@@ -541,6 +543,9 @@ end
 ---@return nil
 function winbar_menu_t:quick_navigation(new_cursor)
   local entry = self.entries and self.entries[new_cursor[1]]
+  if not entry then
+    return
+  end
   local target_component, range
   if not self.prev_cursor then
     target_component, range =
