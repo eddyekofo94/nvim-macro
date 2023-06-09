@@ -147,14 +147,5 @@ return {
       require('configs.nvim-colorizer')
     end,
   },
-
-  {
-    'stevearc/aerial.nvim',
-    keys = { '<Leader>O', '<Leader>o' },
-    cmd = { 'AerialToggle', 'AerialOpen', 'AerialOpenAll' },
-    config = function()
-      require('configs.aerial')
-    end,
-  },
 }
 -- stylua: ignore end

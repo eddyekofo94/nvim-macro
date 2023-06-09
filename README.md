@@ -330,7 +330,7 @@ and it should work out of the box.
 
 ### Default Modules and Plugins of Choice
 
-Total # of plugins: 50 (package manager included).
+Total # of plugins: 49 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -377,7 +377,6 @@ Total # of plugins: 50 (package manager included).
     - [tmux.nvim](https://github.com/aserowy/tmux.nvim)
     - [nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua)
     - [vim-fugitive](https://github.com/tpope/vim-fugitive)
-    - [aerial.nvim](https://github.com/stevearc/aerial.nvim)
 - **Treesitter**
     - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
     - [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)
