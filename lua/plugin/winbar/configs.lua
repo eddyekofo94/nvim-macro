@@ -155,7 +155,7 @@ M.opts = {
           end
           return
         end
-        if M.opts.menu.preview.enable then
+        if M.opts.symbol.preview.enable then
           menu:preview_symbol_at({ mouse.line, mouse.column })
         end
         menu:update_hover_hl({ mouse.line, mouse.column - 1 })
