@@ -395,7 +395,7 @@ function winbar_menu_t:make_buf()
       local cursor = vim.api.nvim_win_get_cursor(self.win)
 
       if
-        configs.opts.symbol.preview.enable
+        configs.opts.menu.preview
         and not vim.deep_equal(cursor, self.prev_cursor)
       then
         self:preview_symbol_at(cursor, true)
@@ -500,7 +500,7 @@ function winbar_menu_t:close(restore_view)
     self.win = nil
   end
   -- Finish preview
-  if configs.opts.symbol.preview.enable then
+  if configs.opts.menu.preview then
     self:finish_preview(restore_view)
   end
 end

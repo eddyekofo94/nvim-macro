@@ -48,9 +48,7 @@ M.opts = {
     },
   },
   symbol = {
-    -- When on, preview the symbol in the source window
     preview = {
-      enable = true,
       ---Reorient the preview window on previewing a new symbol
       ---@param win integer source window
       ---@param range {start: {line: integer}, end: {line: integer}} 0-indexed
@@ -98,6 +96,8 @@ M.opts = {
     },
   },
   menu = {
+    -- When on, preview the symbol in the source window
+    preview = true,
     -- When on, set the cursor to the closest clickable component
     -- on CursorMoved
     quick_navigation = true,
@@ -126,7 +126,7 @@ M.opts = {
           end
           return
         end
-        menu:click_at({ mouse.line, mouse.column }, nil, 1, 'l')
+        menu:click_at({ mouse.line, mouse.column - 1 }, nil, 1, 'l')
       end,
       ['<CR>'] = function()
         local menu = require('plugin.winbar.api').get_current_winbar_menu()
@@ -155,8 +155,8 @@ M.opts = {
           end
           return
         end
-        if M.opts.symbol.preview.enable then
-          menu:preview_symbol_at({ mouse.line, mouse.column })
+        if M.opts.menu.preview then
+          menu:preview_symbol_at({ mouse.line, mouse.column - 1 })
         end
         menu:update_hover_hl({ mouse.line, mouse.column - 1 })
       end,
