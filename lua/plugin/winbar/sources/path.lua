@@ -53,10 +53,10 @@ local function convert(path, buf, win)
         end
         return self.children
       end
-      if k == 'siblings' or k == 'idx' then
+      if k == 'siblings' or k == 'sibling_idx' then
         local parent_dir = vim.fs.dirname(path)
         self.siblings = {}
-        self.idx = 1
+        self.sibling_idx = 1
         for idx, name in vim.iter(vim.fs.dir(parent_dir)):enumerate() do
           if configs.opts.sources.path.filter(name) then
             table.insert(
