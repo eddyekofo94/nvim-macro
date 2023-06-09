@@ -24,7 +24,7 @@ local function get_icon(path)
   return icon, icon_hl
 end
 
----Convert a path to the winbar symbol structure
+---Convert a path into a winbar symbol
 ---@param path string full path
 ---@param buf integer buffer handler
 ---@param win integer window handler
@@ -38,16 +38,8 @@ local function convert(path, buf, win)
     icon = icon,
     icon_hl = icon_hl,
     ---Override the default jump function
-    ---@param symbol winbar_symbol_t
-    jump = function(symbol)
-      if symbol.entry then
-        local current_menu = symbol.entry.menu
-        while current_menu do
-          current_menu:close()
-          current_menu = current_menu.prev_menu
-        end
-        vim.cmd.edit(path)
-      end
+    jump = function(_)
+      vim.cmd.edit(path)
     end,
   }, {
     ---@param self winbar_symbol_t
