@@ -151,7 +151,6 @@ function winbar_symbol_t:new(opts)
                     }),
                     sym:merge({
                       on_click = function()
-                        sym:jump()
                         local current_menu = this.menu
                         while current_menu and current_menu.prev_menu do
                           current_menu = current_menu.prev_menu
@@ -159,6 +158,7 @@ function winbar_symbol_t:new(opts)
                         if current_menu then
                           current_menu:close(false)
                         end
+                        sym:jump()
                       end,
                     }),
                   },
@@ -251,7 +251,7 @@ function winbar_symbol_t:preview()
   )
 end
 
----Clear the preview highlight of the source window
+---Clear the preview highlights in the source window
 ---@return nil
 function winbar_symbol_t:preview_restore_hl()
   utils.hl_range_single(self.buf, 'WinBarPreview')
