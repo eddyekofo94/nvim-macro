@@ -28,9 +28,9 @@ end
 ---@field icon string
 ---@field name_hl string?
 ---@field icon_hl string?
----@field win integer? the window of the source code
----@field buf integer? the buffer of the source code
----@field view table? original view of the source code window
+---@field win integer? the source window the symbol is shown in
+---@field buf integer? the source buffer the symbol is defined in
+---@field view table? original view of the source window
 ---@field bar winbar_t? the winbar the symbol belongs to, if the symbol is shown inside a winbar
 ---@field menu winbar_menu_t? menu associated with the winbar symbol, if the symbol is shown inside a winbar
 ---@field entry winbar_menu_entry_t? the winbar entry the symbol belongs to, if the symbol is shown inside a menu
@@ -219,7 +219,7 @@ end
 ---Jump to the start of the symbol associated with the winbar symbol
 ---@return nil
 function winbar_symbol_t:jump()
-  if not self.range then
+  if not self.range or not self.win then
     return
   end
   vim.api.nvim_win_set_cursor(self.win, {
@@ -231,10 +231,7 @@ end
 ---Preview the symbol in the source window
 ---@return nil
 function winbar_symbol_t:preview()
-  if not self.range then
-    return
-  end
-  if not self.win or not self.buf then
+  if not self.range or not self.win or not self.buf then
     return
   end
   self.view = utils.win_execute(self.win, vim.fn.winsaveview)
@@ -254,13 +251,15 @@ end
 ---Clear the preview highlights in the source window
 ---@return nil
 function winbar_symbol_t:preview_restore_hl()
-  utils.hl_range_single(self.buf, 'WinBarPreview')
+  if self.buf then
+    utils.hl_range_single(self.buf, 'WinBarPreview')
+  end
 end
 
 ---Restore the source window to its original view
 ---@return nil
 function winbar_symbol_t:preview_restore_view()
-  if self.view then
+  if self.view and self.win then
     utils.win_execute(self.win, vim.fn.winrestview, self.view)
   end
 end

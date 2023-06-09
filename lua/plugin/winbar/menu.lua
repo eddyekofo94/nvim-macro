@@ -173,7 +173,6 @@ end
 ---@field _win_configs table evaluated window configuration
 ---@field cursor integer[]? initial cursor position
 ---@field prev_win integer? previous window, assigned when calling new() or automatically determined in open()
----@field source_view table? original view of the source code window
 ---@field sub_menu winbar_menu_t? submenu, assigned when calling new() or automatically determined when a new menu opens
 ---@field prev_menu winbar_menu_t? previous menu, assigned when calling new() or automatically determined in open()
 ---@field clicked_at integer[]? last position where the menu was clicked, byte-indexed, 1,0-indexed
@@ -335,7 +334,7 @@ function winbar_menu_t:make_buf()
   local hl_info = {} ---@type {start: integer, end: integer, hlgroup: string, ns: integer?}[][]
   for _, entry in ipairs(self.entries) do
     local line, entry_hl_info = entry:cat()
-    -- Pad the line with spaces to the width of the window
+    -- Pad lines with spaces to the width of the window
     -- This is to make sure hl-WinBarMenuCurrentContext colors
     -- the entire line
     table.insert(

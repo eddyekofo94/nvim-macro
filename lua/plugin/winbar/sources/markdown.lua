@@ -93,7 +93,7 @@ local function parse_buf(buf, lnum_end, incremental)
   end
 end
 
----Convert markdown heading symbol into winbar symbol tree format
+---Convert a markdown heading symbol into a winbar symbol
 ---@param symbol markdown_heading_symbol_t markdown heading symbol
 ---@param symbols markdown_heading_symbol_t[] markdown heading symbols
 ---@param list_idx integer index of the symbol in the symbols list
