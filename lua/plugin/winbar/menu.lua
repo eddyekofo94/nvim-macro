@@ -321,6 +321,35 @@ function winbar_menu_t:update_hover_hl(pos)
   end
 end
 
+---Update highlights for current context according to pos
+---@param linenr integer? 1-indexed line number
+function winbar_menu_t:update_current_context_hl(linenr)
+  if self.buf then
+    utils.hl_line_single(self.buf, 'WinBarMenuCurrentContext', linenr)
+  end
+end
+
+---Add highlights to the menu buffer
+---@param hl_info winbar_menu_hl_info_t[]
+---@return nil
+function winbar_menu_t:add_hl(hl_info)
+  if not self.buf then
+    return
+  end
+  for linenr, hl_line_info in ipairs(hl_info) do
+    for _, hl_symbol_info in ipairs(hl_line_info) do
+      vim.api.nvim_buf_add_highlight(
+        self.buf,
+        hl_symbol_info.ns or -1,
+        hl_symbol_info.hlgroup,
+        linenr - 1, -- 0-indexed
+        hl_symbol_info.start,
+        hl_symbol_info['end']
+      )
+    end
+  end
+end
+
 ---Make a buffer for the menu and set buffer-local keymaps
 ---Must be called after the popup window is created
 ---Side effect: change self.buf, self.hl_info
@@ -331,7 +360,7 @@ function winbar_menu_t:make_buf()
   end
   self.buf = vim.api.nvim_create_buf(false, true)
   local lines = {} ---@type string[]
-  local hl_info = {} ---@type {start: integer, end: integer, hlgroup: string, ns: integer?}[][]
+  local hl_info = {} ---@type winbar_menu_hl_info_t[][]
   for _, entry in ipairs(self.entries) do
     local line, entry_hl_info = entry:cat()
     -- Pad lines with spaces to the width of the window
@@ -348,20 +377,9 @@ function winbar_menu_t:make_buf()
     table.insert(hl_info, entry_hl_info)
   end
   vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
-  for entry_idx, entry_hl_info in ipairs(hl_info) do
-    for _, hl in ipairs(entry_hl_info) do
-      vim.api.nvim_buf_add_highlight(
-        self.buf,
-        hl.ns or -1,
-        hl.hlgroup,
-        entry_idx - 1, -- 0-indexed
-        hl.start,
-        hl['end']
-      )
-    end
-    if self.cursor and entry_idx == self.cursor[1] then
-      utils.hl_line_single(self.buf, 'WinBarMenuCurrentContext', entry_idx)
-    end
+  self:add_hl(hl_info)
+  if self.cursor then
+    self:update_current_context_hl(self.cursor[1])
   end
   vim.bo[self.buf].ma = false
   vim.bo[self.buf].ft = 'winbar_menu'
@@ -503,13 +521,23 @@ function winbar_menu_t:close(restore_view)
   if configs.opts.menu.preview then
     self:finish_preview(restore_view)
   end
+  -- Update highlights in the previous menu
+  if self.prev_menu then
+    self.prev_menu:update_hover_hl()
+    if configs.opts.menu.preview then
+      self.prev_menu:preview_symbol_at(self.prev_menu.prev_cursor)
+    end
+  end
 end
 
 ---Preview the symbol at the given position
----@param pos integer[] 1,0-indexed, byte-indexed position
+---@param pos integer[]? 1,0-indexed, byte-indexed position
 ---@param look_ahead boolean? whether to look ahead for a component
 ---@return nil
 function winbar_menu_t:preview_symbol_at(pos, look_ahead)
+  if not pos then
+    return
+  end
   if self.prev_cursor then
     local prev_component = self:get_component_at(self.prev_cursor, look_ahead)
     if prev_component then

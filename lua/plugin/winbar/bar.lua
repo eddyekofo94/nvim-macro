@@ -75,6 +75,13 @@ function winbar_symbol_t:new(opts)
         on_click = opts
           ---@param this winbar_symbol_t
           and function(this, _, _, _, _)
+
+            -- Update current context highlights if the symbol
+            -- is shown inside a menu
+            if this.entry and this.entry.menu then
+              this.entry.menu:update_current_context_hl(this.entry.idx)
+            end
+
             -- Determine menu configs
             local prev_win = nil ---@type integer?
             local entries_source = nil ---@type winbar_symbol_t[]?
