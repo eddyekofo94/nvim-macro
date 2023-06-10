@@ -359,6 +359,23 @@ local autocmds = {
       end,
     },
   },
+
+  -- Disable winbar in diff mode
+  {
+    { 'OptionSet' },
+    {
+      pattern = 'diff',
+      group = 'DisableWinBarInDiffMode',
+      callback = function()
+        if vim.v.option_new == '1' then
+          vim.w._winbar = vim.wo.winbar
+          vim.wo.winbar = nil
+        else
+          vim.wo.winbar = vim.w._winbar
+        end
+      end
+    }
+  }
 }
 
 set_autocmds(autocmds)
