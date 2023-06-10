@@ -15,12 +15,12 @@ local function rnvimr_update_layout()
   vim.g.rnvimr_layout = {
     relative = 'editor',
     anchor = 'NW',
-    row = math.floor(0.15 * (vim.go.lines - vim.go.cmdheight)),
-    col = math.ceil(0.15 * vim.go.columns),
-    width = math.floor(0.7 * vim.go.columns),
-    height = math.floor(0.7 * vim.go.lines),
+    row = math.floor(0.65 * (vim.go.lines - vim.go.cmdheight)),
+    col = 0,
+    width = vim.go.columns,
+    height = math.floor(0.35 * vim.go.lines),
     style = 'minimal',
-    border = 'shadow',
+    border = 'solid',
   }
 end
 rnvimr_update_layout()
