@@ -64,7 +64,9 @@ local function get_node_siblings(node, buf)
     if valid_node(current, buf) then
       table.insert(siblings, 1, current)
     else
-      vim.list_extend(siblings, get_node_children(current, buf))
+      for _, sib in get_node_children(current, buf) do
+        table.insert(siblings, 1, sib)
+      end
     end
     current = current:prev_sibling()
   end
@@ -72,7 +74,7 @@ local function get_node_siblings(node, buf)
   current = node:next_sibling()
   while current do
     if valid_node(current, buf) then
-      table.insert(siblings, 1, current)
+      table.insert(siblings, current)
     else
       vim.list_extend(siblings, get_node_children(current, buf))
     end
