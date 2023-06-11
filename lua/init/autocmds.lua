@@ -215,9 +215,9 @@ local autocmds = {
       group = 'QuickFixAutoOpen',
       callback = function(info)
         if vim.startswith(info.match, 'l') then
-          vim.cmd.lwindow()
+          vim.cmd('lwindow')
         else
-          vim.cmd.cwindow()
+          vim.cmd('botright cwindow')
         end
       end,
     },
