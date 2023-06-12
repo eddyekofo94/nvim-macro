@@ -14,7 +14,10 @@ local fmta = require('luasnip.extras.fmt').fmta
 local M = require('snippets.shared.math')
 
 M.env_standalone = {
-  snip = uf.add_attr({ condition = -conds.in_mathzone }, {
+  snip = uf.add_attr({
+    condition = -conds.in_mathzone,
+    show_condition = -conds.in_mathzone,
+  }, {
     s(
       { trig = 'env' },
       fmta(
@@ -73,7 +76,10 @@ M.env_standalone = {
 }
 
 M.style = {
-  snip = uf.add_attr({ condition = -conds.in_mathzone }, {
+  snip = uf.add_attr({
+    condition = -conds.in_mathzone,
+    show_condition = -conds.in_mathzone,
+  }, {
     s({ trig = 'em' }, { t('\\emph{'), i(1), t('}') }),
     s({ trig = 'bf' }, { t('\\textbf{'), i(1), t('}') }),
     s({ trig = 'ul' }, { t('\\underline{'), i(1), t('}') }),
@@ -81,7 +87,10 @@ M.style = {
 }
 
 M.style_auto = {
-  snip = uf.add_attr({ condition = -conds.in_mathzone }, {
+  snip = uf.add_attr({
+    condition = -conds.in_mathzone,
+    show_condition = -conds.in_mathzone,
+  }, {
     s(
       { trig = '^(%s*)- ', regTrig = true },
       f(function(_, parent, _)

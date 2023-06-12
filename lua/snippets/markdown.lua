@@ -11,8 +11,15 @@ local dl = require('luasnip.extras').dynamic_lambda
 local M = require('snippets.shared.math')
 
 M.format = {
-  snip = uf.add_attr({ condition = conds.in_normalzone }, {
-    s({ trig = '^# ', regTrig = true, snippetType = 'autosnippet' }, {
+  snip = uf.add_attr({
+    condition = conds.in_normalzone,
+    show_condition = conds.in_normalzone,
+  }, {
+    s({
+      trig = '^# ',
+      regTrig = true,
+      snippetType = 'autosnippet',
+    }, {
       t('# '),
       dl(
         1,
@@ -40,6 +47,7 @@ M.format = {
 M.markers = {
   snip = uf.add_attr({
     condition = conds.in_normalzone,
+    show_condition = conds.in_normalzone,
   }, {
     s(
       { trig = '**', condition = conds.in_normalzone },

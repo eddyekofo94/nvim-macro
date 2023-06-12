@@ -13,7 +13,11 @@ local d = ls.dynamic_node
 local fmta = require('luasnip.extras.fmt').fmta
 
 M.symbols = {
-  snip = uf.add_attr({ condition = conds.in_mathzone, wordTrig = false }, {
+  snip = uf.add_attr({
+    condition = conds.in_mathzone,
+    show_condition = conds.in_mathzone,
+    wordTrig = false,
+  }, {
     s({ trig = '(%a)(%d)', regTrig = true }, {
       d(1, function(_, snip)
         local symbol = snip.captures[1]
@@ -238,7 +242,11 @@ M.symbols = {
 }
 
 M.words = {
-  snip = uf.add_attr({ condition = conds.in_mathzone, wordTrig = true }, {
+  snip = uf.add_attr({
+    condition = conds.in_mathzone,
+    show_condition = conds.in_mathzone,
+    wordTrig = true
+  }, {
     -- matrix/vector
     s(
       { trig = 'vr', dscr = 'row vector' },
