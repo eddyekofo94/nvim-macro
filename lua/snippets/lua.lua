@@ -26,6 +26,9 @@ M.syntax = {
     ms({
       { trig = 'lf' },
       { trig = 'lfn' },
+      { trig = 'lfun' },
+      { trig = 'lfunc' },
+      { trig = 'lfunction' },
     }, {
       t('local function '),
       i(1, 'func'),
@@ -38,6 +41,7 @@ M.syntax = {
     }),
     ms({
       { trig = 'fn' },
+      { trig = 'fun' },
       { trig = 'func' },
       { trig = 'function' },
     }, {
@@ -246,7 +250,10 @@ M.nvim = {
         { repeat_duplicates = true }
       )
     ),
-    s({ trig = 'notify' }, {
+    ms({
+      { trig = 'not' },
+      { trig = 'notify' },
+    }, {
       t('vim.notify('),
       i(1),
       t(', vim.log.levels.'),
@@ -260,15 +267,34 @@ M.nvim = {
       }),
       t(')'),
     }),
-    s({ trig = 'ins' }, {
+    s({ trig = 'api' }, {
+      t('vim.api.nvim_'),
+    }),
+    s({ trig = 'vfn' }, {
+      t('vim.fn.'),
+    }),
+    ms({
+      { trig = 'in' },
+      { trig = 'ins' },
+      { trig = 'insp' },
+    }, {
       t('vim.inspect('),
       i(1),
       t(')'),
     }),
-    s({ trig = 'pins' }, {
+    ms({
+      { trig = 'pin' },
+      { trig = 'pins' },
+      { trig = 'pinsp' },
+      { trig = 'prin' },
+      { trig = 'prins' },
+      { trig = 'prinsp' },
+    }, {
       t('print(vim.inspect('),
       i(1),
-      t('))'),
+      t(')'),
+      i(2),
+      t(')'),
     }),
   }),
 }
