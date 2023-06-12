@@ -1,5 +1,13 @@
 local lsconds = require('luasnip.extras.conditions')
 
+---@class snip_cond_t
+---@operator call: boolean
+---@operator unm: snip_cond_t
+---@operator add: snip_cond_t
+---@operator mul: snip_cond_t
+---@operator pow: snip_cond_t
+---@operator mod: snip_cond_t
+
 ---@class snip_conds_t
 ---@field make_condition function
 local M = setmetatable({
@@ -30,27 +38,32 @@ function M.in_codeblock()
 end
 
 ---Returns whether current cursor is in a comment
----@return boolean
-function M.in_comment()
-  local buf = vim.api.nvim_get_current_buf()
-  local cursor = vim.api.nvim_win_get_cursor(0)
-  if not vim.treesitter.highlighter.active[buf] then
-    return false
-  end
-  local node = vim.treesitter.get_node({
-    bufnr = buf,
-    pos = { cursor[1] - 1, cursor[2] - 1 },
-  })
-  if not node then
-    return false
-  end
-  return node:type():match('comment') ~= nil
+---@param type string
+---@return snip_cond_t
+function M.in_tsnode(type)
+  return lsconds.make_condition(function()
+    local buf = vim.api.nvim_get_current_buf()
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    if not vim.treesitter.highlighter.active[buf] then
+      return false
+    end
+    local node = vim.treesitter.get_node({
+      bufnr = buf,
+      pos = { cursor[1] - 1, cursor[2] - 1 },
+    })
+    if not node then
+      return false
+    end
+    return node:type():match(type) ~= nil
+  end)
 end
 
 ---Returns whether the cursor is in a normal zone
 ---@return boolean
 function M.in_normalzone()
-  return not M.in_mathzone() and not M.in_codeblock() and not M.in_comment()
+  return not M.in_mathzone()
+    and not M.in_codeblock()
+    and not M.in_tsnode('comment')
 end
 
 return M
