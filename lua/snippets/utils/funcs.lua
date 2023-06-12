@@ -1,11 +1,29 @@
+---Set attributes for a single snippet
+---@param snip table
+---@param attr table
+local function snip_set_attr(snip, attr)
+  for attr_key, attr_val in pairs(attr) do
+    if type(snip[attr_key]) == 'table' and type(attr_val) == 'table' then
+      snip[attr_key] = vim.tbl_deep_extend('keep', snip[attr_key], attr_val)
+    else
+      snip[attr_key] = attr_val
+    end
+  end
+end
+
 ---Add attributes to a snippet group
 ---@param attr table
 ---@param snip_group table
 ---@return table
 local function add_attr(attr, snip_group)
   for _, snip in ipairs(snip_group) do
-    for attr_key, attr_val in pairs(attr) do
-      snip[attr_key] = attr_val
+    -- ls.multi_snippet
+    if snip.v_snips then
+      for _, s in ipairs(snip.v_snips) do
+        snip_set_attr(s, attr)
+      end
+    else -- ls.snippet
+      snip_set_attr(snip, attr)
     end
   end
   return snip_group
@@ -32,6 +50,7 @@ local function get_indent_depth(indent)
 end
 
 return {
+  snip_set_attr = snip_set_attr,
   add_attr = add_attr,
   get_indent_depth = get_indent_depth,
 }
