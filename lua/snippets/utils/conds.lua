@@ -39,7 +39,7 @@ function M.in_comment()
   end
   local node = vim.treesitter.get_node({
     bufnr = buf,
-    pos = { cursor[1] - 1, cursor[2] },
+    pos = { cursor[1] - 1, cursor[2] - 1 },
   })
   if not node then
     return false
