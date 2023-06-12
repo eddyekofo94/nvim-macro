@@ -303,47 +303,6 @@ local autocmds = {
     },
   },
 
-  -- Smart expandtab: use tabs for indentation and spaces for alignment
-  {
-    { 'InsertEnter', 'CursorMovedI' },
-    {
-      group = 'SmartExpandtab',
-      callback = function(info)
-        local col = vim.api.nvim_win_get_cursor(0)[2]
-        local line = vim.api.nvim_get_current_line()
-        local after_non_blank = vim.fn.match(line:sub(1, col), [[\S]]) >= 0
-        -- An adjacent tab is a tab that can be joined with the tab
-        -- inserted before the cursor assuming 'noet' is set
-        local has_adjacent_tabs = vim.fn.match(
-          line:sub(1, col),
-          string.format([[\t\ \{,%d}$]], math.max(0, vim.bo[info.buf].ts - 1))
-        ) >= 0 or line:sub(col + 1, col + 1) == '\t'
-        if after_non_blank and not has_adjacent_tabs then
-          if vim.b[info.buf].expandtab == nil then
-            vim.b[info.buf].expandtab = vim.bo[info.buf].expandtab
-          end
-          vim.bo[info.buf].expandtab = true
-        elseif vim.b[info.buf].expandtab ~= nil then
-          vim.bo[info.buf].expandtab = vim.b[info.buf].expandtab
-          vim.b[info.buf].expandtab = nil
-        end
-      end,
-    },
-  },
-  {
-    { 'InsertLeave' },
-    {
-      group = 'SmartExpandtab',
-      callback = function(info)
-        -- Restore expandtab setting
-        if vim.b[info.buf].expandtab ~= nil then
-          vim.bo[info.buf].expandtab = vim.b[info.buf].expandtab
-          vim.b[info.buf].expandtab = nil
-        end
-      end,
-    },
-  },
-
   -- Set colorcolumn according to textwidth
   {
     { 'OptionSet' },

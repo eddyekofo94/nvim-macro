@@ -22,17 +22,7 @@ local function get_indent_str(depth)
     sts = vim.bo.ts
   end
 
-  local expandtab
-  ---@diagnostic disable-next-line: undefined-field
-  if vim.b.expandtab ~= nil then
-    ---@see autocmds.lua
-    ---@diagnostic disable-next-line: undefined-field
-    expandtab = vim.b.expandtab
-  else
-    expandtab = vim.bo.expandtab
-  end
-
-  return expandtab and string.rep(' ', sts * depth)
+  return vim.bo.expandtab and string.rep(' ', sts * depth)
     or string.rep('\t', math.floor(sts * depth / vim.bo.ts))
       .. string.rep(' ', sts * depth % vim.bo.ts)
 end
