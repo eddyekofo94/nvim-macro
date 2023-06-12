@@ -28,6 +28,14 @@ local function choose_closer(dest1, dest2)
   end
 end
 
+---Check if a node has a previous snippet
+---@param node table
+---@return boolean
+local function node_has_prev_snip(node)
+  local snip = node.parent.snippet
+  return snip.prev.prev ~= nil
+end
+
 ---Check if a node is valid (i.e. has a range)
 ---@param node table
 ---@return boolean
@@ -131,7 +139,12 @@ cmp.setup({
             local buf = vim.api.nvim_get_current_buf()
             local cursor = vim.api.nvim_win_get_cursor(0)
             local current = luasnip.session.current_nodes[buf]
-            while current and not node_is_valid(current) do
+            while
+              current
+              and node_has_prev_snip(current)
+              and not node_is_valid(current, cursor)
+            do
+              print('unlinking', current)
               luasnip.unlink_current()
               current = luasnip.session.current_nodes[buf]
             end
