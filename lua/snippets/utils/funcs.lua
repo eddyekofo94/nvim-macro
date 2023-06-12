@@ -11,31 +11,27 @@ local function add_attr(attr, snip_group)
   return snip_group
 end
 
----Returns whether the cursor is in a math zone
----@return boolean
-local function in_mathzone()
-  return vim.g.loaded_vimtex == 1
-    and vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
-end
-
----Returns whether the cursor is not in a math zone
----@return boolean
-local function not_in_mathzone()
-  return not in_mathzone()
-end
-
----Returns the character after the cursor
----@return string
-local function get_char_after()
-  local cursor = vim.api.nvim_win_get_cursor(0)
-  local current_line =
-    vim.api.nvim_buf_get_lines(0, cursor[1] - 1, cursor[1], true)[1]
-  return current_line:sub(cursor[2], cursor[2])
+---Returns the depth of the current indent given the indent of the current line
+---@param indent number|string
+local function get_indent_depth(indent)
+  if type(indent) == 'string' then
+    indent = #indent:match('^%s*'):gsub('\t', string.rep(' ', vim.bo.ts))
+  end
+  if indent <= 0 then
+    return 0
+  end
+  local sts
+  if vim.bo.sts > 0 then
+    sts = vim.bo.sts
+  elseif vim.bo.sw > 0 then
+    sts = vim.bo.sw
+  else
+    sts = vim.bo.ts
+  end
+  return math.floor(indent / sts)
 end
 
 return {
   add_attr = add_attr,
-  in_mathzone = in_mathzone,
-  not_in_mathzone = not_in_mathzone,
-  get_char_after = get_char_after,
+  get_indent_depth = get_indent_depth,
 }

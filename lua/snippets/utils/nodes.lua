@@ -9,6 +9,10 @@ local d = ls.dynamic_node
 ---@param depth number
 ---@return string
 local function get_indent_str(depth)
+  if depth <= 0 then
+    return ''
+  end
+
   local sts
   if vim.bo.sts > 0 then
     sts = vim.bo.sts
@@ -18,24 +22,32 @@ local function get_indent_str(depth)
     sts = vim.bo.ts
   end
 
-  if vim.bo.expandtab then
-    return string.rep(' ', sts * depth)
+  local expandtab
+  ---@diagnostic disable-next-line: undefined-field
+  if vim.b.expandtab ~= nil then
+    ---@see autocmds.lua
+    ---@diagnostic disable-next-line: undefined-field
+    expandtab = vim.b.expandtab
   else
-    local n_tab = math.floor(sts * depth / vim.bo.ts)
-    local indent_str = string.rep('\t', n_tab)
-    indent_str = indent_str .. string.rep(' ', sts * depth % vim.bo.ts)
-    return indent_str
+    expandtab = vim.bo.expandtab
   end
+
+  return expandtab and string.rep(' ', sts * depth)
+    or string.rep('\t', math.floor(sts * depth / vim.bo.ts))
+      .. string.rep(' ', sts * depth % vim.bo.ts)
 end
 
 ---Returns a function node that returns a string for indentation at the given
 ---depth
----@param depth number
+---@param depth number|fun(): number
+---@param argnode_references number|table?
+---@param node_opts table?
 ---@return table node
-local function function_indent_node(depth)
-  return f(function()
-    return get_indent_str(depth)
-  end, {}, {})
+local function function_indent_node(depth, argnode_references, node_opts)
+  return f(function(...)
+    ---@diagnostic disable-next-line: param-type-mismatch
+    return get_indent_str(type(depth) == 'function' and depth(...) or depth)
+  end, argnode_references, node_opts)
 end
 
 ---Returns a dynamic node for suffix snippet

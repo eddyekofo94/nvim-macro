@@ -1,8 +1,10 @@
 local M = {}
 local uf = require('snippets.utils.funcs')
 local un = require('snippets.utils.nodes')
+local conds = require('snippets.utils.conds')
 local ls = require('luasnip')
 local s = ls.snippet
+local ms = ls.multi_snippet
 local sn = ls.snippet_node
 local t = ls.text_node
 local i = ls.insert_node
@@ -11,7 +13,7 @@ local d = ls.dynamic_node
 local fmta = require('luasnip.extras.fmt').fmta
 
 M.symbols = {
-  snip = uf.add_attr({ condition = uf.in_mathzone, wordTrig = false }, {
+  snip = uf.add_attr({ condition = conds.in_mathzone, wordTrig = false }, {
     s({ trig = '(%a)(%d)', regTrig = true }, {
       d(1, function(_, snip)
         local symbol = snip.captures[1]
@@ -89,12 +91,12 @@ M.symbols = {
       i(0),
     }),
 
-    s({ trig = '!=' }, { t('\\neq '), i(0) }),
     s({ trig = '==' }, { t('&= '), i(0) }),
-    s({ trig = '&= =' }, { t('\\equiv '), i(0) }),
     s({ trig = ':=' }, { t('\\coloneqq '), i(0) }),
-    s({ trig = '>=' }, { t('\\ge '), i(0) }),
-    s({ trig = '<=' }, { t('\\le '), i(0) }),
+    ms({ { trig = '!=' }, { trig = 'neq' } }, { t('\\neq '), i(0) }),
+    ms({ { trig = '&= =' }, { trig = 'eq' } }, { t('\\equiv '), i(0) }),
+    ms({ { trig = '>=' }, { trig = 'ge' } }, { t('\\ge '), i(0) }),
+    ms({ { trig = '<=' }, { trig = 'le' } }, { t('\\le '), i(0) }),
     s({ trig = '<->', priority = 999 }, { t('\\leftrightarrow '), i(0) }),
     s({ trig = '\\le >', priority = 999 }, { t('\\Leftrightarrow '), i(0) }),
     s({ trig = '<--', priority = 999 }, { t('\\leftarrow '), i(0) }),
@@ -236,7 +238,7 @@ M.symbols = {
 }
 
 M.words = {
-  snip = uf.add_attr({ condition = uf.in_mathzone, wordTrig = true }, {
+  snip = uf.add_attr({ condition = conds.in_mathzone, wordTrig = true }, {
     -- matrix/vector
     s(
       { trig = 'vr', dscr = 'row vector' },

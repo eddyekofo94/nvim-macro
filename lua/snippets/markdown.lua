@@ -1,5 +1,6 @@
 local uf = require('snippets.utils.funcs')
 local un = require('snippets.utils.nodes')
+local conds = require('snippets.utils.conds')
 local ls = require('luasnip')
 local s = ls.snippet
 local t = ls.text_node
@@ -9,15 +10,8 @@ local dl = require('luasnip.extras').dynamic_lambda
 
 local M = require('snippets.shared.math')
 
-local function in_normal_zone()
-  local cursor_lnum = vim.api.nvim_win_get_cursor(0)[1]
-  local lines = vim.api.nvim_buf_get_lines(0, 0, cursor_lnum, false)
-  return not uf.in_mathzone()
-    and not require('utils.funcs').ft.markdown.in_code_block(lines)
-end
-
 M.format = {
-  snip = uf.add_attr({ condition = in_normal_zone }, {
+  snip = uf.add_attr({ condition = conds.in_normalzone }, {
     s({ trig = '^# ', regTrig = true, snippetType = 'autosnippet' }, {
       t('# '),
       dl(
@@ -27,7 +21,7 @@ M.format = {
       ),
       i(0),
     }),
-    s('package', {
+    s('pkgs', {
       t({ '---', '' }),
       t({ 'header-includes:', '' }),
       un.idnt(1),
@@ -44,17 +38,11 @@ M.format = {
 }
 
 M.markers = {
-  snip = uf.add_attr({ condition = in_normal_zone }, {
-    s({
-      trig = '*',
-      condition = function()
-        local line = vim.api.nvim_get_current_line()
-        local col = vim.api.nvim_win_get_cursor(0)[2]
-        return line:sub(col + 1, col + 1) == '*' and uf.not_in_mathzone()
-      end,
-    }, { t('*'), i(0), t('*') }),
+  snip = uf.add_attr({
+    condition = conds.in_normalzone,
+  }, {
     s(
-      { trig = '**', priority = 999, condition = uf.not_in_mathzone },
+      { trig = '**', condition = conds.in_normalzone },
       { t('*'), i(0), t('*') }
     ),
   }),
@@ -62,7 +50,7 @@ M.markers = {
 }
 
 M.titles = {
-  snip = uf.add_attr({ condition = in_normal_zone }, {
+  snip = uf.add_attr({ condition = conds.in_normalzone }, {
     s({ trig = 'h1' }, { t('# '), i(0) }),
     s({ trig = 'h2' }, { t('## '), i(0) }),
     s({ trig = 'h3' }, { t('### '), i(0) }),
@@ -73,7 +61,7 @@ M.titles = {
 }
 
 M.theorems = {
-  snip = uf.add_attr({ condition = in_normal_zone }, {
+  snip = uf.add_attr({ condition = conds.in_normalzone }, {
     s({ trig = 'theo' }, { t('***'), i(1, 'Theorem'), t('***') }),
     s({ trig = 'def' }, { t('***'), i(1, 'Definition'), t('***') }),
     s({ trig = 'pro' }, { t('***'), i(1, 'Proof'), t('***') }),
