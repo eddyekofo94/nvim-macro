@@ -24,11 +24,11 @@ local function lualine_config()
     end
 
     if vim.bo.expandtab then
-      return icons.DotSmall .. sts
+      return icons.Dot .. sts
     elseif vim.bo.ts == sts then
       return icons.ArrowRight .. vim.bo.tabstop
     else
-      return icons.ArrowRight .. vim.bo.tabstop .. ' ' .. icons.DotSmall .. sts
+      return icons.ArrowRight .. vim.bo.tabstop .. ' ' .. icons.Dot .. sts
     end
   end
 
