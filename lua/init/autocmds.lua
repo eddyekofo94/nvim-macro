@@ -373,9 +373,9 @@ local autocmds = {
         else
           vim.wo.winbar = vim.w._winbar
         end
-      end
-    }
-  }
+      end,
+    },
+  },
 }
 
 set_autocmds(autocmds)
