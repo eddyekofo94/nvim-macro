@@ -28,20 +28,62 @@ local function choose_closer(dest1, dest2)
   end
 end
 
----Check if a node has a previous snippet
+---Check if a node has length larger than 0
 ---@param node table
 ---@return boolean
-local function node_has_prev_snip(node)
-  local snip = node.parent.snippet
-  return snip.prev.prev ~= nil
-end
-
----Check if a node is valid (i.e. has a range)
----@param node table
----@return boolean
-local function node_is_valid(node)
+local function node_has_length(node)
   local start_pos, end_pos = node:get_buf_position()
   return start_pos[1] ~= end_pos[1] or start_pos[2] ~= end_pos[2]
+end
+
+---Check if range1 contains range2
+---If range1 == range2, return true
+---@param range1 integer[][] 0-based range
+---@param range2 integer[][] 0-based range
+---@return boolean
+local function range_contains(range1, range2)
+  -- stylua: ignore start
+  return (
+    range2[1][1] > range1[1][1]
+    or (range2[1][1] == range1[1][1]
+        and range2[1][2] >= range1[1][2])
+    )
+    and (
+      range2[1][1] < range1[2][1]
+      or (range2[1][1] == range1[2][1]
+          and range2[1][2] <= range1[2][2])
+    )
+    and (
+      range2[2][1] > range1[1][1]
+      or (range2[2][1] == range1[1][1]
+          and range2[2][2] >= range1[1][2])
+    )
+    and (
+      range2[2][1] < range1[2][1]
+      or (range2[2][1] == range1[2][1]
+          and range2[2][2] <= range1[2][2])
+    )
+  -- stylua: ignore end
+end
+
+---Find the parent (a previous node that contains the current node) of the node
+---@param node table current node
+---@return table|nil
+local function node_find_parent(node)
+  local range_start, range_end = node:get_buf_position()
+  local prev = node.parent.snippet and node.parent.snippet.prev.prev
+  while prev do
+    local range_start_prev, range_end_prev = prev:get_buf_position()
+    if
+      range_contains(
+        { range_start_prev, range_end_prev },
+        { range_start, range_end }
+      )
+    then
+      return prev
+    end
+    prev = prev.parent.snippet and prev.parent.snippet.prev.prev
+  end
 end
 
 ---Check if the cursor is at the end of a node
@@ -135,23 +177,25 @@ cmp.setup({
         elseif luasnip.jumpable(1) then
           if luasnip.choice_active() then
             luasnip.jump(1)
-          else
+          else -- not in choice node
             local buf = vim.api.nvim_get_current_buf()
             local cursor = vim.api.nvim_win_get_cursor(0)
             local current = luasnip.session.current_nodes[buf]
-            while
-              current
-              and node_has_prev_snip(current)
-              and not node_is_valid(current, cursor)
-            do
-              print('unlinking', current)
-              luasnip.unlink_current()
-              current = luasnip.session.current_nodes[buf]
-            end
-            if current and cursor_at_end_of_node(current, cursor) then
-              luasnip.jump(1)
-            else
-              fallback()
+            if node_has_length(current) then
+              if cursor_at_end_of_node(current, cursor) then
+                luasnip.jump(1)
+              else
+                fallback()
+              end
+            else -- node has zero length
+              local parent = node_find_parent(current)
+              if not parent then
+                luasnip.jump(1)
+              elseif cursor_at_end_of_node(parent, cursor) then
+                luasnip.jump(1)
+              else
+                fallback()
+              end
             end
           end
         else
