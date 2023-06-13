@@ -66,6 +66,26 @@ local function range_contains(range1, range2)
   -- stylua: ignore end
 end
 
+---Check if the cursor position is in the given range
+---@param range integer[][] 0-based range
+---@param cursor integer[] 1,0-based cursor position
+---@return boolean
+local function cursor_in_range(range, cursor)
+  local cursor0 = { cursor[1] - 1, cursor[2] }
+  -- stylua: ignore start
+  return (
+    cursor0[1] > range[1][1]
+    or (cursor0[1] == range[1][1]
+        and cursor0[2] >= range[1][2])
+    )
+    and (
+      cursor0[1] < range[2][1]
+      or (cursor0[1] == range[2][1]
+          and cursor0[2] <= range[2][2])
+    )
+  -- stylua: ignore end
+end
+
 ---Find the parent (a previous node that contains the current node) of the node
 ---@param node table current node
 ---@return table|nil
@@ -87,12 +107,11 @@ local function node_find_parent(node)
 end
 
 ---Check if the cursor is at the end of a node
----@param node table
----@param cursor number[]
+---@param range table 0-based range
+---@param cursor number[] 1,0-based cursor position
 ---@return boolean
-local function cursor_at_end_of_node(node, cursor)
-  local _, end_pos = node:get_buf_position()
-  return end_pos[1] + 1 == cursor[1] and end_pos[2] == cursor[2]
+local function cursor_at_end_of_range(range, cursor)
+  return range[2][1] + 1 == cursor[1] and range[2][2] == cursor[2]
 end
 
 ---Jump to the closer destination between a snippet and tabout
@@ -114,6 +133,42 @@ local function jump_to_closer(snip_dest, tabout_dest, direction)
   end
   return true
 end
+
+---Filter out unwanted entries
+---@param entry cmp.Entry
+---@param _ cmp.Context ignored
+---@return boolean
+local function entry_filter(entry, _)
+  return not vim.tbl_contains({
+    'No matches found',
+    'Searching...',
+    'Workspace loading',
+  }, entry.completion_item.label)
+end
+
+---Options for fuzzy_path source
+local fuzzy_path_option = {
+  command_shortcut = [[^\(e\|w\)\s\+]],
+  path_regex = [[^\(\k\?[/:\~]\+\|\.\?\.\/\)\S\+]],
+  fd_timeout_msec = 100,
+  fd_cmd = {
+    'fd',
+    '--hidden',
+    '--full-path',
+    '--type',
+    'f',
+    '--type',
+    'd',
+    '--type',
+    'l',
+    '--max-depth',
+    '10',
+    '--max-results',
+    '20',
+    '--exclude',
+    '.git',
+  },
+}
 
 cmp.setup({
   formatting = {
@@ -172,6 +227,7 @@ cmp.setup({
     end, { 'i', 'c' }),
     ['<Tab>'] = cmp.mapping(function(fallback)
       if vim.fn.mode() == 'i' then
+        print('luasnip.expandable(): ' .. vim.inspect(luasnip.expandable()))
         if luasnip.expandable() then
           luasnip.expand()
         elseif luasnip.jumpable(1) then
@@ -182,19 +238,25 @@ cmp.setup({
             local cursor = vim.api.nvim_win_get_cursor(0)
             local current = luasnip.session.current_nodes[buf]
             if node_has_length(current) then
-              if cursor_at_end_of_node(current, cursor) then
+              if
+                cursor_at_end_of_range({ current:get_buf_position() }, cursor)
+              then
                 luasnip.jump(1)
               else
                 fallback()
               end
             else -- node has zero length
               local parent = node_find_parent(current)
-              if not parent then
-                luasnip.jump(1)
-              elseif cursor_at_end_of_node(parent, cursor) then
-                luasnip.jump(1)
+              local range = parent and { parent:get_buf_position() }
+              local tabout_dest = tabout.get_jump_pos('<Tab>')
+              if
+                tabout_dest
+                and range
+                and cursor_in_range(range, tabout_dest)
+              then
+                tabout.do_key('<Tab>')
               else
-                fallback()
+                luasnip.jump(1)
               end
             end
           end
@@ -291,22 +353,21 @@ cmp.setup({
       name = 'nvim_lsp',
       max_item_count = 20,
       -- Suppress LSP completion when workspace is not ready yet
-      entry_filter = function(entry, _)
-        return not entry.completion_item.label:match('Workspace loading')
-      end,
+      entry_filter = entry_filter,
     },
     { name = 'fuzzy_buffer', max_item_count = 8 },
     { name = 'spell', max_item_count = 8 },
     {
       name = 'fuzzy_path',
-      entry_filter = function(entry, _)
-        return not entry.completion_item.label:match('No matches found')
-      end,
+      entry_filter = entry_filter,
+      option = fuzzy_path_option,
     },
     { name = 'calc' },
   },
   sorting = {
+    ---@type table[]|function[]
     comparators = {
+      require('cmp_fuzzy_path.compare'),
       cmp.config.compare.kind,
       cmp.config.compare.locality,
       cmp.config.compare.recently_used,
@@ -322,7 +383,7 @@ cmp.setup({
     },
     documentation = {
       max_width = 80,
-      max_height = 16,
+      max_height = 20,
     },
   },
 })
@@ -343,9 +404,8 @@ cmp.setup.cmdline(':', {
     {
       name = 'fuzzy_path',
       group_index = 1,
-      entry_filter = function(entry, _)
-        return not entry.completion_item.label:match('No matches found')
-      end,
+      entry_filter = entry_filter,
+      option = fuzzy_path_option,
     },
     { name = 'cmdline', group_index = 2 },
   },
@@ -357,9 +417,8 @@ cmp.setup.cmdline('@', {
     {
       name = 'fuzzy_path',
       group_index = 1,
-      entry_filter = function(entry, _)
-        return not entry.completion_item.label:match('No matches found')
-      end,
+      entry_filter = entry_filter,
+      option = fuzzy_path_option,
     },
     { name = 'cmdline', group_index = 2 },
     { name = 'fuzzy_buffer', group_index = 3 },
