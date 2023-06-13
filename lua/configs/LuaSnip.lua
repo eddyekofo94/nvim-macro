@@ -47,8 +47,12 @@ local function set_keymap()
   vim.keymap.set({ 'n', 's' }, '<S-Tab>', function()
     ls.jump(-1)
   end, { noremap = false })
-  vim.keymap.set('s', '<C-n>', '<Plug>luasnip-next-choice')
-  vim.keymap.set('s', '<C-p>', '<Plug>luasnip-prev-choice')
+  vim.keymap.set('s', '<C-n>', function()
+    return ls.choice_active() and '<Plug>luasnip-next-choice' or '<C-n>'
+  end, { silent = true, expr = true })
+  vim.keymap.set('s', '<C-p>', function()
+    return ls.choice_active() and '<Plug>luasnip-prev-choice' or '<C-p>'
+  end, { silent = true, expr = true })
 end
 
 ls.setup({
