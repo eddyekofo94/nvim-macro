@@ -3,6 +3,7 @@ local un = require('snippets.utils.nodes')
 local conds = require('snippets.utils.conds')
 local ls = require('luasnip')
 local s = ls.snippet
+local ms = ls.multi_snippet
 local t = ls.text_node
 local i = ls.insert_node
 local l = require('luasnip.extras').lambda
@@ -45,20 +46,31 @@ M.format = {
 }
 
 M.markers = {
+  ms({
+    common = { snippetType = 'autosnippet' },
+    {
+      trig = '**',
+      priority = 999,
+      condition = conds.in_normalzone,
+      show_condition = conds.in_normalzone,
+    },
+    {
+      trig = '*',
+      condition = conds.in_normalzone
+        * conds.before_pattern('%*')
+        * conds.after_pattern('%*'),
+      show_condition = conds.in_normalzone
+        * conds.before_pattern('%*')
+        * conds.after_pattern('%*'),
+    },
+  }, { t('*'), i(0), t('*') }),
+}
+
+M.titles = {
   snip = uf.add_attr({
     condition = conds.in_normalzone,
     show_condition = conds.in_normalzone,
   }, {
-    s(
-      { trig = '**', condition = conds.in_normalzone },
-      { t('*'), i(0), t('*') }
-    ),
-  }),
-  opts = { type = 'autosnippets' },
-}
-
-M.titles = {
-  snip = uf.add_attr({ condition = conds.in_normalzone }, {
     s({ trig = 'h1' }, { t('# '), i(0) }),
     s({ trig = 'h2' }, { t('## '), i(0) }),
     s({ trig = 'h3' }, { t('### '), i(0) }),
@@ -69,7 +81,10 @@ M.titles = {
 }
 
 M.theorems = {
-  snip = uf.add_attr({ condition = conds.in_normalzone }, {
+  snip = uf.add_attr({
+    condition = conds.in_normalzone,
+    show_condition = conds.in_normalzone,
+  }, {
     s({ trig = 'theo' }, { t('***'), i(1, 'Theorem'), t('***') }),
     s({ trig = 'def' }, { t('***'), i(1, 'Definition'), t('***') }),
     s({ trig = 'pro' }, { t('***'), i(1, 'Proof'), t('***') }),

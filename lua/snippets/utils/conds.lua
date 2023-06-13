@@ -61,9 +61,29 @@ end
 ---Returns whether the cursor is in a normal zone
 ---@return boolean
 function M.in_normalzone()
-  return not M.in_mathzone()
-    and not M.in_codeblock()
-    and not M.in_tsnode('comment')
+  return not M.in_mathzone() and not M.in_codeblock()
+end
+
+---Returns whether the cursor is before a pattern
+---@param pattern string lua pattern
+---@return snip_cond_t
+function M.before_pattern(pattern)
+  return lsconds.make_condition(function()
+    local line = vim.api.nvim_get_current_line()
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    return line:sub(cursor[2] + 1):match('^' .. pattern) ~= nil
+  end)
+end
+
+---Returns whether the cursor is after a pattern
+---@param pattern string lua pattern
+---@return snip_cond_t
+function M.after_pattern(pattern)
+  return lsconds.make_condition(function()
+    local line = vim.api.nvim_get_current_line()
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    return line:sub(1, cursor[2]):match(pattern .. '$') ~= nil
+  end)
 end
 
 return M
