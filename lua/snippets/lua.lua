@@ -5,6 +5,7 @@ local conds = require('snippets.utils.conds')
 local ls = require('luasnip')
 local s = ls.snippet
 local ms = ls.multi_snippet
+local sn = ls.snippet_node
 local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
@@ -81,6 +82,7 @@ M.syntax = {
     ms({
       { trig = 'ife' },
       { trig = 'ifel' },
+      { trig = 'ifelse' },
     }, {
       t('if '),
       i(1, 'condition'),
@@ -93,9 +95,8 @@ M.syntax = {
       t({ '', 'end' }),
     }),
     ms({
-      { trig = 'ifei' },
-      { trig = 'ifeli' },
       { trig = 'ifelif' },
+      { trig = 'ifelseif' },
     }, {
       t('if '),
       i(1, 'condition_1'),
@@ -110,23 +111,16 @@ M.syntax = {
       t({ '', 'end' }),
     }),
     s({
-      trig = '^(%s*)el',
-      regTrig = true,
+      trig = 'else',
+      snippetType = 'autosnippet',
     }, {
-      un.idnt(function(_, parent)
-        return uf.get_indent_depth(parent.captures[1]) - 1
-      end),
       t({ 'else', '' }),
-      un.idnt(function(_, parent)
-        return uf.get_indent_depth(parent.captures[1])
-      end),
-      i(0),
+      un.idnt(1),
     }),
-    ms({
-      common = { regTrig = true },
-      { trig = '^(%s*)ei' },
-      { trig = '^(%s*)eli' },
-      { trig = '^(%s*)elif' },
+    s({
+      trig = '^(%s*)elif',
+      snippetType = 'autosnippet',
+      regTrig = true,
     }, {
       un.idnt(function(_, parent)
         return uf.get_indent_depth(parent.captures[1]) - 1
@@ -137,7 +131,6 @@ M.syntax = {
       un.idnt(function(_, parent)
         return uf.get_indent_depth(parent.captures[1])
       end),
-      i(0),
     }),
     s({
       trig = 'else%s*if',
@@ -148,31 +141,92 @@ M.syntax = {
       i(1, 'condition'),
       t({ ' then', '' }),
       un.idnt(1),
-      i(0),
-    }),
-    s({ trig = 'forr' }, {
-      t('for '),
-      i(1, 'i'),
-      t(' = '),
-      i(2, 'start'),
-      t(', '),
-      i(3, 'stop'),
-      t({ ' do', '' }),
-      un.idnt(1),
-      i(4),
-      t({ '', 'end' }),
     }),
     s({ trig = 'for' }, {
       t('for '),
-      i(1, 'elements'),
-      t(' in '),
-      i(2, 'iterable'),
+      c(1, {
+        sn(nil, {
+          i(1, '_'),
+          t(', '),
+          i(2, 'v'),
+          t(' in ipairs('),
+          i(3, 'tbl'),
+          t(')'),
+        }),
+        sn(nil, {
+          i(1, 'k'),
+          t(', '),
+          i(2, 'v'),
+          t(' in pairs('),
+          i(3, 'tbl'),
+          t(')'),
+        }),
+        sn(nil, {
+          i(1, 'elements'),
+          t(' in '),
+          i(2, 'iterable'),
+        }),
+        sn(nil, {
+          t('i'),
+          t(' = '),
+          i(1, 'start'),
+          t(', '),
+          i(2, 'stop'),
+          t(', '),
+          i(3, 'step'),
+        }),
+        sn(nil, {
+          t('i'),
+          t(' = '),
+          i(1, 'start'),
+          t(', '),
+          i(2, 'stop'),
+        }),
+      }),
       t({ ' do', '' }),
       un.idnt(1),
-      i(3),
+      i(2),
       t({ '', 'end' }),
     }),
-    s({ trig = 'forp' }, {
+    ms({
+      { trig = 'fr' },
+      { trig = 'frange' },
+      { trig = 'forr' },
+      { trig = 'forange' },
+      { trig = 'forrange' },
+    }, {
+      t('for '),
+      c(1, {
+        sn(nil, {
+          i(1, 'i'),
+          t(' = '),
+          i(2, 'start'),
+          t(', '),
+          i(3, 'stop'),
+        }),
+        sn(nil, {
+          i(1, 'i'),
+          t(' = '),
+          i(2, 'start'),
+          t(', '),
+          i(3, 'stop'),
+          t(', '),
+          i(4, 'step'),
+        }),
+      }),
+      t({ ' do', '' }),
+      un.idnt(1),
+      i(2),
+      t({ '', 'end' }),
+    }),
+    ms({
+      { trig = 'fp' },
+      { trig = 'fps' },
+      { trig = 'fpairs' },
+      { trig = 'forp' },
+      { trig = 'forps' },
+      { trig = 'forpairs' },
+    }, {
       t('for '),
       i(1, '_'),
       t(', '),
@@ -184,7 +238,14 @@ M.syntax = {
       i(4),
       t({ '', 'end' }),
     }),
-    s({ trig = 'forip' }, {
+    ms({
+      { trig = 'fip' },
+      { trig = 'fips' },
+      { trig = 'fipairs' },
+      { trig = 'forip' },
+      { trig = 'forips' },
+      { trig = 'foripairs' },
+    }, {
       t('for '),
       i(1, '_'),
       t(', '),
@@ -198,7 +259,6 @@ M.syntax = {
     }),
     ms({
       { trig = 'wh' },
-      { trig = 'whl' },
       { trig = 'while' },
     }, {
       t('while '),
@@ -214,13 +274,28 @@ M.syntax = {
       i(1),
       t({ '', 'end' }),
     }),
-    s({ trig = 'pr' }, {
+    ms({
+      { trig = 'p' },
+    }, {
       t('print('),
       i(1),
       t(')'),
     }),
-    s({ trig = 're' }, {
+    s({ trig = 'rq' }, {
       t('require('),
+      i(1),
+      t(')'),
+    }),
+    s({ trig = 'ps' }, {
+      t('pairs('),
+      i(1),
+      t(')'),
+    }),
+    ms({
+      { trig = 'ip' },
+      { trig = 'ips' },
+    }, {
+      t('ipairs('),
       i(1),
       t(')'),
     }),
@@ -291,9 +366,6 @@ M.nvim = {
       { trig = 'pin' },
       { trig = 'pins' },
       { trig = 'pinsp' },
-      { trig = 'prin' },
-      { trig = 'prins' },
-      { trig = 'prinsp' },
     }, {
       t('print(vim.inspect('),
       i(1),
