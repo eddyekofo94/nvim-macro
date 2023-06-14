@@ -275,13 +275,23 @@ M.syntax = {
       t({ '', 'end' }),
     }),
     ms({
+      { trig = 'r' },
+      { trig = 'rt' },
+      { trig = 'ret' },
+    }, {
+      t('return '),
+    }),
+    ms({
       { trig = 'p' },
     }, {
       t('print('),
       i(1),
       t(')'),
     }),
-    s({ trig = 'rq' }, {
+    ms({
+      { trig = 'rq' },
+      { trig = 'req' },
+    }, {
       t('require('),
       i(1),
       t(')'),
@@ -311,27 +321,30 @@ M.nvim = {
       { trig = 'spec' },
       fmta(
         [[
-{
-<indent>'<author>/<plugin_name>',<finish>
-<indent>config = function()
-<indent><indent>require('configs.<plugin_base_name>')
-<indent>end,
-},
-  ]],
+          {
+          <idnt><q><author>/<plugin_name><q>,<finish>
+          <idnt>config = function()
+          <idnt><idnt>require(<q>configs.<plugin_base_name><q>)
+          <idnt>end,
+          },
+        ]],
         {
           plugin_name = i(1),
           plugin_base_name = f(function(text, _, _)
             return text[1][1]:gsub('%..*', '')
           end, { 1 }),
           author = i(2),
-          indent = un.idnt(1),
           finish = i(0),
+          idnt = t('\t'),
+          q = un.qt(),
         },
         { repeat_duplicates = true }
       )
     ),
     ms({
+      { trig = 'nt' },
       { trig = 'not' },
+      { trig = 'noti' },
       { trig = 'notify' },
     }, {
       t('vim.notify('),
@@ -373,6 +386,47 @@ M.nvim = {
       i(2),
       t(')'),
     }),
+    ms(
+      {
+        { trig = 'pck' },
+        { trig = 'pcheck' },
+      },
+      fmta(
+        'print(<q><v>: <q> .. vim.inspect(<v>)<e>)',
+        { q = un.qt(), v = i(1), e = i(2) },
+        { repeat_duplicates = true }
+      )
+    ),
+    ms(
+      {
+        common = { priority = 999 },
+        { trig = 'ck' },
+        { trig = 'check' },
+      },
+      fmta(
+        '<q><v>: <q> .. vim.inspect(<v>)',
+        { q = un.qt(), v = i(1) },
+        { repeat_duplicates = true }
+      )
+    ),
+    ms(
+      {
+        common = { regTrig = true },
+        { trig = '(%S?)(%s*)%.%.%s*ck' },
+        { trig = '(%S?)(%s*)%.%.%s*check' },
+      },
+      fmta('<spc>.. <q>, <v>: <q> .. vim.inspect(<v>)', {
+        spc = f(function(_, snip, _)
+          return snip.captures[1] == '' and snip.captures[2]
+            or snip.captures[1] .. ' '
+        end, {}, {}),
+        q = un.qt(),
+        v = i(1),
+      }, {
+        repeat_duplicates = true,
+        trim_empty = false,
+      })
+    ),
   }),
 }
 
