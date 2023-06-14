@@ -36,6 +36,9 @@ opt.gcr:append('n-v:block-Cursor/lCursor')
 opt.gcr:append('i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor/lCursor')
 opt.gcr:append('r-cr:hor20,o:hor50')
 
+-- Use patience algorithm for diffing
+opt.diffopt:append('algorithm:patience')
+
 opt.backup = true
 opt.backupdir = fn.stdpath('data') .. '/backup//'
 
