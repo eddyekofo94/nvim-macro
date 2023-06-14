@@ -1,7 +1,7 @@
 return {
   {
     'hrsh7th/nvim-cmp',
-    event = { 'InsertEnter', 'CmdlineEnter' },
+    lazy = true,
     config = function()
       require('configs.nvim-cmp')
     end,
@@ -57,7 +57,7 @@ return {
 
   {
     'saadparwaiz1/cmp_luasnip',
-    event = { 'BufReadPost', 'InsertEnter' },
+    event = 'InsertEnter',
     dependencies = { 'nvim-cmp', 'LuaSnip' },
   },
 
@@ -72,7 +72,7 @@ return {
 
   {
     'L3MON4D3/LuaSnip',
-    event = 'InsertCharPre',
+    event = 'InsertEnter',
     config = function()
       require('configs.LuaSnip')
     end,
