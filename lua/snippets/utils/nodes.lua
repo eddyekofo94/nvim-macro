@@ -50,7 +50,7 @@ vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeOut', 'BufUnload' }, {
 ---A function node that returns a quotation mark based on the number of
 ---double quotes and single quotes in the first 128 lines current buffer
 ---@param argnode_references number|table?
----@param node_opts table?
+---@param opts table?
 ---@return table node
 local function function_quotation_node(argnode_references, opts)
   return f(function()
