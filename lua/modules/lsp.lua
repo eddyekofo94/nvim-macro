@@ -1,7 +1,7 @@
 return {
   {
     'neovim/nvim-lspconfig',
-    event = { 'BufReadPre', 'FileType' },
+    event = { 'FileType' },
     cmd = { 'LspInfo', 'LspStart' },
     config = function()
       require('configs.nvim-lspconfig')

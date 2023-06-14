@@ -19,7 +19,7 @@ function langs_mt:list(field)
 end
 
 M.langs = setmetatable({
-  bash = {
+  sh = {
     ft = 'sh',
     lsp_server = 'bashls',
     dap = 'bashdb',
@@ -71,7 +71,7 @@ M.langs = setmetatable({
     ft = 'vim',
     lsp_server = 'vimls',
   },
-  latex = {
+  tex = {
     ft = 'tex',
     lsp_server = 'texlab',
     formatting = 'latexindent',

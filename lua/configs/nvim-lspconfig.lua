@@ -127,8 +127,32 @@ end
 
 ---Setup all LSP servers
 local function lsp_setup()
-  for _, server_name in pairs(static.langs:list('lsp_server')) do
-    require('lspconfig')[server_name].setup(get_server_config(server_name))
+  local lspconfig = require('lspconfig')
+  local ft_list = vim.tbl_map(function(_)
+    return true
+  end, static.langs)
+  ---@param ft string file type
+  local function setup_ft(ft)
+    if ft_list[ft] then
+      ft_list[ft] = nil
+      local server_name = static.langs[ft].lsp_server
+      if server_name then
+        lspconfig[server_name].setup(get_server_config(server_name))
+      end
+    end
+  end
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    setup_ft(vim.bo[buf].ft)
+  end
+  for ft, _ in pairs(ft_list) do
+    vim.api.nvim_create_autocmd('FileType', {
+      once = true,
+      pattern = ft,
+      group = vim.api.nvim_create_augroup('LspServerSetup', {}),
+      callback = function()
+        setup_ft(ft)
+      end,
+    })
   end
 end
 
