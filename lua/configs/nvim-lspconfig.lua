@@ -155,7 +155,7 @@ local function lsp_setup()
       callback = function(info)
         if setup_ft(ft) then
           local bufname = vim.api.nvim_buf_get_name(info.buf)
-          if bufname ~= '' then
+          if bufname ~= '' and vim.bo[info.buf].bt == '' then
             vim.cmd.edit(bufname)
           end
         end
