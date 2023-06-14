@@ -132,25 +132,33 @@ local function lsp_setup()
     return true
   end, static.langs)
   ---@param ft string file type
+  ---@return boolean? is_setup
   local function setup_ft(ft)
     if ft_list[ft] then
       ft_list[ft] = nil
       local server_name = static.langs[ft].lsp_server
       if server_name then
         lspconfig[server_name].setup(get_server_config(server_name))
+        return true
       end
     end
   end
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     setup_ft(vim.bo[buf].ft)
   end
+  local groupid = vim.api.nvim_create_augroup('LspServerLazySetup', {})
   for ft, _ in pairs(ft_list) do
     vim.api.nvim_create_autocmd('FileType', {
       once = true,
       pattern = ft,
-      group = vim.api.nvim_create_augroup('LspServerSetup', {}),
-      callback = function()
-        setup_ft(ft)
+      group = groupid,
+      callback = function(info)
+        if setup_ft(ft) then
+          local bufname = vim.api.nvim_buf_get_name(info.buf)
+          if bufname ~= '' then
+            vim.cmd.edit(bufname)
+          end
+        end
       end,
     })
   end
