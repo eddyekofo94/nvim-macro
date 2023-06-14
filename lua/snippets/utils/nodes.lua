@@ -4,6 +4,8 @@ local sn = ls.snippet_node
 local t = ls.text_node
 local i = ls.insert_node
 local d = ls.dynamic_node
+local fmt = require('luasnip.extras.fmt').fmt
+local fmta = require('luasnip.extras.fmt').fmta
 
 ---Returns a string for indentation at the given depth
 ---@param depth number
@@ -47,7 +49,8 @@ vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeOut', 'BufUnload' }, {
     quotation_cache[info.buf] = nil
   end,
 })
----A function node that returns a quotation mark based on the number of
+
+---Returns function node that returns a quotation mark based on the number of
 ---double quotes and single quotes in the first 128 lines current buffer
 ---@param argnode_references number|table?
 ---@param opts table?
@@ -85,8 +88,20 @@ local function simple_suffix_dynamic_node(jump_index, opening, closing)
   end)
 end
 
+---A format node with repeat_duplicates set to true
+local format_repeat_duplicates_node = ls.extend_decorator.apply(fmt, {
+  repeat_duplicates = true,
+})
+
+---A format node with <> as placeholders and repeat_duplicates set to true
+local format_angle_repeat_duplicates_node = ls.extend_decorator.apply(fmta, {
+  repeat_duplicates = true,
+})
+
 return {
   idnt = function_indent_node,
   qt = function_quotation_node,
   sdn = simple_suffix_dynamic_node,
+  fmtd = format_repeat_duplicates_node,
+  fmtad = format_angle_repeat_duplicates_node,
 }

@@ -37,6 +37,13 @@ function M.in_codeblock()
   )
 end
 
+---Returns whether the current buffer has treesitter enabled
+---@return boolean
+function M.ts_active()
+  return vim.treesitter.highlighter.active[vim.api.nvim_get_current_buf()]
+    ~= nil
+end
+
 ---Returns whether current cursor is in a comment
 ---@param type string
 ---@return snip_cond_t

@@ -1,47 +1,37 @@
-local uf = require('snippets.utils.funcs')
+local M = {}
 local un = require('snippets.utils.nodes')
+local us = require('snippets.utils.snips')
 local conds = require('snippets.utils.conds')
 local ls = require('luasnip')
-local s = ls.snippet
 local ms = ls.multi_snippet
 local t = ls.text_node
 local i = ls.insert_node
 local l = require('luasnip.extras').lambda
 local dl = require('luasnip.extras').dynamic_lambda
 
-local M = require('snippets.shared.math')
+M.math = require('snippets.shared.math')
 
 M.format = {
-  snip = uf.add_attr({
-    condition = conds.in_normalzone,
-    show_condition = conds.in_normalzone,
+  us.sn({
+    trig = '^# ',
+    regTrig = true,
+    snippetType = 'autosnippet',
   }, {
-    s({
-      trig = '^# ',
-      regTrig = true,
-      snippetType = 'autosnippet',
-    }, {
-      t('# '),
-      dl(
-        1,
-        l.TM_FILENAME:gsub('^%d*_', ''):gsub('_', ' '):gsub('%..*', ''),
-        {}
-      ),
-      i(0),
-    }),
-    s('pkgs', {
-      t({ '---', '' }),
-      t({ 'header-includes:', '' }),
-      un.idnt(1),
-      t({ '- \\usepackage{gensymb}', '' }),
-      un.idnt(1),
-      t({ '- \\usepackage{amsmath}', '' }),
-      un.idnt(1),
-      t({ '- \\usepackage{amssymb}', '' }),
-      un.idnt(1),
-      t({ '- \\usepackage{mathtools}', '' }),
-      t({ '---', '' }),
-    }),
+    t('# '),
+    dl(1, l.TM_FILENAME:gsub('^%d*_', ''):gsub('_', ' '):gsub('%..*', ''), {}),
+  }),
+  us.sn('pkgs', {
+    t({ '---', '' }),
+    t({ 'header-includes:', '' }),
+    un.idnt(1),
+    t({ '- \\usepackage{gensymb}', '' }),
+    un.idnt(1),
+    t({ '- \\usepackage{amsmath}', '' }),
+    un.idnt(1),
+    t({ '- \\usepackage{amssymb}', '' }),
+    un.idnt(1),
+    t({ '- \\usepackage{mathtools}', '' }),
+    t({ '---', '' }),
   }),
 }
 
@@ -67,29 +57,19 @@ M.markers = {
 }
 
 M.titles = {
-  snip = uf.add_attr({
-    condition = conds.in_normalzone,
-    show_condition = conds.in_normalzone,
-  }, {
-    s({ trig = 'h1' }, { t('# '), i(0) }),
-    s({ trig = 'h2' }, { t('## '), i(0) }),
-    s({ trig = 'h3' }, { t('### '), i(0) }),
-    s({ trig = 'h4' }, { t('#### '), i(0) }),
-    s({ trig = 'h5' }, { t('##### '), i(0) }),
-    s({ trig = 'h6' }, { t('###### '), i(0) }),
-  }),
+  us.sn({ trig = 'h1' }, { t('# '), i(0) }),
+  us.sn({ trig = 'h2' }, { t('## '), i(0) }),
+  us.sn({ trig = 'h3' }, { t('### '), i(0) }),
+  us.sn({ trig = 'h4' }, { t('#### '), i(0) }),
+  us.sn({ trig = 'h5' }, { t('##### '), i(0) }),
+  us.sn({ trig = 'h6' }, { t('###### '), i(0) }),
 }
 
 M.theorems = {
-  snip = uf.add_attr({
-    condition = conds.in_normalzone,
-    show_condition = conds.in_normalzone,
-  }, {
-    s({ trig = 'theo' }, { t('***'), i(1, 'Theorem'), t('***') }),
-    s({ trig = 'def' }, { t('***'), i(1, 'Definition'), t('***') }),
-    s({ trig = 'pro' }, { t('***'), i(1, 'Proof'), t('***') }),
-    s({ trig = 'lem' }, { t('***'), i(1, 'Lemma'), t('***') }),
-  }),
+  us.sn({ trig = 'theo' }, { t('***'), i(1, 'Theorem'), t('***') }),
+  us.sn({ trig = 'def' }, { t('***'), i(1, 'Definition'), t('***') }),
+  us.sn({ trig = 'pro' }, { t('***'), i(1, 'Proof'), t('***') }),
+  us.sn({ trig = 'lem' }, { t('***'), i(1, 'Lemma'), t('***') }),
 }
 
 return M
