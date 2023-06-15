@@ -133,7 +133,7 @@ return {
   DiagnosticVirtualTextError = { fg = plt.wine, bg = plt.wine_blend },
   DiagnosticVirtualTextWarn  = { fg = plt.earth, bg = plt.earth_blend },
   DiagnosticVirtualTextInfo  = { fg = plt.smoke, bg = plt.smoke_blend },
-  DiagnosticVirtualTextHint  = { fg = plt.pigeon, bg = plt.pigeon_blend },
+  DiagnosticVirtualTextHint  = { fg = plt.pigeon, bg = plt.deepsea },
   DiagnosticUnderlineOK      = { underline = true, sp = plt.tea },
   DiagnosticUnderlineError   = { undercurl = true, sp = plt.wine },
   DiagnosticUnderlineWarn    = { undercurl = true, sp = plt.earth },
