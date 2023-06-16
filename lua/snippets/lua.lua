@@ -399,8 +399,8 @@ M.nvim = {
   us.msc(
     {
       common = { regTrig = true },
-      { trig = '(%S?)(%s*)%.%.%s*ck' },
-      { trig = '(%S?)(%s*)%.%.%s*check' },
+      { trig = '(%S*)(%s*)%.%.%s*ck' },
+      { trig = '(%S*)(%s*)%.%.%s*check' },
     },
     un.fmtad('<spc>.. <q>, <v>: <q> .. vim.inspect(<v>)', {
       spc = f(function(_, snip, _)
