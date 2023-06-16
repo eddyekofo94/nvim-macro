@@ -1,4 +1,6 @@
-return {
-  funcs = require('utils.funcs'),
-  static = require('utils.static'),
-}
+return setmetatable({}, {
+  __index = function(self, key)
+    self[key] = require('utils.' .. key)
+    return self[key]
+  end,
+})

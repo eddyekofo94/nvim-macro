@@ -1,6 +1,6 @@
-return {
-  string = require('utils.funcs.string'),
-  fs = require('utils.funcs.fs'),
-  ft = require('utils.funcs.ft'),
-  perf = require('utils.funcs.perf'),
-}
+return setmetatable({}, {
+  __index = function(self, key)
+    self[key] = require('utils.funcs.' .. key)
+    return self[key]
+  end,
+})
