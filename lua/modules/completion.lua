@@ -16,6 +16,9 @@ return {
 
   {
     'hrsh7th/cmp-cmdline',
+    build = 'git apply '
+      .. vim.fn.stdpath('config')
+      .. '/patches/cmp-cmdline.patch',
     event = 'CmdlineEnter',
     dependencies = 'nvim-cmp',
   },
