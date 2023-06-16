@@ -35,6 +35,7 @@ return {
   HealthSuccess      = { fg = plt.tea },
   Search             = { bg = plt.thunder },
   IncSearch          = { fg = plt.black, bg = plt.orange, bold = true },
+  CurSearch          = { link = 'IncSearch' },
   LineNr             = { fg = plt.steel },
   ModeMsg            = { fg = plt.smoke },
   MoreMsg            = { fg = plt.aqua },
