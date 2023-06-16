@@ -148,8 +148,6 @@ end
 
 ---Options for fuzzy_path source
 local fuzzy_path_option = {
-  command_shortcut = [[^\(e\|w\)\s\+]],
-  path_regex = [[^\(\k\?[/:\~]\+\|\.\?\.\/\)\S\+]],
   fd_timeout_msec = 100,
   fd_cmd = {
     'fd',
