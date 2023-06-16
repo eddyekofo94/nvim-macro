@@ -42,6 +42,9 @@ return {
 
   {
     'tzachar/cmp-fuzzy-path',
+    build = 'git apply '
+      .. vim.fn.stdpath('config')
+      .. '/patches/cmp-fuzzy-path.patch',
     event = { 'CmdlineEnter', 'InsertEnter' },
     dependencies = { 'fuzzy.nvim', 'nvim-cmp' },
   },

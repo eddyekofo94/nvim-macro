@@ -1,0 +1,35 @@
+From 1240a63baf446208aecaa700354e682e66dec380 Mon Sep 17 00:00:00 2001
+From: bekaboo <18127878294@qq.com>
+Date: Fri, 16 Jun 2023 13:40:47 -0500
+Subject: [PATCH] feat: use getcmdcompltype() instead of regex to decide
+ whether to provide completion
+
+---
+ lua/cmp_fuzzy_path/init.lua | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lua/cmp_fuzzy_path/init.lua b/lua/cmp_fuzzy_path/init.lua
+index 445b4c2..af39038 100644
+--- a/lua/cmp_fuzzy_path/init.lua
++++ b/lua/cmp_fuzzy_path/init.lua
+@@ -41,7 +41,6 @@ end
+ 
+ local PATH_REGEX = [[\%(\k\?[/:\~]\+\|\.\?\.\/\)\S\+]]
+ local COMPILED_PATH_REGEX = vim.regex(PATH_REGEX)
+-local COMMAND_SHORTCUT = vim.regex([[^\%(e\|w\)\s\+]])
+ 
+ source.get_keyword_pattern = function(_, params)
+   if vim.api.nvim_get_mode().mode == 'c' then
+@@ -92,7 +91,8 @@ source.complete = function(self, params, callback)
+       callback({ items = {}, isIncomplete = true })
+       return
+     end
+-    if COMMAND_SHORTCUT:match_str(params.context.cursor_before_line) then
++    local compltype = vim.fn.getcmdcompltype()
++    if compltype == 'file' or compltype == 'dir' then
+       pattern = params.context.cursor_before_line:sub(params.offset)
+     else
+       pattern = find_pattern(params.context.cursor_before_line)
+-- 
+2.41.0
+
