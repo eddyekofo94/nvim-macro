@@ -410,8 +410,11 @@ end
 ---@return nil
 function winbar_t:redraw()
   self:truncate()
-  self.string_cache = self:cat()
-  vim.cmd('silent! redrawstatus')
+  local new_str = self:cat()
+  if new_str ~= self.string_cache then
+    self.string_cache = new_str
+    vim.cmd('silent! redrawstatus')
+  end
 end
 
 ---Update winbar components from sources and redraw winbar, supposed to be
