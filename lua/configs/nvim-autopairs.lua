@@ -1,6 +1,7 @@
 local npairs = require('nvim-autopairs')
 local Rule = require('nvim-autopairs.rule')
 local cond = require('nvim-autopairs.conds')
+local ts_conds = require('nvim-autopairs.ts-conds')
 
 npairs.setup({
   check_ts = true,
@@ -41,6 +42,7 @@ npairs.add_rules({
   Rule('$', '$', { 'markdown', 'tex' })     :with_pair(cond.none()),
   Rule('*', '*', { 'markdown' })            :with_pair(cond.none()),
   Rule('\\(', '\\)', { 'tex' })             :with_pair(cond.not_before_text('\\)')),
+  Rule('\\(', '\\)')                        :with_pair(ts_conds.is_ts_node('string')),
   Rule('\\[', '\\]', { 'tex' })             :with_pair(cond.not_before_text('\\]')),
   Rule('\\{', '\\}', { 'tex', 'markdown' }) :with_pair(cond.not_before_text('\\}')),
 })
