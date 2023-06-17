@@ -52,7 +52,8 @@ end
 
 ---options command accepts, in the format of <optkey>=<candicate_optvals>
 ---or <optkey>
----@class opts_t
+---@alias opts_t table
+---@alias args_t string[]
 
 ---Get option keys / option names from opts table
 ---@param opts opts_t
@@ -104,6 +105,32 @@ function M.complete_opts(opts)
         return '--' .. k
       end, M.optkeys(opts))
     )
+  end
+end
+
+---Returns a function that can be used to complete the arguments of a command
+---@param args args_t
+---@return fun(arglead: string, cmdline: string, cursorpos: integer[]): string[]
+function M.complete_args(args)
+  return function(arglead, _, _)
+    return vim.tbl_filter(function(arg)
+      return arg:find(arglead, 1, true) == 1
+    end, args)
+  end
+end
+
+---Returns a function that can be used to complete the arguments and options
+---of a command
+---@param args args_t
+---@param opts opts_t
+---@return fun(arglead: string, cmdline: string, cursorpos: integer[]): string[]
+function M.complete(args, opts)
+  local fn_compl_args = M.complete_args(args)
+  local fn_compl_opts = M.complete_opts(opts)
+  return function(arglead, cmdline, cursorpos)
+    local args_completions = fn_compl_args(arglead, cmdline, cursorpos)
+    local opts_completions = fn_compl_opts(arglead, cmdline, cursorpos)
+    return vim.list_extend(args_completions, opts_completions)
   end
 end
 
