@@ -113,16 +113,6 @@ end
 ---@field winnr integer|nil
 ---@field wrap boolean|nil
 
----Recursively build a nested table from a list of keys and a value
----@param key_parts string[] list of keys
----@param val any
----@return table
-local function build_nested(key_parts, val)
-  return key_parts[1]
-      and { [key_parts[1]] = build_nested({ unpack(key_parts, 2) }, val) }
-    or val
-end
-
 ---Parse arguments passed to LSP commands
 ---@param fargs string[] list of arguments
 ---@param fn_name_alt string|nil alternative function name
@@ -130,36 +120,7 @@ end
 ---@return parsed_arg_t parsed the parsed arguments
 local function parse_cmdline_args(fargs, fn_name_alt)
   local fn_name = fn_name_alt or fargs[1] and table.remove(fargs, 1) or nil
-  local parsed = {}
-  -- First pass: parse arguments into a plain table
-  for _, arg in ipairs(fargs) do
-    local key, val = arg:match('^%-%-(%S+)=(.*)$')
-    if not key then
-      key = arg:match('^%-%-(%S+)$')
-    end
-    if type(val) == 'string' and vim.loop.fs_stat(vim.fn.expand(val)) then
-      val = vim.fn.expand(val)
-    end
-    if key and val then -- '--key=value'
-      local eval_valid, eval_result = pcall(vim.fn.eval, val)
-      parsed[key] = not eval_valid and val or eval_result
-    elseif key and not val then -- '--key'
-      parsed[key] = true
-    else -- 'value'
-      table.insert(parsed, arg)
-    end
-  end
-  -- Second pass: build nested tables from dot-separated keys
-  for key, val in pairs(parsed) do
-    if type(key) == 'string' then
-      local key_parts = vim.split(key, '%.')
-      parsed =
-        vim.tbl_deep_extend('force', parsed, build_nested(key_parts, val))
-      if #key_parts > 1 then
-        parsed[key] = nil -- Remove the original dot-separated key
-      end
-    end
-  end
+  local parsed = funcs.command.parse_cmdline_args(fargs)
   return fn_name, parsed
 end
 
@@ -189,9 +150,16 @@ local function arg_handler_item(args)
   end
 end
 
+---@type table<string, string[]|fun(): any[]>
+local optvals = {
+  bool = { 'v:true', 'v:false' },
+  severity = { 'WARN', 'INFO', 'ERROR', 'HINT' },
+  bufs = vim.api.nvim_list_bufs,
+}
+
 ---@class subcommand_info_t : table
 ---@field arg_handler function|nil
----@field opts string[]|nil
+---@field opts table|nil
 ---@field fn_override function|nil
 ---@field completion function|nil
 
@@ -230,14 +198,14 @@ local subcommands = {
         opts = {
           '--formatting_options',
           '--formatting_options.tabSize',
-          '--formatting_options.insertSpaces',
-          '--formatting_options.trimTrailingWhitespace',
-          '--formatting_options.insertFinalNewline',
-          '--formatting_options.trimFinalNewlines',
+          ['--formatting_options.insertSpaces'] = optvals.bool,
+          ['--formatting_options.trimTrailingWhitespace'] = optvals.bool,
+          ['--formatting_options.insertFinalNewline'] = optvals.bool,
+          ['--formatting_options.trimFinalNewlines'] = optvals.bool,
           '--timeout_ms',
-          '--bufnr',
+          ['--bufnr'] = optvals.bufs,
           '--filter',
-          '--async',
+          ['--async'] = optvals.bool,
           '--id',
           '--name',
           '--range',
@@ -253,23 +221,23 @@ local subcommands = {
         opts = {
           '--format.formatting_options',
           '--format.formatting_options.tabSize',
-          '--format.formatting_options.insertSpaces',
-          '--format.formatting_options.trimTrailingWhitespace',
-          '--format.formatting_options.insertFinalNewline',
-          '--format.formatting_options.trimFinalNewlines',
+          ['--format.formatting_options.insertSpaces'] = optvals.bool,
+          ['--format.formatting_options.trimTrailingWhitespace'] = optvals.bool,
+          ['--formatting_options.insertFinalNewline'] = optvals.bool,
+          ['--format.formatting_options.trimFinalNewlines'] = optvals.bool,
           '--format.timeout_ms',
-          '--format.bufnr',
+          ['--format.bufnr'] = optvals.bufs,
           '--format.filter',
           '--format.async',
           '--format.id',
           '--format.name',
           '--format.range',
-          '--local',
-          '--global',
-          '--enable',
-          '--disable',
-          '--toggle',
-          '--show-status',
+          ['--local'] = optvals.bool,
+          ['--global'] = optvals.bool,
+          ['--enable'] = optvals.bool,
+          ['--disable'] = optvals.bool,
+          ['--toggle'] = optvals.bool,
+          ['--show-status'] = optvals.bool,
         },
         fn_override = function(opts)
           if opts['show-status'] then
@@ -388,7 +356,7 @@ local subcommands = {
           '--context.only',
           '--context.triggerKind',
           '--filter',
-          '--apply',
+          ['--apply'] = optvals.bool,
           '--range',
         },
       },
@@ -431,11 +399,34 @@ local subcommands = {
         end,
       },
       execute_command = { arg_handler = arg_handler_item },
-      type_definition = { opts = { '--reuse_win', '--on_list' } },
-      declaration = { opts = { '--reuse_win', '--on_list' } },
-      definition = { opts = { '--reuse_win', '--on_list' } },
-      document_symbol = { opts = { '--on_list' } },
-      implementation = { opts = { '--on_list' } },
+      type_definition = {
+        opts = {
+          '--reuse_win',
+          ['--on_list'] = optvals.bool,
+        },
+      },
+      declaration = {
+        opts = {
+          '--reuse_win',
+          ['--on_list'] = optvals.bool,
+        },
+      },
+      definition = {
+        opts = {
+          '--reuse_win',
+          ['--on_list'] = optvals.bool,
+        },
+      },
+      document_symbol = {
+        opts = {
+          ['--on_list'] = optvals.bool,
+        },
+      },
+      implementation = {
+        opts = {
+          ['--on_list'] = optvals.bool,
+        },
+      },
       hover = {},
       document_highlight = {},
       clear_references = {},
@@ -464,33 +455,33 @@ local subcommands = {
         return args.opts, args.namespace
       end,
       opts = {
-        '--opts.underline',
-        '--opts.underline.severity',
-        '--opts.virtual_text',
-        '--opts.virtual_text.severity',
+        ['--opts.underline'] = optvals.bool,
+        ['--opts.underline.severity'] = optvals.severity,
+        ['--opts.virtual_text'] = optvals.bool,
+        ['--opts.virtual_text.severity'] = optvals.severity,
         '--opts.virtual_text.source',
         '--opts.virtual_text.spacing',
         '--opts.virtual_text.prefix',
         '--opts.virtual_text.suffix',
         '--opts.virtual_text.format',
-        '--opts.signs',
-        '--opts.signs.severity',
+        ['--opts.signs'] = optvals.bool,
+        ['--opts.signs.severity'] = optvals.severity,
         '--opts.signs.priority',
         '--opts.float',
-        '--opts.float.bufnr',
+        ['--opts.float.bufnr'] = optvals.bufs,
         '--opts.float.namespace',
         '--opts.float.scope',
         '--opts.float.pos',
         '--opts.float.severity_sort',
-        '--opts.float.severity',
+        ['--opts.float.severity'] = optvals.severity,
         '--opts.float.header',
         '--opts.float.source',
         '--opts.float.format',
         '--opts.float.prefix',
         '--opts.float.suffix',
-        '--opts.update_in_insert',
+        ['--opts.update_in_insert'] = optvals.bool,
         '--opts.severity_sort',
-        '--opts.severity_sort.reverse',
+        ['--opts.severity_sort.reverse'] = optvals.bool,
         '--namespace',
       },
     },
@@ -499,14 +490,20 @@ local subcommands = {
       arg_handler = function(args)
         return args.bufnr, args.namespace
       end,
-      opts = { '--bufnr', '--namespace' },
+      opts = {
+        ['--bufnr'] = optvals.bufs,
+        '--namespace',
+      },
     },
     enable = {
       ---@param args parsed_arg_t
       arg_handler = function(args)
         return args.bufnr, args.namespace
       end,
-      opts = { '--bufnr', '--namespace' },
+      opts = {
+        ['--bufnr'] = optvals.bufs,
+        '--namespace',
+      },
     },
     fromqflist = {
       arg_handler = arg_handler_item,
@@ -521,10 +518,10 @@ local subcommands = {
         return args.bufnr, args.opts
       end,
       opts = {
-        '--bufnr',
+        ['--bufnr'] = optvals.bufs,
         '--opts.namespace',
         '--opts.lnum',
-        '--opts.severity',
+        ['--opts.severity'] = optvals.severity,
       },
       fn_override = function(...)
         vim.notify(vim.inspect(vim.diagnostic.get(...)))
@@ -547,14 +544,14 @@ local subcommands = {
         '--namespace',
         '--cursor_position',
         '--wrap',
-        '--severity',
-        '--float',
-        '--float.bufnr',
+        ['--severity'] = optvals.severity,
+        ['--float'] = optvals.bool,
+        ['--float.bufnr'] = optvals.bufs,
         '--float.namespace',
         '--float.scope',
         '--float.pos',
         '--float.severity_sort',
-        '--float.severity',
+        ['--float.severity'] = optvals.severity,
         '--float.header',
         '--float.source',
         '--float.format',
@@ -571,14 +568,14 @@ local subcommands = {
         '--namespace',
         '--cursor_position',
         '--wrap',
-        '--severity',
-        '--float',
-        '--float.bufnr',
+        ['--severity'] = optvals.severity,
+        ['--float'] = optvals.bool,
+        ['--float.bufnr'] = optvals.bufs,
         '--float.namespace',
         '--float.scope',
         '--float.pos',
         '--float.severity_sort',
-        '--float.severity',
+        ['--float.severity'] = optvals.severity,
         '--float.header',
         '--float.source',
         '--float.format',
@@ -595,14 +592,14 @@ local subcommands = {
         '--namespace',
         '--cursor_position',
         '--wrap',
-        '--severity',
-        '--float',
-        '--float.bufnr',
+        ['--severity'] = optvals.severity,
+        ['--float'] = optvals.bool,
+        ['--float.bufnr'] = optvals.bufs,
         '--float.namespace',
         '--float.scope',
         '--float.pos',
         '--float.severity_sort',
-        '--float.severity',
+        ['--float.severity'] = optvals.severity,
         '--float.header',
         '--float.source',
         '--float.format',
@@ -619,14 +616,14 @@ local subcommands = {
         '--namespace',
         '--cursor_position',
         '--wrap',
-        '--severity',
-        '--float',
-        '--float.bufnr',
+        ['--severity'] = optvals.severity,
+        ['--float'] = optvals.bool,
+        ['--float.bufnr'] = optvals.bufs,
         '--float.namespace',
         '--float.scope',
         '--float.pos',
         '--float.severity_sort',
-        '--float.severity',
+        ['--float.severity'] = optvals.severity,
         '--float.header',
         '--float.source',
         '--float.format',
@@ -643,14 +640,14 @@ local subcommands = {
         '--namespace',
         '--cursor_position',
         '--wrap',
-        '--severity',
-        '--float',
-        '--float.bufnr',
+        ['--severity'] = optvals.severity,
+        ['--float'] = optvals.bool,
+        ['--float.bufnr'] = optvals.bufs,
         '--float.namespace',
         '--float.scope',
         '--float.pos',
         '--float.severity_sort',
-        '--float.severity',
+        ['--float.severity'] = optvals.severity,
         '--float.header',
         '--float.source',
         '--float.format',
@@ -664,14 +661,14 @@ local subcommands = {
         '--namespace',
         '--cursor_position',
         '--wrap',
-        '--severity',
-        '--float',
-        '--float.bufnr',
+        ['--severity'] = optvals.severity,
+        ['--float'] = optvals.bool,
+        ['--float.bufnr'] = optvals.bufs,
         '--float.namespace',
         '--float.scope',
         '--float.pos',
         '--float.severity_sort',
-        '--float.severity',
+        ['--float.severity'] = optvals.severity,
         '--float.header',
         '--float.source',
         '--float.format',
@@ -685,14 +682,20 @@ local subcommands = {
       arg_handler = function(args)
         return args.namespace, args.bufnr
       end,
-      opts = { '--namespace', '--bufnr' },
+      opts = {
+        '--namespace',
+        ['--bufnr'] = optvals.bufs,
+      },
     },
     is_disabled = {
       ---@param args parsed_arg_t
       arg_handler = function(args)
         return args.bufnr, args.namespace
       end,
-      opts = { '--bufnr', '--namespace' },
+      opts = {
+        '--namespace',
+        ['--bufnr'] = optvals.bufs,
+      },
       fn_override = function(...)
         vim.notify(vim.inspect(vim.diagnostic.is_disabled(...)))
       end,
@@ -719,14 +722,14 @@ local subcommands = {
     },
     open_float = {
       opts = {
-        '--bufnr',
+        ['--bufnr'] = optvals.bufs,
         '--namespace',
         '--scope',
         '--pos',
-        '--severity_sort',
-        '--severity',
+        ['--severity_sort'] = optvals.bool,
+        ['--severity'] = optvals.severity,
         '--header',
-        '--source',
+        ['--source'] = optvals.bool,
         '--format',
         '--prefix',
         '--suffix',
@@ -737,7 +740,10 @@ local subcommands = {
       arg_handler = function(args)
         return args.namespace, args.bufnr
       end,
-      opts = { '--namespace', '--bufnr' },
+      opts = {
+        '--namespace',
+        ['--bufnr'] = optvals.bufs,
+      },
     },
     set = {
       ---@param args parsed_arg_t
@@ -746,35 +752,35 @@ local subcommands = {
       end,
       opts = {
         '--namespace',
-        '--bufnr',
+        ['--bufnr'] = optvals.bufs,
         '--diagnostics',
-        '--opts.underline',
-        '--opts.underline.severity',
-        '--opts.virtual_text',
-        '--opts.virtual_text.severity',
+        ['--opts.underline'] = optvals.bool,
+        ['--opts.underline.severity'] = optvals.severity,
+        ['--opts.virtual_text'] = optvals.bool,
+        ['--opts.virtual_text.severity'] = optvals.severity,
         '--opts.virtual_text.source',
         '--opts.virtual_text.spacing',
         '--opts.virtual_text.prefix',
         '--opts.virtual_text.suffix',
         '--opts.virtual_text.format',
-        '--opts.signs',
-        '--opts.signs.severity',
+        ['--opts.signs'] = optvals.bool,
+        ['--opts.signs.severity'] = optvals.severity,
         '--opts.signs.priority',
         '--opts.float',
-        '--opts.float.bufnr',
+        ['--opts.float.bufnr'] = optvals.bufs,
         '--opts.float.namespace',
         '--opts.float.scope',
         '--opts.float.pos',
         '--opts.float.severity_sort',
-        '--opts.float.severity',
+        ['--opts.float.severity'] = optvals.severity,
         '--opts.float.header',
         '--opts.float.source',
         '--opts.float.format',
         '--opts.float.prefix',
         '--opts.float.suffix',
-        '--opts.update_in_insert',
+        ['--opts.update_in_insert'] = optvals.bool,
         '--opts.severity_sort',
-        '--opts.severity_sort.reverse',
+        ['--opts.severity_sort.reverse'] = optvals.bool,
       },
     },
     setloclist = {
@@ -783,7 +789,7 @@ local subcommands = {
         '--winnr',
         '--open',
         '--title',
-        '--severity',
+        ['--severity'] = optvals.severity,
       },
     },
     setqflist = {
@@ -791,7 +797,7 @@ local subcommands = {
         '--namespace',
         '--open',
         '--title',
-        '--severity',
+        ['--severity'] = optvals.severity,
       },
     },
     show = {
@@ -801,35 +807,35 @@ local subcommands = {
       end,
       opts = {
         '--namespace',
-        '--bufnr',
+        ['--bufnr'] = optvals.bufs,
         '--diagnostics',
-        '--opts.underline',
-        '--opts.underline.severity',
-        '--opts.virtual_text',
-        '--opts.virtual_text.severity',
+        ['--opts.underline'] = optvals.bool,
+        ['--opts.underline.severity'] = optvals.severity,
+        ['--opts.virtual_text'] = optvals.bool,
+        ['--opts.virtual_text.severity'] = optvals.severity,
         '--opts.virtual_text.source',
         '--opts.virtual_text.spacing',
         '--opts.virtual_text.prefix',
         '--opts.virtual_text.suffix',
         '--opts.virtual_text.format',
-        '--opts.signs',
-        '--opts.signs.severity',
+        ['--opts.signs'] = optvals.bool,
+        ['--opts.signs.severity'] = optvals.severity,
         '--opts.signs.priority',
         '--opts.float',
-        '--opts.float.bufnr',
+        ['--opts.float.bufnr'] = optvals.bufs,
         '--opts.float.namespace',
         '--opts.float.scope',
         '--opts.float.pos',
         '--opts.float.severity_sort',
-        '--opts.float.severity',
+        ['--opts.float.severity'] = optvals.severity,
         '--opts.float.header',
         '--opts.float.source',
         '--opts.float.format',
         '--opts.float.prefix',
         '--opts.float.suffix',
-        '--opts.update_in_insert',
+        ['--opts.update_in_insert'] = optvals.bool,
         '--opts.severity_sort',
-        '--opts.severity_sort.reverse',
+        ['--opts.severity_sort.reverse'] = optvals.bool,
       },
     },
     toqflist = {
@@ -894,63 +900,13 @@ local function command_complete(meta, subcommand_info_list)
       )
     end
     -- Complete with option values
-    if arglead:match('%-%-%S-=%S*$') then
-      ---@param optvals string[] option values
-      ---@return string[] completion completion results
-      local function _opt_complete(optvals)
-        return vim.tbl_filter(
-          function(completion)
-            return completion:find(arglead, 1, true) == 1
-          end,
-          vim.tbl_map(function(severity)
-            return arglead:match('^.-=') .. severity
-          end, optvals)
-        )
-      end
-      local bool_opts = {
-        'apply',
-        'async',
-        'disable',
-        'enable',
-        'float',
-        'global',
-        'insertSpaces',
-        'local',
-        'on_list',
-        'reverse',
-        'severity_sort',
-        'show-status',
-        'signs',
-        'source',
-        'toggle',
-        'trimFinalNewlines',
-        'trimTrailingWhitespace',
-        'underline',
-        'update_in_insert',
-        'update_in_insert',
-        'virtual_text',
-      }
-      for _, opt in ipairs(bool_opts) do
-        if arglead:find(opt .. '=', 1, true) then
-          return _opt_complete({ 'v:true', 'v:false' })
-        end
-      end
-      if arglead:match('severity=%S*$') then
-        return _opt_complete({ 'WARN', 'INFO', 'ERROR', 'HINT' })
-      end
-      if arglead:match('bufnr=%S*$') then
-        return _opt_complete(vim.api.nvim_list_bufs())
-      end
-      return {}
-    end
-    -- Complete with subcommand's options
-    if arglead == '' then
-      return subcommand_info_list[subcommand].opts
-    end
-    if arglead:match('^%-%-') then
-      return vim.tbl_filter(function(opt)
-        return opt:find(arglead, 1, true) == 1
-      end, subcommand_info_list[subcommand].opts)
+    local subcommand_info = subcommand_info_list[subcommand]
+    if subcommand_info and subcommand_info.opts then
+      return funcs.command.complete_opts(subcommand_info.opts)(
+        arglead,
+        cmdline,
+        cursorpos
+      )
     end
     return {}
   end
