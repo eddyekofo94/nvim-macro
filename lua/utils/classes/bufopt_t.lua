@@ -8,10 +8,16 @@ local utils = require('utils')
 ---@field initialized table<number, true> list of initialized buffers
 local bufopt_t = {}
 
+---@type table<string, bufopt_t>
+local bufopts = {}
+
 ---Create a new bufopt_t object
 ---@param name string name of the buffer option
 ---@param default any default value for the buffer option
 function bufopt_t:new(name, default)
+  if bufopts[name] then
+    return bufopts[name]
+  end
   vim.g[name] = default
   local bufs = vim.api.nvim_list_bufs()
   local initialized = {}
@@ -43,6 +49,7 @@ function bufopt_t:new(name, default)
       new_opt.initialized[info.buf] = nil
     end,
   })
+  bufopts[name] = new_opt
   return new_opt
 end
 
@@ -53,6 +60,7 @@ function bufopt_t:del()
     vim.b[buf][self.name] = nil
   end
   vim.api.nvim_clear_autocmds({ group = self.augroup })
+  bufopts[self.name] = nil
 end
 
 ---Get the buffer option, mimic vim :set <option>?
