@@ -16,6 +16,7 @@ return {
 
   {
     'hrsh7th/cmp-cmdline',
+    pin = true,
     build = 'git apply '
       .. vim.fn.stdpath('config')
       .. '/patches/cmp-cmdline.patch',
@@ -42,6 +43,7 @@ return {
 
   {
     'tzachar/cmp-fuzzy-path',
+    pin = true,
     build = 'git apply '
       .. vim.fn.stdpath('config')
       .. '/patches/cmp-fuzzy-path.patch',
