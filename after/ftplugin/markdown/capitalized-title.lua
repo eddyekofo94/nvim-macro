@@ -1,4 +1,5 @@
 local api = vim.api
+local utils = require('utils')
 
 local lowercase_words = {
   ['a'] = true,
@@ -26,6 +27,9 @@ local lowercase_words = {
   ['vs'] = true,
   ['yet'] = true,
 }
+
+---@type bufopt_t
+local opt_captitle = utils.classes.bufopt_t:new('captitle', true)
 
 ---Given current line, determine if it is a title line
 ---@param lines string[] buffer lines up to current line
@@ -88,7 +92,7 @@ end
 
 ---Capitalize the first letter of words on title line
 local function format_title(info)
-  if not vim.bo[info.buf].filetype == 'markdown' then
+  if not vim.bo[info.buf].filetype == 'markdown' or not opt_captitle:get() then
     return
   end
 
@@ -114,4 +118,34 @@ end
 api.nvim_create_autocmd('TextChangedI', {
   group = api.nvim_create_augroup('MarkdownAutoFormatTitle', {}),
   callback = format_title,
+})
+
+api.nvim_buf_create_user_command(0, 'MarkdownSetCapTitle', function(params)
+  local parsed_args = utils.funcs.command.parse_cmdline_args(params.fargs)
+  if params.bang then
+    return opt_captitle:scope_action(parsed_args, 'toggle')
+  end
+  if params.fargs[1] == '&' then
+    return opt_captitle:scope_action(parsed_args, 'reset')
+  end
+  if params.fargs[1] == '?' then
+    return opt_captitle:scope_action(parsed_args, 'print')
+  end
+  if vim.tbl_contains(parsed_args, 'enable') or parsed_args['enable'] then
+    return opt_captitle:scope_action(parsed_args, 'set', true)
+  end
+  if vim.tbl_contains(parsed_args, 'disable') or parsed_args['disable'] then
+    return opt_captitle:scope_action(parsed_args, 'set', false)
+  end
+end, {
+  nargs = '*',
+  bang = true,
+  complete = utils.funcs.command.complete({
+    'enable',
+    'disable',
+  }, {
+    ['global'] = { 'v:true', 'v:false' },
+    ['local'] = { 'v:true', 'v:false' },
+  }),
+  desc = 'Set whether to automatically capitalize the first letter of words in markdown titles',
 })
