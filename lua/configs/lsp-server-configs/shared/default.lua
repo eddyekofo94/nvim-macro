@@ -70,7 +70,7 @@ local function setup_keymaps(_, bufnr)
   end, { buffer = bufnr })
 end
 
----@class parsed_arg_t : table
+---@class lsp_command_parsed_arg_t : parsed_arg_t
 ---@field apply boolean|nil
 ---@field async boolean|nil
 ---@field bufnr integer|nil
@@ -117,7 +117,7 @@ end
 ---@param fargs string[] list of arguments
 ---@param fn_name_alt string|nil alternative function name
 ---@return string|nil fn_name corresponding LSP / diagnostic function name
----@return parsed_arg_t parsed the parsed arguments
+---@return lsp_command_parsed_arg_t parsed the parsed arguments
 local function parse_cmdline_args(fargs, fn_name_alt)
   local fn_name = fn_name_alt or fargs[1] and table.remove(fargs, 1) or nil
   local parsed = funcs.command.parse_cmdline_args(fargs)
@@ -125,7 +125,7 @@ local function parse_cmdline_args(fargs, fn_name_alt)
 end
 
 ---LSP command argument handler for functions that receive a range
----@param args parsed_arg_t
+---@param args lsp_command_parsed_arg_t
 ---@param tbl table information passed to the command
 ---@return table args
 local function arg_handler_range(args, tbl)
@@ -139,7 +139,7 @@ local function arg_handler_range(args, tbl)
 end
 
 ---Extract the first item from a table, expand it to absolute path if possible
----@param args parsed_arg_t
+---@param args lsp_command_parsed_arg_t
 ---@return any
 local function arg_handler_item(args)
   for _, item in pairs(args) do
@@ -169,14 +169,14 @@ local subcommands = {
     ---@type table<string, subcommand_info_t>
     buf = {
       references = {
-        ---@param args parsed_arg_t
+        ---@param args lsp_command_parsed_arg_t
         arg_handler = function(args)
           return args.context, args.options
         end,
         opts = { 'context', 'options.on_list' },
       },
       rename = {
-        ---@param args parsed_arg_t
+        ---@param args lsp_command_parsed_arg_t
         arg_handler = function(args)
           return args.new_name or args[1], args.options
         end,
@@ -187,7 +187,7 @@ local subcommands = {
         },
       },
       workspace_symbol = {
-        ---@param args parsed_arg_t
+        ---@param args lsp_command_parsed_arg_t
         arg_handler = function(args)
           return args.query, args.options
         end,
@@ -212,7 +212,7 @@ local subcommands = {
         },
       },
       format_on_save = {
-        ---@param args parsed_arg_t
+        ---@param args lsp_command_parsed_arg_t
         ---@param tbl table information passed to the command
         arg_handler = function(args, tbl)
           args.format = arg_handler_range(args, tbl).format
@@ -450,7 +450,7 @@ local subcommands = {
   ---@type table<string, subcommand_info_t>
   diagnostic = {
     config = {
-      ---@param args parsed_arg_t
+      ---@param args lsp_command_parsed_arg_t
       arg_handler = function(args)
         return args.opts, args.namespace
       end,
@@ -486,7 +486,7 @@ local subcommands = {
       },
     },
     disable = {
-      ---@param args parsed_arg_t
+      ---@param args lsp_command_parsed_arg_t
       arg_handler = function(args)
         return args.bufnr, args.namespace
       end,
@@ -496,7 +496,7 @@ local subcommands = {
       },
     },
     enable = {
-      ---@param args parsed_arg_t
+      ---@param args lsp_command_parsed_arg_t
       arg_handler = function(args)
         return args.bufnr, args.namespace
       end,
@@ -513,7 +513,7 @@ local subcommands = {
       end,
     },
     get = {
-      ---@param args parsed_arg_t
+      ---@param args lsp_command_parsed_arg_t
       arg_handler = function(args)
         return args.bufnr, args.opts
       end,
@@ -678,7 +678,7 @@ local subcommands = {
       },
     },
     hide = {
-      ---@param args parsed_arg_t
+      ---@param args lsp_command_parsed_arg_t
       arg_handler = function(args)
         return args.namespace, args.bufnr
       end,
@@ -688,7 +688,7 @@ local subcommands = {
       },
     },
     is_disabled = {
-      ---@param args parsed_arg_t
+      ---@param args lsp_command_parsed_arg_t
       arg_handler = function(args)
         return args.bufnr, args.namespace
       end,
@@ -701,7 +701,7 @@ local subcommands = {
       end,
     },
     match = {
-      ---@param args parsed_arg_t
+      ---@param args lsp_command_parsed_arg_t
       arg_handler = function(args)
         return args.str,
           args.pat,
@@ -736,7 +736,7 @@ local subcommands = {
       },
     },
     reset = {
-      ---@param args parsed_arg_t
+      ---@param args lsp_command_parsed_arg_t
       arg_handler = function(args)
         return args.namespace, args.bufnr
       end,
@@ -746,7 +746,7 @@ local subcommands = {
       },
     },
     set = {
-      ---@param args parsed_arg_t
+      ---@param args lsp_command_parsed_arg_t
       arg_handler = function(args)
         return args.namespace, args.bufnr, args.diagnostics, args.opts
       end,
@@ -801,7 +801,7 @@ local subcommands = {
       },
     },
     show = {
-      ---@param args parsed_arg_t
+      ---@param args lsp_command_parsed_arg_t
       arg_handler = function(args)
         return args.namespace, args.bufnr, args.diagnostics, args.opts
       end,

@@ -10,6 +10,8 @@ function M.build_nested(key_parts, val)
     or val
 end
 
+---@class parsed_arg_t table
+
 ---Parse arguments from the command line into a table
 ---@param fargs string[] list of arguments
 ---@return table
@@ -48,7 +50,8 @@ function M.parse_cmdline_args(fargs)
   return parsed
 end
 
----options command accepts, in the format of <opt>=<val> or <opt>
+---options command accepts, in the format of <optkey>=<candicate_optvals>
+---or <optkey>
 ---@class opts_t
 
 ---Get option keys / option names from opts table
@@ -74,29 +77,33 @@ function M.complete_opts(opts)
   ---@param arglead string leading portion of the argument being completed
   ---@return string[] completion completion results
   return function(arglead, _, _)
-    -- Complete with option values
-    local optkey, optval = arglead:match('^--([^%s=]+)=?([^%s=]*)$')
-    if optkey and optval then
+    local optkey, eq, optval = arglead:match('^%-%-([^%s=]+)(=?)([^%s=]*)$')
+    -- Complete option values
+    if optkey and eq == '=' then
       local candidate_vals = vim.tbl_map(
         tostring,
         type(opts[optkey]) == 'function' and opts[optkey]() or opts[optkey]
       )
       return candidate_vals
-          and vim.tbl_filter(function(val)
-            return val:find(optval, 1, true) == 1
-          end, candidate_vals)
+          and vim.tbl_map(
+            function(val)
+              return '--' .. optkey .. '=' .. val
+            end,
+            vim.tbl_filter(function(val)
+              return val:find(optval, 1, true) == 1
+            end, candidate_vals)
+          )
         or {}
     end
-    -- Complete with command's options
-    if arglead == '' then
-      return M.optkeys(opts)
-    end
-    if arglead:match('^%-%-') then
-      return vim.tbl_filter(function(opt)
-        return opt:find(arglead, 1, true) == 1
+    -- Complete option keys
+    return vim.tbl_filter(
+      function(compl)
+        return compl:find(arglead, 1, true) == 1
+      end,
+      vim.tbl_map(function(k)
+        return '--' .. k
       end, M.optkeys(opts))
-    end
-    return {}
+    )
   end
 end
 
