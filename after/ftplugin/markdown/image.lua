@@ -129,10 +129,10 @@ local function paste_image()
   insert_link(title .. '.png', path)
 end
 
-api.nvim_create_user_command('MarkdownInsertImage', insert_image, {
+api.nvim_buf_create_user_command(0, 'MarkdownInsertImage', insert_image, {
   desc = 'Insert an image on the current line',
 })
 
-api.nvim_create_user_command('MarkdownPasteImage', paste_image, {
+api.nvim_buf_create_user_command(0, 'MarkdownPasteImage', paste_image, {
   desc = 'Paste an image from system clipboard',
 })
