@@ -269,9 +269,13 @@ end
 
 lualine_config()
 
-vim.api.nvim_create_augroup('LuaLineReloadConfig', { clear = true })
+local groupid = vim.api.nvim_create_augroup('LuaLineReloadConfig', {})
 vim.api.nvim_create_autocmd('ColorScheme', {
-  pattern = '*',
-  group = 'LuaLineReloadConfig',
+  group = groupid,
+  callback = lualine_config,
+})
+vim.api.nvim_create_autocmd('OptionSet', {
+  group = groupid,
+  pattern = 'laststatus',
   callback = lualine_config,
 })
