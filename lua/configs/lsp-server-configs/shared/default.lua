@@ -222,7 +222,13 @@ local subcommands = {
           args.format = arg_handler_range(args, tbl).format
           return args, tbl
         end,
-        params = { 'enable', 'disable' },
+        params = {
+          'enable',
+          'disable',
+          'toggle',
+          'reset',
+          'status',
+        },
         opts = {
           'format.formatting_options',
           'format.formatting_options.tabSize',
@@ -260,12 +266,12 @@ local subcommands = {
               desc = 'LSP format on save.',
             })
           end
-          if tbl.bang then
+          if tbl.bang or vim.tbl_contains(args, 'toggle') then
             opt_autofmt_enabled:scope_action(args, 'toggle')
-          elseif tbl.fargs[1] == '&' then
+          elseif tbl.fargs[1] == '&' or vim.tbl_contains(args, 'reset') then
             opt_autofmt_enabled:scope_action(args, 'reset')
             opt_autofmt_opts:scope_action(args, 'reset')
-          elseif tbl.fargs[1] == '?' then
+          elseif tbl.fargs[1] == '?' or vim.tbl_contains(args, 'status') then
             opt_autofmt_enabled:scope_action(args, 'print')
             opt_autofmt_opts:scope_action(args, 'print')
           elseif vim.tbl_contains(args, 'enable') then
