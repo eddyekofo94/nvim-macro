@@ -87,6 +87,14 @@ local function enable_modules(module_names)
   require('lazy').setup(modules, config)
 end
 
+---Execute git command in directory
+---@param dir string directory to execute command in
+---@param cmd string[] git command to execute
+---@return string output
+local function git_dir_execute(dir, cmd)
+  return vim.fn.system({ 'git', '-C', dir, unpack(cmd) })
+end
+
 if vim.env.NVIM_MANPAGER or not bootstrap() then
   return
 end
@@ -112,3 +120,60 @@ end
 
 -- a handy abbreviation
 vim.cmd('cnoreabbrev lz Lazy')
+
+-- Autocommands to apply and restore local patches to plugins
+local groupid = vim.api.nvim_create_augroup('LazyPatches', {})
+local patches_path = vim.fn.stdpath('config') .. '/patches'
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'LazyUpdatePre',
+  group = groupid,
+  callback = function()
+    for patch in vim.fs.dir(patches_path) do
+      local patch_path = patches_path .. '/' .. patch
+      local plugin_path = vim.g.package_path
+        .. '/'
+        .. patch:gsub('%.patch$', '')
+      if
+        vim.loop.fs_stat(plugin_path)
+        and git_dir_execute(plugin_path, { 'diff', '--stat' }) ~= ''
+      then
+        local shell_output = git_dir_execute(
+          plugin_path,
+          { 'apply', '--reverse', '--ignore-space-change', patch_path }
+        )
+        if shell_output ~= '' then
+          vim.notify(
+            'Failed to reverse patch ' .. patch .. ': ' .. shell_output,
+            vim.log.levels.WARN
+          )
+        end
+      end
+    end
+  end,
+  desc = 'Reverse local patches before updating plugins.',
+})
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'LazyUpdate',
+  group = groupid,
+  callback = function()
+    for patch in vim.fs.dir(patches_path) do
+      local patch_path = patches_path .. '/' .. patch
+      local plugin_path = vim.g.package_path
+        .. '/'
+        .. patch:gsub('%.patch$', '')
+      if vim.loop.fs_stat(plugin_path) then
+        local shell_output = git_dir_execute(
+          plugin_path,
+          { 'apply', '--ignore-space-change', patch_path }
+        )
+        if shell_output ~= '' then
+          vim.notify(
+            'Failed to apply patch ' .. patch .. ': ' .. shell_output,
+            vim.log.levels.WARN
+          )
+        end
+      end
+    end
+  end,
+  desc = 'Reapply local patches after updating plugins.',
+})

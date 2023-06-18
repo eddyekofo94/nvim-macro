@@ -16,10 +16,6 @@ return {
 
   {
     'hrsh7th/cmp-cmdline',
-    pin = true,
-    build = 'git apply '
-      .. vim.fn.stdpath('config')
-      .. '/patches/cmp-cmdline.patch',
     event = 'CmdlineEnter',
     dependencies = 'nvim-cmp',
   },
@@ -43,10 +39,6 @@ return {
 
   {
     'tzachar/cmp-fuzzy-path',
-    pin = true,
-    build = 'git apply '
-      .. vim.fn.stdpath('config')
-      .. '/patches/cmp-fuzzy-path.patch',
     event = { 'CmdlineEnter', 'InsertEnter' },
     dependencies = { 'fuzzy.nvim', 'nvim-cmp' },
   },
