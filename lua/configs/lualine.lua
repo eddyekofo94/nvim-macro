@@ -69,8 +69,8 @@ local function lualine_config()
   ---@return string icon
   local function formatter_icon()
     if
-      vim.b.lsp_format_on_save == false
-      or not vim.b.lsp_format_on_save and not vim.g.lsp_format_on_save
+      vim.b.lsp_autofmt_enabled == false
+      or not vim.b.lsp_autofmt_enabled and not vim.g.lsp_autofmt_enabled
     then
       return ''
     end
@@ -87,8 +87,8 @@ local function lualine_config()
   ---@return string message
   local function formatter_text()
     if
-      vim.b.lsp_format_on_save == false
-      or not vim.b.lsp_format_on_save and not vim.g.lsp_format_on_save
+      vim.b.lsp_autofmt_enabled == false
+      or not vim.b.lsp_autofmt_enabled and not vim.g.lsp_autofmt_enabled
     then
       return ''
     end

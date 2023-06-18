@@ -1,4 +1,5 @@
 local funcs = require('utils.funcs')
+local classes = require('utils.classes')
 
 ---Check if there exists an LS that supports the given method
 ---for the given buffer
@@ -159,6 +160,7 @@ local optvals = {
 
 ---@class subcommand_info_t : table
 ---@field arg_handler function|nil
+---@field params table|nil
 ---@field opts table|nil
 ---@field fn_override function|nil
 ---@field completion function|nil
@@ -211,13 +213,16 @@ local subcommands = {
           'range',
         },
       },
-      format_on_save = {
+      auto_format = {
         ---@param args lsp_command_parsed_arg_t
         ---@param tbl table information passed to the command
+        ---@return lsp_command_parsed_arg_t args
+        ---@return table tbl
         arg_handler = function(args, tbl)
           args.format = arg_handler_range(args, tbl).format
-          return args
+          return args, tbl
         end,
+        params = { 'enable', 'disable' },
         opts = {
           'format.formatting_options',
           'format.formatting_options.tabSize',
@@ -234,120 +239,51 @@ local subcommands = {
           'format.range',
           ['local'] = optvals.bool,
           ['global'] = optvals.bool,
-          ['enable'] = optvals.bool,
-          ['disable'] = optvals.bool,
-          ['toggle'] = optvals.bool,
-          ['show-status'] = optvals.bool,
         },
-        fn_override = function(opts)
-          if opts['show-status'] then
-            vim.notify(
-              '[LSP] format-on-save: '
-                .. (vim.b.lsp_format_on_save and 'enabled' or 'disabled')
-                .. ' locally, '
-                .. (vim.g.lsp_format_on_save and 'enabled' or 'disabled')
-                .. ' globally,'
-                .. ' local format options: '
-                .. vim.inspect(vim.b.lsp_format_on_save_options)
-                .. ', global format options: '
-                .. vim.inspect(vim.g.lsp_format_on_save_options)
-            )
-            return
-          end
-
-          if not vim.g.lsp_format_on_save_initialized then
-            vim.g.lsp_format_on_save_initialized = true
-            vim.g.lsp_format_on_save_options = { timeout_ms = 500 }
-            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-              if vim.bo[buf].bt == '' then
-                vim.b[buf].lsp_format_on_save = false
-                vim.b[buf].lsp_format_on_save_options =
-                  vim.g.lsp_format_on_save_options
-              end
-            end
-            local groupid = vim.api.nvim_create_augroup('LspFormatOnSave', {})
-            vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
-              group = groupid,
-              callback = function(tbl)
-                if vim.bo[tbl.buf].bt ~= '' then
-                  return
-                end
-                if vim.b[tbl.buf].lsp_format_on_save == nil then
-                  vim.b[tbl.buf].lsp_format_on_save = vim.g.lsp_format_on_save
-                end
-                if vim.b[tbl.buf].lsp_format_on_save_options == nil then
-                  vim.b[tbl.buf].lsp_format_on_save_options =
-                    vim.g.lsp_format_on_save_options
-                end
-              end,
-            })
+        ---@param args lsp_command_parsed_arg_t
+        ---@param tbl table information passed to the command
+        fn_override = function(args, tbl)
+          ---@type bufopt_t
+          local opt_autofmt_enabled =
+            classes.bufopt_t:new('lsp_autofmt_enabled', false)
+          ---@type bufopt_t
+          local opt_autofmt_opts =
+            classes.bufopt_t:new('lsp_autofmt_opts', { timeout_ms = 500 })
+          if vim.fn.exists('#LspAutoFmt') == 0 then
             vim.api.nvim_create_autocmd('BufWritePre', {
-              group = groupid,
-              callback = function(tbl)
-                if vim.b[tbl.buf].lsp_format_on_save then
-                  vim.lsp.buf.format(
-                    vim.tbl_deep_extend(
-                      'keep',
-                      vim.b[tbl.buf].lsp_format_on_save_options
-                        or vim.g.lsp_format_on_save_options
-                        or {},
-                      {
-                        timeout_ms = 500,
-                      }
-                    )
-                  )
+              group = vim.api.nvim_create_augroup('LspAutoFmt', {}),
+              callback = function(info)
+                if opt_autofmt_enabled:get(info.buf) then
+                  vim.lsp.buf.format(opt_autofmt_opts:get(info.buf))
                 end
               end,
               desc = 'LSP format on save.',
             })
           end
-
-          -- Set format-on-save flags
-          if opts.toggle then
-            if opts.scope_local then
-              vim.b.lsp_format_on_save = not vim.b.lsp_format_on_save
-            elseif opts.scope_global then
-              vim.g.lsp_format_on_save = not vim.g.lsp_format_on_save
-            else
-              vim.b.lsp_format_on_save = not vim.b.lsp_format_on_save
-              vim.g.lsp_format_on_save = vim.b.lsp_format_on_save
-            end
-          elseif opts.disable then
-            if not opts.scope_global then
-              vim.b.lsp_format_on_save = false
-            end
-            if not opts.scope_local then
-              vim.g.lsp_format_on_save = false
-            end
-          else -- enable
-            if not opts.scope_global then
-              vim.b.lsp_format_on_save = true
-            end
-            if not opts.scope_local then
-              vim.g.lsp_format_on_save = true
-            end
+          if tbl.bang then
+            opt_autofmt_enabled:scope_action(args, 'toggle')
+          elseif tbl.fargs[1] == '&' then
+            opt_autofmt_enabled:scope_action(args, 'reset')
+            opt_autofmt_opts:scope_action(args, 'reset')
+          elseif tbl.fargs[1] == '?' then
+            opt_autofmt_enabled:scope_action(args, 'print')
+            opt_autofmt_opts:scope_action(args, 'print')
+          elseif vim.tbl_contains(args, 'enable') then
+            opt_autofmt_enabled:scope_action(args, 'set', true)
+          elseif vim.tbl_contains(args, 'disable') then
+            opt_autofmt_enabled:scope_action(args, 'set', false)
           end
-
-          -- Set format-on-save options
-          if not opts.scope_global then
-            vim.b.lsp_format_on_save_options = vim.tbl_deep_extend(
-              'force',
-              vim.b.lsp_format_on_save_options or {},
-              opts.format or {}
+          if args.format then
+            opt_autofmt_opts:scope_action(
+              args,
+              'set',
+              vim.tbl_deep_extend(
+                'force',
+                opt_autofmt_opts:scope_action(args, 'get'),
+                args.format
+              )
             )
           end
-          if not opts.scope_local then
-            vim.g.lsp_format_on_save_options = vim.tbl_deep_extend(
-              'force',
-              vim.g.lsp_format_on_save_options or {},
-              opts.format or {}
-            )
-          end
-
-          vim.notify(
-            '[LSP] format-on-save: '
-              .. (vim.b.lsp_format_on_save and 'enabled' or 'disabled')
-          )
         end,
       },
       code_action = {
@@ -884,7 +820,7 @@ local function command_complete(meta, subcommand_info_list)
         return cmd:find(arglead, 1, true) == 1
       end, vim.tbl_keys(subcommand_info_list))
     end
-    -- If subcommand is specified, complete with its options or option values
+    -- If subcommand is specified, complete with its options or params
     local subcommand = funcs.string.camel_to_snake(
       cmdline:match('^%s*' .. meta .. '(%w+)')
     ) or cmdline:match('^%s*' .. meta .. '%s+(%S+)')
@@ -899,14 +835,13 @@ local function command_complete(meta, subcommand_info_list)
         cursorpos
       )
     end
-    -- Complete with option values
+    -- Complete with subcommand's options or params
     local subcommand_info = subcommand_info_list[subcommand]
-    if subcommand_info and subcommand_info.opts then
-      return funcs.command.complete_opts(subcommand_info.opts)(
-        arglead,
-        cmdline,
-        cursorpos
-      )
+    if subcommand_info then
+      return funcs.command.complete(
+        subcommand_info.params,
+        subcommand_info.opts
+      )(arglead, cmdline, cursorpos)
     end
     return {}
   end
@@ -925,6 +860,7 @@ local function setup_commands(_, bufnr, meta, subcommand_info_list, fn_scope)
     meta,
     command_meta(subcommand_info_list, fn_scope),
     {
+      bang = true,
       range = true,
       nargs = '*',
       complete = command_complete(meta, subcommand_info_list),
@@ -937,6 +873,7 @@ local function setup_commands(_, bufnr, meta, subcommand_info_list, fn_scope)
       meta .. funcs.string.snake_to_camel(subcommand),
       command_meta(subcommand_info_list, fn_scope, subcommand, subcommand),
       {
+        bang = true,
         range = true,
         nargs = '*',
         complete = command_complete(meta, subcommand_info_list),

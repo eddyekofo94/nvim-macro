@@ -72,12 +72,15 @@ end
 
 ---Returns a function that can be used to complete the options of a command
 ---An option must be in the format of --<opt> or --<opt>=<val>
----@param opts opts_t
+---@param opts opts_t?
 ---@return fun(arglead: string, cmdline: string, cursorpos: integer[]): string[]
 function M.complete_opts(opts)
   ---@param arglead string leading portion of the argument being completed
   ---@return string[] completion completion results
   return function(arglead, _, _)
+    if not opts or vim.tbl_isempty(opts) then
+      return {}
+    end
     local optkey, eq, optval = arglead:match('^%-%-([^%s=]+)(=?)([^%s=]*)$')
     -- Complete option values
     if optkey and eq == '=' then
@@ -109,20 +112,20 @@ function M.complete_opts(opts)
 end
 
 ---Returns a function that can be used to complete the arguments of a command
----@param params params_t
+---@param params params_t?
 ---@return fun(arglead: string, cmdline: string, cursorpos: integer[]): string[]
 function M.complete_params(params)
   return function(arglead, _, _)
     return vim.tbl_filter(function(arg)
       return arg:find(arglead, 1, true) == 1
-    end, params)
+    end, params or {})
   end
 end
 
 ---Returns a function that can be used to complete the arguments and options
 ---of a command
----@param params params_t
----@param opts opts_t
+---@param params params_t?
+---@param opts opts_t?
 ---@return fun(arglead: string, cmdline: string, cursorpos: integer[]): string[]
 function M.complete(params, opts)
   local fn_compl_params = M.complete_params(params)
