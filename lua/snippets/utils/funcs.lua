@@ -49,8 +49,17 @@ local function get_indent_depth(indent)
   return math.floor(indent / sts)
 end
 
+---Returns the character after the cursor
+---@return string
+local function get_char_after()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2]
+  return line:sub(col + 1, col + 1)
+end
+
 return {
   snip_set_attr = snip_set_attr,
   add_attr = add_attr,
+  get_char_after = get_char_after,
   get_indent_depth = get_indent_depth,
 }
