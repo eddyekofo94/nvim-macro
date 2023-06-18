@@ -11,6 +11,65 @@ local function read_file(path)
   return content
 end
 
+---Print shell command error
+---@param cmd string[] shell command
+---@param msg string error message
+---@param lev number? log level to use for errors, defaults to WARN
+---@return nil
+local function shell_error(cmd, msg, lev)
+  lev = lev or vim.log.levels.WARN
+  vim.notify(
+    '[plugins] failed to execute shell command: '
+      .. table.concat(cmd, ' ')
+      .. '\n'
+      .. msg,
+    lev
+  )
+end
+
+---Execute git command in directory
+---@param dir string directory to execute command in
+---@param cmd string[] git command to execute
+---@param error_lev number? log level to use for errors, defaults to WARN
+---@reurn { success: boolean, output: string }
+local function git_dir_execute(dir, cmd, error_lev)
+  error_lev = error_lev or vim.log.levels.WARN
+  local shell_args = { 'git', '-C', dir, unpack(cmd) }
+  local shell_out = vim.fn.system(shell_args)
+  if vim.v.shell_error ~= 0 then
+    shell_error(shell_args, shell_out, error_lev)
+    return {
+      success = false,
+      output = shell_out,
+    }
+  end
+  return {
+    success = true,
+    output = shell_out,
+  }
+end
+
+---Execute git command in current directory
+---@param cmd string[] git command to execute
+---@param error_lev number? log level to use for errors, defaults to WARN
+---@reurn { success: boolean, output: string }
+local function git_execute(cmd, error_lev)
+  error_lev = error_lev or vim.log.levels.WARN
+  local shell_args = { 'git', unpack(cmd) }
+  local shell_out = vim.fn.system(shell_args)
+  if vim.v.shell_error ~= 0 then
+    shell_error(shell_args, shell_out, error_lev)
+    return {
+      success = false,
+      output = shell_out,
+    }
+  end
+  return {
+    success = true,
+    output = shell_out,
+  }
+end
+
 ---Install package manager if not already installed
 ---@return boolean success
 local function bootstrap()
@@ -30,25 +89,23 @@ local function bootstrap()
       and lock_data['lazy.nvim'].commit
     or nil
   local url = 'https://github.com/folke/lazy.nvim.git'
-  vim.notify('Installing lazy.nvim...', vim.log.levels.INFO)
+  vim.notify('[plugins] installing lazy.nvim...', vim.log.levels.INFO)
   vim.fn.mkdir(vim.g.package_path, 'p')
-  local cloned = os.execute(
-    table.concat({ 'git', 'clone', '--filter=blob:none', url, lazy_path }, ' ')
-  )
-  if commit then
-    os.execute(table.concat({
-      'git',
-      '--git-dir=' .. lazy_path .. '/.git',
-      '--work-tree=' .. lazy_path,
-      'checkout',
-      commit,
-    }, ' '))
-  end
-  if cloned ~= 0 then
-    vim.notify('Failed to clone lazy.nvim', vim.log.levels.WARN)
+  if
+    not git_execute(
+      { 'clone', '--filter=blob:none', url, lazy_path },
+      vim.log.levels.INFO
+    ).success
+  then
     return false
   end
-  vim.notify('lazy.nvim cloned to ' .. lazy_path, vim.log.levels.INFO)
+  if commit then
+    git_dir_execute(lazy_path, { 'checkout', commit }, vim.log.levels.INFO)
+  end
+  vim.notify(
+    '[plugins] lazy.nvim cloned to ' .. lazy_path,
+    vim.log.levels.INFO
+  )
   return true
 end
 
@@ -87,14 +144,6 @@ local function enable_modules(module_names)
   require('lazy').setup(modules, config)
 end
 
----Execute git command in directory
----@param dir string directory to execute command in
----@param cmd string[] git command to execute
----@return string output
-local function git_dir_execute(dir, cmd)
-  return vim.fn.system({ 'git', '-C', dir, unpack(cmd) })
-end
-
 if vim.env.NVIM_MANPAGER or not bootstrap() then
   return
 end
@@ -122,58 +171,36 @@ end
 vim.cmd('cnoreabbrev lz Lazy')
 
 -- Autocommands to apply and restore local patches to plugins
-local groupid = vim.api.nvim_create_augroup('LazyPatches', {})
 local patches_path = vim.fn.stdpath('config') .. '/patches'
 vim.api.nvim_create_autocmd('User', {
-  pattern = 'LazyUpdatePre',
-  group = groupid,
-  callback = function()
-    for patch in vim.fs.dir(patches_path) do
-      local patch_path = patches_path .. '/' .. patch
-      local plugin_path = vim.g.package_path
-        .. '/'
-        .. patch:gsub('%.patch$', '')
-      if
-        vim.loop.fs_stat(plugin_path)
-        and git_dir_execute(plugin_path, { 'diff', '--stat' }) ~= ''
-      then
-        local shell_output = git_dir_execute(
-          plugin_path,
-          { 'apply', '--reverse', '--ignore-space-change', patch_path }
-        )
-        if shell_output ~= '' then
-          vim.notify(
-            'Failed to reverse patch ' .. patch .. ': ' .. shell_output,
-            vim.log.levels.WARN
-          )
-        end
-      end
-    end
-  end,
-  desc = 'Reverse local patches before updating plugins.',
-})
-vim.api.nvim_create_autocmd('User', {
-  pattern = 'LazyUpdate',
-  group = groupid,
-  callback = function()
+  pattern = 'LazyUpdate*',
+  group = vim.api.nvim_create_augroup('LazyPatches', {}),
+  callback = function(info)
     for patch in vim.fs.dir(patches_path) do
       local patch_path = patches_path .. '/' .. patch
       local plugin_path = vim.g.package_path
         .. '/'
         .. patch:gsub('%.patch$', '')
       if vim.loop.fs_stat(plugin_path) then
-        local shell_output = git_dir_execute(
-          plugin_path,
-          { 'apply', '--ignore-space-change', patch_path }
-        )
-        if shell_output ~= '' then
-          vim.notify(
-            'Failed to apply patch ' .. patch .. ': ' .. shell_output,
-            vim.log.levels.WARN
-          )
+        if
+          info.match == 'LazyUpdatePre'
+          and git_dir_execute(plugin_path, { 'diff', '--stat' }).output ~= ''
+        then
+          git_dir_execute(plugin_path, {
+            'apply',
+            '--reverse',
+            '--ignore-space-change',
+            patch_path,
+          })
+        elseif info.match == 'LazyUpdate' then
+          git_dir_execute(plugin_path, {
+            'apply',
+            '--ignore-space-change',
+            patch_path,
+          })
         end
       end
     end
   end,
-  desc = 'Reapply local patches after updating plugins.',
+  desc = 'Reverse/Apply local patches before/after updating plugins.',
 })
