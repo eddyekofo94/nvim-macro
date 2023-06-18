@@ -794,7 +794,15 @@ local function command_meta(subcommand_info_list, fn_scope, fn_name_alt)
   ---@param tbl table information passed to the command
   return function(tbl)
     local fn_name, cmdline_args = parse_cmdline_args(tbl.fargs, fn_name_alt)
-    local fn = subcommand_info_list[fn_name].fn_override or fn_scope[fn_name]
+    if not fn_name then
+      return
+    end
+    local fn = subcommand_info_list[fn_name]
+        and subcommand_info_list[fn_name].fn_override
+      or fn_scope[fn_name]
+    if not fn then
+      return
+    end
     local arg_handler = subcommand_info_list[fn_name].arg_handler
       or function(args)
         return args
