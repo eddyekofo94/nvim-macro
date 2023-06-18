@@ -120,21 +120,21 @@ api.nvim_create_autocmd('TextChangedI', {
   callback = format_title,
 })
 
-api.nvim_buf_create_user_command(0, 'MarkdownSetCapTitle', function(params)
-  local parsed_args = utils.funcs.command.parse_cmdline_args(params.fargs)
-  if params.bang then
+api.nvim_buf_create_user_command(0, 'MarkdownSetCapTitle', function(info)
+  local parsed_args = utils.funcs.command.parse_cmdline_args(info.fargs)
+  if info.bang then
     return opt_captitle:scope_action(parsed_args, 'toggle')
   end
-  if params.fargs[1] == '&' then
+  if info.fargs[1] == '&' then
     return opt_captitle:scope_action(parsed_args, 'reset')
   end
-  if params.fargs[1] == '?' then
+  if info.fargs[1] == '?' then
     return opt_captitle:scope_action(parsed_args, 'print')
   end
-  if vim.tbl_contains(parsed_args, 'enable') or parsed_args['enable'] then
+  if vim.tbl_contains(parsed_args, 'enable') then
     return opt_captitle:scope_action(parsed_args, 'set', true)
   end
-  if vim.tbl_contains(parsed_args, 'disable') or parsed_args['disable'] then
+  if vim.tbl_contains(parsed_args, 'disable') then
     return opt_captitle:scope_action(parsed_args, 'set', false)
   end
 end, {
