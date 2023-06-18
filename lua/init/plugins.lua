@@ -70,9 +70,50 @@ local function git_execute(cmd, error_lev)
   }
 end
 
+-- Apply and restore local patches on plugin update/install
+local function create_autocmd_applypatch()
+  vim.api.nvim_create_autocmd('User', {
+    pattern = { 'LazyInstall', 'LazyUpdate*' },
+    group = vim.api.nvim_create_augroup('LazyPatches', {}),
+    callback = function(info)
+      local patches_path = vim.fn.stdpath('config') .. '/patches'
+      for patch in vim.fs.dir(patches_path) do
+        local patch_path = patches_path .. '/' .. patch
+        local plugin_path = vim.g.package_path
+          .. '/'
+          .. patch:gsub('%.patch$', '')
+        if vim.loop.fs_stat(plugin_path) then
+          if
+            info.match == 'LazyUpdatePre'
+            and git_dir_execute(plugin_path, { 'diff', '--stat' }).output
+              ~= ''
+          then
+            vim.notify('[plugins] reverting patch' .. patch_path)
+            git_dir_execute(plugin_path, {
+              'apply',
+              '--reverse',
+              '--ignore-space-change',
+              patch_path,
+            })
+          elseif info.match == 'LazyUpdate' or info.match == 'LazyInstall' then
+            vim.notify('[plugins] applying patch' .. patch_path)
+            git_dir_execute(plugin_path, {
+              'apply',
+              '--ignore-space-change',
+              patch_path,
+            })
+          end
+        end
+      end
+    end,
+    desc = 'Reverse/Apply local patches on updating/intalling plugins.',
+  })
+end
+
 ---Install package manager if not already installed
 ---@return boolean success
 local function bootstrap()
+  create_autocmd_applypatch()
   vim.g.package_path = vim.fn.stdpath('data') .. '/site/pack/packages/opt'
   vim.g.package_lock = vim.fn.stdpath('config') .. '/package-lock.json'
   local lazy_path = vim.g.package_path .. '/lazy.nvim'
@@ -169,38 +210,3 @@ end
 
 -- a handy abbreviation
 vim.cmd('cnoreabbrev lz Lazy')
-
--- Autocommands to apply and restore local patches to plugins
-local patches_path = vim.fn.stdpath('config') .. '/patches'
-vim.api.nvim_create_autocmd('User', {
-  pattern = 'LazyUpdate*',
-  group = vim.api.nvim_create_augroup('LazyPatches', {}),
-  callback = function(info)
-    for patch in vim.fs.dir(patches_path) do
-      local patch_path = patches_path .. '/' .. patch
-      local plugin_path = vim.g.package_path
-        .. '/'
-        .. patch:gsub('%.patch$', '')
-      if vim.loop.fs_stat(plugin_path) then
-        if
-          info.match == 'LazyUpdatePre'
-          and git_dir_execute(plugin_path, { 'diff', '--stat' }).output ~= ''
-        then
-          git_dir_execute(plugin_path, {
-            'apply',
-            '--reverse',
-            '--ignore-space-change',
-            patch_path,
-          })
-        elseif info.match == 'LazyUpdate' then
-          git_dir_execute(plugin_path, {
-            'apply',
-            '--ignore-space-change',
-            patch_path,
-          })
-        end
-      end
-    end
-  end,
-  desc = 'Reverse/Apply local patches before/after updating plugins.',
-})
