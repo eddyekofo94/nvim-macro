@@ -162,14 +162,15 @@ end
 ---@param opts table
 ---@param action string
 ---@vararg any
+---@return any
 function bufopt_t:scope_action(opts, action, ...)
   if opts['global'] then
-    self[action .. 'global'](self, ...)
-  elseif opts['local'] then
-    self[action .. 'local'](self, ...)
-  else
-    self[action](self, ...)
+    return self[action .. 'global'](self, ...)
   end
+  if opts['local'] then
+    return self[action .. 'local'](self, ...)
+  end
+  return self[action](self, ...)
 end
 
 return bufopt_t
