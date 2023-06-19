@@ -77,7 +77,7 @@ end
 vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
   group = vim.api.nvim_create_augroup('StatusColumn', {}),
   callback = function(tbl)
-    if tbl.file and vim.loop.fs_stat(tbl.file) and vim.bo.bt == '' then
+    if tbl.file and vim.uv.fs_stat(tbl.file) and vim.bo.bt == '' then
       -- 1. Diagnostic / Dap signs
       -- 2. Line number
       -- 3. Git signs

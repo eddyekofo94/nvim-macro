@@ -119,7 +119,7 @@ local autocmds = {
           vim.cmd.lcd(proj_dir)
         else
           local dirname = vim.fs.dirname(info.file)
-          local stat = vim.loop.fs_stat(dirname)
+          local stat = vim.uv.fs_stat(dirname)
           if stat and stat.type == 'directory' then
             vim.cmd.lcd(dirname)
           end
@@ -169,7 +169,7 @@ local autocmds = {
         vim.g.BACKGROUND = vim.go.background
         vim.cmd.wshada()
         if vim.fn.executable('setbg') == 1 then
-          vim.loop.spawn('setbg', {
+          vim.uv.spawn('setbg', {
             args = { vim.go.background },
             stdio = { nil, nil, nil },
           })

@@ -24,7 +24,7 @@ function M.parse_cmdline_args(fargs)
       key = arg:match('^%-%-(%S+)$')
     end
     local val_expanded = vim.fn.expand(val)
-    if type(val) == 'string' and vim.loop.fs_stat(val_expanded) then
+    if type(val) == 'string' and vim.uv.fs_stat(val_expanded) then
       val = val_expanded
     end
     if key and val then -- '--key=value'

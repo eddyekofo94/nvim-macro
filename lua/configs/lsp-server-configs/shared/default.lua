@@ -141,7 +141,7 @@ end
 local function arg_handler_item(args)
   for _, item in pairs(args) do
     return type(item) == 'string'
-        and vim.loop.fs_stat(vim.fn.fnamemodify(item, ':p'))
+        and vim.uv.fs_stat(vim.fn.fnamemodify(item, ':p'))
         and vim.fn.resolve(vim.fn.fnamemodify(item, ':p'))
       or item
   end
@@ -303,7 +303,7 @@ local subcommands = {
         completion = function(arglead, _, _)
           local basedir = arglead == '' and vim.fn.getcwd() or arglead
           local incomplete = nil ---@type string|nil
-          if not vim.loop.fs_stat(basedir) then
+          if not vim.uv.fs_stat(basedir) then
             basedir = vim.fn.fnamemodify(basedir, ':h')
             incomplete = vim.fn.fnamemodify(arglead, ':t')
           end

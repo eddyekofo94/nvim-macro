@@ -8,7 +8,7 @@ local bar = require('plugin.winbar.bar')
 local function get_icon(path)
   local icon = configs.opts.icons.kinds.symbols.File
   local icon_hl = 'WinBarIconKindFile'
-  local stat = vim.loop.fs_stat(path)
+  local stat = vim.uv.fs_stat(path)
   if not stat then
     return icon, icon_hl
   elseif stat.type == 'directory' then

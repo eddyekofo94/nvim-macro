@@ -1,7 +1,7 @@
 local api = vim.api
 local ui = vim.ui
 local fn = vim.fn
-local uv = vim.loop
+local uv = vim.uv
 local cmd = vim.cmd
 
 ---Make directory for the image

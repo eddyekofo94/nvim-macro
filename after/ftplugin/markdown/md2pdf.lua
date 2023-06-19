@@ -95,7 +95,7 @@ end
 ---@param opts table<string, string> options
 local function spawn_viewer(files, opts)
   close_handler(_G.handler_viewer)
-  _G.handler_viewer = vim.loop.spawn(
+  _G.handler_viewer = vim.uv.spawn(
     opts.viewer,
     { args = files },
     vim.schedule_wrap(function(code_viewer, _)
@@ -119,7 +119,7 @@ end
 ---@param opts table<string, string> options
 local function spawn_pandoc(args, opts)
   close_handler(_G.handler_md2pdf)
-  _G.handler_md2pdf = vim.loop.spawn(
+  _G.handler_md2pdf = vim.uv.spawn(
     'md2pdf',
     {
       args = { '--' .. opts['pdf-engine'], unpack(args) },

@@ -8,11 +8,11 @@ local M = {}
 ---@return number total time in nanoseconds
 function M.time(epochs, fn, ...)
   epochs = epochs or 128
-  local start = vim.loop.hrtime()
+  local start = vim.uv.hrtime()
   for _ = 1, epochs do
     fn(...)
   end
-  local total = vim.loop.hrtime() - start
+  local total = vim.uv.hrtime() - start
   return total / epochs, total
 end
 

@@ -82,7 +82,7 @@ local function create_autocmd_applypatch()
         local plugin_path = vim.g.package_path
           .. '/'
           .. patch:gsub('%.patch$', '')
-        if vim.loop.fs_stat(plugin_path) then
+        if vim.uv.fs_stat(plugin_path) then
           if
             info.match:match('Pre$')
             and git_dir_execute(plugin_path, { 'diff', '--stat' }).output
@@ -119,7 +119,7 @@ local function bootstrap()
   local lazy_path = vim.g.package_path .. '/lazy.nvim'
   vim.opt.rtp:prepend(lazy_path)
   vim.opt.pp:prepend(lazy_path)
-  if vim.loop.fs_stat(lazy_path) then
+  if vim.uv.fs_stat(lazy_path) then
     return true
   end
 
