@@ -13,22 +13,15 @@ local function lualine_config()
   ---Display indent style
   ---@return string
   local function indent_style()
-    -- Get softtabstop or equivalent fallback
-    local sts
-    if vim.bo.sts > 0 then
-      sts = vim.bo.sts
-    elseif vim.bo.sw > 0 then
-      sts = vim.bo.sw
-    else
-      sts = vim.bo.ts
-    end
+    -- Get shiftwidth or equivalent fallback
+    local sw = vim.fn.shiftwidth()
 
     if vim.bo.expandtab then
-      return icons.Dot .. sts
-    elseif vim.bo.ts == sts then
+      return icons.Dot .. sw
+    elseif vim.bo.ts == sw then
       return icons.ArrowRight .. vim.bo.tabstop
     else
-      return icons.ArrowRight .. vim.bo.tabstop .. ' ' .. icons.Dot .. sts
+      return icons.ArrowRight .. vim.bo.tabstop .. ' ' .. icons.Dot .. sw
     end
   end
 

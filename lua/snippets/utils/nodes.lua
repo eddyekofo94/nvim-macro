@@ -15,18 +15,10 @@ local function get_indent_str(depth)
     return ''
   end
 
-  local sts
-  if vim.bo.sts > 0 then
-    sts = vim.bo.sts
-  elseif vim.bo.sw > 0 then
-    sts = vim.bo.sw
-  else
-    sts = vim.bo.ts
-  end
-
-  return vim.bo.expandtab and string.rep(' ', sts * depth)
-    or string.rep('\t', math.floor(sts * depth / vim.bo.ts))
-      .. string.rep(' ', sts * depth % vim.bo.ts)
+  local sw = vim.fn.shiftwidth()
+  return vim.bo.expandtab and string.rep(' ', sw * depth)
+    or string.rep('\t', math.floor(sw * depth / vim.bo.ts))
+      .. string.rep(' ', sw * depth % vim.bo.ts)
 end
 
 ---Returns a function node that returns a string for indentation at the given
