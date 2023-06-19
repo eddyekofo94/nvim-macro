@@ -57,6 +57,7 @@ local function lazygit_toggle()
   lazygit:toggle()
 end
 
+vim.keymap.set({ 't', 'n' }, '<M-i>', lazygit_toggle)
 vim.keymap.set({ 't', 'n' }, '<C-\\>g', lazygit_toggle)
 vim.keymap.set({ 't', 'n' }, '<C-\\><C-g>', lazygit_toggle)
 vim.api.nvim_create_user_command('Lazygit', lazygit_toggle, {})

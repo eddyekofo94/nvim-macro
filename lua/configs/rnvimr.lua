@@ -46,5 +46,6 @@ local function rnvimr_toggle()
   vim.cmd('silent! RnvimrToggle')
 end
 
+vim.keymap.set({ 'n', 't' }, '<M-e>', rnvimr_toggle)
 vim.keymap.set({ 'n', 't' }, '<C-\\>e', rnvimr_toggle)
 vim.keymap.set({ 'n', 't' }, '<C-\\><C-e>', rnvimr_toggle)

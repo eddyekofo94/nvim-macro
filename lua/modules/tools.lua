@@ -60,6 +60,7 @@ return {
   {
     'akinsho/toggleterm.nvim',
     keys = {
+      { '<M-i>',        mode = { 'n', 't' } },
       { '<C-\\>v',      mode = { 'n', 't' } },
       { '<C-\\>s',      mode = { 'n', 't' } },
       { '<C-\\>t',      mode = { 'n', 't' } },
