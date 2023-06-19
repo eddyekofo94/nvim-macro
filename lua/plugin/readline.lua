@@ -69,28 +69,32 @@ function M.init()
   map('!', '<C-a>', '<Home>')
   map('!', '<C-e>', '<End>')
   map('!', '<C-d>', '<Del>')
-
+  map('!', '<C-y>', '<C-r>-')
   map('c', '<C-b>', '<Left>')
+  map('c', '<C-f>', '<Right>')
+  map('c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>')
+  map('i', '<M-b>', '<S-Left>')
+  map('i', '<M-f>', '<Cmd>normal! e<CR><Right>')
+  map('!', '<C-BS>', '<C-w>')
+  map('!', '<M-BS>', '<C-w>')
+  map('!', '<M-Del>', '<C-w>')
+  map('i', '<M-d>', '<Cmd>normal! dw<CR>')
+
   map('i', '<C-b>', function()
     if first_line() and start_of_line() then
       return '<Ignore>'
     end
     return start_of_line() and '<Up><End>' or '<Left>'
   end, { expr = true })
-
-  map('c', '<C-f>', '<Right>')
   map('i', '<C-f>', function()
     if last_line() and end_of_line() then
       return '<Ignore>'
     end
     return end_of_line() and '<Down><Home>' or '<Right>'
   end, { expr = true })
-
-  map('c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>')
   map('i', '<C-k>', function()
     return end_of_line() and '<Del>' or '<Cmd>normal! D<CR><Right>'
   end, { expr = true })
-
   map('!', '<C-t>', function()
     if vim.tbl_contains({ '?', '/' }, fn.getcmdtype()) then
       return '<C-t>'
@@ -122,7 +126,6 @@ function M.init()
       return '<BS><Right>' .. get_char(-1)
     end
   end, { expr = true })
-
   map('!', '<C-u>', function()
     if not start_of_line() then
       local current_line = fn.mode() == 'c' and fn.getcmdline()
@@ -132,28 +135,34 @@ function M.init()
     end
     return '<C-u>'
   end, { expr = true })
-
-  map('!', '<C-y>', '<C-r>-')
-
-  map('!', '<M-b>', '<S-Left>')
-  map('c', '<M-f>', '<S-Right>')
-  map('i', '<M-f>', '<Cmd>normal! e<CR><Right>')
-  map('!', '<C-BS>', '<C-w>')
-  map('!', '<M-BS>', '<C-w>')
-  map('!', '<M-Del>', '<C-w>')
-  map('i', '<M-d>', '<Cmd>normal! dw<CR>')
+  map('c', '<M-b>', function()
+    local cmdline_before = fn.getcmdline():sub(1, fn.getcmdpos() - 1)
+    local word_before = cmdline_before:match('([%w_]*%s*)$')
+    if word_before == '' then
+      word_before = cmdline_before:match('([^%w_]*%s*)$')
+    end
+    return string.rep('<Left>', #word_before)
+  end, { expr = true })
+  map('c', '<M-f>', function()
+    local cmdline_after = fn.getcmdline():sub(fn.getcmdpos())
+    local word_after = cmdline_after:match('^(%s*[%w_]*)')
+    if word_after == '' then
+      word_after = cmdline_after:match('^(%s*[^%w_]*)')
+    end
+    return string.rep('<Right>', #word_after)
+  end, { expr = true })
   map('c', '<M-d>', function()
     local cmdline = fn.getcmdline()
     local pos = fn.getcmdpos()
-    if pos >= #cmdline then
-      return '<Ignore>'
+    if pos > #cmdline then
+      return
     end
     local _, _, to_del = cmdline:sub(pos + 1):find('^(%w*%s*)')
     fn.setcmdline(
       cmdline:sub(1, pos - 1) .. cmdline:sub(pos + #to_del + 1),
       pos
     )
-  end, { expr = true })
+  end)
 end
 
 return M
