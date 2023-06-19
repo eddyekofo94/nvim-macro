@@ -225,7 +225,6 @@ cmp.setup({
     end, { 'i', 'c' }),
     ['<Tab>'] = cmp.mapping(function(fallback)
       if vim.fn.mode() == 'i' then
-        print('luasnip.expandable(): ' .. vim.inspect(luasnip.expandable()))
         if luasnip.expandable() then
           luasnip.expand()
         elseif luasnip.jumpable(1) then
