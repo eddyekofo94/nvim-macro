@@ -1,10 +1,10 @@
-local palette = require('colors.cockatoo.palette')
 local icons = require('utils.static').icons
 
 vim.opt.rtp:append(vim.fn.stdpath('config') .. '/lua/colors/cockatoo')
 
 ---Lualine configuration
 local function lualine_config()
+  local palette = require('colors.cockatoo.palette')
   local function location()
     local cursor_loc = vim.api.nvim_win_get_cursor(0)
     return cursor_loc[1] .. ',' .. cursor_loc[2] + 1
