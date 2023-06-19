@@ -80,9 +80,10 @@ end
 ---@return snip_cond_t
 function M.before_pattern(pattern)
   return lsconds.make_condition(function()
-    local line = vim.api.nvim_get_current_line()
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    return line:sub(cursor[2] + 1):match('^' .. pattern) ~= nil
+    return vim.api
+      .nvim_get_current_line()
+      :sub(vim.api.nvim_win_get_cursor(0)[2] + 1)
+      :match('^' .. pattern) ~= nil
   end)
 end
 
@@ -90,11 +91,31 @@ end
 ---@param pattern string lua pattern
 ---@return snip_cond_t
 function M.after_pattern(pattern)
-  return lsconds.make_condition(function()
-    local line = vim.api.nvim_get_current_line()
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    return line:sub(1, cursor[2]):match(pattern .. '$') ~= nil
+  ---@param matched_trigger string the fully matched trigger
+  return lsconds.make_condition(function(_, matched_trigger)
+    return vim.api
+      .nvim_get_current_line()
+      :sub(1, vim.api.nvim_win_get_cursor(0)[2])
+      :gsub(matched_trigger, '')
+      :match(pattern .. '$') ~= nil
   end)
+end
+
+---Returns whether the cursor is at the start of a line
+---@param matched_trigger string the fully matched trigger
+---@return boolean
+function M.at_line_start(_, matched_trigger)
+  return vim.api
+    .nvim_get_current_line()
+    :sub(1, vim.api.nvim_win_get_cursor(0)[2])
+    :gsub(matched_trigger, '')
+    :match('^%s*$') ~= nil
+end
+
+---Returns whether the cursor is at the end of a line
+---@return boolean
+function M.at_line_end()
+  return vim.api.nvim_win_get_cursor(0)[2] == #vim.api.nvim_get_current_line()
 end
 
 return M

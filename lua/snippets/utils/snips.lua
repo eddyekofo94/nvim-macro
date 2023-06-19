@@ -27,7 +27,56 @@ local snip_attr_map = {
     condition = -conds.in_normalzone,
     show_condition = -conds.in_normalzone,
   },
+  s = {
+    condition = conds.at_line_start,
+    show_condition = conds.at_line_start,
+  },
+  S = {
+    condition = -conds.at_line_start,
+    show_condition = -conds.at_line_start,
+  },
+  e = {
+    condition = conds.at_line_end,
+    show_condition = conds.at_line_end,
+  },
+  E = {
+    condition = -conds.at_line_end,
+    show_condition = -conds.at_line_end,
+  },
+  -- After text block
+  b = {
+    condition = conds.after_pattern('[%w%d%)%]%}%>]%s*'),
+    show_condition = conds.after_pattern('[%w%d%)%]%}%>]%s*'),
+  },
+  B = {
+    condition = -conds.after_pattern('[%w%d%)%]%}%>]%s*'),
+    show_condition = -conds.after_pattern('[%w%d%)%]%}%>]%s*'),
+  },
 }
+
+---Add new snippet attribute option to snippet attributes table
+---@param snip_attr table
+---@param opt_key string
+---@param opt_val any
+local function snip_attr_add_new_opt(snip_attr, opt_key, opt_val)
+  if opt_val == nil then
+    return
+  end
+  local opt_orig_val = snip_attr[opt_key]
+  if opt_orig_val == nil then
+    snip_attr[opt_key] = opt_val
+    return
+  end
+  if opt_key:match('condition$') then
+    snip_attr[opt_key] = opt_orig_val * opt_val
+    return
+  end
+  if type(opt_orig_val) == 'table' and type(opt_val) == 'table' then
+    snip_attr[opt_key] = vim.tbl_deep_extend('force', opt_orig_val, opt_val)
+    return
+  end
+  snip_attr[opt_key] = opt_val
+end
 
 return setmetatable({}, {
   __index = function(self, snip_name)
@@ -37,7 +86,7 @@ return setmetatable({}, {
       local snip_attr_opts = snip_attr_map[snip_attr_str:sub(i, i)]
       if snip_attr_opts then
         for attr_opt_key, attr_opt_val in pairs(snip_attr_opts) do
-          snip_attr[attr_opt_key] = attr_opt_val
+          snip_attr_add_new_opt(snip_attr, attr_opt_key, attr_opt_val)
         end
       end
     end
