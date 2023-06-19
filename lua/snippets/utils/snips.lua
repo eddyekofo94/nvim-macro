@@ -1,107 +1,53 @@
-local M = {}
 local ls = require('luasnip')
 local conds = require('snippets.utils.conds')
-local s = ls.snippet
-local ms = ls.multi_snippet
 
--- Auto snippets
-M.sa = ls.extend_decorator.apply(s, {
-  snippetType = 'autosnippet',
-})
-
--- Auto multi-snippets
-M.msa = ls.extend_decorator.apply(ms, {
-  common = { snippetType = 'autosnippet' },
-})
-
--- Math auto snippets, automatically expands in math zone
-M.sam = ls.extend_decorator.apply(M.sa, {
-  condition = conds.in_mathzone,
-  show_condition = conds.in_mathzone,
-})
-
--- Math auto multi-snippets, automatically expands in math zone
-M.msam = ls.extend_decorator.apply(M.msa, {
-  common = {
+-- Map snippet attribute string to snippet attribute options
+local snip_attr_map = {
+  w = { wordTrig = true },
+  W = { wordTrig = false },
+  r = { regTrig = true },
+  R = { regTrig = false },
+  h = { hidden = true },
+  H = { hidden = false },
+  a = { snippetType = 'autosnippet' },
+  A = { snippetType = 'snippet' },
+  m = {
     condition = conds.in_mathzone,
     show_condition = conds.in_mathzone,
   },
-})
-
--- Math auto snippets with regex trigger
-M.samr = ls.extend_decorator.apply(M.sam, {
-  regTrig = true,
-})
-
--- Math auto multi-snippets with regex trigger
-M.msamr = ls.extend_decorator.apply(M.msam, {
-  common = { regTrig = true },
-})
-
--- Math operator auto snippets, wordTrig = false
-M.samo = ls.extend_decorator.apply(M.sam, {
-  wordTrig = false,
-})
-
--- Math operator auto multi-snippets, wordTrig = false
-M.msamo = ls.extend_decorator.apply(M.msam, {
-  common = { wordTrig = false },
-})
-
--- Math operator auto snippets with regex trigger
-M.samor = ls.extend_decorator.apply(M.samo, {
-  regTrig = true,
-})
-
--- Math operator auto multi-snippets with regex trigger
-M.msamor = ls.extend_decorator.apply(M.msamo, {
-  common = { regTrig = true },
-})
-
--- Snippets that does not expand in mathzone
-M.sM = ls.extend_decorator.apply(s, {
-  condition = -conds.in_mathzone,
-  show_condition = -conds.in_mathzone,
-})
-
--- Multi-snippets that does not expand in mathzone
-M.msM = ls.extend_decorator.apply(ms, {
-  common = {
+  M = {
     condition = -conds.in_mathzone,
     show_condition = -conds.in_mathzone,
   },
-})
-
--- Normal zone snippets
-M.sn = ls.extend_decorator.apply(s, {
-  condition = conds.in_normalzone,
-  show_condition = conds.in_normalzone,
-})
-
--- Normal zone multi-snippets
-M.msn = ls.extend_decorator.apply(ms, {
-  common = {
+  n = {
     condition = conds.in_normalzone,
     show_condition = conds.in_normalzone,
   },
-})
-
--- Snippets that does not expand in string or comments ('code' snippets)
-M.sc = ls.extend_decorator.apply(s, {
-  condition = -conds.ts_active
-    + -conds.in_tsnode('comment') * -conds.in_tsnode('string'),
-  show_condition = -conds.ts_active
-    + -conds.in_tsnode('comment') * -conds.in_tsnode('string'),
-})
-
--- Multi snippets that does not expand in string or comments ('code' snippets)
-M.msc = ls.extend_decorator.apply(ms, {
-  common = {
-    condition = -conds.ts_active
-      + -conds.in_tsnode('comment') * -conds.in_tsnode('string'),
-    show_condition = -conds.ts_active
-      + -conds.in_tsnode('comment') * -conds.in_tsnode('string'),
+  N = {
+    condition = -conds.in_normalzone,
+    show_condition = -conds.in_normalzone,
   },
-})
+}
 
-return M
+return setmetatable({}, {
+  __index = function(self, snip_name)
+    local snip_attr_str = snip_name:gsub('^m?s', '')
+    local snip_attr = {}
+    for i = 1, #snip_attr_str do
+      local snip_attr_opts = snip_attr_map[snip_attr_str:sub(i, i)]
+      if snip_attr_opts then
+        for attr_opt_key, attr_opt_val in pairs(snip_attr_opts) do
+          snip_attr[attr_opt_key] = attr_opt_val
+        end
+      end
+    end
+    if snip_name:match('^m') then
+      self[snip_name] = ls.extend_decorator.apply(ls.multi_snippet, {
+        common = snip_attr,
+      })
+    else
+      self[snip_name] = ls.extend_decorator.apply(ls.snippet, snip_attr)
+    end
+    return self[snip_name]
+  end,
+})

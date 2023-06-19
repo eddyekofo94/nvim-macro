@@ -11,7 +11,7 @@ local d = ls.dynamic_node
 local f = ls.function_node
 
 return {
-  us.samor({ trig = '(%a)(%d)' }, {
+  us.samWr({ trig = '(%a)(%d)' }, {
     d(1, function(_, snip)
       local symbol = snip.captures[1]
       local subscript = snip.captures[2]
@@ -22,7 +22,7 @@ return {
       })
     end),
   }),
-  us.samor({ trig = '(.*%))//' }, {
+  us.samWr({ trig = '(.*%))//' }, {
     d(1, function(_, snip)
       local captured = vim.trim(snip.captures[1])
       if captured == nil or not captured:match('%S') then
@@ -72,7 +72,7 @@ return {
       })
     end),
   }),
-  us.samor({ trig = '(\\%w+{%S+})//' }, {
+  us.samWr({ trig = '(\\%w+{%S+})//' }, {
     d(1, function(_, snip)
       return sn(nil, {
         t('\\frac{'),
@@ -83,7 +83,7 @@ return {
       })
     end),
   }),
-  us.samor({ trig = '(\\?%w*_*%w*)//' }, {
+  us.samWr({ trig = '(\\?%w*_*%w*)//' }, {
     d(1, function(_, snip)
       local numerator = snip.captures[1]
       if numerator == nil or not numerator:match('%S') then
@@ -105,7 +105,7 @@ return {
     end),
   }),
   -- matrix/vector bold font
-  us.samor({
+  us.samWr({
     trig = ';(%a)',
     priority = 999,
     dscr = 'vector bold math font',
@@ -117,33 +117,33 @@ return {
     end),
   }),
 
-  us.samo({ trig = '==' }, t('&= ')),
-  us.samo({ trig = ':=' }, t('\\coloneqq ')),
+  us.samW({ trig = '==' }, t('&= ')),
+  us.samW({ trig = ':=' }, t('\\coloneqq ')),
   ms({ { trig = '!=' }, { trig = 'neq' } }, t('\\neq ')),
   ms({ { trig = '&= =' }, { trig = 'eq' } }, t('\\equiv ')),
   ms({ { trig = '>=' }, { trig = 'ge' } }, t('\\ge ')),
   ms({ { trig = '<=' }, { trig = 'le' } }, t('\\le ')),
-  us.samo({ trig = '<->', priority = 999 }, t('\\leftrightarrow ')),
-  us.samo({ trig = '\\le >', priority = 999 }, t('\\Leftrightarrow ')),
-  us.samo({ trig = '<--', priority = 999 }, t('\\leftarrow ')),
-  us.samo({ trig = '\\le =', priority = 999 }, t('\\Leftarrow ')),
-  us.samo({ trig = '-->', priority = 999 }, t('\\rightarrow ')),
-  us.samo({ trig = '&= >', priority = 999 }, t('\\Rightarrow ')),
-  us.samo({ trig = '->', priority = 998 }, t('\\to ')),
-  us.samo({ trig = '<-', priority = 998 }, t('\\gets ')),
-  us.samo({ trig = '=>', priority = 998 }, t('\\implies ')),
-  us.samo({ trig = '|>' }, t('\\mapsto ')),
-  us.samo({ trig = '><' }, t('\\bowtie ')),
-  us.samo({ trig = '=>' }, t('\\implies ')),
-  us.samo({ trig = '**' }, t('\\cdot ')),
-  us.samo({ trig = 'x<->' }, {
+  us.samW({ trig = '<->', priority = 999 }, t('\\leftrightarrow ')),
+  us.samW({ trig = '\\le >', priority = 999 }, t('\\Leftrightarrow ')),
+  us.samW({ trig = '<--', priority = 999 }, t('\\leftarrow ')),
+  us.samW({ trig = '\\le =', priority = 999 }, t('\\Leftarrow ')),
+  us.samW({ trig = '-->', priority = 999 }, t('\\rightarrow ')),
+  us.samW({ trig = '&= >', priority = 999 }, t('\\Rightarrow ')),
+  us.samW({ trig = '->', priority = 998 }, t('\\to ')),
+  us.samW({ trig = '<-', priority = 998 }, t('\\gets ')),
+  us.samW({ trig = '=>', priority = 998 }, t('\\implies ')),
+  us.samW({ trig = '|>' }, t('\\mapsto ')),
+  us.samW({ trig = '><' }, t('\\bowtie ')),
+  us.samW({ trig = '=>' }, t('\\implies ')),
+  us.samW({ trig = '**' }, t('\\cdot ')),
+  us.samW({ trig = 'x<->' }, {
     t('\\xleftrightarrow['),
     i(1),
     t(']{'),
     i(2),
     t('} '),
   }),
-  us.samo({ trig = 'x\\le >' }, {
+  us.samW({ trig = 'x\\le >' }, {
     t('\\xLeftrightarrow['),
     i(1),
     t(']{'),
@@ -151,28 +151,28 @@ return {
     t('} '),
     i(),
   }),
-  us.samo({ trig = 'x<--' }, {
+  us.samW({ trig = 'x<--' }, {
     t('\\xleftarrow['),
     i(1),
     t(']{'),
     i(2),
     t('} '),
   }),
-  us.samo({ trig = 'x\\le =' }, {
+  us.samW({ trig = 'x\\le =' }, {
     t('\\xLeftarrow['),
     i(1),
     t(']{'),
     i(2),
     t('} '),
   }),
-  us.samo({ trig = 'x-->' }, {
+  us.samW({ trig = 'x-->' }, {
     t('\\xrightarrow['),
     i(1),
     t(']{'),
     i(2),
     t('} '),
   }),
-  us.samo({ trig = 'x&= >' }, {
+  us.samW({ trig = 'x&= >' }, {
     t('\\xRightarrow['),
     i(1),
     t(']{'),
@@ -180,7 +180,7 @@ return {
     t('} '),
   }),
 
-  us.samor({ trig = '%s*_' }, {
+  us.samWr({ trig = '%s*_' }, {
     d(1, function()
       local char_after = uf.get_char_after()
       if char_after == '_' or char_after == '{' then
@@ -190,7 +190,7 @@ return {
       end
     end),
   }),
-  us.samor({ trig = '%s*^' }, {
+  us.samWr({ trig = '%s*^' }, {
     d(1, function()
       local char_after = uf.get_char_after()
       if char_after == '^' or char_after == '{' then
@@ -200,22 +200,22 @@ return {
       end
     end),
   }),
-  us.samo({ trig = '>>' }, t('\\gg ')),
-  us.samo({ trig = '<<' }, t('\\ll ')),
-  us.samo({ trig = '...' }, t('\\ldots')),
-  us.samo({ trig = '\\ldots.' }, t('\\cdots')),
-  us.samo({ trig = ':..' }, t('\\vdots')),
-  us.samo({ trig = '\\..' }, t('\\ddots')),
-  us.samo({ trig = '~~' }, t('\\sim ')),
-  us.samo({ trig = '~=' }, t('\\approx ')),
-  us.samo({ trig = '+-' }, t('\\pm ')),
-  us.samo({ trig = '-+' }, t('\\mp ')),
-  us.samor({ trig = '%s*||' }, t(' \\mid ')),
-  us.samo({ trig = '\\\\\\' }, { t('\\setminus ') }),
-  us.samo({ trig = '%%' }, t('\\%')),
-  us.samo({ trig = '##' }, t('\\#')),
-  us.samo({ trig = ': ' }, t('\\colon ')),
-  us.msamo({
+  us.samW({ trig = '>>' }, t('\\gg ')),
+  us.samW({ trig = '<<' }, t('\\ll ')),
+  us.samW({ trig = '...' }, t('\\ldots')),
+  us.samW({ trig = '\\ldots.' }, t('\\cdots')),
+  us.samW({ trig = ':..' }, t('\\vdots')),
+  us.samW({ trig = '\\..' }, t('\\ddots')),
+  us.samW({ trig = '~~' }, t('\\sim ')),
+  us.samW({ trig = '~=' }, t('\\approx ')),
+  us.samW({ trig = '+-' }, t('\\pm ')),
+  us.samW({ trig = '-+' }, t('\\mp ')),
+  us.samWr({ trig = '%s*||' }, t(' \\mid ')),
+  us.samW({ trig = '\\\\\\' }, { t('\\setminus ') }),
+  us.samW({ trig = '%%' }, t('\\%')),
+  us.samW({ trig = '##' }, t('\\#')),
+  us.samW({ trig = ': ' }, t('\\colon ')),
+  us.msamW({
     { trig = 'sqrt' },
     { trig = '(%S*)^{2}rt', regTrig = true },
   }, {
@@ -246,57 +246,57 @@ return {
     }),
   }),
 
-  us.samo({ trig = 'abs' }, { t('\\left\\vert '), i(1), t(' \\right\\vert') }),
-  us.samo({ trig = 'lrv' }, { t('\\left\\vert '), i(1), t(' \\right\\vert') }),
-  us.samo({ trig = 'lrb' }, { t('\\left('), i(1), t('\\right)') }),
-  us.samo({ trig = 'lr)' }, { t('\\left('), i(1), t('\\right)') }),
-  us.samo({ trig = 'lr]' }, { t('\\left['), i(1), t('\\right]') }),
-  us.samo({ trig = 'lrB' }, { t('\\left{'), i(1), t('\\right}') }),
-  us.samo({ trig = 'lr}' }, { t('\\left{'), i(1), t('\\right}') }),
-  us.samo({ trig = 'lr>' }, { t('\\left<'), i(1), t('\\right>') }),
-  us.samo(
+  us.samW({ trig = 'abs' }, { t('\\left\\vert '), i(1), t(' \\right\\vert') }),
+  us.samW({ trig = 'lrv' }, { t('\\left\\vert '), i(1), t(' \\right\\vert') }),
+  us.samW({ trig = 'lrb' }, { t('\\left('), i(1), t('\\right)') }),
+  us.samW({ trig = 'lr)' }, { t('\\left('), i(1), t('\\right)') }),
+  us.samW({ trig = 'lr]' }, { t('\\left['), i(1), t('\\right]') }),
+  us.samW({ trig = 'lrB' }, { t('\\left{'), i(1), t('\\right}') }),
+  us.samW({ trig = 'lr}' }, { t('\\left{'), i(1), t('\\right}') }),
+  us.samW({ trig = 'lr>' }, { t('\\left<'), i(1), t('\\right>') }),
+  us.samW(
     { trig = 'norm' },
     { t('\\left\\lVert '), i(1), t(' \\right\\lVert') }
   ),
 
-  us.samor(
+  us.samWr(
     { trig = '(%S+)%s*compl' },
     f(function(_, snip)
       return snip.captures[1] .. '^{C}'
     end, {}, {})
   ),
-  us.samor(
+  us.samWr(
     { trig = '(%S+)%s*inv' },
     f(function(_, snip)
       return snip.captures[1] .. '^{-1}'
     end, {}, {})
   ),
-  us.samor(
+  us.samWr(
     { trig = '(%S+)%s*sq' },
     f(function(_, snip)
       return snip.captures[1] .. '^{2}'
     end, {}, {})
   ),
-  us.samor(
+  us.samWr(
     { trig = '(%S+)%s*cb' },
     f(function(_, snip)
       return snip.captures[1] .. '^{3}'
     end, {}, {})
   ),
-  us.samor(
+  us.samWr(
     { trig = '(%S+)%s*ks' },
     f(function(_, snip)
       return snip.captures[1] .. '^{*}'
     end, {}, {})
   ),
 
-  us.samo({ trig = 'transp' }, t('^{\\intercal}')),
-  us.samor({ trig = '(\\?%w*_*%w*)vv' }, un.sdn(1, '\\vec{', '}')),
-  us.samor({ trig = '(\\?%w*_*%w*)hat' }, un.sdn(1, '\\hat{', '}')),
-  us.samor({ trig = '(\\?%w*_*%w*)bar' }, un.sdn(1, '\\bar{', '}')),
-  us.samor({ trig = '(\\?%w*_*%w*)td' }, un.sdn(1, '\\tilde{', '}')),
-  us.samor({ trig = '(\\?%w*_*%w*)ovl' }, un.sdn(1, '\\overline{', '}')),
-  us.samor({ trig = '(\\?%w*_*%w*)ovs' }, {
+  us.samW({ trig = 'transp' }, t('^{\\intercal}')),
+  us.samWr({ trig = '(\\?%w*_*%w*)vv' }, un.sdn(1, '\\vec{', '}')),
+  us.samWr({ trig = '(\\?%w*_*%w*)hat' }, un.sdn(1, '\\hat{', '}')),
+  us.samWr({ trig = '(\\?%w*_*%w*)bar' }, un.sdn(1, '\\bar{', '}')),
+  us.samWr({ trig = '(\\?%w*_*%w*)td' }, un.sdn(1, '\\tilde{', '}')),
+  us.samWr({ trig = '(\\?%w*_*%w*)ovl' }, un.sdn(1, '\\overline{', '}')),
+  us.samWr({ trig = '(\\?%w*_*%w*)ovs' }, {
     d(1, function(_, snip)
       local text = snip.captures[1]
       if text == nil or not text:match('%S') then

@@ -4,7 +4,7 @@ local ls = require('luasnip')
 local t = ls.text_node
 
 M.cpp_snippets = {
-  us.sc({
+  us.sn({
     trig = '^#include fmt',
     regTrig = true,
     snippetType = 'autosnippet',

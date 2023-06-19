@@ -10,7 +10,7 @@ local f = ls.function_node
 local c = ls.choice_node
 
 M.syntax = {
-  us.msc({
+  us.msn({
     { trig = 'lv' },
     { trig = 'lc' },
     { trig = 'l=' },
@@ -20,7 +20,7 @@ M.syntax = {
     t(' = '),
     i(0, 'value'),
   }),
-  us.msc({
+  us.msn({
     { trig = 'lf' },
     { trig = 'lfn' },
     { trig = 'lfun' },
@@ -36,7 +36,7 @@ M.syntax = {
     i(3),
     t({ '', 'end' }),
   }),
-  us.msc({
+  us.msn({
     { trig = 'fn' },
     { trig = 'fun' },
     { trig = 'func' },
@@ -49,7 +49,7 @@ M.syntax = {
     i(2),
     t({ '', 'end' }),
   }),
-  us.msc({
+  us.msn({
     { trig = 'me' },
     { trig = 'method' },
   }, {
@@ -64,7 +64,7 @@ M.syntax = {
     i(4),
     t({ '', 'end' }),
   }),
-  us.sc({ trig = 'if' }, {
+  us.sn({ trig = 'if' }, {
     t('if '),
     i(1, 'condition'),
     t({ ' then', '' }),
@@ -72,7 +72,7 @@ M.syntax = {
     i(2),
     t({ '', 'end' }),
   }),
-  us.msc({
+  us.msn({
     { trig = 'ife' },
     { trig = 'ifel' },
     { trig = 'ifelse' },
@@ -87,7 +87,7 @@ M.syntax = {
     i(3),
     t({ '', 'end' }),
   }),
-  us.msc({
+  us.msn({
     { trig = 'ifelif' },
     { trig = 'ifelseif' },
   }, {
@@ -103,18 +103,11 @@ M.syntax = {
     i(4),
     t({ '', 'end' }),
   }),
-  us.sc({
-    trig = 'else',
-    snippetType = 'autosnippet',
-  }, {
+  us.san({ trig = 'else' }, {
     t({ 'else', '' }),
     un.idnt(1),
   }),
-  us.sc({
-    trig = '^(%s*)elif',
-    snippetType = 'autosnippet',
-    regTrig = true,
-  }, {
+  us.sanr({ trig = '^(%s*)elif' }, {
     un.idnt(function(_, snip)
       return uf.get_indent_depth(snip.captures[1]) - 1
     end),
@@ -125,17 +118,13 @@ M.syntax = {
       return uf.get_indent_depth(snip.captures[1])
     end),
   }),
-  us.sc({
-    trig = 'else%s*if',
-    regTrig = true,
-    snippetType = 'autosnippet',
-  }, {
+  us.sanr({ trig = 'else%s*if' }, {
     t('elseif '),
     i(1, 'condition'),
     t({ ' then', '' }),
     un.idnt(1),
   }),
-  us.sc({ trig = 'for' }, {
+  us.sn({ trig = 'for' }, {
     t('for '),
     c(1, {
       sn(nil, {
@@ -181,7 +170,7 @@ M.syntax = {
     i(2),
     t({ '', 'end' }),
   }),
-  us.msc({
+  us.msn({
     { trig = 'fr' },
     { trig = 'frange' },
     { trig = 'forr' },
@@ -212,7 +201,7 @@ M.syntax = {
     i(2),
     t({ '', 'end' }),
   }),
-  us.msc({
+  us.msn({
     { trig = 'fp' },
     { trig = 'fps' },
     { trig = 'fpairs' },
@@ -231,7 +220,7 @@ M.syntax = {
     i(4),
     t({ '', 'end' }),
   }),
-  us.msc({
+  us.msn({
     { trig = 'fip' },
     { trig = 'fips' },
     { trig = 'fipairs' },
@@ -250,7 +239,7 @@ M.syntax = {
     i(4),
     t({ '', 'end' }),
   }),
-  us.msc({
+  us.msn({
     { trig = 'wh' },
     { trig = 'while' },
   }, {
@@ -261,27 +250,27 @@ M.syntax = {
     i(2),
     t({ '', 'end' }),
   }),
-  us.sc({ trig = 'do' }, {
+  us.sn({ trig = 'do' }, {
     t({ 'do', '' }),
     un.idnt(1),
     i(1),
     t({ '', 'end' }),
   }),
-  us.msc({
+  us.msn({
     { trig = 'r' },
     { trig = 'rt' },
     { trig = 'ret' },
   }, {
     t('return '),
   }),
-  us.msc({
+  us.msn({
     { trig = 'p' },
   }, {
     t('print('),
     i(1),
     t(')'),
   }),
-  us.msc({
+  us.msn({
     { trig = 'rq' },
     { trig = 'req' },
   }, {
@@ -289,12 +278,12 @@ M.syntax = {
     i(1),
     t(')'),
   }),
-  us.sc({ trig = 'ps' }, {
+  us.sn({ trig = 'ps' }, {
     t('pairs('),
     i(1),
     t(')'),
   }),
-  us.msc({
+  us.msn({
     { trig = 'ip' },
     { trig = 'ips' },
   }, {
@@ -305,7 +294,7 @@ M.syntax = {
 }
 
 M.nvim = {
-  us.sc(
+  us.sn(
     { trig = 'spec' },
     un.fmtad(
       [[
@@ -329,7 +318,7 @@ M.nvim = {
       }
     )
   ),
-  us.msc({
+  us.msn({
     { trig = 'nt' },
     { trig = 'not' },
     { trig = 'noti' },
@@ -348,13 +337,13 @@ M.nvim = {
     }),
     t(')'),
   }),
-  us.sc({ trig = 'api' }, {
+  us.sn({ trig = 'api' }, {
     t('vim.api.nvim_'),
   }),
-  us.sc({ trig = 'vfn' }, {
+  us.sn({ trig = 'vfn' }, {
     t('vim.fn.'),
   }),
-  us.msc({
+  us.msn({
     { trig = 'in' },
     { trig = 'ins' },
     { trig = 'insp' },
@@ -363,7 +352,7 @@ M.nvim = {
     i(1),
     t(')'),
   }),
-  us.msc({
+  us.msn({
     { trig = 'pin' },
     { trig = 'pins' },
     { trig = 'pinsp' },
@@ -374,7 +363,7 @@ M.nvim = {
     i(2),
     t(')'),
   }),
-  us.msc(
+  us.msn(
     {
       { trig = 'pck' },
       { trig = 'pcheck' },
@@ -385,7 +374,7 @@ M.nvim = {
       e = i(2),
     })
   ),
-  us.msc(
+  us.msn(
     {
       common = { priority = 999 },
       { trig = 'ck' },
@@ -396,7 +385,7 @@ M.nvim = {
       v = i(1),
     })
   ),
-  us.msc(
+  us.msn(
     {
       common = { regTrig = true },
       { trig = '(%S*)(%s*)%.%.%s*ck' },

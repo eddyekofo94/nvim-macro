@@ -68,7 +68,11 @@ end
 ---Returns whether the cursor is in a normal zone
 ---@return boolean
 function M.in_normalzone()
-  return not M.in_mathzone() and not M.in_codeblock()
+  if vim.bo.ft == 'markdown' or vim.bo.ft == 'tex' then
+    return not M.in_mathzone() and not M.in_codeblock()
+  end
+  return not M.ts_active()
+    or not M.in_tsnode('comment')() and not M.in_tsnode('string')()
 end
 
 ---Returns whether the cursor is before a pattern
