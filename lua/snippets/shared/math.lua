@@ -8,6 +8,7 @@ local t = ls.text_node
 local i = ls.insert_node
 local c = ls.choice_node
 local d = ls.dynamic_node
+local f = ls.function_node
 
 return {
   us.samor({ trig = '(%a)(%d)' }, {
@@ -214,20 +215,35 @@ return {
   us.samo({ trig = '%%' }, t('\\%')),
   us.samo({ trig = '##' }, t('\\#')),
   us.samo({ trig = ': ' }, t('\\colon ')),
-  us.samor({ trig = '(%[.*%])rt', priority = 999 }, {
-    d(1, function(_, snip)
-      local order = snip.captures[1]
-      return sn(nil, {
-        t('\\sqrt' .. order .. '{'),
+  us.msamo({
+    { trig = 'sqrt' },
+    { trig = '(%S*)^{2}rt', regTrig = true },
+  }, {
+    f(function(_, snip)
+      if not snip.captures or not snip.captures[1] then
+        return ''
+      end
+      if
+        not vim.tbl_contains({ '(', '{', '[', '$' }, snip.captures[1]:sub(-1))
+      then
+        return snip.captures[1] .. ' '
+      end
+      return snip.captures[1]
+    end, {}, {}),
+    c(1, {
+      sn(nil, {
+        t('\\sqrt{'),
         i(1),
         t('}'),
-      })
-    end),
-  }),
-  us.samo({ trig = '/.', priority = 999 }, {
-    t('\\sqrt{'),
-    i(1),
-    t('}'),
+      }),
+      sn(nil, {
+        t('\\sqrt['),
+        i(1),
+        t(']{'),
+        i(2),
+        t('}'),
+      }),
+    }),
   }),
 
   us.samo({ trig = 'abs' }, { t('\\left\\vert '), i(1), t(' \\right\\vert') }),
@@ -243,11 +259,36 @@ return {
     { t('\\left\\lVert '), i(1), t(' \\right\\lVert') }
   ),
 
-  us.samor({ trig = '(%s*)compl' }, t('^{C} ')),
-  us.samor({ trig = '(%s*)inv' }, t('^{-1}')),
-  us.samor({ trig = '(%s*)sq' }, t('^{2}')),
-  us.samor({ trig = '(%s*)cb' }, t('^{3}')),
-  us.samor({ trig = '(%s*)ks' }, t('^{*}')),
+  us.samor(
+    { trig = '(%S+)%s*compl' },
+    f(function(_, snip)
+      return snip.captures[1] .. '^{C}'
+    end, {}, {})
+  ),
+  us.samor(
+    { trig = '(%S+)%s*inv' },
+    f(function(_, snip)
+      return snip.captures[1] .. '^{-1}'
+    end, {}, {})
+  ),
+  us.samor(
+    { trig = '(%S+)%s*sq' },
+    f(function(_, snip)
+      return snip.captures[1] .. '^{2}'
+    end, {}, {})
+  ),
+  us.samor(
+    { trig = '(%S+)%s*cb' },
+    f(function(_, snip)
+      return snip.captures[1] .. '^{3}'
+    end, {}, {})
+  ),
+  us.samor(
+    { trig = '(%S+)%s*ks' },
+    f(function(_, snip)
+      return snip.captures[1] .. '^{*}'
+    end, {}, {})
+  ),
 
   us.samo({ trig = 'transp' }, t('^{\\intercal}')),
   us.samor({ trig = '(\\?%w*_*%w*)vv' }, un.sdn(1, '\\vec{', '}')),
