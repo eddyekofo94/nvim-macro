@@ -385,9 +385,8 @@ M.nvim = {
       v = i(1),
     })
   ),
-  us.msn(
+  us.msnr(
     {
-      common = { regTrig = true },
       { trig = '(%S*)(%s*)%.%.%s*ck' },
       { trig = '(%S*)(%s*)%.%.%s*check' },
     },
