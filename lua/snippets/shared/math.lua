@@ -414,18 +414,23 @@ return {
       sn(nil, {
         t('\\mathrm{min}'),
         t('\\left('),
-        i(1),
+        r(1, 'expr'),
         t('\\right)'),
       }),
       sn(nil, {
         t('\\mathrm{min}_{'),
-        i(1),
+        i(2),
         t('}'),
         t('\\left('),
-        i(2),
+        r(1, 'expr'),
         t('\\right)'),
       }),
-    })
+    }),
+    {
+      stored = {
+        expr = i(1),
+      },
+    }
   ),
   us.sam(
     { trig = 'max', priority = 999 },
@@ -433,18 +438,23 @@ return {
       sn(nil, {
         t('\\mathrm{max}'),
         t('\\left('),
-        i(1),
+        r(1, 'expr'),
         t('\\right)'),
       }),
       sn(nil, {
         t('\\mathrm{max}_{'),
-        i(1),
+        i(2),
         t('}'),
         t('\\left('),
-        i(2),
+        r(1, 'expr'),
         t('\\right)'),
       }),
-    })
+    }),
+    {
+      stored = {
+        expr = i(1),
+      },
+    }
   ),
 
   us.sam({ trig = 'sin', priority = 999 }, {
@@ -543,7 +553,10 @@ return {
         \end{<env>}
       ]],
       {
-        env = c(1, { i(nil, 'equation*'), i(nil, 'equation') }),
+        env = c(1, {
+          i(nil, 'equation*'),
+          i(nil, 'equation'),
+        }),
         idnt = un.idnt(1),
         text = i(2),
       }
