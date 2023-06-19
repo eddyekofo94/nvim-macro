@@ -19,6 +19,30 @@ end
 ---@param _ table LS client, ignored
 ---@param bufnr number buffer handler
 local function setup_keymaps(_, bufnr)
+  ---@param direction 'prev'|'next'
+  ---@param level 'ERROR'|'WARN'|'INFO'|'HINT'
+  ---@return function
+  local function goto_diagnostic(direction, level)
+    return function()
+      vim.diagnostic['goto_' .. direction]({
+        severity = vim.diagnostic.severity[level],
+      })
+    end
+  end
+  ---@param method string LSP method
+  ---@param fn_name string function name, used to index vim.lsp.buf
+  ---@param fallback string fallback keymap
+  ---@return function
+  local function if_supports(method, fn_name, fallback)
+    return function()
+      if supports_method(method, bufnr) then
+        vim.lsp.buf[fn_name]()
+        return '<Ignore>'
+      else
+        return fallback
+      end
+    end
+  end
   -- stylua: ignore start
   vim.keymap.set('n', '<Leader>ca', vim.lsp.buf.code_action,   { buffer = bufnr })
   vim.keymap.set('n', '<Leader>r',  vim.lsp.buf.rename,        { buffer = bufnr })
@@ -27,48 +51,20 @@ local function setup_keymaps(_, bufnr)
   vim.keymap.set('n', '<leader>E',  vim.diagnostic.setloclist, { buffer = bufnr })
   vim.keymap.set('n', '[e',         vim.diagnostic.goto_prev,  { buffer = bufnr })
   vim.keymap.set('n', ']e',         vim.diagnostic.goto_next,  { buffer = bufnr })
+  vim.keymap.set('n', 'gq;',        vim.lsp.buf.format,        { buffer = bufnr })
+  vim.keymap.set('n', 'gq;',        vim.lsp.buf.format,        { buffer = bufnr })
+  vim.keymap.set('n', '[E', goto_diagnostic('prev', 'ERROR'),  { buffer = bufnr })
+  vim.keymap.set('n', ']E', goto_diagnostic('next', 'ERROR'),  { buffer = bufnr })
+  vim.keymap.set('n', '[W', goto_diagnostic('prev', 'WARN'),   { buffer = bufnr })
+  vim.keymap.set('n', '[W', goto_diagnostic('prev', 'WARN'),   { buffer = bufnr })
+  vim.keymap.set('n', ']I', goto_diagnostic('next', 'INFO'),   { buffer = bufnr })
+  vim.keymap.set('n', ']I', goto_diagnostic('next', 'INFO'),   { buffer = bufnr })
+  vim.keymap.set('n', ']H', goto_diagnostic('next', 'HINT'),   { buffer = bufnr })
+  vim.keymap.set('n', ']H', goto_diagnostic('next', 'HINT'),   { buffer = bufnr })
+  vim.keymap.set('n', 'gd', if_supports('textDocument/definition', 'definition', 'gd'),          { buffer = bufnr, expr = true })
+  vim.keymap.set('n', 'gD', if_supports('textDocument/typeDefinition', 'type_definition', 'gD'), { buffer = bufnr, expr = true })
+  vim.keymap.set('n', 'K',  if_supports('textDocument/hover', 'hover', 'K'),                     { buffer = bufnr, expr = true })
   -- stylua: ignore end
-  vim.keymap.set('n', '[E', function()
-    vim.diagnostic.goto_prev({
-      severity = vim.diagnostic.severity.ERROR,
-    })
-  end, { buffer = bufnr })
-  vim.keymap.set('n', ']E', function()
-    vim.diagnostic.goto_next({
-      severity = vim.diagnostic.severity.ERROR,
-    })
-  end, { buffer = bufnr })
-  vim.keymap.set('n', '[W', function()
-    vim.diagnostic.goto_prev({
-      severity = vim.diagnostic.severity.WARN,
-    })
-  end, { buffer = bufnr })
-  vim.keymap.set('n', ']W', function()
-    vim.diagnostic.goto_next({
-      severity = vim.diagnostic.severity.WARN,
-    })
-  end, { buffer = bufnr })
-  vim.keymap.set('n', 'gd', function()
-    if supports_method('textDocument/definition', bufnr) then
-      vim.lsp.buf.definition()
-    else
-      vim.api.nvim_feedkeys('gd', 'in', false)
-    end
-  end, { buffer = bufnr })
-  vim.keymap.set('n', 'gD', function()
-    if supports_method('textDocument/typeDefinition', bufnr) then
-      vim.lsp.buf.type_definition()
-    else
-      vim.api.nvim_feedkeys('gD', 'in', false)
-    end
-  end, { buffer = bufnr })
-  vim.keymap.set('n', 'K', function()
-    if supports_method('textDocument/hover', bufnr) then
-      vim.lsp.buf.hover()
-    else
-      vim.api.nvim_feedkeys('K', 'in', false)
-    end
-  end, { buffer = bufnr })
 end
 
 ---@class lsp_command_parsed_arg_t : parsed_arg_t
