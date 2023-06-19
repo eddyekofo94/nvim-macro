@@ -17,11 +17,10 @@ function! GetMarkdownIndent() abort
 
   " Align to the equal sign of the previous line
   " if the current line starts with '=' or '&='
-  let l:prev_line_eq_pos = l:prev_line =~# '&='
-        \ ? match(l:prev_line, '&=')
-        \ : match(l:prev_line, '=')
-  if l:prev_line_eq_pos >= 0 && l:line =~# '^\s*&\?='
-    return l:prev_line_eq_pos
+  let l:prev_line_trimmed = substitute(l:prev_line, '^\s*', '', '')
+  let l:eq_pos = match(l:prev_line_trimmed, '&\?=')
+  if l:eq_pos >= 0 && l:line =~# '^\s*&\?='
+    return indent(l:prev_lnum) + l:eq_pos
   endif
 
   return indent(v:lnum)
