@@ -9,6 +9,7 @@ local i = ls.insert_node
 local c = ls.choice_node
 local d = ls.dynamic_node
 local f = ls.function_node
+local r = ls.restore_node
 
 return {
   us.samWr({ trig = '(%a)(%d)' }, {
@@ -217,33 +218,29 @@ return {
   us.samW({ trig = ': ' }, t('\\colon ')),
   us.msamW({
     { trig = 'sqrt' },
-    { trig = '(%S*)^{2}rt', regTrig = true },
+    { trig = '^{2}rt' },
   }, {
     f(function(_, snip)
-      if not snip.captures or not snip.captures[1] then
-        return ''
-      end
-      if
-        not vim.tbl_contains({ '(', '{', '[', '$' }, snip.captures[1]:sub(-1))
-      then
-        return snip.captures[1] .. ' '
-      end
-      return snip.captures[1]
+      return snip.trigger == '^{2}rt' and ' ' or ''
     end, {}, {}),
     c(1, {
       sn(nil, {
         t('\\sqrt{'),
-        i(1),
+        r(1, 'expr'),
         t('}'),
       }),
       sn(nil, {
         t('\\sqrt['),
-        i(1),
+        i(2, '3'),
         t(']{'),
-        i(2),
+        r(1, 'expr'),
         t('}'),
       }),
     }),
+  }, {
+    stored = {
+      expr = i(1),
+    },
   }),
 
   us.samW({ trig = 'abs' }, { t('\\left\\vert '), i(1), t(' \\right\\vert') }),
@@ -259,36 +256,11 @@ return {
     { t('\\left\\lVert '), i(1), t(' \\right\\lVert') }
   ),
 
-  us.samWr(
-    { trig = '(%S+)%s*compl' },
-    f(function(_, snip)
-      return snip.captures[1] .. '^{C}'
-    end, {}, {})
-  ),
-  us.samWr(
-    { trig = '(%S+)%s*inv' },
-    f(function(_, snip)
-      return snip.captures[1] .. '^{-1}'
-    end, {}, {})
-  ),
-  us.samWr(
-    { trig = '(%S+)%s*sq' },
-    f(function(_, snip)
-      return snip.captures[1] .. '^{2}'
-    end, {}, {})
-  ),
-  us.samWr(
-    { trig = '(%S+)%s*cb' },
-    f(function(_, snip)
-      return snip.captures[1] .. '^{3}'
-    end, {}, {})
-  ),
-  us.samWr(
-    { trig = '(%S+)%s*ks' },
-    f(function(_, snip)
-      return snip.captures[1] .. '^{*}'
-    end, {}, {})
-  ),
+  us.sambWr({ trig = '%s*ks' }, t('^{*}')),
+  us.sambWr({ trig = '%s*sq' }, t('^{2}')),
+  us.sambWr({ trig = '%s*cb' }, t('^{3}')),
+  us.sambWr({ trig = '%s*inv' }, t('^{-1}')),
+  us.sambWr({ trig = '%s*compl' }, t('^{C}')),
 
   us.samW({ trig = 'transp' }, t('^{\\intercal}')),
   us.samWr({ trig = '(\\?%w*_*%w*)vv' }, un.sdn(1, '\\vec{', '}')),
