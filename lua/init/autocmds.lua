@@ -151,12 +151,25 @@ local autocmds = {
   {
     { 'Signal' },
     {
+      nested = true,
       group = 'SwitchBackground',
       callback = function(info)
+        local hrtime = vim.uv.hrtime()
+        -- Check the last time when a signal is received/sent to avoid
+        -- the infinite loop of
+        -- -> receiving signal
+        -- -> setting bg
+        -- -> sending signals to other nvim instances
+        -- -> receiving signals from other nvim instances
+        -- -> setting bg
+        -- -> ...
+        if vim.g.sig_hrtime and hrtime - vim.g.sig_hrtime < 500000000 then
+          return
+        end
+        vim.g.sig_hrtime = hrtime
         vim.opt.background = info.match == 'SIGUSR1' and 'light' or 'dark'
         vim.g.BACKGROUND = vim.go.background
         vim.cmd.wshada()
-        vim.cmd.doautocmd('ColorScheme') -- reload plugin colorschemes
       end,
     },
   },
@@ -168,9 +181,18 @@ local autocmds = {
       callback = function()
         vim.g.BACKGROUND = vim.go.background
         vim.cmd.wshada()
-        if vim.fn.executable('setbg') == 1 then
+        local hrtime = vim.uv.hrtime()
+        if
+          not vim.g.sig_hrtime
+          or hrtime - vim.g.sig_hrtime >= 500000000
+            and vim.fn.executable('setbg') == 1
+        then
+          vim.g.sig_hrtime = hrtime
           vim.uv.spawn('setbg', {
-            args = { vim.go.background },
+            args = {
+              vim.go.background,
+              '--exclude-nvim-processes=' .. vim.fn.getpid(),
+            },
             stdio = { nil, nil, nil },
           })
         end
