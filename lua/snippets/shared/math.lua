@@ -753,6 +753,16 @@ return {
       { cond_x = i(2, 'X=x'), cond_y = i(1, 'Y=y') }
     )
   ),
+  us.sam(
+    {
+      trig = 'nord',
+      dscr = 'Normal Distribution',
+    },
+    un.fmtad(
+      '\\mathcal{N} \\left(<mean>, <var>\\right)',
+      { mean = i(1, '\\mu'), var = i(2, '\\sigma^2') }
+    )
+  ),
 
   -- Math env
   us.sa({
