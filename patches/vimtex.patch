@@ -1,14 +1,14 @@
-From bbbc175ce53a1e909c3e8d90f93273c7e1c3aaaf Mon Sep 17 00:00:00 2001
+From 8a56d458464e6bcb5f781dcc5546f396a51b26cb Mon Sep 17 00:00:00 2001
 From: bekaboo <18127878294@qq.com>
 Date: Sun, 18 Jun 2023 22:11:57 -0500
 Subject: [PATCH] feat: align equal signs across lines
 
 ---
- indent/tex.vim | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ indent/tex.vim | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/indent/tex.vim b/indent/tex.vim
-index 336ef4a2..3daee046 100644
+index 336ef4a2..8357f4b1 100644
 --- a/indent/tex.vim
 +++ b/indent/tex.vim
 @@ -20,7 +20,7 @@ set cpoptions&vim
@@ -20,17 +20,16 @@ index 336ef4a2..3daee046 100644
  
  " Add standard closing math delimiters to indentkeys
  for s:delim in [
-@@ -46,6 +46,15 @@ function! VimtexIndent(lnum) abort " {{{1
+@@ -46,6 +46,14 @@ function! VimtexIndent(lnum) abort " {{{1
    if l:prev_lnum == 0 | return indent(a:lnum) | endif
    let l:line = s:clean_line(getline(a:lnum))
  
 +  " Align to the equal sign of the previous line
 +  " if the current line starts with '=' or '&='
-+  let l:prev_line_eq_pos = l:prev_line =~# '&='
-+        \ ? match(l:prev_line, '&=')
-+        \ : match(l:prev_line, '=')
-+  if l:prev_line_eq_pos >= 0 && l:line =~# '^\s*&\?='
-+    return l:prev_line_eq_pos
++  let l:prev_line_trimmed = substitute(l:prev_line, '^\s*', '', '')
++  let l:eq_pos = match(l:prev_line_trimmed, '&\?=')
++  if l:eq_pos >= 0 && l:line =~# '^\s*&\?='
++    return indent(l:prev_lnum) + l:eq_pos
 +  endif
 +
    " Check for verbatim modes
