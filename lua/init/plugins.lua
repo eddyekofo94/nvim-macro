@@ -73,7 +73,7 @@ end
 -- Apply and restore local patches on plugin update/install
 local function create_autocmd_applypatch()
   vim.api.nvim_create_autocmd('User', {
-    pattern = { 'LazyInstall', 'LazyUpdate*' },
+    pattern = { 'LazyInstall*', 'LazyUpdate*' },
     group = vim.api.nvim_create_augroup('LazyPatches', {}),
     callback = function(info)
       local patches_path = vim.fn.stdpath('config') .. '/patches'
@@ -84,7 +84,7 @@ local function create_autocmd_applypatch()
           .. patch:gsub('%.patch$', '')
         if vim.loop.fs_stat(plugin_path) then
           if
-            info.match == 'LazyUpdatePre'
+            info.match:match('Pre$')
             and git_dir_execute(plugin_path, { 'diff', '--stat' }).output
               ~= ''
           then
@@ -95,7 +95,7 @@ local function create_autocmd_applypatch()
               '--ignore-space-change',
               patch_path,
             })
-          elseif info.match == 'LazyUpdate' or info.match == 'LazyInstall' then
+          else
             vim.notify('[plugins] applying patch' .. patch_path)
             git_dir_execute(plugin_path, {
               'apply',
