@@ -351,7 +351,7 @@ function winbar_menu_t:add_hl(hl_info)
 end
 
 ---Make a buffer for the menu and set buffer-local keymaps
----Must be called after the popup window is created
+---Must be called after self:eval_win_configs()
 ---Side effect: change self.buf, self.hl_info
 ---@return nil
 function winbar_menu_t:make_buf()
@@ -436,6 +436,24 @@ function winbar_menu_t:make_buf()
   })
 end
 
+---Open the popup window with win configs and opts,
+---must be called after self:make_buf()
+---@return nil
+function winbar_menu_t:open_win()
+  if self.is_opened then
+    return
+  end
+  self.is_opened = true
+
+  self.win = vim.api.nvim_open_win(self.buf, true, self._win_configs)
+  vim.wo[self.win].scrolloff = 0
+  vim.wo[self.win].sidescrolloff = 0
+  vim.wo[self.win].winhl = table.concat({
+    'NormalFloat:WinBarMenuNormalFloat',
+    'FloatBorder:WinBarMenuFloatBorder',
+  }, ',')
+end
+
 ---Override menu options
 ---@param opts winbar_menu_t?
 ---@return nil
@@ -477,10 +495,7 @@ function winbar_menu_t:open(opts)
 
   self:eval_win_configs()
   self:make_buf()
-  self.win = vim.api.nvim_open_win(self.buf, true, self._win_configs)
-  self.is_opened = true
-  vim.wo[self.win].scrolloff = 0
-  vim.wo[self.win].sidescrolloff = 0
+  self:open_win()
   _G.winbar.menus[self.win] = self
   -- Initialize cursor position
   if self._win_configs.focusable ~= false then

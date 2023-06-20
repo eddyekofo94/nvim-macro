@@ -61,9 +61,11 @@ local hlgroups = {
   WinBarIconUISeparator           = { link = 'SpecialChar' },
   WinBarIconUISeparatorMenu       = { link = 'WinBarIconUISeparator' },
   WinBarMenuCurrentContext        = { link = 'PmenuSel' },
+  WinBarMenuFloatBorder           = { link = 'FloatBorder' },
   WinBarMenuHoverEntry            = { link = 'Visual' },
   WinBarMenuHoverIcon             = { reverse = true },
   WinBarMenuHoverSymbol           = { bold = true },
+  WinBarMenuNormalFloat           = { link = 'NormalFloat' },
   WinBarPreview                   = { link = 'Visual' },
 }
 --stylua: ignore end
