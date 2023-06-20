@@ -54,7 +54,7 @@ end
 local function get_char_after()
   local line = vim.api.nvim_get_current_line()
   local col = vim.api.nvim_win_get_cursor(0)[2]
-  return line:sub(col + 1, col + 1)
+  return line:sub(col, col)
 end
 
 return {
