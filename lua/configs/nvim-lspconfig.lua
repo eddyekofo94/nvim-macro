@@ -140,12 +140,10 @@ local function lsp_setup()
       once = true,
       pattern = ft,
       group = groupid,
-      callback = function(info)
+      callback = function()
         if setup_ft(ft) then
-          local bufname = vim.api.nvim_buf_get_name(info.buf)
-          if bufname ~= '' and vim.bo[info.buf].bt == '' then
-            vim.cmd.edit(bufname)
-          end
+          -- Trigger lspconfig filetype autocmds to launch LSP servers
+          vim.cmd('doautocmd Filetype ' .. ft)
         end
       end,
     })
