@@ -59,7 +59,6 @@ function! GetMarkdownIndent() abort
     " if the current line starts with '=' or '&='
     let l:eq_pos =
           \ match(substitute(l:prev_line, '^\s*', '', ''), '&\?=')
-    echo l:eq_pos
     if l:eq_pos >= 0 && l:line =~# '^\s*&\?='
       return indent(l:prev_lnum) + l:eq_pos
     endif
