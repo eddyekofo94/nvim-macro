@@ -1,7 +1,6 @@
 local npairs = require('nvim-autopairs')
 local Rule = require('nvim-autopairs.rule')
 local cond = require('nvim-autopairs.conds')
-local ts_conds = require('nvim-autopairs.ts-conds')
 
 npairs.setup({
   check_ts = true,
@@ -39,11 +38,19 @@ npairs.add_rules({
     end),
 
   Rule('/*', '*/', { 'c', 'cpp' }),
-  Rule('$', '$', { 'markdown', 'tex' })     :with_pair(cond.none()),
-  Rule('*', '*', { 'markdown' })            :with_pair(cond.none()),
-  Rule('\\(', '\\)', { 'tex' })             :with_pair(cond.not_before_text('\\)')),
-  Rule('\\(', '\\)')                        :with_pair(ts_conds.is_ts_node('string')),
-  Rule('\\[', '\\]', { 'tex' })             :with_pair(cond.not_before_text('\\]')),
-  Rule('\\{', '\\}', { 'tex', 'markdown' }) :with_pair(cond.not_before_text('\\}')),
+  Rule('$', '$', { 'markdown', 'tex' })                              :with_pair(cond.none()),
+  Rule('*', '*', { 'markdown' })                                     :with_pair(cond.none()),
+  Rule('\\(', '\\)')                                                 :with_pair(cond.not_before_text('\\)')),
+  Rule('\\(', '\\)', { 'tex' })                                      :with_pair(cond.not_before_text('\\)')),
+  Rule('\\[', '\\]', { 'tex' })                                      :with_pair(cond.not_before_text('\\]')),
+  Rule('\\{', '\\}', { 'tex', 'markdown' })                          :with_pair(cond.not_before_text('\\}')),
+  Rule('\\left(', '\\right)', { 'markdown', 'tex' })                 :with_pair(cond.not_before_text('\\right)')),
+  Rule('\\left[', '\\right]', { 'markdown', 'tex' })                 :with_pair(cond.not_before_text('\\right]')),
+  Rule('\\left{', '\\right}', { 'markdown', 'tex' })                 :with_pair(cond.not_before_text('\\right}')),
+  Rule('\\left<', '\\right>', { 'markdown', 'tex' })                 :with_pair(cond.not_before_text('\\right>')),
+  Rule('\\left\\lfloor ', ' \\right\\rfloor', { 'markdown', 'tex' }) :with_pair(cond.not_before_text('\\right\\rfloor)')),
+  Rule('\\left\\lceil ', ' \\right\\rceil', { 'markdown', 'tex' })   :with_pair(cond.not_before_text('\\right\\rceil)')),
+  Rule('\\left\\vert ', ' \\right\\vert', { 'markdown', 'tex' })     :with_pair(cond.not_before_text('\\right\\vert')),
+  Rule('\\left\\lVert ', ' \\right\\lVert', { 'markdown', 'tex' })   :with_pair(cond.not_before_text('\\right\\lVert')),
 })
 -- stylua: ignore end
