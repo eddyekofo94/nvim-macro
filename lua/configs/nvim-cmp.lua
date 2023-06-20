@@ -171,28 +171,25 @@ local fuzzy_path_option = {
 cmp.setup({
   formatting = {
     fields = { 'kind', 'abbr' },
-    format = function(entry, vim_item)
-      -- Use a terminal icon for completions from cmp-cmdline
-      if entry.source.name == 'cmdline' then
-        vim_item.kind = icons.Terminal
-      elseif entry.source.name == 'calc' then
-        vim_item.kind = icons.Calculator
-      else
-        vim_item.kind = icons[vim_item.kind]
-      end
+    format = function(entry, cmp_item)
+      ---@type table<string, string> override icons with `entry.source.name`
+      local icon_override = {
+        cmdline = icons.Terminal,
+        calc = icons.Calculator,
+      }
+      cmp_item.kind = icon_override[entry.source.name] or icons[cmp_item.kind]
       -- Max and min width of the popup menu
-      if #vim_item.abbr > 40 then
-        vim_item.abbr = string.format(
+      if #cmp_item.abbr > 40 then
+        cmp_item.abbr = string.format(
           '%s…%s',
-          string.sub(vim_item.abbr, 1, 29),
-          string.sub(vim_item.abbr, -10, -1)
+          string.sub(cmp_item.abbr, 1, 29),
+          string.sub(cmp_item.abbr, -10, -1)
         )
-      elseif #vim_item.abbr < vim.go.pumwidth then
-        vim_item.abbr = vim_item.abbr
-          .. string.rep(' ', vim.go.pumwidth - #vim_item.abbr)
+      elseif #cmp_item.abbr < vim.go.pumwidth then
+        cmp_item.abbr = cmp_item.abbr
+          .. string.rep(' ', vim.go.pumwidth - #cmp_item.abbr)
       end
-
-      return vim_item
+      return cmp_item
     end,
   },
   experimental = { ghost_text = { hl_group = 'Ghost' } },
