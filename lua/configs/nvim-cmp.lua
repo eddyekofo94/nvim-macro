@@ -146,6 +146,19 @@ local function entry_filter(entry, _)
   }, entry.completion_item.label)
 end
 
+---Filter out unwanted entries for fuzzy_path source
+---@param entry cmp.Entry
+---@param context cmp.Context
+local function entry_filter_fuzzy_path(entry, context)
+  return entry_filter(entry, context)
+    -- Don't show fuzzy-path entries in markdown/tex mathzone
+    and not (
+      vim.g.loaded_vimtex == 1
+      and (vim.bo.ft == 'markdown' or vim.bo.ft == 'tex')
+      and vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
+    )
+end
+
 ---Options for fuzzy_path source
 local fuzzy_path_option = {
   fd_timeout_msec = 100,
@@ -354,7 +367,7 @@ cmp.setup({
     { name = 'spell', max_item_count = 8 },
     {
       name = 'fuzzy_path',
-      entry_filter = entry_filter,
+      entry_filter = entry_filter_fuzzy_path,
       option = fuzzy_path_option,
     },
     { name = 'calc' },
@@ -399,7 +412,7 @@ cmp.setup.cmdline(':', {
     {
       name = 'fuzzy_path',
       group_index = 1,
-      entry_filter = entry_filter,
+      entry_filter = entry_filter_fuzzy_path,
       option = fuzzy_path_option,
     },
     { name = 'cmdline', group_index = 2 },
@@ -412,7 +425,7 @@ cmp.setup.cmdline('@', {
     {
       name = 'fuzzy_path',
       group_index = 1,
-      entry_filter = entry_filter,
+      entry_filter = entry_filter_fuzzy_path,
       option = fuzzy_path_option,
     },
     { name = 'cmdline', group_index = 2 },
