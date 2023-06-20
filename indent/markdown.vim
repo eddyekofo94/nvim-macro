@@ -73,7 +73,7 @@ function! GetMarkdownIndent() abort
     let l:order = s:get_list_order(v:lnum)
     if l:order > 0
       let [l:prev_item_order, l:prev_item_lnum] = s:prev_ordered_item(v:lnum)
-      return l:order == l:prev_item_order + 1
+      return l:order > l:prev_item_order
             \ ? indent(l:prev_item_lnum)
             \ : indent(l:prev_item_lnum) + l:sw
     endif
