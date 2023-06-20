@@ -49,7 +49,6 @@ function! GetMarkdownIndent() abort
   let l:line = getline(v:lnum)
   let l:prev_lnum = prevnonblank(v:lnum - 1)
   let l:prev_line = getline(l:prev_lnum)
-  let l:prev_line_trimmed = substitute(l:prev_line, '^\s*', '', '')
   let l:sw = shiftwidth()
   if l:prev_lnum == 0
       return indent(v:lnum)
@@ -58,9 +57,20 @@ function! GetMarkdownIndent() abort
   if s:in_mathzone()
     " Align to the equal sign of the previous line
     " if the current line starts with '=' or '&='
-    let l:eq_pos = match(l:prev_line_trimmed, '&\?=')
+    let l:eq_pos =
+          \ match(substitute(l:prev_line, '^\s*', '', ''), '&\?=')
+    echo l:eq_pos
     if l:eq_pos >= 0 && l:line =~# '^\s*&\?='
       return indent(l:prev_lnum) + l:eq_pos
+    endif
+    " Add extra indent if previous line starts with '=' or '&='
+    " and has no trailing double backslash '\\'
+    if l:prev_line =~# '^\s*&\?=' && l:prev_line !~# '\\\\\s*$'
+      return indent(l:prev_lnum) + l:sw
+    endif
+    " Reduce indent if previous line ends with '\\' but does not contain '='
+    if l:prev_line !~# '=' && l:prev_line =~# '\\\\\s*$'
+      return indent(l:prev_lnum) - l:sw
     endif
   endif
 
@@ -88,14 +98,13 @@ function! GetMarkdownIndent() abort
     " ---------------------------------------------
     if l:prev_lnum == v:lnum - 1
       " Align unordered list multi-line items
-      let l:list_extra_indent =
-            \ match(l:prev_line_trimmed, '\(^[-*+]\s*\)\@<=\S')
+      let l:list_extra_indent = match(l:prev_line, '\(^\s*[-*+]\s*\)\@<=\S')
       if l:list_extra_indent >= 0
         return indent(l:prev_lnum) + l:list_extra_indent
       endif
       " Align ordered list multi-line items
       let l:ordered_list_extra_indent =
-            \ match(l:prev_line_trimmed, '\(^\d\+\.\s*\)\@<=\S')
+            \ match(l:prev_line, '\(^\s*\d\+\.\s*\)\@<=\S')
       if l:ordered_list_extra_indent >= 0
         return indent(l:prev_lnum) + l:ordered_list_extra_indent
       endif
