@@ -58,6 +58,7 @@ opt.fillchars = {
   foldclose = '',
   foldsep   = ' ',
   diff      = '╱',
+  eob       = ' ',
 }
 
 opt.ts          = 4
