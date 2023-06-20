@@ -238,34 +238,29 @@ cmp.setup({
         if luasnip.expandable() then
           luasnip.expand()
         elseif luasnip.jumpable(1) then
-          -- Jump if in select mode
-          if vim.fn.match(vim.fn.mode(), '[sS\x13].*') >= 0 then
-            luasnip.jump(1)
-          else -- not in select mode
-            local buf = vim.api.nvim_get_current_buf()
-            local cursor = vim.api.nvim_win_get_cursor(0)
-            local current = luasnip.session.current_nodes[buf]
-            if node_has_length(current) then
-              if
-                cursor_at_end_of_range({ current:get_buf_position() }, cursor)
-              then
-                luasnip.jump(1)
-              else
-                fallback()
-              end
-            else -- node has zero length
-              local parent = node_find_parent(current)
-              local range = parent and { parent:get_buf_position() }
-              local tabout_dest = tabout.get_jump_pos('<Tab>')
-              if
-                tabout_dest
-                and range
-                and cursor_in_range(range, tabout_dest)
-              then
-                tabout.do_key('<Tab>')
-              else
-                luasnip.jump(1)
-              end
+          local buf = vim.api.nvim_get_current_buf()
+          local cursor = vim.api.nvim_win_get_cursor(0)
+          local current = luasnip.session.current_nodes[buf]
+          if node_has_length(current) then
+            if
+              cursor_at_end_of_range({ current:get_buf_position() }, cursor)
+            then
+              luasnip.jump(1)
+            else
+              fallback()
+            end
+          else -- node has zero length
+            local parent = node_find_parent(current)
+            local range = parent and { parent:get_buf_position() }
+            local tabout_dest = tabout.get_jump_pos('<Tab>')
+            if
+              tabout_dest
+              and range
+              and cursor_in_range(range, tabout_dest)
+            then
+              tabout.do_key('<Tab>')
+            else
+              luasnip.jump(1)
             end
           end
         else
