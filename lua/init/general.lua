@@ -10,6 +10,7 @@ opt.eb             = false
 opt.foldlevelstart = 99
 opt.guifont        = 'JetbrainsMono Nerd Font:h13'
 opt.laststatus     = 3
+opt.showmode       = false
 opt.mouse          = 'a'
 opt.mousemoveevent = true
 opt.number         = true
