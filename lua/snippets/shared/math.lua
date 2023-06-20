@@ -528,40 +528,83 @@ return {
   }),
   us.sam(
     { trig = 'aln' },
-    un.fmtad(
-      [[
+    c(1, {
+      un.fmtad(
+        [[
         \begin{<env>}
         <idnt><text>
         \end{<env>}
-      ]],
-      {
-        env = c(1, {
-          i(nil, 'aligned'),
-          i(nil, 'align*'),
-          i(nil, 'align'),
-        }),
-        idnt = un.idnt(1),
-        text = i(2),
-      }
-    )
+        ]],
+        {
+          env = t('aligned'),
+          idnt = un.idnt(1),
+          text = r(1, 'text'),
+        }
+      ),
+      un.fmtad(
+        [[
+        \begin{<env>}
+        <idnt><text>
+        \end{<env>}
+        ]],
+        {
+          env = t('align*'),
+          idnt = un.idnt(1),
+          text = r(1, 'text'),
+        }
+      ),
+      un.fmtad(
+        [[
+        \begin{<env>}
+        <idnt><text>
+        \end{<env>}
+        ]],
+        {
+          env = t('align'),
+          idnt = un.idnt(1),
+          text = r(1, 'text'),
+        }
+      ),
+    }),
+    {
+      stored = {
+        text = i(1),
+      },
+    }
   ),
   us.sam(
     { trig = 'eqt' },
-    un.fmtad(
-      [[
+    c(1, {
+      un.fmtad(
+        [[
         \begin{<env>}
         <idnt><text>
         \end{<env>}
-      ]],
-      {
-        env = c(1, {
-          i(nil, 'equation*'),
-          i(nil, 'equation'),
-        }),
-        idnt = un.idnt(1),
-        text = i(2),
-      }
-    )
+        ]],
+        {
+          env = t('equation'),
+          idnt = un.idnt(1),
+          text = r(1, 'text'),
+        }
+      ),
+      un.fmtad(
+        [[
+        \begin{<env>}
+        <idnt><text>
+        \end{<env>}
+        ]],
+        {
+          env = t('equation*'),
+          idnt = un.idnt(1),
+          text = r(1, 'text'),
+        }
+      ),
+    }),
+    {
+      stored = {
+        text = i(1),
+      },
+    }
   ),
   us.sam({ trig = 'case' }, {
     t({ '\\begin{cases}', '' }),
@@ -788,24 +831,60 @@ return {
         * conds.next_line_matches('^%s*%$%$%s*$'),
       -- stylua: ignore end
     },
-    un.fmtad(
-      [[
-        <idnt>\begin{<env>}
-        <idnt><idnt><text> \\<i>
-        <idnt>\end{<env>}
-      ]],
-      {
-        idnt = un.idnt(1),
-        env = c(1, {
-          i(nil, 'aligned'),
-          i(nil, 'align*'),
-          i(nil, 'align'),
-        }),
-        text = f(function(_, snip)
-          return vim.trim(snip.captures[1]):gsub('&?=', '&=')
-        end, {}, {}),
-        i = i(2),
-      }
-    )
+    c(1, {
+      un.fmtad(
+        [[
+          <idnt>\begin{<env>}
+          <idnt><idnt><text> \\
+          <idnt><idnt><i>
+          <idnt>\end{<env>}
+        ]],
+        {
+          idnt = un.idnt(1),
+          env = t('aligned'),
+          text = f(function(_, parent)
+            return vim.trim(parent.snippet.captures[1]):gsub('&?=', '&=')
+          end, {}, {}),
+          i = r(1, 'additional'),
+        }
+      ),
+      un.fmtad(
+        [[
+          <idnt>\begin{<env>}
+          <idnt><idnt><text> \\
+          <idnt><idnt><i>
+          <idnt>\end{<env>}
+        ]],
+        {
+          idnt = un.idnt(1),
+          env = t('align*'),
+          text = f(function(_, parent)
+            return vim.trim(parent.snippet.captures[1]):gsub('&?=', '&=')
+          end, {}, {}),
+          i = r(1, 'additional'),
+        }
+      ),
+      un.fmtad(
+        [[
+          <idnt>\begin{<env>}
+          <idnt><idnt><text> \\
+          <idnt><idnt><i>
+          <idnt>\end{<env>}
+        ]],
+        {
+          idnt = un.idnt(1),
+          env = t('align'),
+          text = f(function(_, parent)
+            return vim.trim(parent.snippet.captures[1]):gsub('&?=', '&=')
+          end, {}, {}),
+          i = r(1, 'additional'),
+        }
+      ),
+    }),
+    {
+      stored = {
+        additional = i(1),
+      },
+    }
   ),
 }
