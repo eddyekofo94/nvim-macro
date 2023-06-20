@@ -87,6 +87,7 @@ favorite package manager:
 - Rust: install [Rust Analyzer](https://rust-analyzer.github.io/)
 - LaTeX: install [TexLab](https://github.com/latex-lsp/texlab)
 - VimL: install [VimLS](https://github.com/iamcco/vim-language-server)
+- Markdown: install [Marksman](https://github.com/artempyanykh/marksman)
 
 To add support for other languages, install corresponding LS manually and
 append the language and its language server to `M.langs` in [lua/utils/static.lua](https://github.com/Bekaboo/nvim/blob/master/lua/utils/static.lua)
@@ -330,7 +331,7 @@ and it should work out of the box.
 
 ### Default Modules and Plugins of Choice
 
-Total # of plugins: 49 (package manager included).
+Total # of plugins: 48 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -357,7 +358,6 @@ Total # of plugins: 49 (package manager included).
 - **Markup**
     - [vimtex](https://github.com/lervag/vimtex)
     - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
-    - [zk-nvim](https://github.com/mickael-menu/zk-nvim)
     - [vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
 - **Editor**
     - [nvim-surround](https://github.com/kylechui/nvim-surround)

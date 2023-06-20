@@ -59,6 +59,9 @@ M.langs = setmetatable({
     ts = 'make',
     ft = 'make',
   },
+  markdown = {
+    lsp_server = 'marksman',
+  },
   python = {
     ts = 'python',
     ft = 'python',
