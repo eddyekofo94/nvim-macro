@@ -341,8 +341,11 @@ return {
       }
     )
   ),
+  us.msam({
+    { trig = 'prop' },
+    { trig = 'oc' },
+  }, t('\\propto ')),
   us.sam({ trig = '\\in f' }, t('\\infty')),
-  us.sam({ trig = 'prop' }, t('\\propto ')),
   us.sam({ trig = 'deg' }, t('\\degree')),
   us.sam({ trig = 'ang' }, t('\\angle ')),
   us.sam({ trig = 'mcal' }, { t('\\mathcal{'), i(1), t('}') }),
@@ -490,6 +493,11 @@ return {
   }),
   us.sam({ trig = 'sc' }, {
     t('\\mathrm{sinc}\\left('),
+    i(1),
+    t('\\right)'),
+  }),
+  us.sam({ trig = 'exp' }, {
+    t('\\mathrm{exp}\\left('),
     i(1),
     t('\\right)'),
   }),
