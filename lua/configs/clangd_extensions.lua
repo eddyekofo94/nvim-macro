@@ -4,7 +4,7 @@ local default_config = require('configs.lsp-server-configs.shared.default')
 require('clangd_extensions').setup({
   server = default_config,
   extensions = {
-    autoSetHints = true,
+    autoSetHints = false,
     inlay_hints = {
       only_current_line = true,
       highlight = 'LspInlayHint',
