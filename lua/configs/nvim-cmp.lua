@@ -228,9 +228,10 @@ cmp.setup({
         if luasnip.expandable() then
           luasnip.expand()
         elseif luasnip.jumpable(1) then
-          if luasnip.choice_active() then
+          -- Jump if in select mode
+          if vim.fn.match(vim.fn.mode(), '[sS\x13].*') >= 0 then
             luasnip.jump(1)
-          else -- not in choice node
+          else -- not in select mode
             local buf = vim.api.nvim_get_current_buf()
             local cursor = vim.api.nvim_win_get_cursor(0)
             local current = luasnip.session.current_nodes[buf]
