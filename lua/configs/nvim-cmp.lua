@@ -125,11 +125,10 @@ local function jump_to_closer(snip_dest, tabout_dest, direction)
   if not dest then
     return false
   end
-  -- prefer to jump to the snippet if destination is the same
-  if dest == snip_dest then
-    luasnip.jump(direction)
+  if vim.deep_equal(dest, tabout_dest) then
+    tabout.do_key(direction == 1 and '<Tab>' or '<S-Tab>')
   else
-    vim.api.nvim_win_set_cursor(0, dest)
+    luasnip.jump(direction)
   end
   return true
 end
