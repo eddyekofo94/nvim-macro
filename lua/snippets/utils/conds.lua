@@ -118,4 +118,34 @@ function M.at_line_end()
   return vim.api.nvim_win_get_cursor(0)[2] == #vim.api.nvim_get_current_line()
 end
 
+---Returns whether the previous line matches a pattern
+---@param pattern string lua pattern
+---@return snip_cond_t
+function M.prev_line_matches(pattern)
+  return lsconds.make_condition(function()
+    local lnum = vim.fn.line('.')
+    if lnum <= 1 then
+      return false
+    end
+    return vim.api
+      .nvim_buf_get_lines(0, lnum - 2, lnum - 1, true)[1]
+      :match(pattern) ~= nil
+  end)
+end
+
+---Returns whether the next line matches a pattern
+---@param pattern string lua pattern
+---@return snip_cond_t
+function M.next_line_matches(pattern)
+  return lsconds.make_condition(function()
+    local lnum = vim.fn.line('.')
+    if lnum >= vim.fn.line('$') then
+      return false
+    end
+    return vim.api
+      .nvim_buf_get_lines(0, lnum, lnum + 1, true)[1]
+      :match(pattern) ~= nil
+  end)
+end
+
 return M

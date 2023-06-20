@@ -1,6 +1,7 @@
 local uf = require('snippets.utils.funcs')
 local un = require('snippets.utils.nodes')
 local us = require('snippets.utils.snips')
+local conds = require('snippets.utils.conds')
 local ls = require('luasnip')
 local ms = ls.multi_snippet
 local sn = ls.snippet_node
@@ -775,4 +776,36 @@ return {
     i(0),
     t('$'),
   }),
+  us.sar(
+    {
+      trig = '^(.*)\\\\',
+      condition = conds.in_mathzone
+        * conds.prev_line_matches('^%s*%$%$%s*$')
+        * conds.next_line_matches('^%s*%$%$%s*$'),
+      -- stylua: ignore start
+      show_condition = conds.in_mathzone
+        * conds.prev_line_matches('^%s*%$%$%s*$')
+        * conds.next_line_matches('^%s*%$%$%s*$'),
+      -- stylua: ignore end
+    },
+    un.fmtad(
+      [[
+        <idnt>\begin{<env>}
+        <idnt><idnt><text> \\<i>
+        <idnt>\end{<env>}
+      ]],
+      {
+        idnt = un.idnt(1),
+        env = c(1, {
+          i(nil, 'aligned'),
+          i(nil, 'align*'),
+          i(nil, 'align'),
+        }),
+        text = f(function(_, snip)
+          return vim.trim(snip.captures[1]):gsub('&?=', '&=')
+        end, {}, {}),
+        i = i(2),
+      }
+    )
+  ),
 }
