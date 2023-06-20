@@ -97,9 +97,9 @@ function! GetMarkdownIndent() abort
     " ---------------------------------------------
     if l:prev_lnum == v:lnum - 1
       " Align unordered list multi-line items
-      let l:list_extra_indent = match(l:prev_line, '\(^\s*[-*+]\s*\)\@<=\S')
-      if l:list_extra_indent >= 0
-        return indent(l:prev_lnum) + l:list_extra_indent
+      let l:prev_line_char_pos = match(l:prev_line, '\(^\s*[-*+]\s*\)\@<=\S')
+      if l:prev_line_char_pos >= 0
+        return l:prev_line_char_pos
       endif
       " Align ordered list multi-line items
       let l:ordered_list_extra_indent =
