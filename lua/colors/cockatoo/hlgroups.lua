@@ -123,6 +123,7 @@ return {
   LspReferenceWrite           = { link = 'LspReferenceText' },
   LspSignatureActiveParameter = { link = 'IncSearch' },
   LspInfoBorder               = { link = 'FloatBorder' },
+  LspInlayHint                = { link = 'DiagnosticVirtualTextHint' },
 
   -- Diagnostic highlighting
   DiagnosticOK               = { fg = plt.tea },

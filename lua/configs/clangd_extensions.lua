@@ -7,7 +7,7 @@ require('clangd_extensions').setup({
     autoSetHints = true,
     inlay_hints = {
       only_current_line = true,
-      highlight = 'DiagnosticVirtualTextHint',
+      highlight = 'LspInlayHint',
     },
     ast = {
       role_icons = {
