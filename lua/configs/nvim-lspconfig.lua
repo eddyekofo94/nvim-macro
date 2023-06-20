@@ -1,4 +1,5 @@
 local static = require('utils.static')
+local server_configs = require('configs.lsp-server-configs')
 
 ---Customize LSP floating window border
 local function lspconfig_floating_win()
@@ -112,19 +113,6 @@ local function lspconfig_goto_handers()
   end
 end
 
----Get LSP server default config from lspconfig
----@param server_name string LSP server name
----@return table config
-local function get_server_config(server_name)
-  local status, config =
-    pcall(require, 'configs.lsp-server-configs.' .. server_name)
-  if not status then
-    return require('configs.lsp-server-configs.shared.default')
-  else
-    return config
-  end
-end
-
 ---Setup all LSP servers
 local function lsp_setup()
   local lspconfig = require('lspconfig')
@@ -138,7 +126,7 @@ local function lsp_setup()
       ft_list[ft] = nil
       local server_name = static.langs[ft].lsp_server
       if server_name then
-        lspconfig[server_name].setup(get_server_config(server_name))
+        lspconfig[server_name].setup(server_configs[server_name])
         return true
       end
     end

@@ -1,5 +1,3 @@
-local default_config = require('configs.lsp-server-configs.shared.default')
-
 ---Get the path to a config file
 ---@param app string
 ---@return string
@@ -36,7 +34,7 @@ local function inside_nvim_runtime_paths(path)
   return false
 end
 
-return vim.tbl_deep_extend('force', default_config, {
+return {
   settings = {
     Lua = {
       completion = {
@@ -94,4 +92,4 @@ return vim.tbl_deep_extend('force', default_config, {
       })
     end
   end,
-})
+}
