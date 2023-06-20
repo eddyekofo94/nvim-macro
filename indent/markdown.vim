@@ -29,14 +29,14 @@ function s:prev_ordered_item(lnum) abort
   let l:lnum = prevnonblank(a:lnum - 1)
   let l:indent = indent(l:lnum)
   while l:lnum >= 1
-    let line = getline(l:lnum)
+    let l:line = getline(l:lnum)
     let l:order = s:get_list_order(l:lnum)
     if l:order > 0
       return [l:order, l:lnum]
     endif
     let l:lnum = prevnonblank(l:lnum - 1)
     let l:new_indent = indent(l:lnum)
-    if l:new_indent < l:indent
+    if l:new_indent <= l:indent
       let l:indent = l:new_indent
     else
       break
@@ -77,17 +77,28 @@ function! GetMarkdownIndent() abort
             \ ? indent(l:prev_item_lnum)
             \ : indent(l:prev_item_lnum) + l:sw
     endif
-    " Align unordered list multi-line items
-    let l:list_extra_indent =
-          \ match(l:prev_line_trimmed, '\(^[-*+]\s*\)\@<=\S')
-    if l:list_extra_indent >= 0
-      return indent(l:prev_lnum) + l:list_extra_indent
-    endif
-    " Align ordered list multi-line items
-    let l:ordered_list_extra_indent =
-          \ match(l:prev_line_trimmed, '\(^\d\+\.\s*\)\@<=\S')
-    if l:ordered_list_extra_indent >= 0
-      return indent(l:prev_lnum) + l:ordered_list_extra_indent
+    " Only align multi-line list items if adjacent previous line is non-empty
+    " ---------------------------------------------
+    " 1234. aaa-bbb
+    "       ccc <- should align with the 'aaa'
+    " ---------------------------------------------
+    " 5678. ddd
+    "
+    "     eee <- should not align with 'ddd'
+    " ---------------------------------------------
+    if l:prev_lnum == v:lnum - 1
+      " Align unordered list multi-line items
+      let l:list_extra_indent =
+            \ match(l:prev_line_trimmed, '\(^[-*+]\s*\)\@<=\S')
+      if l:list_extra_indent >= 0
+        return indent(l:prev_lnum) + l:list_extra_indent
+      endif
+      " Align ordered list multi-line items
+      let l:ordered_list_extra_indent =
+            \ match(l:prev_line_trimmed, '\(^\d\+\.\s*\)\@<=\S')
+      if l:ordered_list_extra_indent >= 0
+        return indent(l:prev_lnum) + l:ordered_list_extra_indent
+      endif
     endif
   endif
 
