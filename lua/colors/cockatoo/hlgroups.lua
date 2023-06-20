@@ -24,7 +24,7 @@ return {
   DiffDelete         = { fg = plt.wine, bg = plt.wine_blend },
   DiffRemoved        = { fg = plt.scarlet, bg = plt.wine_blend },
   DiffText           = { bg = plt.lavender_blend },
-  Directory          = { fg = plt.pigeon },
+  Directory          = { fg = plt.yellow },
   EndOfBuffer        = { fg = plt.iron },
   ErrorMsg           = { fg = plt.scarlet },
   FoldColumn         = { fg = plt.steel },
