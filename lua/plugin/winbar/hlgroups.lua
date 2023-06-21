@@ -17,7 +17,7 @@ local hlgroups = {
   WinBarIconKindEnumMember        = { link = 'CmpItemKindEnumMember' },
   WinBarIconKindEvent             = { link = 'CmpItemKindEvent' },
   WinBarIconKindField             = { link = 'CmpItemKindField' },
-  WinBarIconKindFile              = { link = 'Directory' },
+  WinBarIconKindFile              = { link = 'Field' },
   WinBarIconKindFolder            = { link = 'Directory' },
   WinBarIconKindForStatement      = { link = 'Repeat' },
   WinBarIconKindFunction          = { link = 'Function' },
