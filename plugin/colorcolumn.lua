@@ -120,10 +120,10 @@ end
 ---Get background color in hex
 ---@param hlgroup_name string
 ---@param field string 'foreground' or 'background'
----@param fallback string|nil fallback color in hex, default to '#000000'
+---@param fallback string|nil fallback color in hex, default to '#000000' if &bg is 'dark' and '#FFFFFF' if &bg is 'light'
 ---@return string hex color
 local function get_hl(hlgroup_name, field, fallback)
-  fallback = fallback or '#000000'
+  fallback = fallback or vim.opt.bg == 'dark' and '#000000' or '#FFFFFF'
   local has_hlgroup, hlgroup =
     pcall(vim.api.nvim_get_hl, 0, { name = hlgroup_name })
   if has_hlgroup and hlgroup[field] then
