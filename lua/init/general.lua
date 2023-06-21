@@ -27,6 +27,9 @@ opt.undofile       = true
 opt.updatetime     = 10
 opt.vb             = true
 opt.wrap           = false
+opt.linebreak      = true
+opt.breakindent    = true
+opt.smoothscroll   = true
 opt.completeopt    = 'menuone'
 opt.conceallevel   = 2
 -- stylua: ignore end
