@@ -278,15 +278,24 @@ local autocmds = {
     },
   },
   {
+    { 'WinLeave' },
+    {
+      group = 'AutoHlCursorLine',
+      command = 'let g:prev_win = win_getid()',
+    },
+  },
+  {
     { 'BufWinEnter', 'WinEnter', 'InsertLeave' },
     {
       group = 'AutoHlCursorLine',
       callback = function()
         vim.defer_fn(function()
           local winhl = vim.opt_local.winhl:get()
+          -- Restore CursorLine and CursorColumn for current window
+          -- if diff is not and not in inert/replace/select mode
           if
-            (winhl['CursorLine'] or winhl['CursorColumn'])
-            and not vim.wo.diff
+            not vim.wo.diff
+            and (winhl['CursorLine'] or winhl['CursorColumn'])
             and vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
           then
             vim.opt_local.winhl:remove({
@@ -294,12 +303,29 @@ local autocmds = {
               'CursorColumn',
             })
           end
+          -- Conceal cursor line and cursor column in the previous window
+          -- if current window is not floating window and contains a normal buf
+          local current_win = vim.api.nvim_get_current_win()
+          if
+            vim.g.prev_win
+            and vim.g.prev_win ~= current_win
+            and vim.api.nvim_win_is_valid(vim.g.prev_win)
+            and not vim.api.nvim_win_get_config(current_win).zindex
+            and vim.bo[vim.api.nvim_win_get_buf(current_win)].bt == ''
+          then
+            vim.api.nvim_win_call(vim.g.prev_win, function()
+              vim.opt_local.winhl:append({
+                CursorLine = '',
+                CursorColumn = '',
+              })
+            end)
+          end
         end, 10)
       end,
     },
   },
   {
-    { 'WinLeave', 'InsertEnter' },
+    { 'InsertEnter' },
     {
       group = 'AutoHlCursorLine',
       callback = function()
