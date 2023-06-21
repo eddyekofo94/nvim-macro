@@ -31,7 +31,7 @@ return {
   Folded             = { fg = plt.steel, bg = plt.ocean },
   FloatBorder        = { fg = plt.smoke, bg = plt.ocean },
   FloatShadow        = { bg = plt.shadow, blend = 70 },
-  FloatShadowThrough = { bg = plt.shadow, blend = 100 },
+  FloatShadowThrough = { link = 'None' },
   HealthSuccess      = { fg = plt.tea },
   Search             = { bg = plt.thunder },
   IncSearch          = { fg = plt.black, bg = plt.orange, bold = true },
