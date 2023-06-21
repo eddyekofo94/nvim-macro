@@ -329,7 +329,7 @@ return {
   CmpItemKindStruct      = { link = 'Type' },
   CmpItemKindEvent       = { fg = plt.flashlight },
   CmpItemKindInterface   = { fg = plt.flashlight },
-  CmpItemKindFile        = { fg = plt.smoke },
+  CmpItemKindFile        = { link = 'DevIconDefault' },
   CmpItemKindFolder      = { link = 'Directory' },
   CmpItemKindUnit        = { fg = plt.cerulean },
   CmpItemKind            = { fg = plt.smoke },
