@@ -26,7 +26,7 @@ function markdown_heading_symbol_t:new(opts)
 end
 
 ---@class markdown_heading_symbols_parsed_list_t
----@field end { lnum: integer, inside_code_block: boolean }
+---@field end { lnum: integer, in_codeblock: boolean }
 ---@field symbols markdown_heading_symbol_t[]
 local markdown_heading_symbols_parsed_list_t = {}
 markdown_heading_symbols_parsed_list_t.__index =
@@ -37,7 +37,7 @@ markdown_heading_symbols_parsed_list_t.__index =
 function markdown_heading_symbols_parsed_list_t:new(opts)
   return setmetatable(
     vim.tbl_deep_extend('force', {
-      ['end'] = { lnum = 0, inside_code_block = false },
+      ['end'] = { lnum = 0, in_codeblock = false },
       symbols = {},
     }, opts or {}),
     self
@@ -66,17 +66,17 @@ local function parse_buf(buf, lnum_end, incremental)
   if not incremental then
     lnum_start = 0
     symbols_parsed.symbols = {}
-    symbols_parsed['end'] = { lnum = 0, inside_code_block = false }
+    symbols_parsed['end'] = { lnum = 0, in_codeblock = false }
   end
   local lines = vim.api.nvim_buf_get_lines(buf, lnum_start, lnum_end, false)
   symbols_parsed['end'].lnum = lnum_start + #lines + 1
 
   for idx, line in ipairs(lines) do
     if line:match('^```') then
-      symbols_parsed['end'].inside_code_block =
-        not symbols_parsed['end'].inside_code_block
+      symbols_parsed['end'].in_codeblock =
+        not symbols_parsed['end'].in_codeblock
     end
-    if not symbols_parsed['end'].inside_code_block then
+    if not symbols_parsed['end'].in_codeblock then
       local _, _, heading_notation, heading_str = line:find('^(#+)%s+(.*)')
       local level = heading_notation and #heading_notation or 0
       if level >= 1 and level <= 6 then
@@ -163,7 +163,10 @@ local function convert(symbol, symbols, list_idx, buf, win)
             break
           end
           if symbols[i].level == symbol.level then
-            table.insert(self.siblings, convert(symbols[i], symbols, i, buf, win))
+            table.insert(
+              self.siblings,
+              convert(symbols[i], symbols, i, buf, win)
+            )
           end
         end
         return self[k]
@@ -289,7 +292,11 @@ local function get_symbols(buf, win, cursor)
   for idx, symbol in vim.iter(buf_symbols.symbols):enumerate():rev() do
     if symbol.lnum <= cursor[1] and symbol.level < current_level then
       current_level = symbol.level
-      table.insert(result, 1, convert(symbol, buf_symbols.symbols, idx, buf, win))
+      table.insert(
+        result,
+        1,
+        convert(symbol, buf_symbols.symbols, idx, buf, win)
+      )
       if current_level == 1 then
         break
       end

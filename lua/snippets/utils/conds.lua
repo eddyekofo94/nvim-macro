@@ -1,4 +1,5 @@
 local lsconds = require('luasnip.extras.conditions')
+local utils = require('utils')
 
 ---@class snip_cond_t
 ---@operator call: boolean
@@ -24,24 +25,20 @@ local M = setmetatable({
 ---Returns whether the cursor is in a math zone
 ---@return boolean
 function M.in_mathzone()
-  return vim.g.loaded_vimtex == 1
-    and vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
+  return utils.funcs.ft.markdown.in_mathzone()
 end
 
 ---Returns whether the cursor is in a code block
 ---@return boolean
 function M.in_codeblock()
   local cursor = vim.api.nvim_win_get_cursor(0)
-  return require('utils.funcs').ft.markdown.in_code_block(
-    vim.api.nvim_buf_get_lines(0, 0, cursor[1], false)
-  )
+  return utils.funcs.ft.markdown.in_codeblock(cursor[1])
 end
 
 ---Returns whether the current buffer has treesitter enabled
 ---@return boolean
 function M.ts_active()
-  return vim.treesitter.highlighter.active[vim.api.nvim_get_current_buf()]
-    ~= nil
+  return utils.funcs.treesitter.ts_active()
 end
 
 ---Returns whether current cursor is in a comment
@@ -49,19 +46,7 @@ end
 ---@return snip_cond_t
 function M.in_tsnode(type)
   return lsconds.make_condition(function()
-    local buf = vim.api.nvim_get_current_buf()
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    if not vim.treesitter.highlighter.active[buf] then
-      return false
-    end
-    local node = vim.treesitter.get_node({
-      bufnr = buf,
-      pos = { cursor[1] - 1, cursor[2] - 1 },
-    })
-    if not node then
-      return false
-    end
-    return node:type():match(type) ~= nil
+    return utils.funcs.treesitter.in_tsnode(type)
   end)
 end
 
@@ -69,7 +54,7 @@ end
 ---@return boolean
 function M.in_normalzone()
   if vim.bo.ft == 'markdown' or vim.bo.ft == 'tex' then
-    return not M.in_mathzone() and not M.in_codeblock()
+    return utils.funcs.ft[vim.bo.ft].in_normalzone()
   end
   return not M.ts_active()
     or not M.in_tsnode('comment')() and not M.in_tsnode('string')()

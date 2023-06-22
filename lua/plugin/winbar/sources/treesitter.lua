@@ -1,6 +1,7 @@
 local funcs = require('utils.funcs')
 local configs = require('plugin.winbar.configs')
 local bar = require('plugin.winbar.bar')
+local utils = require('utils')
 
 ---Get short name of treesitter symbols in buffer buf
 ---@param node TSNode
@@ -33,7 +34,8 @@ end
 ---@param buf integer buffer handler
 ---@return boolean
 local function valid_node(node, buf)
-  return get_node_short_type(node) ~= nil and get_node_short_name(node, buf) ~= ''
+  return get_node_short_type(node) ~= nil
+    and get_node_short_name(node, buf) ~= ''
 end
 
 ---Get treesitter node children
@@ -137,7 +139,7 @@ end
 ---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[] symbols winbar symbols
 local function get_symbols(buf, win, cursor)
-  if not vim.treesitter.highlighter.active[buf] then
+  if not utils.funcs.treesitter.ts_active(buf) then
     return {}
   end
 
