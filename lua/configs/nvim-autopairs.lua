@@ -1,6 +1,7 @@
 local npairs = require('nvim-autopairs')
 local Rule = require('nvim-autopairs.rule')
 local cond = require('nvim-autopairs.conds')
+local utils = require('utils')
 
 npairs.setup({
   check_ts = true,
@@ -27,10 +28,22 @@ npairs.add_rules({
   -- Add spaces between parenthesis
   Rule(' ', ' ')
     :with_pair(function(opts)
-      local pair_single_char = opts.line:sub(opts.col - 1, opts.col)
-      local pair_double_char = opts.line:sub(opts.col - 2, opts.col + 1)
-      return vim.tbl_contains({ '()', '[]', '{}' }, pair_single_char)
-        or vim.tbl_contains({ '/**/' }, pair_double_char)
+      local pairs_single_char = { '()', '[]', '{}' }
+      local pairs_double_char = { '/**/' }
+      if
+        vim.bo[opts.bufnr].ft == 'markdown'
+        and opts.line:match('^- ')
+        and utils.funcs.ft.markdown.in_normalzone()
+      then
+        pairs_single_char = { '()', '{}' }
+      end
+      return vim.tbl_contains(
+        pairs_single_char,
+        opts.line:sub(opts.col - 1, opts.col)
+      ) or vim.tbl_contains(
+        pairs_double_char,
+        opts.line:sub(opts.col - 2, opts.col + 1)
+      )
     end)
     :with_del(function(opts)
       return vim.fn.match(opts.line:sub(1, opts.col):reverse(),
