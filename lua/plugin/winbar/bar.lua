@@ -1,24 +1,5 @@
 local configs = require('plugin.winbar.configs')
-local utils = require('plugin.winbar.utils')
-
----Add highlight to a string
----@param str string
----@param hlgroup string?
----@return string
-local function hl(str, hlgroup)
-  if not hlgroup or hlgroup:match('^%s*$') then
-    return str
-  end
-  return string.format('%%#%s#%s%%*', hlgroup, str or '')
-end
-
----Make a winbar string clickable
----@param str string
----@param callback string
----@return string
-local function make_clickable(str, callback)
-  return string.format('%%@%s@%s%%X', callback, str)
-end
+local utils = require('utils')
 
 ---@alias winbar_symbol_range_t lsp_range_t
 
@@ -194,10 +175,10 @@ function winbar_symbol_t:cat(plain)
   if plain then
     return self.icon .. self.name
   end
-  local icon_highlighted = hl(self.icon, self.icon_hl)
-  local name_highlighted = hl(self.name, self.name_hl)
+  local icon_highlighted = utils.funcs.stl.hl(self.icon, self.icon_hl)
+  local name_highlighted = utils.funcs.stl.hl(self.name, self.name_hl)
   if self.on_click and self.bar_idx then
-    return make_clickable(
+    return utils.funcs.stl.make_clickable(
       icon_highlighted .. name_highlighted,
       string.format(
         'v:lua.winbar.on_click_callbacks.buf%s.win%s.fn%s',
@@ -244,7 +225,11 @@ function winbar_symbol_t:preview()
     return
   end
   self.view = vim.api.nvim_win_call(self.win, vim.fn.winsaveview)
-  utils.hl_range_single(self.buf, 'WinBarPreview', self.range)
+  utils.funcs.highlighting.hl_range_single(
+    self.buf,
+    'WinBarPreview',
+    self.range
+  )
   vim.api.nvim_win_set_cursor(self.win, {
     self.range.start.line + 1,
     self.range.start.character,
@@ -258,7 +243,7 @@ end
 ---@return nil
 function winbar_symbol_t:preview_restore_hl()
   if self.buf then
-    utils.hl_range_single(self.buf, 'WinBarPreview')
+    utils.funcs.highlighting.hl_range_single(self.buf, 'WinBarPreview')
   end
 end
 
@@ -399,10 +384,10 @@ function winbar_t:cat(plain)
       or component:cat(plain)
   end
   -- Must add highlights to padding, else nvim will automatically truncate it
-  local padding_hl = not plain and 'WinBar' or nil
-  local padding_left = hl(string.rep(' ', self.padding.left), padding_hl)
-  local padding_right = hl(string.rep(' ', self.padding.right), padding_hl)
-  return result and padding_left .. result .. padding_right or ''
+  local padding_left = string.rep(' ', self.padding.left)
+  local padding_right = string.rep(' ', self.padding.right)
+  result = result and padding_left .. result .. padding_right or ''
+  return plain and result or utils.funcs.stl.hl(result, 'DropBar')
 end
 
 ---Reevaluate winbar string from components and redraw winbar

@@ -385,7 +385,6 @@ Total # of plugins: 48 (package manager included).
     - [ts-node-action](https://github.com/CKolkey/ts-node-action)
     - [cellular-automaton.nvim](https://github.com/Eandrju/cellular-automaton.nvim)
 - **UI**
-    - [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
     - [fidget.nvim](https://github.com/j-hui/fidget.nvim)
 - **DEBUG**
     - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
