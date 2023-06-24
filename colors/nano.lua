@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat Jun 24 03:40:03 AM CDT 2023
+-- Last Updated: Sat Jun 24 01:00:34 PM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -18,7 +18,7 @@ local palette_variants = {
     popout     = '#d08770',
     subtle     = '#434c5e',
     shaded     = '#4f596e',
-    faint      = '#566279',
+    faint      = '#6d7d9a',
     faded      = '#99aac8',
     grass      = '#374b50',
     tea        = '#507178',
@@ -114,7 +114,7 @@ local hlgroups = {
   TermCursorNC = { fg = palette.critical, bg = palette.subtle },
   DiffAdd = { bg = palette.grass },
   DiffChange = { link = 'None' },
-  DiffDelete = { fg = palette.faded },
+  DiffDelete = { fg = palette.faint },
   DiffText = { bg = palette.lavender },
   Directory = { fg = palette.faded },
   EndOfBuffer = { fg = palette.subtle },
