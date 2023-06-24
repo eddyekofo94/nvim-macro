@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri Jun 23 09:21:11 PM CDT 2023
+-- Last Updated: Sat Jun 24 03:40:03 AM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -54,24 +54,45 @@ local palette = palette_variants[vim.go.bg]
 -- }}}
 
 -- Terminal colors {{{
-local termcolors = {
-  terminal_color_0 = palette.subtle,
-  terminal_color_8 = palette.faded,
-  terminal_color_1 = palette.critical,
-  terminal_color_9 = palette.critical,
-  terminal_color_2 = palette.pine,
-  terminal_color_10 = palette.pine,
-  terminal_color_3 = palette.popout,
-  terminal_color_11 = palette.popout,
-  terminal_color_4 = palette.faint,
-  terminal_color_12 = palette.faded,
-  terminal_color_5 = palette.strong,
-  terminal_color_13 = palette.strong,
-  terminal_color_6 = palette.salient,
-  terminal_color_14 = palette.salient,
-  terminal_color_7 = palette.faded,
-  terminal_color_15 = palette.faded,
+local termcolor_variants = {
+  dark = {
+    terminal_color_0 = palette.subtle,
+    terminal_color_8 = palette.faded,
+    terminal_color_1 = palette.popout,
+    terminal_color_9 = palette.popout,
+    terminal_color_2 = palette.pine,
+    terminal_color_10 = palette.pine,
+    terminal_color_3 = palette.critical,
+    terminal_color_11 = palette.critical,
+    terminal_color_4 = palette.faint,
+    terminal_color_12 = palette.faded,
+    terminal_color_5 = palette.strong,
+    terminal_color_13 = palette.strong,
+    terminal_color_6 = palette.salient,
+    terminal_color_14 = palette.salient,
+    terminal_color_7 = palette.faded,
+    terminal_color_15 = palette.faded,
+  },
+  light = {
+    terminal_color_0 = palette.subtle,
+    terminal_color_8 = palette.faded,
+    terminal_color_1 = palette.critical,
+    terminal_color_9 = palette.critical,
+    terminal_color_2 = palette.pine,
+    terminal_color_10 = palette.pine,
+    terminal_color_3 = palette.popout,
+    terminal_color_11 = palette.popout,
+    terminal_color_4 = palette.faint,
+    terminal_color_12 = palette.faded,
+    terminal_color_5 = palette.strong,
+    terminal_color_13 = palette.strong,
+    terminal_color_6 = palette.salient,
+    terminal_color_14 = palette.salient,
+    terminal_color_7 = palette.faded,
+    terminal_color_15 = palette.faded,
+  },
 }
+local termcolors = termcolor_variants[vim.go.bg]
 -- }}}
 
 -- Highlight groups {{{1
@@ -428,7 +449,7 @@ local hlgroups = {
   CmpItemKindUnit = { fg = palette.salient },
   CmpItemKind = { fg = palette.foreground },
   CmpItemMenu = { fg = palette.foreground },
-  CmpVirtualText = { fg = palette.faded, italic = true },
+  CmpVirtualText = { fg = palette.faint, italic = true },
 
   -- gitsigns
   GitSignsAdd = { fg = palette.tea },
@@ -617,8 +638,8 @@ local hlgroups = {
   LazyH1 = { fg = palette.subtle, bg = palette.strong, bold = true },
 
   -- copilot.lua
-  CopilotSuggestion = { fg = palette.faded, italic = true },
-  CopilotAnnotation = { fg = palette.faded, italic = true },
+  CopilotSuggestion = { fg = palette.faint, italic = true },
+  CopilotAnnotation = { fg = palette.faint, italic = true },
 
   -- statusline
   StatusLineGitBranch = { fg = palette.foreground, bg = palette.subtle },
@@ -635,12 +656,26 @@ local hlgroups = {
 }
 -- }}}1
 
+-- Highlight group overrides {{{1
+local hlgroup_override_variants = {
+  dark = {
+    String = { fg = palette.popout },
+    CmpItemAbbrMatch = { fg = palette.critical },
+  },
+  light = {},
+}
+local hlgroup_overrides = hlgroup_override_variants[vim.go.bg]
+-- }}}1
+
 -- Set highlight groups {{{1
 vim.cmd.hi('clear')
 for termcolor, hex in pairs(termcolors) do
   vim.g[termcolor] = hex
 end
 for hlgroup_name, hlgroup_attr in pairs(hlgroups) do
+  vim.api.nvim_set_hl(0, hlgroup_name, hlgroup_attr)
+end
+for hlgroup_name, hlgroup_attr in pairs(hlgroup_overrides) do
   vim.api.nvim_set_hl(0, hlgroup_name, hlgroup_attr)
 end
 vim.g.colors_name = 'nano'
