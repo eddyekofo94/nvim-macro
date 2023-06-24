@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat Jun 24 01:05:19 PM CDT 2023
+-- Last Updated: Sat Jun 24 01:23:42 PM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -624,18 +624,18 @@ local hlgroups = {
   -- lazy.nvim
   LazyDir = { link = 'Directory' },
   LazyUrl = { link = 'htmlLink' },
-  LazySpecial = { fg = palette.critical },
+  LazySpecial = { link = 'Special' },
   LazyCommit = { fg = palette.faded },
-  LazyReasonFt = { fg = palette.foreground },
-  LazyReasonCmd = { fg = palette.strong },
+  LazyReasonFt = { fg = palette.salient },
+  LazyReasonCmd = { fg = palette.salient },
   LazyReasonPlugin = { fg = palette.salient },
-  LazyReasonSource = { fg = palette.critical },
+  LazyReasonSource = { fg = palette.salient },
   LazyReasonRuntime = { fg = palette.salient },
-  LazyReasonEvent = { fg = palette.subtle },
+  LazyReasonEvent = { fg = palette.salient },
   LazyReasonKeys = { fg = palette.faded },
   LazyButton = { bg = palette.subtle },
-  LazyButtonActive = { bg = palette.subtle, bold = true },
-  LazyH1 = { fg = palette.subtle, bg = palette.strong, bold = true },
+  LazyButtonActive = { bg = palette.shaded, bold = true },
+  LazyH1 = { fg = palette.subtle, bg = palette.faint, bold = true },
 
   -- copilot.lua
   CopilotSuggestion = { fg = palette.faint, italic = true },
