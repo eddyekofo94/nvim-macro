@@ -1,8 +1,8 @@
 local M = {}
 
----Cache git branch names for each path
+---Store git branch names for each path
 ---@type table<string, string>
-local branch_cache = {}
+local path_branches = {}
 
 ---Print git command error
 ---@param cmd string[] shell command
@@ -71,16 +71,16 @@ end
 function M.branch(path)
   path = vim.fs.normalize(path or vim.api.nvim_buf_get_name(0))
   local dir = vim.fs.dirname(path)
-  if not branch_cache[dir] and vim.uv.fs_stat(dir) then
+  if vim.uv.fs_stat(dir) then
     vim.system(
       { 'git', 'rev-parse', '--abbrev-ref', 'HEAD' },
       { cwd = dir, stderr = false },
       function(err, _)
-        branch_cache[dir] = err.stdout:gsub('\n.*', '')
+        path_branches[dir] = err.stdout:gsub('\n.*', '')
       end
     )
   end
-  return branch_cache[dir] or ''
+  return path_branches[dir] or ''
 end
 
 return M
