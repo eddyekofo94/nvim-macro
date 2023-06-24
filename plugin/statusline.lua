@@ -65,7 +65,7 @@ end
 
 ---@type table<string, string>
 local components = {
-  padding = '%#None# %*',
+  padding = '%#None#  %*',
   mode = '%{%v:lua.statusline.mode()%}',
   filename = ' %t ',
   info = '%{%v:lua.statusline.info()%}',
