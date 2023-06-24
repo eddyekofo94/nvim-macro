@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri 23 Jun 2023 01:08:35 AM CST
+-- Last Updated: Sat Jun 24 01:05:25 PM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -187,7 +187,7 @@ local hlgroups = {
   QuickFixLine = { link = 'Visual' },
   SignColumn = { fg = palette.smoke },
   SpecialKey = { fg = palette.orange },
-  SpellBad = { underdotted = true },
+  SpellBad = { underdashed = true },
   SpellCap = { link = 'SpellBad' },
   SpellLocal = { link = 'SpellBad' },
   SpellRare = { link = 'SpellBad' },
