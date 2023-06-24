@@ -8,6 +8,7 @@ local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
 local c = ls.choice_node
+local r = ls.restore_node
 
 M.syntax = {
   us.msn({
@@ -42,12 +43,27 @@ M.syntax = {
     { trig = 'func' },
     { trig = 'function' },
   }, {
-    t('function('),
-    i(1),
-    t({ ')', '' }),
+    c(1, {
+      sn(nil, {
+        t('function('),
+        r(1, 'params'),
+        t({ ')', '' }),
+      }),
+      sn(nil, {
+        t('function '),
+        i(1, 'fn_name'),
+        t('('),
+        r(2, 'params'),
+        t({ ')', '' }),
+      }),
+    }),
     un.idnt(1),
     i(2),
     t({ '', 'end' }),
+  }, {
+    stored = {
+      params = i(1),
+    }
   }),
   us.msn({
     { trig = 'me' },
