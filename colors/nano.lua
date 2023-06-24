@@ -428,6 +428,7 @@ local hlgroups = {
   CmpItemKindUnit = { fg = palette.salient },
   CmpItemKind = { fg = palette.foreground },
   CmpItemMenu = { fg = palette.foreground },
+  CmpVirtualText = { fg = palette.faded, italic = true },
 
   -- gitsigns
   GitSignsAdd = { fg = palette.tea },
