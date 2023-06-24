@@ -169,7 +169,7 @@ local hlgroups = {
   Constant = { fg = palette.foreground },
   String = { fg = palette.faded },
   -- String = { fg = palette.popout },
-  DocumentKeyword = { fg = palette.faded },
+  DocumentKeyword = { link = 'Keyword' },
   Character = { fg = palette.critical },
   Number = { fg = palette.faded },
   Boolean = { link = 'Constant' },
@@ -483,13 +483,14 @@ local hlgroups = {
   fugitiveUntrackedHeading = { fg = palette.salient, bold = true },
 
   -- telescope
-  TelescopeNormal = { link = 'NormalFloat' },
+  TelescopeNormal = { fg = palette.faded, bg = palette.subtle },
   TelescopePromptNormal = { bg = palette.highlight },
   TelescopeTitle = { fg = palette.subtle, bg = palette.faded, bold = true },
   TelescopeBorder = { fg = palette.foreground, bg = palette.subtle },
   TelescopePromptBorder = { fg = palette.foreground, bg = palette.highlight },
-  TelescopePreviewLine = { bg = palette.subtle },
-  TelescopeMatching = { fg = palette.foreground, bg = palette.faint },
+  TelescopePreviewLine = { bg = palette.shaded },
+  TelescopePreviewMatch = { fg = palette.salient, bold = true },
+  TelescopeMatching = { fg = palette.salient, bold = true },
   TelescopePromptCounter = { link = 'Comment' },
   TelescopePromptPrefix = { fg = palette.critical },
   TelescopeSelection = { bg = palette.shaded },
@@ -661,6 +662,8 @@ local hlgroup_override_variants = {
   dark = {
     String = { fg = palette.popout },
     CmpItemAbbrMatch = { fg = palette.critical },
+    TelescopePreviewMatch = { fg = palette.critical, bold = true },
+    TelescopeMatching = { fg = palette.critical, bold = true },
   },
   light = {},
 }
