@@ -63,7 +63,7 @@ M.syntax = {
   }, {
     stored = {
       params = i(1),
-    }
+    },
   }),
   us.msn({
     { trig = 'me' },
@@ -273,7 +273,6 @@ M.syntax = {
     t({ '', 'end' }),
   }),
   us.msn({
-    { trig = 'r' },
     { trig = 'rt' },
     { trig = 'ret' },
   }, {
