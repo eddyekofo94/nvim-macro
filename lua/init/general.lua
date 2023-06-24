@@ -98,9 +98,6 @@ g.loaded_netrw           = 1
 g.loaded_netrwPlugin     = 1
 -- stylua: ignore start
 
--- colorscheme
-cmd('colorscheme cockatoo')
-
 -- abbreviations
 cmd('cnoreabbrev qa qa!')
 cmd('cnoreabbrev bw bw!')
