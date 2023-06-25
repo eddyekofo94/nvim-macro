@@ -73,11 +73,11 @@ end
 ---Returns a function that can be used to complete the options of a command
 ---An option must be in the format of --<opt> or --<opt>=<val>
 ---@param opts opts_t?
----@return fun(arglead: string, cmdline: string, cursorpos: integer[]): string[]
+---@return fun(arglead: string, cmdline: string, cursorpos: integer): string[]
 function M.complete_opts(opts)
   ---@param arglead string leading portion of the argument being completed
   ---@param cmdline string the entire command line
-  ---@param cursorpos integer[] cursor position in the command line
+  ---@param cursorpos integer cursor position in the command line
   ---@return string[] completion completion results
   return function(arglead, cmdline, cursorpos)
     if not opts or vim.tbl_isempty(opts) then
@@ -117,7 +117,7 @@ end
 
 ---Returns a function that can be used to complete the arguments of a command
 ---@param params params_t?
----@return fun(arglead: string, cmdline: string, cursorpos: integer[]): string[]
+---@return fun(arglead: string, cmdline: string, cursorpos: integer): string[]
 function M.complete_params(params)
   return function(arglead, _, _)
     return vim.tbl_filter(function(arg)
@@ -130,7 +130,7 @@ end
 ---of a command
 ---@param params params_t?
 ---@param opts opts_t?
----@return fun(arglead: string, cmdline: string, cursorpos: integer[]): string[]
+---@return fun(arglead: string, cmdline: string, cursorpos: integer): string[]
 function M.complete(params, opts)
   local fn_compl_params = M.complete_params(params)
   local fn_compl_opts = M.complete_opts(opts)
