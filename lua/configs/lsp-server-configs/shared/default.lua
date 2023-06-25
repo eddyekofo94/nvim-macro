@@ -151,7 +151,9 @@ end
 local optvals = {
   bool = { 'v:true', 'v:false' },
   severity = { 'WARN', 'INFO', 'ERROR', 'HINT' },
-  bufs = vim.api.nvim_list_bufs,
+  bufs = function()
+    return vim.api.nvim_list_bufs()
+  end,
 }
 
 ---@class subcommand_info_t : table

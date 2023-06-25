@@ -76,8 +76,10 @@ end
 ---@return fun(arglead: string, cmdline: string, cursorpos: integer[]): string[]
 function M.complete_opts(opts)
   ---@param arglead string leading portion of the argument being completed
+  ---@param cmdline string the entire command line
+  ---@param cursorpos integer[] cursor position in the command line
   ---@return string[] completion completion results
-  return function(arglead, _, _)
+  return function(arglead, cmdline, cursorpos)
     if not opts or vim.tbl_isempty(opts) then
       return {}
     end
@@ -86,7 +88,9 @@ function M.complete_opts(opts)
     if optkey and eq == '=' then
       local candidate_vals = vim.tbl_map(
         tostring,
-        type(opts[optkey]) == 'function' and opts[optkey]() or opts[optkey]
+        type(opts[optkey]) == 'function'
+            and opts[optkey](arglead, cmdline, cursorpos)
+          or opts[optkey]
       )
       return candidate_vals
           and vim.tbl_map(
