@@ -6,6 +6,9 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
     local winbar = require('plugin.winbar')
     local api = require('plugin.winbar.api')
     winbar.setup({
+      general = {
+        update_interval = 32,
+      },
       sources = {
         path = {
           modified = function(sym)
@@ -13,9 +16,9 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
               icon = static.icons.ui.DotLarge,
               icon_hl = 'CmpItemKindSnippet',
             })
-          end
-        }
-      }
+          end,
+        },
+      },
     })
     vim.keymap.set('n', '<Leader>;', api.pick)
     vim.keymap.set('n', '[C', api.goto_context_start)
