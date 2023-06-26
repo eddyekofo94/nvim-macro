@@ -75,11 +75,11 @@ opt.hlsearch    = false
 opt.ignorecase  = true
 opt.smartcase   = true
 
-opt.spell = true
+opt.spell         = true
 opt.spellcapcheck = ''
-opt.spelllang = 'en,cjk'
-opt.spelloptions = 'camel'
-opt.spellsuggest = 'best,9'
+opt.spelllang     = 'en,cjk'
+opt.spelloptions  = 'camel'
+opt.spellsuggest  = 'best,9'
 
 -- disable plugins shipped with neovim
 g.loaded_gzip            = 1
@@ -97,7 +97,7 @@ g.loaded_logiPat         = 1
 g.loaded_rrhelper        = 1
 g.loaded_netrw           = 1
 g.loaded_netrwPlugin     = 1
--- stylua: ignore start
+-- stylua: ignore end
 
 -- abbreviations
 cmd('cnoreabbrev qa qa!')
