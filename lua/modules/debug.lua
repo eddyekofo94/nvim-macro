@@ -1,10 +1,27 @@
 return {
   {
     'mfussenegger/nvim-dap',
+    cmd = {
+      'DapContinue',
+      'DapLoadLaunchJSON',
+      'DapRestartFrame',
+      'DapSetLogLevel',
+      'DapShowLog',
+      'DapToggleBreakPoint',
+    },
     keys = { '<F5>', '<F8>', '<F9>', '<F21>', '<F45>' },
     dependencies = 'nvim-dap-ui',
     config = function()
       require('configs.nvim-dap')
+    end,
+  },
+
+  {
+    'jbyuki/one-small-step-for-vimkind',
+    cmd = 'DapOSVLaunchServer',
+    dependencies = 'nvim-dap',
+    config = function()
+      require('configs.one-small-step-for-vimkind')
     end,
   },
 
