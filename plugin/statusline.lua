@@ -42,36 +42,78 @@ local modes = {
 -- stylua: ignore end
 
 ---Get string representation of the current mode
+---@return string
 function statusline.mode()
   local hl = vim.bo.mod and 'StatusLineHeaderModified' or 'StatusLineHeader'
   return utils.funcs.stl.hl(' ' .. modes[vim.fn.mode()] .. ' ', hl)
 end
 
+---Get diff stats for current buffer
+---@return string
+function statusline.gitdiff()
+  -- Integration with gitsigns.nvim
+  ---@diagnostic disable-next-line: undefined-field
+  local diff = vim.b.gitsigns_status_dict or utils.funcs.git.diffstat()
+  if diff.added == 0 and diff.removed == 0 and diff.changed == 0 then
+    return ''
+  end
+  return string.format(
+    '+%s~%s-%s',
+    utils.funcs.stl.hl(tostring(diff.added), 'StatusLineGitAdded'),
+    utils.funcs.stl.hl(tostring(diff.changed), 'StatusLineGitChanged'),
+    utils.funcs.stl.hl(tostring(diff.removed), 'StatusLineGitRemoved')
+  )
+end
+
+---Get string representation of current git branch
+---@return string
+function statusline.branch()
+  ---@diagnostic disable-next-line: undefined-field
+  local branch = vim.b.gitsigns_status_dict and vim.b.gitsigns_status_dict.head
+    or utils.funcs.git.branch()
+  return branch == '' and '' or '#' .. branch
+end
+
+---Get current filetype
+---@return string
+function statusline.ft()
+  return vim.bo.ft == '' and '' or vim.bo.ft:gsub('^%l', string.upper)
+end
+
+---Additional info for the current buffer enclosed in parentheses
+---@return string
 function statusline.info()
   if vim.bo.bt ~= '' then
     return ''
   end
   local info = {}
-  if vim.bo.ft ~= '' then
-    table.insert(info, (vim.bo.ft:gsub('^%l', string.upper)))
+  ---@param section string
+  local function add_section(section)
+    if section ~= '' then
+      table.insert(info, section)
+    end
   end
-  local br = utils.funcs.git.branch()
-  if br ~= '' then
-    table.insert(info, utils.funcs.stl.hl('#' .. br, 'StatusLineGitBranch'))
-  end
+  add_section(statusline.ft())
+  add_section(statusline.branch())
+  add_section(statusline.gitdiff())
   return vim.tbl_isempty(info) and ''
     or string.format('(%s)', table.concat(info, ', '))
 end
 
+-- stylua: ignore start
+---Statusline components
 ---@type table<string, string>
 local components = {
-  padding = '%#None#  %*',
-  mode = '%{%v:lua.statusline.mode()%}',
-  filename = ' %t ',
-  info = '%{%v:lua.statusline.info()%}',
-  align = '%=',
-  position = '%l:%c ',
+  align    = '%=',
+  fname    = ' %#StatusLineStrong#%t%* ',
+  fname_nc = ' %#StatusLineWeak#%t%* ',
+  info     = '%{%v:lua.statusline.info()%}',
+  mode     = '%{%v:lua.statusline.mode()%}',
+  padding  = '%#None#  %*',
+  position = '%#StatusLineFaded#%l:%c%* ',
+  truncate = '%<',
 }
+-- stylua: ignore end
 
 local groupid = vim.api.nvim_create_augroup('StatusLine', {})
 vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'CursorMoved' }, {
@@ -80,7 +122,8 @@ vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'CursorMoved' }, {
     vim.wo.statusline = table.concat({
       components.padding,
       components.mode,
-      components.filename,
+      components.truncate,
+      components.fname,
       components.info,
       components.align,
       components.position,
@@ -93,7 +136,8 @@ vim.api.nvim_create_autocmd('WinLeave', {
   callback = function()
     vim.wo.statusline = table.concat({
       components.padding,
-      components.filename,
+      components.truncate,
+      components.fname_nc,
       components.align,
       components.padding,
     })
