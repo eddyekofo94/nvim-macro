@@ -688,9 +688,13 @@ local hlgroups = {
   CopilotAnnotation = { fg = palette.steel, italic = true },
 
   -- statusline plugin
-  StatusLineGitBranch = { fg = palette.pigeon, bg = palette.deepsea },
+  StatusLineFaded = { fg = palette.pigeon, bg = palette.deepsea },
+  StatusLineGitAdded = { fg = palette.tea, bg = palette.deepsea },
+  StatusLineGItChanged = { fg = palette.lavender, bg = palette.deepsea },
+  StatusLineGitRemoved = { fg = palette.scarlet, bg = palette.deepsea },
   StatusLineHeader = { fg = palette.jeans, bg = palette.steel },
   StatusLineHeaderModified = { fg = palette.jeans, bg = palette.pink },
+  StatusLineStrong = { fg = palette.white, bg = palette.deepsea, bold = true },
   -- }}}2
 
   -- Extra {{{2
