@@ -33,52 +33,62 @@ vim.api.nvim_create_autocmd('VimResized', {
 -- Set cmdheight to 0 when rnvimr is visible so that the floating
 -- terminal window fully occupies the bottom of the screen
 vim.api.nvim_create_augroup('RnvimrSetCmdHeight', {})
-vim.api.nvim_create_autocmd({ 'TabNewEntered', 'TermEnter', 'WinEnter' }, {
-  group = 'RnvimrSetCmdHeight',
-  desc = 'Set cmdheight to 0 when rnvimr is visible.',
-  callback = function()
-    ---Save and restore origin window view before and after calling fn
-    ---@generic T
-    ---@param win integer window handler
-    ---@param fn fun(): T? function to call
-    ---@return T?
-    local function win_call_keep_view(win, fn)
-      return vim.api.nvim_win_call(win, function()
-        local view = vim.fn.winsaveview()
-        local result = fn()
-        vim.fn.winrestview(view)
-        return result
-      end)
-    end
-    local prev_win = vim.fn.win_getid(vim.fn.winnr('#'))
-    -- If rnvimr is opened in current tab, set cmdheight to 0
-    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-      local buf = vim.api.nvim_win_get_buf(win)
-      if vim.bo[buf].ft == 'rnvimr' then
-        if not vim.g.cmdheight then
-          vim.g.cmdheight = vim.go.cmdheight
+vim.api.nvim_create_autocmd(
+  { 'TabNewEntered', 'TermEnter', 'WinEnter', 'TermLeave' },
+  {
+    group = 'RnvimrSetCmdHeight',
+    desc = 'Set cmdheight to 0 when rnvimr is visible.',
+    callback = function()
+      ---Save and restore origin window views before and after calling fn
+      ---@generic T
+      ---@param wins integer[] window handlers
+      ---@param fn fun(): T? function to call
+      ---@return T?
+      local function win_call_keep_views(wins, fn)
+        local views = {}
+        for _, win in ipairs(wins) do
+          views[win] = vim.api.nvim_win_call(win, vim.fn.winsaveview)
         end
-        if vim.go.cmdheight ~= 0 then
-          win_call_keep_view(prev_win, function()
-            vim.go.cmdheight = 0
+        local ret = fn()
+        for win, view in pairs(views) do
+          if vim.api.nvim_win_is_valid(win) then
+            vim.api.nvim_win_call(win, function()
+              vim.fn.winrestview(view)
+            end)
+          end
+        end
+        return ret
+      end
+      local tab_wins = vim.api.nvim_tabpage_list_wins(0)
+      -- If rnvimr is opened in current tab, set cmdheight to 0
+      for _, win in ipairs(tab_wins) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.bo[buf].ft == 'rnvimr' then
+          if not vim.g.cmdheight then
+            vim.g.cmdheight = vim.go.cmdheight
+          end
+          if vim.go.cmdheight ~= 0 then
+            win_call_keep_views(tab_wins, function()
+              vim.go.cmdheight = 0
+            end)
+            vim.g.redraw_pending = true
+          end
+          return
+        end
+      end
+      -- Else restore cmdheight to its original value
+      if vim.g.cmdheight then
+        if vim.go.cmdheight ~= vim.g.cmdheight then
+          win_call_keep_views(tab_wins, function()
+            vim.go.cmdheight = vim.g.cmdheight
           end)
           vim.g.redraw_pending = true
         end
-        return
+        vim.g.cmdheight = nil
       end
-    end
-    -- Else restore cmdheight to its original value
-    if vim.g.cmdheight then
-      if vim.go.cmdheight ~= vim.g.cmdheight then
-        win_call_keep_view(prev_win, function()
-          vim.go.cmdheight = vim.g.cmdheight
-        end)
-        vim.g.redraw_pending = true
-      end
-      vim.g.cmdheight = nil
-    end
-  end,
-})
+    end,
+  }
+)
 
 -- Redraw screen on TanEnter/TabNewEntered if cmdheight is changed but
 -- the screen has not been redrawn yet
