@@ -16,36 +16,18 @@ dapui.setup({
   layouts = {
     {
       elements = {
-        {
-          id = 'scopes',
-          size = 0.25,
-        },
-        {
-          id = 'breakpoints',
-          size = 0.25,
-        },
-        {
-          id = 'stacks',
-          size = 0.25,
-        },
-        {
-          id = 'watches',
-          size = 0.25,
-        },
+        { id = 'scopes', size = 0.25 },
+        { id = 'breakpoints', size = 0.25 },
+        { id = 'stacks', size = 0.25 },
+        { id = 'watches', size = 0.25 },
       },
       position = 'left',
       size = 0.3,
     },
     {
       elements = {
-        {
-          id = 'repl',
-          size = 0.5,
-        },
-        {
-          id = 'console',
-          size = 0.5,
-        },
+        { id = 'repl', size = 0.5 },
+        { id = 'console', size = 0.5 },
       },
       position = 'bottom',
       size = 0.25,
@@ -58,8 +40,8 @@ dapui.setup({
   },
   mappings = {
     -- Use a table to apply multiple mappings
-    expand = { '<Tab>', '<LeftMouse>' },
-    open = { '<CR>', 'o' },
+    expand = { '<CR>', '<Tab>', 'za' },
+    open = { 'o', 'zo' },
     remove = { 'dd', 'x' },
     edit = { 's', 'cc' },
     repl = 'r',
