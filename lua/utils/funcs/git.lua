@@ -83,4 +83,49 @@ function M.branch(path)
   return path_branches[dir] or ''
 end
 
+---Store git diff stats for each buffer
+---@type table<string, {added: integer, removed: integer, changed: integer}>
+local buf_diffstats = {}
+
+---Get the diff stats for the current buffer asynchronously
+---@param path string? defaults to the path to the current buffer
+---@return {added: integer, removed: integer, changed: integer} diff stats
+function M.diffstat(path)
+  path = vim.fs.normalize(path or vim.api.nvim_buf_get_name(0))
+  local dir = vim.fs.dirname(path)
+  if dir then
+    vim.system({
+      'git',
+      '-C',
+      dir,
+      '--no-pager',
+      'diff',
+      '-U0',
+      '--no-color',
+      '--no-ext-diff',
+      '--',
+      path,
+    }, { stderr = false }, function(err, _)
+      local stat = { added = 0, removed = 0, changed = 0 }
+      for _, line in ipairs(vim.split(err.stdout, '\n')) do
+        if line:find('^@@ ') then
+          local num_lines_old, num_lines_new =
+            line:match('^@@ %-%d+,?(%d*) %+%d+,?(%d*)')
+          num_lines_old = tonumber(num_lines_old) or 1
+          num_lines_new = tonumber(num_lines_new) or 1
+          local num_lines_changed = math.min(num_lines_old, num_lines_new)
+          stat.changed = stat.changed + num_lines_changed
+          if num_lines_old > num_lines_new then
+            stat.removed = stat.removed + num_lines_old - num_lines_changed
+          else
+            stat.added = stat.added + num_lines_new - num_lines_changed
+          end
+        end
+      end
+      buf_diffstats[path] = stat
+    end)
+  end
+  return buf_diffstats[path] or { added = 0, removed = 0, changed = 0 }
+end
+
 return M
