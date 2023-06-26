@@ -1,9 +1,5 @@
 local M = {}
 
----Store git branch names for each path
----@type table<string, string>
-local path_branches = {}
-
 ---Print git command error
 ---@param cmd string[] shell command
 ---@param msg string error message
@@ -65,16 +61,20 @@ function M.execute(cmd, error_lev)
   }
 end
 
+---Store git branch names for each path
+---@type table<string, string>
+local path_branches = {}
+
 ---Get the current branch name asynchronously
 ---@param path string? defaults to the path to the current buffer
 ---@return string branch name
 function M.branch(path)
   path = vim.fs.normalize(path or vim.api.nvim_buf_get_name(0))
   local dir = vim.fs.dirname(path)
-  if vim.uv.fs_stat(dir) then
+  if dir then
     vim.system(
-      { 'git', 'rev-parse', '--abbrev-ref', 'HEAD' },
-      { cwd = dir, stderr = false },
+      { 'git', '-C', dir, 'rev-parse', '--abbrev-ref', 'HEAD' },
+      { stderr = false },
       function(err, _)
         path_branches[dir] = err.stdout:gsub('\n.*', '')
       end
