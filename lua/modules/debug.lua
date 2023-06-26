@@ -10,7 +10,7 @@ return {
       'DapToggleBreakPoint',
     },
     keys = { '<F5>', '<F8>', '<F9>', '<F21>', '<F45>' },
-    dependencies = 'nvim-dap-ui',
+    dependencies = { 'cmp-dap', 'nvim-dap-ui' },
     config = function()
       require('configs.nvim-dap')
     end,

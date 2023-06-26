@@ -51,8 +51,8 @@ return {
 
   {
     'rcarriga/cmp-dap',
-    event = 'InsertEnter',
-    dependencies = 'nvim-cmp',
+    lazy = true,
+    dependencies = { 'nvim-dap', 'nvim-cmp' },
   },
 
   {
