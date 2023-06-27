@@ -145,6 +145,7 @@ local function lsp_setup()
           -- Trigger lspconfig filetype autocmds to launch LSP servers
           vim.cmd('doautocmd Filetype ' .. ft)
         end
+        return true
       end,
     })
   end

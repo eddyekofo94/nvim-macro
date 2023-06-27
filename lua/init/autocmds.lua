@@ -26,11 +26,12 @@ local autocmds = {
     { 'TextYankPost' },
     {
       group = 'YankToSystemClipboard',
+      once = true,
       callback = function()
         vim.opt.clipboard:append('unnamedplus')
         vim.cmd('silent! let @+ = @' .. vim.v.register)
+        return true
       end,
-      once = true,
     },
   },
 
@@ -133,6 +134,7 @@ local autocmds = {
     { 'BufReadPre', 'UIEnter' },
     {
       group = 'RestoreBackground',
+      once = true,
       callback = function()
         if vim.g.theme_restored then
           return
@@ -144,8 +146,8 @@ local autocmds = {
         if not vim.g.colors_name or vim.g.COLORSNAME ~= vim.g.colors_name then
           vim.cmd('silent! colorscheme ' .. (vim.g.COLORSNAME or 'nano'))
         end
+        return true
       end,
-      once = true,
     },
   },
 
@@ -294,6 +296,7 @@ local autocmds = {
             vim.wo[win].winhl = new_winhl
           end
         end
+        return true
       end,
     },
   },

@@ -30,6 +30,7 @@ local function lazy_load_snippets()
       group = 'LuaSnipLazyLoadSnippets',
       callback = function()
         load_snippets(ft)
+        return true
       end,
     })
   end

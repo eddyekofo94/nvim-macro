@@ -29,5 +29,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
     vim.keymap.set('n', '<Leader>;', api.pick)
     vim.keymap.set('n', '[C', api.goto_context_start)
     vim.keymap.set('n', ']C', api.select_next_context)
+    return true
   end,
 })

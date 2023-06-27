@@ -4,5 +4,6 @@ vim.api.nvim_create_autocmd({ 'CmdlineEnter', 'InsertEnter' }, {
   once = true,
   callback = function()
     require('plugin.readline').init()
+    return true
   end,
 })
