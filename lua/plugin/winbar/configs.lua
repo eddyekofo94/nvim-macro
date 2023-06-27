@@ -6,9 +6,9 @@ M.opts = {
   general = {
     ---@type boolean|fun(buf: integer, win: integer): boolean
     enable = function(buf, win)
-      return not vim.api.nvim_win_get_config(win).zindex
-        and vim.bo[buf].buftype == ''
+      return vim.bo[buf].buftype == ''
         and vim.api.nvim_buf_get_name(buf) ~= ''
+        and vim.fn.win_gettype(win) == ''
         and not vim.wo[win].diff
     end,
     -- Wait for a short time before updating the winbar, if another update

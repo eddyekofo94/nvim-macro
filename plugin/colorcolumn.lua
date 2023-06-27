@@ -191,7 +191,7 @@ local function cc_autocmd()
   vim.api.nvim_create_autocmd({ 'InsertLeave', 'WinLeave' }, {
     group = id,
     callback = function()
-      if not vim.api.nvim_win_get_config(0).zindex then
+      if vim.fn.win_gettype() == '' then
         cc_conceal(0)
       end
     end,
@@ -200,7 +200,7 @@ local function cc_autocmd()
     group = id,
     callback = function()
       local cc = cc_resolve(vim.wo.cc)
-      if not cc or vim.api.nvim_win_get_config(0).zindex then
+      if not cc or vim.fn.win_gettype() ~= '' then
         cc_conceal(0)
         return
       end
