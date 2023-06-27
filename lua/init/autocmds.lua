@@ -282,6 +282,7 @@ local autocmds = {
     {
       once = true,
       group = 'AutoHlCursorLine',
+      desc = 'Initialize cursorline winhl.',
       callback = function()
         local winlist = vim.api.nvim_list_wins()
         for _, win in ipairs(winlist) do
@@ -290,7 +291,9 @@ local autocmds = {
             :gsub('CursorLine:[^,]*', '')
             :gsub('CursorColumn:[^,]*', '')
               .. ',CursorLine:' .. ',CursorColumn:')
-            :gsub('^,*', ''):gsub(',*$', ''):gsub(',+', ',')
+            :gsub('^,*', '')
+            :gsub(',*$', '')
+            :gsub(',+', ',')
           -- stylua: ignore end
           if new_winhl ~= vim.wo[win].winhl then
             vim.wo[win].winhl = new_winhl
@@ -298,13 +301,6 @@ local autocmds = {
         end
         return true
       end,
-    },
-  },
-  {
-    { 'WinLeave' },
-    {
-      group = 'AutoHlCursorLine',
-      command = 'let g:prev_win = win_getid()',
     },
   },
   {
@@ -327,16 +323,16 @@ local autocmds = {
             })
           end
           -- Conceal cursor line and cursor column in the previous window
-          -- if current window is not floating window and contains a normal buf
+          -- if current window is a normal window
           local current_win = vim.api.nvim_get_current_win()
+          local prev_win = vim.fn.win_getid(vim.fn.winnr('#'))
           if
-            vim.g.prev_win
-            and vim.g.prev_win ~= current_win
-            and vim.api.nvim_win_is_valid(vim.g.prev_win)
-            and not vim.api.nvim_win_get_config(current_win).zindex
-            and vim.bo[vim.api.nvim_win_get_buf(current_win)].bt == ''
+            prev_win ~= 0
+            and prev_win ~= current_win
+            and vim.api.nvim_win_is_valid(prev_win)
+            and vim.fn.win_gettype(current_win) == ''
           then
-            vim.api.nvim_win_call(vim.g.prev_win, function()
+            vim.api.nvim_win_call(prev_win, function()
               vim.opt_local.winhl:append({
                 CursorLine = '',
                 CursorColumn = '',
