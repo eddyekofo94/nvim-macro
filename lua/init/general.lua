@@ -1,4 +1,3 @@
-local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
 local opt = vim.opt
@@ -98,8 +97,3 @@ g.loaded_rrhelper        = 1
 g.loaded_netrw           = 1
 g.loaded_netrwPlugin     = 1
 -- stylua: ignore end
-
--- abbreviations
-cmd('cnoreabbrev qa qa!')
-cmd('cnoreabbrev bw bw!')
-cmd('cnoreabbrev mks mks!')

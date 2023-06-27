@@ -161,4 +161,4 @@ else
 end
 
 -- a handy abbreviation
-vim.cmd('cnoreabbrev lz Lazy')
+utils.funcs.keymap.command_abbrev('lz', 'Lazy')

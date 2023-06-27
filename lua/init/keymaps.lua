@@ -1,3 +1,5 @@
+local utils = require('utils')
+
 vim.keymap.set({ 'n', 'x' }, '<Space>', '<Ignore>')
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -93,3 +95,8 @@ vim.keymap.set('x', 'if', ':<C-u>silent! keepjumps normal! ggVG<CR>', { silent =
 vim.keymap.set('o', 'af', '<Cmd>silent! normal m`Vaf<CR><Cmd>silent! normal! ``<CR>', { noremap = false })
 vim.keymap.set('o', 'if', '<Cmd>silent! normal m`Vif<CR><Cmd>silent! normal! ``<CR>', { noremap = false })
 -- stylua: ignore end
+
+-- Abbreaviations
+utils.funcs.keymap.command_abbrev('qa', 'qa!')
+utils.funcs.keymap.command_abbrev('bw', 'bw!')
+utils.funcs.keymap.command_abbrev('mks', 'mks!')
