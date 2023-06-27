@@ -221,6 +221,7 @@ M.icons = setmetatable({
     ArrowRight          = '→ ',
     ArrowUp             = '↑ ',
     Cross               = '󰅖 ',
+    Ok                  = '󰄬 ',
     Diamond             = '◆ ',
     Dot                 = '• ',
     DotLarge            = ' ',
