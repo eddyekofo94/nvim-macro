@@ -211,8 +211,15 @@ cmp.setup({
     end,
   },
   mapping = {
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if vim.fn.mode() == 'i' then
+    ['<S-Tab>'] = {
+      ['c'] = function()
+        if cmp.visible() then
+          cmp.select_prev_item()
+        else
+          cmp.complete()
+        end
+      end,
+      ['i'] = function(fallback)
         if luasnip.jumpable(-1) then
           local prev = luasnip.jump_destination(-1)
           local _, snip_dest_end = prev:get_buf_position()
@@ -224,16 +231,17 @@ cmp.setup({
         else
           fallback()
         end
-      elseif vim.fn.mode() == 'c' then
+      end,
+    },
+    ['<Tab>'] = {
+      ['c'] = function()
         if cmp.visible() then
-          cmp.select_prev_item()
+          cmp.select_next_item()
         else
           cmp.complete()
         end
-      end
-    end, { 'i', 'c' }),
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if vim.fn.mode() == 'i' then
+      end,
+      ['i'] = function(fallback)
         if luasnip.expandable() then
           luasnip.expand()
         elseif luasnip.jumpable(1) then
@@ -271,16 +279,11 @@ cmp.setup({
         else
           fallback()
         end
-      elseif vim.fn.mode() == 'c' then
-        if cmp.visible() then
-          cmp.select_next_item()
-        else
-          cmp.complete()
-        end
-      end
-    end, { 'i', 'c' }),
-    ['<C-p>'] = cmp.mapping(function(fallback)
-      if vim.fn.mode() == 'i' then
+      end,
+    },
+    ['<C-p>'] = {
+      ['c'] = cmp.mapping.select_prev_item(),
+      ['i'] = function()
         if cmp.visible() then
           cmp.select_prev_item()
         elseif luasnip.choice_active() then
@@ -288,16 +291,11 @@ cmp.setup({
         else
           cmp.complete()
         end
-      elseif vim.fn.mode() == 'c' then
-        if cmp.visible() then
-          cmp.select_prev_item()
-        else
-          fallback()
-        end
-      end
-    end, { 'i', 'c' }),
-    ['<C-n>'] = cmp.mapping(function(fallback)
-      if vim.fn.mode() == 'i' then
+      end,
+    },
+    ['<C-n>'] = {
+      ['c'] = cmp.mapping.select_next_item(),
+      ['i'] = function()
         if cmp.visible() then
           cmp.select_next_item()
         elseif luasnip.choice_active() then
@@ -305,25 +303,19 @@ cmp.setup({
         else
           cmp.complete()
         end
-      elseif vim.fn.mode() == 'c' then
-        if cmp.visible() then
-          cmp.select_next_item()
-        else
-          fallback()
-        end
-      end
-    end, { 'i', 'c' }),
+      end,
+    },
     ['<Down>'] = cmp.mapping(
       cmp.mapping.select_next_item({
         behavior = cmp.SelectBehavior.Select,
       }),
-      { 'i' }
+      { 'i', 'c' }
     ),
     ['<Up>'] = cmp.mapping(
       cmp.mapping.select_prev_item({
         behavior = cmp.SelectBehavior.Select,
       }),
-      { 'i' }
+      { 'i', 'c' }
     ),
     ['<PageDown>'] = cmp.mapping(
       cmp.mapping.select_next_item({
@@ -348,10 +340,13 @@ cmp.setup({
         fallback()
       end
     end, { 'i', 'c' }),
-    ['<C-y>'] = cmp.mapping.confirm({
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = false,
-    }),
+    ['<C-y>'] = cmp.mapping(
+      cmp.mapping.confirm({
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = false,
+      }),
+      { 'i', 'c' }
+    ),
   },
   sources = {
     { name = 'luasnip', max_item_count = 3 },
