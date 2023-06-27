@@ -33,27 +33,29 @@ end
 ---@param cachekey string key of the cache
 ---@return string sign string representation of the sign with highlight
 function _G.statuscol.get_sign(bufnum, lnum, prefixes, cachekey)
-  local cur_signs =
-    vim.fn.sign_getplaced(bufnum, { group = '*', lnum = lnum })[1].signs
-
-  local diag_signs = {}
-  for _, sign in ipairs(cur_signs) do
-    for _, prefix in ipairs(prefixes) do
-      if vim.startswith(sign.name, prefix) then
-        table.insert(diag_signs, sign)
-        break
+  local signs = vim.tbl_filter(
+    function(sign)
+      for _, prefix in ipairs(prefixes) do
+        if vim.startswith(sign.name, prefix) then
+          return true
+        end
       end
+      return false
+    end,
+    vim.fn.sign_getplaced(bufnum, {
+      group = '*',
+      lnum = lnum,
+    })[1].signs
+  )
+
+  local sign_max_priority = { priority = -1 }
+  for _, sign in ipairs(signs) do
+    if sign.priority > sign_max_priority.priority then
+      sign_max_priority = sign
     end
   end
 
-  local max_priority_sign = { priority = -1 }
-  for _, sign in ipairs(diag_signs) do
-    if sign.priority > max_priority_sign.priority then
-      max_priority_sign = sign
-    end
-  end
-
-  local sign_def = get_sign_def(max_priority_sign.name, cachekey)
+  local sign_def = get_sign_def(sign_max_priority.name, cachekey)
 
   if
     not sign_def
