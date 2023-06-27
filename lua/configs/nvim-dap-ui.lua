@@ -34,8 +34,8 @@ dapui.setup({
     },
   },
   icons = {
-    expanded = vim.trim(static.icons.TriangleDown),
-    collapsed = vim.trim(static.icons.TriangleRight),
+    expanded = vim.trim(static.icons.ui.AngleDown),
+    collapsed = vim.trim(static.icons.ui.AngleRight),
     current_frame = vim.trim(static.icons.StackFrameCurrent),
   },
   mappings = {
