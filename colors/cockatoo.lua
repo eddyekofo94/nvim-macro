@@ -543,8 +543,8 @@ local hlgroups = {
   TelescopeSelectionCaret = { fg = palette.orange, bg = palette.thunder },
 
   -- fidget
-  FidgetTitle = { link = 'Title' },
-  FidgetTask = { fg = palette.pigeon },
+  FidgetTask = { fg = palette.thunder },
+  FidgetTitle = { fg = palette.thunder, bold = true },
 
   -- nvim-dap-ui
   DapUIBreakpointsCurrentLine = { link = 'CursorLineNr' },
