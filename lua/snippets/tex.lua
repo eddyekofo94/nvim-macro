@@ -90,6 +90,7 @@ M.style_auto = {
     {
       trig = '^(%s*)- ',
       regTrig = true,
+      hidden = true,
       snippetType = 'autosnippet',
     },
     f(function(_, snip, _)
@@ -100,6 +101,7 @@ M.style_auto = {
     {
       trig = '\\item(%w)',
       regTrig = true,
+      hidden = true,
       snippetType = 'autosnippet',
     },
     d(1, function(_, snip)

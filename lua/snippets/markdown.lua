@@ -15,6 +15,7 @@ M.format = {
   us.sn({
     trig = '^# ',
     regTrig = true,
+    hidden = true,
     snippetType = 'autosnippet',
   }, {
     t('# '),
