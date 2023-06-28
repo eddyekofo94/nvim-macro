@@ -37,13 +37,10 @@ M.format = {
 }
 
 M.markers = {
-  ms({
-    common = { snippetType = 'autosnippet' },
+  us.msan({
     {
       trig = '**',
       priority = 999,
-      condition = conds.in_normalzone,
-      show_condition = conds.in_normalzone,
     },
     {
       trig = '*',

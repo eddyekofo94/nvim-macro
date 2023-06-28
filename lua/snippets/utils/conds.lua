@@ -81,7 +81,7 @@ function M.after_pattern(pattern)
     return vim.api
       .nvim_get_current_line()
       :sub(1, vim.api.nvim_win_get_cursor(0)[2])
-      :gsub(matched_trigger, '')
+      :gsub(vim.pesc(matched_trigger) .. '$', '', 1)
       :match(pattern .. '$') ~= nil
   end)
 end
