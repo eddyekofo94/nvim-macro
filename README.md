@@ -1,53 +1,57 @@
 <h1 align="center"> Bekaboo's Neovim Configuration </h1>
 
 <center>
-
-![image](https://user-images.githubusercontent.com/76579810/220516563-8c9e9f95-fa8d-4788-b995-04e1efca7124.png)
-
-![image](https://user-images.githubusercontent.com/76579810/220517666-4a6ce796-0972-4b06-98ac-86313036537e.png)
-
+    <div>
+        <img src="https://github.com/Bekaboo/nvim/assets/76579810/ff20fc73-4d21-478b-ae13-728832e4f3db" width=47.5%>
+        <img src="https://github.com/Bekaboo/nvim/assets/76579810/1f2ceeaf-3b78-4777-afc7-db0b7f6ba69a" width=47.5%>
+    </div>
 </center>
-
-*\*Plugin and relevant resources for the startup screen has been removed since
-commit `d49a2fa` to debloat this config. Revert this commit if you like the
-startup screen.*
 
 ## Table of Contents
 
-1. [Features](#features)
-2. [Requirements and Dependencies](#requirements-and-dependencies)
-    1. [Basic](#basic)
-    2. [Tree-sitter](#tree-sitter)
-    3. [LSP](#lsp)
-    4. [DAP](#dap)
-    5. [Other External Tools](#other-external-tools)
-3. [Installation](#installation)
-4. [Config Structure](#config-structure)
-5. [Tweaking this Configuration](#tweaking-this-configuration)
-    1. [Managing Plugins with Modules](#managing-plugins-with-modules)
-    2. [Installing Packages to an Existing Module](#installing-packages-to-an-existing-module)
-    3. [Installing Packages to a New Module](#installing-packages-to-a-new-module)
-    4. [General Settings and Options](#general-settings-and-options)
-    5. [Keymaps](#keymaps)
-    6. [Colorscheme](#colorscheme)
-    7. [Auto Commands](#auto-commands)
-    8. [LSP Server Configurations](#lsp-server-configurations)
-    9. [DAP Configurations](#dap-configurations)
-    10. [Snippets](#snippets)
-    11. [Enabling VSCode Integration](#enabling-vscode-integration)
-6. [Appendix](#appendix)
-    1. [Default Modules and Plugins of Choice](#default-modules-and-plugins-of-choice)
-    2. [Startuptime Statistics](#startuptime-statistics)
+<!--toc:start-->
+- [Table of Contents](#table-of-contents)
+- [Features](#features)
+- [Requirements and Dependencies](#requirements-and-dependencies)
+  - [Basic](#basic)
+  - [Tree-sitter](#tree-sitter)
+  - [LSP](#lsp)
+  - [DAP](#dap)
+  - [Formatter](#formatter)
+  - [Other External Tools](#other-external-tools)
+- [Installation](#installation)
+- [Config Structure](#config-structure)
+- [Tweaking this Configuration](#tweaking-this-configuration)
+  - [Managing Plugins with Modules](#managing-plugins-with-modules)
+  - [Installing Packages to an Existing Module](#installing-packages-to-an-existing-module)
+  - [Installing Packages to a New Module](#installing-packages-to-a-new-module)
+  - [General Settings and Options](#general-settings-and-options)
+  - [Keymaps](#keymaps)
+  - [Colorscheme](#colorscheme)
+  - [Auto Commands](#auto-commands)
+  - [LSP Server Configurations](#lsp-server-configurations)
+  - [DAP Configurations](#dap-configurations)
+  - [Snippets](#snippets)
+  - [Enabling VSCode Integration](#enabling-vscode-integration)
+- [Appendix](#appendix)
+  - [Default Modules and Plugins of Choice](#default-modules-and-plugins-of-choice)
+      - [Third Party Plugins](#third-party-plugins)
+    - [Local Plugins](#local-plugins)
+  - [Startuptime Statistics](#startuptime-statistics)
+<!--toc:end-->
 
 ## Features
 
-- Modular Design
+- Modular design
     - Install and manage packages in groups
-    - Make it easy to use different set of configuration for different use cases
-- [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) Integration
+    - Make it easy to use different set of configuration for different use
+      cases
+- [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) integration
     - Feels at home in VSCode when you occasionally need it
-- Fast Startup
-    - Around [15 ~ 35 ms](#startuptime-statistics)
+- Massive [TeX math snippets](https://github.com/Bekaboo/nvim/blob/master/lua/snippets/shared/math.lua)
+- Custom UI elements ([statusline](https://github.com/Bekaboo/nvim/blob/master/plugin/statusline.lua), [statuscolumn](https://github.com/Bekaboo/nvim/blob/master/plugin/statuscolumn.lua), [winbar](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/winbar)) and [colorschemes](https://github.com/Bekaboo/nvim/tree/master/colors)
+- [Fine-tuned plugins](https://github.com/Bekaboo/nvim/tree/master/lua/configs) with [custom patches](https://github.com/Bekaboo/nvim/tree/master/patches)
+- Fast startup around [15 ~ 35 ms](#startuptime-statistics)
 
 ## Requirements and Dependencies
 
@@ -166,7 +170,6 @@ Install the following debug adapters manually:
 ├── ftplugin                    # custom filetype plugins
 ├── init.lua                    # entry of config
 ├── lua
-│   ├── colors                  # actual implementation of colorshemes
 │   ├── init                    # files under this folder is required by 'init.lua'
 │   │   ├── autocmds.lua
 │   │   ├── general.lua         # options and general settings
@@ -197,13 +200,11 @@ In order to enable or disable a module, one need to change the table in
 [lua/init/plugins.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua) passed to `manage_plugins()`, for example
 
 ```lua
-manage_plugins({
-    spec = {
-      { import = 'modules.base' },
-      { import = 'modules.treesitter' },
-      { import = 'modules.editor' },
-      -- ...
-    },
+enable_modules({
+  'base',
+  'treesitter',
+  'editor',
+  -- ...
 })
 ```
 
@@ -220,11 +221,11 @@ corresponding specification to the big table
 
 ```lua
 return {
-    -- ...
-    {
-        'foo/foo',
-        dependencies = 'foo_dep',
-    },
+  -- ...
+  {
+    'foo/foo',
+    dependencies = 'foo_dep',
+  },
 }
 ```
 
@@ -265,11 +266,10 @@ return {
 After creating the new module `bar`, enable it in [lua/init/plugins.lua](hub.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua):
 
 ```lua
-manage_plugins({
-    spec = {
-      -- ...
-      { import = 'modules.bar' },
-    },
+enable_modules({
+  -- ...
+  'bar',
+  -- ...
 })
 ```
 
@@ -284,18 +284,31 @@ corresponding plugin keymaps.
 
 ### Colorscheme
 
-![image](https://user-images.githubusercontent.com/76579810/220518710-aa55a4cc-6855-471d-8ed8-627bbfdf617c.png)
+- Nano
 
+    <div>
+        <img src="https://github.com/Bekaboo/nvim/assets/76579810/a79e1322-114c-46c8-80ff-c29129f8cb2a" width=47.5%>
+        <img src="https://github.com/Bekaboo/nvim/assets/76579810/be61e9bf-84d8-472a-a3b1-a0d2962e636a" width=47.5%>
+    </div>
 
-`cockatoo` is a builtin custom colorscheme, with seperate palettes for dark and light background.
+- Cockatoo
 
-Neovim is configured to restore the background settings on startup, so there
-is no need to setup `vim.opt.bg` in the config.
+    <div>
+        <img src="https://github.com/Bekaboo/nvim/assets/76579810/de4c61f6-a8a8-409d-bb6d-6bb144e65832" width=47.5%>
+        <img src="https://github.com/Bekaboo/nvim/assets/76579810/035eb032-bbe5-48a5-abaf-4b334516c2cd" width=47.5%>
+    </div>
+
+`cockatoo` and `nano` are two builtin custom colorschemes, with seperate
+palettes for dark and light background.
+
+Neovim is configured to restore the previous background and colorscheme
+settings on startup, so there is no need to set them up in the config
+file explicitly.
 
 To disable the auto-restore feature, remove corresponding lines in
 [lua/init/autocmds.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/autocmds.lua)
 
-To tweak this colorscheme, see [lua/colors/cockatoo](https://github.com/Bekaboo/nvim/tree/master/lua/colors/cockatoo).
+To tweak this colorscheme, see [colors/cockatoo.lua](https://github.com/Bekaboo/nvim/tree/master/colors/cockatoo.lua) and [colors/nano.lua](https://github.com/Bekaboo/nvim/tree/master/colors/nano.lua)
 
 ### Auto Commands
 
@@ -330,6 +343,8 @@ and it should work out of the box.
 ## Appendix
 
 ### Default Modules and Plugins of Choice
+
+#### Third Party Plugins
 
 Total # of plugins: 48 (package manager included).
 
@@ -389,16 +404,40 @@ Total # of plugins: 48 (package manager included).
 - **DEBUG**
     - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
     - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
+    - [one-small-step-for-vimkind](https://github.com/jbyuki/one-small-step-for-vimkind)
+
+#### Local Plugins
+
+- [colorcolumn](https://github.com/Bekaboo/nvim/tree/master/plugin/colorcolumn.lua)
+    - shows color column dynamically based on current line width
+    - released as [deadcolumn.nvim](https://github.com/Bekaboo/deadcolumn.nvim)
+- [expandtab](https://github.com/Bekaboo/nvim/tree/master/plugin/expandtab.lua)
+    - always use spaces for alignment
+- [hlsearch](https://github.com/Bekaboo/nvim/tree/master/plugin/hlsearch.lua)
+    - toggles `'hlsearch'` smartly
+- [readline](https://github.com/Bekaboo/nvim/tree/master/plugin/readline.lua)
+    - readline-like keybindings in insert and command mode
+- [statuscolumn](https://github.com/Bekaboo/nvim/tree/master/plugin/statuscolumn.lua)
+    - custom statuscolumn, with git signs on the right of line numbers
+- [statusline](https://github.com/Bekaboo/nvim/tree/master/plugin/statusline.lua)
+    - custom statusline inspired by [nano-emacs](https://github.com/rougier/nano-emacs)
+- [tabout](https://github.com/Bekaboo/nvim/tree/master/plugin/tabout.lua)
+    - tab in and out with `<Tab>` and `<S-Tab>`
+- [vscode-neovim](https://github.com/Bekaboo/nvim/tree/master/plugin/vscode-neovim.vim)
+    - integration with [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim)
+- [winbar](https://github.com/Bekaboo/nvim/blob/master/plugin/winbar.lua)
+    - a winbar with drop-down menus and multiple backends
+    - released as [dropbar.nvim](https://github.com/Bekaboo/dropbar.nvim)
 
 ### Startuptime Statistics
 
-Last update: 2023-01-16
+Last update: 2023-06-27
 
-Neovim Version: `NVIM v0.9.0-dev-646+gef67503320`
+Neovim Version: `NVIM v0.10.0-dev-585+g2e055e49a3`
 
-Commit: `db72f37` (#551)
+Config Commit: `25d92d44dcfa20ec3a980132b3d2fd053cf2daa0` (#1582)
 
-System: Arch Linux 6.1.4
+System: Arch Linux 6.3.9
 
 Machine: Dell XPS-13-7390
 
@@ -412,154 +451,216 @@ Command: `nvim --startuptime startuptime.log`
      clock   self+sourced   self:  sourced script
      clock   elapsed:              other lines
 
-    000.007  000.007: --- NVIM STARTING ---
-    000.054  000.047: event init
-    000.102  000.048: early init
-    000.137  000.035: locale set
-    000.167  000.031: init first window
-    000.373  000.205: inits 1
-    000.381  000.009: window checked
-    000.383  000.002: parsing arguments
-    000.741  000.060  000.060: require('vim.shared')
-    000.835  000.032  000.032: require('vim._meta')
-    000.837  000.092  000.060: require('vim._editor')
-    000.838  000.176  000.024: require('vim._init_packages')
-    000.839  000.280: init lua interpreter
-    000.880  000.041: expanding arguments
-    000.904  000.024: inits 2
-    001.109  000.205: init highlight
-    001.110  000.001: waiting for UI
-    001.208  000.098: done waiting for UI
-    001.213  000.005: clear screen
-    001.305  000.092: init default mappings
-    001.316  000.011: init default autocommands
-    001.653  000.061  000.061: sourcing /usr/share/nvim/runtime/ftplugin.vim
-    001.702  000.022  000.022: sourcing /usr/share/nvim/runtime/indent.vim
-    001.741  000.007  000.007: sourcing /usr/share/nvim/archlinux.vim
-    001.744  000.021  000.014: sourcing /etc/xdg/nvim/sysinit.vim
-    003.039  000.032  000.032: require('colors.nvim-falcon.palette')
-    003.146  000.523  000.491: require('colors.nvim-falcon.colorscheme')
-    003.148  000.559  000.036: require('colors.nvim-falcon')
-    003.952  000.073  000.073: require('colors.nvim-falcon.terminal')
-    003.956  001.377  000.746: sourcing /home/zeng/.config/nvim/colors/nvim-falcon.lua
-    003.960  002.190  000.813: require('init.general')
-    004.077  000.005  000.005: require('vim.keymap')
-    004.879  000.918  000.913: require('init.keymaps')
-    004.954  000.072  000.072: require('init.autocmds')
-    005.194  000.202  000.202: require('utils.packer')
-    006.651  000.398  000.398: require('packer.load')
-    007.549  000.006  000.006: require('vim.F')
-    007.559  000.696  000.690: require('alpha')
-    007.691  000.131  000.131: require('alpha.themes.dashboard')
-    008.047  000.354  000.354: require('utils.static')
-    008.710  000.044  000.044: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vim-markdown/ftdetect/markdown.vim
-    008.743  000.015  000.015: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/cls.vim
-    008.775  000.016  000.016: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim
-    008.805  000.014  000.014: sourcing /home/zeng/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tikz.vim
-    008.825  003.603  001.936: require('packer_compiled')
-    008.852  003.896  000.091: require('init.plugins')
-    008.853  007.095  000.020: sourcing /home/zeng/.config/nvim/init.lua
-    008.858  000.342: sourcing vimrc file(s)
-    009.054  000.009  000.009: sourcing /usr/share/vim/vimfiles/ftdetect/PKGBUILD.vim
-    009.074  000.009  000.009: sourcing /usr/share/vim/vimfiles/ftdetect/SRCINFO.vim
-    009.131  000.232  000.214: sourcing /usr/share/nvim/runtime/filetype.lua
-    009.273  000.072  000.072: sourcing /usr/share/nvim/runtime/syntax/synload.vim
-    009.345  000.182  000.110: sourcing /usr/share/nvim/runtime/syntax/syntax.vim
-    009.585  000.009  000.009: sourcing /home/zeng/.config/nvim/plugin/vscode_neovim.vim
-    009.783  000.010  000.010: sourcing /usr/share/nvim/runtime/plugin/gzip.vim
-    009.800  000.007  000.007: sourcing /usr/share/nvim/runtime/plugin/health.vim
-    009.816  000.008  000.008: sourcing /usr/share/nvim/runtime/plugin/matchit.vim
-    009.936  000.110  000.110: sourcing /usr/share/nvim/runtime/plugin/matchparen.vim
-    009.961  000.012  000.012: sourcing /usr/share/nvim/runtime/plugin/netrwPlugin.vim
-    010.073  000.006  000.006: sourcing /home/zeng/.local/share/nvim/rplugin.vim
-    010.080  000.108  000.102: sourcing /usr/share/nvim/runtime/plugin/rplugin.vim
-    010.135  000.046  000.046: sourcing /usr/share/nvim/runtime/plugin/shada.vim
-    010.168  000.016  000.016: sourcing /usr/share/nvim/runtime/plugin/spellfile.vim
-    010.192  000.011  000.011: sourcing /usr/share/nvim/runtime/plugin/tarPlugin.vim
-    010.210  000.007  000.007: sourcing /usr/share/nvim/runtime/plugin/tohtml.vim
-    010.233  000.012  000.012: sourcing /usr/share/nvim/runtime/plugin/tutor.vim
-    010.294  000.013  000.013: sourcing /usr/share/nvim/runtime/plugin/zipPlugin.vim
-    010.500  000.118  000.118: sourcing /home/zeng/.config/nvim/plugin/auto_hlsearch.lua
-    010.555  000.038  000.038: sourcing /home/zeng/.config/nvim/plugin/auto_set_spell.lua
-    010.600  000.033  000.033: sourcing /home/zeng/.config/nvim/plugin/tabout.lua
-    010.811  000.039  000.039: sourcing /usr/share/nvim/runtime/plugin/editorconfig.lua
-    010.879  000.056  000.056: sourcing /usr/share/nvim/runtime/plugin/man.lua
-    010.912  000.019  000.019: sourcing /usr/share/nvim/runtime/plugin/nvim.lua
-    010.927  000.981: loading rtp plugins
-    011.048  000.120: loading packages
-    011.489  000.121  000.121: sourcing /home/zeng/.local/share/nvim/site/pack/packer/start/rnvimr/after/plugin/rnvimr.vim
-    011.527  000.359: loading after plugins
-    011.541  000.014: inits 3
-    013.598  002.057: reading ShaDa
-    013.783  000.185: opening buffers
-    013.914  000.116  000.116: require('utils.funcs')
-    014.107  000.113  000.113: sourcing /home/zeng/.local/share/nvim/site/pack/packer/start/rnvimr/autoload/rnvimr.vim
-    014.128  000.116: BufEnter autocommands
-    014.130  000.002: editing files in windows
-    015.761  001.631: VimEnter autocommands
-    015.764  000.004: UIEnter autocommands
-    015.766  000.002: before starting main loop
-    016.512  000.746: first screen update
-    016.515  000.002: --- NVIM STARTED ---
+    000.005  000.005: --- NVIM STARTING ---
+    000.058  000.053: event init
+    000.105  000.047: early init
+    000.139  000.034: locale set
+    000.170  000.031: init first window
+    000.371  000.201: inits 1
+    000.382  000.012: window checked
+    000.384  000.002: parsing arguments
+    000.762  000.053  000.053: require('vim.shared')
+    000.859  000.035  000.035: require('vim._meta')
+    000.861  000.095  000.061: require('vim._editor')
+    000.862  000.195  000.047: require('vim._init_packages')
+    000.866  000.286: init lua interpreter
+    000.921  000.055: expanding arguments
+    000.951  000.030: inits 2
+    001.186  000.235: init highlight
+    001.187  000.001: waiting for UI
+    001.332  000.145: done waiting for UI
+    001.341  000.009: clear screen
+    001.455  000.114: init default mappings & autocommands
+    001.751  000.045  000.045: sourcing /usr/share/nvim/runtime/ftplugin.vim
+    001.799  000.023  000.023: sourcing /usr/share/nvim/runtime/indent.vim
+    001.839  000.008  000.008: sourcing /usr/share/nvim/archlinux.vim
+    001.842  000.023  000.015: sourcing /etc/xdg/nvim/sysinit.vim
+    002.480  000.612  000.612: require('init.general')
+    002.649  000.025  000.025: require('utils')
+    002.660  000.008  000.008: require('vim.keymap')
+    003.445  000.033  000.033: require('utils.funcs')
+    003.485  000.036  000.036: require('utils.funcs.keymap')
+    003.619  001.135  001.033: require('init.keymaps')
+    003.959  000.339  000.339: require('init.autocmds')
+    004.553  000.271  000.271: require('modules.base')
+    004.642  000.050  000.050: require('modules.completion')
+    004.721  000.042  000.042: require('modules.debug')
+    004.766  000.041  000.041: require('modules.editor')
+    004.806  000.036  000.036: require('modules.lsp')
+    004.846  000.036  000.036: require('modules.markup')
+    004.936  000.085  000.085: require('modules.tools')
+    005.018  000.078  000.078: require('modules.treesitter')
+    005.043  000.021  000.021: require('modules.ui')
+    005.139  000.092  000.092: require('lazy')
+    005.180  000.012  000.012: require('ffi')
+    005.209  000.026  000.026: require('vim.loader')
+    005.274  000.015  000.015: require('vim.fs')
+    005.543  000.298  000.283: require('lazy.stats')
+    005.707  000.142  000.142: require('lazy.core.util')
+    005.841  000.131  000.131: require('lazy.core.config')
+    006.133  000.186  000.186: require('lazy.core.handler')
+    006.281  000.145  000.145: require('lazy.core.plugin')
+    006.290  000.446  000.116: require('lazy.core.loader')
+    008.936  000.149  000.149: require('lazy.core.handler.event')
+    009.077  000.136  000.136: require('lazy.core.handler.ft')
+    009.166  000.084  000.084: require('lazy.core.handler.cmd')
+    009.225  000.056  000.056: require('lazy.core.handler.keys')
+    009.330  000.028  000.028: sourcing /home/zeng/.local/share/nvim/site/pack/packages/opt/vimtex/ftdetect/cls.vim
+    009.372  000.019  000.019: sourcing /home/zeng/.local/share/nvim/site/pack/packages/opt/vimtex/ftdetect/tex.vim
+    009.409  000.014  000.014: sourcing /home/zeng/.local/share/nvim/site/pack/packages/opt/vimtex/ftdetect/tikz.vim
+    011.277  000.246  000.246: sourcing /usr/share/nvim/runtime/filetype.lua
+    011.615  000.242  000.242: require('configs.rnvimr')
+    011.854  000.130  000.130: sourcing /home/zeng/.config/nvim/plugin/colorcolumn.lua
+    011.984  000.104  000.104: sourcing /home/zeng/.config/nvim/plugin/expandtab.lua
+    012.197  000.185  000.185: sourcing /home/zeng/.config/nvim/plugin/hlsearch.lua
+    012.285  000.060  000.060: sourcing /home/zeng/.config/nvim/plugin/readline.lua
+    012.424  000.112  000.112: sourcing /home/zeng/.config/nvim/plugin/statuscolumn.lua
+    012.586  000.117  000.117: sourcing /home/zeng/.config/nvim/plugin/statusline.lua
+    012.746  000.116  000.116: sourcing /home/zeng/.config/nvim/plugin/tabout.lua
+    012.788  000.013  000.013: sourcing /home/zeng/.config/nvim/plugin/vscode-neovim.vim
+    012.871  000.062  000.062: sourcing /home/zeng/.config/nvim/plugin/winbar.lua
+    013.095  000.106  000.106: sourcing /usr/share/nvim/runtime/plugin/editorconfig.lua
+    013.265  000.142  000.142: sourcing /usr/share/nvim/runtime/plugin/man.lua
+    013.438  000.143  000.143: sourcing /usr/share/nvim/runtime/plugin/matchparen.vim
+    013.748  000.154  000.154: sourcing /usr/share/nvim/runtime/plugin/nvim.lua
+    013.964  000.142  000.142: sourcing /usr/share/nvim/runtime/plugin/rplugin.vim
+    014.046  000.052  000.052: sourcing /usr/share/nvim/runtime/plugin/shada.vim
+    014.109  000.020  000.020: sourcing /usr/share/nvim/runtime/plugin/spellfile.vim
+    014.297  000.069  000.069: sourcing /home/zeng/.local/share/nvim/site/pack/packages/opt/rnvimr/after/plugin/rnvimr.vim
+    014.427  010.465  005.957: require('init.plugins')
+    014.429  012.573  000.022: sourcing /home/zeng/.config/nvim/init.lua
+    014.436  000.318: sourcing vimrc file(s)
+    014.625  000.088  000.088: sourcing /usr/share/nvim/runtime/filetype.lua
+    014.770  000.064  000.064: sourcing /usr/share/nvim/runtime/syntax/synload.vim
+    014.841  000.177  000.113: sourcing /usr/share/nvim/runtime/syntax/syntax.vim
+    014.860  000.158: inits 3
+    015.619  000.759: reading ShaDa
+    015.755  000.006  000.006: require('vim.F')
+    015.931  000.307: opening buffers
+    016.103  000.116  000.116: sourcing /home/zeng/.local/share/nvim/site/pack/packages/opt/rnvimr/autoload/rnvimr.vim
+    016.125  000.078: BufEnter autocommands
+    016.127  000.002: editing files in windows
+    016.134  000.007: executing command arguments
+    016.136  000.001: VimEnter autocommands
+    017.069  000.880  000.880: sourcing /home/zeng/.config/nvim/colors/nano.lua
+    017.106  000.090: UIEnter autocommands
+    017.108  000.002: before starting main loop
+    017.326  000.051  000.051: require('utils.funcs.stl')
+    017.411  000.048  000.048: require('utils.funcs.git')
+    017.638  000.220  000.220: require('vim._system')
+    019.474  002.047: first screen update
+    019.477  000.003: --- NVIM STARTED ---
   ```
 
 </details>
 
 <details>
-  <summary>statistics of 50 startups (sorted)</summary>
+  <summary>statistics of 100 startups (sorted)</summary>
 
 
   ```
-  016.891  000.004: --- NVIM STARTED ---
-  018.252  000.003: --- NVIM STARTED ---
-  019.379  000.003: --- NVIM STARTED ---
-  019.416  000.003: --- NVIM STARTED ---
-  019.486  000.003: --- NVIM STARTED ---
-  019.490  000.003: --- NVIM STARTED ---
-  019.644  000.004: --- NVIM STARTED ---
-  019.657  000.003: --- NVIM STARTED ---
-  019.746  000.004: --- NVIM STARTED ---
-  019.794  000.003: --- NVIM STARTED ---
-  019.821  000.003: --- NVIM STARTED ---
-  019.846  000.003: --- NVIM STARTED ---
-  019.913  000.003: --- NVIM STARTED ---
-  019.951  000.003: --- NVIM STARTED ---
-  019.961  000.003: --- NVIM STARTED ---
-  019.969  000.003: --- NVIM STARTED ---
-  019.985  000.003: --- NVIM STARTED ---
-  020.053  000.003: --- NVIM STARTED ---
-  020.107  000.003: --- NVIM STARTED ---
-  020.118  000.003: --- NVIM STARTED ---
-  020.133  000.003: --- NVIM STARTED ---
-  020.134  000.003: --- NVIM STARTED ---
-  020.136  000.003: --- NVIM STARTED ---
-  020.202  000.003: --- NVIM STARTED ---
-  020.229  000.003: --- NVIM STARTED ---
-  020.236  000.003: --- NVIM STARTED ---
-  020.236  000.003: --- NVIM STARTED ---
-  020.248  000.003: --- NVIM STARTED ---
-  020.327  000.003: --- NVIM STARTED ---
-  020.346  000.003: --- NVIM STARTED ---
-  020.374  000.003: --- NVIM STARTED ---
-  020.379  000.003: --- NVIM STARTED ---
-  020.401  000.003: --- NVIM STARTED ---
-  020.440  000.003: --- NVIM STARTED ---
-  020.486  000.003: --- NVIM STARTED ---
-  020.509  000.003: --- NVIM STARTED ---
-  020.524  000.003: --- NVIM STARTED ---
-  020.543  000.003: --- NVIM STARTED ---
-  020.555  000.003: --- NVIM STARTED ---
-  020.570  000.003: --- NVIM STARTED ---
-  020.584  000.003: --- NVIM STARTED ---
-  020.635  000.003: --- NVIM STARTED ---
-  020.717  000.003: --- NVIM STARTED ---
-  020.736  000.003: --- NVIM STARTED ---
-  020.763  000.003: --- NVIM STARTED ---
-  021.218  000.003: --- NVIM STARTED ---
-  021.375  000.003: --- NVIM STARTED ---
-  021.800  000.003: --- NVIM STARTED ---
-  026.470  000.004: --- NVIM STARTED ---
-  027.071  000.004: --- NVIM STARTED ---
+    017.735  000.003: --- NVIM STARTED ---
+    018.343  000.003: --- NVIM STARTED ---
+    018.382  000.003: --- NVIM STARTED ---
+    018.512  000.003: --- NVIM STARTED ---
+    018.536  000.003: --- NVIM STARTED ---
+    018.691  000.003: --- NVIM STARTED ---
+    018.702  000.003: --- NVIM STARTED ---
+    018.718  000.003: --- NVIM STARTED ---
+    018.851  000.003: --- NVIM STARTED ---
+    018.868  000.003: --- NVIM STARTED ---
+    018.947  000.003: --- NVIM STARTED ---
+    018.978  000.004: --- NVIM STARTED ---
+    019.008  000.003: --- NVIM STARTED ---
+    019.074  000.003: --- NVIM STARTED ---
+    019.081  000.003: --- NVIM STARTED ---
+    019.243  000.005: --- NVIM STARTED ---
+    019.391  000.005: --- NVIM STARTED ---
+    019.430  000.003: --- NVIM STARTED ---
+    019.465  000.003: --- NVIM STARTED ---
+    019.476  000.004: --- NVIM STARTED ---
+    019.477  000.003: --- NVIM STARTED ---
+    019.478  000.004: --- NVIM STARTED ---
+    019.506  000.004: --- NVIM STARTED ---
+    019.540  000.003: --- NVIM STARTED ---
+    019.551  000.006: --- NVIM STARTED ---
+    019.570  000.005: --- NVIM STARTED ---
+    019.626  000.003: --- NVIM STARTED ---
+    019.628  000.004: --- NVIM STARTED ---
+    019.676  000.003: --- NVIM STARTED ---
+    019.736  000.004: --- NVIM STARTED ---
+    019.769  000.004: --- NVIM STARTED ---
+    019.780  000.004: --- NVIM STARTED ---
+    019.783  000.004: --- NVIM STARTED ---
+    019.818  000.003: --- NVIM STARTED ---
+    019.837  000.003: --- NVIM STARTED ---
+    019.892  000.003: --- NVIM STARTED ---
+    019.917  000.003: --- NVIM STARTED ---
+    019.933  000.004: --- NVIM STARTED ---
+    019.940  000.003: --- NVIM STARTED ---
+    019.963  000.006: --- NVIM STARTED ---
+    020.125  000.003: --- NVIM STARTED ---
+    020.129  000.005: --- NVIM STARTED ---
+    020.190  000.003: --- NVIM STARTED ---
+    020.194  000.003: --- NVIM STARTED ---
+    020.418  000.004: --- NVIM STARTED ---
+    020.560  000.005: --- NVIM STARTED ---
+    020.589  000.005: --- NVIM STARTED ---
+    020.624  000.006: --- NVIM STARTED ---
+    020.699  000.004: --- NVIM STARTED ---
+    020.713  000.003: --- NVIM STARTED ---
+    020.799  000.006: --- NVIM STARTED ---
+    020.901  000.003: --- NVIM STARTED ---
+    020.903  000.004: --- NVIM STARTED ---
+    020.925  000.007: --- NVIM STARTED ---
+    021.008  000.003: --- NVIM STARTED ---
+    021.011  000.004: --- NVIM STARTED ---
+    021.017  000.005: --- NVIM STARTED ---
+    021.037  000.004: --- NVIM STARTED ---
+    021.047  000.004: --- NVIM STARTED ---
+    021.147  000.003: --- NVIM STARTED ---
+    021.162  000.004: --- NVIM STARTED ---
+    021.166  000.003: --- NVIM STARTED ---
+    021.261  000.006: --- NVIM STARTED ---
+    021.334  000.003: --- NVIM STARTED ---
+    021.334  000.003: --- NVIM STARTED ---
+    021.357  000.005: --- NVIM STARTED ---
+    021.374  000.003: --- NVIM STARTED ---
+    021.411  000.004: --- NVIM STARTED ---
+    021.420  000.005: --- NVIM STARTED ---
+    021.538  000.003: --- NVIM STARTED ---
+    021.542  000.003: --- NVIM STARTED ---
+    021.557  000.008: --- NVIM STARTED ---
+    021.664  000.003: --- NVIM STARTED ---
+    021.693  000.003: --- NVIM STARTED ---
+    021.706  000.004: --- NVIM STARTED ---
+    021.760  000.004: --- NVIM STARTED ---
+    021.766  000.004: --- NVIM STARTED ---
+    021.771  000.004: --- NVIM STARTED ---
+    021.823  000.007: --- NVIM STARTED ---
+    021.831  000.003: --- NVIM STARTED ---
+    021.877  000.004: --- NVIM STARTED ---
+    021.945  000.003: --- NVIM STARTED ---
+    022.191  000.004: --- NVIM STARTED ---
+    022.242  000.004: --- NVIM STARTED ---
+    022.262  000.007: --- NVIM STARTED ---
+    022.307  000.003: --- NVIM STARTED ---
+    022.429  000.004: --- NVIM STARTED ---
+    022.601  000.003: --- NVIM STARTED ---
+    022.898  000.004: --- NVIM STARTED ---
+    022.940  000.004: --- NVIM STARTED ---
+    023.014  000.003: --- NVIM STARTED ---
+    023.025  000.004: --- NVIM STARTED ---
+    023.093  000.003: --- NVIM STARTED ---
+    023.151  000.003: --- NVIM STARTED ---
+    023.258  000.004: --- NVIM STARTED ---
+    023.553  000.004: --- NVIM STARTED ---
+    023.571  000.006: --- NVIM STARTED ---
+    024.175  000.005: --- NVIM STARTED ---
+    024.182  000.005: --- NVIM STARTED ---
+    025.475  000.005: --- NVIM STARTED ---
+
+    Mean:  2076.55 / 100 = 20.7655
   ```
 
 </details>
