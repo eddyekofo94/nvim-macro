@@ -362,6 +362,11 @@ local hlgroups = {
   DiagnosticSignWarn = { link = 'DiagnosticWarn' },
   DiagnosticSignInfo = { link = 'DiagnosticInfo' },
   DiagnosticSignHint = { link = 'DiagnosticHint' },
+  DiagnosticSignOkCul = { fg = palette.faded },
+  DiagnosticSignErrorCul = { fg = palette.critical },
+  DiagnosticSignWarnCul = { fg = palette.popout },
+  DiagnosticSignInfoCul = { fg = palette.foreground },
+  DiagnosticSignHintCul = { fg = palette.foreground },
   -- }}}2
 
   -- Filetype {{{2

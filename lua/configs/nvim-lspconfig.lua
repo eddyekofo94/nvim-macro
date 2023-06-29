@@ -40,6 +40,7 @@ local function lspconfig_diagnostic()
       text = icons[sign_name],
       texthl = sign_name,
       numhl = sign_name,
+      culhl = sign_name .. 'Cul',
     })
   end
 

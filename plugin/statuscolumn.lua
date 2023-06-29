@@ -1,38 +1,76 @@
 _G.statuscol = {}
-local cache = {}
 local utils = require('utils')
+
+---@class sign_def
+---@field name string?
+---@field icon string?
+---@field text string?
+---@field texthl string?
+---@field linehl string?
+---@field numhl string?
+---@field culhl string?
+
+---@type table<string, table<string, sign_def>>
+local signs_cache = {}
+
+---Highlight groups created from merging other highlight groups
+---@type table<string, string[]>
+local merged_hlgroups = {}
+
+---Record line number highlights for each line in each window
+---@type table<integer, table<integer, string>>
+local win_linenr_hl = {}
 
 ---Get sign definition
 ---@param sign_name string sign name
----@param cachekey string key of the cache
----@return nil|table sign_def sign definition
-local function get_sign_def(sign_name, cachekey)
-  if not cache[cachekey] then
-    cache[cachekey] = {}
+---@param sign_group string group name of the signs
+---@return table sign_def sign definition
+local function get_sign_def(sign_name, sign_group)
+  if not signs_cache[sign_group] then
+    signs_cache[sign_group] = {}
   end
 
-  local cached_signs = cache[cachekey]
+  local cached_signs = signs_cache[sign_group]
   local sign_def = cached_signs[sign_name]
 
   if not sign_def then
     sign_def = vim.fn.sign_getdefined(sign_name)
     if vim.tbl_isempty(sign_def) then
-      return nil
+      return {}
     end
     sign_def[1].text = vim.trim(sign_def[1].text)
-    cached_signs[sign_name] = sign_def
+    if not sign_def[1].culhl then
+      local texthl = sign_def[1].texthl
+      local culhl = texthl .. 'Cul'
+      vim.api.nvim_set_hl(
+        0,
+        culhl,
+        utils.funcs.stl.hl_merge('CursorLineSign', texthl)
+      )
+      vim.fn.sign_define(sign_def[1].name, { culhl = culhl })
+      merged_hlgroups[culhl] = { 'CursorLineSign', texthl }
+    end
+    cached_signs[sign_group] = cached_signs[sign_group] or {}
+    cached_signs[sign_group][sign_name] = sign_def
   end
 
   return sign_def
 end
 
 ---Return the sign at current line
----@param bufnum integer current buffer number
----@param lnum integer current line number
 ---@param prefixes string[] prefixes of the sign name
----@param cachekey string key of the cache
+---@param sign_group string group name of the signs
 ---@return string sign string representation of the sign with highlight
-function _G.statuscol.get_sign(bufnum, lnum, prefixes, cachekey)
+function _G.statuscol.get_sign(prefixes, sign_group)
+  local bufnum = vim.api.nvim_get_current_buf()
+  local cursorline = vim.api.nvim_win_get_cursor(0)[1]
+  local lnum = vim.v.lnum
+  local winnr = vim.api.nvim_get_current_win()
+
+  -- Clear line number highlight group cache
+  win_linenr_hl[winnr] = win_linenr_hl[winnr] or {}
+  win_linenr_hl[winnr][lnum] = nil
+
   local signs = vim.tbl_filter(
     function(sign)
       for _, prefix in ipairs(prefixes) do
@@ -47,18 +85,20 @@ function _G.statuscol.get_sign(bufnum, lnum, prefixes, cachekey)
       lnum = lnum,
     })[1].signs
   )
+  if vim.tbl_isempty(signs) then
+    return ' '
+  end
 
   local sign_max_priority = { priority = -1 }
   for _, sign in ipairs(signs) do
-    if sign.priority > sign_max_priority.priority then
+    if sign.priority >= sign_max_priority.priority then
       sign_max_priority = sign
     end
   end
-
-  local sign_def = get_sign_def(sign_max_priority.name, cachekey)
+  local sign_def = get_sign_def(sign_max_priority.name, sign_group)
 
   if
-    not sign_def
+    vim.tbl_isempty(sign_def)
     or vim.v.virtnum ~= 0 -- Don't show git delete signs in virtual line
       and sign_def[1]
       and sign_def[1].name:match('Git%w*[Dd]elete$')
@@ -66,25 +106,75 @@ function _G.statuscol.get_sign(bufnum, lnum, prefixes, cachekey)
     return ' '
   end
 
-  return utils.funcs.stl.hl(sign_def[1].text, sign_def[1].texthl)
+  -- Determine the highlight of the sign according to cursor line
+  local hl = sign_def[1].texthl
+  if lnum == cursorline and vim.wo.cul then
+    hl = sign_def[1].culhl
+  end
+
+  -- Record line number highlight group if the sign has 'numhl' set
+  if sign_def[1].numhl then
+    win_linenr_hl[winnr][lnum] = sign_def[1].numhl
+  end
+
+  return utils.funcs.stl.hl(sign_def[1].text, hl, false)
 end
 
+---Return the line number highlight group at current line
+---@return string line number highlight group
+function _G.statuscol.get_lnum_hl()
+  local winnr = vim.api.nvim_get_current_win()
+  local lnum = vim.v.lnum
+  local cursorline = vim.api.nvim_win_get_cursor(0)[1]
+  if
+    lnum ~= cursorline
+    or not vim.wo.cul
+    or (vim.wo.culopt ~= 'both' and not (vim.wo.culopt:find('number')))
+    or not win_linenr_hl[winnr]
+    or not win_linenr_hl[winnr][lnum]
+  then
+    return ''
+  end
+  local numhl = win_linenr_hl[winnr][lnum]
+  local cursor_numhl = numhl .. 'CulNr'
+  if not merged_hlgroups[cursor_numhl] then
+    vim.api.nvim_set_hl(
+      0,
+      cursor_numhl,
+      utils.funcs.stl.hl_merge('CursorLineNr', numhl)
+    )
+    merged_hlgroups[cursor_numhl] = { 'CursorLineNr', numhl }
+  end
+  return cursor_numhl
+end
+
+local groupid = vim.api.nvim_create_augroup('StatusColumn', {})
 vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
-  group = vim.api.nvim_create_augroup('StatusColumn', {}),
-  callback = function(tbl)
-    if tbl.file and vim.uv.fs_stat(tbl.file) and vim.bo.bt == '' then
+  group = groupid,
+  desc = 'Set statusline for each window.',
+  callback = function(info)
+    if info.file and vim.bo.bt == '' then
       -- 1. Diagnostic / Dap signs
       -- 2. Line number
       -- 3. Git signs
       -- 4. Fold column
       vim.wo.statuscolumn = table.concat({
-        "%{%&scl=='no'?'':(v:virtnum?'':v:lua.statuscol.get_sign(bufnr(),v:lnum,['Dap','Diagnostic'],'dapdiags'))%} ",
-        "%=%{%v:virtnum?'':(&nu?(&rnu?(v:relnum?v:relnum:printf('%-'.max([3,len(line('$'))]).'S',v:lnum)):v:lnum):(&rnu?v:relnum:''))%} ",
-        "%{%&scl=='no'?'':(v:lua.statuscol.get_sign(bufnr(),v:lnum,['GitSigns'],'gitsigns'))%}",
-        '%C ',
+        '%{%&scl==#"no"?"":(v:virtnum?"":v:lua.statuscol.get_sign(["Dap","Diagnostic"],"dapdiags"))%} ',
+        '%=%{%"%#".v:lua.statuscol.get_lnum_hl()."#".(v:virtnum?"":(&nu?(&rnu?(v:relnum?v:relnum:printf("%-".max([3,len(line("$"))])."S",v:lnum)):v:lnum):(&rnu?v:relnum:"")))%} ',
+        '%{%&scl==#"no"?"":(v:lua.statuscol.get_sign(["GitSigns"],"gitsigns"))%} ',
+        '%C',
       })
     else
       vim.wo.statuscolumn = ''
+    end
+  end,
+})
+vim.api.nvim_create_autocmd('ColorScheme', {
+  group = groupid,
+  desc = 'Update merged highlight groups when colorscheme changes.',
+  callback = function()
+    for hl, components in pairs(merged_hlgroups) do
+      vim.api.nvim_set_hl(0, hl, utils.funcs.stl.hl_merge(unpack(components)))
     end
   end,
 })
