@@ -395,6 +395,11 @@ local hlgroups = {
   DiagnosticSignWarn = { link = 'DiagnosticWarn' },
   DiagnosticSignInfo = { link = 'DiagnosticInfo' },
   DiagnosticSignHint = { link = 'DiagnosticHint' },
+  DiagnosticSignOkCul = { fg = palette.tea },
+  DiagnosticSignErrorCul = { fg = palette.wine },
+  DiagnosticSignWarnCul = { fg = palette.earch },
+  DiagnosticSignInfoCul = { fg = palette.smoke },
+  DiagnosticSignHintCul = { fg = palette.pigeon },
   -- }}}2
 
   -- Filetype {{{2
