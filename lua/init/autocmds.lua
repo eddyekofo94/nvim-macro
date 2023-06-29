@@ -305,10 +305,9 @@ local autocmds = {
         vim.defer_fn(function()
           local winhl = vim.opt_local.winhl:get()
           -- Restore CursorLine and CursorColumn for current window
-          -- if diff is not and not in inert/replace/select mode
+          -- if not in inert/replace/select mode
           if
-            not vim.wo.diff
-            and (winhl['CursorLine'] or winhl['CursorColumn'])
+            (winhl['CursorLine'] or winhl['CursorColumn'])
             and vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
           then
             vim.opt_local.winhl:remove({
