@@ -178,3 +178,10 @@ vim.api.nvim_create_autocmd('ColorScheme', {
     end
   end,
 })
+vim.api.nvim_create_autocmd('WinClosed', {
+  group = groupid,
+  desc = 'Clear line number highlight group cache when window is closed.',
+  callback = function(info)
+    win_linenr_hl[tonumber(info.match)] = nil
+  end,
+})
