@@ -42,13 +42,13 @@ local function get_sign_def(sign_name, sign_group)
     if not sign_def[1].culhl then
       local texthl = sign_def[1].texthl
       local culhl = texthl .. 'Cul'
-      vim.api.nvim_set_hl(
-        0,
-        culhl,
-        utils.funcs.stl.hl_merge('CursorLineSign', texthl)
-      )
+      if not merged_hlgroups[culhl] and vim.fn.hlexists(culhl) == 0 then
+        local components = { 'CursorLineSign', texthl }
+        local merge_hl = utils.funcs.stl.hl_merge(unpack(components))
+        vim.api.nvim_set_hl(0, culhl, merge_hl)
+        merged_hlgroups[culhl] = components
+      end
       vim.fn.sign_define(sign_def[1].name, { culhl = culhl })
-      merged_hlgroups[culhl] = { 'CursorLineSign', texthl }
     end
     cached_signs[sign_group] = cached_signs[sign_group] or {}
     cached_signs[sign_group][sign_name] = sign_def
@@ -137,13 +137,13 @@ function _G.statuscol.get_lnum_hl()
   end
   local numhl = win_linenr_hl[winnr][lnum]
   local cursor_numhl = numhl .. 'CulNr'
-  if not merged_hlgroups[cursor_numhl] then
-    vim.api.nvim_set_hl(
-      0,
-      cursor_numhl,
-      utils.funcs.stl.hl_merge('CursorLineNr', numhl)
-    )
-    merged_hlgroups[cursor_numhl] = { 'CursorLineNr', numhl }
+  if
+    not merged_hlgroups[cursor_numhl] and vim.fn.hlexists(cursor_numhl) == 0
+  then
+    local compoents = { 'CursorLineNr', numhl }
+    local merged_hl = utils.funcs.stl.hl_merge(unpack(compoents))
+    vim.api.nvim_set_hl(0, cursor_numhl, merged_hl)
+    merged_hlgroups[cursor_numhl] = compoents
   end
   return cursor_numhl
 end
