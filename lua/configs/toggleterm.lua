@@ -32,6 +32,7 @@ toggleterm.setup({
     WinBarActive = { link = 'WinBar' },
     WinBarInactive = { link = 'WinBarNC' },
     MatchParen = { link = 'None' },
+    StatusLine = { link = 'StatusLine' },
   },
   winbar = {
     enabled = false,
