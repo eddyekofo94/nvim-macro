@@ -1,4 +1,3 @@
--- stylua: ignore start
 return {
   {
     'nvim-telescope/telescope.nvim',
@@ -59,6 +58,7 @@ return {
 
   {
     'akinsho/toggleterm.nvim',
+    -- stylua: ignore start
     keys = {
       { '<M-i>',        mode = { 'n', 't' } },
       { '<C-\\>v',      mode = { 'n', 't' } },
@@ -73,6 +73,7 @@ return {
       { '<C-\\><C-g>',  mode = { 'n', 't' } },
       { '<C-\\><C-\\>', mode = { 'n', 't' } },
     },
+    -- stylua: ignore end
     cmd = {
       'Lazygit',
       'TermExec',
@@ -127,6 +128,12 @@ return {
   },
 
   {
+    'akinsho/git-conflict.nvim',
+    event = 'BufReadPre',
+    config = true,
+  },
+
+  {
     'kevinhwang91/rnvimr',
     config = function()
       require('configs.rnvimr')
@@ -149,4 +156,3 @@ return {
     end,
   },
 }
--- stylua: ignore end
