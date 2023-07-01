@@ -487,6 +487,7 @@ local hlgroups = {
   fugitiveStagedHeading = { fg = palette.foreground, bold = true },
   fugitiveUnstagedHeading = { fg = palette.faded, bold = true },
   fugitiveUntrackedHeading = { fg = palette.salient, bold = true },
+  DiffAdded = { fg = palette.pine },
 
   -- telescope
   TelescopeNormal = { fg = palette.faded, bg = palette.subtle },
