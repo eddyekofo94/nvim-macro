@@ -26,6 +26,7 @@ ts_configs.setup({
   ignore_install = {},
   highlight = {
     enable = not vim.g.vscode,
+    disable = { 'markdown', 'tex' },
     additional_vim_regex_highlighting = false,
   },
   context_commentstring = {

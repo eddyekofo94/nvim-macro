@@ -10,6 +10,10 @@ function langs_mt:list(field)
   for _, info in pairs(self) do
     if type(info[field]) == 'string' then
       deduplist[info[field]] = true
+    elseif type(info[field]) == 'table' then
+      for _, name in pairs(info[field]) do
+        deduplist[name] = true
+      end
     end
   end
   for name, _ in pairs(deduplist) do
@@ -60,6 +64,10 @@ M.langs = setmetatable({
     ft = 'make',
   },
   markdown = {
+    ts = {
+      'markdown_inline',
+      'markdown',
+    },
     lsp_server = 'marksman',
   },
   python = {
@@ -76,6 +84,7 @@ M.langs = setmetatable({
   },
   tex = {
     ft = 'tex',
+    ts = 'latex',
     lsp_server = 'texlab',
     formatting = 'latexindent',
   },
