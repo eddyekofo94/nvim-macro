@@ -70,6 +70,8 @@ function winbar_symbol_t:new(opts)
             -- is shown inside a menu
             if this.entry and this.entry.menu then
               this.entry.menu:update_current_context_hl(this.entry.idx)
+            elseif this.bar then
+              this.bar:update_current_context_hl(this.bar_idx)
             end
 
             -- Determine menu configs
@@ -602,6 +604,37 @@ function winbar_t:get_component_at(col, look_ahead)
     col_offset = col_offset + component_len + self.separator:displaywidth()
   end
   return nil, nil
+end
+
+---Highlight the symbol at bar_idx as current context
+---@param bar_idx integer? see winbar_symbol_t.bar_idx
+---@return nil
+function winbar_t:update_current_context_hl(bar_idx)
+  local symbol = self.components[bar_idx]
+  if not symbol then
+    return
+  end
+  local hl_currentcontext_icon = '_WinBarIconCurrentContext'
+  local hl_currentcontext_name = '_WinBarCurrentContext'
+  vim.api.nvim_set_hl(
+    0,
+    hl_currentcontext_icon,
+    utils.funcs.highlighting.merge(
+      'WinBarCurrentContext',
+      symbol.icon_hl or 'WinBar'
+    )
+  )
+  vim.api.nvim_set_hl(
+    0,
+    hl_currentcontext_name,
+    utils.funcs.highlighting.merge(
+      'WinBarIconCurrentContext',
+      symbol.name_hl or 'WinBar'
+    )
+  )
+  symbol:swap_field('icon_hl', hl_currentcontext_icon)
+  symbol:swap_field('name_hl', hl_currentcontext_name)
+  self:redraw()
 end
 
 ---Get the string representation of the winbar
