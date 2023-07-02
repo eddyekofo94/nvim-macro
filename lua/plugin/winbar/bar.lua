@@ -23,6 +23,7 @@ local utils = require('utils')
 ---@field range winbar_symbol_range_t?
 ---@field on_click fun(this: winbar_symbol_t, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false? force disable on_click when false
 ---@field data table? any data associated with the symbol
+---@field cache table caches string representation, length, etc. for the symbol
 local winbar_symbol_t = {}
 
 function winbar_symbol_t:__index(k)
@@ -30,6 +31,14 @@ function winbar_symbol_t:__index(k)
 end
 
 function winbar_symbol_t:__newindex(k, v)
+  if k == 'name' or k == 'icon' then
+    self.cache.decorated_str = nil
+    self.cache.plain_str = nil
+    self.cache.displaywidth = nil
+    self.cache.bytewidth = nil
+  elseif k == 'name_hl' or k == 'icon_hl' then
+    self.cache.decorated_str = nil
+  end
   self._[k] = v
 end
 
@@ -53,6 +62,7 @@ function winbar_symbol_t:new(opts)
       vim.tbl_deep_extend('force', {
         name = '',
         icon = '',
+        cache = {},
         on_click = opts
           ---@param this winbar_symbol_t
           and function(this, _, _, _, _)
@@ -172,13 +182,19 @@ end
 ---@param plain boolean?
 ---@return string
 function winbar_symbol_t:cat(plain)
+  if self.cache.plain_str and plain then
+    return self.cache.plain_str
+  elseif self.cache.decorated_str and not plain then
+    return self.cache.decorated_str
+  end
   if plain then
-    return self.icon .. self.name
+    self.cache.plain_str = self.icon .. self.name
+    return self.cache.plain_str
   end
   local icon_highlighted = utils.funcs.stl.hl(self.icon, self.icon_hl)
   local name_highlighted = utils.funcs.stl.hl(self.name, self.name_hl)
   if self.on_click and self.bar_idx then
-    return utils.funcs.stl.make_clickable(
+    self.cache.decorated_str = utils.funcs.stl.make_clickable(
       icon_highlighted .. name_highlighted,
       string.format(
         'v:lua.winbar.on_click_callbacks.buf%s.win%s.fn%s',
@@ -187,20 +203,30 @@ function winbar_symbol_t:cat(plain)
         self.bar_idx
       )
     )
+    return self.cache.decorated_str
   end
-  return icon_highlighted .. name_highlighted
+  self.cache.decorated_str = icon_highlighted .. name_highlighted
+  return self.cache.decorated_str
 end
 
 ---Get the display length of the winbar symbol
 ---@return integer
 function winbar_symbol_t:displaywidth()
-  return vim.fn.strdisplaywidth(self:cat(true))
+  if self.cache.displaywidth then
+    return self.cache.displaywidth
+  end
+  self.cache.displaywidth = vim.fn.strdisplaywidth(self:cat(true))
+  return self.cache.displaywidth
 end
 
 ---Get the byte length of the winbar symbol
 ---@return integer
 function winbar_symbol_t:bytewidth()
-  return #self:cat(true)
+  if self.cache.bytewidth then
+    return self.cache.bytewidth
+  end
+  self.cache.bytewidth = self:cat(true):len()
+  return self.cache.bytewidth
 end
 
 ---Jump to the start of the symbol associated with the winbar symbol
