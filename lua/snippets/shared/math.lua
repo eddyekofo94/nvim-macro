@@ -3,7 +3,6 @@ local un = require('snippets.utils.nodes')
 local us = require('snippets.utils.snips')
 local conds = require('snippets.utils.conds')
 local ls = require('luasnip')
-local ms = ls.multi_snippet
 local sn = ls.snippet_node
 local t = ls.text_node
 local i = ls.insert_node
