@@ -27,7 +27,7 @@ local function create_autocmd_applypatch()
         if vim.uv.fs_stat(plugin_path) then
           if
             info.match:match('Pre$')
-            and utils.funcs.git.dir_execute(
+            and utils.git.dir_execute(
                 plugin_path,
                 { 'diff', '--stat' },
                 vim.log.levels.WARN
@@ -35,7 +35,7 @@ local function create_autocmd_applypatch()
               ~= ''
           then
             vim.notify('[plugins] reverting patch' .. patch_path)
-            utils.funcs.git.dir_execute(plugin_path, {
+            utils.git.dir_execute(plugin_path, {
               'apply',
               '--reverse',
               '--ignore-space-change',
@@ -43,7 +43,7 @@ local function create_autocmd_applypatch()
             }, vim.log.levels.WARN)
           else
             vim.notify('[plugins] applying patch' .. patch_path)
-            utils.funcs.git.dir_execute(plugin_path, {
+            utils.git.dir_execute(plugin_path, {
               'apply',
               '--ignore-space-change',
               patch_path,
@@ -79,7 +79,7 @@ local function bootstrap()
   vim.notify('[plugins] installing lazy.nvim...', vim.log.levels.INFO)
   vim.fn.mkdir(vim.g.package_path, 'p')
   if
-    not utils.funcs.git.execute({
+    not utils.git.execute({
       'clone',
       '--filter=blob:none',
       url,
@@ -89,7 +89,7 @@ local function bootstrap()
     return false
   end
   if commit then
-    utils.funcs.git.dir_execute(
+    utils.git.dir_execute(
       lazy_path,
       { 'checkout', commit },
       vim.log.levels.INFO
@@ -161,4 +161,4 @@ else
 end
 
 -- a handy abbreviation
-utils.funcs.keymap.command_abbrev('lz', 'Lazy')
+utils.keymap.command_abbrev('lz', 'Lazy')

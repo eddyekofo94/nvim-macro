@@ -29,7 +29,7 @@ function bufopt_t:new(name, default)
     name = name,
     default = default,
     augroup = vim.api.nvim_create_augroup(
-      'BufOpt' .. utils.funcs.string.snake_to_camel(name),
+      'BufOpt' .. utils.string.snake_to_camel(name),
       {}
     ),
     initialized = initialized,

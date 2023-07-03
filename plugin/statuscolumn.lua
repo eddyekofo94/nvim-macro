@@ -44,8 +44,7 @@ local function get_sign_def(sign_name, sign_group)
       local culhl = texthl .. 'Cul'
       if not merged_hlgroups[culhl] and vim.fn.hlexists(culhl) == 0 then
         local components = { 'CursorLineSign', texthl }
-        local merged_hl_attr =
-          utils.funcs.highlighting.merge(unpack(components))
+        local merged_hl_attr = utils.highlighting.merge(unpack(components))
         vim.api.nvim_set_hl(0, culhl, merged_hl_attr)
         merged_hlgroups[culhl] = components
       end
@@ -118,7 +117,7 @@ function _G.statuscol.get_sign(prefixes, sign_group)
     win_linenr_hl[winnr][lnum] = sign_def[1].numhl
   end
 
-  return utils.funcs.stl.hl(sign_def[1].text, hl, false)
+  return utils.stl.hl(sign_def[1].text, hl, false)
 end
 
 ---Return the line number highlight group at current line
@@ -142,7 +141,7 @@ function _G.statuscol.get_lnum_hl()
     not merged_hlgroups[cursor_numhl] and vim.fn.hlexists(cursor_numhl) == 0
   then
     local compoents = { 'CursorLineNr', numhl }
-    local merged_hl_attr = utils.funcs.highlighting.merge(unpack(compoents))
+    local merged_hl_attr = utils.highlighting.merge(unpack(compoents))
     vim.api.nvim_set_hl(0, cursor_numhl, merged_hl_attr)
     merged_hlgroups[cursor_numhl] = compoents
   end
@@ -175,11 +174,7 @@ vim.api.nvim_create_autocmd('ColorScheme', {
   desc = 'Update merged highlight groups when colorscheme changes.',
   callback = function()
     for hl, components in pairs(merged_hlgroups) do
-      vim.api.nvim_set_hl(
-        0,
-        hl,
-        utils.funcs.highlighting.merge(unpack(components))
-      )
+      vim.api.nvim_set_hl(0, hl, utils.highlighting.merge(unpack(components)))
     end
   end,
 })

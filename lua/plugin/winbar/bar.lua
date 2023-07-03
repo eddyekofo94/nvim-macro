@@ -194,10 +194,10 @@ function winbar_symbol_t:cat(plain)
     self.cache.plain_str = self.icon .. self.name
     return self.cache.plain_str
   end
-  local icon_highlighted = utils.funcs.stl.hl(self.icon, self.icon_hl)
-  local name_highlighted = utils.funcs.stl.hl(self.name, self.name_hl)
+  local icon_highlighted = utils.stl.hl(self.icon, self.icon_hl)
+  local name_highlighted = utils.stl.hl(self.name, self.name_hl)
   if self.on_click and self.bar_idx then
-    self.cache.decorated_str = utils.funcs.stl.make_clickable(
+    self.cache.decorated_str = utils.stl.make_clickable(
       icon_highlighted .. name_highlighted,
       string.format(
         'v:lua.winbar.on_click_callbacks.buf%s.win%s.fn%s',
@@ -254,11 +254,7 @@ function winbar_symbol_t:preview()
     return
   end
   self.view = vim.api.nvim_win_call(self.win, vim.fn.winsaveview)
-  utils.funcs.highlighting.hl_range_single(
-    self.buf,
-    'WinBarPreview',
-    self.range
-  )
+  utils.highlighting.hl_range_single(self.buf, 'WinBarPreview', self.range)
   vim.api.nvim_win_set_cursor(self.win, {
     self.range.start.line + 1,
     self.range.start.character,
@@ -272,7 +268,7 @@ end
 ---@return nil
 function winbar_symbol_t:preview_restore_hl()
   if self.buf then
-    utils.funcs.highlighting.hl_range_single(self.buf, 'WinBarPreview')
+    utils.highlighting.hl_range_single(self.buf, 'WinBarPreview')
   end
 end
 
@@ -421,7 +417,7 @@ function winbar_t:cat(plain)
   local padding_left = string.rep(' ', self.padding.left)
   local padding_right = string.rep(' ', self.padding.right)
   result = result and padding_left .. result .. padding_right or ''
-  return plain and result or utils.funcs.stl.hl(result, 'DropBar')
+  return plain and result or utils.stl.hl(result, 'DropBar')
 end
 
 ---Reevaluate winbar string from components and redraw winbar
@@ -623,7 +619,7 @@ function winbar_t:update_current_context_hl(bar_idx)
   vim.api.nvim_set_hl(
     0,
     hl_currentcontext_icon,
-    utils.funcs.highlighting.merge(
+    utils.highlighting.merge(
       'WinBarCurrentContext',
       symbol.icon_hl or 'WinBar'
     )
@@ -631,7 +627,7 @@ function winbar_t:update_current_context_hl(bar_idx)
   vim.api.nvim_set_hl(
     0,
     hl_currentcontext_name,
-    utils.funcs.highlighting.merge(
+    utils.highlighting.merge(
       'WinBarCurrentContext',
       symbol.name_hl or 'WinBar'
     )
@@ -662,12 +658,12 @@ function winbar_t:update_hover_hl(col)
   vim.api.nvim_set_hl(
     0,
     hl_hover_icon,
-    utils.funcs.highlighting.merge('WinBarHover', symbol.icon_hl or 'WinBar')
+    utils.highlighting.merge('WinBarHover', symbol.icon_hl or 'WinBar')
   )
   vim.api.nvim_set_hl(
     0,
     hl_hover_name,
-    utils.funcs.highlighting.merge('WinBarHover', symbol.name_hl or 'WinBar')
+    utils.highlighting.merge('WinBarHover', symbol.name_hl or 'WinBar')
   )
   symbol:swap_field('icon_hl', hl_hover_icon)
   symbol:swap_field('name_hl', hl_hover_name)

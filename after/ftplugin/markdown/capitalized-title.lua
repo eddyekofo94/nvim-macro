@@ -36,7 +36,7 @@ local opt_captitle = utils.classes.bufopt_t:new('captitle', true)
 ---@return boolean
 local function on_title_line(lines)
   local current_line = lines[#lines]
-  return not require('utils.funcs').ft.markdown.in_codeblock(lines)
+  return not utils.ft.markdown.in_codeblock(lines)
     and current_line:match('^#+%s')
 end
 
@@ -121,7 +121,7 @@ api.nvim_create_autocmd('TextChangedI', {
 })
 
 api.nvim_buf_create_user_command(0, 'MarkdownSetCapTitle', function(info)
-  local parsed_args = utils.funcs.command.parse_cmdline_args(info.fargs)
+  local parsed_args = utils.command.parse_cmdline_args(info.fargs)
   if info.bang then
     return opt_captitle:scope_action(parsed_args, 'toggle')
   end
@@ -140,7 +140,7 @@ api.nvim_buf_create_user_command(0, 'MarkdownSetCapTitle', function(info)
 end, {
   nargs = '*',
   bang = true,
-  complete = utils.funcs.command.complete({
+  complete = utils.command.complete({
     'enable',
     'disable',
   }, {

@@ -1,5 +1,4 @@
-local funcs = require('utils.funcs')
-local classes = require('utils.classes')
+local utils = require('utils')
 
 ---Check if there exists an LS that supports the given method
 ---for the given buffer
@@ -117,7 +116,7 @@ end
 ---@return lsp_command_parsed_arg_t parsed the parsed arguments
 local function parse_cmdline_args(fargs, fn_name_alt)
   local fn_name = fn_name_alt or fargs[1] and table.remove(fargs, 1) or nil
-  local parsed = funcs.command.parse_cmdline_args(fargs)
+  local parsed = utils.command.parse_cmdline_args(fargs)
   return fn_name, parsed
 end
 
@@ -249,10 +248,12 @@ local subcommands = {
         fn_override = function(args, tbl)
           ---@type bufopt_t
           local opt_autofmt_enabled =
-            classes.bufopt_t:new('lsp_autofmt_enabled', false)
+            utils.classes.bufopt_t:new('lsp_autofmt_enabled', false)
           ---@type bufopt_t
-          local opt_autofmt_opts =
-            classes.bufopt_t:new('lsp_autofmt_opts', { timeout_ms = 500 })
+          local opt_autofmt_opts = utils.classes.bufopt_t:new(
+            'lsp_autofmt_opts',
+            { timeout_ms = 500 }
+          )
           if vim.fn.exists('#LspAutoFmt') == 0 then
             vim.api.nvim_create_autocmd('BufWritePre', {
               group = vim.api.nvim_create_augroup('LspAutoFmt', {}),
@@ -833,7 +834,7 @@ local function command_complete(meta, subcommand_info_list)
       end, vim.tbl_keys(subcommand_info_list))
     end
     -- If subcommand is specified, complete with its options or params
-    local subcommand = funcs.string.camel_to_snake(
+    local subcommand = utils.string.camel_to_snake(
       cmdline:match('^%s*' .. meta .. '(%w+)')
     ) or cmdline:match('^%s*' .. meta .. '%s+(%S+)')
     if not subcommand_info_list[subcommand] then
@@ -850,7 +851,7 @@ local function command_complete(meta, subcommand_info_list)
     -- Complete with subcommand's options or params
     local subcommand_info = subcommand_info_list[subcommand]
     if subcommand_info then
-      return funcs.command.complete(
+      return utils.command.complete(
         subcommand_info.params,
         subcommand_info.opts
       )(arglead, cmdline, cursorpos)
@@ -882,7 +883,7 @@ local function setup_commands(_, bufnr, meta, subcommand_info_list, fn_scope)
   for subcommand, _ in pairs(subcommand_info_list) do
     vim.api.nvim_buf_create_user_command(
       bufnr,
-      meta .. funcs.string.snake_to_camel(subcommand),
+      meta .. utils.string.snake_to_camel(subcommand),
       command_meta(subcommand_info_list, fn_scope, subcommand, subcommand),
       {
         bang = true,

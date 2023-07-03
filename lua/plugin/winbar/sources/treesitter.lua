@@ -1,4 +1,3 @@
-local funcs = require('utils.funcs')
 local configs = require('plugin.winbar.configs')
 local bar = require('plugin.winbar.bar')
 local utils = require('utils')
@@ -94,7 +93,7 @@ local function convert(ts_node, buf, win)
   if not valid_node(ts_node, buf) then
     return nil
   end
-  local kind = funcs.string.snake_to_camel(get_node_short_type(ts_node))
+  local kind = utils.string.snake_to_camel(get_node_short_type(ts_node))
   local range = { ts_node:range() }
   return bar.winbar_symbol_t:new(setmetatable({
     buf = buf,
@@ -139,7 +138,7 @@ end
 ---@param cursor integer[] cursor position
 ---@return winbar_symbol_t[] symbols winbar symbols
 local function get_symbols(buf, win, cursor)
-  if not utils.funcs.treesitter.ts_active(buf) then
+  if not utils.treesitter.ts_active(buf) then
     return {}
   end
 
@@ -160,7 +159,7 @@ local function get_symbols(buf, win, cursor)
       valid_node(current_node, buf)
       and not (start_row == 0 and end_row == vim.fn.line('$'))
     then
-      local lsp_type = funcs.string.snake_to_camel(type)
+      local lsp_type = utils.string.snake_to_camel(type)
       if
         vim.tbl_isempty(symbols)
         or symbols[1].name ~= name

@@ -292,20 +292,16 @@ end
 ---@param pos integer[]? byte-indexed, 1,0-indexed cursor/mouse position
 ---@return nil
 function winbar_menu_t:update_hover_hl(pos)
-  utils.funcs.highlighting.hl_range_single(self.buf, 'WinBarMenuHoverSymbol')
-  utils.funcs.highlighting.hl_range_single(self.buf, 'WinBarMenuHoverIcon')
-  utils.funcs.highlighting.hl_range_single(self.buf, 'WinBarMenuHoverEntry')
+  utils.highlighting.hl_range_single(self.buf, 'WinBarMenuHoverSymbol')
+  utils.highlighting.hl_range_single(self.buf, 'WinBarMenuHoverIcon')
+  utils.highlighting.hl_range_single(self.buf, 'WinBarMenuHoverEntry')
   if not pos then
     return
   end
-  utils.funcs.highlighting.hl_line_single(
-    self.buf,
-    'WinBarMenuHoverEntry',
-    pos[1]
-  )
+  utils.highlighting.hl_line_single(self.buf, 'WinBarMenuHoverEntry', pos[1])
   local component, range = self:get_component_at({ pos[1], pos[2] })
   if component and component.on_click and range then
-    utils.funcs.highlighting.hl_range_single(
+    utils.highlighting.hl_range_single(
       self.buf,
       component and component.name == '' and 'WinBarMenuHoverIcon'
         or 'WinBarMenuHoverSymbol',
@@ -327,7 +323,7 @@ end
 ---@param linenr integer? 1-indexed line number
 function winbar_menu_t:update_current_context_hl(linenr)
   if self.buf then
-    utils.funcs.highlighting.hl_line_single(
+    utils.highlighting.hl_line_single(
       self.buf,
       'WinBarMenuCurrentContext',
       linenr

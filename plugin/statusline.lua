@@ -45,7 +45,7 @@ local modes = {
 ---@return string
 function statusline.mode()
   local hl = vim.bo.mod and 'StatusLineHeaderModified' or 'StatusLineHeader'
-  return utils.funcs.stl.hl(' ' .. modes[vim.fn.mode()] .. ' ', hl)
+  return utils.stl.hl(' ' .. modes[vim.fn.mode()] .. ' ', hl)
 end
 
 ---Get diff stats for current buffer
@@ -53,15 +53,15 @@ end
 function statusline.gitdiff()
   -- Integration with gitsigns.nvim
   ---@diagnostic disable-next-line: undefined-field
-  local diff = vim.b.gitsigns_status_dict or utils.funcs.git.diffstat()
+  local diff = vim.b.gitsigns_status_dict or utils.git.diffstat()
   if diff.added == 0 and diff.removed == 0 and diff.changed == 0 then
     return ''
   end
   return string.format(
     '+%s~%s-%s',
-    utils.funcs.stl.hl(tostring(diff.added), 'StatusLineGitAdded'),
-    utils.funcs.stl.hl(tostring(diff.changed), 'StatusLineGitChanged'),
-    utils.funcs.stl.hl(tostring(diff.removed), 'StatusLineGitRemoved')
+    utils.stl.hl(tostring(diff.added), 'StatusLineGitAdded'),
+    utils.stl.hl(tostring(diff.changed), 'StatusLineGitChanged'),
+    utils.stl.hl(tostring(diff.removed), 'StatusLineGitRemoved')
   )
 end
 
@@ -70,7 +70,7 @@ end
 function statusline.branch()
   ---@diagnostic disable-next-line: undefined-field
   local branch = vim.b.gitsigns_status_dict and vim.b.gitsigns_status_dict.head
-    or utils.funcs.git.branch()
+    or utils.git.branch()
   return branch == '' and '' or '#' .. branch
 end
 

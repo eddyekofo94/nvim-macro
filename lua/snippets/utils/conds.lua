@@ -25,20 +25,20 @@ local M = setmetatable({
 ---Returns whether the cursor is in a math zone
 ---@return boolean
 function M.in_mathzone()
-  return utils.funcs.ft.markdown.in_mathzone()
+  return utils.ft.markdown.in_mathzone()
 end
 
 ---Returns whether the cursor is in a code block
 ---@return boolean
 function M.in_codeblock()
   local cursor = vim.api.nvim_win_get_cursor(0)
-  return utils.funcs.ft.markdown.in_codeblock(cursor[1])
+  return utils.ft.markdown.in_codeblock(cursor[1])
 end
 
 ---Returns whether the current buffer has treesitter enabled
 ---@return boolean
 function M.ts_active()
-  return utils.funcs.treesitter.ts_active()
+  return utils.treesitter.ts_active()
 end
 
 ---Returns whether current cursor is in a comment
@@ -46,7 +46,7 @@ end
 ---@return snip_cond_t
 function M.in_tsnode(type)
   return lsconds.make_condition(function()
-    return utils.funcs.treesitter.in_tsnode(type)
+    return utils.treesitter.in_tsnode(type)
   end)
 end
 
@@ -54,7 +54,7 @@ end
 ---@return boolean
 function M.in_normalzone()
   if vim.bo.ft == 'markdown' or vim.bo.ft == 'tex' then
-    return utils.funcs.ft[vim.bo.ft].in_normalzone()
+    return utils.ft[vim.bo.ft].in_normalzone()
   end
   return not M.ts_active()
     or not M.in_tsnode('comment')() and not M.in_tsnode('string')()

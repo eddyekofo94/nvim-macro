@@ -21,7 +21,7 @@ end
 ---Returns whether the cursor is in a math zone
 ---@return boolean
 function M.in_mathzone()
-  return utils.funcs.ft.tex.in_mathzone()
+  return utils.ft.tex.in_mathzone()
 end
 
 ---Returns whether the cursor is in normal zone

@@ -33,7 +33,7 @@ npairs.add_rules({
       if
         vim.bo[opts.bufnr].ft == 'markdown'
         and opts.line:match('^- ')
-        and utils.funcs.ft.markdown.in_normalzone()
+        and utils.ft.markdown.in_normalzone()
       then
         pairs_single_char = { '()', '{}' }
       end
