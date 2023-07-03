@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Mon Jul  3 03:21:13 PM CDT 2023
+-- Last Updated: Mon Jul  3 03:27:49 PM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -331,7 +331,7 @@ local hlgroups = {
   DiagnosticOk = { fg = palette.faded },
   DiagnosticError = { fg = palette.critical },
   DiagnosticWarn = { fg = palette.popout },
-  DiagnosticInfo = { fg = palette.foreground },
+  DiagnosticInfo = { fg = palette.salient },
   DiagnosticHint = { fg = palette.foreground },
   DiagnosticVirtualTextOk = { fg = palette.faded, bg = palette.highlight },
   DiagnosticVirtualTextError = {
@@ -340,7 +340,7 @@ local hlgroups = {
   },
   DiagnosticVirtualTextWarn = { fg = palette.popout, bg = palette.highlight },
   DiagnosticVirtualTextInfo = {
-    fg = palette.foreground,
+    fg = palette.salient,
     bg = palette.highlight,
   },
   DiagnosticVirtualTextHint = {
@@ -350,7 +350,7 @@ local hlgroups = {
   DiagnosticUnderlineOk = { underline = true, sp = palette.faded },
   DiagnosticUnderlineError = { undercurl = true, sp = palette.critical },
   DiagnosticUnderlineWarn = { undercurl = true, sp = palette.popout },
-  DiagnosticUnderlineInfo = { undercurl = true, sp = palette.subtle },
+  DiagnosticUnderlineInfo = { undercurl = true, sp = palette.salient },
   DiagnosticUnderlineHint = { undercurl = true, sp = palette.subtle },
   DiagnosticFloatingOk = { link = 'DiagnosticOk' },
   DiagnosticFloatingError = { link = 'DiagnosticError' },
