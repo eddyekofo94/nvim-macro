@@ -1,7 +1,7 @@
 --stylua: ignore start
 local hlgroups = {
   WinBarCurrentContext            = { link = 'Visual' },
-  WinBarIconCurrentContext        = { link = 'Visual' },
+  WinBarHover                     = { link = 'Visual' },
   WinBarIconKindArray             = { link = 'Array' },
   WinBarIconKindBoolean           = { link = 'Boolean' },
   WinBarIconKindBreakStatement    = { link = 'Error' },

@@ -287,26 +287,29 @@ function winbar_symbol_t:preview_restore_view()
 end
 
 ---Temporarily change the content of a winbar symbol
----Currently does not support replacing nil values
 ---@param field string
 ---@param new_val any
+---@return nil
 function winbar_symbol_t:swap_field(field, new_val)
   self.data = self.data or {}
   self.data.swap = self.data.swap or {}
+  self.data.swapped = self.data.swapped or {}
   self.data.swap[field] = self.data.swap[field] or self[field]
+  table.insert(self.data.swapped, field)
   self[field] = new_val
 end
 
 ---Restore the content of a winbar symbol
----Currently does not support restoring nil values
+---@return nil
 function winbar_symbol_t:restore()
   if not self.data or not self.data.swap then
     return
   end
-  for field, val in pairs(self.data.swap) do
-    self[field] = val
+  for _, field in ipairs(self.data.swapped) do
+    self[field] = self.data.swap[field]
   end
   self.data.swap = nil
+  self.data.swapped = nil
 end
 
 ---@class winbar_opts_t
@@ -327,6 +330,7 @@ end
 ---@field components winbar_symbol_t[]
 ---@field string_cache string
 ---@field in_pick_mode boolean?
+---@field symbol_on_hover winbar_symbol_t?
 ---@field last_update_request_time float? timestamp of the last update request in ms, see :h uv.hrtime()
 local winbar_t = {}
 winbar_t.__index = winbar_t
@@ -607,7 +611,7 @@ function winbar_t:get_component_at(col, look_ahead)
 end
 
 ---Highlight the symbol at bar_idx as current context
----@param bar_idx integer? see winbar_symbol_t.bar_idx
+---@param bar_idx integer see winbar_symbol_t.bar_idx
 ---@return nil
 function winbar_t:update_current_context_hl(bar_idx)
   local symbol = self.components[bar_idx]
@@ -628,12 +632,49 @@ function winbar_t:update_current_context_hl(bar_idx)
     0,
     hl_currentcontext_name,
     utils.funcs.highlighting.merge(
-      'WinBarIconCurrentContext',
+      'WinBarCurrentContext',
       symbol.name_hl or 'WinBar'
     )
   )
   symbol:swap_field('icon_hl', hl_currentcontext_icon)
   symbol:swap_field('name_hl', hl_currentcontext_name)
+  self:redraw()
+end
+
+---Highlight the symbol at col as if the mouse is hovering on it
+---@param col integer? displaywidth-indexed, 0-indexed mouse position, nil to clear the hover highlights
+---@return nil
+function winbar_t:update_hover_hl(col)
+  if not col then
+    if self.symbol_on_hover then
+      self.symbol_on_hover:restore()
+      self.symbol_on_hover = nil
+      self:redraw()
+    end
+    return
+  end
+  local symbol = self:get_component_at(col)
+  if not symbol or symbol == self.symbol_on_hover then
+    return
+  end
+  local hl_hover_icon = '_WinBarIconHover'
+  local hl_hover_name = '_WinBarHover'
+  vim.api.nvim_set_hl(
+    0,
+    hl_hover_icon,
+    utils.funcs.highlighting.merge('WinBarHover', symbol.icon_hl or 'WinBar')
+  )
+  vim.api.nvim_set_hl(
+    0,
+    hl_hover_name,
+    utils.funcs.highlighting.merge('WinBarHover', symbol.name_hl or 'WinBar')
+  )
+  symbol:swap_field('icon_hl', hl_hover_icon)
+  symbol:swap_field('name_hl', hl_hover_name)
+  if self.symbol_on_hover then
+    self.symbol_on_hover:restore()
+  end
+  self.symbol_on_hover = symbol
   self:redraw()
 end
 
@@ -646,7 +687,29 @@ function winbar_t:__tostring()
   return self.string_cache
 end
 
+---@type winbar_t?
+local last_hovered_winbar = nil
+---Update winbar hover highlights given the mouse position
+---@param mouse table
+---@return nil
+local function update_hover_hl(mouse)
+  local winbar = require('plugin.winbar.api').get_winbar(nil, mouse.winid)
+  if not winbar or mouse.winrow ~= 1 or mouse.line ~= 0 then
+    if last_hovered_winbar then
+      last_hovered_winbar:update_hover_hl()
+      last_hovered_winbar = nil
+    end
+    return
+  end
+  if last_hovered_winbar and last_hovered_winbar ~= winbar then
+    last_hovered_winbar:update_hover_hl()
+  end
+  winbar:update_hover_hl(math.max(0, mouse.wincol - 1))
+  last_hovered_winbar = winbar
+end
+
 return {
   winbar_t = winbar_t,
   winbar_symbol_t = winbar_symbol_t,
+  update_hover_hl = update_hover_hl,
 }

@@ -1,8 +1,9 @@
 ---Get the winbar
----@param buf integer
+---@param buf? integer
 ---@param win integer
 ---@return winbar_t?
 local function get_winbar(buf, win)
+  buf = buf or vim.api.nvim_win_get_buf(win)
   if rawget(_G.winbar.bars, buf) then
     return rawget(_G.winbar.bars[buf], win)
   end

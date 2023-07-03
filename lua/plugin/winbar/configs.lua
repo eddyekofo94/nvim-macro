@@ -84,6 +84,7 @@ M.opts = {
     },
   },
   bar = {
+    hover = true,
     ---@type winbar_source_t[]|fun(buf: integer, win: integer): winbar_source_t[]
     sources = function(_, _)
       local sources = require('plugin.winbar.sources')
