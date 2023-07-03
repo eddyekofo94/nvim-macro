@@ -24,7 +24,7 @@ local win_linenr_hl = {}
 ---Get sign definition
 ---@param sign_name string sign name
 ---@param sign_group string group name of the signs
----@return table sign_def sign definition
+---@return sign_def? sign_def sign definition
 local function get_sign_def(sign_name, sign_group)
   if not signs_cache[sign_group] then
     signs_cache[sign_group] = {}
@@ -34,13 +34,13 @@ local function get_sign_def(sign_name, sign_group)
   local sign_def = signs_group_cache[sign_name]
 
   if not sign_def then
-    sign_def = vim.fn.sign_getdefined(sign_name)
-    if vim.tbl_isempty(sign_def) then
-      return {}
+    sign_def = vim.fn.sign_getdefined(sign_name)[1]
+    if not sign_def then
+      return
     end
-    sign_def[1].text = vim.trim(sign_def[1].text)
-    if not sign_def[1].culhl then
-      local texthl = sign_def[1].texthl
+    sign_def.text = vim.trim(sign_def.text)
+    if not sign_def.culhl then
+      local texthl = sign_def.texthl
       local culhl = texthl .. 'Cul'
       if not merged_hlgroups[culhl] and vim.fn.hlexists(culhl) == 0 then
         local components = { 'CursorLineSign', texthl }
@@ -48,8 +48,8 @@ local function get_sign_def(sign_name, sign_group)
         vim.api.nvim_set_hl(0, culhl, merged_hl_attr)
         merged_hlgroups[culhl] = components
       end
-      sign_def[1].culhl = culhl
-      vim.fn.sign_define(sign_def[1].name, sign_def[1])
+      sign_def.culhl = culhl
+      vim.fn.sign_define(sign_def.name, sign_def)
     end
     signs_group_cache[sign_name] = sign_def
   end
@@ -98,26 +98,26 @@ function _G.statuscol.get_sign(prefixes, sign_group)
   local sign_def = get_sign_def(sign_max_priority.name, sign_group)
 
   if
-    vim.tbl_isempty(sign_def)
+    not sign_def
     or vim.v.virtnum ~= 0 -- Don't show git delete signs in virtual line
-      and sign_def[1]
-      and sign_def[1].name:match('Git%w*[Dd]elete$')
+      and sign_def
+      and sign_def.name:match('Git%w*[Dd]elete$')
   then
     return ' '
   end
 
   -- Determine the highlight of the sign according to cursor line
-  local hl = sign_def[1].texthl
+  local hl = sign_def.texthl
   if lnum == cursorline and vim.wo.cul then
-    hl = sign_def[1].culhl
+    hl = sign_def.culhl
   end
 
   -- Record line number highlight group if the sign has 'numhl' set
-  if sign_def[1].numhl then
-    win_linenr_hl[winnr][lnum] = sign_def[1].numhl
+  if sign_def.numhl then
+    win_linenr_hl[winnr][lnum] = sign_def.numhl
   end
 
-  return utils.stl.hl(sign_def[1].text, hl, false)
+  return utils.stl.hl(sign_def.text, hl, false)
 end
 
 ---Return the line number highlight group at current line
