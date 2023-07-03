@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Mon Jul  3 03:21:21 PM CDT 2023
+-- Last Updated: Mon Jul  3 03:28:34 PM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -693,6 +693,10 @@ local hlgroups = {
   CopilotAnnotation = { fg = palette.steel, italic = true },
 
   -- statusline plugin
+  StatusLineDiagnosticError = { fg = palette.wine, bg = palette.deepsea },
+  StatusLineDiagnosticHint = { fg = palette.pigeon, bg = palette.deepsea },
+  StatusLineDiagnosticInfo = { fg = palette.smoke, bg = palette.deepsea },
+  StatusLineDiagnosticWarn = { fg = palette.earch, bg = palette.deepsea },
   StatusLineFaded = { fg = palette.pigeon, bg = palette.deepsea },
   StatusLineGitAdded = { fg = palette.tea, bg = palette.deepsea },
   StatusLineGitChanged = { fg = palette.lavender, bg = palette.deepsea },

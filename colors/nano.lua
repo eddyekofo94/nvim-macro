@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Mon Jul  3 03:27:49 PM CDT 2023
+-- Last Updated: Mon Jul  3 03:28:28 PM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -651,6 +651,10 @@ local hlgroups = {
   CopilotAnnotation = { fg = palette.faint, italic = true },
 
   -- statusline
+  StatusLineDiagnosticError = { fg = palette.critical, bg = palette.subtle },
+  StatusLineDiagnosticHint = { fg = palette.foreground, bg = palette.subtle },
+  StatusLineDiagnosticInfo = { fg = palette.salient, bg = palette.subtle },
+  StatusLineDiagnosticWarn = { fg = palette.popout, bg = palette.subtle },
   StatusLineFaded = { fg = palette.faded, bg = palette.subtle },
   StatusLineGitAdded = { fg = palette.pine, bg = palette.subtle },
   StatusLineGitChanged = { fg = palette.faded, bg = palette.subtle },

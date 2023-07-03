@@ -1,6 +1,19 @@
 _G.statusline = {}
 local utils = require('utils')
 
+---@type table<string, string>
+local signs_text_cache = {}
+
+---@param name string
+---@return string?
+local function get_sign_text(name)
+  if not signs_text_cache[name] then
+    local sign_def = vim.fn.sign_getdefined(name)[1]
+    signs_text_cache[name] = sign_def and sign_def.text
+  end
+  return signs_text_cache[name]
+end
+
 -- stylua: ignore start
 local modes = {
   ['n']    = 'NO',
@@ -100,18 +113,58 @@ function statusline.info()
     or string.format('(%s)', table.concat(info, ', '))
 end
 
+---Get string representation of diagnostics for current buffer
+---@return string
+function statusline.diagnostics()
+  local diagnostics = vim.diagnostic.get(0)
+  local diagnostics_workspace = vim.diagnostic.get(nil)
+  local counts = { 0, 0, 0, 0 }
+  local counts_workspace = { 0, 0, 0, 0 }
+  for _, diagnostic in ipairs(diagnostics) do
+    counts[diagnostic.severity] = counts[diagnostic.severity] + 1
+  end
+  for _, diagnostic in ipairs(diagnostics_workspace) do
+    counts_workspace[diagnostic.severity] = counts_workspace[diagnostic.severity]
+      + 1
+  end
+  ---@param severity string
+  ---@return string
+  local function get_diagnostics_str(severity)
+    local severity_num = vim.diagnostic.severity[severity:upper()]
+    local count = counts[severity_num]
+    local count_workspace = counts_workspace[severity_num]
+    if count + count_workspace == 0 then
+      return ''
+    end
+    return utils.stl.hl(
+      get_sign_text('DiagnosticSign' .. severity)
+        .. string.format('%d/%d', count, count_workspace),
+      'StatusLineDiagnostic' .. severity
+    )
+  end
+  local result = ''
+  for _, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
+    local diag_str = get_diagnostics_str(severity)
+    if diag_str ~= '' then
+      result = result .. (result == '' and '' or ' ') .. diag_str
+    end
+  end
+  return result
+end
+
 -- stylua: ignore start
 ---Statusline components
 ---@type table<string, string>
 local components = {
-  align    = '%=',
-  fname    = ' %#StatusLineStrong#%t%* ',
-  fname_nc = ' %#StatusLineWeak#%t%* ',
-  info     = '%{%v:lua.statusline.info()%}',
-  mode     = '%{%v:lua.statusline.mode()%}',
-  padding  = '%#None#  %*',
-  position = '%#StatusLineFaded#%l:%c%* ',
-  truncate = '%<',
+  align       = '%=',
+  diagnostics = '%{%v:lua.statusline.diagnostics()%} ',
+  fname       = ' %#StatusLineStrong#%t%* ',
+  fname_nc    = ' %#StatusLineWeak#%t%* ',
+  info        = '%{%v:lua.statusline.info()%}',
+  mode        = '%{%v:lua.statusline.mode()%}',
+  padding     = '%#None#  %*',
+  position    = '%#StatusLineFaded#%l:%c%* ',
+  truncate    = '%<',
 }
 -- stylua: ignore end
 
@@ -126,6 +179,7 @@ vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'CursorMoved' }, {
       components.fname,
       components.info,
       components.align,
+      components.diagnostics,
       components.position,
       components.padding,
     })
