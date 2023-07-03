@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat Jun 24 01:23:42 PM CDT 2023
+-- Last Updated: Mon Jul  3 03:21:13 PM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -653,7 +653,7 @@ local hlgroups = {
   -- statusline
   StatusLineFaded = { fg = palette.faded, bg = palette.subtle },
   StatusLineGitAdded = { fg = palette.pine, bg = palette.subtle },
-  StatusLineGItChanged = { fg = palette.faded, bg = palette.subtle },
+  StatusLineGitChanged = { fg = palette.faded, bg = palette.subtle },
   StatusLineGitRemoved = { fg = palette.popout, bg = palette.subtle },
   StatusLineHeader = { fg = palette.background, bg = palette.faded },
   StatusLineHeaderModified = { fg = palette.background, bg = palette.popout },
