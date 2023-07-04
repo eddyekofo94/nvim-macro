@@ -2,6 +2,7 @@ _G.winbar = {}
 local hlgroups = require('plugin.winbar.hlgroups')
 local bar = require('plugin.winbar.bar')
 local configs = require('plugin.winbar.configs')
+local utils = require('plugin.winbar.utils')
 
 ---Store the on_click callbacks for each winbar symbol
 ---Make it assessable from global only because nvim's viml-lua interface
@@ -138,7 +139,7 @@ local function setup(opts)
   if configs.opts.bar.hover then
     vim.on_key(function(key)
       if key == vim.keycode('<MouseMove>') then
-        bar.update_hover_hl(vim.fn.getmousepos())
+        utils.bar.update_hover_hl(vim.fn.getmousepos())
       end
     end)
   end

@@ -683,29 +683,7 @@ function winbar_t:__tostring()
   return self.string_cache
 end
 
----@type winbar_t?
-local last_hovered_winbar = nil
----Update winbar hover highlights given the mouse position
----@param mouse table
----@return nil
-local function update_hover_hl(mouse)
-  local winbar = require('plugin.winbar.api').get_winbar(nil, mouse.winid)
-  if not winbar or mouse.winrow ~= 1 or mouse.line ~= 0 then
-    if last_hovered_winbar then
-      last_hovered_winbar:update_hover_hl()
-      last_hovered_winbar = nil
-    end
-    return
-  end
-  if last_hovered_winbar and last_hovered_winbar ~= winbar then
-    last_hovered_winbar:update_hover_hl()
-  end
-  winbar:update_hover_hl(math.max(0, mouse.wincol - 1))
-  last_hovered_winbar = winbar
-end
-
 return {
   winbar_t = winbar_t,
   winbar_symbol_t = winbar_symbol_t,
-  update_hover_hl = update_hover_hl,
 }
