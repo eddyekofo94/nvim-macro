@@ -127,6 +127,11 @@ vim.api.nvim_create_autocmd({ 'TabEnter', 'TabNewEntered' }, {
 })
 
 local function rnvimr_toggle()
+  local current_wintype = vim.fn.win_gettype(vim.api.nvim_get_current_win())
+  local current_filetype = vim.bo[vim.api.nvim_get_current_buf()].filetype
+  if current_wintype ~= '' and current_filetype ~= 'rnvimr' then
+    return
+  end
   local winlist = vim.api.nvim_list_wins()
   for _, winnr in ipairs(winlist) do
     local bufnr = vim.api.nvim_win_get_buf(winnr)
