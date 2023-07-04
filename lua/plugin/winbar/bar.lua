@@ -414,7 +414,7 @@ function winbar_t:cat(plain)
       or component:cat(plain)
   end
   -- Must add highlights to padding, else nvim will automatically truncate it
-  local padding_left = string.rep(' ', self.padding.left)
+  local padding_left = string.rep(' ', self.padding.left) .. '%<'
   local padding_right = string.rep(' ', self.padding.right)
   result = result and padding_left .. result .. padding_right or ''
   return plain and result or utils.stl.hl(result, 'DropBar')
