@@ -9,8 +9,8 @@ local function get_node_short_name(node, buf)
   return vim.trim(
     vim.treesitter
       .get_node_text(node, buf)
-      :match(configs.opts.sources.treesitter.name_pattern)
       :gsub('\n.*', '')
+      :match(configs.opts.sources.treesitter.name_pattern) or ''
   )
 end
 
@@ -145,10 +145,16 @@ local function get_symbols(buf, win, cursor)
   local symbols = {}
   local prev_type_rank = math.huge
   local prev_row = math.huge
-  local current_node = vim.treesitter.get_node({
-    bufnr = buf,
-    pos = { cursor[1] - 1, cursor[2] },
-  })
+  local current_node =
+    vim.treesitter.get_node({
+      bufnr = buf,
+      pos = {
+        cursor[1] - 1,
+        cursor[2] - (cursor[2] >= 1 and vim.api
+          .nvim_get_mode().mode
+          :match('^i') and 1 or 0),
+      },
+    })
   while current_node do
     local name = get_node_short_name(current_node, buf)
     local type, type_rank = get_node_short_type(current_node)

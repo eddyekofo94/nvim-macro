@@ -200,6 +200,7 @@ M.icons = setmetatable({
     Object              = '󰅩 ',
     Operator            = '󰆕 ',
     Package             = '󰆦 ',
+    Pair                = '󰅪 ',
     Property            = ' ',
     Reference           = '󰦾 ',
     Regex               = ' ',

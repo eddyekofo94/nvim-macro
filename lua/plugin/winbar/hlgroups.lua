@@ -43,6 +43,7 @@ local hlgroups = {
   WinBarIconKindObject            = { link = 'Statement' },
   WinBarIconKindOperator          = { link = 'Operator' },
   WinBarIconKindPackage           = { link = 'CmpItemKindModule' },
+  WinBarIconKindPair              = { link = 'String' },
   WinBarIconKindProperty          = { link = 'CmpItemKindProperty' },
   WinBarIconKindReference         = { link = 'CmpItemKindReference' },
   WinBarIconKindRepeat            = { link = 'Repeat' },
