@@ -2,37 +2,54 @@ local static = require('utils.static')
 local server_configs = require('configs.lsp-server-configs')
 
 ---Customize LSP floating window border
-local function lspconfig_floating_win()
+local function lspconfig_floating_preview()
   local opts_override = {}
 
-  ---Set LSP floating window options
-  local function set_win_opts()
+  ---Update LSP floating preview window options
+  local function update_floating_preview_opts()
     opts_override = {
       border = 'solid',
       max_width = math.ceil(vim.go.columns * 0.75),
       max_height = math.ceil(vim.go.lines * 0.4),
+      close_events = {
+        'CursorMoved',
+        'CursorMovedI',
+        'ModeChanged',
+        'WinScrolled',
+      },
     }
   end
-  set_win_opts()
-
+  update_floating_preview_opts()
   -- Reset LSP floating window options on VimResized
-  vim.api.nvim_create_augroup('LspFloatingWinOpts', { clear = true })
   vim.api.nvim_create_autocmd('VimResized', {
-    group = 'LspFloatingWinOpts',
-    callback = set_win_opts,
+    group = vim.api.nvim_create_augroup('LspFloatingWinOpts', {}),
+    callback = update_floating_preview_opts,
   })
 
   -- Hijack LSP floating window function to use custom options
   local _open_floating_preview = vim.lsp.util.open_floating_preview
+  ---@param contents table of lines to show in window
+  ---@param syntax string of syntax to set for opened buffer
+  ---@param opts table with optional fields (additional keys are passed on to |nvim_open_win()|)
+  ---@returns bufnr,winnr buffer and window number of the newly created floating
+  ---preview window
   ---@diagnostic disable-next-line: duplicate-set-field
-  function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  function vim.lsp.util.open_floating_preview(contents, syntax, opts)
+    local source_ft = vim.bo[vim.api.nvim_get_current_buf()].ft
     opts = vim.tbl_deep_extend('force', opts, opts_override)
-    return _open_floating_preview(contents, syntax, opts, ...)
+    -- If source filetype if markdown or tex, use markdown syntax
+    -- and disable stylizing markdown to get math concealing provided
+    -- by vimtex in the floating window
+    if source_ft == 'markdown' or source_ft == 'tex' then
+      opts.stylize_markdown = false
+      syntax = 'markdown'
+    end
+    return _open_floating_preview(contents, syntax, opts)
   end
 end
 
 ---Customize LSP diagnostic UI
-local function lspconfig_diagnostic()
+local function lspconfig_diagnostics()
   local icons = static.icons
   for _, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
     local sign_name = 'DiagnosticSign' .. severity
@@ -80,10 +97,9 @@ local function lspconfig_info_win()
   -- setup LspInfo floating window border
   require('lspconfig.ui.windows').default_options.border = 'shadow'
   -- reload LspInfo floating window on VimResized
-  vim.api.nvim_create_augroup('LspInfoResize', { clear = true })
   vim.api.nvim_create_autocmd('VimResized', {
     pattern = '*',
-    group = 'LspInfoResize',
+    group = vim.api.nvim_create_augroup('LspInfoResize', {}),
     callback = function()
       if vim.bo.ft == 'lspinfo' then
         vim.api.nvim_win_close(0, true)
@@ -152,8 +168,8 @@ local function lsp_setup()
   end
 end
 
-lspconfig_floating_win()
-lspconfig_diagnostic()
+lspconfig_floating_preview()
+lspconfig_diagnostics()
 lspconfig_info_win()
 lspconfig_goto_handers()
 lsp_setup()
