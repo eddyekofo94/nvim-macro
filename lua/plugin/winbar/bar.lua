@@ -1,5 +1,5 @@
 local configs = require('plugin.winbar.configs')
-local utils = require('utils')
+local utils = require('plugin.winbar.utils')
 
 ---@alias winbar_symbol_range_t lsp_range_t
 

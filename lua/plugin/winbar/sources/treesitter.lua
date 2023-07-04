@@ -1,6 +1,6 @@
 local configs = require('plugin.winbar.configs')
 local bar = require('plugin.winbar.bar')
-local utils = require('utils')
+local utils = require('plugin.winbar.utils')
 
 ---Get short name of treesitter symbols in buffer buf
 ---@param node TSNode

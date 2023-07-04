@@ -1,4 +1,5 @@
-local static = require('utils.static')
+local utils = require('plugin.winbar.utils')
+local icons = utils.static.icons
 local M = {}
 
 ---@class winbar_configs_t
@@ -38,17 +39,17 @@ M.opts = {
   icons = {
     kinds = {
       use_devicons = true,
-      symbols = static.icons.kinds,
+      symbols = icons.kinds,
     },
     ui = {
       bar = {
-        separator = static.icons.ui.AngleRight,
+        separator = icons.ui.AngleRight,
         extends = vim.opt.listchars:get().extends
-          or vim.trim(static.icons.ui.Ellipsis),
+          or vim.trim(icons.ui.Ellipsis),
       },
       menu = {
         separator = ' ',
-        indicator = static.icons.ui.AngleRight,
+        indicator = icons.ui.AngleRight,
       },
     },
   },
@@ -86,27 +87,24 @@ M.opts = {
   bar = {
     hover = true,
     ---@type winbar_source_t[]|fun(buf: integer, win: integer): winbar_source_t[]
-    sources = function(_, _)
+    sources = function(buf, _)
       local sources = require('plugin.winbar.sources')
+      if vim.bo[buf].ft == 'markdown' then
+        return {
+          sources.path,
+          utils.source.fallback({
+            sources.treesitter,
+            sources.markdown,
+            sources.lsp,
+          }),
+        }
+      end
       return {
         sources.path,
-        {
-          get_symbols = function(buf, win, cursor)
-            if vim.bo[buf].ft == 'markdown' then
-              return sources.markdown.get_symbols(buf, win, cursor)
-            end
-            for _, source in ipairs({
-              sources.lsp,
-              sources.treesitter,
-            }) do
-              local symbols = source.get_symbols(buf, win, cursor)
-              if not vim.tbl_isempty(symbols) then
-                return symbols
-              end
-            end
-            return {}
-          end,
-        },
+        utils.source.fallback({
+          sources.lsp,
+          sources.treesitter,
+        }),
       }
     end,
     padding = {
@@ -289,6 +287,12 @@ M.opts = {
         'event',
         'for_statement',
         'function',
+        'h1_marker',
+        'h2_marker',
+        'h3_marker',
+        'h4_marker',
+        'h5_marker',
+        'h6_marker',
         'if_statement',
         'interface',
         'keyword',

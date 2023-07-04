@@ -1,5 +1,5 @@
 local bar = require('plugin.winbar.bar')
-local utils = require('utils')
+local utils = require('plugin.winbar.utils')
 local groupid = vim.api.nvim_create_augroup('WinBarMenu', {})
 local configs = require('plugin.winbar.configs')
 
