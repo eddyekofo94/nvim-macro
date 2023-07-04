@@ -4,7 +4,7 @@ local M = {}
 ---@param buf integer
 ---@param hlgroup string
 ---@param range winbar_symbol_range_t?
-function M.hl_range_single(buf, hlgroup, range)
+function M.range_single(buf, hlgroup, range)
   local ns = vim.api.nvim_create_namespace(hlgroup)
   vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
   if range then
@@ -29,8 +29,8 @@ end
 ---@param buf integer
 ---@param hlgroup string
 ---@param linenr integer? 1-indexed line number
-function M.hl_line_single(buf, hlgroup, linenr)
-  M.hl_range_single(buf, hlgroup, linenr and {
+function M.line_single(buf, hlgroup, linenr)
+  M.range_single(buf, hlgroup, linenr and {
     start = {
       line = linenr - 1,
       character = 0,
