@@ -1,14 +1,13 @@
 local M = {}
 local utils = require('utils')
 
----Check if the current line is a markdown code block
----@param lines_or_lnum string[]|integer|nil default to current line number
-function M.in_codeblock(lines_or_lnum, buf)
+---Check if the current line is a markdown code block, using regex
+---to check each line
+---@param lnum integer? default to current line number
+function M.in_codeblock_regex(lnum, buf)
   buf = buf or 0
-  lines_or_lnum = lines_or_lnum or vim.api.nvim_win_get_cursor(0)[1]
-  local lines = type(lines_or_lnum) == 'number'
-      and vim.api.nvim_buf_get_lines(buf, 0, lines_or_lnum - 1, false)
-    or lines_or_lnum --[=[@as string[]]=]
+  lnum = lnum or vim.api.nvim_win_get_cursor(0)[1]
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, lnum - 1, false)
   local result = false
   for _, line in ipairs(lines) do
     if line:match('^```') then
@@ -16,6 +15,17 @@ function M.in_codeblock(lines_or_lnum, buf)
     end
   end
   return result
+end
+
+---Check if the current line is a markdown code block
+---@param lnum integer? default to current line number
+function M.in_codeblock(lnum, buf)
+  buf = buf or 0
+  lnum = lnum or vim.api.nvim_win_get_cursor(0)[1]
+  if utils.treesitter.ts_active(buf) then
+    return utils.treesitter.in_tsnode('fenced_code_block', { lnum, 0 }, buf)
+  end
+  return M.in_codeblock_regex(lnum, buf)
 end
 
 ---Returns whether the cursor is in a math zone

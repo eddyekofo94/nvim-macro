@@ -32,11 +32,14 @@ local lowercase_words = {
 local opt_captitle = utils.classes.bufopt_t:new('captitle', true)
 
 ---Given current line, determine if it is a title line
----@param lines string[] buffer lines up to current line
+---@param lnum integer
 ---@return boolean
-local function on_title_line(lines)
-  local current_line = lines[#lines]
-  return not utils.ft.markdown.in_codeblock(lines)
+local function on_title_line(lnum)
+  local current_line = api.nvim_buf_get_lines(0, lnum - 1, lnum, false)[1]
+  if not current_line then
+    return false
+  end
+  return not utils.ft.markdown.in_codeblock(lnum)
     and current_line:match('^#+%s')
 end
 
@@ -97,13 +100,12 @@ local function format_title(info)
   end
 
   local cursor = api.nvim_win_get_cursor(0)
-  local lines = api.nvim_buf_get_lines(info.buf, 0, cursor[1], false)
-  if not on_title_line(lines) then
+  if not on_title_line(cursor[1]) then
     return
   end
 
   local col = cursor[2]
-  local current_line = lines[#lines]
+  local current_line = api.nvim_get_current_line()
   local char_current = current_line:sub(col, col)
   if on_word_boundary(current_line, col) and char_current:match('%a') then
     current_line = current_line:sub(1, col - 1)
