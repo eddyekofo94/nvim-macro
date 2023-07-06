@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Wed Jul  5 08:06:11 PM CDT 2023
+-- Last Updated: Thu Jul  6 03:17:38 PM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -160,7 +160,7 @@ local hlgroups = {
   WarningMsg = { fg = palette.popout },
   Whitespace = { link = 'NonText' },
   WildMenu = { link = 'PmenuSel' },
-  Winseparator = { link = 'VertSplit' },
+  WinSeparator = { link = 'VertSplit' },
   WinBar = { fg = palette.foreground },
   WinBarNC = { fg = palette.faded },
   -- }}}2
