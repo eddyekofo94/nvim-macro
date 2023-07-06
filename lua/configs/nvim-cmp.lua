@@ -406,6 +406,9 @@ cmp.setup({
       max_height = 20,
     },
   },
+  performance = {
+    max_view_entries = 64,
+  },
 })
 
 -- Use buffer source for `/`.
