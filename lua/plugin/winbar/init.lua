@@ -71,12 +71,7 @@ local function setup(opts)
   vim.api.nvim_create_autocmd({ 'BufDelete', 'BufUnload', 'BufWipeOut' }, {
     group = groupid,
     callback = function(info)
-      if not rawget(_G.winbar.bars, info.buf) then
-        return
-      end
-      for win, _ in pairs(_G.winbar.bars[info.buf]) do
-        _G.winbar.bars[info.buf][win]:del()
-      end
+      utils.bar.winbar_do({ buf = info.buf }, 'del')
       _G.winbar.bars[info.buf] = nil
     end,
     desc = 'Remove winbar from cache on buffer delete/unload/wipeout.',
@@ -87,12 +82,7 @@ local function setup(opts)
       callback = function(info)
         local win = info.event == 'WinScrolled' and tonumber(info.match)
           or vim.api.nvim_get_current_win()
-        local buf = vim.api.nvim_win_get_buf(win)
-        if
-          rawget(_G.winbar.bars, buf) and rawget(_G.winbar.bars[buf], win)
-        then
-          _G.winbar.bars[buf][win]:update()
-        end
+        utils.bar.winbar_do({ win = win }, 'update')
       end,
       desc = 'Update a single winbar.',
     })
@@ -101,11 +91,7 @@ local function setup(opts)
     vim.api.nvim_create_autocmd(configs.opts.general.update_events.buf, {
       group = groupid,
       callback = function(info)
-        if rawget(_G.winbar.bars, info.buf) then
-          for win, _ in pairs(_G.winbar.bars[info.buf]) do
-            _G.winbar.bars[info.buf][win]:update()
-          end
-        end
+        utils.bar.winbar_do({ buf = info.buf }, 'update')
       end,
       desc = 'Update all winbars associated with buf.',
     })
@@ -126,13 +112,7 @@ local function setup(opts)
   vim.api.nvim_create_autocmd({ 'WinClosed' }, {
     group = groupid,
     callback = function(info)
-      if not rawget(_G.winbar.bars, info.buf) then
-        return
-      end
-      local win = tonumber(info.match)
-      if win then
-        _G.winbar.bars[info.buf][win]:del()
-      end
+      utils.bar.winbar_do({ win = tonumber(info.match) }, 'del')
     end,
     desc = 'Remove winbar from cache on window closed.',
   })

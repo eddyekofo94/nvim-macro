@@ -8,7 +8,7 @@ local M = {}
 ---If neither `opts.win` nor `opts.buf` is specified, return the winbar
 ---attached the current window
 ---@param opts {win: integer?, buf: integer?}
----@return winbar_t|winbar_t[]?
+---@return winbar_t?|winbar_t[]
 function M.get_winbar(opts)
   opts = opts or {}
   if opts.buf then
@@ -16,12 +16,39 @@ function M.get_winbar(opts)
       return rawget(_G.winbar.bars, opts.buf)
         and rawget(_G.winbar.bars[opts.buf], opts.win)
     end
-    return rawget(_G.winbar.bars, opts.buf)
+    return rawget(_G.winbar.bars, opts.buf) or {}
   end
   opts.win = opts.win or vim.api.nvim_get_current_win()
   opts.buf = vim.api.nvim_win_get_buf(opts.win)
   return rawget(_G.winbar.bars, opts.buf)
     and rawget(_G.winbar.bars[opts.buf], opts.win)
+end
+
+---Call method on winbar(s) given the window id and/or buffer number the
+---winbar(s) attached to
+---If only `opts.win` is specified, clear the winbar attached the window;
+---If only `opts.buf` is specified, clear all winbars attached the buffer;
+---If both `opts.win` and `opts.buf` are specified, clear the winbar attached
+---the window that contains the buffer;
+---If neither `opts.win` nor `opts.buf` is specified, clear the winbar
+---attached the current window
+---@param opts {win: integer?, buf: integer?}
+---@param method string
+---@vararg any? params passed to the method
+---@return nil
+function M.winbar_do(opts, method, ...)
+  opts = opts or {}
+  local winbars = M.get_winbar(opts)
+  if not winbars then
+    return
+  end
+  if vim.tbl_islist(winbars) then
+    for _, winbar in ipairs(winbars) do
+      winbar[method](winbar, ...)
+    end
+  else
+    winbars[method](winbars, ...)
+  end
 end
 
 ---@type winbar_t?
