@@ -7,7 +7,19 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
     local api = require('plugin.winbar.api')
     winbar.setup({
       general = {
-        update_interval = 32,
+        update_interval = 64,
+        update_events = {
+          win = {
+            'CursorMoved',
+            'CursorMovedI',
+            'WinEnter',
+          },
+          global = {
+            'DirChanged',
+            'VimResized',
+            'WinResized',
+          },
+        },
       },
       bar = {
         padding = {
