@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu Jul  6 03:17:38 PM CDT 2023
+-- Last Updated: Thu Jul  6 03:50:05 PM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -669,6 +669,29 @@ local hlgroups = {
   WinBarMenuHoverIcon = { fg = palette.salient, bg = palette.faint },
   WinBarMenuHoverEntry = { fg = palette.foreground, bg = palette.subtle },
   WinBarMenuCurrentContext = { fg = palette.foreground, bg = palette.subtle },
+
+  -- glance.nvim
+  GlanceBorderTop = { link = 'WinSeparator' },
+  GlancePreviewBorderBottom = { link = 'GlanceBorderTop' },
+  GlanceListBorderBottom = { link = 'GlanceBorderTop' },
+  GlanceFoldIcon = { link = 'Comment' },
+  GlanceListCount = { fg = palette.background, bg = palette.faint },
+  GlanceListCursorLine = { bg = palette.shaded },
+  GlanceListNormal = { link = 'NormalFloat' },
+  GlanceListMatch = { bg = palette.shaded, bold = true },
+  GlancePreviewNormal = { link = 'Pmenu' },
+  GlancePreviewMatch = { bg = palette.shaded },
+  GlanceWinBarFilename = {
+    fg = palette.faded,
+    bg = palette.subtle,
+    bold = true,
+  },
+  GlanceWinBarFilepath = { fg = palette.faded, bg = palette.subtle },
+  GlanceWinBarTitle = {
+    fg = palette.faded,
+    bg = palette.subtle,
+    bold = true,
+  },
   -- }}}2
 }
 -- }}}1

@@ -38,4 +38,12 @@ return {
       require('configs.neodev')
     end,
   },
+
+  {
+    'dnlhc/glance.nvim',
+    event = 'LspAttach',
+    config = function()
+      require('configs.glance')
+    end,
+  },
 }

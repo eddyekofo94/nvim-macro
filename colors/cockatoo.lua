@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu Jul  6 03:20:20 PM CDT 2023
+-- Last Updated: Thu Jul  6 03:49:58 PM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -704,6 +704,28 @@ local hlgroups = {
   StatusLineHeader = { fg = palette.jeans, bg = palette.steel },
   StatusLineHeaderModified = { fg = palette.jeans, bg = palette.pink },
   StatusLineStrong = { fg = palette.white, bg = palette.deepsea, bold = true },
+
+  -- glance.nvim
+  GlanceBorderTop = { link = 'WinSeparator' },
+  GlancePreviewBorderBottom = { link = 'GlanceBorderTop' },
+  GlanceListBorderBottom = { link = 'GlanceBorderTop' },
+  GlanceFoldIcon = { link = 'Comment' },
+  GlanceListCount = { fg = palette.jeans, bg = palette.pigeon },
+  GlanceListCursorLine = { bg = palette.deepsea },
+  GlanceListNormal = { bg = palette.deepsea },
+  GlanceListMatch = { bg = palette.thunder, bold = true },
+  GlancePreviewNormal = { link = 'Pmenu' },
+  GlanceWinBarFilename = {
+    fg = palette.pigeon,
+    bg = palette.deepsea,
+    bold = true,
+  },
+  GlanceWinBarFilepath = { fg = palette.pigeon, bg = palette.deepsea },
+  GlanceWinBarTitle = {
+    fg = palette.pigeon,
+    bg = palette.deepsea,
+    bold = true,
+  },
   -- }}}2
 
   -- Extra {{{2
