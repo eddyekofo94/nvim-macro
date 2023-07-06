@@ -427,9 +427,11 @@ function winbar_t:redraw()
   local new_str = self:cat()
   if new_str ~= self.string_cache then
     self.string_cache = new_str
-    vim.api.nvim_win_call(self.win, function()
-      vim.cmd('silent! redrawstatus')
-    end)
+    -- Actually we should use vim.api.nvim_win_call() to wrap this command so
+    -- that the winbar at self.win is redrawn, vim.api.nvim_win_call() is slow
+    -- and cause flickering and tearing when there's constantly updating
+    -- floating windows (e.g. nvim-cmp's completion windows)
+    vim.cmd('silent! redrawstatus')
   end
 end
 
