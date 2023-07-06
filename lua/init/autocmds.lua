@@ -303,6 +303,9 @@ local autocmds = {
       group = 'AutoHlCursorLine',
       callback = function()
         vim.defer_fn(function()
+          if vim.fn.win_gettype() ~= '' then
+            return
+          end
           local winhl = vim.opt_local.winhl:get()
           -- Restore CursorLine and CursorColumn for current window
           -- if not in inert/replace/select mode
