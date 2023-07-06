@@ -182,7 +182,7 @@ local fuzzy_path_option = {
 
 cmp.setup({
   formatting = {
-    fields = { 'kind', 'abbr' },
+    fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, cmp_item)
       ---@type table<string, string> override icons with `entry.source.name`
       local icon_override = {
@@ -190,17 +190,34 @@ cmp.setup({
         calc = icons.Calculator,
       }
       cmp_item.kind = icon_override[entry.source.name] or icons[cmp_item.kind]
-      -- Max and min width of the popup menu
-      if #cmp_item.abbr > 40 then
-        cmp_item.abbr = string.format(
-          '%s…%s',
-          string.sub(cmp_item.abbr, 1, 29),
-          string.sub(cmp_item.abbr, -10, -1)
-        )
-      elseif #cmp_item.abbr < vim.go.pumwidth then
-        cmp_item.abbr = cmp_item.abbr
-          .. string.rep(' ', vim.go.pumwidth - #cmp_item.abbr)
+      ---@param field string
+      ---@param min_width integer
+      ---@param max_width integer
+      ---@return nil
+      local function clamp(field, min_width, max_width)
+        if not cmp_item[field] or not type(cmp_item) == 'string' then
+          return
+        end
+        -- In case that min_width > max_width
+        if min_width > max_width then
+          min_width, max_width = max_width, min_width
+        end
+        local field_str = cmp_item[field]
+        local field_width = vim.fn.strdisplaywidth(field_str)
+        if field_width > max_width then
+          local former_width = math.floor(max_width * 0.6)
+          local latter_width = math.max(0, max_width - former_width - 1)
+          cmp_item[field] = string.format(
+            '%s…%s',
+            field_str:sub(1, former_width),
+            field_str:sub(-latter_width)
+          )
+        elseif field_width < min_width then
+          cmp_item[field] = string.format('%-' .. min_width .. 's', field_str)
+        end
       end
+      clamp('abbr', vim.go.pumwidth, 32)
+      clamp('menu', 0, 16)
       return cmp_item
     end,
   },
