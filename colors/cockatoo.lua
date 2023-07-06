@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Mon Jul  3 03:28:34 PM CDT 2023
+-- Last Updated: Wed Jul  5 07:06:50 PM CDT 2023
 
 -- Palette {{{
 -- stylua: ignore start
@@ -488,7 +488,7 @@ local hlgroups = {
   CmpItemKindFolder = { link = 'Directory' },
   CmpItemKindUnit = { fg = palette.cerulean },
   CmpItemKind = { fg = palette.smoke },
-  CmpItemMenu = { fg = palette.smoke },
+  CmpItemMenu = { link = 'Pmenu' },
   CmpVirtualText = { fg = palette.steel, italic = true },
 
   -- gitsigns
