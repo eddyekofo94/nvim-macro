@@ -5,13 +5,13 @@ local utils = require('utils')
 local signs_text_cache = {}
 
 ---@param name string
----@return string?
+---@return string
 local function get_sign_text(name)
   if not signs_text_cache[name] then
     local sign_def = vim.fn.sign_getdefined(name)[1]
     signs_text_cache[name] = sign_def and sign_def.text
   end
-  return signs_text_cache[name]
+  return signs_text_cache[name] or ''
 end
 
 -- stylua: ignore start
