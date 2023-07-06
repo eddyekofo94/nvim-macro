@@ -8,7 +8,7 @@ local M = {}
 ---If neither `opts.win` nor `opts.buf` is specified, return the winbar
 ---attached the current window
 ---@param opts {win: integer?, buf: integer?}
----@return winbar_t?|winbar_t[]
+---@return winbar_t?|table<integer, winbar_t>
 function M.get_winbar(opts)
   opts = opts or {}
   if opts.buf then
@@ -43,7 +43,7 @@ function M.winbar_do(opts, method, ...)
     return
   end
   if vim.tbl_islist(winbars) then
-    for _, winbar in ipairs(winbars) do
+    for _, winbar in pairs(winbars) do
       winbar[method](winbar, ...)
     end
   else
