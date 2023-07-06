@@ -346,7 +346,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 48 (package manager included).
+Total # of plugins: 49 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -358,7 +358,6 @@ Total # of plugins: 48 (package manager included).
     - [cmp-nvim-lsp](https://github.com/hrsh7th/cmp-nvim-lsp)
     - [fuzzy.nvim](https://github.com/tzachar/fuzzy.nvim)
     - [cmp-fuzzy-path](https://github.com/tzachar/cmp-fuzzy-path)
-    - [cmp-buffer](https://github.com/hrsh7th/cmp-buffer)
     - [cmp-buffer](https://github.com/hrsh7th/cmp-buffer)
     - [cmp_luasnip](https://github.com/saadparwaiz1/cmp_luasnip)
     - [cmp-nvim-lsp-signature-help](https://github.com/hrsh7th/cmp-nvim-lsp-signature-help)
@@ -388,6 +387,7 @@ Total # of plugins: 48 (package manager included).
     - [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)
     - [flatten.nvim](https://github.com/willothy/flatten.nvim)
     - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
+    - [git-conflict](akinsho/git-conflict.nvim)
     - [rnvimr](https://github.com/kevinhwang91/rnvimr)
     - [tmux.nvim](https://github.com/aserowy/tmux.nvim)
     - [nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua)
