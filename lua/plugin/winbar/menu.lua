@@ -5,7 +5,8 @@ local configs = require('plugin.winbar.configs')
 
 ---Lookup table for winbar menus
 ---@type table<integer, winbar_menu_t>
-_G.winbar.menus = {}
+_G.winbar.menus = {} -- menu win id -> menu
+_G.winbar.menus_prev_win = {} -- menu prev win id -> menu
 
 ---@class winbar_menu_hl_info_t
 ---@field start integer byte-indexed, 0-indexed, start inclusive
@@ -215,6 +216,9 @@ function winbar_menu_t:del()
   end
   if self.win then
     _G.winbar.menus[self.win] = nil
+  end
+  if self.prev_win then
+    _G.winbar.menus_prev_win[self.prev_win] = nil
   end
 end
 
@@ -497,6 +501,7 @@ function winbar_menu_t:open(opts)
   self:make_buf()
   self:open_win()
   _G.winbar.menus[self.win] = self
+  _G.winbar.menus_prev_win[self.prev_win] = self
   -- Initialize cursor position
   if self._win_configs.focusable ~= false then
     if self.prev_cursor then
@@ -532,6 +537,10 @@ function winbar_menu_t:close(restore_view)
     end
     _G.winbar.menus[self.win] = nil
     self.win = nil
+  end
+  if self.prev_win then
+    _G.winbar.menus_prev_win[self.prev_win] = nil
+    self.prev_win = nil
   end
   -- Finish preview
   if configs.opts.menu.preview then
