@@ -358,7 +358,7 @@ Total # of plugins: 48 (package manager included).
     - [cmp-nvim-lsp](https://github.com/hrsh7th/cmp-nvim-lsp)
     - [fuzzy.nvim](https://github.com/tzachar/fuzzy.nvim)
     - [cmp-fuzzy-path](https://github.com/tzachar/cmp-fuzzy-path)
-    - [cmp-fuzzy-buffer](https://github.com/tzachar/cmp-fuzzy-buffer)
+    - [cmp-buffer](https://github.com/hrsh7th/cmp-buffer)
     - [cmp-buffer](https://github.com/hrsh7th/cmp-buffer)
     - [cmp_luasnip](https://github.com/saadparwaiz1/cmp_luasnip)
     - [cmp-nvim-lsp-signature-help](https://github.com/hrsh7th/cmp-nvim-lsp-signature-help)

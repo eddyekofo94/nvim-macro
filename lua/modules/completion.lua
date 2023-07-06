@@ -44,9 +44,9 @@ return {
   },
 
   {
-    'tzachar/cmp-fuzzy-buffer',
+    'hrsh7th/cmp-buffer',
     event = { 'CmdlineEnter', 'InsertEnter' },
-    dependencies = { 'fuzzy.nvim', 'nvim-cmp' },
+    dependencies = 'nvim-cmp',
   },
 
   {

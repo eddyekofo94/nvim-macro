@@ -375,7 +375,7 @@ cmp.setup({
       -- Suppress LSP completion when workspace is not ready yet
       entry_filter = entry_filter,
     },
-    { name = 'fuzzy_buffer', max_item_count = 8 },
+    { name = 'buffer', max_item_count = 8 },
     { name = 'spell', max_item_count = 8 },
     {
       name = 'fuzzy_path',
@@ -414,11 +414,11 @@ cmp.setup({
 -- Use buffer source for `/`.
 cmp.setup.cmdline('/', {
   enabled = true,
-  sources = { { name = 'fuzzy_buffer' } },
+  sources = { { name = 'buffer' } },
 })
 cmp.setup.cmdline('?', {
   enabled = true,
-  sources = { { name = 'fuzzy_buffer' } },
+  sources = { { name = 'buffer' } },
 })
 -- Use cmdline & path source for ':'.
 cmp.setup.cmdline(':', {
@@ -444,7 +444,7 @@ cmp.setup.cmdline('@', {
       option = fuzzy_path_option,
     },
     { name = 'cmdline', group_index = 2 },
-    { name = 'fuzzy_buffer', group_index = 3 },
+    { name = 'buffer', group_index = 3 },
   },
 })
 
