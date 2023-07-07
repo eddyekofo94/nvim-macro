@@ -29,23 +29,23 @@ require('gitsigns').setup({
     -- Navigation
     map({ 'n', 'x' }, ']c', function()
       if vim.wo.diff then
-        return ']c'
+        vim.api.nvim_feedkeys(vim.v.count1 .. ']c', 'n', true)
+        return
       end
-      vim.schedule(function()
+      for _ = 1, vim.v.count1 do
         gs.next_hunk()
-      end)
-      return '<Ignore>'
-    end, { expr = true })
+      end
+    end)
 
     map({ 'n', 'x' }, '[c', function()
       if vim.wo.diff then
-        return '[c'
+        vim.api.nvim_feedkeys(vim.v.count1 .. '[c', 'n', true)
+        return
       end
-      vim.schedule(function()
+      for _ = 1, vim.v.count1 do
         gs.prev_hunk()
-      end)
-      return '<Ignore>'
-    end, { expr = true })
+      end
+    end)
 
     -- Actions
     map('n', '<leader>gs', gs.stage_hunk)
@@ -57,7 +57,17 @@ require('gitsigns').setup({
     map('n', '<leader>gb', gs.blame_line)
 
     -- Text object
-    map({ 'o', 'x' }, 'ic', ':<C-U>Gitsigns select_hunk<CR>')
-    map({ 'o', 'x' }, 'ac', ':<C-U>Gitsigns select_hunk<CR>')
+    map(
+      { 'o', 'x' },
+      'ic',
+      ':<C-U>Gitsigns select_hunk<CR>',
+      { silent = true }
+    )
+    map(
+      { 'o', 'x' },
+      'ac',
+      ':<C-U>Gitsigns select_hunk<CR>',
+      { silent = true }
+    )
   end,
 })
