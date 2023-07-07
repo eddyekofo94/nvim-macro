@@ -130,7 +130,9 @@ return {
   {
     'akinsho/git-conflict.nvim',
     event = 'BufReadPre',
-    config = true,
+    config = function()
+      require('configs.git-conflict')
+    end,
   },
 
   {
