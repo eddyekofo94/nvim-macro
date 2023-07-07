@@ -3,6 +3,17 @@ local actions = glance.actions
 local utils = require('utils')
 local horiz = vim.opt.fillchars:get().horiz
 
+---@param callback function
+local function count_wrap(callback)
+  return function(...)
+    local result = nil
+    for _ = 1, vim.v.count1 do
+      result = { callback(...) }
+    end
+    return unpack(result)
+  end
+end
+
 glance.setup({
   height = 16,
   detached = function(win)
@@ -42,12 +53,12 @@ glance.setup({
   mappings = {
     ---@type table<string, function|boolean>
     list = {
-      ['j'] = actions.next,
-      ['k'] = actions.previous,
-      ['<Down>'] = actions.next,
-      ['<Up>'] = actions.previous,
-      ['<C-n>'] = actions.next_location,
-      ['<C-p>'] = actions.previous_location,
+      ['j'] = count_wrap(actions.next),
+      ['k'] = count_wrap(actions.previous),
+      ['<Down>'] = count_wrap(actions.next),
+      ['<Up>'] = count_wrap(actions.previous),
+      ['<C-n>'] = count_wrap(actions.next_location),
+      ['<C-p>'] = count_wrap(actions.previous_location),
       ['<C-u>'] = actions.preview_scroll_win(5),
       ['<C-d>'] = actions.preview_scroll_win(-5),
       ['<C-f>'] = actions.preview_scroll_win(10),
@@ -82,8 +93,8 @@ glance.setup({
     ---@type table<string, function|boolean>
     preview = {
       ['q'] = actions.close,
-      ['<C-n>'] = actions.next_location,
-      ['<C-p>'] = actions.previous_location,
+      ['<C-n>'] = count_wrap(actions.next_location),
+      ['<C-p>'] = count_wrap(actions.previous_location),
       ['<C-w>l'] = actions.enter_win('list'),
       ['<M-l>'] = actions.enter_win('list'),
       ['Q'] = false,
