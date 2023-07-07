@@ -96,15 +96,32 @@ local function setup(opts)
       desc = 'Update all winbars associated with buf.',
     })
   end
+  if not vim.tbl_isempty(configs.opts.general.update_events.tab) then
+    vim.api.nvim_create_autocmd(configs.opts.general.update_events.tab, {
+      group = groupid,
+      callback = function(info)
+        if vim.tbl_isempty(utils.bar.get_winbar({ buf = info.buf })) then
+          return
+        end
+        for _, win in
+          ipairs(
+            vim.api.nvim_tabpage_list_wins(vim.api.nvim_get_current_tabpage())
+          )
+        do
+          utils.bar.winbar_do({ win = win }, 'update')
+        end
+      end,
+      desc = 'Update all winbars in a tabpage.',
+    })
+  end
   if not vim.tbl_isempty(configs.opts.general.update_events.global) then
     vim.api.nvim_create_autocmd(configs.opts.general.update_events.global, {
       group = groupid,
-      callback = function()
-        for buf, _ in pairs(_G.winbar.bars) do
-          for win, _ in pairs(_G.winbar.bars[buf]) do
-            _G.winbar.bars[buf][win]:update()
-          end
+      callback = function(info)
+        if vim.tbl_isempty(utils.bar.get_winbar({ buf = info.buf })) then
+          return
         end
+        utils.bar.winbar_do(nil, 'update')
       end,
       desc = 'Update all winbars.',
     })

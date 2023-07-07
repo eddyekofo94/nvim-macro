@@ -9,14 +9,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
       general = {
         update_interval = 64,
         update_events = {
-          win = {
-            'CursorMoved',
-            'CursorMovedI',
-            'WinEnter',
-          },
-          global = {
-            'DirChanged',
-            'VimResized',
+          tab = {
             'WinResized',
           },
         },

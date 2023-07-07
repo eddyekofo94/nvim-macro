@@ -1,14 +1,14 @@
 local M = {}
 
 ---Get winbar
----If only `opts.win` is specified, return the winbar attached the window;
----If only `opts.buf` is specified, return all winbars attached the buffer;
----If both `opts.win` and `opts.buf` are specified, return the winbar attached
----the window that contains the buffer;
----If neither `opts.win` nor `opts.buf` is specified, return the winbar
----attached the current window
----@param opts {win: integer?, buf: integer?}
----@return winbar_t?|table<integer, winbar_t>
+--- - If only `opts.win` is specified, return the winbar attached the window;
+--- - If only `opts.buf` is specified, return all winbars attached the buffer;
+--- - If both `opts.win` and `opts.buf` are specified, return the winbar attached
+---   the window that contains the buffer;
+--- - If neither `opts.win` nor `opts.buf` is specified, return all winbars
+---   in the form of `table<buf, table<win, winbar_t>>`
+---@param opts {win: integer?, buf: integer?}?
+---@return winbar_t?|table<integer, winbar_t>|table<integer, table<integer, winbar_t>>
 function M.get_winbar(opts)
   opts = opts or {}
   if opts.buf then
@@ -18,36 +18,45 @@ function M.get_winbar(opts)
     end
     return rawget(_G.winbar.bars, opts.buf) or {}
   end
-  opts.win = opts.win or vim.api.nvim_get_current_win()
-  opts.buf = vim.api.nvim_win_get_buf(opts.win)
-  return rawget(_G.winbar.bars, opts.buf)
-    and rawget(_G.winbar.bars[opts.buf], opts.win)
+  if opts.win then
+    local buf = vim.api.nvim_win_get_buf(opts.win)
+    return rawget(_G.winbar.bars, buf)
+      and rawget(_G.winbar.bars[buf], opts.win)
+  end
+  return _G.winbar.bars
 end
 
 ---Call method on winbar(s) given the window id and/or buffer number the
 ---winbar(s) attached to
----If only `opts.win` is specified, clear the winbar attached the window;
----If only `opts.buf` is specified, clear all winbars attached the buffer;
----If both `opts.win` and `opts.buf` are specified, clear the winbar attached
----the window that contains the buffer;
----If neither `opts.win` nor `opts.buf` is specified, clear the winbar
----attached the current window
----@param opts {win: integer?, buf: integer?}
+--- - If only `opts.win` is specified, call the winbar attached the window;
+--- - If only `opts.buf` is specified, call all winbars attached the buffer;
+--- - If both `opts.win` and `opts.buf` are specified, call the winbar attached
+---   the window that contains the buffer;
+--- - If neither `opts.win` nor `opts.buf` is specified, call all winbars
+---@param opts {win: integer?, buf: integer?}?
 ---@param method string
 ---@vararg any? params passed to the method
 ---@return nil
 function M.winbar_do(opts, method, ...)
   opts = opts or {}
   local winbars = M.get_winbar(opts)
-  if not winbars then
+  if not winbars or vim.tbl_isempty(winbar) then
     return
   end
-  if vim.tbl_islist(winbars) then
+  if opts.win then
+    winbars[method](winbars, ...)
+    return
+  end
+  if opts.buf then
     for _, winbar in pairs(winbars) do
       winbar[method](winbar, ...)
     end
-  else
-    winbars[method](winbars, ...)
+    return
+  end
+  for _, buf_winbars in pairs(winbars) do
+    for _, winbar in pairs(buf_winbars) do
+      winbar[method](winbar, ...)
+    end
   end
 end
 
