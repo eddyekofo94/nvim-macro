@@ -72,11 +72,13 @@ vim.keymap.set('n', 'q', function()
     return
   end
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-    local config = vim.api.nvim_win_get_config(win)
-    -- close floating windows that can be focused
-    if config.relative ~= '' and config.focusable then
-      vim.api.nvim_win_close(win, false) -- do not force
-      count = count + 1
+    if vim.api.nvim_win_is_valid(win) then
+      local config = vim.api.nvim_win_get_config(win)
+      -- close floating windows that can be focused
+      if config.relative ~= '' and config.focusable then
+        vim.api.nvim_win_close(win, false) -- do not force
+        count = count + 1
+      end
     end
   end
   if count == 0 then -- Fallback
