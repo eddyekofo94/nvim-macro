@@ -467,8 +467,6 @@ function winbar_t:update()
       )
       or vim.fn.reg_executing() ~= ''
       or self.in_pick_mode
-      -- Don't update if there's an opening menu in the attached window
-      or utils.menu.get_menu({ prev_win = self.win })
     then
       return
     end
