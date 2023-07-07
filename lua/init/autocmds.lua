@@ -401,7 +401,7 @@ local autocmds = {
 
   -- Automatically clear message area on specific events
   {
-    { 'ModeChanged', 'WinLeave', 'BufLeave', 'FocusLost' },
+    { 'ModeChanged', 'WinLeave', 'FocusLost' },
     {
       group = 'ClearMsgArea',
       command = 'echo',
