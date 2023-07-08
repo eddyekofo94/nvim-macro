@@ -1,34 +1,30 @@
+local M = {}
+local utils = require('plugin.winbar.utils')
+
 ---Get the winbar
----@param buf? integer
----@param win integer
----@return winbar_t?
-local function get_winbar(buf, win)
-  buf = buf or vim.api.nvim_win_get_buf(win)
-  if rawget(_G.winbar.bars, buf) then
-    return rawget(_G.winbar.bars[buf], win)
-  end
+---@param opts {win: integer?, buf: integer?}?
+---@return winbar_t?|table<integer, winbar_t>|table<integer, table<integer, winbar_t>>
+function M.get_winbar(opts)
+  return utils.bar.get_winbar(opts)
 end
 
 ---Get current winbar
 ---@return winbar_t?
-local function get_current_winbar()
-  return get_winbar(
-    vim.api.nvim_get_current_buf(),
-    vim.api.nvim_get_current_win()
-  )
+function M.get_current_winbar()
+  return utils.bar.get_winbar({ win = vim.api.nvim_get_current_win() })
 end
 
 ---Get winbar menu
----@param win integer
+---@param opts {win: integer}
 ---@return winbar_menu_t?
-local function get_winbar_menu(win)
-  return _G.winbar.menus[win]
+function M.get_winbar_menu(opts)
+  return _G.winbar.menus[opts.win]
 end
 
 ---Get current winbar menu
 ---@return winbar_menu_t?
-local function get_current_winbar_menu()
-  return get_winbar_menu(vim.api.nvim_get_current_win())
+function M.get_current_winbar_menu()
+  return M.get_winbar_menu({ win = vim.api.nvim_get_current_win() })
 end
 
 ---Goto the start of context
@@ -36,9 +32,9 @@ end
 ---prev context if cursor is already at the start of current context;
 ---If `count` is positive, goto the start of `count` prev context
 ---@param count integer? default vim.v.count
-local function goto_context_start(count)
+function M.goto_context_start(count)
   count = count or vim.v.count
-  local bar = get_current_winbar()
+  local bar = M.get_current_winbar()
   if not bar or not bar.components or vim.tbl_isempty(bar.components) then
     return
   end
@@ -66,8 +62,8 @@ local function goto_context_start(count)
 end
 
 ---Open the menu of current context to select the next context
-local function select_next_context()
-  local bar = get_current_winbar()
+function M.select_next_context()
+  local bar = M.get_current_winbar()
   if not bar or not bar.components or vim.tbl_isempty(bar.components) then
     return
   end
@@ -78,19 +74,11 @@ end
 
 ---Pick a component from current winbar
 ---@param idx integer?
-local function pick(idx)
-  local bar = get_current_winbar()
+function M.pick(idx)
+  local bar = M.get_current_winbar()
   if bar then
     bar:pick(idx)
   end
 end
 
-return {
-  get_winbar = get_winbar,
-  get_current_winbar = get_current_winbar,
-  get_winbar_menu = get_winbar_menu,
-  get_current_winbar_menu = get_current_winbar_menu,
-  goto_context_start = goto_context_start,
-  select_next_context = select_next_context,
-  pick = pick,
-}
+return M

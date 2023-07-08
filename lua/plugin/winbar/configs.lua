@@ -1,3 +1,4 @@
+local api = require('plugin.winbar.api')
 local utils = require('plugin.winbar.utils')
 local icons = utils.static.icons
 local M = {}
@@ -131,14 +132,13 @@ M.opts = {
     ---@type table<string, string|function|table<string, string|function>>
     keymaps = {
       ['<LeftMouse>'] = function()
-        local api = require('plugin.winbar.api')
         local menu = api.get_current_winbar_menu()
         if not menu then
           return
         end
         local mouse = vim.fn.getmousepos()
         if mouse.winid ~= menu.win then
-          local prev_menu = api.get_winbar_menu(mouse.winid)
+          local prev_menu = api.get_winbar_menu({ win = mouse.winid })
           if prev_menu and prev_menu.sub_menu then
             prev_menu.sub_menu:close()
           end
@@ -150,7 +150,7 @@ M.opts = {
         menu:click_at({ mouse.line, mouse.column - 1 }, nil, 1, 'l')
       end,
       ['<CR>'] = function()
-        local menu = require('plugin.winbar.api').get_current_winbar_menu()
+        local menu = api.get_current_winbar_menu()
         if not menu then
           return
         end
@@ -161,7 +161,7 @@ M.opts = {
         end
       end,
       ['<MouseMove>'] = function()
-        local menu = require('plugin.winbar.api').get_current_winbar_menu()
+        local menu = api.get_current_winbar_menu()
         if not menu then
           return
         end
@@ -203,10 +203,7 @@ M.opts = {
           return menu.prev_menu._win_configs.width
         end
         local mouse = vim.fn.getmousepos()
-        local bar = require('plugin.winbar.api').get_winbar(
-          vim.api.nvim_win_get_buf(menu.prev_win),
-          menu.prev_win
-        )
+        local bar = api.get_winbar({ win = menu.prev_win })
         if not bar then
           return mouse.wincol
         end

@@ -431,7 +431,7 @@ function winbar_t:redraw()
     -- that the winbar at self.win is redrawn, vim.api.nvim_win_call() is slow
     -- and cause flickering and tearing when there's constantly updating
     -- floating windows (e.g. nvim-cmp's completion windows)
-    vim.cmd('silent! redrawstatus')
+    vim.cmd('silent! redrawstatus!')
   end
 end
 
