@@ -412,11 +412,10 @@ function winbar_menu_t:make_buf()
     callback = function()
       local cursor = vim.api.nvim_win_get_cursor(self.win)
 
-      if
-        configs.opts.menu.preview
-        and not vim.deep_equal(cursor, self.prev_cursor)
-      then
+      if configs.opts.menu.preview then
         self:preview_symbol_at(cursor, true)
+      else
+        self.prev_cursor = cursor
       end
 
       if configs.opts.menu.quick_navigation then
@@ -523,6 +522,14 @@ function winbar_menu_t:close(restore_view)
   end
   -- Move cursor to the previous window
   if self.prev_win and vim.api.nvim_win_is_valid(self.prev_win) then
+    local prev_menu = _G.winbar.menus[self.prev_win]
+    if prev_menu then
+      if prev_menu.cursor then
+        prev_menu:update_current_context_hl(prev_menu.cursor[1])
+      else
+        prev_menu:update_current_context_hl(nil)
+      end
+    end
     vim.api.nvim_set_current_win(self.prev_win)
   end
   -- Close the menu window and dereference it in the lookup table
