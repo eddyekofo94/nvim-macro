@@ -203,7 +203,7 @@ In order to enable or disable a module, one need to change the table in
 enable_modules({
   'base',
   'treesitter',
-  'editor',
+  'edit',
   -- ...
 })
 ```
@@ -374,7 +374,7 @@ Total # of plugins: 50 (package manager included).
     - [vimtex](https://github.com/lervag/vimtex)
     - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
     - [vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
-- **Editor**
+- **Edit**
     - [nvim-surround](https://github.com/kylechui/nvim-surround)
     - [Comment.nvim](https://github.com/numToStr/Comment.nvim)
     - [vim-sleuth](https://github.com/tpope/vim-sleuth)
