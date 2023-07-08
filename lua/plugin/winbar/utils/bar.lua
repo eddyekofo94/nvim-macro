@@ -9,7 +9,7 @@ local M = {}
 ---   in the form of `table<buf, table<win, winbar_t>>`
 ---@param opts {win: integer?, buf: integer?}?
 ---@return winbar_t?|table<integer, winbar_t>|table<integer, table<integer, winbar_t>>
-function M.get_winbar(opts)
+function M.get(opts)
   opts = opts or {}
   if opts.buf then
     if opts.win then
@@ -36,28 +36,30 @@ end
 ---@param opts {win: integer?, buf: integer?}?
 ---@param method string
 ---@vararg any? params passed to the method
----@return nil
-function M.winbar_do(opts, method, ...)
+---@return any? return value of the method
+function M.exec(opts, method, ...)
   opts = opts or {}
-  local winbars = M.get_winbar(opts)
+  local winbars = M.get(opts)
   if not winbars or vim.tbl_isempty(winbar) then
     return
   end
   if opts.win then
-    winbars[method](winbars, ...)
-    return
+    return winbars[method](winbars, ...)
   end
   if opts.buf then
+    local results = {}
     for _, winbar in pairs(winbars) do
-      winbar[method](winbar, ...)
+      table.insert(results, { winbar[method](winbar, ...) })
     end
-    return
+    return results
   end
+  local results = {}
   for _, buf_winbars in pairs(winbars) do
     for _, winbar in pairs(buf_winbars) do
-      winbar[method](winbar, ...)
+      table.insert(results, { winbar[method](winbar, ...) })
     end
   end
+  return results
 end
 
 ---@type winbar_t?
@@ -67,7 +69,7 @@ local last_hovered_winbar = nil
 ---@param mouse table
 ---@return nil
 function M.update_hover_hl(mouse)
-  local winbar = M.get_winbar({ win = mouse.winid })
+  local winbar = M.get({ win = mouse.winid })
   if not winbar or mouse.winrow ~= 1 or mouse.line ~= 0 then
     if last_hovered_winbar then
       last_hovered_winbar:update_hover_hl()

@@ -5,20 +5,22 @@ local utils = require('plugin.winbar.utils')
 ---@param opts {win: integer?, buf: integer?}?
 ---@return winbar_t?|table<integer, winbar_t>|table<integer, table<integer, winbar_t>>
 function M.get_winbar(opts)
-  return utils.bar.get_winbar(opts)
+  return utils.bar.get(opts)
 end
 
 ---Get current winbar
 ---@return winbar_t?
 function M.get_current_winbar()
-  return utils.bar.get_winbar({ win = vim.api.nvim_get_current_win() })
+  return M.get_winbar({ win = vim.api.nvim_get_current_win() })
 end
 
 ---Get winbar menu
----@param opts {win: integer}
+--- - If `opts.win` is specified, return the winbar menu attached the window;
+--- - If `opts.win` is not specified, return all opened winbar menus
+---@param opts {win: integer?}?
 ---@return winbar_menu_t?
 function M.get_winbar_menu(opts)
-  return _G.winbar.menus[opts.win]
+  return utils.menu.get(opts)
 end
 
 ---Get current winbar menu

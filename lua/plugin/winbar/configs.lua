@@ -145,6 +145,8 @@ M.opts = {
           if vim.api.nvim_win_is_valid(mouse.winid) then
             vim.api.nvim_set_current_win(mouse.winid)
           end
+          utils.menu.exec(nil, 'close')
+          utils.bar.exec(nil, 'update_current_context_hl')
           return
         end
         menu:click_at({ mouse.line, mouse.column - 1 }, nil, 1, 'l')

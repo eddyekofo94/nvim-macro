@@ -71,7 +71,7 @@ local function setup(opts)
   vim.api.nvim_create_autocmd({ 'BufDelete', 'BufUnload', 'BufWipeOut' }, {
     group = groupid,
     callback = function(info)
-      utils.bar.winbar_do({ buf = info.buf }, 'del')
+      utils.bar.exec({ buf = info.buf }, 'del')
       _G.winbar.bars[info.buf] = nil
     end,
     desc = 'Remove winbar from cache on buffer delete/unload/wipeout.',
@@ -82,7 +82,7 @@ local function setup(opts)
       callback = function(info)
         local win = info.event == 'WinScrolled' and tonumber(info.match)
           or vim.api.nvim_get_current_win()
-        utils.bar.winbar_do({ win = win }, 'update')
+        utils.bar.exec({ win = win }, 'update')
       end,
       desc = 'Update a single winbar.',
     })
@@ -91,7 +91,7 @@ local function setup(opts)
     vim.api.nvim_create_autocmd(configs.opts.general.update_events.buf, {
       group = groupid,
       callback = function(info)
-        utils.bar.winbar_do({ buf = info.buf }, 'update')
+        utils.bar.exec({ buf = info.buf }, 'update')
       end,
       desc = 'Update all winbars associated with buf.',
     })
@@ -100,7 +100,7 @@ local function setup(opts)
     vim.api.nvim_create_autocmd(configs.opts.general.update_events.tab, {
       group = groupid,
       callback = function(info)
-        if vim.tbl_isempty(utils.bar.get_winbar({ buf = info.buf })) then
+        if vim.tbl_isempty(utils.bar.get({ buf = info.buf })) then
           return
         end
         for _, win in
@@ -108,7 +108,7 @@ local function setup(opts)
             vim.api.nvim_tabpage_list_wins(vim.api.nvim_get_current_tabpage())
           )
         do
-          utils.bar.winbar_do({ win = win }, 'update')
+          utils.bar.exec({ win = win }, 'update')
         end
       end,
       desc = 'Update all winbars in a tabpage.',
@@ -118,10 +118,10 @@ local function setup(opts)
     vim.api.nvim_create_autocmd(configs.opts.general.update_events.global, {
       group = groupid,
       callback = function(info)
-        if vim.tbl_isempty(utils.bar.get_winbar({ buf = info.buf })) then
+        if vim.tbl_isempty(utils.bar.get({ buf = info.buf })) then
           return
         end
-        utils.bar.winbar_do(nil, 'update')
+        utils.bar.exec(nil, 'update')
       end,
       desc = 'Update all winbars.',
     })
@@ -129,7 +129,7 @@ local function setup(opts)
   vim.api.nvim_create_autocmd({ 'WinClosed' }, {
     group = groupid,
     callback = function(info)
-      utils.bar.winbar_do({ win = tonumber(info.match) }, 'del')
+      utils.bar.exec({ win = tonumber(info.match) }, 'del')
     end,
     desc = 'Remove winbar from cache on window closed.',
   })

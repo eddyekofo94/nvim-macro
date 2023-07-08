@@ -22,7 +22,8 @@ local utils = require('plugin.winbar.utils')
 ---@field sibling_idx integer? index of the symbol in its siblings
 ---@field range winbar_symbol_range_t?
 ---@field on_click fun(this: winbar_symbol_t, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false? force disable on_click when false
----@field data table? any data associated with the symbol
+---@field swap table<string, any>? swapped data of the symbol
+---@field swapped table<string, true>? swapped fields of the symbol
 ---@field cache table caches string representation, length, etc. for the symbol
 local winbar_symbol_t = {}
 
@@ -287,25 +288,26 @@ end
 ---@param new_val any
 ---@return nil
 function winbar_symbol_t:swap_field(field, new_val)
-  self.data = self.data or {}
-  self.data.swap = self.data.swap or {}
-  self.data.swapped = self.data.swapped or {}
-  self.data.swap[field] = self.data.swap[field] or self[field]
-  table.insert(self.data.swapped, field)
+  self.swap = self.swap or {}
+  self.swapped = self.swapped or {}
+  if not self.swapped[field] then
+    self.swap[field] = self[field]
+    self.swapped[field] = true
+  end
   self[field] = new_val
 end
 
 ---Restore the content of a winbar symbol
 ---@return nil
 function winbar_symbol_t:restore()
-  if not self.data or not self.data.swap then
+  if not self.swap or not self.swapped then
     return
   end
-  for _, field in ipairs(self.data.swapped) do
-    self[field] = self.data.swap[field]
+  for field, _ in pairs(self.swapped) do
+    self[field] = self.swap[field]
   end
-  self.data.swap = nil
-  self.data.swapped = nil
+  self.swap = nil
+  self.swapped = nil
 end
 
 ---@class winbar_opts_t
@@ -611,11 +613,15 @@ function winbar_t:get_component_at(col, look_ahead)
 end
 
 ---Highlight the symbol at bar_idx as current context
----@param bar_idx integer see winbar_symbol_t.bar_idx
+---@param bar_idx integer? see winbar_symbol_t.bar_idx, nil to remove the highlight
 ---@return nil
 function winbar_t:update_current_context_hl(bar_idx)
-  local symbol = self.components[bar_idx]
+  local symbol = bar_idx and self.components[bar_idx]
   if not symbol then
+    for _, sym in ipairs(self.components) do
+      sym:restore()
+    end
+    self:redraw()
     return
   end
   local hl_currentcontext_icon = '_WinBarIconCurrentContext'
