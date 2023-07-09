@@ -31,7 +31,6 @@ M.opts = {
         'TextChanged',
         'TextChangedI',
       },
-      tab = {},
       global = {
         'DirChanged',
         'VimResized',
