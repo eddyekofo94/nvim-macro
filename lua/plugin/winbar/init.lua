@@ -80,9 +80,16 @@ local function setup(opts)
     vim.api.nvim_create_autocmd(configs.opts.general.update_events.win, {
       group = groupid,
       callback = function(info)
-        local win = info.event == 'WinScrolled' and tonumber(info.match)
-          or vim.api.nvim_get_current_win()
-        utils.bar.exec({ win = win }, 'update')
+        if info.event == 'WinResized' then
+          for _, win in ipairs(vim.v.event.windows) do
+            utils.bar.exec({ win = win }, 'update')
+          end
+        else
+          utils.bar.exec({
+            win = info.event == 'WinScrolled' and tonumber(info.match)
+              or vim.api.nvim_get_current_win(),
+          }, 'update')
+        end
       end,
       desc = 'Update a single winbar.',
     })
@@ -94,24 +101,6 @@ local function setup(opts)
         utils.bar.exec({ buf = info.buf }, 'update')
       end,
       desc = 'Update all winbars associated with buf.',
-    })
-  end
-  if not vim.tbl_isempty(configs.opts.general.update_events.tab) then
-    vim.api.nvim_create_autocmd(configs.opts.general.update_events.tab, {
-      group = groupid,
-      callback = function(info)
-        if vim.tbl_isempty(utils.bar.get({ buf = info.buf })) then
-          return
-        end
-        for _, win in
-          ipairs(
-            vim.api.nvim_tabpage_list_wins(vim.api.nvim_get_current_tabpage())
-          )
-        do
-          utils.bar.exec({ win = win }, 'update')
-        end
-      end,
-      desc = 'Update all winbars in a tabpage.',
     })
   end
   if not vim.tbl_isempty(configs.opts.general.update_events.global) then
