@@ -137,9 +137,11 @@ function statusline.diagnostics()
       return ''
     end
     return utils.stl.hl(
-      get_sign_text('DiagnosticSign' .. severity)
-        .. string.format('%d/%d', count, count_workspace),
+      get_sign_text('DiagnosticSign' .. severity),
       'StatusLineDiagnostic' .. severity
+    ) .. utils.stl.hl(
+      string.format('%d/%d', count, count_workspace),
+      'StatusLineFaded'
     )
   end
   local result = ''
@@ -152,18 +154,22 @@ function statusline.diagnostics()
   return result
 end
 
+function statusline.diag_or_pos()
+  local diagnostics = statusline.diagnostics()
+  return diagnostics == '' and '%#StatusLineFaded#%l:%c%*' or diagnostics
+end
+
 -- stylua: ignore start
 ---Statusline components
 ---@type table<string, string>
 local components = {
   align       = '%=',
-  diagnostics = '%{%v:lua.statusline.diagnostics()%} ',
+  diag_or_pos = '%{%v:lua.statusline.diag_or_pos()%} ',
   fname       = ' %#StatusLineStrong#%t%* ',
   fname_nc    = ' %#StatusLineWeak#%t%* ',
   info        = '%{%v:lua.statusline.info()%}',
   mode        = '%{%v:lua.statusline.mode()%}',
   padding     = '%#None#  %*',
-  position    = '%#StatusLineFaded#%l:%c%* ',
   truncate    = '%<',
 }
 -- stylua: ignore end
@@ -179,8 +185,7 @@ vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'CursorMoved' }, {
       components.fname,
       components.info,
       components.align,
-      components.diagnostics,
-      components.position,
+      components.diag_or_pos,
       components.padding,
     })
   end,
