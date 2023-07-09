@@ -283,9 +283,6 @@ local function update_symbols(buf, client, ttl)
         end, configs.opts.sources.lsp.request.interval)
       else -- Update symbol_list
         lsp_buf_symbols[buf] = unify(symbols)
-        for _, winbar in pairs(_G.winbar.bars[buf]) do
-          winbar:update() -- Redraw winbar after updating symbols
-        end
       end
     end,
     buf
