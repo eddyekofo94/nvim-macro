@@ -317,7 +317,7 @@ local subcommands = {
               table.insert(
                 subdirs,
                 vim.fn.fnamemodify(
-                  vim.fn.resolve(basedir .. '/' .. name),
+                  vim.fn.resolve(vim.fs.joinpath(basedir, name)),
                   ':p:~:.'
                 )
               )

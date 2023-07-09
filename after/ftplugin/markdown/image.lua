@@ -31,13 +31,13 @@ end
 ---@param fname string filename of the image
 ---@param path string path to the image
 local function insert_link(fname, path)
-  cmd.lcd(fn.expand('%:p:h'))
+  cmd('silent! lcd ' .. fn.expand('%:p:h'))
   local link = string.format(
     '![%s](%s)',
     fn.fnamemodify(fname, ':t:r'),
-    fn.fnamemodify(path .. '/' .. fname, ':~:.')
+    fn.fnamemodify(vim.fs.joinpath(path, fname), ':~:.')
   )
-  cmd.lcd('-')
+  cmd('silent! lcd -')
   fn.append(fn.line('.'), link)
 end
 
@@ -50,22 +50,25 @@ local function insert_image()
 
   -- create directory and blank image file
   local fname = title:gsub('%s+', '_'):lower() .. '.drawio.png'
-  local path = fn.expand('%:p:h') .. '/pic/' .. fn.expand('%:t:r')
+  local path = vim.fs.joinpath(fn.expand('%:p:h'), 'pic', fn.expand('%:t:r'))
   make_image_dir(path)
-  os.execute(
-    'cp '
-      .. fn.stdpath('config')
-      .. '/ftplugin/markdown/resources/blank.drawio.png '
-      .. path
-      .. '/'
-      .. fname
-  )
+  vim.system({
+    'cp',
+    vim.fs.joinpath(
+      fn.stdpath('config'),
+      'ftplugin',
+      'markdown',
+      'reousrces',
+      'blank.drawio.png'
+    ),
+    vim.fs.joinpath(path, fname),
+  })
 
   -- insert link
   insert_link(fname, path)
 
   -- copy file path to system clipboard
-  os.execute('echo ' .. path .. ' | xclip -sel clip')
+  os.execute('echo "' .. path .. '" | xclip -sel clip')
 
   -- open drawio
   if _G.handler_drawio and not _G.handler_drawio:is_closing() then
@@ -74,7 +77,7 @@ local function insert_image()
   _G.handler_drawio = uv.spawn(
     'drawio',
     {
-      args = { path .. '/' .. fname },
+      args = { vim.fs.joinpath(path, fname) },
       detached = true,
     },
     vim.schedule_wrap(function(code_drawio, _)
@@ -107,7 +110,7 @@ local function paste_image()
   end
 
   -- Make directory for the image
-  local path = fn.expand('%:p:h') .. '/pic/' .. fn.expand('%:t:r')
+  local path = vim.fs.joinpath(fn.expand('%:p:h'), 'pic', fn.expand('%:t:r'))
   make_image_dir(path)
 
   -- Get image name
@@ -118,11 +121,9 @@ local function paste_image()
 
   -- Save image to file
   os.execute(
-    'xclip -selection clipboard -o -t image/png > '
-      .. path
-      .. '/'
-      .. title
-      .. '.png'
+    'xclip -selection clipboard -o -t image/png > "'
+      .. vim.fs.joinpath(path, title .. '.png')
+      .. '"'
   )
 
   -- Insert link
