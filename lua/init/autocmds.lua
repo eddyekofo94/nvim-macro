@@ -392,8 +392,19 @@ local autocmds = {
         if vim.v.option_new == '1' then
           vim.w._winbar = vim.wo.winbar
           vim.wo.winbar = nil
+          if vim.wo.culopt:find('both') or vim.wo.culopt:find('line') then
+            vim.w._culopt = vim.wo.culopt
+            vim.wo.culopt = 'number'
+          end
         else
-          vim.wo.winbar = vim.w._winbar
+          if vim.w._winbar then
+            vim.wo.winbar = vim.w._winbar
+            vim.w._winbar = nil
+          end
+          if vim.w._culopt then
+            vim.wo.culopt = vim.w._culopt
+            vim.w._culopt = nil
+          end
         end
       end,
     },
