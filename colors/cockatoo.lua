@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu Jul  6 03:49:58 PM CDT 2023
+-- Last Updated: Sun 09 Jul 2023 12:06:57 PM CDT
 
 -- Palette {{{
 -- stylua: ignore start
@@ -395,11 +395,11 @@ local hlgroups = {
   DiagnosticSignWarn = { link = 'DiagnosticWarn' },
   DiagnosticSignInfo = { link = 'DiagnosticInfo' },
   DiagnosticSignHint = { link = 'DiagnosticHint' },
-  DiagnosticSignOkCul = { fg = palette.tea },
-  DiagnosticSignErrorCul = { fg = palette.wine },
-  DiagnosticSignWarnCul = { fg = palette.earch },
-  DiagnosticSignInfoCul = { fg = palette.smoke },
-  DiagnosticSignHintCul = { fg = palette.pigeon },
+  DiagnosticSignOkCul = { link = 'DiagnosticError' },
+  DiagnosticSignErrorCul = { link = 'DiagnosticError' },
+  DiagnosticSignWarnCul = { link = 'DiagnosticWarn' },
+  DiagnosticSignInfoCul = { link = 'DiagnosticInfo' },
+  DiagnosticSignHintCul = { link = 'DiagnosticHint' },
   -- }}}2
 
   -- Filetype {{{2
@@ -696,7 +696,7 @@ local hlgroups = {
   StatusLineDiagnosticError = { fg = palette.wine, bg = palette.deepsea },
   StatusLineDiagnosticHint = { fg = palette.pigeon, bg = palette.deepsea },
   StatusLineDiagnosticInfo = { fg = palette.smoke, bg = palette.deepsea },
-  StatusLineDiagnosticWarn = { fg = palette.earch, bg = palette.deepsea },
+  StatusLineDiagnosticWarn = { fg = palette.earth, bg = palette.deepsea },
   StatusLineFaded = { fg = palette.pigeon, bg = palette.deepsea },
   StatusLineGitAdded = { fg = palette.tea, bg = palette.deepsea },
   StatusLineGitChanged = { fg = palette.lavender, bg = palette.deepsea },

@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu Jul  6 03:50:05 PM CDT 2023
+-- Last Updated: Sun 09 Jul 2023 07:39:26 PM CDT
 
 -- Palette {{{
 -- stylua: ignore start
@@ -408,7 +408,7 @@ local hlgroups = {
   shDeref = { link = 'Macro' },
   shDerefVar = { link = 'Macro' },
   -- Git
-  gitHash = { fg = palette.foreground },
+  gitHash = { fg = palette.faded },
   -- Checkhealth
   helpHeader = { fg = palette.foreground, bold = true },
   helpSectionDelim = { fg = palette.faded, bold = true },
@@ -481,12 +481,12 @@ local hlgroups = {
   fugitiveHeading = { fg = palette.critical, bold = true },
   fugitiveHelpTag = { fg = palette.critical },
   fugitiveSymbolicRef = { fg = palette.strong },
-  fugitiveStagedModifier = { fg = palette.faded, bold = true },
-  fugitiveUnstagedModifier = { fg = palette.popout, bold = true },
-  fugitiveUntrackedModifier = { fg = palette.foreground, bold = true },
+  fugitiveStagedModifier = { fg = palette.foreground, bold = true },
+  fugitiveUnstagedModifier = { fg = palette.salient, bold = true },
+  fugitiveUntrackedModifier = { fg = palette.faded, bold = true },
   fugitiveStagedHeading = { fg = palette.foreground, bold = true },
-  fugitiveUnstagedHeading = { fg = palette.faded, bold = true },
-  fugitiveUntrackedHeading = { fg = palette.salient, bold = true },
+  fugitiveUnstagedHeading = { fg = palette.salient, bold = true },
+  fugitiveUntrackedHeading = { fg = palette.faded, bold = true },
   DiffAdded = { fg = palette.pine },
 
   -- telescope
