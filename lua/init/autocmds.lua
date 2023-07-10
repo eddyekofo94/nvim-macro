@@ -430,6 +430,7 @@ local autocmds = {
           end
         end
         if update then
+          vim.cmd.undojoin()
           vim.api.nvim_buf_set_lines(info.buf, 0, 8, false, lines)
         end
       end,
