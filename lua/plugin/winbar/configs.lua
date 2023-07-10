@@ -133,8 +133,6 @@ M.opts = {
       ['<LeftMouse>'] = function()
         local menu = api.get_current_winbar_menu()
         if not menu then
-          utils.menu.exec(nil, 'close')
-          utils.bar.exec(nil, 'update_current_context_hl')
           return
         end
         local mouse = vim.fn.getmousepos()
@@ -142,6 +140,9 @@ M.opts = {
           local prev_menu = api.get_winbar_menu({ win = mouse.winid })
           if prev_menu and prev_menu.sub_menu then
             prev_menu.sub_menu:close()
+          else
+            utils.menu.exec(nil, 'close')
+            utils.bar.exec(nil, 'update_current_context_hl')
           end
           if vim.api.nvim_win_is_valid(mouse.winid) then
             vim.api.nvim_set_current_win(mouse.winid)
