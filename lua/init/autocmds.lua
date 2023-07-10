@@ -417,13 +417,14 @@ local autocmds = {
         if not vim.bo[info.buf].ma or not vim.bo[info.buf].mod then
           return
         end
-        -- Example: "Fri 07 Jul 2023 12:04:05 AM CDT"
-        local timestamp_pattern =
-          '%u%U%U%s+%d%d%s+%u%U%U%s+%d%d%d%d%s+%d%d:%d%d:%d%d%s+%u%u%s+%u+'
         local lines = vim.api.nvim_buf_get_lines(info.buf, 0, 8, false)
         local update = false
         for idx, line in ipairs(lines) do
-          local new_str, pos = line:gsub(timestamp_pattern, os.date())
+          -- Example: "Fri 07 Jul 2023 12:04:05 AM CDT"
+          local new_str, pos = line:gsub(
+            '%u%U%U%s+%d%d%s+%u%U%U%s+%d%d%d%d%s+%d%d:%d%d:%d%d%s+%u%u%s+%u+',
+            os.date('%a %d %b %Y %I:%M:%S %p %Z')
+          )
           if pos > 0 then
             update = true
             lines[idx] = new_str
