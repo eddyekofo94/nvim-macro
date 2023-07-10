@@ -34,9 +34,18 @@ opt.conceallevel   = 2
 -- stylua: ignore end
 
 -- Cursor shape
-opt.gcr = 'n-v:block-Cursor/lCursor'
-  .. ',i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor'
-  .. ',r-cr:hor20,o:hor50-Cursor/lCursor'
+-- For unknown reasons, wezterm won't reload config for current session
+-- when we spawn 'setbg' or 'setcolors' scripts from nvim using libuv
+-- if GUI cursor highlights are set for modes n,v,r,cr
+if vim.env.WEZTERM then
+  opt.gcr = 'n-v:block'
+    .. ',i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor'
+    .. ',r-cr:hor20,o:hor50'
+else
+  opt.gcr = 'n-v:block-Cursor/lCursor'
+    .. ',i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor'
+    .. ',r-cr:hor20,o:hor50-Cursor/lCursor'
+end
 
 -- Use patience algorithm for diffing
 opt.diffopt:append('algorithm:patience')
