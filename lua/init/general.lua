@@ -34,10 +34,9 @@ opt.conceallevel   = 2
 -- stylua: ignore end
 
 -- Cursor shape
--- opt.gcr = 'n-v:block,i-c-ci-ve:blinkoff500-blinkon500-block,r-cr-o:hor20'
-opt.gcr:append('n-v:block-Cursor/lCursor')
-opt.gcr:append('i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor/lCursor')
-opt.gcr:append('r-cr:hor20,o:hor50')
+opt.gcr = 'n-v:block-Cursor/lCursor'
+  .. ',i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor'
+  .. ',r-cr:hor20,o:hor50-Cursor/lCursor'
 
 -- Use patience algorithm for diffing
 opt.diffopt:append('algorithm:patience')
