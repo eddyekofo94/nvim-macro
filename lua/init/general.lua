@@ -42,7 +42,7 @@ opt.gcr = 'n-v:block-Cursor/lCursor'
 opt.diffopt:append('algorithm:patience')
 
 opt.backup = true
-opt.backupdir = fn.stdpath('data') .. '/backup//'
+opt.backupdir:remove('.')
 
 -- stylua: ignore start
 opt.list = true
