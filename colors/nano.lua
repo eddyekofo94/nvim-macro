@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sun 09 Jul 2023 07:39:26 PM CDT
+-- Last Updated: Sun 16 Jul 2023 01:53:19 PM CDT
 
 -- Palette {{{
 -- stylua: ignore start
@@ -64,7 +64,7 @@ local termcolor_variants = {
     terminal_color_10 = palette.pine,
     terminal_color_3 = palette.critical,
     terminal_color_11 = palette.critical,
-    terminal_color_4 = palette.faint,
+    terminal_color_4 = palette.subtle,
     terminal_color_12 = palette.faded,
     terminal_color_5 = palette.strong,
     terminal_color_13 = palette.strong,
@@ -82,8 +82,8 @@ local termcolor_variants = {
     terminal_color_10 = palette.pine,
     terminal_color_3 = palette.popout,
     terminal_color_11 = palette.popout,
-    terminal_color_4 = palette.faint,
-    terminal_color_12 = palette.faded,
+    terminal_color_4 = palette.subtle,
+    terminal_color_12 = palette.faint,
     terminal_color_5 = palette.strong,
     terminal_color_13 = palette.strong,
     terminal_color_6 = palette.salient,
