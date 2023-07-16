@@ -108,3 +108,4 @@ vim.keymap.set('o', 'if', '<Cmd>silent! normal m`Vif<CR><Cmd>silent! normal! ``<
 utils.keymap.command_abbrev('qa', 'qa!')
 utils.keymap.command_abbrev('bw', 'bw!')
 utils.keymap.command_abbrev('mks', 'mks!')
+utils.keymap.command_abbrev('man', 'Man')
