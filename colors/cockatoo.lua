@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sun 09 Jul 2023 12:06:57 PM CDT
+-- Last Updated: Sun 16 Jul 2023 02:23:29 PM CDT
 
 -- Palette {{{
 -- stylua: ignore start
@@ -60,7 +60,7 @@ local palette_variants = {
     tea            = '#5f8c3f',
     aqua           = '#3b8f84',
     turquoise      = '#29647a',
-    flashlight     = '#76a2c2',
+    flashlight     = '#97c0dc',
     skyblue        = '#4c99d4',
     cerulean       = '#3c70b4',
     lavender       = '#9d7bca',
@@ -126,8 +126,8 @@ local termcolor_variants = {
     terminal_color_11 = palette.yellow,
     terminal_color_4 = palette.flashlight,
     terminal_color_12 = palette.cumulonimbus,
-    terminal_color_5 = palette.lavender,
-    terminal_color_13 = palette.lavender,
+    terminal_color_5 = palette.pigeon,
+    terminal_color_13 = palette.pigeon,
     terminal_color_6 = palette.aqua,
     terminal_color_14 = palette.aqua,
     terminal_color_7 = palette.white,
