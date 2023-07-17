@@ -1,5 +1,4 @@
 vim.bo.buflisted = false
-vim.opt_local.nu = false
 vim.opt_local.rnu = false
 vim.opt_local.signcolumn = 'no'
 
