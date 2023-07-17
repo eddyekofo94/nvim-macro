@@ -65,7 +65,12 @@ local function mid_of_line()
 end
 
 ---Set up key mappings
-function M.init()
+function M.setup()
+  if vim.g.loaded_readline then
+    return
+  end
+  vim.g.loaded_readline = true
+
   map('!', '<C-a>', '<Home>')
   map('!', '<C-e>', '<End>')
   map('!', '<C-d>', '<Del>')
