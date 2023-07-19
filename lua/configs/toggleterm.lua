@@ -21,7 +21,7 @@ toggleterm.setup({
   },
   size = function(term)
     if term.direction == 'horizontal' then
-      return vim.go.lines * 0.3
+      return vim.go.lines * 0.4
     elseif term.direction == 'vertical' then
       return vim.go.columns * 0.35
     end
