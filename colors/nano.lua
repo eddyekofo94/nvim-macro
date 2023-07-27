@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Tue 18 Jul 2023 02:39:55 AM CDT
+-- Last Updated: Tue 25 Jul 2023 02:43:55 PM CDT
 
 -- Palette {{{
 -- stylua: ignore start
@@ -125,7 +125,7 @@ local hlgroups = {
   FloatShadow = { bg = palette.black, blend = 70 },
   FloatShadowThrough = { link = 'None' },
   HealthSuccess = { fg = palette.faded },
-  Search = { fg = palette.foreground, bg = palette.subtle },
+  Search = { bg = palette.subtle },
   IncSearch = { fg = palette.background, bg = palette.popout, bold = true },
   CurSearch = { link = 'IncSearch' },
   LineNr = { fg = palette.faint },
