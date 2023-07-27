@@ -67,14 +67,17 @@ function statusline.gitdiff()
   -- Integration with gitsigns.nvim
   ---@diagnostic disable-next-line: undefined-field
   local diff = vim.b.gitsigns_status_dict or utils.git.diffstat()
-  if diff.added == 0 and diff.removed == 0 and diff.changed == 0 then
+  local added = diff.added or 0
+  local changed = diff.changed or 0
+  local removed = diff.removed or 0
+  if added == 0 and removed == 0 and changed == 0 then
     return ''
   end
   return string.format(
     '+%s~%s-%s',
-    utils.stl.hl(tostring(diff.added), 'StatusLineGitAdded'),
-    utils.stl.hl(tostring(diff.changed), 'StatusLineGitChanged'),
-    utils.stl.hl(tostring(diff.removed), 'StatusLineGitRemoved')
+    utils.stl.hl(tostring(added), 'StatusLineGitAdded'),
+    utils.stl.hl(tostring(changed), 'StatusLineGitChanged'),
+    utils.stl.hl(tostring(removed), 'StatusLineGitRemoved')
   )
 end
 
