@@ -85,11 +85,7 @@ M.langs = setmetatable({
   python = {
     ts = 'python',
     ft = 'python',
-    lsp_server = {
-      'pylsp',
-      'pyright',
-      'jedi_language_server',
-    },
+    lsp_server = 'jedi_language_server',
     dap = 'debugpy',
     formatting = 'black',
   },
