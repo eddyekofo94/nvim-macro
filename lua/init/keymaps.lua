@@ -68,6 +68,11 @@ vim.keymap.set('n', '[b', '<Cmd>exec v:count1 . "bp"<CR>')
 vim.keymap.set('i', '<C-S-L>', '<Esc>[szg`]a')
 vim.keymap.set('i', '<C-l>', '<C-G>u<Esc>[s1z=`]a<C-G>u')
 
+-- Don't include extra spaces around quotes
+vim.keymap.set({ 'o', 'x' }, 'a"', '2i"', { noremap = false })
+vim.keymap.set({ 'o', 'x' }, "a'", "2i'", { noremap = false })
+vim.keymap.set({ 'o', 'x' }, 'a`', '2i`', { noremap = false })
+
 -- Close all floating windows
 vim.keymap.set('n', 'q', function()
   local count = 0
