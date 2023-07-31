@@ -22,8 +22,15 @@ _G.winbar.menus = {}
 local winbar_menu_entry_t = {}
 winbar_menu_entry_t.__index = winbar_menu_entry_t
 
+---@class winbar_menu_entry_opts_t
+---@field separator winbar_symbol_t?
+---@field padding {left: integer, right: integer}?
+---@field components winbar_symbol_t[]?
+---@field menu winbar_menu_t? the menu the entry belongs to
+---@field idx integer? the index of the entry in the menu
+
 ---Create a winbar menu entry instance
----@param opts winbar_menu_entry_t?
+---@param opts winbar_menu_entry_opts_t?
 ---@return winbar_menu_entry_t
 function winbar_menu_entry_t:new(opts)
   local entry = setmetatable(
@@ -181,8 +188,23 @@ end
 local winbar_menu_t = {}
 winbar_menu_t.__index = winbar_menu_t
 
+---@class winbar_menu_opts_t
+---@field buf integer?
+---@field win integer?
+---@field is_opened boolean?
+---@field entries winbar_menu_entry_t[]?
+---@field win_configs table? window configuration, value can be a function
+---@field _win_configs table? evaluated window configuration
+---@field cursor integer[]? initial cursor position
+---@field prev_win integer? previous window, assigned when calling new() or automatically determined in open()
+---@field sub_menu winbar_menu_t? submenu, assigned when calling new() or automatically determined when a new menu opens
+---@field prev_menu winbar_menu_t? previous menu, assigned when calling new() or automatically determined in open()
+---@field clicked_at integer[]? last position where the menu was clicked, byte-indexed, 1,0-indexed
+---@field prev_cursor integer[]? previous cursor position
+---@field symbol_previewed winbar_symbol_t? symbol being previewed
+
 ---Create a winbar menu instance
----@param opts winbar_menu_t?
+---@param opts winbar_menu_opts_t?
 ---@return winbar_menu_t
 function winbar_menu_t:new(opts)
   local winbar_menu = setmetatable(
@@ -454,7 +476,7 @@ function winbar_menu_t:open_win()
 end
 
 ---Override menu options
----@param opts winbar_menu_t?
+---@param opts winbar_symbol_opts_t?
 ---@return nil
 function winbar_menu_t:override(opts)
   if not opts then
@@ -475,7 +497,7 @@ end
 
 ---Open the menu
 ---Side effect: change self.win and self.buf
----@param opts winbar_menu_t?
+---@param opts winbar_symbol_opts_t?
 ---@return nil
 function winbar_menu_t:open(opts)
   if self.is_opened then
@@ -618,7 +640,7 @@ function winbar_menu_t:quick_navigation(new_cursor)
 end
 
 ---Toggle the menu
----@param opts winbar_menu_t? menu options passed to self:open()
+---@param opts winbar_symbol_opts_t? menu options passed to self:open()
 ---@return nil
 function winbar_menu_t:toggle(opts)
   if self.is_opened then

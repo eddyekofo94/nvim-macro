@@ -21,7 +21,7 @@ local utils = require('plugin.winbar.utils')
 ---@field entry_idx integer? index of the symbol in the menu entry
 ---@field sibling_idx integer? index of the symbol in its siblings
 ---@field range winbar_symbol_range_t?
----@field on_click fun(this: winbar_symbol_t, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false? force disable on_click when false
+---@field on_click fun(this: winbar_symbol_t, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false|nil force disable on_click when false
 ---@field swap table<string, any>? swapped data of the symbol
 ---@field swapped table<string, true>? swapped fields of the symbol
 ---@field cache table caches string representation, length, etc. for the symbol
@@ -44,19 +44,42 @@ function winbar_symbol_t:__newindex(k, v)
 end
 
 ---Create a new winbar symbol instance with merged options
----@param opts winbar_symbol_t
+---@param opts winbar_symbol_opts_t
 ---@return winbar_symbol_t
 function winbar_symbol_t:merge(opts)
   return winbar_symbol_t:new(
     setmetatable(
       vim.tbl_deep_extend('force', self._, opts),
       getmetatable(self._)
-    )
+    ) --[[@as winbar_symbol_opts_t]]
   )
 end
 
+---@class winbar_symbol_opts_t
+---@field _ winbar_symbol_t?
+---@field name string?
+---@field icon string?
+---@field name_hl string?
+---@field icon_hl string?
+---@field win integer? the source window the symbol is shown in
+---@field buf integer? the source buffer the symbol is defined in
+---@field view table? original view of the source window
+---@field bar winbar_t? the winbar the symbol belongs to, if the symbol is shown inside a winbar
+---@field menu winbar_menu_t? menu associated with the winbar symbol, if the symbol is shown inside a winbar
+---@field entry winbar_menu_entry_t? the winbar entry the symbol belongs to, if the symbol is shown inside a menu
+---@field children winbar_symbol_t[]? children of the symbol
+---@field siblings winbar_symbol_t[]? siblings of the symbol
+---@field bar_idx integer? index of the symbol in the winbar
+---@field entry_idx integer? index of the symbol in the menu entry
+---@field sibling_idx integer? index of the symbol in its siblings
+---@field range winbar_symbol_range_t?
+---@field on_click fun(this: winbar_symbol_t, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false|nil force disable on_click when false
+---@field swap table<string, any>? swapped data of the symbol
+---@field swapped table<string, true>? swapped fields of the symbol
+---@field cache table? caches string representation, length, etc. for the symbol
+
 ---Create a winbar symbol instance, with drop-down menu support
----@param opts winbar_symbol_t
+---@param opts winbar_symbol_opts_t?
 function winbar_symbol_t:new(opts)
   return setmetatable({
     _ = setmetatable(
@@ -329,7 +352,7 @@ end
 ---@field string_cache string
 ---@field in_pick_mode boolean?
 ---@field symbol_on_hover winbar_symbol_t?
----@field last_update_request_time float? timestamp of the last update request in ms, see :h uv.hrtime()
+---@field last_update_request_time number? timestamp of the last update request in ms, see :h uv.hrtime()
 local winbar_t = {}
 winbar_t.__index = winbar_t
 
