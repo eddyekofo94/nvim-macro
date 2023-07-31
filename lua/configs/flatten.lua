@@ -53,4 +53,8 @@ require('flatten').setup({
       end, 50)
     end,
   },
+  one_per = {
+    kitty = false,
+    wezterm = false,
+  },
 })
