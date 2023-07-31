@@ -74,6 +74,7 @@ function M.branch(path)
   if dir then
     vim.system(
       { 'git', '-C', dir, 'rev-parse', '--abbrev-ref', 'HEAD' },
+      ---@diagnostic disable-next-line: missing-fields
       { stderr = false },
       function(err, _)
         path_branches[dir] = err.stdout:gsub('\n.*', '')
@@ -105,6 +106,7 @@ function M.diffstat(path)
       '--no-ext-diff',
       '--',
       path,
+      ---@diagnostic disable-next-line: missing-fields
     }, { stderr = false }, function(err, _)
       local stat = { added = 0, removed = 0, changed = 0 }
       for _, line in ipairs(vim.split(err.stdout, '\n')) do

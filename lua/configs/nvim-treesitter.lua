@@ -20,6 +20,7 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
   end,
 })
 
+---@diagnostic disable-next-line: missing-fields
 ts_configs.setup({
   ensure_installed = require('utils.static').langs:list('ts'),
   sync_install = true,
