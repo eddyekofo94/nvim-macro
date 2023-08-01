@@ -205,7 +205,7 @@ vim.api.nvim_create_autocmd('WinLeave', {
     })
   end,
 })
-vim.api.nvim_create_autocmd('FileChangedShellPost', {
+vim.api.nvim_create_autocmd({ 'FileChangedShellPost', 'DiagnosticChanged' }, {
   group = groupid,
   command = 'redrawstatus',
 })
