@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Tue 25 Jul 2023 02:43:55 PM CDT
+-- Last Updated: Thu 03 Aug 2023 07:53:38 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -204,7 +204,7 @@ local hlgroups = {
   SpecialChar = { link = 'Special' },
   Tag = { fg = palette.subtle, underline = true },
   Delimiter = { fg = palette.foreground },
-  Bracket = { fg = palette.cumulonimbus },
+  Bracket = { fg = palette.foreground },
   SpecialComment = { link = 'SpecialChar' },
   Debug = { link = 'Special' },
   Underlined = { underline = true },
@@ -594,7 +594,7 @@ local hlgroups = {
   texSymbol = { fg = palette.critical },
   texTitleArg = { link = 'Title' },
   texVerbZone = { fg = palette.foreground },
-  texZone = { fg = palette.aqupigeon },
+  texZone = { fg = palette.subtle },
   texMathArg = { fg = palette.foreground },
   texMathCmd = { link = 'texCmd' },
   texMathSub = { fg = palette.foreground },
