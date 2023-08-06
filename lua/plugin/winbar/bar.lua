@@ -649,15 +649,16 @@ function winbar_t:update_current_context_hl(bar_idx)
   end
   local hl_currentcontext_icon = '_WinBarIconCurrentContext'
   local hl_currentcontext_name = '_WinBarCurrentContext'
+  symbol:restore()
   vim.api.nvim_set_hl(
     0,
     hl_currentcontext_icon,
-    utils.hl.merge('WinBarCurrentContext', symbol.icon_hl or 'WinBar')
+    utils.hl.merge('WinBarNC', symbol.icon_hl, 'WinBarCurrentContext')
   )
   vim.api.nvim_set_hl(
     0,
     hl_currentcontext_name,
-    utils.hl.merge('WinBarCurrentContext', symbol.name_hl or 'WinBar')
+    utils.hl.merge('WinBarNC', symbol.name_hl, 'WinBarCurrentContext')
   )
   symbol:swap_field('icon_hl', hl_currentcontext_icon)
   symbol:swap_field('name_hl', hl_currentcontext_name)
@@ -682,15 +683,17 @@ function winbar_t:update_hover_hl(col)
   end
   local hl_hover_icon = '_WinBarIconHover'
   local hl_hover_name = '_WinBarHover'
+  local hl_winbar = vim.api.nvim_get_current_win() == self.win and 'WinBar'
+    or 'WinbarNC'
   vim.api.nvim_set_hl(
     0,
     hl_hover_icon,
-    utils.hl.merge('WinBarHover', symbol.icon_hl or 'WinBar')
+    utils.hl.merge(hl_winbar, symbol.icon_hl, 'WinBarHover')
   )
   vim.api.nvim_set_hl(
     0,
     hl_hover_name,
-    utils.hl.merge('WinBarHover', symbol.name_hl or 'WinBar')
+    utils.hl.merge(hl_winbar, symbol.name_hl, 'WinBarHover')
   )
   symbol:swap_field('icon_hl', hl_hover_icon)
   symbol:swap_field('name_hl', hl_hover_name)

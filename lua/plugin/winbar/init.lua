@@ -47,6 +47,7 @@ end
 ---Setup winbar
 ---@param opts winbar_configs_t?
 local function setup(opts)
+  print('setup plugin winbar')
   configs.set(opts)
   hlgroups.init()
   local groupid = vim.api.nvim_create_augroup('WinBar', {})
