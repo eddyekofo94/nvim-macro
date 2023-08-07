@@ -47,27 +47,26 @@ end
 ---Setup winbar
 ---@param opts winbar_configs_t?
 local function setup(opts)
-  print('setup plugin winbar')
   configs.set(opts)
   hlgroups.init()
   local groupid = vim.api.nvim_create_augroup('WinBar', {})
-  ---Enable/disable winbar
+  ---Attach winbar to window
   ---@param win integer
   ---@param buf integer
-  local function _switch(buf, win)
+  local function attach(buf, win)
     if configs.eval(configs.opts.general.enable, buf, win) then
       vim.wo.winbar = '%{%v:lua.winbar.get_winbar()%}'
     end
   end
   for _, win in ipairs(vim.api.nvim_list_wins()) do
-    _switch(vim.api.nvim_win_get_buf(win), win)
+    attach(vim.api.nvim_win_get_buf(win), win)
   end
   vim.api.nvim_create_autocmd({ 'OptionSet', 'BufWinEnter', 'BufWritePost' }, {
     group = groupid,
     callback = function(info)
-      _switch(info.buf, 0)
+      attach(info.buf, 0)
     end,
-    desc = 'Enable/disable winbar',
+    desc = 'Attach winbar',
   })
   vim.api.nvim_create_autocmd({ 'BufDelete', 'BufUnload', 'BufWipeOut' }, {
     group = groupid,
