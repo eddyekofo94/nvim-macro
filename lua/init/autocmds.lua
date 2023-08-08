@@ -8,12 +8,12 @@ local set_autocmds = function(autocmds)
 end
 
 local autocmds = {
-  -- Highlight the selection on yank
   {
     { 'TextYankPost' },
     {
       pattern = '*',
       group = 'YankHighlight',
+      desc = 'Highlight the selection on yank.',
       callback = function()
         vim.highlight.on_yank({ higroup = 'Visual', timeout = 200 })
       end,
@@ -27,6 +27,7 @@ local autocmds = {
     {
       group = 'YankToSystemClipboard',
       once = true,
+      desc = 'Yank into system clipboard.',
       callback = function()
         vim.opt.clipboard:append('unnamedplus')
         vim.cmd('silent! let @+ = @' .. vim.v.register)
@@ -35,23 +36,23 @@ local autocmds = {
     },
   },
 
-  -- Autosave on focus change
   {
     { 'BufLeave', 'WinLeave', 'FocusLost' },
     {
       pattern = '*',
       group = 'Autosave',
+      desc = 'Autosave on focus change.',
       command = 'silent! wall',
       nested = true,
     },
   },
 
-  -- Jump to last accessed window on closing the current one
   {
     { 'WinEnter' },
     {
       pattern = '*',
       group = 'WinCloseJmp',
+      desc = 'Jump to last accessed window on closing the current one.',
       callback = function()
         if '' ~= vim.api.nvim_win_get_config(0).relative then
           return
@@ -80,12 +81,12 @@ local autocmds = {
     },
   },
 
-  -- Last-position-jump
   {
     { 'BufReadPost' },
     {
       pattern = '*',
       group = 'LastPosJmp',
+      desc = 'Last position jump.',
       callback = function(info)
         local ft = vim.bo[info.buf].ft
         -- don't apply to git messages
@@ -105,12 +106,12 @@ local autocmds = {
     },
   },
 
-  -- Automatically change local current directory
   {
-    { 'BufReadPost', 'BufWinEnter', 'FileChangedShellPost' },
+    { 'BufReadPost', 'BufWinEnter', 'WinEnter', 'FileChangedShellPost' },
     {
       pattern = '*',
       group = 'AutoCwd',
+      desc = 'Automatically change local current directory.',
       callback = function(info)
         if info.file == '' or not vim.bo[info.buf].ma then
           return
@@ -129,12 +130,12 @@ local autocmds = {
     },
   },
 
-  -- Restore dark/light background and colorscheme from ShaDa
   {
     { 'BufReadPre', 'UIEnter' },
     {
       group = 'RestoreBackground',
       once = true,
+      desc = 'Restore dark/light background and colorscheme from ShaDa.',
       callback = function()
         if vim.g.theme_restored then
           return
@@ -151,13 +152,13 @@ local autocmds = {
     },
   },
 
-  -- Change background on receiving signal SIGUSER1
   {
     { 'Signal' },
     {
       nested = true,
       pattern = 'SIGUSR1',
       group = 'SwitchBackground',
+      desc = 'Change background on receiving signal SIGUSER1.',
       callback = function()
         local hrtime = vim.uv.hrtime()
         -- Check the last time when a signal is received/sent to avoid
@@ -190,6 +191,7 @@ local autocmds = {
     { 'Colorscheme' },
     {
       group = 'SwitchBackground',
+      desc = 'Spawn setbg/setcolors on colorscheme change.',
       callback = function()
         vim.g.BACKGROUND = vim.go.background
         vim.g.COLORSNAME = vim.g.colors_name
@@ -222,11 +224,11 @@ local autocmds = {
     },
   },
 
-  -- Undo automatic <C-w> remap in prompt buffers
   {
     { 'BufEnter' },
     {
       group = 'PromptBufKeymaps',
+      desc = 'Undo automatic <C-w> remap in prompt buffers.',
       callback = function(info)
         if vim.bo[info.buf].buftype == 'prompt' then
           vim.keymap.set('i', '<C-w>', '<C-S-W>', { buffer = info.buf })
@@ -235,11 +237,11 @@ local autocmds = {
     },
   },
 
-  -- Terminal options
   {
     { 'TermOpen' },
     {
       group = 'TermOptions',
+      desc = 'Terminal options.',
       callback = function(info)
         if vim.bo[info.buf].buftype == 'terminal' then
           vim.cmd.setlocal('nonu')
@@ -252,11 +254,11 @@ local autocmds = {
     },
   },
 
-  -- Open quickfix window if there are results
   {
     { 'QuickFixCmdPost' },
     {
       group = 'QuickFixAutoOpen',
+      desc = 'Open quickfix window if there are results.',
       callback = function(info)
         if vim.startswith(info.match, 'l') then
           vim.cmd('lwindow')
@@ -267,11 +269,11 @@ local autocmds = {
     },
   },
 
-  -- Make window equal size on VimResized
   {
     { 'VimResized' },
     {
       group = 'EqualWinSize',
+      desc = 'Make window equal size on VimResized.',
       command = 'wincmd =',
     },
   },
@@ -352,11 +354,11 @@ local autocmds = {
     },
   },
 
-  -- Update folds on BufEnter
   {
     { 'BufWinEnter', 'BufEnter' },
     {
       group = 'UpdateFolds',
+      desc = 'Update folds on BufEnter.',
       callback = function(info)
         if not vim.b[info.buf].foldupdated then
           vim.b[info.buf].foldupdated = true
@@ -366,28 +368,26 @@ local autocmds = {
     },
   },
 
-  -- Set colorcolumn according to textwidth
   {
     { 'OptionSet' },
     {
       pattern = 'textwidth',
       group = 'TextwidthRelativeColorcolumn',
+      desc = 'Set colorcolumn according to textwidth.',
       callback = function()
         if vim.v.option_new ~= '0' then
           vim.opt_local.colorcolumn = '+1'
-        else
-          vim.opt_local.colorcolumn = vim.go.colorcolumn
         end
       end,
     },
   },
 
-  -- Disable winbar in diff mode
   {
     { 'OptionSet' },
     {
       pattern = 'diff',
       group = 'DisableWinBarInDiffMode',
+      desc = 'Disable winbar in diff mode.',
       callback = function()
         if vim.v.option_new == '1' then
           vim.w._winbar = vim.wo.winbar
@@ -410,20 +410,20 @@ local autocmds = {
     },
   },
 
-  -- Automatically clear message area on specific events
   {
     { 'ModeChanged', 'WinLeave', 'FocusLost' },
     {
       group = 'ClearMsgArea',
+      desc = 'Automatically clear message area on specific events.',
       command = 'echo',
     },
   },
 
-  -- Update timestamp automatically
   {
     { 'BufWritePre' },
     {
       group = 'UpdateTimestamp',
+      desc = 'Update timestamp automatically.',
       callback = function(info)
         if not vim.bo[info.buf].ma or not vim.bo[info.buf].mod then
           return
