@@ -11,7 +11,7 @@ end
 ---Get current winbar
 ---@return winbar_t?
 function M.get_current_winbar()
-  return M.get_winbar({ win = vim.api.nvim_get_current_win() })
+  return utils.bar.get_current()
 end
 
 ---Get winbar menu
@@ -26,7 +26,7 @@ end
 ---Get current winbar menu
 ---@return winbar_menu_t?
 function M.get_current_winbar_menu()
-  return M.get_winbar_menu({ win = vim.api.nvim_get_current_win() })
+  return utils.menu.get_current()
 end
 
 ---Goto the start of context

@@ -26,6 +26,12 @@ function M.get(opts)
   return _G.winbar.bars
 end
 
+---Get current winbar
+---@return winbar_t?
+function M.get_current()
+  return M.get({ win = vim.api.nvim_get_current_win() })
+end
+
 ---Call method on winbar(s) given the window id and/or buffer number the
 ---winbar(s) attached to
 --- - If only `opts.win` is specified, call the winbar attached the window;

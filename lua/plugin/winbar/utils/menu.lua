@@ -13,6 +13,12 @@ function M.get(opts)
   return _G.winbar.menus
 end
 
+---Get current menu
+---@return winbar_menu_t?
+function M.get_current()
+  return M.get({ win = vim.api.nvim_get_current_win() })
+end
+
 ---Call method on winbar menu(s) given the window id
 --- - If `opts.win` is specified, call the winbar menu with the window id;
 --- - If `opts.win` is not specified, call all opened winbars
