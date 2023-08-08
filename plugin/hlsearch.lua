@@ -16,12 +16,8 @@ vim.keymap.set('x', 'g#', 'y?\\V<C-R>=escape(@",\'/\')<CR><CR><Cmd>set hlsearch<
 -- stylua: ignore end
 
 vim.keymap.set({ 'n', 'x' }, '<C-l>', function()
-  if vim.go.hlsearch then
-    vim.go.hlsearch = false
-    return '<Ignore>'
-  else
-    return '<C-l>'
-  end
+  return vim.go.hlsearch and '<Cmd>set nohlsearch<CR>'
+    or '<Cmd>set nohlsearch|diffupdate|normal! <C-l><CR>'
 end, { expr = true })
 
 vim.api.nvim_create_autocmd('InsertEnter', {
