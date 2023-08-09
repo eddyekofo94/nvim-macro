@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu 03 Aug 2023 07:53:38 PM CST
+-- Last Updated: Tue 08 Aug 2023 10:17:18 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -481,10 +481,10 @@ local hlgroups = {
   fugitiveHeading = { fg = palette.critical, bold = true },
   fugitiveHelpTag = { fg = palette.critical },
   fugitiveSymbolicRef = { fg = palette.strong },
-  fugitiveStagedModifier = { fg = palette.foreground, bold = true },
+  fugitiveStagedModifier = { fg = palette.pine, bold = true },
   fugitiveUnstagedModifier = { fg = palette.salient, bold = true },
   fugitiveUntrackedModifier = { fg = palette.faded, bold = true },
-  fugitiveStagedHeading = { fg = palette.foreground, bold = true },
+  fugitiveStagedHeading = { fg = palette.pine, bold = true },
   fugitiveUnstagedHeading = { fg = palette.salient, bold = true },
   fugitiveUntrackedHeading = { fg = palette.faded, bold = true },
   DiffAdded = { fg = palette.pine },
