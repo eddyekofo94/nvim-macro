@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sun 16 Jul 2023 02:23:29 PM CDT
+-- Last Updated: Thu 10 Aug 2023 12:42:53 AM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -209,7 +209,7 @@ local hlgroups = {
   -- }}}2
 
   -- Syntax {{{2
-  Comment = { fg = palette.steel, italic = true },
+  Comment = { fg = palette.steel },
   Constant = { fg = palette.ochre },
   String = { fg = palette.turquoise },
   DocumentKeyword = { fg = palette.tea },
@@ -219,7 +219,7 @@ local hlgroups = {
   Array = { fg = palette.orange },
   Float = { link = 'Number' },
   Identifier = { fg = palette.smoke },
-  Builtin = { fg = palette.pink, italic = true },
+  Builtin = { fg = palette.pink },
   Field = { fg = palette.pigeon },
   Enum = { fg = palette.ochre },
   Namespace = { fg = palette.ochre },
