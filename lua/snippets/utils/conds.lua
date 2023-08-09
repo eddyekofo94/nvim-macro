@@ -124,7 +124,7 @@ end
 function M.next_line_matches(pattern)
   return lsconds.make_condition(function()
     local lnum = vim.fn.line('.')
-    if lnum >= vim.fn.line('$') then
+    if lnum >= vim.api.nvim_buf_line_count(0) then
       return false
     end
     return vim.api

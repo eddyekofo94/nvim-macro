@@ -143,6 +143,7 @@ local function get_symbols(buf, win, cursor)
   end
 
   local symbols = {}
+  local num_lines = vim.api.nvim_buf_line_count(buf)
   local prev_type_rank = math.huge
   local prev_row = math.huge
   local current_node =
@@ -163,7 +164,7 @@ local function get_symbols(buf, win, cursor)
     local end_row = range[3]
     if
       valid_node(current_node, buf)
-      and not (start_row == 0 and end_row == vim.fn.line('$'))
+      and not (start_row == 0 and end_row == num_lines)
     then
       local lsp_type = utils.string.snake_to_camel(type)
       if
