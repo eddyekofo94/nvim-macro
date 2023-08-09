@@ -90,17 +90,8 @@ local autocmds = {
       callback = function(info)
         local ft = vim.bo[info.buf].ft
         -- don't apply to git messages
-        if ft:match('commit') or ft:match('rebase') then
-          return
-        end
-        -- get position of last saved edit
-        local markpos = vim.api.nvim_buf_get_mark(0, '"')
-        local line = markpos[1]
-        local col = markpos[2]
-        -- if in range, go there
-        if (line > 1) and (line <= vim.api.nvim_buf_line_count(0)) then
-          vim.api.nvim_win_set_cursor(0, { line, col })
-          vim.cmd.normal({ 'zvzz', bang = true })
+        if ft ~= 'gitcommit' and ft ~= 'gitrebase' then
+          vim.cmd('silent! normal! g`"')
         end
       end,
     },
@@ -355,15 +346,24 @@ local autocmds = {
   },
 
   {
-    { 'BufWinEnter', 'BufEnter' },
+    { 'BufWinEnter' },
     {
       group = 'UpdateFolds',
       desc = 'Update folds on BufEnter.',
       callback = function(info)
         if not vim.b[info.buf].foldupdated then
           vim.b[info.buf].foldupdated = true
-          vim.cmd.normal('zx')
+          vim.cmd.normal({ 'zx', bang = true })
         end
+      end,
+    },
+  },
+  {
+    { 'BufUnload' },
+    {
+      group = 'UpdateFolds',
+      callback = function(info)
+        vim.b[info.buf].foldupdated = nil
       end,
     },
   },
