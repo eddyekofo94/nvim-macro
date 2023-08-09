@@ -1,4 +1,5 @@
 local ts_configs = require('nvim-treesitter.configs')
+local utils = require('utils')
 
 -- Get all filetypes that have treesitter parsers
 local ts_filetypes = {}
@@ -13,7 +14,7 @@ end
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('TSFolds', {}),
   callback = function(info)
-    if vim.tbl_contains(ts_filetypes, info.match) then
+    if utils.treesitter.ts_active(info.buf) then
       vim.opt_local.foldmethod = 'expr'
       vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
     end
