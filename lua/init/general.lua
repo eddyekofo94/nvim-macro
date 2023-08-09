@@ -77,7 +77,6 @@ opt.expandtab   = true
 opt.smartindent = true
 opt.autoindent  = true
 
-opt.hlsearch    = false
 opt.ignorecase  = true
 opt.smartcase   = true
 
