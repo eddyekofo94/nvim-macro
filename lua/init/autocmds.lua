@@ -448,19 +448,6 @@ local autocmds = {
       end,
     },
   },
-
-  {
-    { 'CmdWinEnter' },
-    {
-      group = 'CmdWinRegexVimHl',
-      desc = 'Use regex vim highlight in command window.',
-      callback = function(info)
-        if info.match == ':' then
-          vim.cmd('silent! TSBufDisable highlight')
-        end
-      end,
-    },
-  },
 }
 
 set_autocmds(autocmds)

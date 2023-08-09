@@ -10,12 +10,22 @@ for lang, _ in pairs(langs) do
 end
 
 -- Set treesitter folds
-vim.api.nvim_create_autocmd({ 'FileType' }, {
+vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('TSFolds', {}),
-  callback = function(tbl)
-    if vim.tbl_contains(ts_filetypes, tbl.match) then
+  callback = function(info)
+    if vim.tbl_contains(ts_filetypes, info.match) then
       vim.opt_local.foldmethod = 'expr'
       vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd('CmdWinEnter', {
+  group = vim.api.nvim_create_augroup('CmdWinRegexVimHl', {}),
+  desc = 'Use regex vim highlight in command window.',
+  callback = function(info)
+    if info.match == ':' then
+      vim.cmd('TSBufDisable highlight')
     end
   end,
 })
