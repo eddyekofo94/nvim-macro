@@ -5,63 +5,98 @@ local map = vim.keymap.set
 local col = vim.fn.col
 local line = vim.fn.line
 
+---Check if string is empty
+---@param str string
+---@return boolean
+local function str_isempty(str)
+  return str:gsub('%s+', '') == ''
+end
+
+---Match non-empty string
+---@param str string
+---@vararg string patterns to match
+---@return string
+local function match_nonempty(str, ...)
+  local patterns = { ... }
+  local capture = ''
+  for _, pattern in ipairs(patterns) do
+    capture = str:match(pattern)
+    if capture and not str_isempty(capture) then
+      return capture
+    end
+  end
+  return capture
+end
+
+---Get current line
+---@return string
+local function get_current_line()
+  return fn.mode() == 'c' and fn.getcmdline() or api.nvim_get_current_line()
+end
+
+---Get current column number
+---@return integer
+local function get_current_col()
+  return fn.mode() == 'c' and fn.getcmdpos() or col('.')
+end
+
 ---Get character relative to cursor
 ---@param offset number from cursor
 ---@return string character
 local function get_char(offset)
-  if fn.mode() == 'c' then
-    local cmdline = fn.getcmdline()
-    local pos = fn.getcmdpos()
-    return cmdline:sub(pos + offset, pos + offset)
-  end
-  local current_line = api.nvim_get_current_line()
-  return current_line:sub(col('.') + offset, col('.') + offset)
+  local idx = get_current_col() + offset
+  return get_current_line():sub(idx, idx)
+end
+
+---Get word after cursor
+---@param str string? content of the line, default to current line
+---@param colnr integer? column number, default to current column
+---@return string
+local function get_word_after(str, colnr)
+  str = str or get_current_line()
+  colnr = colnr or get_current_col()
+  return match_nonempty(str:sub(colnr), '^%s*[%w_]*', '^%s*[^%s%w_]*')
+end
+
+---Get word before cursor
+---@param str string? content of the line, default to current line
+---@param colnr integer? column number, default to current column - 1
+---@return string
+local function get_word_before(str, colnr)
+  str = str or get_current_line()
+  colnr = colnr or get_current_col() - 1
+  return match_nonempty(str:sub(1, colnr), '[%w_]*%s*$', '[^%s%w_]*%s*$')
 end
 
 ---Check if current line is the last line
 ---@return boolean
 local function last_line()
-  if fn.mode() == 'c' then
-    return true
-  end
-  return line('.') == line('$')
+  return fn.mode() == 'c' or line('.') == line('$')
 end
 
 ---Check if current line is the first line
 ---@return boolean
 local function first_line()
-  if fn.mode() == 'c' then
-    return true
-  end
-  return line('.') == 1
+  return fn.mode() == 'c' or line('.') == 1
 end
 
 ---Check if cursor is at the end of the line
 ---@return boolean
 local function end_of_line()
-  if fn.mode() == 'c' then
-    return fn.getcmdpos() == #fn.getcmdline() + 1
-  end
-  return col('.') == col('$')
+  return get_current_col() == #get_current_line() + 1
 end
 
 ---Check if cursor is at the start of the line
 ---@return boolean
 local function start_of_line()
-  if fn.mode() == 'c' then
-    return fn.getcmdpos() == 1
-  end
-  return col('.') == 1
+  return get_current_col() == 1
 end
 
 ---Check if cursor is at the middle of the line
 ---@return boolean
 local function mid_of_line()
-  if fn.mode() == 'c' then
-    local pos = fn.getcmdpos()
-    return pos > 1 and pos <= #fn.getcmdline()
-  end
-  return col('.') > 1 and col('.') < col('$')
+  local current_col = get_current_col()
+  return current_col > 1 and current_col <= #get_current_line()
 end
 
 ---Set up key mappings
@@ -74,16 +109,13 @@ function M.setup()
   map('!', '<C-a>', '<Home>')
   map('!', '<C-e>', '<End>')
   map('!', '<C-d>', '<Del>')
-  map('!', '<C-y>', '<C-r>-')
+  map('!', '<C-y>', 'pumvisible() ? "<C-y>" : "<C-r>-"', { expr = true })
   map('c', '<C-b>', '<Left>')
   map('c', '<C-f>', '<Right>')
   map('c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>')
-  map('i', '<M-b>', '<S-Left>')
-  map('i', '<M-f>', '<Cmd>normal! e<CR><Right>')
   map('!', '<C-BS>', '<C-w>')
   map('!', '<M-BS>', '<C-w>')
   map('!', '<M-Del>', '<C-w>')
-  map('i', '<M-d>', '<Cmd>normal! dw<CR>')
 
   map('i', '<C-b>', function()
     if first_line() and start_of_line() then
@@ -98,20 +130,20 @@ function M.setup()
     return end_of_line() and '<Down><Home>' or '<Right>'
   end, { expr = true })
   map('i', '<C-k>', function()
-    return end_of_line() and '<Del>' or '<Cmd>normal! D<CR><Right>'
+    return '<C-g>u'
+      .. (end_of_line() and '<Del>' or '<Cmd>normal! D<CR><Right>')
   end, { expr = true })
   map('!', '<C-t>', function()
-    if vim.tbl_contains({ '?', '/' }, fn.getcmdtype()) then
+    if fn.getcmdtype():match('[?/]') then
       return '<C-t>'
     end
-
     if start_of_line() and not first_line() then
       local char_under_cur = get_char(0)
       if char_under_cur ~= '' then
         return '<Del><Up><End>' .. char_under_cur .. '<Down><Home>'
       else
-        local prev_line =
-          api.nvim_buf_get_lines(0, line('.') - 2, line('.') - 1, false)[1]
+        local lnum = line('.')
+        local prev_line = fn.getline(lnum - 1) --[[@as string]]
         local char_end_of_prev_line = prev_line:sub(-1)
         if char_end_of_prev_line ~= '' then
           return '<Up><End><BS><Down><Home>' .. char_end_of_prev_line
@@ -133,41 +165,42 @@ function M.setup()
   end, { expr = true })
   map('!', '<C-u>', function()
     if not start_of_line() then
-      local current_line = fn.mode() == 'c' and fn.getcmdline()
-        or api.nvim_get_current_line()
-      local pos = fn.mode() == 'c' and fn.getcmdpos() or col('.')
-      fn.setreg('-', current_line:sub(1, pos - 1))
+      fn.setreg('-', get_current_line():sub(1, get_current_col() - 1))
     end
-    return '<C-u>'
+    return fn.mode() == 'c' and '<C-u>' or '<C-g>u<C-u>'
   end, { expr = true })
-  map('c', '<M-b>', function()
-    local cmdline_before = fn.getcmdline():sub(1, fn.getcmdpos() - 1)
-    local word_before = cmdline_before:match('([%w_]*%s*)$')
-    if word_before == '' then
-      word_before = cmdline_before:match('([^%w_]*%s*)$')
+  map('!', '<M-b>', function()
+    local word_before = get_word_before()
+    if not str_isempty(word_before) or fn.mode() == 'c' then
+      return string.rep('<Left>', #word_before)
     end
-    return string.rep('<Left>', #word_before)
+    -- No word before cursor and is in insert mode
+    local current_linenr = line('.')
+    local target_linenr = fn.prevnonblank(current_linenr - 1)
+    target_linenr = target_linenr ~= 0 and target_linenr or 1
+    local line_str = fn.getline(target_linenr) --[[@as string]]
+    return (current_linenr == target_linenr and '' or '<End>')
+      .. string.rep('<Up>', current_linenr - target_linenr)
+      .. string.rep('<Left>', #get_word_before(line_str, #line_str))
   end, { expr = true })
-  map('c', '<M-f>', function()
-    local cmdline_after = fn.getcmdline():sub(fn.getcmdpos())
-    local word_after = cmdline_after:match('^(%s*[%w_]*)')
-    if word_after == '' then
-      word_after = cmdline_after:match('^(%s*[^%w_]*)')
+  map('!', '<M-f>', function()
+    local word_after = get_word_after()
+    if not str_isempty(word_after) or fn.mode() == 'c' then
+      return string.rep('<Right>', #word_after)
     end
-    return string.rep('<Right>', #word_after)
+    -- No word after cursor and is in insert mode
+    local current_linenr = line('.')
+    local target_linenr = fn.nextnonblank(current_linenr + 1)
+    target_linenr = target_linenr ~= 0 and target_linenr or line('$')
+    local line_str = fn.getline(target_linenr) --[[@as string]]
+    return (current_linenr == target_linenr and '' or '<Home>')
+      .. string.rep('<Down>', target_linenr - current_linenr)
+      .. string.rep('<Right>', #get_word_after(line_str, 1))
   end, { expr = true })
-  map('c', '<M-d>', function()
-    local cmdline = fn.getcmdline()
-    local pos = fn.getcmdpos()
-    if pos > #cmdline then
-      return
-    end
-    local _, _, to_del = cmdline:sub(pos + 1):find('^(%w*%s*)')
-    fn.setcmdline(
-      cmdline:sub(1, pos - 1) .. cmdline:sub(pos + #to_del + 1),
-      pos
-    )
-  end)
+  map('!', '<M-d>', function()
+    return (fn.mode() == 'c' and '' or '<C-g>u')
+      .. string.rep('<Del>', #get_word_after())
+  end, { expr = true })
 end
 
 return M
