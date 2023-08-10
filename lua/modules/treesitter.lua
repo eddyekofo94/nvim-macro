@@ -41,12 +41,12 @@ return {
   },
 
   {
-    'CKolkey/ts-node-action',
-    event = 'FileType',
-    keys = '<Leader><Leader>',
+    'Wansmer/treesj',
+    cmd = { 'TSJToggle', 'TSJSplit', 'TSJJoin' },
+    keys = { '<Leader>j', '<Leader>s', '<Leader>S', '<Leader>t', '<Leader>T' },
     dependencies = 'nvim-treesitter',
     config = function()
-      require('configs.ts-node-action')
+      require('configs.treesj')
     end,
   },
 

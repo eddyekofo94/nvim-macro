@@ -1,5 +1,0 @@
-local action = require('ts-node-action')
-action.setup({})
-vim.keymap.set('n', '<leader><leader>', function()
-  pcall(action.node_action)
-end)
