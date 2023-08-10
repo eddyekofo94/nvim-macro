@@ -20,8 +20,8 @@ local function match_nonempty(str, ...)
   local patterns = { ... }
   local capture = ''
   for _, pattern in ipairs(patterns) do
-    capture = str:match(pattern)
-    if capture and not str_isempty(capture) then
+    capture = str:match(pattern) or capture
+    if not str_isempty(capture) then
       return capture
     end
   end
