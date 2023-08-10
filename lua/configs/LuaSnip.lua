@@ -1,7 +1,7 @@
 local fn = vim.fn
 local ls = require('luasnip')
 local ls_types = require('luasnip.util.types')
-local icons = require('utils.static').icons
+local static = require('utils.static')
 
 ---Load snippets for a given filetype
 ---@param ft string
@@ -64,14 +64,20 @@ ls.setup({
   enable_autosnippets = true,
   store_selection_keys = '<Tab>',
   ext_opts = {
-    [ls_types.choiceNode] = {
-      active = {
-        virt_text = { { icons.Enum, 'Ochre' } },
+    [ls_types.insertNode] = {
+      unvisited = {
+        virt_text = {
+          { static.box.single.vt, 'Special' },
+        },
+        virt_text_pos = 'inline',
       },
     },
-    [ls_types.insertNode] = {
-      active = {
-        virt_text = { { icons.Snippet, 'Tea' } },
+    [ls_types.exitNode] = {
+      unvisited = {
+        virt_text = {
+          { static.box.single.vt, 'Special' },
+        },
+        virt_text_pos = 'inline',
       },
     },
   },
