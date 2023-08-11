@@ -34,7 +34,7 @@ opt.conceallevel   = 2
 -- For unknown reasons, wezterm won't reload config for current session
 -- when we spawn 'setbg' or 'setcolors' scripts from nvim using libuv
 -- if GUI cursor highlights are set for modes n,v,r,cr
-opt.gcr = vim.env.WEZTERM
+opt.gcr = vim.env.WEZTERM_PANE
     and 'n-v:block,i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor,r-cr:hor20,o:hor50'
   or 'n-v:block-Cursor/lCursor,i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor,r-cr:hor20,o:hor50-Cursor/lCursor'
 
