@@ -118,7 +118,7 @@ end
 
 ---Get string representation of diagnostics for current buffer
 ---@return string
-function statusline.diagnostics()
+function statusline.diag()
   local diagnostics = vim.diagnostic.get(0)
   local diagnostics_workspace = vim.diagnostic.get(nil)
   local counts = { 0, 0, 0, 0 }
@@ -157,22 +157,18 @@ function statusline.diagnostics()
   return result
 end
 
-function statusline.diag_or_pos()
-  local diagnostics = statusline.diagnostics()
-  return diagnostics == '' and '%#StatusLineFaded#%l:%c%*' or diagnostics
-end
-
 -- stylua: ignore start
 ---Statusline components
 ---@type table<string, string>
 local components = {
   align       = '%=',
-  diag_or_pos = '%{%v:lua.statusline.diag_or_pos()%} ',
+  diag        = '%{%v:lua.statusline.diag()%} ',
   fname       = ' %#StatusLineStrong#%t%* ',
   fname_nc    = ' %#StatusLineWeak#%t%* ',
   info        = '%{%v:lua.statusline.info()%}',
   mode        = '%{%v:lua.statusline.mode()%}',
   padding     = '%#None#  %*',
+  pos         = '%#StatusLineFaded#%l:%c%* ',
   truncate    = '%<',
 }
 -- stylua: ignore end
@@ -188,7 +184,8 @@ vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'CursorMoved' }, {
       components.fname,
       components.info,
       components.align,
-      components.diag_or_pos,
+      components.diag,
+      components.pos,
       components.padding,
     })
   end,
@@ -201,6 +198,7 @@ vim.api.nvim_create_autocmd('WinLeave', {
       components.truncate,
       components.fname_nc,
       components.align,
+      components.pos,
       components.padding,
     })
   end,
