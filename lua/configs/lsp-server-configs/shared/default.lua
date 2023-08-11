@@ -52,7 +52,6 @@ local function setup_keymaps(_, bufnr)
   vim.keymap.set('n', '[e',         vim.diagnostic.goto_prev,  { buffer = bufnr })
   vim.keymap.set('n', ']e',         vim.diagnostic.goto_next,  { buffer = bufnr })
   vim.keymap.set('n', 'gq;',        vim.lsp.buf.format,        { buffer = bufnr })
-  vim.keymap.set('n', 'gq;',        vim.lsp.buf.format,        { buffer = bufnr })
   vim.keymap.set('n', '[E', goto_diagnostic('prev', 'ERROR'),  { buffer = bufnr })
   vim.keymap.set('n', ']E', goto_diagnostic('next', 'ERROR'),  { buffer = bufnr })
   vim.keymap.set('n', '[W', goto_diagnostic('prev', 'WARN'),   { buffer = bufnr })
@@ -868,6 +867,8 @@ end
 ---@param subcommand_info_list table<string, subcommand_info_t> subcommands information
 ---@param fn_scope table scope of corresponding functions for subcommands
 local function setup_commands(_, bufnr, meta, subcommand_info_list, fn_scope)
+  -- metacommand -> MetaCommand abbreviation
+  utils.keymap.command_abbrev(meta:lower(), meta)
   -- Format: MetaCommand sub_command opts ...
   vim.api.nvim_buf_create_user_command(
     bufnr,

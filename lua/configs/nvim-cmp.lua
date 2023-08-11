@@ -180,6 +180,7 @@ local fuzzy_path_option = {
   },
 }
 
+---@diagnostic disable missing-fields
 cmp.setup({
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },
