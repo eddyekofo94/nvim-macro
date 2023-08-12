@@ -1,4 +1,6 @@
 local utils = require('utils')
+local confpath = vim.fn.stdpath('config')
+local datapath = vim.fn.stdpath('data')
 
 ---Read file contents
 ---@param path string
@@ -19,7 +21,7 @@ local function create_autocmd_applypatch()
     pattern = { 'LazyInstall*', 'LazyUpdate*' },
     group = vim.api.nvim_create_augroup('LazyPatches', {}),
     callback = function(info)
-      local patches_path = vim.fs.joinpath(vim.fn.stdpath('config'), 'patches')
+      local patches_path = vim.fs.joinpath(confpath, 'patches')
       for patch in vim.fs.dir(patches_path) do
         local patch_path = vim.fs.joinpath(patches_path, patch)
         local plugin_path =
@@ -60,8 +62,8 @@ end
 ---@return boolean success
 local function bootstrap()
   create_autocmd_applypatch()
-  vim.g.package_path = vim.fn.stdpath('data') .. '/site/pack/packages/opt'
-  vim.g.package_lock = vim.fn.stdpath('config') .. '/package-lock.json'
+  vim.g.package_path = datapath .. '/site/pack/packages/opt'
+  vim.g.package_lock = confpath .. '/package-lock.json'
   local lazy_path = vim.g.package_path .. '/lazy.nvim'
   vim.opt.rtp:prepend(lazy_path)
   vim.opt.pp:prepend(lazy_path)
