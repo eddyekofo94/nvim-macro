@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Tue 08 Aug 2023 10:17:18 PM CST
+-- Last Updated: Sat 12 Aug 2023 11:28:41 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -503,10 +503,6 @@ local hlgroups = {
   TelescopeSelection = { bg = palette.shaded },
   TelescopeMultiSelection = { bg = palette.shaded, bold = true },
   TelescopeSelectionCaret = { fg = palette.critical, bg = palette.shaded },
-
-  -- fidget
-  FidgetTask = { fg = palette.faded },
-  FidgetTitle = { fg = palette.faded, bold = true },
 
   -- nvim-dap-ui
   DapUIBreakpointsCurrentLine = { link = 'CursorLineNr' },

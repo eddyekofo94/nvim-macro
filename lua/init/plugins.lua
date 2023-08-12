@@ -156,7 +156,6 @@ else
     'markup',
     'tools',
     'treesitter',
-    'ui',
   })
 end
 

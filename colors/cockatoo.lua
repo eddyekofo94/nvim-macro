@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu 10 Aug 2023 12:42:53 AM CST
+-- Last Updated: Sat 12 Aug 2023 11:28:47 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -546,10 +546,6 @@ local hlgroups = {
   TelescopePromptCounter = { link = 'Comment' },
   TelescopePromptPrefix = { fg = palette.orange },
   TelescopeSelectionCaret = { fg = palette.orange, bg = palette.thunder },
-
-  -- fidget
-  FidgetTask = { fg = palette.thunder },
-  FidgetTitle = { fg = palette.thunder, bold = true },
 
   -- nvim-dap-ui
   DapUIBreakpointsCurrentLine = { link = 'CursorLineNr' },
