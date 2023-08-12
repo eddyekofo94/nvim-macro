@@ -346,7 +346,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 50 (package manager included).
+Total # of plugins: 49 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -398,10 +398,8 @@ Total # of plugins: 50 (package manager included).
     - [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)
     - [nvim-ts-context-commentstring](https://github.com/JoosepAlviste/nvim-ts-context-commentstring)
     - [nvim-treesitter-endwise](https://github.com/RRethy/nvim-treesitter-endwise)
-    - [ts-node-action](https://github.com/CKolkey/ts-node-action)
+    - [treesj](https://github.com/Wansmer/treesj)
     - [cellular-automaton.nvim](https://github.com/Eandrju/cellular-automaton.nvim)
-- **UI**
-    - [fidget.nvim](https://github.com/j-hui/fidget.nvim)
 - **DEBUG**
     - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
     - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
