@@ -28,6 +28,7 @@ opt.breakindent    = true
 opt.smoothscroll   = true
 opt.completeopt    = 'menuone'
 opt.conceallevel   = 2
+opt.autowriteall   = true
 -- stylua: ignore end
 
 -- Cursor shape
