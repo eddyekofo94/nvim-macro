@@ -96,6 +96,18 @@ function statusline.ft()
   return vim.bo.ft == '' and '' or vim.bo.ft:gsub('^%l', string.upper)
 end
 
+---@type table<string, fun(): string>
+---@diagnostic disable: undefined-field
+statusline.flags = {
+  md_captitle = function()
+    return vim.bo.ft == 'markdown' and vim.b.captitle and 'md-cap-title' or ''
+  end,
+  lsp_autofmt = function()
+    return vim.b.lsp_autofmt_enabled and 'lsp-auto-format' or ''
+  end,
+}
+---@diagnostic enable: undefined-field
+
 ---Additional info for the current buffer enclosed in parentheses
 ---@return string
 function statusline.info()
@@ -112,6 +124,8 @@ function statusline.info()
   add_section(statusline.ft())
   add_section(statusline.branch())
   add_section(statusline.gitdiff())
+  add_section(statusline.flags.md_captitle())
+  add_section(statusline.flags.lsp_autofmt())
   return vim.tbl_isempty(info) and ''
     or string.format('(%s)', table.concat(info, ', '))
 end
