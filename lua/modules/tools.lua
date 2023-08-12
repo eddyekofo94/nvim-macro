@@ -144,6 +144,9 @@ return {
 
   {
     'aserowy/tmux.nvim',
+    enabled = function()
+      return vim.env.TMUX
+    end,
     keys = { '<M-h>', '<M-j>', '<M-k>', '<M-l>' },
     config = function()
       require('configs.tmux')
