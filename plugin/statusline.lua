@@ -87,7 +87,7 @@ function statusline.branch()
   ---@diagnostic disable-next-line: undefined-field
   local branch = vim.b.gitsigns_status_dict and vim.b.gitsigns_status_dict.head
     or utils.git.branch()
-  return branch == '' and '' or '#' .. branch
+  return branch == '' and '' or utils.stl.hl('#', 'StatusLineFaded') .. branch
 end
 
 ---Get current filetype
