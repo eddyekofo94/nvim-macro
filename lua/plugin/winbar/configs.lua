@@ -244,7 +244,7 @@ M.opts = {
     path = {
       ---@type string|fun(buf: integer): string
       relative_to = function(buf)
-        return require('utils.fs').proj_dir(vim.api.nvim_buf_get_name(buf))
+        return utils.fs.proj_dir(vim.api.nvim_buf_get_name(buf))
           or vim.fn.getcwd()
       end,
       ---Can be used to filter out files or directories
@@ -262,7 +262,6 @@ M.opts = {
     },
     treesitter = {
       -- Lua pattern used to extract a short name from the node text
-      -- Be aware that the match result must not be nil!
       name_pattern = '[#~%*%w%._%->!@:]+%s*'
         .. string.rep('[#~%*%w%._%->!@:]*', 3, '%s*'),
       -- The order matters! The first match is used as the type
