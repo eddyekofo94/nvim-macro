@@ -3,27 +3,24 @@ local server_configs = require('configs.lsp-server-configs')
 
 ---Customize LSP floating window border
 local function lspconfig_floating_preview()
-  local opts_override = {}
-
-  ---Update LSP floating preview window options
-  local function update_floating_preview_opts()
-    opts_override = {
-      border = 'solid',
-      max_width = math.ceil(vim.go.columns * 0.75),
-      max_height = math.ceil(vim.go.lines * 0.4),
-      close_events = {
-        'CursorMoved',
-        'CursorMovedI',
-        'ModeChanged',
-        'WinScrolled',
-      },
-    }
-  end
-  update_floating_preview_opts()
-  -- Reset LSP floating window options on VimResized
+  local opts_override = {
+    border = 'solid',
+    max_width = math.max(80, math.ceil(vim.go.columns * 0.75)),
+    max_height = math.max(20, math.ceil(vim.go.lines * 0.4)),
+    close_events = {
+      'CursorMoved',
+      'CursorMovedI',
+      'ModeChanged',
+      'WinScrolled',
+    },
+  }
   vim.api.nvim_create_autocmd('VimResized', {
-    group = vim.api.nvim_create_augroup('LspFloatingWinOpts', {}),
-    callback = update_floating_preview_opts,
+    desc = 'Update LSP floating window maximum size on VimResized.',
+    group = vim.api.nvim_create_augroup('LspUpdateFloatingWinMaxSize', {}),
+    callback = function()
+      opts_override.max_width = math.max(80, math.ceil(vim.go.columns * 0.75))
+      opts_override.max_height = math.max(20, math.ceil(vim.go.lines * 0.4))
+    end,
   })
 
   -- Hijack LSP floating window function to use custom options
@@ -31,8 +28,7 @@ local function lspconfig_floating_preview()
   ---@param contents table of lines to show in window
   ---@param syntax string of syntax to set for opened buffer
   ---@param opts table with optional fields (additional keys are passed on to |nvim_open_win()|)
-  ---@returns bufnr,winnr buffer and window number of the newly created floating
-  ---preview window
+  ---@returns bufnr,winnr buffer and window number of the newly created floating preview window
   ---@diagnostic disable-next-line: duplicate-set-field
   function vim.lsp.util.open_floating_preview(contents, syntax, opts)
     local source_ft = vim.bo[vim.api.nvim_get_current_buf()].ft
