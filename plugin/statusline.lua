@@ -171,19 +171,90 @@ function statusline.diag()
   return result
 end
 
+---@class lsp_progress_data_t
+---@field client_id integer
+---@field result lsp_progress_data_result_t
+
+---@class lsp_progress_data_result_t
+---@field token integer
+---@field value lsp_progress_data_result_value_t
+
+---@class lsp_progress_data_result_value_t
+---@field kind 'begin'|'report'|'end'
+---@field title string
+---@field message string?
+---@field percentage integer?
+
+local lsp_prog_data ---@type lsp_progress_data_t?
+local report_time ---@type integer?
+vim.api.nvim_create_autocmd('LspProgress', {
+  desc = 'Update LSP progress info for the status line.',
+  group = vim.api.nvim_create_augroup('StatusLineUpdateLspProgress', {}),
+  callback = function(info)
+    local data = info.data
+    -- Filter out-of-order progress updates
+    if
+      lsp_prog_data
+      and lsp_prog_data.client_id == data.client_id
+      and lsp_prog_data.result.value.title == data.result.value.title
+      and lsp_prog_data.result.value.percentage
+      and data.result.value.percentage
+      and data.result.value.percentage
+        < lsp_prog_data.result.value.percentage
+    then
+      return
+    end
+    lsp_prog_data = data
+    report_time = vim.uv.hrtime()
+    if data.result.value.kind == 'end' then
+      local _report_time = report_time
+      lsp_prog_data.result.value.message =
+        vim.trim(utils.static.icons.diagnostics.DiagnosticSignOk)
+      -- Clear client message after a short time if received an 'end' message
+      vim.defer_fn(function()
+        -- No new report since the timer was set
+        if _report_time == report_time then
+          lsp_prog_data = nil
+          vim.cmd.redrawstatus({ bang = true })
+        end
+      end, 2048)
+    end
+    vim.cmd.redrawstatus({ bang = true })
+  end,
+})
+
+---@return string
+function statusline.lsp_progress()
+  if not lsp_prog_data then
+    return ''
+  end
+  local value = lsp_prog_data.result.value
+  return utils.stl.hl(
+    string.format(
+      '%s: %s%s%s',
+      vim.lsp.get_client_by_id(lsp_prog_data.client_id).name,
+      value.title,
+      value.message and string.format(' %s', value.message) or '',
+      value.percentage and string.format(' [%d%%%%]', value.percentage) or ''
+    ),
+    'StatusLineFaded'
+  )
+end
+
 -- stylua: ignore start
 ---Statusline components
 ---@type table<string, string>
 local components = {
-  align       = '%=',
-  diag        = '%{%v:lua.statusline.diag()%} ',
-  fname       = ' %#StatusLineStrong#%t%* ',
-  fname_nc    = ' %#StatusLineWeak#%t%* ',
-  info        = '%{%v:lua.statusline.info()%}',
-  mode        = '%{%v:lua.statusline.mode()%}',
-  padding     = '%#None#  %*',
-  pos         = '%#StatusLineFaded#%l:%c%* ',
-  truncate    = '%<',
+  align        = '%=',
+  diag         = '%{%v:lua.statusline.diag()%} ',
+  fname        = ' %#StatusLineStrong#%t%* ',
+  fname_nc     = ' %#StatusLineWeak#%t%* ',
+  info         = '%{%v:lua.statusline.info()%}',
+  lsp_progress = '%{%v:lua.statusline.lsp_progress()%} ',
+  mode         = '%{%v:lua.statusline.mode()%}',
+  padding      = '%#None#  %*',
+  pos          = '%#StatusLineFaded#%l:%c%* ',
+  truncate     = '%<',
 }
 -- stylua: ignore end
 
@@ -198,6 +269,7 @@ vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'CursorMoved' }, {
       components.fname,
       components.info,
       components.align,
+      components.lsp_progress,
       components.diag,
       components.pos,
       components.padding,
