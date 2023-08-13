@@ -279,9 +279,9 @@ vim.api.nvim_create_autocmd('WinLeave', {
   callback = function()
     vim.wo.statusline = table.concat({
       components.padding,
-      components.truncate,
       components.fname_nc,
       components.align,
+      components.truncate,
       components.pos,
       components.padding,
     })
