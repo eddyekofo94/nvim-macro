@@ -5,7 +5,7 @@ local utils = require('utils')
 ---@param method string the method to check for
 ---@param bufnr number buffer handler
 local function supports_method(method, bufnr)
-  local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
   for _, client in ipairs(clients) do
     if client.supports_method(method) then
       return true
@@ -378,11 +378,6 @@ local subcommands = {
       },
       incoming_calls = {},
       outgoing_calls = {},
-      server_ready = {
-        fn_override = function(...)
-          vim.notify(vim.inspect(vim.lsp.buf.server_ready(...)))
-        end,
-      },
       signature_help = {},
     },
   },
@@ -809,8 +804,8 @@ local function command_meta(subcommand_info_list, fn_scope, fn_name_alt)
       return
     end
     local arg_handler = subcommand_info_list[fn_name].arg_handler
-      or function(args)
-        return args
+      or function(...)
+        return ...
       end
     fn(arg_handler(cmdline_args, tbl))
   end
@@ -886,7 +881,7 @@ local function setup_commands(_, bufnr, meta, subcommand_info_list, fn_scope)
     vim.api.nvim_buf_create_user_command(
       bufnr,
       meta .. utils.string.snake_to_camel(subcommand),
-      command_meta(subcommand_info_list, fn_scope, subcommand, subcommand),
+      command_meta(subcommand_info_list, fn_scope, subcommand),
       {
         bang = true,
         range = true,
