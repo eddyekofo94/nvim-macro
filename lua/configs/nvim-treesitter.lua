@@ -14,10 +14,12 @@ end
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('TSFolds', {}),
   callback = function(info)
-    if utils.treesitter.ts_active(info.buf) then
-      vim.opt_local.foldmethod = 'expr'
-      vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
-    end
+    vim.schedule(function()
+      if utils.treesitter.ts_active(info.buf) then
+        vim.opt_local.foldmethod = 'expr'
+        vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
+      end
+    end)
   end,
 })
 
@@ -86,10 +88,7 @@ ts_configs.setup({
         [']l'] = '@loop.outer',
         [']]'] = '@function.outer',
         [']k'] = '@class.outer',
-        [']}'] = '@class.outer',
         [']a'] = '@parameter.outer',
-        [']/'] = '@comment.outer',
-        [']*'] = '@comment.outer',
         [']o'] = '@block.outer',
         [']?'] = '@conditional.outer',
       },
@@ -98,8 +97,9 @@ ts_configs.setup({
         [']L'] = '@loop.outer',
         [']['] = '@function.outer',
         [']K'] = '@class.outer',
-        [']{'] = '@class.outer',
         [']A'] = '@parameter.outer',
+        [']/'] = '@comment.outer',
+        [']*'] = '@comment.outer',
         [']O'] = '@block.outer',
       },
       goto_previous_start = {
@@ -107,7 +107,6 @@ ts_configs.setup({
         ['[l'] = '@loop.outer',
         ['[['] = '@function.outer',
         ['[k'] = '@class.outer',
-        ['[{'] = '@class.outer',
         ['[a'] = '@parameter.outer',
         ['[/'] = '@comment.outer',
         ['[*'] = '@comment.outer',
@@ -119,7 +118,6 @@ ts_configs.setup({
         ['[L'] = '@loop.outer',
         ['[]'] = '@function.outer',
         ['[K'] = '@class.outer',
-        ['[}'] = '@class.outer',
         ['[A'] = '@parameter.outer',
         ['[O'] = '@block.outer',
       },
