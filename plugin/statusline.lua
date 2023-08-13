@@ -127,7 +127,7 @@ function statusline.info()
   add_section(statusline.flags.md_captitle())
   add_section(statusline.flags.lsp_autofmt())
   return vim.tbl_isempty(info) and ''
-    or string.format('(%s)', table.concat(info, ', '))
+    or string.format('(%s) ', table.concat(info, ', '))
 end
 
 ---Get string representation of diagnostics for current buffer
@@ -168,7 +168,7 @@ function statusline.diag()
       result = result .. (result == '' and '' or ' ') .. diag_str
     end
   end
-  return result
+  return result == '' and '' or result .. ' '
 end
 
 ---@class lsp_progress_data_t
@@ -231,7 +231,7 @@ function statusline.lsp_progress()
   local value = lsp_prog_data.result.value
   return utils.stl.hl(
     string.format(
-      '%s: %s%s%s',
+      '%s: %s%s%s ',
       vim.lsp.get_client_by_id(lsp_prog_data.client_id).name,
       value.title,
       value.message and string.format(' %s', value.message) or '',
@@ -246,11 +246,11 @@ end
 ---@type table<string, string>
 local components = {
   align        = '%=',
-  diag         = '%{%v:lua.statusline.diag()%} ',
+  diag         = '%{%v:lua.statusline.diag()%}',
   fname        = ' %#StatusLineStrong#%t%* ',
   fname_nc     = ' %#StatusLineWeak#%t%* ',
   info         = '%{%v:lua.statusline.info()%}',
-  lsp_progress = '%{%v:lua.statusline.lsp_progress()%} ',
+  lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
   mode         = '%{%v:lua.statusline.mode()%}',
   padding      = '%#None#  %*',
   pos          = '%#StatusLineFaded#%l:%c%* ',
@@ -265,10 +265,10 @@ vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'CursorMoved' }, {
     vim.wo.statusline = table.concat({
       components.padding,
       components.mode,
-      components.truncate,
       components.fname,
       components.info,
       components.align,
+      components.truncate,
       components.lsp_progress,
       components.diag,
       components.pos,
