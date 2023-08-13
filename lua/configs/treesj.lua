@@ -38,6 +38,7 @@ local function format_fn(dir)
 end
 
 vim.keymap.set('n', '<Leader>j', tsj.join)
+vim.keymap.set('n', '<Leader>J', tsj.join)
 vim.keymap.set('n', '<Leader>s', tsj.split)
 vim.keymap.set('n', '<Leader>t', tsj.toggle)
 vim.keymap.set('n', '<Leader>S', format_fn('split_recursive'))
