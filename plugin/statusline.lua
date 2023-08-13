@@ -197,10 +197,8 @@ vim.api.nvim_create_autocmd('LspProgress', {
       lsp_prog_data
       and lsp_prog_data.client_id == data.client_id
       and lsp_prog_data.result.value.title == data.result.value.title
-      and lsp_prog_data.result.value.percentage
-      and data.result.value.percentage
-      and data.result.value.percentage
-        < lsp_prog_data.result.value.percentage
+      and (data.result.value.percentage or 100)
+        < (lsp_prog_data.result.value.percentage or 0)
     then
       return
     end
