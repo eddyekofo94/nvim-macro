@@ -26,7 +26,7 @@ return {
       },
       sh = {
         {
-          formatCommand = 'shfmt -filename ${INPUT} -',
+          formatCommand = 'shfmt --filename ${INPUT} -',
           formatStdin = true,
         },
       },
