@@ -18,20 +18,6 @@ return {
   },
 
   {
-    'jose-elias-alvarez/null-ls.nvim',
-    event = { 'BufReadPre', 'FileType' },
-    cmd = {
-      'NullLsLog',
-      'NullLsInfo',
-      'NullLsFormatOnSaveToggle',
-    },
-    dependencies = { 'plenary.nvim' },
-    config = function()
-      require('configs.null-ls')
-    end,
-  },
-
-  {
     'folke/neodev.nvim',
     ft = 'lua',
     config = function()

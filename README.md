@@ -92,6 +92,9 @@ favorite package manager:
 - LaTeX: install [TexLab](https://github.com/latex-lsp/texlab)
 - VimL: install [VimLS](https://github.com/iamcco/vim-language-server)
 - Markdown: install [Marksman](https://github.com/artempyanykh/marksman)
+- \*General-purpose LSP: install [EFM Language Server](https://github.com/mattn/efm-langserver)
+    - Already configured for [Black](https://github.com/psf/black), [Shfmt](https://github.com/mvdan/sh), and [StyLua](https://github.com/JohnnyMorganz/StyLua)
+    - Find configuration in [lua/configs/lsp-server-configs/efm.lua](https://github.com/Bekaboo/nvim/tree/master/lua/configs/lsp-server-configs/efm.lua)
 
 To add support for other languages, install corresponding LS manually and
 append the language and its language server to `M.langs` in [lua/utils/static.lua](https://github.com/Bekaboo/nvim/blob/master/lua/utils/static.lua)
@@ -346,7 +349,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 49 (package manager included).
+Total # of plugins: 48 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -367,7 +370,6 @@ Total # of plugins: 49 (package manager included).
 - **LSP**
     - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
     - [clangd_extensions.nvim](https://github.com/p00f/clangd_extensions.nvim)
-    - [null-lsp.nvim](https://github.com/jose-elias-alvarez/null-ls.nvim)
     - [neodev](https://github.com/folke/neodev.nvim)
     - [glance.nvim](https://github.com/dnlhc/glance.nvim)
 - **Markup**

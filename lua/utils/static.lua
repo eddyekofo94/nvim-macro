@@ -37,23 +37,20 @@ end
 M.langs = setmetatable({
   sh = {
     ft = 'sh',
-    lsp_server = 'bashls',
+    lsp_server = { 'bashls', 'efm' },
     dap = 'bashdb',
-    formatting = 'shfmt',
   },
   c = {
     ts = 'c',
     ft = 'c',
     lsp_server = 'clangd',
     dap = 'codelldb',
-    formatting = 'clang-format',
   },
   cpp = {
     ts = 'cpp',
     ft = 'cpp',
     lsp_server = 'clangd',
     dap = 'codelldb',
-    formatting = 'clang-format',
   },
   help = {
     ts = 'vimdoc',
@@ -62,14 +59,12 @@ M.langs = setmetatable({
   lua = {
     ts = 'lua',
     ft = 'lua',
-    lsp_server = 'lua_ls',
-    formatting = 'stylua',
+    lsp_server = { 'lua_ls', 'efm' },
   },
   rust = {
     ts = 'rust',
     ft = 'rust',
     lsp_server = 'rust_analyzer',
-    formatting = 'rustfmt',
   },
   make = {
     ts = 'make',
@@ -85,9 +80,8 @@ M.langs = setmetatable({
   python = {
     ts = 'python',
     ft = 'python',
-    lsp_server = 'jedi_language_server',
+    lsp_server = { 'jedi_language_server', 'efm' },
     dap = 'debugpy',
-    formatting = 'black',
   },
   vim = {
     ts = 'vim',
@@ -98,7 +92,6 @@ M.langs = setmetatable({
     ft = 'tex',
     ts = 'latex',
     lsp_server = 'texlab',
-    formatting = 'latexindent',
   },
 }, langs_mt)
 
