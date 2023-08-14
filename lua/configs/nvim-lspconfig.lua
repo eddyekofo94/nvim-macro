@@ -144,6 +144,7 @@ local function lsp_setup()
       lspconfig[server].setup(server_configs[server])
     end
     ft_servers[ft] = nil
+    vim.api.nvim_exec_autocmds('FileType', { pattern = ft })
     return true
   end
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -156,11 +157,7 @@ local function lsp_setup()
       pattern = ft,
       group = groupid,
       callback = function()
-        if setup_ft(ft) then
-          -- Trigger lspconfig filetype autocmds to launch LSP servers
-          vim.cmd('doautocmd Filetype ' .. ft)
-        end
-        return true
+        return setup_ft(ft)
       end,
     })
   end
