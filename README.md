@@ -106,9 +106,10 @@ Install the following debug adapters manually:
 
 - Bash:
 
-    Go to [vscode-bash-debug release page](https://github.com/rogalmic/vscode-bash-debug/releases), download the lastest release
-    (`bash-debug-x.x.x.vsix`), extract the contents to a new directory
-    `vscode-bash-debug/` and put it under stdpath `data`
+    Go to [vscode-bash-debug release page](https://github.com/rogalmic/vscode-bash-debug/releases),
+    download the latest release (`bash-debug-x.x.x.vsix`), extract
+    (change the extension from `.vsix` to `.zip` then unzip it) the contents
+    to a new directory `vscode-bash-debug/` and put it under stdpath `data`
     (see `:h stdpath`).
 
     Make sure `node` is executable.
