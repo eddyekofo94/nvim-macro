@@ -1,9 +1,14 @@
+local utils = require('utils')
+
 return {
   init_options = { documentFormatting = true },
-  filetypes = { 'lua', 'python', 'sh' },
+  filetypes = { 'lua', 'python', 'sh', 'fish' },
   single_file_support = false,
+  root_dir = function(startpath)
+    return utils.fs.proj_dir(startpath) or vim.fs.dirname(startpath)
+  end,
   settings = {
-    rootMarkers = { '.git/' },
+    rootMarkers = utils.fs.root_patterns,
     languages = {
       lua = {
         {
@@ -22,6 +27,12 @@ return {
       sh = {
         {
           formatCommand = 'shfmt -filename ${INPUT} -',
+          formatStdin = true,
+        },
+      },
+      fish = {
+        {
+          formatCommand = 'fish_indent ${INPUT}',
           formatStdin = true,
         },
       },
