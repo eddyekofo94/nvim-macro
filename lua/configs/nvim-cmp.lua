@@ -376,7 +376,6 @@ cmp.setup({
       entry_filter = entry_filter,
     },
     { name = 'buffer', max_item_count = 8 },
-    { name = 'spell', max_item_count = 8 },
     {
       name = 'fuzzy_path',
       entry_filter = entry_filter_fuzzy_path,
