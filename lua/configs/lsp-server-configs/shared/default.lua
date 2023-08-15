@@ -15,7 +15,7 @@ local function supports_method(method, bufnr)
 end
 
 ---Setup LSP keymaps
----@param _ table LS client, ignored
+---@param _ lsp.Client LS client, ignored
 ---@param bufnr number buffer handler
 local function setup_keymaps(_, bufnr)
   ---@param direction 'prev'|'next'
@@ -246,45 +246,28 @@ local subcommands = {
         ---@param args lsp_command_parsed_arg_t
         ---@param tbl table information passed to the command
         fn_override = function(args, tbl)
-          ---@type bufopt_t
-          local opt_autofmt_enabled =
-            utils.classes.bufopt_t:new('lsp_autofmt_enabled', false)
-          ---@type bufopt_t
-          local opt_autofmt_opts = utils.classes.bufopt_t:new(
-            'lsp_autofmt_opts',
-            { timeout_ms = 500 }
-          )
-          if vim.fn.exists('#LspAutoFmt') == 0 then
-            vim.api.nvim_create_autocmd('BufWritePre', {
-              group = vim.api.nvim_create_augroup('LspAutoFmt', {}),
-              callback = function(info)
-                if opt_autofmt_enabled:get(info.buf) then
-                  vim.lsp.buf.format(opt_autofmt_opts:get(info.buf))
-                end
-              end,
-              desc = 'LSP format on save.',
-            })
-          end
+          local enabled = utils.classes.bufopt_t:new('lsp_autofmt_enabled') ---@type bufopt_t
+          local fmtopts = utils.classes.bufopt_t:new('lsp_autofmt_opts') ---@type bufopt_t
           if tbl.bang or vim.tbl_contains(args, 'toggle') then
-            opt_autofmt_enabled:scope_action(args, 'toggle')
+            enabled:scope_action(args, 'toggle')
           elseif tbl.fargs[1] == '&' or vim.tbl_contains(args, 'reset') then
-            opt_autofmt_enabled:scope_action(args, 'reset')
-            opt_autofmt_opts:scope_action(args, 'reset')
+            enabled:scope_action(args, 'reset')
+            fmtopts:scope_action(args, 'reset')
           elseif tbl.fargs[1] == '?' or vim.tbl_contains(args, 'status') then
-            opt_autofmt_enabled:scope_action(args, 'print')
-            opt_autofmt_opts:scope_action(args, 'print')
+            enabled:scope_action(args, 'print')
+            fmtopts:scope_action(args, 'print')
           elseif vim.tbl_contains(args, 'enable') then
-            opt_autofmt_enabled:scope_action(args, 'set', true)
+            enabled:scope_action(args, 'set', true)
           elseif vim.tbl_contains(args, 'disable') then
-            opt_autofmt_enabled:scope_action(args, 'set', false)
+            enabled:scope_action(args, 'set', false)
           end
           if args.format then
-            opt_autofmt_opts:scope_action(
+            fmtopts:scope_action(
               args,
               'set',
               vim.tbl_deep_extend(
                 'force',
-                opt_autofmt_opts:scope_action(args, 'get'),
+                fmtopts:scope_action(args, 'get'),
                 args.format
               )
             )
@@ -856,7 +839,7 @@ local function command_complete(meta, subcommand_info_list)
 end
 
 ---Setup commands
----@param _ table LS client, ignored
+---@param _ lsp.Client LS client, ignored
 ---@param bufnr number buffer handler
 ---@param meta string meta command name
 ---@param subcommand_info_list table<string, subcommand_info_t> subcommands information
@@ -893,7 +876,7 @@ local function setup_commands(_, bufnr, meta, subcommand_info_list, fn_scope)
 end
 
 ---Automatically enable / disable diagnostics on mode change
----@param _ table LS client, ignored
+---@param _ lsp.Client LS client, ignored
 ---@param bufnr number buffer handler
 local function setup_diagnostics_on_mode_change(_, bufnr)
   local augroup_diagnostic = 'LspDiagnostic' .. bufnr
@@ -914,8 +897,37 @@ local function setup_diagnostics_on_mode_change(_, bufnr)
   })
 end
 
+---@param client lsp.Client LSP client
+---@param bufnr number buffer handler
+---@return nil
+local function setup_lsp_autoformat(client, bufnr)
+  if
+    not client.supports_method('textDocument/formatting')
+    and not client.supports_method('textDocument/rangeFormatting')
+  then
+    return
+  end
+  ---@type bufopt_t
+  local enabled = utils.classes.bufopt_t:new('lsp_autofmt_enabled', false)
+  ---@type bufopt_t
+  local fmtopts = utils.classes.bufopt_t:new('lsp_autofmt_opts', {
+    async = true,
+    timeout_ms = 500,
+  })
+  vim.api.nvim_create_autocmd('BufWritePre', {
+    desc = 'LSP format on save.',
+    group = vim.api.nvim_create_augroup('LspAutoFmt' .. bufnr, {}),
+    buffer = bufnr,
+    callback = function(info)
+      if enabled:get(info.buf) then
+        vim.lsp.buf.format(fmtopts:get(info.buf))
+      end
+    end,
+  })
+end
+
 ---Set up keymaps and commands
----@param client table LS client, ignored
+---@param client lsp.Client LSP client, ignored
 ---@param bufnr number buffer handler
 local function on_attach(client, bufnr)
   if not vim.b[bufnr].lsp_attached then
@@ -929,6 +941,7 @@ local function on_attach(client, bufnr)
       subcommands.diagnostic,
       vim.diagnostic
     )
+    setup_lsp_autoformat(client, bufnr)
     setup_diagnostics_on_mode_change(client, bufnr)
   end
 end
