@@ -1,5 +1,6 @@
 _G.statusline = {}
 local utils = require('utils')
+local redraw_cmd = 'silent! redrawstatus'
 
 ---@type table<string, string>
 local signs_text_cache = {}
@@ -103,7 +104,13 @@ statusline.flags = {
     return vim.bo.ft == 'markdown' and vim.b.captitle and 'md-cap-title' or ''
   end,
   lsp_autofmt = function()
-    return vim.b.lsp_autofmt_enabled and 'lsp-auto-format' or ''
+    return vim.b.lsp_autofmt_enabled
+        and not vim.tbl_isempty(vim.lsp.get_clients({
+          bufnr = 0,
+          method = 'textDocument/formatting',
+        }))
+        and 'lsp-auto-format'
+      or ''
   end,
 }
 ---@diagnostic enable: undefined-field
@@ -213,11 +220,11 @@ vim.api.nvim_create_autocmd('LspProgress', {
         -- No new report since the timer was set
         if _report_time == report_time then
           lsp_prog_data = nil
-          vim.cmd.redrawstatus({ bang = true })
+          vim.cmd(redraw_cmd)
         end
       end, 2048)
     end
-    vim.cmd.redrawstatus({ bang = true })
+    vim.cmd(redraw_cmd)
   end,
 })
 
@@ -289,5 +296,5 @@ vim.api.nvim_create_autocmd('WinLeave', {
 })
 vim.api.nvim_create_autocmd({ 'FileChangedShellPost', 'DiagnosticChanged' }, {
   group = groupid,
-  command = 'redrawstatus',
+  command = redraw_cmd,
 })
