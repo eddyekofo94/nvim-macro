@@ -23,7 +23,7 @@ end
 
 ---Returns a function node that returns a string for indentation at the given
 ---depth
----@param depth number|fun(): number
+---@param depth number|fun(...): number
 ---@param argnode_references number|table?
 ---@param node_opts table?
 ---@return table node
