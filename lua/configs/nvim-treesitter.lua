@@ -49,6 +49,7 @@ ts_configs.setup({
   incremental_selection = {
     enable = true,
     keymaps = {
+      init_selection = false,
       node_incremental = 'an',
       scope_incremental = 'aN',
       node_decremental = 'in',
