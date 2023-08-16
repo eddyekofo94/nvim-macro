@@ -12,9 +12,12 @@ function _G.textobj_fold(motion)
     return (
       foldlev == 0 and 'zk'
       or (foldlev > foldlev_prev and foldlev_prev > 0 and 'k' or '')
-    ) .. (motion == 'i' and ']zkV[zj' or ']zV[z')
+    )
+      .. vim.v.count1
+      .. (motion == 'i' and ']zkV[zj' or ']zV[z')
   end
   return (foldlev == 0 and 'zj' or (foldlev > foldlev_prev and 'j' or ''))
+    .. vim.v.count1
     .. (motion == 'i' and '[zjV]zk' or '[zV]z')
 end
 -- stylua: ignore start
