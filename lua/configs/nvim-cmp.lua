@@ -217,8 +217,8 @@ cmp.setup({
           cmp_item[field] = string.format('%-' .. min_width .. 's', field_str)
         end
       end
-      clamp('abbr', vim.go.pumwidth, 32)
-      clamp('menu', 0, 16)
+      clamp('abbr', vim.go.pw, math.max(60, math.ceil(vim.o.columns * 0.4)))
+      clamp('menu', 0, math.max(16, math.ceil(vim.o.columns * 0.2)))
       return cmp_item
     end,
   },
@@ -396,10 +396,6 @@ cmp.setup({
   },
   -- cmp floating window config
   window = {
-    completion = {
-      max_width = 40,
-      max_height = 16,
-    },
     documentation = {
       max_width = 80,
       max_height = 20,
