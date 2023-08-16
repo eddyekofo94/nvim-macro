@@ -350,7 +350,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 48 (package manager included).
+Total # of plugins: 47 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -371,7 +371,6 @@ Total # of plugins: 48 (package manager included).
 - **LSP**
     - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
     - [clangd_extensions.nvim](https://github.com/p00f/clangd_extensions.nvim)
-    - [neodev](https://github.com/folke/neodev.nvim)
     - [glance.nvim](https://github.com/dnlhc/glance.nvim)
 - **Markup**
     - [vimtex](https://github.com/lervag/vimtex)

@@ -18,14 +18,6 @@ return {
   },
 
   {
-    'folke/neodev.nvim',
-    ft = 'lua',
-    config = function()
-      require('configs.neodev')
-    end,
-  },
-
-  {
     'dnlhc/glance.nvim',
     event = 'LspAttach',
     config = function()
