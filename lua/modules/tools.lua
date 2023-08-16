@@ -14,7 +14,6 @@ return {
       '<Leader>f/',
       '<Leader>fb',
       '<Leader>fr',
-      '<Leader>fa',
       '<Leader>fe',
       '<Leader>fp',
       '<Leader>fs',
@@ -22,12 +21,19 @@ return {
       '<Leader>fg',
       '<Leader>fm',
       '<Leader>fd',
+      '<Leader>fD',
     },
     dependencies = {
       'plenary.nvim',
       'telescope-fzf-native.nvim',
       'telescope-undo.nvim',
     },
+    init = function()
+      local utils = require('utils')
+      utils.keymap.command_abbrev('F', 'Telescope')
+      utils.keymap.command_abbrev('T', 'Telescope')
+      utils.keymap.command_abbrev('FF', 'Telescope find_files')
+    end,
     config = function()
       require('configs.telescope')
     end,

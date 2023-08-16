@@ -69,7 +69,7 @@ vim.keymap.set('n', '<Leader>f/', function() builtin.current_buffer_fuzzy_find()
 vim.keymap.set('n', '<Leader>fb', function() builtin.buffers() end)
 vim.keymap.set('n', '<Leader>fr', function() builtin.lsp_references() end)
 vim.keymap.set('n', '<Leader>fd', function() builtin.lsp_definitions() end)
-vim.keymap.set('n', '<Leader>fa', function() builtin.lsp_code_actions() end)
+vim.keymap.set('n', '<Leader>fD', function() builtin.lsp_type_definitions() end)
 vim.keymap.set('n', '<Leader>fe', function() builtin.diagnostics() end)
 vim.keymap.set('n', '<Leader>fp', function() builtin.treesitter() end)
 vim.keymap.set('n', '<Leader>fs', function() builtin.lsp_document_symbols() end)
@@ -180,6 +180,9 @@ telescope.setup({
       jump_type = 'never',
     },
     lsp_definitions = {
+      jump_type = 'never',
+    },
+    lsp_type_definitions = {
       jump_type = 'never',
     },
     vim_options = layout_dropdown,
