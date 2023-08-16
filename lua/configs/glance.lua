@@ -3,17 +3,6 @@ local actions = glance.actions
 local utils = require('utils')
 local horiz = vim.opt.fillchars:get().horiz
 
----@param callback function
-local function count_wrap(callback)
-  return function(...)
-    local result = nil
-    for _ = 1, vim.v.count1 do
-      result = { callback(...) }
-    end
-    return unpack(result)
-  end
-end
-
 glance.setup({
   height = 16,
   detached = function(win)
@@ -51,14 +40,14 @@ glance.setup({
     end,
   },
   mappings = {
-    ---@type table<string, function|boolean>
+    ---@type table<string, function|boolean|string>
     list = {
-      ['j'] = count_wrap(actions.next),
-      ['k'] = count_wrap(actions.previous),
-      ['<Down>'] = count_wrap(actions.next),
-      ['<Up>'] = count_wrap(actions.previous),
-      ['<C-n>'] = count_wrap(actions.next_location),
-      ['<C-p>'] = count_wrap(actions.previous_location),
+      ['j'] = utils.keymap.count_wrap(actions.next),
+      ['k'] = utils.keymap.count_wrap(actions.previous),
+      ['<Down>'] = utils.keymap.count_wrap(actions.next),
+      ['<Up>'] = utils.keymap.count_wrap(actions.previous),
+      ['<C-n>'] = utils.keymap.count_wrap(actions.next_location),
+      ['<C-p>'] = utils.keymap.count_wrap(actions.previous_location),
       ['<C-u>'] = actions.preview_scroll_win(5),
       ['<C-d>'] = actions.preview_scroll_win(-5),
       ['<C-f>'] = actions.preview_scroll_win(10),
@@ -78,6 +67,12 @@ glance.setup({
       ['<CR>'] = actions.jump,
       ['<C-w>h'] = actions.enter_win('preview'),
       ['<M-h>'] = actions.enter_win('preview'),
+      ['<C-w>l'] = '<Ignore>',
+      ['<M-l>'] = '<Ignore>',
+      ['<C-w>j'] = '<Ignore>',
+      ['<M-j>'] = '<Ignore>',
+      ['<C-w>k'] = '<Ignore>',
+      ['<M-k>'] = '<Ignore>',
       ['q'] = actions.close,
       ['<Esc>'] = actions.close,
       ['<S-Tab>'] = false,
@@ -90,13 +85,19 @@ glance.setup({
       ['o'] = false,
       ['<Leader>l'] = false,
     },
-    ---@type table<string, function|boolean>
+    ---@type table<string, function|boolean|string>
     preview = {
       ['q'] = actions.close,
-      ['<C-n>'] = count_wrap(actions.next_location),
-      ['<C-p>'] = count_wrap(actions.previous_location),
+      ['<C-n>'] = utils.keymap.count_wrap(actions.next_location),
+      ['<C-p>'] = utils.keymap.count_wrap(actions.previous_location),
       ['<C-w>l'] = actions.enter_win('list'),
       ['<M-l>'] = actions.enter_win('list'),
+      ['<C-w>h'] = '<Ignore>',
+      ['<M-h>'] = '<Ignore>',
+      ['<C-w>j'] = '<Ignore>',
+      ['<M-j>'] = '<Ignore>',
+      ['<C-w>k'] = '<Ignore>',
+      ['<M-k>'] = '<Ignore>',
       ['Q'] = false,
       ['<Tab>'] = false,
       ['<S-Tab>'] = false,
