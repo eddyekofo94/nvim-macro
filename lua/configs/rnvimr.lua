@@ -18,7 +18,7 @@ local function rnvimr_update_layout()
     row = math.floor(0.7 * (vim.go.lines - vim.go.cmdheight)),
     col = 0,
     width = vim.go.columns,
-    height = math.floor(0.3 * vim.go.lines),
+    height = math.max(10, math.floor(0.35 * vim.go.lines)),
     style = 'minimal',
     border = 'solid',
   }
