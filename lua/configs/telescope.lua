@@ -63,6 +63,8 @@ vim.keymap.set('n', '<Leader>f',  function() builtin.builtin() end)
 vim.keymap.set('n', '<Leader>ff', function() builtin.find_files() end)
 vim.keymap.set('n', '<Leader>fo', function() builtin.oldfiles() end)
 vim.keymap.set('n', '<Leader>f;', function() builtin.live_grep() end)
+vim.keymap.set('n', '<Leader>f:', function() builtin.commands() end)
+vim.keymap.set('n', '<Leader>fq', function() builtin.command_history() end)
 vim.keymap.set('n', '<Leader>f*', function() builtin.grep_string() end)
 vim.keymap.set('n', '<Leader>fh', function() builtin.help_tags() end)
 vim.keymap.set('n', '<Leader>f/', function() builtin.current_buffer_fuzzy_find() end)
@@ -102,8 +104,8 @@ vim.api.nvim_create_autocmd('WinLeave', {
 local layout_dropdown = {
   previewer = false,
   layout_config = {
-    width = 0.5,
-    height = 0.5,
+    width = 0.65,
+    height = 0.65,
   },
 }
 
@@ -129,7 +131,49 @@ telescope.setup({
       },
     },
     sorting_strategy = 'ascending',
-    file_ignore_patterns = { '.git/', '%.pdf', '%.o', '%.zip' },
+    file_ignore_patterns = {
+      '%.back$',
+      '%.bak$',
+      '%.bkp$',
+      '%.bz2$',
+      '%.directory$',
+      '%.doc$',
+      '%.docx$',
+      '%.drawio$',
+      '%.gif$',
+      '%.git/',
+      '%.gz$',
+      '%.ico$',
+      '%.ipynb$',
+      '%.iso$',
+      '%.jar$',
+      '%.jpeg$',
+      '%.jpg$',
+      '%.mp3$',
+      '%.mp4$',
+      '%.o$',
+      '%.otf$',
+      '%.out$',
+      '%.pdf$',
+      '%.pickle$',
+      '%.png$',
+      '%.ppt$',
+      '%.pptx$',
+      '%.so$',
+      '%.svg$',
+      '%.tar$',
+      '%.ttf$',
+      '%.venv/',
+      '%.xls$',
+      '%.xlsx$',
+      '%.zip$',
+      '__pycache__/',
+      'events%.out%.tfevents%.%d+',
+      'node_modules/',
+      'vendor/',
+      'venv/',
+      '~$',
+    },
     mappings = {
       i = {
         ['<M-c>'] = actions.close,
@@ -171,25 +215,21 @@ telescope.setup({
   },
   pickers = {
     colorscheme = { enable_preview = true },
-    commands = layout_dropdown,
     command_history = layout_dropdown,
+    commands = layout_dropdown,
     filetypes = layout_dropdown,
+    find_files = { hidden = true, follow = true },
+    grep_string = { additional_args = { '--hidden' } },
     keymaps = layout_dropdown,
-    lsp_references = {
-      include_current_line = true,
-      jump_type = 'never',
-    },
-    lsp_definitions = {
-      jump_type = 'never',
-    },
-    lsp_type_definitions = {
-      jump_type = 'never',
-    },
-    vim_options = layout_dropdown,
+    live_grep = { additional_args = { '--hidden' } },
+    lsp_definitions = { jump_type = 'never' },
+    lsp_references = { include_current_line = true, jump_type = 'never' },
+    lsp_type_definitions = { jump_type = 'never' },
     registers = layout_dropdown,
     reloader = layout_dropdown,
     search_history = layout_dropdown,
     spell_suggest = layout_dropdown,
+    vim_options = layout_dropdown,
   },
   extensions = {
     undo = {

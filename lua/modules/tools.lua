@@ -8,6 +8,8 @@ return {
       '<Leader>ff',
       '<Leader>fo',
       '<Leader>f;',
+      '<Leader>f:',
+      '<Leader>fq',
       '<Leader>f*',
       '<Leader>fh',
       '<Leader>fm',
