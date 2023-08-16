@@ -129,4 +129,23 @@ function M.amend(modes, lhs, rhs, opts)
   end
 end
 
+---Wrap a function so that it repeats the original function multiple times
+---according to v:count or v:count1
+---@generic T
+---@param fn fun(): T?
+---@param count? 0|1 count given for the last normal mode command, see `:h v:count` or `:h v:count1`, default to 1
+---@return fun(): T[]
+function M.count_wrap(fn, count)
+  return function()
+    if count == 0 and vim.v.count0 == 0 then
+      return {}
+    end
+    local result = {}
+    for _ = 1, vim.v.count1 do
+      vim.list_extend(result, { fn() })
+    end
+    return unpack(result)
+  end
+end
+
 return M
