@@ -1,0 +1,14 @@
+diff --git a/lua/cmp_fuzzy_path/init.lua b/lua/cmp_fuzzy_path/init.lua
+index af39038..56c6ee8 100644
+--- a/lua/cmp_fuzzy_path/init.lua
++++ b/lua/cmp_fuzzy_path/init.lua
+@@ -131,6 +131,9 @@ source.complete = function(self, params, callback)
+   } }, isIncomplete = true })
+   local job
+   local job_start = vim.fn.reltime()
++  if self.last_job then
++    vim.fn.jobstop(self.last_job)
++  end
+   job = fn.jobstart(cmd, {
+     stdout_buffered = false,
+     cwd = cwd,
