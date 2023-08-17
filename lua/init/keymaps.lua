@@ -117,6 +117,7 @@ vim.keymap.set('o', 'if', '<Cmd>silent! normal m`Vif<CR><Cmd>silent! normal! ``<
 -- stylua: ignore end
 
 -- Abbreaviations
+utils.keymap.command_abbrev('S', '%s')
 utils.keymap.command_abbrev(':', 'lua')
 utils.keymap.command_abbrev('qa', 'qa!')
 utils.keymap.command_abbrev('bw', 'bw!')
