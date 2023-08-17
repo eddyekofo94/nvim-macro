@@ -100,6 +100,15 @@ vim.api.nvim_create_autocmd('WinLeave', {
   end,
 })
 
+-- Mimic fzf.vim's :FZF command
+vim.api.nvim_create_user_command('FZF', function(info)
+  builtin.find_files({ cwd = info.fargs[1] })
+end, {
+  nargs = '?',
+  complete = 'dir',
+  desc = 'Fuzzy find files.',
+})
+
 -- Dropdown layout for telescope
 local layout_dropdown = {
   previewer = false,

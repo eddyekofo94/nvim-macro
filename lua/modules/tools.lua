@@ -1,7 +1,7 @@
 return {
   {
     'nvim-telescope/telescope.nvim',
-    cmd = 'Telescope',
+    cmd = { 'Telescope', 'FZF' },
     keys = {
       '<Leader>F',
       '<Leader>f',
@@ -30,12 +30,6 @@ return {
       'telescope-fzf-native.nvim',
       'telescope-undo.nvim',
     },
-    init = function()
-      local utils = require('utils')
-      utils.keymap.command_abbrev('F', 'Telescope')
-      utils.keymap.command_abbrev('T', 'Telescope')
-      utils.keymap.command_abbrev('FF', 'Telescope find_files')
-    end,
     config = function()
       require('configs.telescope')
     end,
