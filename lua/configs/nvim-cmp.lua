@@ -378,28 +378,16 @@ cmp.setup({
         end
       end,
     },
-    ['<Down>'] = cmp.mapping(
-      cmp.mapping.select_next_item({
-        behavior = cmp.SelectBehavior.Select,
-      }),
-      { 'i', 'c' }
-    ),
-    ['<Up>'] = cmp.mapping(
-      cmp.mapping.select_prev_item({
-        behavior = cmp.SelectBehavior.Select,
-      }),
-      { 'i', 'c' }
-    ),
+    ['<Down>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
+    ['<Up>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
     ['<PageDown>'] = cmp.mapping(
       cmp.mapping.select_next_item({
-        behavior = cmp.SelectBehavior.Select,
         count = vim.o.pumheight ~= 0 and math.ceil(vim.o.pumheight / 2) or 8,
       }),
       { 'i', 'c' }
     ),
     ['<PageUp>'] = cmp.mapping(
       cmp.mapping.select_prev_item({
-        behavior = cmp.SelectBehavior.Select,
         count = vim.o.pumheight ~= 0 and math.ceil(vim.o.pumheight / 2) or 8,
       }),
       { 'i', 'c' }
