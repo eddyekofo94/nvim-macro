@@ -76,7 +76,7 @@ function! GetMarkdownIndent() abort
   endif
 
   if s:in_normalzone()
-    " Reindent unsordered list bullet points
+    " Reindent unordered list bullet points
     if l:line =~# '^\s*[-*+]'
       return indent(v:lnum) / l:sw * l:sw
     endif
