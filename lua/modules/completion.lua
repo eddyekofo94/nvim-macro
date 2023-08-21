@@ -40,7 +40,11 @@ return {
   {
     'tzachar/cmp-fuzzy-path',
     event = { 'CmdlineEnter', 'InsertEnter' },
-    dependencies = { 'fuzzy.nvim', 'nvim-cmp' },
+    dependencies = {
+      'fuzzy.nvim',
+      'nvim-cmp',
+      'telescope-fzf-native.nvim',
+    },
   },
 
   {
