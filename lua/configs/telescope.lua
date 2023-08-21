@@ -1,6 +1,9 @@
 local telescope = require('telescope')
 local builtin = require('telescope.builtin')
 local actions = require('telescope.actions')
+local actions_set = require('telescope.actions.set')
+local actions_state = require('telescope.actions.state')
+local actions_mt = require('telescope.actions.mt')
 local static = require('utils.static')
 
 ---Record buffers whose LSP clients are ready for 'textDocument/documentSymbol'
@@ -19,8 +22,8 @@ vim.api.nvim_create_autocmd('LspDetach', {
 ---Override builtin.lsp_document_symbols, builtin.lsp_workspace_symbols, and
 ---builtin.lsp_dynamic_workspace_symbols to fallback to use treesitter picker
 ---if the language server is not ready
----@param name string
----@param lsp_method string
+---@param name string name of the lsp picker
+---@param lsp_method string lsp method to check if the client is ready
 local function override_lsp_picker(name, lsp_method)
   local orig_picker = builtin[name]
   builtin[name] = function(...)
@@ -118,12 +121,78 @@ local layout_dropdown = {
   },
 }
 
+local _actions = {} -- Custom actions
+
+---@alias telescope_open_direction_t 'default'|'horizontal'|'vertical'|'tab'|'drop'|'tab drop'
+---@type table<telescope_open_direction_t, string>
+-- stylua: ignore start
+local select_cmds = {
+  default      = 'edit',
+  drop         = 'drop',
+  horizontal   = 'new',
+  vertical     = 'vnew',
+  tab          = 'tabedit',
+  ['tab drop'] = 'tab drop',
+}
+-- stylua: ignore end
+
+---@param prompt_bufnr integer
+local function append_to_history(prompt_bufnr)
+  actions_state.get_current_history():append(
+    actions_state.get_current_line(),
+    actions_state.get_current_picker(prompt_bufnr),
+    false
+  )
+end
+
+---Open multiple selected files
+---@param prompt_bufnr integer
+---@param direction telescope_open_direction_t
+---@return nil
+local function file_open_multi(prompt_bufnr, direction)
+  local picker = actions_state.get_current_picker(prompt_bufnr)
+  local multi = picker:get_multi_selection()
+
+  if #multi <= 1 then
+    actions_set.select(prompt_bufnr, direction)
+    return
+  end
+
+  for _, entry in ipairs(multi) do
+    if not entry.path then
+      vim.notify(
+        string.format(
+          '[telescope] cannot open, selected entries are not all files',
+          entry.path
+        ),
+        vim.log.levels.WARN
+      )
+      return
+    end
+  end
+
+  actions.close(prompt_bufnr)
+  for _, entry in ipairs(multi) do
+    vim.cmd(select_cmds[direction] .. ' ' .. vim.fn.fnameescape(entry.path))
+  end
+end
+
+-- Convert custom functions to actions
+for direction, _ in pairs(select_cmds) do
+  _actions['select_' .. direction] = {
+    pre = append_to_history,
+    action = function(prompt_bufnr)
+      return file_open_multi(prompt_bufnr, direction)
+    end,
+  }
+end
+_actions = actions_mt.transform_mod(_actions)
+
 telescope.setup({
   defaults = {
     prompt_prefix = '/ ',
     selection_caret = static.icons.ArrowRight,
     borderchars = static.borders.empty,
-    dynamic_preview_title = true,
     layout_strategy = 'flex',
     layout_config = {
       horizontal = {
@@ -139,6 +208,7 @@ telescope.setup({
         mirror = true,
       },
     },
+    sorting_strategy = 'ascending',
     vimgrep_arguments = {
       'rg',
       '--hidden',
@@ -189,7 +259,7 @@ telescope.setup({
       '-g=!*.xlsx',
       '-g=!*.zip',
       '-g=!*Cache*/',
-      '-g=!*\\~',
+      '-g=!*~',
       '-g=!*cache*/',
       '-g=!.*Cache*/',
       '-g=!.*cache*/',
@@ -215,15 +285,19 @@ telescope.setup({
       '-g=!vendor/',
       '-g=!venv/',
     },
-    sorting_strategy = 'ascending',
     mappings = {
       i = {
         ['<M-c>'] = actions.close,
-        ['<M-s>'] = actions.select_horizontal,
-        ['<M-v>'] = actions.select_vertical,
-        ['<M-t>'] = actions.select_tab,
-        ['<M-q>'] = actions.smart_add_to_qflist + actions.open_qflist,
-        ['<M-l>'] = actions.smart_add_to_loclist + actions.open_loclist,
+        ['<CR>'] = _actions.select_default,
+        ['<C-s>'] = _actions.select_horizontal,
+        ['<C-v>'] = _actions.select_vertical,
+        ['<M-s>'] = _actions.select_horizontal,
+        ['<M-v>'] = _actions.select_vertical,
+        ['<M-t>'] = _actions.select_tab,
+        ['<M-q>'] = actions.smart_send_to_qflist + actions.open_qflist,
+        ['<M-l>'] = actions.smart_send_to_loclist + actions.open_loclist,
+        ['<M-Q>'] = actions.smart_add_to_qflist + actions.open_qflist,
+        ['<M-L>'] = actions.smart_add_to_loclist + actions.open_loclist,
         ['<S-up>'] = actions.preview_scrolling_up,
         ['<S-down>'] = actions.preview_scrolling_down,
         ['<C-f>'] = false,
@@ -245,15 +319,21 @@ telescope.setup({
 
       n = {
         ['q'] = actions.close,
-        ['<esc>'] = actions.close,
+        ['<Esc>'] = actions.close,
         ['<C-n>'] = actions.move_selection_next,
         ['<C-p>'] = actions.move_selection_previous,
         ['<M-c>'] = actions.close,
-        ['<M-s>'] = actions.select_horizontal,
-        ['<M-v>'] = actions.select_vertical,
-        ['<M-t>'] = actions.select_tab,
-        ['<M-q>'] = actions.smart_add_to_qflist + actions.open_qflist,
-        ['<M-l>'] = actions.smart_add_to_loclist + actions.open_loclist,
+        ['<CR>'] = _actions.select_default,
+        ['<C-s>'] = _actions.select_horizontal,
+        ['<C-v>'] = _actions.select_vertical,
+        ['<C-t>'] = _actions.select_tab,
+        ['<M-s>'] = _actions.select_horizontal,
+        ['<M-v>'] = _actions.select_vertical,
+        ['<M-t>'] = _actions.select_tab,
+        ['<M-q>'] = actions.smart_send_to_qflist + actions.open_qflist,
+        ['<M-l>'] = actions.smart_send_to_loclist + actions.open_loclist,
+        ['<M-Q>'] = actions.smart_add_to_qflist + actions.open_qflist,
+        ['<M-L>'] = actions.smart_add_to_loclist + actions.open_loclist,
         ['<S-up>'] = actions.preview_scrolling_up,
         ['<S-down>'] = actions.preview_scrolling_down,
       },
@@ -399,14 +479,5 @@ telescope.setup({
 })
 
 -- load telescope extensions
-if
-  not vim.tbl_isempty(vim.fs.find({ 'libfzf.so' }, {
-    path = vim.g.package_path,
-    type = 'file',
-  }))
-then
-  telescope.load_extension('fzf')
-else
-  vim.notify_once('[telescope] libfzf.so not found', vim.log.levels.WARN)
-end
+telescope.load_extension('fzf')
 telescope.load_extension('undo')
