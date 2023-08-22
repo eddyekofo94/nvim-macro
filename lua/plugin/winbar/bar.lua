@@ -404,6 +404,10 @@ end
 ---Side effect: change winbar.components
 ---@return nil
 function winbar_t:truncate()
+  if not self.win or not vim.api.nvim_win_is_valid(self.win) then
+    self:del()
+    return
+  end
   local win_width = vim.api.nvim_win_get_width(self.win)
   local len = self:displaywidth()
   local delta = len - win_width
