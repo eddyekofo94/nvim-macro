@@ -198,6 +198,14 @@ telescope.setup({
       },
     },
     sorting_strategy = 'ascending',
+    preview = {
+      treesitter = {
+        -- Use regex highlighting for markdown and tex to get
+        -- better math syntax highlighting and concealing provided
+        -- by vim-markdown syntax file and vimtex
+        disable = { 'markdown', 'tex' },
+      },
+    },
     vimgrep_arguments = {
       'rg',
       '--hidden',
