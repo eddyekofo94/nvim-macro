@@ -72,7 +72,7 @@ vim.keymap.set('n', '<Leader>fD', function() builtin.lsp_type_definitions() end)
 vim.keymap.set('n', '<Leader>fO', function() builtin.resume() end)
 vim.keymap.set('n', '<Leader>fS', function() builtin.lsp_workspace_symbols() end)
 vim.keymap.set('n', '<Leader>fb', function() builtin.buffers() end)
-vim.keymap.set('n', '<Leader>fc', function() builtin.colors() end)
+vim.keymap.set('n', '<Leader>fc', function() builtin.colorscheme() end)
 vim.keymap.set('n', '<Leader>fd', function() builtin.lsp_definitions() end)
 vim.keymap.set('n', '<Leader>fe', function() builtin.diagnostics() end)
 vim.keymap.set('n', '<Leader>ff', function() builtin.find_files() end)
@@ -297,6 +297,12 @@ telescope.setup({
         ['<M-L>'] = actions.smart_add_to_loclist + actions.open_loclist,
         ['<S-up>'] = actions.preview_scrolling_up,
         ['<S-down>'] = actions.preview_scrolling_down,
+        ['<S-left>'] = actions.preview_scrolling_left,
+        ['<S-right>'] = actions.preview_scrolling_right,
+        ['<M-up>'] = actions.results_scrolling_up,
+        ['<M-down>'] = actions.results_scrolling_down,
+        ['<M-left>'] = actions.results_scrolling_left,
+        ['<M-right>'] = actions.results_scrolling_right,
         ['<C-f>'] = false,
         ['<C-d>'] = false,
         ['<C-a>'] = false,
@@ -333,6 +339,12 @@ telescope.setup({
         ['<M-L>'] = actions.smart_add_to_loclist + actions.open_loclist,
         ['<S-up>'] = actions.preview_scrolling_up,
         ['<S-down>'] = actions.preview_scrolling_down,
+        ['<S-left>'] = actions.preview_scrolling_left,
+        ['<S-right>'] = actions.preview_scrolling_right,
+        ['<M-up>'] = actions.results_scrolling_up,
+        ['<M-down>'] = actions.results_scrolling_down,
+        ['<M-left>'] = actions.results_scrolling_left,
+        ['<M-right>'] = actions.results_scrolling_right,
       },
     },
   },
@@ -423,16 +435,6 @@ telescope.setup({
     keymaps = layout_dropdown,
     live_grep = {
       additional_args = { '--hidden' },
-      mappings = {
-        i = {
-          ['<C-/>'] = actions.to_fuzzy_refine,
-          ['<C-_>'] = actions.to_fuzzy_refine,
-        },
-        n = {
-          ['<C-/>'] = actions.to_fuzzy_refine,
-          ['<C-_>'] = actions.to_fuzzy_refine,
-        },
-      },
     },
     lsp_definitions = { jump_type = 'never' },
     lsp_dynamic_workspace_symbols = {
