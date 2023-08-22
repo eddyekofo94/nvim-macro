@@ -46,7 +46,7 @@ local function override_lsp_picker(name, lsp_method)
     end
     local client_ok = client.request_sync(lsp_method, {
       textDocument = vim.lsp.util.make_text_document_params(buf),
-    }, 32, buf)
+    }, 512, buf)
     if client_ok then
       buf_client_ready[buf] = true
       orig_picker(...)
