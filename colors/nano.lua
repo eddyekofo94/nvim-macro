@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 12 Aug 2023 11:28:41 PM CST
+-- Last Updated: Wed 23 Aug 2023 01:09:29 AM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -449,7 +449,7 @@ local hlgroups = {
   CmpItemKindClass = { link = 'Type' },
   CmpItemKindStruct = { link = 'Type' },
   CmpItemKindEvent = { fg = palette.tea },
-  CmpItemKindInterface = { fg = palette.subtle },
+  CmpItemKindInterface = { fg = palette.faded },
   CmpItemKindFile = { link = 'DevIconDefault' },
   CmpItemKindFolder = { link = 'Directory' },
   CmpItemKindUnit = { fg = palette.salient },
