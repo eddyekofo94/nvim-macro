@@ -181,7 +181,7 @@ telescope.setup({
   defaults = {
     prompt_prefix = '/ ',
     selection_caret = static.icons.ArrowRight,
-    borderchars = static.borders.empty,
+    borderchars = static.borders.solid,
     layout_strategy = 'flex',
     layout_config = {
       horizontal = {
