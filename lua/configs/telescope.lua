@@ -92,24 +92,6 @@ vim.keymap.set('n', '<Leader>fu', function() telescope.extensions.undo.undo() en
 vim.keymap.set('n', '<Leader>f<Esc>', '<Ignore>')
 -- stylua: ignore end
 
--- Workaround for nvim-telescope/telescope.nvim #2501
--- to prevent opening files in insert mode
-vim.api.nvim_create_autocmd('WinLeave', {
-  group = vim.api.nvim_create_augroup('TelescopeConfig', {}),
-  callback = function(info)
-    if
-      vim.bo[info.buf].ft == 'TelescopePrompt'
-      and vim.startswith(vim.fn.mode(), 'i')
-    then
-      vim.api.nvim_feedkeys(
-        vim.api.nvim_replace_termcodes('<Esc>', true, false, true),
-        'in',
-        false
-      )
-    end
-  end,
-})
-
 -- Mimic fzf.vim's :FZF command
 vim.api.nvim_create_user_command('FZF', function(info)
   builtin.find_files({ cwd = info.fargs[1] })
@@ -123,7 +105,7 @@ end, {
 local layout_dropdown = {
   previewer = false,
   layout_config = {
-    width = 0.65,
+    width = 0.6,
     height = 0.65,
   },
 }
