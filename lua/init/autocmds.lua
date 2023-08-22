@@ -453,7 +453,7 @@ local autocmds = {
           -- see `:h undojoin` and `:h E790`
           local undotree = vim.fn.undotree(info.buf)
           if undotree.seq_cur == undotree.seq_last then
-            vim.cmd.silent({ 'undojoin', bang = true })
+            vim.cmd.undojoin()
             vim.api.nvim_buf_set_lines(info.buf, 0, 8, false, lines)
           end
         end
