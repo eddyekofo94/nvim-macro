@@ -448,8 +448,14 @@ local autocmds = {
           end
         end
         if update then
-          vim.cmd.undojoin()
-          vim.api.nvim_buf_set_lines(info.buf, 0, 8, false, lines)
+          -- Only join further change with the previous undo block
+          -- when the current undo block is a leaf node (no further change),
+          -- see `:h undojoin` and `:h E790`
+          local undotree = vim.fn.undotree(info.buf)
+          if undotree.seq_cur == undotree.seq_last then
+            vim.cmd.silent({ 'undojoin', bang = true })
+            vim.api.nvim_buf_set_lines(info.buf, 0, 8, false, lines)
+          end
         end
       end,
     },
