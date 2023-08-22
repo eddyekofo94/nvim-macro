@@ -61,6 +61,9 @@ setmetatable(markdown_heading_buf_symbols, {
 ---@param incremental? boolean incremental parsing
 ---@return nil
 local function parse_buf(buf, lnum_end, incremental)
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return
+  end
   local symbols_parsed = markdown_heading_buf_symbols[buf]
   local lnum_start = symbols_parsed['end'].lnum
   if not incremental then
@@ -201,7 +204,10 @@ end
 ---@param buf integer buffer handler
 ---@return nil
 local function attach(buf)
-  if vim.b[buf].winbar_markdown_heading_parser_attached then
+  if
+    vim.b[buf].winbar_markdown_heading_parser_attached
+    or not vim.api.nvim_buf_is_valid(buf)
+  then
     return
   end
   local function _update()
