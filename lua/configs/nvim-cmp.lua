@@ -472,7 +472,13 @@ cmp.setup.cmdline(':', {
       entry_filter = entry_filter_fuzzy_path,
       option = fuzzy_path_option,
     },
-    { name = 'cmdline', group_index = 2 },
+    {
+      name = 'cmdline',
+      option = {
+        ignore_cmds = {},
+      },
+      group_index = 2,
+    },
   },
 })
 -- Complete vim.ui.input()
@@ -485,7 +491,13 @@ cmp.setup.cmdline('@', {
       entry_filter = entry_filter_fuzzy_path,
       option = fuzzy_path_option,
     },
-    { name = 'cmdline', group_index = 2 },
+    {
+      name = 'cmdline',
+      group_index = 2,
+      option = {
+        ignore_cmds = {},
+      },
+    },
     { name = 'buffer', group_index = 3 },
   },
 })
