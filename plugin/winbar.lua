@@ -9,12 +9,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
       general = {
         update_interval = 32,
       },
-      bar = {
-        padding = {
-          left = 2,
-          right = 2,
-        },
-      },
       sources = {
         path = {
           modified = function(sym)

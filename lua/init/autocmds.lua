@@ -417,15 +417,6 @@ local autocmds = {
   },
 
   {
-    { 'ModeChanged', 'WinLeave', 'FocusLost' },
-    {
-      group = 'ClearMsgArea',
-      desc = 'Automatically clear message area on specific events.',
-      command = 'echo',
-    },
-  },
-
-  {
     { 'BufWritePre' },
     {
       group = 'UpdateTimestamp',
