@@ -350,7 +350,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 47 (package manager included).
+Total # of plugins: 45 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -392,7 +392,6 @@ Total # of plugins: 47 (package manager included).
     - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
     - [git-conflict](akinsho/git-conflict.nvim)
     - [rnvimr](https://github.com/kevinhwang91/rnvimr)
-    - [tmux.nvim](https://github.com/aserowy/tmux.nvim)
     - [nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua)
     - [vim-fugitive](https://github.com/tpope/vim-fugitive)
 - **Treesitter**
