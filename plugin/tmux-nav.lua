@@ -8,6 +8,7 @@ end
 
 ---@alias nvim_direction_t 'h'|'j'|'k'|'l'
 ---@alias tmux_direction_t 'L'|'D'|'U'|'R'
+---@alias tmux_borderpane_direction_t 'left'|'bottom'|'top'|'right'
 
 ---@return string tmux socket path
 local function tmux_get_socket()
@@ -33,73 +34,25 @@ local function tmux_is_zoomed()
     ~= tmux_exec("display-message -p '#{window_zoomed_flag}'"):find('1')
 end
 
----@class tmux_window_pane_t
----@field id integer
----@field x integer
----@field y integer
----@field width integer
----@field height integer
-
----@class tmux_window_layout_t
----@field width integer
----@field height integer
----@field panes table<integer, tmux_window_pane_t>
----@return tmux_window_layout_t?
-local function tmux_get_window_layout()
-  -- Example layout info string: 5a51,178x41,0,0,31
-  local layout_info_str = tmux_exec("display-message -p '#{window_layout}'")
-  if not layout_info_str or layout_info_str == '' then
-    return
-  end
-
-  local layout = {
-    width = tonumber(layout_info_str:match('^%w+,(%d+)x%d+')),
-    height = tonumber(layout_info_str:match('^%w+,%d+x(%d+)')),
-    panes = {},
-  }
-  for pane_info_str in layout_info_str:gmatch('(%d+x%d+,%d+,%d+,%d+)') do
-    local pane_id = tonumber(pane_info_str:match('%d+x%d+,%d+,%d+,(%d+)'))
-    if pane_id then
-      layout.panes[pane_id] = {
-        id = pane_id,
-        x = tonumber(pane_info_str:match('%d+x%d+,(%d+),%d+,%d+')),
-        y = tonumber(pane_info_str:match('%d+x%d+,%d+,(%d+),%d+')),
-        width = tonumber(pane_info_str:match('(%d+)x%d+')),
-        height = tonumber(pane_info_str:match('%d+x(%d+)')),
-      }
-    end
-  end
-  return layout
-end
-
----@return integer current pane
-local function tmux_get_current_pane_id()
-  return tonumber(vim.env.TMUX_PANE:match('%d*')) --[[@as integer]]
-end
+---@type table<nvim_direction_t, tmux_borderpane_direction_t>
+local tmux_pane_position_map = {
+  h = 'left',
+  j = 'bottom',
+  k = 'top',
+  l = 'right',
+}
 
 ---@param direction nvim_direction_t
 ---@return boolean
 local function tmux_at_border(direction)
-  local id = tmux_get_current_pane_id()
-  local layout = tmux_get_window_layout()
-  if not layout then
-    return false
-  end
-
-  local pane = layout.panes[id]
-  if not pane then
-    return false
-  end
-
-  if direction == 'x' then
-    return pane.x == 0
-  elseif direction == 'j' then
-    return pane.y + pane.height == layout.height
-  elseif direction == 'k' then
-    return pane.y == 0
-  else
-    return pane.x + pane.width == layout.width
-  end
+  return nil
+    ~= tmux_exec(
+      string.format(
+        "display-message -p -t '%s' '#{pane_at_%s}'",
+        vim.env.TMUX_PANE,
+        tmux_pane_position_map[direction]
+      )
+    ):find('1')
 end
 
 ---@param direction nvim_direction_t
