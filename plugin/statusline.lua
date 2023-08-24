@@ -140,43 +140,55 @@ end
 ---Get string representation of diagnostics for current buffer
 ---@return string
 function statusline.diag()
-  local diagnostics = vim.diagnostic.get(0)
-  local diagnostics_workspace = vim.diagnostic.get(nil)
-  local counts = { 0, 0, 0, 0 }
-  local counts_workspace = { 0, 0, 0, 0 }
-  for _, diagnostic in ipairs(diagnostics) do
-    counts[diagnostic.severity] = counts[diagnostic.severity] + 1
-  end
-  for _, diagnostic in ipairs(diagnostics_workspace) do
-    counts_workspace[diagnostic.severity] = counts_workspace[diagnostic.severity]
-      + 1
-  end
-  ---@param severity string
-  ---@return string
-  local function get_diagnostics_str(severity)
-    local severity_num = vim.diagnostic.severity[severity:upper()]
-    local count = counts[severity_num]
-    local count_workspace = counts_workspace[severity_num]
-    if count + count_workspace == 0 then
-      return ''
-    end
-    return utils.stl.hl(
-      get_sign_text('DiagnosticSign' .. severity),
-      'StatusLineDiagnostic' .. severity
-    ) .. utils.stl.hl(
-      string.format('%d/%d', count, count_workspace),
-      'StatusLineFaded'
-    )
-  end
-  local result = ''
-  for _, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
-    local diag_str = get_diagnostics_str(severity)
-    if diag_str ~= '' then
-      result = result .. (result == '' and '' or ' ') .. diag_str
-    end
-  end
-  return result == '' and '' or result .. ' '
+  return ''
 end
+
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+  once = true,
+  desc = 'Activate diagnostic update function.',
+  group = vim.api.nvim_create_augroup('StatusLineActivateDiagnostic', {}),
+  callback = function()
+    function statusline.diag()
+      local diagnostics = vim.diagnostic.get(0)
+      local diagnostics_workspace = vim.diagnostic.get(nil)
+      local counts = { 0, 0, 0, 0 }
+      local counts_workspace = { 0, 0, 0, 0 }
+      for _, diagnostic in ipairs(diagnostics) do
+        counts[diagnostic.severity] = counts[diagnostic.severity] + 1
+      end
+      for _, diagnostic in ipairs(diagnostics_workspace) do
+        counts_workspace[diagnostic.severity] = counts_workspace[diagnostic.severity]
+          + 1
+      end
+      ---@param severity string
+      ---@return string
+      local function get_diagnostics_str(severity)
+        local severity_num = vim.diagnostic.severity[severity:upper()]
+        local count = counts[severity_num]
+        local count_workspace = counts_workspace[severity_num]
+        if count + count_workspace == 0 then
+          return ''
+        end
+        return utils.stl.hl(
+          get_sign_text('DiagnosticSign' .. severity),
+          'StatusLineDiagnostic' .. severity
+        ) .. utils.stl.hl(
+          string.format('%d/%d', count, count_workspace),
+          'StatusLineFaded'
+        )
+      end
+      local result = ''
+      for _, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
+        local diag_str = get_diagnostics_str(severity)
+        if diag_str ~= '' then
+          result = result .. (result == '' and '' or ' ') .. diag_str
+        end
+      end
+      return result == '' and '' or result .. ' '
+    end
+    return true
+  end,
+})
 
 ---@class lsp_progress_data_t
 ---@field client_id integer
