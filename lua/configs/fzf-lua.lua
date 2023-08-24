@@ -94,6 +94,7 @@ fzf.setup({
     fzf = {
       -- fzf '--bind=' options
       ['ctrl-z'] = 'abort',
+      ['ctrl-k'] = 'kill-line',
       ['ctrl-u'] = 'unix-line-discard',
       ['ctrl-a'] = 'beginning-of-line',
       ['ctrl-e'] = 'end-of-line',
@@ -122,13 +123,17 @@ fzf.setup({
     },
   },
   fzf_opts = {
+    ['--no-scrollbar'] = '',
+    ['--no-separator'] = '',
     ['--info'] = e('inline-right'),
     ['--layout'] = e('reverse'),
     ['--marker'] = e('+ '),
+    ['--prompt'] = e('/ '),
     ['--border'] = e('none'),
     ['--padding'] = e('0,1'),
     ['--margin'] = e('0'),
     ['--preview-window'] = e('border-sharp'),
+    ['--pointer'] = e(utils.static.icons.ui.ArrowRight),
   },
   previewers = {
     builtin = {
