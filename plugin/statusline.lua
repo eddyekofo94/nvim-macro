@@ -211,19 +211,17 @@ vim.api.nvim_create_autocmd('LspProgress', {
     end
     lsp_prog_data = data
     report_time = vim.uv.hrtime()
-    if data.result.value.kind == 'end' then
-      local _report_time = report_time
-      lsp_prog_data.result.value.message =
-        vim.trim(utils.static.icons.diagnostics.DiagnosticSignOk)
-      -- Clear client message after a short time if received an 'end' message
-      vim.defer_fn(function()
-        -- No new report since the timer was set
-        if _report_time == report_time then
-          lsp_prog_data = nil
-          vim.cmd(redraw_cmd)
-        end
-      end, 2048)
-    end
+    local _report_time = report_time
+    lsp_prog_data.result.value.message =
+      vim.trim(utils.static.icons.diagnostics.DiagnosticSignOk)
+    -- Clear client message after a short time if no new message is received
+    vim.defer_fn(function()
+      -- No new report since the timer was set
+      if _report_time == report_time then
+        lsp_prog_data = nil
+        vim.cmd(redraw_cmd)
+      end
+    end, 2048)
     vim.cmd(redraw_cmd)
   end,
 })
