@@ -250,6 +250,22 @@ local autocmds = {
       end,
     },
   },
+  {
+    { 'TermEnter' },
+    {
+      group = 'TermOptions',
+      desc = 'Disable mousemoveevent in terminal mode.',
+      command = 'let g:mousemev = &mousemev | set nomousemev',
+    },
+  },
+  {
+    { 'TermLeave' },
+    {
+      group = 'TermOptions',
+      desc = 'Restore mousemoveevent after leaving terminal mode.',
+      command = 'if exists("g:mousemev") | let &mousemev = g:mousemev | unlet g:mousemev | endif',
+    },
+  },
 
   {
     { 'QuickFixCmdPost' },
