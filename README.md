@@ -148,7 +148,7 @@ Install the following debug adapters manually:
 ### Other External Tools
 
 - [Lazygit](https://github.com/jesseduffield/lazygit) for improved git integration
-- [Fd](https://github.com/sharkdp/fd) and [Ripgrep](https://github.com/BurntSushi/ripgrep) for the fuzzy finder `telescope`
+- [Fd](https://github.com/sharkdp/fd), [Ripgrep](https://github.com/BurntSushi/ripgrep), and [Fzf](https://github.com/junegunn/fzf) for fuzzy search
 - [Neovim Remote](https://github.com/mhinz/neovim-remote) and [Ranger](https://github.com/ranger/ranger) for file manager support
 - [Pandoc](https://pandoc.org/), [custom scripts](https://github.com/Bekaboo/dot/tree/master/.scripts) and [TexLive](https://www.tug.org/texlive/) (for ArchLinux users, it is `texlive-core` and `texlive-extra`) for markdown → PDF conversion
 
@@ -350,11 +350,12 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 45 (package manager included).
+Total # of plugins: 44 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
     - [nvim-web-devicons](https://github.com/kyazdani42/nvim-web-devicons)
+    - [telescope-fzf-native.nvim](https://github.com/nvim-telescope/telescope-fzf-native.nvim)
 - **Completion**
     - [nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
     - [cmp-calc](https://github.com/hrsh7th/cmp-calc)
@@ -384,9 +385,7 @@ Total # of plugins: 45 (package manager included).
     - [fcitx.nvim](https://github.com/h-hg/fcitx.nvim)
     - [vim-easy-align](https://github.com/junegunn/vim-easy-align)
 - **Tools**
-    - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
-    - [telescope-fzf-native.nvim](https://github.com/nvim-telescope/telescope-fzf-native.nvim)
-    - [telescope-undo.nvim](https://github.com/debugloop/telescope-undo.nvim)
+    - [fzf-lua](https://github.com/ibhagwan/fzf-lua)
     - [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)
     - [flatten.nvim](https://github.com/willothy/flatten.nvim)
     - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)

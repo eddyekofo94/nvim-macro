@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 12 Aug 2023 11:28:47 PM CST
+-- Last Updated: Thu 24 Aug 2023 05:29:03 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -546,6 +546,17 @@ local hlgroups = {
   TelescopePromptCounter = { link = 'Comment' },
   TelescopePromptPrefix = { fg = palette.orange },
   TelescopeSelectionCaret = { fg = palette.orange, bg = palette.thunder },
+
+  -- fzf-lua (can share some hlgroups with telescope)
+  FzfLuaBufFlagAlt = { link = 'FzfLuaBufFlagCur' },
+  FzfLuaBufFlagCur = { link = 'CursorLineNr' },
+  FzfLuaBufLineNr = { link = 'LineNr' },
+  FzfLuaBufName = { link = 'Directory' },
+  FzfLuaBufNr = { link = 'LineNr' },
+  FzfLuaHeaderBind = { link = 'Comment' },
+  FzfLuaHeaderText = { link = 'Comment' },
+  FzfLuaTabMarker = { link = 'Keyword' },
+  FzfLuaTabTitle = { link = 'Title' },
 
   -- nvim-dap-ui
   DapUIBreakpointsCurrentLine = { link = 'CursorLineNr' },

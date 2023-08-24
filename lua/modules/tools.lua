@@ -1,17 +1,22 @@
 return {
   {
-    'nvim-telescope/telescope.nvim',
-    cmd = { 'Telescope', 'FZF' },
+    'ibhagwan/fzf-lua',
+    cmd = { 'FzfLua', 'F', 'FZ', 'FZF' },
     keys = {
       '<Leader>.',
       '<Leader>F',
+      '<Leader>f"',
       '<Leader>f',
       '<Leader>f*',
       '<Leader>f/',
+      '<Leader>f:',
       '<Leader>f;',
       '<Leader>fD',
+      '<Leader>fE',
+      '<Leader>fH',
       '<Leader>fO',
       '<Leader>fS',
+      '<Leader>fa',
       '<Leader>fb',
       '<Leader>fc',
       '<Leader>fd',
@@ -19,42 +24,19 @@ return {
       '<Leader>ff',
       '<Leader>fg',
       '<Leader>fh',
-      '<Leader>fH',
       '<Leader>fk',
-      '<Leader>fm',
+      '<Leader>fl',
       '<Leader>fm',
       '<Leader>fo',
-      '<Leader>fp',
-      '<Leader>fq',
+      '<Leader>fq/',
       '<Leader>fq:',
       '<Leader>fq?',
       '<Leader>fr',
       '<Leader>fs',
-      '<Leader>fu',
-    },
-    dependencies = {
-      'plenary.nvim',
-      'telescope-fzf-native.nvim',
-      'telescope-undo.nvim',
     },
     config = function()
-      require('configs.telescope')
+      require('configs.fzf-lua')
     end,
-  },
-
-  {
-    'nvim-telescope/telescope-fzf-native.nvim',
-    -- If it complains 'fzf doesn't exists, run 'make' inside
-    -- the root folder of this plugin
-    build = 'make',
-    lazy = true,
-    dependencies = { 'plenary.nvim', 'telescope.nvim' },
-  },
-
-  {
-    'debugloop/telescope-undo.nvim',
-    lazy = true,
-    dependencies = { 'plenary.nvim', 'telescope.nvim' },
   },
 
   {
