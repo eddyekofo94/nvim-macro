@@ -1,12 +1,3 @@
-local set_autocmds = function(autocmds)
-  for _, autocmd in ipairs(autocmds) do
-    if autocmd[2].group and vim.fn.exists('#' .. autocmd[2].group) == 0 then
-      vim.api.nvim_create_augroup(autocmd[2].group, { clear = true })
-    end
-    vim.api.nvim_create_autocmd(unpack(autocmd))
-  end
-end
-
 local autocmds = {
   {
     { 'TextYankPost' },
@@ -351,4 +342,10 @@ local autocmds = {
   },
 }
 
-set_autocmds(autocmds)
+for _, au in ipairs(autocmds) do
+  local audef = au[2]
+  if audef.group and vim.fn.exists('#' .. audef.group) == 0 then
+    vim.api.nvim_create_augroup(audef.group, {})
+  end
+  vim.api.nvim_create_autocmd(unpack(au))
+end
