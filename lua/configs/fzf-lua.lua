@@ -1,5 +1,6 @@
 local fzf = require('fzf-lua')
 local actions = require('fzf-lua.actions')
+local path = require('fzf-lua.path')
 local utils = require('utils')
 
 local e = vim.fn.shellescape
@@ -26,6 +27,22 @@ local cfg_vertpreview = {
     },
   },
 }
+
+local _vimcmd_file = actions.vimcmd_file
+
+---Override the default file edit action, resolve each entry to absolute path
+---before opening, this fixes issues of trying to open a non-existing relative
+---path with autochdir enabled when multiple files are selected
+---@diagnostic disable-next-line: duplicate-set-field
+function actions.vimcmd_file(vimcmd, selected, opts)
+  for idx = 1, #selected do
+    local entry = path.entry_to_file(selected[idx], opts, opts.force_uri)
+    if entry.path and entry.path ~= '<none>' then
+      selected[idx] = vim.uv.fs_realpath(entry.path) or selected[idx]
+    end
+  end
+  _vimcmd_file(vimcmd, selected, opts)
+end
 
 fzf.setup({
   winopts = {
