@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri 25 Aug 2023 04:25:51 PM CST
+-- Last Updated: Sat 26 Aug 2023 12:34:15 AM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -134,7 +134,7 @@ local hlgroups = {
   MsgArea = { link = 'Normal' },
   MsgSeparator = { link = 'StatusLine' },
   MatchParen = { bg = palette.subtle, bold = true },
-  NonText = { fg = palette.subtle },
+  NonText = { fg = palette.shaded },
   Pmenu = { fg = palette.faded, bg = palette.highlight },
   PmenuSbar = { bg = palette.subtle },
   PmenuSel = { fg = palette.foreground, bg = palette.subtle, bold = true },
