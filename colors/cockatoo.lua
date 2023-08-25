@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri 25 Aug 2023 04:29:00 PM CST
+-- Last Updated: Sat 26 Aug 2023 12:00:13 AM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -708,8 +708,8 @@ local hlgroups = {
   StatusLineGitAdded = { fg = palette.tea, bg = palette.deepsea },
   StatusLineGitChanged = { fg = palette.lavender, bg = palette.deepsea },
   StatusLineGitRemoved = { fg = palette.scarlet, bg = palette.deepsea },
-  StatusLineHeader = { fg = palette.jeans, bg = palette.steel },
-  StatusLineHeaderModified = { fg = palette.jeans, bg = palette.pink },
+  StatusLineHeader = { fg = palette.jeans, bg = palette.pigeon },
+  StatusLineHeaderModified = { fg = palette.jeans, bg = palette.ochre },
   StatusLineStrong = { fg = palette.white, bg = palette.deepsea, bold = true },
 
   -- glance.nvim
