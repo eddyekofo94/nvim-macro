@@ -1,6 +1,7 @@
 vim.bo.buflisted = false
 vim.opt_local.rnu = false
 vim.opt_local.signcolumn = 'no'
+vim.opt_local.statuscolumn = ''
 
 -- stylua: ignore start
 vim.keymap.set('n', '<Tab>', '<CR>zz<C-w>p',  { buffer = true })
