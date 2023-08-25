@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu 24 Aug 2023 05:29:03 PM CST
+-- Last Updated: Fri 25 Aug 2023 04:29:00 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -453,7 +453,7 @@ local hlgroups = {
   manOptionDesc = { fg = palette.ochre },
   manReference = { link = 'htmlLink' },
   manSectionHeading = { link = 'manBold' },
-  manUnderline = { fg = palette.cerulean, italic = true },
+  manUnderline = { fg = palette.cerulean },
   -- }}}2
 
   -- Plugins {{{2

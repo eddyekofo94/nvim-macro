@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu 24 Aug 2023 05:29:48 PM CST
+-- Last Updated: Fri 25 Aug 2023 04:25:51 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -415,12 +415,12 @@ local hlgroups = {
   helpCommand = { fg = palette.salient },
   helpBacktick = { fg = palette.salient },
   -- Man
-  manBold = { fg = palette.faded, bold = true },
-  manItalic = { fg = palette.salient, italic = true },
+  manBold = { fg = palette.salient, bold = true },
+  manItalic = { fg = palette.faded, italic = true },
   manOptionDesc = { fg = palette.faded },
   manReference = { link = 'htmlLink' },
   manSectionHeading = { link = 'manBold' },
-  manUnderline = { fg = palette.salient, italic = true },
+  manUnderline = { fg = palette.popout },
   -- }}}2
 
   -- Plugins {{{2
