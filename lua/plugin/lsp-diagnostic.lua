@@ -64,6 +64,85 @@ local function setup_keymaps()
   -- stylua: ignore end
 end
 
+---Setup LSP handlers overrides
+---@return nil
+local function setup_lsp_overrides()
+  -- Show notification if no references, definition, declaration,
+  -- implementation or type definition is found
+  local handlers = {
+    ['textDocument/references'] = vim.lsp.handlers['textDocument/references'],
+    ['textDocument/definition'] = vim.lsp.handlers['textDocument/definition'],
+    ['textDocument/declaration'] = vim.lsp.handlers['textDocument/declaration'],
+    ['textDocument/implementation'] = vim.lsp.handlers['textDocument/implementation'],
+    ['textDocument/typeDefinition'] = vim.lsp.handlers['textDocument/typeDefinition'],
+  }
+  for method, handler in pairs(handlers) do
+    vim.lsp.handlers[method] = function(err, result, ctx, cfg)
+      if not result or type(result) == 'table' and vim.tbl_isempty(result) then
+        vim.notify(
+          '[LSP] no ' .. method:match('/(%w*)$') .. ' found',
+          vim.log.levels.WARN
+        )
+      end
+      handler(err, result, ctx, cfg)
+    end
+  end
+
+  -- Configure diagnostics style
+  vim.lsp.handlers['textDocument/publishDiagnostics'] =
+    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+      -- Enable underline, use default values
+      underline = true,
+      -- Enable virtual text, override spacing to 4
+      virtual_text = {
+        spacing = 4,
+        prefix = vim.trim(utils.static.icons.AngleLeft),
+      },
+    })
+
+  -- Configure hovering window style
+  local opts_override_floating_preview = {
+    border = 'solid',
+    max_width = math.max(80, math.ceil(vim.go.columns * 0.75)),
+    max_height = math.max(20, math.ceil(vim.go.lines * 0.4)),
+    close_events = {
+      'CursorMoved',
+      'CursorMovedI',
+      'ModeChanged',
+      'WinScrolled',
+    },
+  }
+  vim.api.nvim_create_autocmd('VimResized', {
+    desc = 'Update LSP floating window maximum size on VimResized.',
+    group = vim.api.nvim_create_augroup('LspUpdateFloatingWinMaxSize', {}),
+    callback = function()
+      opts_override_floating_preview.max_width =
+        math.max(80, math.ceil(vim.go.columns * 0.75))
+      opts_override_floating_preview.max_height =
+        math.max(20, math.ceil(vim.go.lines * 0.4))
+    end,
+  })
+  -- Hijack LSP floating window function to use custom options
+  local _open_floating_preview = vim.lsp.util.open_floating_preview
+  ---@param contents table of lines to show in window
+  ---@param syntax string of syntax to set for opened buffer
+  ---@param opts table with optional fields (additional keys are passed on to |nvim_open_win()|)
+  ---@returns bufnr,winnr buffer and window number of the newly created floating preview window
+  ---@diagnostic disable-next-line: duplicate-set-field
+  function vim.lsp.util.open_floating_preview(contents, syntax, opts)
+    local source_ft = vim.bo[vim.api.nvim_get_current_buf()].ft
+    opts = vim.tbl_deep_extend('force', opts, opts_override_floating_preview)
+    -- If source filetype if markdown or tex, use markdown syntax
+    -- and disable stylizing markdown to get math concealing provided
+    -- by vimtex in the floating window
+    if source_ft == 'markdown' or source_ft == 'tex' then
+      opts.stylize_markdown = false
+      syntax = 'markdown'
+    end
+    return _open_floating_preview(contents, syntax, opts)
+  end
+end
+
 ---@class lsp_command_parsed_arg_t : parsed_arg_t
 ---@field apply boolean|nil
 ---@field async boolean|nil
@@ -870,17 +949,35 @@ local function setup_commands(meta, subcommand_info_list, fn_scope)
   end
 end
 
----Automatically enable / disable diagnostics on mode change
+---Automatically enable / disable diagnostics on mode change & optionset
 ---@return nil
-local function setup_diagnostics_on_mode_change()
+local function setup_diagnostics_autoswitch()
+  local groupid = vim.api.nvim_create_augroup('LspDiagnosticSwitch', {})
   vim.api.nvim_create_autocmd('ModeChanged', {
     desc = 'LSP diagnostics on mode change.',
-    group = vim.api.nvim_create_augroup('LspDiagnostic', { clear = true }),
+    group = groupid,
     callback = function(info)
       if vim.fn.match(info.match, '.*:[iRsS\x13].*') ~= -1 then
         vim.diagnostic.disable(info.buf)
         vim.b._lsp_diagnostics_temp_disabled = true
       elseif not vim.wo.diff and vim.b._lsp_diagnostics_temp_disabled then
+        vim.diagnostic.enable(info.buf)
+        vim.b._lsp_diagnostics_temp_disabled = nil
+      end
+    end,
+  })
+  vim.api.nvim_create_autocmd('OptionSet', {
+    desc = 'Disable diagnostics in diff mode.',
+    pattern = 'diff',
+    group = groupid,
+    callback = function(info)
+      if vim.v.option_new == '1' then
+        vim.diagnostic.disable(info.buf)
+        vim.b._lsp_diagnostics_temp_disabled = true
+      elseif
+        vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
+        and vim.b._lsp_diagnostics_temp_disabled
+      then
         vim.diagnostic.enable(info.buf)
         vim.b._lsp_diagnostics_temp_disabled = nil
       end
@@ -908,14 +1005,31 @@ local function setup_lsp_autoformat()
   })
 end
 
+---Set up diagnostic signs
+---@return nil
+local function setup_diagnostic_signs()
+  local icons = utils.static.icons
+  for _, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
+    local sign_name = 'DiagnosticSign' .. severity
+    vim.fn.sign_define(sign_name, {
+      text = icons[sign_name],
+      texthl = sign_name,
+      numhl = sign_name,
+      culhl = sign_name .. 'Cul',
+    })
+  end
+end
+
 ---Set up LSP and diagnostic
 ---@return nil
 local function setup()
   setup_keymaps()
+  setup_lsp_overrides()
+  setup_lsp_autoformat()
+  setup_diagnostic_signs()
+  setup_diagnostics_autoswitch()
   setup_commands('Lsp', subcommands.lsp.buf, vim.lsp.buf)
   setup_commands('Diagnostic', subcommands.diagnostic, vim.diagnostic)
-  setup_lsp_autoformat()
-  setup_diagnostics_on_mode_change()
 end
 
 return {
