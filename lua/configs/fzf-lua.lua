@@ -143,13 +143,13 @@ fzf.setup({
     ['--no-separator'] = '',
     ['--info'] = e('inline-right'),
     ['--layout'] = e('reverse'),
-    ['--marker'] = e('+ '),
+    ['--marker'] = e('+'),
+    ['--pointer'] = e('→'),
     ['--prompt'] = e('/ '),
     ['--border'] = e('none'),
     ['--padding'] = e('0,1'),
     ['--margin'] = e('0'),
     ['--preview-window'] = e('border-sharp'),
-    ['--pointer'] = e(utils.static.icons.ui.ArrowRight),
   },
   previewers = {
     builtin = {
