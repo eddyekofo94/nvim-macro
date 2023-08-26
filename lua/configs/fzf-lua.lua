@@ -18,12 +18,11 @@ local cfg_smallwin_nopreview = {
   },
 }
 
-local cfg_vertpreview = {
+local cfg_prefer_vertpreview = {
   winopts = {
-    height = 0.75,
-    width = 0.6,
     preview = {
-      layout = 'vertical',
+      layout = 'flex',
+      flip_columns = 160,
     },
   },
 }
@@ -202,8 +201,8 @@ fzf.setup({
   commands = cfg_smallwin_nopreview,
   registers = cfg_smallwin_nopreview,
   search_history = cfg_smallwin_nopreview,
-  autocmds = cfg_vertpreview,
-  keymaps = cfg_vertpreview,
+  autocmds = cfg_prefer_vertpreview,
+  keymaps = cfg_prefer_vertpreview,
 })
 
 vim.keymap.set('n', '<Leader>.', fzf.files)
