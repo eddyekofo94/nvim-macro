@@ -19,6 +19,9 @@ function M.get(opts)
     return rawget(_G.winbar.bars, opts.buf) or {}
   end
   if opts.win then
+    if not vim.api.nvim_win_is_valid(opts.win) then
+      return
+    end
     local buf = vim.api.nvim_win_get_buf(opts.win)
     return rawget(_G.winbar.bars, buf)
       and rawget(_G.winbar.bars[buf], opts.win)
