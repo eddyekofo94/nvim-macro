@@ -340,6 +340,35 @@ local autocmds = {
       end,
     },
   },
+
+  {
+    { 'CursorMoved' },
+    {
+      desc = 'Record cursor position in visual mode if virtualedit is set.',
+      group = 'FixVirtualEditCursorPos',
+      callback = function()
+        if vim.wo.ve:find('all') then
+          vim.w.ve_cursor = vim.fn.getcurpos()
+        end
+      end,
+    },
+  },
+  {
+    { 'ModeChanged' },
+    {
+      desc = 'Keep cursor position after entering normal mode from visual mode with virtual edit enabled.',
+      group = 'FixVirtualEditCursorPos',
+      pattern = '[vV\x16]*:n',
+      callback = function()
+        if vim.wo.ve:find('all') and vim.w.ve_cursor then
+          vim.api.nvim_win_set_cursor(0, {
+            vim.w.ve_cursor[2],
+            vim.w.ve_cursor[3] + vim.w.ve_cursor[4] - 1,
+          })
+        end
+      end,
+    },
+  },
 }
 
 for _, au in ipairs(autocmds) do

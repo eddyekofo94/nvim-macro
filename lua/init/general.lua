@@ -29,6 +29,7 @@ opt.smoothscroll   = true
 opt.completeopt    = 'menuone'
 opt.conceallevel   = 2
 opt.autowriteall   = true
+opt.virtualedit    = 'block'
 -- stylua: ignore end
 
 -- Cursor shape
