@@ -42,6 +42,7 @@ local autocmds = {
     { 'WinClosed' },
     {
       pattern = '*',
+      nested = true,
       group = 'WinCloseJmp',
       desc = 'Jump to last accessed window on closing the current one.',
       command = "if expand('<amatch>') == win_getid() | wincmd p | endif",
