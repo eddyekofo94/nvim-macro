@@ -216,10 +216,7 @@ end
 ---@return any
 local function arg_handler_item(args)
   for _, item in pairs(args) do
-    return type(item) == 'string'
-        and vim.uv.fs_stat(vim.fn.fnamemodify(item, ':p'))
-        and vim.fn.resolve(vim.fn.fnamemodify(item, ':p'))
-      or item
+    return type(item) == 'string' and vim.uv.fs_realpath(item) or item
   end
 end
 
