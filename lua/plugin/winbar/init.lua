@@ -71,7 +71,7 @@ local function setup(opts)
   vim.api.nvim_create_autocmd({ 'BufDelete', 'BufUnload', 'BufWipeOut' }, {
     group = groupid,
     callback = function(info)
-      utils.bar.exec({ buf = info.buf }, 'del')
+      utils.bar.exec('del', { buf = info.buf })
       _G.winbar.bars[info.buf] = nil
     end,
     desc = 'Remove winbar from cache on buffer delete/unload/wipeout.',
@@ -82,13 +82,13 @@ local function setup(opts)
       callback = function(info)
         if info.event == 'WinResized' then
           for _, win in ipairs(vim.v.event.windows) do
-            utils.bar.exec({ win = win }, 'update')
+            utils.bar.exec('update', { win = win })
           end
         else
-          utils.bar.exec({
+          utils.bar.exec('update', {
             win = info.event == 'WinScrolled' and tonumber(info.match)
               or vim.api.nvim_get_current_win(),
-          }, 'update')
+          })
         end
       end,
       desc = 'Update a single winbar.',
@@ -98,7 +98,7 @@ local function setup(opts)
     vim.api.nvim_create_autocmd(configs.opts.general.update_events.buf, {
       group = groupid,
       callback = function(info)
-        utils.bar.exec({ buf = info.buf }, 'update')
+        utils.bar.exec('update', { buf = info.buf })
       end,
       desc = 'Update all winbars associated with buf.',
     })
@@ -110,7 +110,7 @@ local function setup(opts)
         if vim.tbl_isempty(utils.bar.get({ buf = info.buf })) then
           return
         end
-        utils.bar.exec(nil, 'update')
+        utils.bar.exec('update')
       end,
       desc = 'Update all winbars.',
     })
@@ -118,7 +118,7 @@ local function setup(opts)
   vim.api.nvim_create_autocmd({ 'WinClosed' }, {
     group = groupid,
     callback = function(info)
-      utils.bar.exec({ win = tonumber(info.match) }, 'del')
+      utils.bar.exec('del', { win = tonumber(info.match) })
     end,
     desc = 'Remove winbar from cache on window closed.',
   })

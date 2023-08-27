@@ -140,8 +140,8 @@ M.opts = {
           if prev_menu and prev_menu.sub_menu then
             prev_menu.sub_menu:close()
           else
-            utils.menu.exec(nil, 'close')
-            utils.bar.exec(nil, 'update_current_context_hl')
+            utils.menu.exec('close')
+            utils.bar.exec('update_current_context_hl')
           end
           if vim.api.nvim_win_is_valid(mouse.winid) then
             vim.api.nvim_set_current_win(mouse.winid)

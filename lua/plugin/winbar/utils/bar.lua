@@ -8,7 +8,7 @@ local M = {}
 --- - If neither `opts.win` nor `opts.buf` is specified, return all winbars
 ---   in the form of `table<buf, table<win, winbar_t>>`
 ---@param opts {win: integer?, buf: integer?}?
----@return winbar_t?|table<integer, winbar_t>|table<integer, table<integer, winbar_t>>
+---@return (winbar_t?)|table<integer, winbar_t>|table<integer, table<integer, winbar_t>>
 function M.get(opts)
   opts = opts or {}
   if opts.buf then
@@ -42,30 +42,35 @@ end
 --- - If both `opts.win` and `opts.buf` are specified, call the winbar attached
 ---   the window that contains the buffer;
 --- - If neither `opts.win` nor `opts.buf` is specified, call all winbars
----@param opts {win: integer?, buf: integer?}?
+--- - `opts.params` specifies params passed to the method
 ---@param method string
----@vararg any? params passed to the method
----@return any? return value of the method
-function M.exec(opts, method, ...)
+---@param opts {win: integer?, buf: integer?, params: table?}?
+---@return any?: return values of the method
+function M.exec(method, opts)
   opts = opts or {}
+  opts.params = opts.params or {}
   local winbars = M.get(opts)
   if not winbars or vim.tbl_isempty(winbar) then
     return
   end
   if opts.win then
-    return winbars[method](winbars, ...)
+    return winbars[method](winbars, unpack(opts.params))
   end
   if opts.buf then
     local results = {}
     for _, winbar in pairs(winbars) do
-      table.insert(results, { winbar[method](winbar, ...) })
+      table.insert(results, {
+        winbar[method](winbar, unpack(opts.params)),
+      })
     end
     return results
   end
   local results = {}
   for _, buf_winbars in pairs(winbars) do
     for _, winbar in pairs(buf_winbars) do
-      table.insert(results, { winbar[method](winbar, ...) })
+      table.insert(results, {
+        winbar[method](winbar, unpack(opts.params)),
+      })
     end
   end
   return results
