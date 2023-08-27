@@ -23,6 +23,7 @@ return {
       '<Leader>fe',
       '<Leader>ff',
       '<Leader>fg',
+      '<Leader>fG',
       '<Leader>fh',
       '<Leader>fk',
       '<Leader>fl',
