@@ -52,6 +52,8 @@ glance.setup({
       ['<C-d>'] = actions.preview_scroll_win(-5),
       ['<C-f>'] = actions.preview_scroll_win(10),
       ['<C-b>'] = actions.preview_scroll_win(-10),
+      ['<S-Up>'] = actions.preview_scroll_win(5),
+      ['<S-Down>'] = actions.preview_scroll_win(-5),
       ['<M-v>'] = actions.jump_vsplit,
       ['<C-v>'] = actions.jump_vsplit,
       ['<M-s>'] = actions.jump_split,
