@@ -160,8 +160,8 @@ vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
       -- 4. Fold column
       vim.wo.statuscolumn = table.concat({
         '%{%&scl==#"no"?"":(v:virtnum?"":v:lua.statuscol.get_sign(["Dap","Diagnostic"],"dapdiags"))%} ',
-        '%=%{%"%#".v:lua.statuscol.get_lnum_hl()."#".(v:virtnum?"":(&nu?(&rnu?(v:relnum?v:relnum:printf("%-".max([3,len(line("$"))])."S",v:lnum)):v:lnum):(&rnu?v:relnum:"")))%} ',
-        '%{%&scl==#"no"?"":(v:lua.statuscol.get_sign(["GitSigns"],"gitsigns"))%} ',
+        '%=%{%"%#".v:lua.statuscol.get_lnum_hl()."#".(v:virtnum?"":(&nu?(&rnu?(v:relnum?v:relnum:printf("%-".max([3,len(line("$"))])."S",v:lnum)):v:lnum)." ":(&rnu?v:relnum." ":"")))%}',
+        '%{%&scl==#"no"?"":(v:lua.statuscol.get_sign(["GitSigns"],"gitsigns"))." "%}',
         '%C',
       })
     else
