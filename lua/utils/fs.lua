@@ -33,7 +33,8 @@ function M.proj_dir(fpath, patterns)
       type = pattern:match('/$') and 'directory' or 'file',
     })[1]
     if root and vim.uv.fs_stat(root) then
-      return vim.fs.dirname(root)
+      local dirname = vim.fs.dirname(root)
+      return dirname and vim.uv.fs_realpath(dirname) --[[@as string]]
     end
   end
 end

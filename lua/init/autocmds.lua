@@ -83,13 +83,17 @@ local autocmds = {
           return
         end
         if proj_dir then
-          vim.cmd.lcd(proj_dir)
+          vim.schedule(function()
+            vim.cmd.lcd(proj_dir)
+          end)
           return
         end
         local dirname = vim.fs.dirname(info.file)
         local stat = vim.uv.fs_stat(dirname)
         if stat and stat.type == 'directory' and proj_dir ~= current_dir then
-          vim.cmd.lcd(dirname)
+          vim.schedule(function()
+            vim.cmd.lcd(dirname)
+          end)
         end
       end,
     },
