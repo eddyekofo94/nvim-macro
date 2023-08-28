@@ -1,4 +1,4 @@
-NVIM v0.10.0-dev-915+g898ef1835d
+NVIM v0.10.0-dev-976+g1ad13e07d2
 Build type: Release
 LuaJIT 2.1.1692616192
 
