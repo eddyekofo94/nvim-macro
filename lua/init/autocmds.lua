@@ -372,10 +372,13 @@ local autocmds = {
   },
 }
 
-for _, au in ipairs(autocmds) do
-  local audef = au[2]
-  if audef.group and vim.fn.exists('#' .. audef.group) == 0 then
-    vim.api.nvim_create_augroup(audef.group, {})
+if not vim.g.loaded_autocmds then
+  for _, au in ipairs(autocmds) do
+    local audef = au[2]
+    if audef.group and vim.fn.exists('#' .. audef.group) == 0 then
+      vim.api.nvim_create_augroup(audef.group, {})
+    end
+    vim.api.nvim_create_autocmd(unpack(au))
   end
-  vim.api.nvim_create_autocmd(unpack(au))
+  vim.g.loaded_autocmds = true
 end
