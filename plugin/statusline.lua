@@ -269,6 +269,7 @@ local components = {
   mode         = '%{%v:lua.statusline.mode()%}',
   padding      = '%#None#  %*',
   pos          = '%#StatusLineFaded#%l:%c%* ',
+  pos_nc       = '%#StatusLineWeak#%l:%c%* ',
   truncate     = '%<',
 }
 -- stylua: ignore end
@@ -296,7 +297,7 @@ vim.api.nvim_create_autocmd('WinLeave', {
       components.fname_nc,
       components.align,
       components.truncate,
-      components.pos,
+      components.pos_nc,
     })
   end,
 })
