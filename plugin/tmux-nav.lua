@@ -90,12 +90,12 @@ end
 ---pane is running vim
 ---@return nil
 local function tmux_set_isvim()
-  tmux_exec('set -p @is_vim yes')
+  tmux_exec(string.format('set -pt %s @is_vim yes', vim.env.TMUX_PANE))
 end
 
 ---@return nil
 local function tmux_unset_isvim()
-  tmux_exec('set -p -u @is_vim')
+  tmux_exec(string.format('set -put %s @is_vim', vim.env.TMUX_PANE))
 end
 
 ---@param direction nvim_direction_t
