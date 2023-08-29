@@ -84,7 +84,9 @@ local function lazygit_toggle(dir)
   elseif last_visited_git_repo and lazygits[last_visited_git_repo] then
     lazygits[last_visited_git_repo]:toggle()
   else
-    vim.notify('[lazygit] not inside git repo', vim.log.levels.INFO)
+    if lazygits[dir] then
+      lazygits[dir]:toggle()
+    end
   end
 end
 
