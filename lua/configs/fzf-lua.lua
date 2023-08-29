@@ -1,6 +1,5 @@
 local fzf = require('fzf-lua')
 local actions = require('fzf-lua.actions')
-local path = require('fzf-lua.path')
 local utils = require('utils')
 
 local e = vim.fn.shellescape
