@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 26 Aug 2023 10:47:50 PM CST
+-- Last Updated: Tue 29 Aug 2023 10:32:23 AM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -500,7 +500,7 @@ local hlgroups = {
   TelescopeMatching = { fg = palette.salient, bold = true },
   TelescopePromptCounter = { link = 'Comment' },
   TelescopePromptPrefix = { fg = palette.critical },
-  TelescopeSelection = { bg = palette.shaded },
+  TelescopeSelection = { fg = palette.foreground, bg = palette.shaded },
   TelescopeMultiIcon = { fg = palette.salient, bold = true },
   TelescopeMultiSelection = { bg = palette.shaded, bold = true },
   TelescopeSelectionCaret = { fg = palette.critical, bg = palette.shaded },
