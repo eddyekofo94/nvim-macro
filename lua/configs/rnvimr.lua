@@ -95,11 +95,12 @@ vim.api.nvim_create_autocmd('WinClosed', {
   group = 'RnvimrSetCmdHeight',
   desc = 'Restore cmdheight when rnvimr is closed.',
   callback = function(info)
+    local win = tonumber(info.match) --[[@as integer]]
     if
       vim.g.cmdheight
       and vim.g.cmdheight ~= vim.go.cmdheight
-      and vim.bo[vim.api.nvim_win_get_buf(tonumber(info.match))].ft
-        == 'rnvimr'
+      and vim.api.nvim_win_is_valid(win)
+      and vim.bo[vim.api.nvim_win_get_buf(win)].ft == 'rnvimr'
     then
       win_call_keep_views(vim.api.nvim_tabpage_list_wins(0), function()
         vim.go.cmdheight = vim.g.cmdheight
