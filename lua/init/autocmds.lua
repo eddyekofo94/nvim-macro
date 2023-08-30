@@ -122,7 +122,7 @@ local autocmds = {
         vim.keymap.set('n', 'o', '<Cmd>startinsert<CR>', { buffer = buf })
         if vim.bo[buf].buftype == 'terminal' then
           vim.keymap.set('t', '<Esc>', function()
-            return require('utils').term.running_shell()
+            return require('utils').term.shall_esc()
                 and (function()
                   vim.b.t_esc = vim.uv.hrtime()
                   return true
@@ -137,7 +137,7 @@ local autocmds = {
           vim.keymap.set('n', '<Esc>', function()
             return vim.b.t_esc
                 and vim.uv.hrtime() - vim.b.t_esc <= vim.go.tm * 1e6
-                and require('utils').term.running_shell()
+                and require('utils').term.shall_esc()
                 and '<Cmd>startinsert<CR><Esc>'
               or '<Esc>'
           end, {
