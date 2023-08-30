@@ -133,6 +133,18 @@ local function nvim_in_floating_win()
   return vim.fn.win_gettype() == 'popup'
 end
 
+---Check if nvim has only one window in current session
+---@return boolean
+local function nvim_has_only_win()
+  return #vim.api.nvim_list_wins() <= 1
+end
+
+---Check if nvim has only one window in current tab
+---@return boolean
+local function nvim_tabpage_has_only_win()
+  return vim.fn.winnr('$') <= 1
+end
+
 ---@param direction nvim_direction_t
 ---@param count integer? default to 1
 ---@return nil
@@ -168,6 +180,40 @@ vim.keymap.set({ 'n', 'x' }, '<M-h>', navigate_wrap('h'))
 vim.keymap.set({ 'n', 'x' }, '<M-j>', navigate_wrap('j'))
 vim.keymap.set({ 'n', 'x' }, '<M-k>', navigate_wrap('k'))
 vim.keymap.set({ 'n', 'x' }, '<M-l>', navigate_wrap('l'))
+
+---Map a key in normal and visual mode to a tmux command with fallback
+---@param key string
+---@param command string
+---@param condition? fun(): boolean
+---@return nil
+local function tmux_mapkey_fallback(key, command, condition)
+  condition = condition
+    or function()
+      return not tmux_is_zoomed() and nvim_tabpage_has_only_win()
+    end
+  require('utils').keymap.amend({ 'n', 'x' }, key, function(fallback)
+    if condition() then
+      tmux_exec(command)
+      return
+    end
+    fallback()
+  end)
+end
+
+-- stylua: ignore start
+tmux_mapkey_fallback('<M-p>', 'last-pane')
+tmux_mapkey_fallback('<M-R>', 'swap-pane -U')
+tmux_mapkey_fallback('<M-r>', 'swap-pane -D')
+tmux_mapkey_fallback('<M-o>', "confirm 'kill-pane -a'")
+tmux_mapkey_fallback('<M-=>', "confirm 'select-layout tiled'")
+tmux_mapkey_fallback('<M-c>', 'confirm kill-pane', function() return not tmux_is_zoomed() and nvim_has_only_win() end)
+tmux_mapkey_fallback('<M-<>', 'resize-pane -L 4', function() return not tmux_is_zoomed() and (nvim_at_border('l') and (nvim_at_border('h') or not tmux_at_border('l'))) end)
+tmux_mapkey_fallback('<M->>', 'resize-pane -R 4', function() return not tmux_is_zoomed() and (nvim_at_border('l') and (nvim_at_border('h') or not tmux_at_border('l'))) end)
+tmux_mapkey_fallback('<M-,>', 'resize-pane -L 4', function() return not tmux_is_zoomed() and (nvim_at_border('l') and (nvim_at_border('h') or not tmux_at_border('l'))) end)
+tmux_mapkey_fallback('<M-.>', 'resize-pane -R 4', function() return not tmux_is_zoomed() and (nvim_at_border('l') and (nvim_at_border('h') or not tmux_at_border('l'))) end)
+tmux_mapkey_fallback('<M-->', [[run "tmux resize-pane -y $(($(tmux display -p '#{pane_height}') - 2))"]], function() return not tmux_is_zoomed() and (nvim_at_border('j') and (nvim_at_border('k') or not tmux_at_border('j'))) end)
+tmux_mapkey_fallback('<M-+>', [[run "tmux resize-pane -y $(($(tmux display -p '#{pane_height}') + 2))"]], function() return not tmux_is_zoomed() and (nvim_at_border('j') and (nvim_at_border('k') or not tmux_at_border('j'))) end)
+-- stylua: ignore end
 
 -- Set @is_vim and register relevant autocmds callbacks if not already
 -- in a vim/nvim session

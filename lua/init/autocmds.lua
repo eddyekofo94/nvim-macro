@@ -120,37 +120,35 @@ local autocmds = {
       callback = function(info)
         local buf = info.buf
         vim.keymap.set('n', 'o', '<Cmd>startinsert<CR>', { buffer = buf })
-        if vim.bo[buf].buftype == 'terminal' then
-          vim.keymap.set('t', '<Esc>', function()
-            return require('utils').term.shall_esc()
-                and (function()
-                  vim.b.t_esc = vim.uv.hrtime()
-                  return true
-                end)()
-                and '<Cmd>stopinsert<CR>'
-              or '<Esc>'
-          end, {
-            buffer = buf,
-            expr = true,
-            desc = 'Use <Esc> to exit terminal mode when running a shell.',
-          })
-          vim.keymap.set('n', '<Esc>', function()
-            return vim.b.t_esc
-                and vim.uv.hrtime() - vim.b.t_esc <= vim.go.tm * 1e6
-                and require('utils').term.shall_esc()
-                and '<Cmd>startinsert<CR><Esc>'
-              or '<Esc>'
-          end, {
-            buffer = buf,
-            expr = true,
-            desc = 'Use <Esc> in normal mode to send <Esc> to terminal when running a shell.',
-          })
-          vim.cmd.setlocal('nonu')
-          vim.cmd.setlocal('nornu')
-          vim.cmd.setlocal('statuscolumn=')
-          vim.cmd.setlocal('signcolumn=no')
-          vim.cmd.startinsert()
-        end
+        vim.keymap.set('t', '<Esc>', function()
+          return require('utils').term.shall_esc()
+              and (function()
+                vim.b.t_esc = vim.uv.now()
+                return true
+              end)()
+              and '<Cmd>stopinsert<CR>'
+            or '<Esc>'
+        end, {
+          buffer = buf,
+          expr = true,
+          desc = 'Use <Esc> to exit terminal mode when running a shell.',
+        })
+        vim.keymap.set('n', '<Esc>', function()
+          return vim.b.t_esc
+              and vim.uv.now() - vim.b.t_esc <= vim.go.tm
+              and require('utils').term.shall_esc()
+              and '<Cmd>startinsert<CR><Esc>'
+            or '<Esc>'
+        end, {
+          buffer = buf,
+          expr = true,
+          desc = 'Use <Esc> in normal mode to send <Esc> to terminal when running a shell.',
+        })
+        vim.cmd.setlocal('nonu')
+        vim.cmd.setlocal('nornu')
+        vim.cmd.setlocal('statuscolumn=')
+        vim.cmd.setlocal('signcolumn=no')
+        vim.cmd.startinsert()
       end,
     },
   },

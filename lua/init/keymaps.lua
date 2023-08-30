@@ -14,9 +14,10 @@ vim.keymap.set({ 'x', 'n' }, '<M-L>',      '<C-w>L')
 vim.keymap.set({ 'x', 'n' }, '<M-=>',      '<C-w>=')
 vim.keymap.set({ 'x', 'n' }, '<M-_>',      '<C-w>_')
 vim.keymap.set({ 'x', 'n' }, '<M-|>',      '<C-w>|')
-vim.keymap.set({ 'x', 'n' }, '<M-<>',      '<C-w><')
-vim.keymap.set({ 'x', 'n' }, '<M->>',      'v:count ? "<C-w>>" : "4<C-w>>"', { expr = true })
-vim.keymap.set({ 'x', 'n' }, '<M-<>',      'v:count ? "<C-w><" : "4<C-w><"', { expr = true })
+vim.keymap.set({ 'x', 'n' }, '<M->>',      '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w><" : "<C-w>>")', { expr = true })
+vim.keymap.set({ 'x', 'n' }, '<M-<>',      '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w>>" : "<C-w><")', { expr = true })
+vim.keymap.set({ 'x', 'n' }, '<M-.>',      '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w><" : "<C-w>>")', { expr = true })
+vim.keymap.set({ 'x', 'n' }, '<M-,>',      '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w>>" : "<C-w><")', { expr = true })
 vim.keymap.set({ 'x', 'n' }, '<M-+>',      'v:count ? "<C-w>+" : "2<C-w>+"', { expr = true })
 vim.keymap.set({ 'x', 'n' }, '<M-->',      'v:count ? "<C-w>-" : "2<C-w>-"', { expr = true })
 vim.keymap.set({ 'x', 'n' }, '<M-p>',      '<C-w>p')
@@ -50,8 +51,10 @@ vim.keymap.set({ 'x', 'n' }, '<M-l>',      '<C-w><C-l>')
 vim.keymap.set({ 'x', 'n' }, '<M-g><M-]>', '<C-w>g<C-]>')
 vim.keymap.set({ 'x', 'n' }, '<M-g><Tab>', '<C-w>g<Tab>')
 
-vim.keymap.set({ 'x', 'n' }, '<C-w>>', 'v:count ? "<C-w>>" : "4<C-w>>"', { expr = true })
-vim.keymap.set({ 'x', 'n' }, '<C-w><', 'v:count ? "<C-w><" : "4<C-w><"', { expr = true })
+vim.keymap.set({ 'x', 'n' }, '<C-w>>', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w><" : "<C-w>>")', { expr = true })
+vim.keymap.set({ 'x', 'n' }, '<C-w><', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w>>" : "<C-w><")', { expr = true })
+vim.keymap.set({ 'x', 'n' }, '<C-w>,', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w><" : "<C-w>>")', { expr = true })
+vim.keymap.set({ 'x', 'n' }, '<C-w>.', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w>>" : "<C-w><")', { expr = true })
 vim.keymap.set({ 'x', 'n' }, '<C-w>+', 'v:count ? "<C-w>+" : "2<C-w>+"', { expr = true })
 vim.keymap.set({ 'x', 'n' }, '<C-w>-', 'v:count ? "<C-w>-" : "2<C-w>-"', { expr = true })
 -- stylua: ignore end
@@ -63,6 +66,26 @@ vim.keymap.set({ 'n', 'x' }, 'k', 'v:count ? "k" : "gk"', { expr = true })
 -- Buffer navigation
 vim.keymap.set('n', ']b', '<Cmd>exec v:count1 . "bn"<CR>')
 vim.keymap.set('n', '[b', '<Cmd>exec v:count1 . "bp"<CR>')
+
+-- Tabpages
+---@param default function
+---@return function
+local function tabswitch(default)
+  return function()
+    local tabcount = vim.fn.tabpagenr('$')
+    if tabcount >= vim.v.count then
+      default(vim.v.count ~= 0 and vim.v.count or nil)
+      return
+    end
+    for _ = 1, vim.v.count - tabcount do
+      vim.cmd.tabnew()
+    end
+    vim.cmd.tabnext('$')
+  end
+end
+vim.keymap.set('n', 'gt', tabswitch(vim.cmd.tabnext))
+vim.keymap.set('n', 'gT', tabswitch(vim.cmd.tabprev))
+vim.keymap.set('n', 'gy', tabswitch(vim.cmd.tabprev)) -- gT is too hard to press
 
 -- Correct misspelled word / mark as correct
 vim.keymap.set('i', '<C-S-L>', '<Esc>[szg`]a')

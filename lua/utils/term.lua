@@ -8,6 +8,10 @@ local commands_shall_esc = {
   fish = true,
   less = true,
   gawk = true,
+  python = true,
+  python3 = true,
+  ipython = true,
+  ipython3 = true,
 }
 
 ---Decide if pressing <Esc> in nvim builtin terminal should exit terminal mode
