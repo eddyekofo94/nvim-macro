@@ -29,10 +29,52 @@ local function tmux_exec(command)
   return result
 end
 
+---Get tmux option value in current pane
+---@param opt string tmux pane option
+---@return string tmux pane option value
+local function tmux_get_pane_opt(opt)
+  return (
+    tmux_exec(
+      string.format(
+        "display-message -pt %s '#{%s}'",
+        vim.env.TMUX_PANE,
+        vim.fn.escape(opt, "'\\")
+      )
+    ):gsub('\n.*', '')
+  )
+end
+
+---Set tmux option value in current pane
+---@param opt string tmux pane option
+---@param val string tmux pane option value
+---@return nil
+local function tmux_set_pane_opt(opt, val)
+  tmux_exec(
+    string.format(
+      "set -pt %s %s '%s'",
+      vim.env.TMUX_PANE,
+      opt,
+      vim.fn.escape(val, "'\\")
+    )
+  )
+end
+
+---Unset a tmux pane option
+---@param opt string tmux pane option
+---@return nil
+local function tmux_unset_pane_opt(opt)
+  tmux_exec(
+    string.format(
+      "set -put %s '%s'",
+      vim.env.TMUX_PANE,
+      vim.fn.escape(opt, "'\\")
+    )
+  )
+end
+
 ---@return boolean
 local function tmux_is_zoomed()
-  return nil
-    ~= tmux_exec("display-message -p '#{window_zoomed_flag}'"):find('1')
+  return tmux_get_pane_opt('window_zoomed_flag') == '1'
 end
 
 ---@type table<nvim_direction_t, tmux_borderpane_direction_t>
@@ -46,14 +88,8 @@ local tmux_pane_position_map = {
 ---@param direction nvim_direction_t
 ---@return boolean
 local function tmux_at_border(direction)
-  return nil
-    ~= tmux_exec(
-      string.format(
-        "display-message -p -t '%s' '#{pane_at_%s}'",
-        vim.env.TMUX_PANE,
-        tmux_pane_position_map[direction]
-      )
-    ):find('1')
+  return tmux_get_pane_opt('pane_at_' .. tmux_pane_position_map[direction])
+    == '1'
 end
 
 ---@param direction nvim_direction_t
@@ -84,18 +120,6 @@ local function tmux_navigate(direction, count)
       )
     )
   end
-end
-
----Set @is_vim to yes in tmux pane options so that tmux knows that the current
----pane is running vim
----@return nil
-local function tmux_set_isvim()
-  tmux_exec(string.format('set -pt %s @is_vim yes', vim.env.TMUX_PANE))
-end
-
----@return nil
-local function tmux_unset_isvim()
-  tmux_exec(string.format('set -put %s @is_vim', vim.env.TMUX_PANE))
 end
 
 ---@param direction nvim_direction_t
@@ -145,16 +169,23 @@ vim.keymap.set({ 'n', 'x' }, '<M-j>', navigate_wrap('j'))
 vim.keymap.set({ 'n', 'x' }, '<M-k>', navigate_wrap('k'))
 vim.keymap.set({ 'n', 'x' }, '<M-l>', navigate_wrap('l'))
 
-tmux_set_isvim()
-
-local groupid = vim.api.nvim_create_augroup('TmuxNavSetIsVim', {})
-vim.api.nvim_create_autocmd('VimResume', {
-  desc = 'Set @is_vim in tmux pane options after vim resumes.',
-  group = groupid,
-  callback = tmux_set_isvim,
-})
-vim.api.nvim_create_autocmd({ 'VimSuspend', 'VimLeave' }, {
-  desc = 'Unset @is_vim in tmux pane options on vim leaving or suspending.',
-  group = groupid,
-  callback = tmux_unset_isvim,
-})
+-- Set @is_vim and register relevant autocmds callbacks if not already
+-- in a vim/nvim session
+if tmux_get_pane_opt('@is_vim') == '' then
+  tmux_set_pane_opt('@is_vim', 'yes')
+  local groupid = vim.api.nvim_create_augroup('TmuxNavSetIsVim', {})
+  vim.api.nvim_create_autocmd('VimResume', {
+    desc = 'Set @is_vim in tmux pane options after vim resumes.',
+    group = groupid,
+    callback = function()
+      tmux_set_pane_opt('@is_vim', 'yes')
+    end,
+  })
+  vim.api.nvim_create_autocmd({ 'VimSuspend', 'VimLeave' }, {
+    desc = 'Unset @is_vim in tmux pane options on vim leaving or suspending.',
+    group = groupid,
+    callback = function()
+      tmux_unset_pane_opt('@is_vim')
+    end,
+  })
+end
