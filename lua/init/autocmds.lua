@@ -178,7 +178,7 @@ local autocmds = {
       desc = 'Open quickfix window if there are results.',
       callback = function(info)
         if vim.startswith(info.match, 'l') then
-          vim.cmd('lwindow')
+          vim.cmd('belowright lwindow')
         else
           vim.cmd('botright cwindow')
         end
