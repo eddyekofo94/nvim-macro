@@ -2,6 +2,8 @@ if vim.bo.ma then
   return
 end
 
+vim.bo.bufhidden = 'wipe'
+vim.bo.buflisted = false
 vim.opt_local.conceallevel = 1
 vim.opt_local.list = false
 vim.opt_local.number = false
