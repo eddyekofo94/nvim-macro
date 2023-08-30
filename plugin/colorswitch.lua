@@ -40,7 +40,7 @@ vim.api.nvim_create_autocmd('Signal', {
   group = groupid,
   desc = 'Change background on receiving signal SIGUSER1.',
   callback = function()
-    local hrtime = vim.uv.hrtime()
+    local now = vim.uv.now()
     -- Check the last time when a signal is received/sent to avoid
     -- the infinite loop of
     -- -> receiving signal
@@ -49,10 +49,10 @@ vim.api.nvim_create_autocmd('Signal', {
     -- -> receiving signals from other nvim instances
     -- -> setting bg
     -- -> ...
-    if vim.g.sig_hrtime and hrtime - vim.g.sig_hrtime < 500000000 then
+    if vim.g.sigtime and now - vim.g.sigtime < 500 then
       return
     end
-    vim.g.sig_hrtime = hrtime
+    vim.g.sigtime = now
     vim.cmd.rshada()
     -- Must save the background and colorscheme name read from ShaDa
     -- because setting background or colorscheme will overwrite them
@@ -74,11 +74,11 @@ vim.api.nvim_create_autocmd('Colorscheme', {
     vim.g.BACKGROUND = vim.go.background
     vim.g.COLORSNAME = vim.g.colors_name
     vim.cmd.wshada()
-    local hrtime = vim.uv.hrtime()
-    if vim.g.sig_hrtime and hrtime - vim.g.sig_hrtime < 500000000 then
+    local now = vim.uv.now()
+    if vim.g.sigtime and now - vim.g.sigtime < 500 then
       return
     end
-    vim.g.sig_hrtime = hrtime
+    vim.g.sigtime = now
     local pid = vim.fn.getpid()
     if vim.fn.executable('setbg') == 1 then
       vim.uv.spawn('setbg', {

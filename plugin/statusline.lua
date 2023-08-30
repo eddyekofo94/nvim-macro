@@ -222,7 +222,7 @@ vim.api.nvim_create_autocmd('LspProgress', {
       return
     end
     lsp_prog_data = data
-    report_time = vim.uv.hrtime()
+    report_time = vim.uv.now()
     local _report_time = report_time
     lsp_prog_data.result.value.message =
       vim.trim(utils.static.icons.diagnostics.DiagnosticSignOk)
