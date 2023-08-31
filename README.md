@@ -411,8 +411,6 @@ Total # of plugins: 43 (package manager included).
     - released as [deadcolumn.nvim](https://github.com/Bekaboo/deadcolumn.nvim)
 - [expandtab](https://github.com/Bekaboo/nvim/tree/master/plugin/expandtab.lua)
     - always use spaces for alignment
-- [hlsearch](https://github.com/Bekaboo/nvim/tree/master/plugin/hlsearch.lua)
-    - toggles `'hlsearch'` smartly
 - [readline](https://github.com/Bekaboo/nvim/tree/master/plugin/readline.lua)
     - readline-like keybindings in insert and command mode
 - [statuscolumn](https://github.com/Bekaboo/nvim/tree/master/plugin/statuscolumn.lua)
