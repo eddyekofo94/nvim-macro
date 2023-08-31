@@ -144,10 +144,12 @@ local autocmds = {
           expr = true,
           desc = 'Use <Esc> in normal mode to send <Esc> to terminal when running a shell.',
         })
-        vim.cmd.setlocal('nonu')
-        vim.cmd.setlocal('nornu')
-        vim.cmd.setlocal('statuscolumn=')
-        vim.cmd.setlocal('signcolumn=no')
+        vim.opt_local.nu = false
+        vim.opt_local.rnu = false
+        vim.opt_local.statuscolumn = ''
+        vim.opt_local.signcolumn = 'no'
+        vim.opt_local.scrolloff = 0
+        vim.opt_local.sidescrolloff = 0
         vim.cmd.startinsert()
       end,
     },
