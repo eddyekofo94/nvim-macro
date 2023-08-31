@@ -180,7 +180,7 @@ Install the following debug adapters manually:
 │   │   ├── keymaps.lua
 │   │   └── plugins.lua         # specify which modules to use in different conditions
 │   ├── modules                 # all plugin specifications and configs go here
-│   │   ├── base.lua            # plugin specifications in module 'base'
+│   │   ├── lib.lua             # plugin specifications in module 'lib'
 │   │   ├── completion.lua      # plugin specifications in module 'completion'
 │   │   ├── debug.lua           # plugin specifications in modules 'debug'
 │   │   ├── lsp.lua             # plugin specifications in module 'lsp'
@@ -205,7 +205,7 @@ In order to enable or disable a module, one need to change the table in
 
 ```lua
 enable_modules({
-  'base',
+  'lib',
   'treesitter',
   'edit',
   -- ...
@@ -352,7 +352,7 @@ and it should work out of the box.
 
 Total # of plugins: 43 (package manager included).
 
-- **Base**
+- **Lib**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
     - [nvim-web-devicons](https://github.com/kyazdani42/nvim-web-devicons)
     - [telescope-fzf-native.nvim](https://github.com/nvim-telescope/telescope-fzf-native.nvim)

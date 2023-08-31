@@ -144,13 +144,13 @@ if vim.env.NVIM_MANPAGER or not bootstrap() then
 end
 if vim.g.vscode then
   enable_modules({
-    'base',
+    'lib',
     'treesitter',
     'edit',
   })
 else
   enable_modules({
-    'base',
+    'lib',
     'completion',
     'debug',
     'edit',
