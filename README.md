@@ -350,7 +350,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 44 (package manager included).
+Total # of plugins: 43 (package manager included).
 
 - **Base**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -386,7 +386,6 @@ Total # of plugins: 44 (package manager included).
     - [vim-easy-align](https://github.com/junegunn/vim-easy-align)
 - **Tools**
     - [fzf-lua](https://github.com/ibhagwan/fzf-lua)
-    - [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)
     - [flatten.nvim](https://github.com/willothy/flatten.nvim)
     - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
     - [git-conflict](akinsho/git-conflict.nvim)

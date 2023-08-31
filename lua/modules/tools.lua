@@ -49,39 +49,6 @@ return {
   },
 
   {
-    'akinsho/toggleterm.nvim',
-    -- stylua: ignore start
-    keys = {
-      { '<M-i>',        mode = { 'n', 't' } },
-      { '<C-\\>v',      mode = { 'n', 't' } },
-      { '<C-\\>s',      mode = { 'n', 't' } },
-      { '<C-\\>t',      mode = { 'n', 't' } },
-      { '<C-\\>f',      mode = { 'n', 't' } },
-      { '<C-\\>g',      mode = { 'n', 't' } },
-      { '<C-\\><C-v>',  mode = { 'n', 't' } },
-      { '<C-\\><C-s>',  mode = { 'n', 't' } },
-      { '<C-\\><C-t>',  mode = { 'n', 't' } },
-      { '<C-\\><C-f>',  mode = { 'n', 't' } },
-      { '<C-\\><C-g>',  mode = { 'n', 't' } },
-      { '<C-\\><C-\\>', mode = { 'n', 't' } },
-    },
-    -- stylua: ignore end
-    cmd = {
-      'Lazygit',
-      'TermExec',
-      'ToggleTerm',
-      'ToggleTermSetName',
-      'ToggleTermToggleAll',
-      'ToggleTermSendCurrentLine',
-      'ToggleTermSendVisualLines',
-      'ToggleTermSendVisualSelection',
-    },
-    config = function()
-      require('configs.toggleterm')
-    end,
-  },
-
-  {
     'lewis6991/gitsigns.nvim',
     event = 'BufReadPre',
     dependencies = 'plenary.nvim',
