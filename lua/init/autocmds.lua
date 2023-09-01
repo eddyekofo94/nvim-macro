@@ -172,21 +172,6 @@ local autocmds = {
   },
 
   {
-    { 'QuickFixCmdPost' },
-    {
-      group = 'QuickFixAutoOpen',
-      desc = 'Open quickfix window if there are results.',
-      callback = function(info)
-        if vim.startswith(info.match, 'l') then
-          vim.cmd('belowright lwindow')
-        else
-          vim.cmd('botright cwindow')
-        end
-      end,
-    },
-  },
-
-  {
     { 'VimResized' },
     {
       group = 'EqualWinSize',
