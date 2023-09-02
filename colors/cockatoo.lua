@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Tue 29 Aug 2023 10:33:59 AM CST
+-- Last Updated: Sat 02 Sep 2023 05:29:29 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -314,6 +314,18 @@ local hlgroups = {
   ['@text.environment'] = { link = 'Macro' },
   ['@text.environment.name'] = { link = 'Type' },
   ['@text.reference'] = { link = 'Constant' },
+  ['@text.title.1.markdown'] = { link = 'markdownH1' },
+  ['@text.title.2.markdown'] = { link = 'markdownH2' },
+  ['@text.title.3.markdown'] = { link = 'markdownH3' },
+  ['@text.title.4.markdown'] = { link = 'markdownH4' },
+  ['@text.title.5.markdown'] = { link = 'markdownH5' },
+  ['@text.title.6.markdown'] = { link = 'markdownH6' },
+  ['@text.title.1.marker.markdown'] = { link = 'markdownH1Delimiter' },
+  ['@text.title.2.marker.markdown'] = { link = 'markdownH2Delimiter' },
+  ['@text.title.3.marker.markdown'] = { link = 'markdownH3Delimiter' },
+  ['@text.title.4.marker.markdown'] = { link = 'markdownH4Delimiter' },
+  ['@text.title.5.marker.markdown'] = { link = 'markdownH5Delimiter' },
+  ['@text.title.6.marker.markdown'] = { link = 'markdownH6Delimiter' },
   ['@text.todo'] = { link = 'Todo' },
   ['@text.todo.unchecked'] = { link = 'Todo' },
   ['@text.todo.checked'] = { link = 'Done' },
