@@ -465,7 +465,7 @@ function winbar_t:redraw()
 end
 
 ---Update winbar components from sources and redraw winbar, supposed to be
----called at CursorMoved, CurosrMovedI, TextChanged, and TextChangedI
+---called at CursorMoved, CursorMovedI, TextChanged, and TextChangedI
 ---Not updating when executing a macro
 ---@return nil
 function winbar_t:update()
