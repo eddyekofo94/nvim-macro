@@ -98,4 +98,15 @@ function M.update_hover_hl(mouse)
   last_hovered_winbar = winbar
 end
 
+---Attach winbar to window
+---@param buf integer
+---@param win integer
+---@return nil
+function M.attach(buf, win)
+  local configs = require('plugin.winbar.configs')
+  if configs.eval(configs.opts.general.enable, buf, win) then
+    vim.wo.winbar = '%{%v:lua.winbar.get_winbar()%}'
+  end
+end
+
 return M

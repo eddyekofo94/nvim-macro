@@ -50,24 +50,18 @@ local function setup(opts)
   configs.set(opts)
   hlgroups.init()
   local groupid = vim.api.nvim_create_augroup('WinBar', {})
-  ---Attach winbar to window
-  ---@param win integer
-  ---@param buf integer
-  local function attach(buf, win)
-    if configs.eval(configs.opts.general.enable, buf, win) then
-      vim.wo.winbar = '%{%v:lua.winbar.get_winbar()%}'
-    end
-  end
   for _, win in ipairs(vim.api.nvim_list_wins()) do
-    attach(vim.api.nvim_win_get_buf(win), win)
+    utils.bar.attach(vim.api.nvim_win_get_buf(win), win)
   end
-  vim.api.nvim_create_autocmd({ 'OptionSet', 'BufWinEnter', 'BufWritePost' }, {
-    group = groupid,
-    callback = function(info)
-      attach(info.buf, 0)
-    end,
-    desc = 'Attach winbar',
-  })
+  if not vim.tbl_isempty(configs.opts.general.attach_events) then
+    vim.api.nvim_create_autocmd(configs.opts.general.attach_events, {
+      group = groupid,
+      callback = function(info)
+        utils.bar.attach(info.buf, 0)
+      end,
+      desc = 'Attach dropbar',
+    })
+  end
   vim.api.nvim_create_autocmd({ 'BufDelete', 'BufUnload', 'BufWipeOut' }, {
     group = groupid,
     callback = function(info)

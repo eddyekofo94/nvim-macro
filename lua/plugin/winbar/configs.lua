@@ -12,6 +12,10 @@ M.opts = {
         and vim.fn.win_gettype(win) == ''
         and not vim.wo[win].diff
     end,
+    attach_events = {
+      'BufWinEnter',
+      'BufWritePost',
+    },
     -- Wait for a short time before updating the winbar, if another update
     -- request is received within this time, the previous request will be
     -- cancelled, this improves the performance when the user is holding
