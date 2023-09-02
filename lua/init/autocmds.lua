@@ -72,29 +72,31 @@ local autocmds = {
       group = 'AutoCwd',
       desc = 'Automatically change local current directory.',
       callback = function(info)
-        if info.file == '' or not vim.bo[info.buf].ma then
-          return
-        end
-        local current_dir = vim.fn.getcwd()
-        local proj_dir = require('utils').fs.proj_dir(info.file)
-        -- Prevent unnecessary directory change, which triggers
-        -- DirChanged autocmds that may update winbar unexpectedly
-        if current_dir == proj_dir then
-          return
-        end
-        if proj_dir then
-          vim.schedule(function()
+        vim.schedule(function()
+          if
+            info.file == ''
+            or not vim.api.nvim_buf_is_valid(info.buf)
+            or vim.bo[info.buf].ma
+          then
+            return
+          end
+          local current_dir = vim.fn.getcwd()
+          local proj_dir = require('utils').fs.proj_dir(info.file)
+          -- Prevent unnecessary directory change, which triggers
+          -- DirChanged autocmds that may update winbar unexpectedly
+          if current_dir == proj_dir then
+            return
+          end
+          if proj_dir then
             vim.cmd.lcd(proj_dir)
-          end)
-          return
-        end
-        local dirname = vim.fs.dirname(info.file)
-        local stat = vim.uv.fs_stat(dirname)
-        if stat and stat.type == 'directory' and proj_dir ~= current_dir then
-          vim.schedule(function()
+            return
+          end
+          local dirname = vim.fs.dirname(info.file)
+          local stat = vim.uv.fs_stat(dirname)
+          if stat and stat.type == 'directory' and proj_dir ~= current_dir then
             vim.cmd.lcd(dirname)
-          end)
-        end
+          end
+        end)
       end,
     },
   },
