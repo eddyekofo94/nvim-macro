@@ -23,7 +23,7 @@ local groupid = vim.api.nvim_create_augroup('FugitiveSettings', {})
 vim.api.nvim_create_autocmd('User', {
   pattern = 'FugitiveIndex',
   group = groupid,
-  command = 'nmap <buffer> <Tab> = | xmap <buffer> <Tab> =',
+  command = 'nmap <buffer> <Tab> =| xmap <buffer> <Tab> =',
 })
 
 vim.api.nvim_create_autocmd('User', {
