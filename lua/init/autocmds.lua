@@ -115,65 +115,6 @@ local autocmds = {
   },
 
   {
-    { 'TermOpen' },
-    {
-      group = 'TermOptions',
-      desc = 'Terminal options.',
-      callback = function(info)
-        local buf = info.buf
-        vim.keymap.set('n', 'o', '<Cmd>startinsert<CR>', { buffer = buf })
-        vim.keymap.set('t', '<Esc>', function()
-          return require('utils').term.shall_esc()
-              and (function()
-                vim.b.t_esc = vim.uv.now()
-                return true
-              end)()
-              and '<Cmd>stopinsert<CR>'
-            or '<Esc>'
-        end, {
-          buffer = buf,
-          expr = true,
-          desc = 'Use <Esc> to exit terminal mode when running a shell.',
-        })
-        vim.keymap.set('n', '<Esc>', function()
-          return vim.b.t_esc
-              and vim.uv.now() - vim.b.t_esc <= vim.go.tm
-              and require('utils').term.shall_esc()
-              and '<Cmd>startinsert<CR><Esc>'
-            or '<Esc>'
-        end, {
-          buffer = buf,
-          expr = true,
-          desc = 'Use <Esc> in normal mode to send <Esc> to terminal when running a shell.',
-        })
-        vim.opt_local.nu = false
-        vim.opt_local.rnu = false
-        vim.opt_local.statuscolumn = ''
-        vim.opt_local.signcolumn = 'no'
-        vim.opt_local.scrolloff = 0
-        vim.opt_local.sidescrolloff = 0
-        vim.cmd.startinsert()
-      end,
-    },
-  },
-  {
-    { 'TermEnter' },
-    {
-      group = 'TermOptions',
-      desc = 'Disable mousemoveevent in terminal mode.',
-      command = 'let g:mousemev = &mousemev | set nomousemev',
-    },
-  },
-  {
-    { 'TermLeave' },
-    {
-      group = 'TermOptions',
-      desc = 'Restore mousemoveevent after leaving terminal mode.',
-      command = 'if exists("g:mousemev") | let &mousemev = g:mousemev | unlet g:mousemev | endif',
-    },
-  },
-
-  {
     { 'VimResized' },
     {
       group = 'EqualWinSize',
