@@ -6,6 +6,7 @@ opt.cursorline     = true
 opt.colorcolumn    = '80'
 opt.foldlevelstart = 99
 opt.guifont        = 'JetbrainsMono Nerd Font:h13'
+opt.helpheight     = 10
 opt.laststatus     = 3
 opt.showmode       = false
 opt.mouse          = 'a'
