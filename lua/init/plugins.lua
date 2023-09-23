@@ -154,7 +154,6 @@ else
     'completion',
     'debug',
     'edit',
-    'ui',
     'lsp',
     'markup',
     'tools',
