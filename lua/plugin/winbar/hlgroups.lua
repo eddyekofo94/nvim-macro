@@ -75,6 +75,8 @@ local hlgroups = {
   WinBarMenuHoverIcon             = { reverse = true },
   WinBarMenuHoverSymbol           = { bold = true },
   WinBarMenuNormalFloat           = { link = 'NormalFloat' },
+  WinBarMenuSbar                  = { link = 'PmenuSbar' },
+  WinBarMenuThumb                 = { link = 'PmenuThumb' },
   WinBarPreview                   = { link = 'Visual' },
 }
 --stylua: ignore end

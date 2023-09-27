@@ -185,6 +185,7 @@ end
 ---@field clicked_at integer[]? last position where the menu was clicked, byte-indexed, 1,0-indexed
 ---@field prev_cursor integer[]? previous cursor position
 ---@field symbol_previewed winbar_symbol_t? symbol being previewed
+---@field scrollbar { thumb: integer, sbar: integer }? scrollbar window handlers
 local winbar_menu_t = {}
 winbar_menu_t.__index = winbar_menu_t
 
@@ -253,6 +254,18 @@ function winbar_menu_t:eval_win_configs()
     else
       self._win_configs[k] = config
     end
+  end
+
+  -- Ensure `win` field is nil if `relative` ~= 'win', else nvim will
+  -- throw error
+  -- Why `win` field is set if `relative` field is not 'win'?
+  -- It's set because the global configs are used when creating windows, and
+  -- overridden by the menu-local settings, but `vim.tbl_deep_extend` will not
+  -- replace non-nil with nil so if the default win config uses
+  -- `relative` = 'win' (which it does), win will be set even if the menu-local
+  -- win config doesn't set it.
+  if self._win_configs.relative ~= 'win' then
+    self._win_configs.win = nil
   end
 end
 
@@ -448,6 +461,13 @@ function winbar_menu_t:make_buf()
       self:update_hover_hl(self.prev_cursor)
     end,
   })
+  vim.api.nvim_create_autocmd('WinScrolled', {
+    group = groupid,
+    buffer = self.buf,
+    callback = function()
+      self:update_scrollbar()
+    end,
+  })
   vim.api.nvim_create_autocmd('BufLeave', {
     group = groupid,
     buffer = self.buf,
@@ -473,6 +493,89 @@ function winbar_menu_t:open_win()
     'NormalFloat:WinBarMenuNormalFloat',
     'FloatBorder:WinBarMenuFloatBorder',
   }, ',')
+end
+
+---Update the scrollbar's position and height, create a new scrollbar if
+---one does not exist
+---Side effect: can change self.scrollbar
+---@return nil
+function winbar_menu_t:update_scrollbar()
+  if
+    not self.win
+    or not self.buf
+    or not vim.api.nvim_win_is_valid(self.win)
+    or not vim.api.nvim_buf_is_valid(self.buf)
+  then
+    return
+  end
+
+  local buf_height = vim.api.nvim_buf_line_count(self.buf)
+  local menu_win_configs = vim.api.nvim_win_get_config(self.win)
+  if buf_height <= menu_win_configs.height then
+    self:close_scrollbar()
+    return
+  end
+
+  local thumb_height =
+    math.max(1, math.floor(menu_win_configs.height ^ 2 / buf_height))
+  local offset = vim.fn.line('w$') == buf_height
+      and menu_win_configs.height - thumb_height
+    or math.min(
+      menu_win_configs.height - thumb_height,
+      math.floor(menu_win_configs.height * vim.fn.line('w0') / buf_height)
+    )
+
+  if self.scrollbar and vim.api.nvim_win_is_valid(self.scrollbar.thumb) then
+    local config = vim.api.nvim_win_get_config(self.scrollbar.thumb)
+    config.row = offset
+    config.height = thumb_height
+    vim.api.nvim_win_set_config(self.scrollbar.thumb, config)
+  else
+    self:close_scrollbar()
+    self.scrollbar = {}
+    local win_configs = {
+      row = offset,
+      col = menu_win_configs.width,
+      width = 1,
+      height = thumb_height,
+      style = 'minimal',
+      border = 'none',
+      relative = 'win',
+      win = self.win,
+      zindex = menu_win_configs.zindex,
+    }
+    self.scrollbar.thumb = vim.api.nvim_open_win(
+      vim.api.nvim_create_buf(false, true),
+      false,
+      win_configs
+    )
+    vim.wo[self.scrollbar.thumb].winhl = 'NormalFloat:WinBarMenuThumb'
+
+    win_configs.row = 0
+    win_configs.height = menu_win_configs.height
+    self.scrollbar.sbar = vim.api.nvim_open_win(
+      vim.api.nvim_create_buf(false, true),
+      false,
+      win_configs
+    )
+    vim.wo[self.scrollbar.sbar].winhl = 'NormalFloat:WinBarMenuSbar'
+  end
+end
+
+---Close the scrollbar, if one exists
+---Side effect: set self.scrollbar to nil
+---@return nil
+function winbar_menu_t:close_scrollbar()
+  if not self.scrollbar then
+    return
+  end
+  if vim.api.nvim_win_is_valid(self.scrollbar.thumb) then
+    vim.api.nvim_win_close(self.scrollbar.thumb, true)
+  end
+  if vim.api.nvim_win_is_valid(self.scrollbar.sbar) then
+    vim.api.nvim_win_close(self.scrollbar.sbar, true)
+  end
+  self.scrollbar = nil
 end
 
 ---Override menu options
@@ -527,6 +630,7 @@ function winbar_menu_t:open(opts)
       vim.api.nvim_exec_autocmds('CursorMoved', { buffer = self.buf })
     end
   end
+  self:update_scrollbar()
 end
 
 ---Close the menu
@@ -564,6 +668,9 @@ function winbar_menu_t:close(restore_view)
     if configs.opts.menu.preview then
       self.prev_menu:preview_symbol_at(self.prev_menu.prev_cursor)
     end
+  end
+  if self.scrollbar then
+    self:close_scrollbar()
   end
 end
 
