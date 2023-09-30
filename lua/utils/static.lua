@@ -52,6 +52,10 @@ M.langs = setmetatable({
     lsp_server = 'clangd',
     dap = 'codelldb',
   },
+  cuda = {
+    ts = 'cuda',
+    ft = 'cuda',
+  },
   fish = {
     ts = 'fish',
     ft = 'fish',
