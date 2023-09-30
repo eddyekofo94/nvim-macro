@@ -1,6 +1,6 @@
-NVIM v0.10.0-dev-976+g1ad13e07d2
+NVIM v0.10.0-dev-1224+gdfa8b582a6
 Build type: Release
-LuaJIT 2.1.1692616192
+LuaJIT 2.1.1694285958
 
    system vimrc file: "$VIM/sysinit.vim"
   fall-back for $VIM: "/usr/share/nvim"
