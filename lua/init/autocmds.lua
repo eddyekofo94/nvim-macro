@@ -76,7 +76,7 @@ local autocmds = {
           if
             info.file == ''
             or not vim.api.nvim_buf_is_valid(info.buf)
-            or vim.bo[info.buf].ma
+            or not vim.bo[info.buf].ma
           then
             return
           end
