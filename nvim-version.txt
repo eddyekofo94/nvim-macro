@@ -1,6 +1,7 @@
-NVIM v0.10.0-dev-1224+gdfa8b582a6
-Build type: Release
-LuaJIT 2.1.1694285958
+NVIM v0.10.0-dev-1334+gd2d38858d1f
+Build type: RelWithDebInfo
+LuaJIT 2.1.1696795921
+Compilation: /usr/bin/cc -O2 -g -Og -g -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wshadow -Wconversion -Wvla -Wdouble-promotion -Wmissing-noreturn -Wmissing-format-attribute -Wmissing-prototypes -fno-common -Wno-unused-result -Wimplicit-fallthrough -fdiagnostics-color=auto -fstack-protector-strong -DUNIT_TESTING -DINCLUDE_GENERATED_DECLARATIONS -D_GNU_SOURCE -I/usr/include/luajit-2.1 -I/usr/include -I/build/neovim-git/src/build/src/nvim/auto -I/build/neovim-git/src/build/include -I/build/neovim-git/src/build/cmake.config -I/build/neovim-git/src/neovim-git/src
 
    system vimrc file: "$VIM/sysinit.vim"
   fall-back for $VIM: "/usr/share/nvim"
