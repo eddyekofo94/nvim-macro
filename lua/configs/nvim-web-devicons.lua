@@ -15,4 +15,32 @@ require('nvim-web-devicons').setup({
       name = 'DesktopEntry',
     },
   },
+  override_by_extension = {
+    cu = {
+      color = '#76b900',
+      cterm_color = '2',
+      icon = vim.trim(icons.Cuda),
+      name = 'Cuda',
+    },
+    raw = {
+      color = '#ff9800',
+      cterm_color = '208',
+      icon = vim.trim(icons.Raw),
+      name = 'Raw',
+    },
+    dat = {
+      color = '#6dcde8',
+      cterm_color = '81',
+      icon = vim.trim(icons.Data),
+      name = 'Data',
+    },
+  },
+  override_by_filename = {
+    run_datasets = {
+      color = '#65767a',
+      cterm_color = '238',
+      icon = vim.trim(icons.Sh),
+      name = 'ShellRunDatasets',
+    },
+  },
 })

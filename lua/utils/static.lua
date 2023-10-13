@@ -178,11 +178,12 @@ M.borders = {
 local icons_mt = {}
 
 function icons_mt:__index(key)
-  return self.debug[key]
-    or self.diagnostics[key]
-    or self.kinds[key]
-    or self.ui[key]
-    or icons_mt[key]
+  for _, icons in pairs(self) do
+    if icons[key] then
+      return icons[key]
+    end
+  end
+  return icons_mt[key]
 end
 
 ---Flatten the layered icons table into a single type-icon table.
@@ -225,7 +226,6 @@ M.icons = setmetatable({
     Copilot             = ' ',
     Declaration         = '󰙠 ',
     Delete              = '󰩺 ',
-    Desktop             = '󰟀 ',
     DoStatement         = '󰑖 ',
     Enum                = ' ',
     EnumMember          = ' ',
@@ -285,6 +285,13 @@ M.icons = setmetatable({
     Value               = '󰎠 ',
     Variable            = '󰀫 ',
     WhileStatement      = '󰑖 ',
+  },
+  ft = {
+    Cuda                = '󱗼 ',
+    Data                = '󰆼 ',
+    Desktop             = '󰟀 ',
+    Raw                 = '󱨏 ',
+    Sh                  = ' ',
   },
   ui = {
     AngleDown           = ' ',
