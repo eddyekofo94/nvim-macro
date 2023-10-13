@@ -5,6 +5,7 @@ local function term_set_keymaps_and_opts(buf)
     return
   end
   vim.keymap.set('n', 'o', '<Cmd>startinsert<CR>', { buffer = buf })
+  vim.keymap.set('t', '<C-Space>[', '<C-\\><C-n>', { buffer = buf })
   vim.keymap.set('t', '<Esc>', function()
     return require('utils').term.shall_esc()
         and (function()

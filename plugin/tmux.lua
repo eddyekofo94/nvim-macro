@@ -215,6 +215,13 @@ tmux_mapkey_fallback('<M-->', [[run "tmux resize-pane -y $(($(tmux display -p '#
 tmux_mapkey_fallback('<M-+>', [[run "tmux resize-pane -y $(($(tmux display -p '#{pane_height}') + 2))"]], function() return not tmux_is_zoomed() and (nvim_at_border('j') and (nvim_at_border('k') or not tmux_at_border('j'))) end)
 -- stylua: ignore end
 
+-- Use a unified keymap `<C-space>[` to escape from vim terminal mode or enter
+-- tmux visual mode
+vim.keymap.set('t', '<C-Space>[', '<C-\\><C-n>')
+vim.keymap.set({ 'n', 'v', 'o', 'i', 'c', 't', 'l' }, '<C-Space>[', function()
+  tmux_exec('copy-mode')
+end)
+
 -- Set @is_vim and register relevant autocmds callbacks if not already
 -- in a vim/nvim session
 if tmux_get_pane_opt('@is_vim') == '' then
