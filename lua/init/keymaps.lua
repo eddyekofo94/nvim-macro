@@ -69,15 +69,17 @@ vim.keymap.set('n', '[b', '<Cmd>exec v:count1 . "bp"<CR>')
 
 -- Tabpages
 ---@param default function
+---@param count number?
 ---@return function
-local function tabswitch(default)
+local function tabswitch(default, count)
   return function()
+    count = count or vim.v.count
     local tabcount = vim.fn.tabpagenr('$')
-    if tabcount >= vim.v.count then
-      default(vim.v.count ~= 0 and vim.v.count or nil)
+    if tabcount >= count then
+      default(count ~= 0 and count or nil)
       return
     end
-    for _ = 1, vim.v.count - tabcount do
+    for _ = 1, count - tabcount do
       vim.cmd.tabnew()
     end
     vim.cmd.tabnext('$')
@@ -86,6 +88,16 @@ end
 vim.keymap.set('n', 'gt', tabswitch(vim.cmd.tabnext))
 vim.keymap.set('n', 'gT', tabswitch(vim.cmd.tabprev))
 vim.keymap.set('n', 'gy', tabswitch(vim.cmd.tabprev)) -- gT is too hard to press
+
+vim.keymap.set('n', '<M-1>', tabswitch(vim.cmd.tabnext, 1))
+vim.keymap.set('n', '<M-2>', tabswitch(vim.cmd.tabnext, 2))
+vim.keymap.set('n', '<M-3>', tabswitch(vim.cmd.tabnext, 3))
+vim.keymap.set('n', '<M-4>', tabswitch(vim.cmd.tabnext, 4))
+vim.keymap.set('n', '<M-5>', tabswitch(vim.cmd.tabnext, 5))
+vim.keymap.set('n', '<M-6>', tabswitch(vim.cmd.tabnext, 6))
+vim.keymap.set('n', '<M-7>', tabswitch(vim.cmd.tabnext, 7))
+vim.keymap.set('n', '<M-8>', tabswitch(vim.cmd.tabnext, 8))
+vim.keymap.set('n', '<M-9>', tabswitch(vim.cmd.tabnext, 9))
 
 -- Correct misspelled word / mark as correct
 vim.keymap.set('i', '<C-S-L>', '<Esc>[szg`]a')
