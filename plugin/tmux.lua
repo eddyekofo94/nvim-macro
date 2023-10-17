@@ -218,7 +218,7 @@ tmux_mapkey_fallback('<M-+>', [[run "tmux resize-pane -y $(($(tmux display -p '#
 -- Use a unified keymap `<C-space>[` to escape from vim terminal mode or enter
 -- tmux visual mode
 vim.keymap.set('t', '<C-Space>[', '<C-\\><C-n>')
-vim.keymap.set({ 'n', 'v', 'o', 'i', 'c', 't', 'l' }, '<C-Space>[', function()
+vim.keymap.set({ 'n', 'v', 'o', 'i', 'c', 'l' }, '<C-Space>[', function()
   tmux_exec('copy-mode')
 end)
 
