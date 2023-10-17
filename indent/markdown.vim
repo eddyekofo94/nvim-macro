@@ -5,7 +5,7 @@ let b:did_indent = 1
 
 setlocal autoindent
 setlocal indentexpr=GetMarkdownIndent()
-setlocal indentkeys=!^F,o,O,0=,0=&=,0-,0*,0+,.
+setlocal indentkeys=!^F,o,O,0&,0=,0=<,0=>,0=le,0=ge,0=sim,0=approx,0=gg,0=ll,0=\\le,0=\\ge,0=\\sim,0=\\approx,0=\\gg,0=\\ll,0~,0-,0*,0+
 
 function! s:in_mathzone(...) abort
   return !exists('g:loaded_vimtex') || !g:loaded_vimtex
@@ -53,23 +53,28 @@ function! GetMarkdownIndent() abort
   endif
 
   if s:in_mathzone()
-    " Align to the equal sign of the first previous line that contains '=' or
-    " '&=' if the current line starts with '=' or '&='
-    if l:line =~# '^\s*&\?='
+    " Align to the equal sign of the first previous line that contains
+    " '='/'>'/'<'/'\le'/'\ge'/'\sim'/'\approx'/'\gg'/'\ll' or variants with
+    " '&' at the beginning if the current line starts with one of these
+    " patterns
+    let align_patterns =
+          \ '&\?\s*\(=\|>\|<\|\\\?\(le\|ge\|sim\|approx\|gg\|ll\)\)\|&'
+    if l:line =~# align_patterns
       let [l:prev_eq_lnum, l:eq_pos, l:_] =
-            \ s:trimmed_prevnonblank_matches(v:lnum, '&\?=')
+            \ s:trimmed_prevnonblank_matches(v:lnum, align_patterns)
       if l:prev_eq_lnum > 0 && s:in_mathzone(l:prev_eq_lnum, 1)
         return indent(l:prev_eq_lnum) + l:eq_pos
       endif
     endif
     if s:in_mathzone(l:prev_lnum, 1)
-      " Add extra indent if previous line starts with '=' or '&='
+      " Add extra indent if previous line starts with `align_patterns`
       " and has no trailing double backslash '\\'
-      if l:prev_line =~# '^\s*&\?=' && l:prev_line !~# '\\\\\s*$'
+      if l:prev_line =~# align_patterns && l:prev_line !~# '\\\\\s*$'
         return indent(l:prev_lnum) + l:sw
       endif
-      " Reduce indent if previous line ends with '\\' but does not contain '='
-      if l:prev_line !~# '=' && l:prev_line =~# '\\\\\s*$'
+      " Reduce indent if previous line ends with '\\' but does not contain
+      " `align_patterns`
+      if l:prev_line !~# align_patterns && l:prev_line =~# '\\\\\s*$'
         return indent(l:prev_lnum) - l:sw
       endif
     endif
