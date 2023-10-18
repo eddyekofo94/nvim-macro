@@ -7,10 +7,10 @@ vim.g.vimtex_quickfix_ignore_filters = {
 }
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'tex', 'markdown' },
+  pattern = { 'tex', 'markdown', 'mkd' },
   group = vim.api.nvim_create_augroup('VimTexFileTypeInit', {}),
   callback = function(info)
-    if info.match == 'markdown' then
+    if info.match == 'markdown' or info.match == 'mkd' then
       vim.api.nvim_eval('vimtex#init()')
       vim.api.nvim_eval('vimtex#text_obj#init_buffer()')
       vim.bo[info.buf].formatexpr = ''
