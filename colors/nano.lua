@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 02 Sep 2023 05:26:16 PM CST
+-- Last Updated: Wed 18 Oct 2023 11:40:06 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -299,8 +299,7 @@ local hlgroups = {
   ['@text.strong'] = { bold = true },
   ['@text.strike'] = { strikethrough = true },
   ['@text.emphasis'] = {
-    fg = palette.background,
-    bg = palette.popout,
+    fg = palette.popout,
     bold = true,
   },
   ['@text.underline'] = { underline = true },

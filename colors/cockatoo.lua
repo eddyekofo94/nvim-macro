@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 02 Sep 2023 05:29:29 PM CST
+-- Last Updated: Wed 18 Oct 2023 11:41:02 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -340,8 +340,7 @@ local hlgroups = {
   ['@text.strong'] = { bold = true },
   ['@text.strike'] = { strikethrough = true },
   ['@text.emphasis'] = {
-    fg = palette.black,
-    bg = palette.beige,
+    fg = palette.beige,
     bold = true,
     italic = true,
   },
