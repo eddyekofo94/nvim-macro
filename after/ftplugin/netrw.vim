@@ -7,4 +7,3 @@ setlocal norelativenumber
 setlocal nospell
 setlocal signcolumn=no
 setlocal winbar=
-setlocal winhl=Normal:NormalFloat
