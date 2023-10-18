@@ -30,6 +30,7 @@ opt.breakindent    = true
 opt.smoothscroll   = true
 opt.completeopt    = 'menuone'
 opt.conceallevel   = 2
+opt.concealcursor  = 'nc'
 opt.autowriteall   = true
 opt.virtualedit    = 'block'
 -- stylua: ignore end
