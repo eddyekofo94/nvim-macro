@@ -32,10 +32,17 @@ local fterm_list_by_buf = {} ---@type table<integer, fterm_t>
 ---@field height number?
 ---...
 
+---@class fterm_termopts_event_callback_t
+---@field priority integer priority number larger than 0
+---@field callback fun(term: fterm_t)
+
+---@class fterm_termopts_event_callbacks_t
+---@field on_new table<string, fterm_termopts_event_callback_t?>? callbacks to invoke when the terminal is first created, default callback has priority 100
+---@field on_open table<string, fterm_termopts_event_callback_t?>? callbacks to invoke when the terminal window is opened, default callback has priority 100
+
 ---@class fterm_termopts_t
----@field init fun(term: fterm_t)? callback to invoke when the terminal is first created
----@field on_open fun(term: fterm_t)? callback to invoke when the terminal window is opened
----@field on_leave fun(term: fterm_t)? callback to invoke when the cursor leave the terminal window
+---@field toggle_keys string[]?
+---@field event_callbacks fterm_termopts_event_callbacks_t?
 
 ---@class fterm_opts_t
 ---@field jobopts fterm_jobopts_t?
@@ -45,9 +52,62 @@ local fterm_list_by_buf = {} ---@type table<integer, fterm_t>
 ---@type fterm_opts_t
 local fterm_opts_default = {
   termopts = {
-    on_leave = function(term)
-      term:close()
-    end,
+    toggle_keys = {},
+    event_callbacks = {
+      on_new = {
+        map_toggle_keys = {
+          priority = 100,
+          callback = function(term)
+            local keys = term.opts.termopts.toggle_keys
+            if keys then
+              for _, key in ipairs(keys) do
+                vim.keymap.set({ 'n', 'x', 't' }, key, function()
+                  term:close()
+                end, { buffer = term.buf })
+              end
+            end
+          end,
+        },
+        auto_close = {
+          priority = 100,
+          callback = function(term)
+            vim.api.nvim_create_autocmd('WinLeave', {
+              buffer = term.buf,
+              group = vim.api.nvim_create_augroup(
+                'FtermAutoClose' .. term.buf,
+                {}
+              ),
+              callback = function()
+                term:close()
+              end,
+            })
+          end,
+        },
+        auto_resize = {
+          priority = 100,
+          callback = function(term)
+            vim.api.nvim_create_autocmd('VimResized', {
+              buffer = term.buf,
+              group = vim.api.nvim_create_augroup(
+                'FtermAutoResize' .. term.buf,
+                {}
+              ),
+              callback = function()
+                term:update_win_size()
+              end,
+            })
+          end,
+        },
+      },
+      on_open = {
+        auto_insert = {
+          priority = 100,
+          callback = function(_)
+            vim.cmd.startinsert()
+          end,
+        },
+      },
+    },
   },
   jobopts = {
     on_exit = function(jobid, code, event)
@@ -169,21 +229,8 @@ function fterm_t:new(cmd, opts)
   fterm_list_by_job[jobid] = term
   fterm_list_by_buf[buf] = term
 
-  if normalized_opts.termopts.init then
-    normalized_opts.termopts.init(term)
-  end
-  if normalized_opts.termopts.on_open then
-    normalized_opts.termopts.on_open(term)
-  end
-  if normalized_opts.termopts.on_leave then
-    vim.api.nvim_create_autocmd('WinLeave', {
-      buffer = buf,
-      group = vim.api.nvim_create_augroup('FtermOnLeave' .. buf, {}),
-      callback = function()
-        normalized_opts.termopts.on_leave(term)
-      end,
-    })
-  end
+  term:exec_event_callbacks('on_new')
+  term:exec_event_callbacks('on_open')
 
   return term
 end
@@ -202,6 +249,27 @@ function fterm_t:del()
   end
   fterm_list_by_job[self.jobid] = nil
   fterm_list_by_buf[self.buf] = nil
+end
+
+---@param event 'on_new'|'on_open'
+function fterm_t:exec_event_callbacks(event)
+  local normalized_opts = normalize_fterm_opts(self.opts)
+  local event_callbacks = normalized_opts.termopts.event_callbacks[event]
+  if event_callbacks then
+    local sorted_callbacks = {}
+    for _, callback in pairs(event_callbacks) do
+      sorted_callbacks[callback.priority] = sorted_callbacks[callback.priority]
+        or {}
+      table.insert(sorted_callbacks[callback.priority], callback.callback)
+    end
+    for _, callbacks in pairs(sorted_callbacks) do
+      for _, callback in pairs(callbacks) do
+        if vim.is_callable(callback) then
+          callback(self)
+        end
+      end
+    end
+  end
 end
 
 ---Get the terminal instance by jobid
@@ -260,9 +328,7 @@ function fterm_t:open()
     true,
     normalize_fterm_winopts(self.opts.winopts)
   )
-  if self.opts.termopts.on_open then
-    self.opts.termopts.on_open(self)
-  end
+  self:exec_event_callbacks('on_open')
 end
 
 ---Close the terminal windows in current tabpage
@@ -283,6 +349,32 @@ function fterm_t:toggle()
     self:close()
   else
     self:open()
+  end
+end
+
+---Update window size based on `opts.winopts`
+---@return nil
+function fterm_t:update_win_size()
+  if not self:win_is_visible() then
+    return
+  end
+
+  vim.api.nvim_win_set_config(
+    self.win[vim.api.nvim_get_current_tabpage()],
+    normalize_fterm_winopts(self.opts.winopts)
+  )
+
+  -- Prevent terminal contents from shifting left when
+  -- the window width is reduced
+  if vim.api.nvim_get_mode().mode:find('^t') then
+    local eventignore = vim.o.eventignore
+    vim.opt.eventignore:append('CursorMoved')
+    vim.opt.eventignore:append('InsertEnter')
+    vim.opt.eventignore:append('InsertLeave')
+    vim.opt.eventignore:append('ModeChanged')
+    vim.cmd.stopinsert()
+    vim.api.nvim_feedkeys('0i', 'n', false)
+    vim.o.eventignore = eventignore
   end
 end
 

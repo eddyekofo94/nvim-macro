@@ -5,8 +5,8 @@ local fterm_t = utils.classes.fterm_t ---@type fterm_t
 ---@type table<string, fterm_t>
 local lazygits = {}
 
----@param key string key to toggle the lazygit terminal
-local function toggle(key)
+---@param keys string[] keys to toggle the lazygit terminal
+local function toggle(keys)
   ---@diagnostic disable-next-line: undefined-field
   local root = utils.fs.proj_dir(vim.uv.cwd(), { '.git/' })
   if root then
@@ -16,16 +16,7 @@ local function toggle(key)
       lazygits[root] = fterm_t:new('lazygit', {
         winopts = { border = 'solid' },
         jobopts = { cwd = root },
-        termopts = {
-          init = function(term)
-            vim.keymap.set('t', key, function()
-              term:close()
-            end, { buffer = term.buf })
-          end,
-          on_open = function()
-            vim.cmd.startinsert()
-          end,
-        },
+        termopts = { toggle_keys = keys },
       })
     end
   end
