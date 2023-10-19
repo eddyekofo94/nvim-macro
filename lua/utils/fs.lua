@@ -17,15 +17,20 @@ M.root_patterns = {
 }
 
 ---Compute project directory for given path.
----@param fpath string?
+---@param path string?
 ---@param patterns string[]? root patterns
 ---@return string? nil if not found
-function M.proj_dir(fpath, patterns)
-  if not fpath or fpath == '' then
+function M.proj_dir(path, patterns)
+  if not path or path == '' then
     return nil
   end
   patterns = patterns or M.root_patterns
-  local dirpath = vim.fs.dirname(fpath)
+  ---@diagnostic disable-next-line: undefined-field
+  local stat = vim.uv.fs_stat(path)
+  if not stat then
+    return
+  end
+  local dirpath = stat.type == 'directory' and path or vim.fs.dirname(path)
   for _, pattern in ipairs(patterns) do
     local root = vim.fs.find(pattern, {
       path = dirpath,
