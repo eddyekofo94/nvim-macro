@@ -12,6 +12,8 @@ local commands_shall_esc = {
   python3 = true,
   ipython = true,
   ipython3 = true,
+  lua = true,
+  git = true,
 }
 
 ---Decide if pressing <Esc> in nvim builtin terminal should exit terminal mode
