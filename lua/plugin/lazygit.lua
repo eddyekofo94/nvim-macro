@@ -8,7 +8,8 @@ local lazygits = {}
 ---@param keys string[] keys to toggle the lazygit terminal
 local function toggle(keys)
   ---@diagnostic disable-next-line: undefined-field
-  local root = utils.fs.proj_dir(vim.uv.cwd(), { '.git/' })
+  local cwd = vim.uv.cwd()
+  local root = utils.fs.proj_dir(cwd, { '.git/' }) or cwd
   if root then
     if lazygits[root] then
       lazygits[root]:toggle()
@@ -19,6 +20,8 @@ local function toggle(keys)
         termopts = { toggle_keys = keys },
       })
     end
+  else
+    vim.notify('[lazygit] vim.uv.cwd() failed!', vim.log.levels.WARN)
   end
 end
 
