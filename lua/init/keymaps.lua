@@ -59,9 +59,16 @@ vim.keymap.set({ 'x', 'n' }, '<C-w>+', 'v:count ? "<C-w>+" : "2<C-w>+"', { expr 
 vim.keymap.set({ 'x', 'n' }, '<C-w>-', 'v:count ? "<C-w>-" : "2<C-w>-"', { expr = true })
 -- stylua: ignore end
 
--- Up/down motions
-vim.keymap.set({ 'n', 'x' }, 'j', 'v:count ? "j" : "gj"', { expr = true })
-vim.keymap.set({ 'n', 'x' }, 'k', 'v:count ? "k" : "gk"', { expr = true })
+-- More consistent behavior when &wrap is set
+-- stylua: ignore start
+vim.keymap.set({ 'n', 'x' }, 'j',      'v:count ? "j"       : "gj"',     { expr = true })
+vim.keymap.set({ 'n', 'x' }, 'k',      'v:count ? "k"       : "gk"',     { expr = true })
+vim.keymap.set({ 'n', 'x' }, '0',      '&wrap   ? "g0"      : "0"',      { expr = true })
+vim.keymap.set({ 'n', 'x' }, '$',      '&wrap   ? "g$"      : "$"',      { expr = true })
+vim.keymap.set({ 'n', 'x' }, '^',      '&wrap   ? "g^"      : "^"',      { expr = true })
+vim.keymap.set({ 'n', 'x' }, '<Home>', '&wrap   ? "g<Home>" : "<Home>"', { expr = true })
+vim.keymap.set({ 'n', 'x' }, '<End>',  '&wrap   ? "g<End>"  : "<End>"',  { expr = true })
+-- stylua: ignore end
 
 -- Buffer navigation
 vim.keymap.set('n', ']b', '<Cmd>exec v:count1 . "bn"<CR>')
