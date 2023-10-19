@@ -61,10 +61,10 @@ local fterm_opts_default = {
     relative = 'editor',
     border = 'none',
     style = 'minimal',
-    width = 0.65,
+    width = 0.75,
     height = 0.75,
     row = 0.125,
-    col = 0.175,
+    col = 0.125,
   },
 }
 
@@ -93,7 +93,7 @@ local function normalize_fterm_winopts(winopts)
   normalized_winopts.width = normalize_relative_geometry(normalized_winopts.width, columns)
   normalized_winopts.height = normalize_relative_geometry(normalized_winopts.height, lines)
   normalized_winopts.row = normalize_relative_geometry(normalized_winopts.row, lines)
-  normalized_winopts.col = normalize_relative_geometry(normalized_winopts.col, columns, 'ceil')
+  normalized_winopts.col = normalize_relative_geometry(normalized_winopts.col, columns)
   -- stylua: ignore end
   if normalized_winopts.relative ~= 'win' then
     normalized_winopts.win = nil
@@ -149,10 +149,10 @@ end
 ---@return fterm_t?
 function fterm_t:new(cmd, opts)
   cmd = cmd or ''
-  opts = normalize_fterm_opts(opts)
+  local normalized_opts = normalize_fterm_opts(opts)
   local buf = vim.api.nvim_create_buf(false, false)
-  local win = vim.api.nvim_open_win(buf, true, opts.winopts)
-  local jobid = vim.fn.termopen(cmd, opts.jobopts)
+  local win = vim.api.nvim_open_win(buf, true, normalized_opts.winopts)
+  local jobid = vim.fn.termopen(cmd, normalized_opts.jobopts)
   if jobid <= 0 then -- Failed to start
     return
   end
@@ -169,18 +169,18 @@ function fterm_t:new(cmd, opts)
   fterm_list_by_job[jobid] = term
   fterm_list_by_buf[buf] = term
 
-  if opts.termopts.init then
-    opts.termopts.init(term)
+  if normalized_opts.termopts.init then
+    normalized_opts.termopts.init(term)
   end
-  if opts.termopts.on_open then
-    opts.termopts.on_open(term)
+  if normalized_opts.termopts.on_open then
+    normalized_opts.termopts.on_open(term)
   end
-  if opts.termopts.on_leave then
+  if normalized_opts.termopts.on_leave then
     vim.api.nvim_create_autocmd('WinLeave', {
       buffer = buf,
       group = vim.api.nvim_create_augroup('FtermOnLeave' .. buf, {}),
       callback = function()
-        opts.termopts.on_leave(term)
+        normalized_opts.termopts.on_leave(term)
       end,
     })
   end
@@ -241,6 +241,7 @@ function fterm_t:open()
   if self:win_is_visible() then
     return
   end
+
   -- Create a new terminal with the same config if the old buffer is not valid
   -- then replace the attributes of the old terminal with the new one
   if not self:buf_is_valid() then
