@@ -46,6 +46,9 @@ opt.gcr = vim.env.WEZTERM_PANE
 -- Use patience algorithm for diffing
 opt.diffopt:append('algorithm:patience')
 
+-- Use system clipboard
+opt.clipboard:append('unnamedplus')
+
 opt.backup = true
 opt.backupdir:remove('.')
 
