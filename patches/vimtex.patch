@@ -1,14 +1,5 @@
-From 8a56d458464e6bcb5f781dcc5546f396a51b26cb Mon Sep 17 00:00:00 2001
-From: bekaboo <18127878294@qq.com>
-Date: Sun, 18 Jun 2023 22:11:57 -0500
-Subject: [PATCH 1/3] feat: align equal signs across lines
-
----
- indent/tex.vim | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
 diff --git a/indent/tex.vim b/indent/tex.vim
-index 336ef4a2..8357f4b1 100644
+index d8de2f58..284fd583 100644
 --- a/indent/tex.vim
 +++ b/indent/tex.vim
 @@ -20,7 +20,7 @@ set cpoptions&vim
@@ -16,140 +7,47 @@ index 336ef4a2..8357f4b1 100644
  setlocal autoindent
  setlocal indentexpr=VimtexIndentExpr()
 -setlocal indentkeys=!^F,o,O,0(,0),],},\&,0=\\item\ ,0=\\item[,0=\\else,0=\\fi
-+setlocal indentkeys=!^F,o,O,0(,0),0=,],},\&,0=\\item\ ,0=\\item[,0=\\else,0=\\fi
++setlocal indentkeys=!^F,o,O,0&,0=,0=<,0=>,0=le,0=ge,0=sim,0=approx,0=gg,0=ll,0=\\le,0=\\ge,0=\\sim,0=\\approx,0=\\gg,0=\\ll,0~,0-,0*,0+
  
  " Add standard closing math delimiters to indentkeys
  for s:delim in [
-@@ -46,6 +46,14 @@ function! VimtexIndent(lnum) abort " {{{1
-   if l:prev_lnum == 0 | return indent(a:lnum) | endif
-   let l:line = s:clean_line(getline(a:lnum))
- 
-+  " Align to the equal sign of the previous line
-+  " if the current line starts with '=' or '&='
-+  let l:prev_line_trimmed = substitute(l:prev_line, '^\s*', '', '')
-+  let l:eq_pos = match(l:prev_line_trimmed, '&\?=')
-+  if l:eq_pos >= 0 && l:line =~# '^\s*&\?='
-+    return indent(l:prev_lnum) + l:eq_pos
-+  endif
-+
-   " Check for verbatim modes
-   if s:in_verbatim(a:lnum)
-     return empty(l:line) ? indent(l:prev_lnum) : indent(a:lnum)
--- 
-2.41.0
-
-
-From 8ca3f5b3ece36c28846b62bb76a55bfdc9a8ec6d Mon Sep 17 00:00:00 2001
-From: bekaboo <18127878294@qq.com>
-Date: Tue, 20 Jun 2023 01:22:05 -0500
-Subject: [PATCH 2/3] feat: indent multi-line math expressions
-
----
- indent/tex.vim | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
-
-diff --git a/indent/tex.vim b/indent/tex.vim
-index 8357f4b1..3ce6c7a7 100644
---- a/indent/tex.vim
-+++ b/indent/tex.vim
-@@ -46,19 +46,30 @@ function! VimtexIndent(lnum) abort " {{{1
-   if l:prev_lnum == 0 | return indent(a:lnum) | endif
-   let l:line = s:clean_line(getline(a:lnum))
- 
--  " Align to the equal sign of the previous line
--  " if the current line starts with '=' or '&='
--  let l:prev_line_trimmed = substitute(l:prev_line, '^\s*', '', '')
--  let l:eq_pos = match(l:prev_line_trimmed, '&\?=')
--  if l:eq_pos >= 0 && l:line =~# '^\s*&\?='
--    return indent(l:prev_lnum) + l:eq_pos
--  endif
--
-   " Check for verbatim modes
-   if s:in_verbatim(a:lnum)
+@@ -51,6 +51,35 @@ function! VimtexIndent(lnum) abort " {{{1
      return empty(l:line) ? indent(l:prev_lnum) : indent(a:lnum)
    endif
  
 +  " Align texts in mathzone
 +  if vimtex#syntax#in_mathzone()
-+    " Align to the equal sign of the previous line
-+    " if the current line starts with '=' or '&='
-+    let l:eq_pos = match(substitute(l:prev_line, '^\s*', '', ''), '&\?=')
-+    if l:eq_pos >= 0 && l:line =~# '^\s*&\?='
-+      return indent(l:prev_lnum) + l:eq_pos
++    " Align to the equal sign of the first previous line that contains
++    " '='/'>'/'<'/'\le'/'\ge'/'\sim'/'\approx'/'\gg'/'\ll' or variants with
++    " '&' at the beginning if the current line starts with one of these
++    " patterns
++    let align_patterns =
++          \ '&\?\s*\(=\|>\|<\|\\\?\(le\|ge\|sim\|approx\|gg\|ll\)\)\|&'
++    if l:line =~# align_patterns
++      let [l:prev_eq_lnum, l:eq_pos, l:_] =
++            \ s:trimmed_prevnonblank_matches(v:lnum, align_patterns)
++      if l:prev_eq_lnum > 0 && vimtex#syntax#in_mathzone(l:prev_eq_lnum, 1)
++        return indent(l:prev_eq_lnum) + l:eq_pos
++      endif
 +    endif
-+    " Add extra indent if previous line starts with '=' or '&='
-+    " and has no trailing double backslash '\\'
-+    if l:prev_line =~# '^\s*&\?=' && l:prev_line !~# '\\\\\s*$'
-+      return indent(l:prev_lnum) + s:sw
-+    endif
-+    " Reduce indent if previous line ends with '\\' but does not contain '='
-+    if l:prev_line !~# '=' && l:prev_line =~# '\\\\\s*$'
-+      return indent(l:prev_lnum) - s:sw
++    if vimtex#syntax#in_mathzone(l:prev_lnum, 1)
++      " Add extra indent if previous line starts with `align_patterns`
++      " and has no trailing double backslash '\\'
++      if l:prev_line =~# align_patterns && l:prev_line !~# '\\\\\s*$'
++        return indent(l:prev_lnum) + l:sw
++      endif
++      " Reduce indent if previous line ends with '\\' but does not contain
++      " `align_patterns`
++      if l:prev_line !~# align_patterns && l:prev_line =~# '\\\\\s*$'
++        return indent(l:prev_lnum) - l:sw
++      endif
 +    endif
 +  endif
 +
    " Use previous indentation for comments
    if l:line =~# '^\s*%'
      return indent(a:lnum)
--- 
-2.41.0
-
-
-From e0ce462995498e600f49246a7f200a07af62575d Mon Sep 17 00:00:00 2001
-From: bekaboo <18127878294@qq.com>
-Date: Wed, 21 Jun 2023 23:57:25 -0500
-Subject: [PATCH 3/3] feat: indent: add zone check; enhence equal signs
- alignment
-
----
- indent/tex.vim | 59 +++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 46 insertions(+), 13 deletions(-)
-
-diff --git a/indent/tex.vim b/indent/tex.vim
-index 3ce6c7a7..c24f1b27 100644
---- a/indent/tex.vim
-+++ b/indent/tex.vim
-@@ -53,20 +53,26 @@ function! VimtexIndent(lnum) abort " {{{1
- 
-   " Align texts in mathzone
-   if vimtex#syntax#in_mathzone()
--    " Align to the equal sign of the previous line
--    " if the current line starts with '=' or '&='
--    let l:eq_pos = match(substitute(l:prev_line, '^\s*', '', ''), '&\?=')
--    if l:eq_pos >= 0 && l:line =~# '^\s*&\?='
--      return indent(l:prev_lnum) + l:eq_pos
-+    " Align to the equal sign of the first previous line that contains '=' or
-+    " '&=' if the current line starts with '=' or '&='
-+    if l:line =~# '^\s*&\?='
-+      let [l:prev_eq_lnum, l:eq_pos, l:_] =
-+            \ s:trimmed_prevnonblank_matches(v:lnum, '&\?=')
-+      if l:prev_eq_lnum > 0 && vimtex#syntax#in_mathzone(l:prev_eq_lnum, 1)
-+        return indent(l:prev_eq_lnum) + l:eq_pos
-+      endif
-     endif
--    " Add extra indent if previous line starts with '=' or '&='
--    " and has no trailing double backslash '\\'
--    if l:prev_line =~# '^\s*&\?=' && l:prev_line !~# '\\\\\s*$'
--      return indent(l:prev_lnum) + s:sw
--    endif
--    " Reduce indent if previous line ends with '\\' but does not contain '='
--    if l:prev_line !~# '=' && l:prev_line =~# '\\\\\s*$'
--      return indent(l:prev_lnum) - s:sw
-+    if vimtex#syntax#in_mathzone(l:prev_lnum, 1)
-+      " Add extra indent if previous line starts with '=' or '&='
-+      " and has no trailing double backslash '\\'
-+      if l:prev_line =~# '^\s*&\?=' && l:prev_line !~# '\\\\\s*$'
-+        echom 'here'
-+        return indent(l:prev_lnum) + s:sw
-+      endif
-+      " Reduce indent if previous line ends with '\\' but does not contain '='
-+      if l:prev_line !~# '=' && l:prev_line =~# '\\\\\s*$'
-+        return indent(l:prev_lnum) - s:sw
-+      endif
-     endif
-   endif
- 
-@@ -112,6 +118,33 @@ function! s:get_prev_lnum(lnum) abort " {{{1
+@@ -93,6 +122,33 @@ function! s:get_prev_lnum(lnum) abort " {{{1
          \]
  endfunction
  
@@ -183,6 +81,3 @@ index 3ce6c7a7..c24f1b27 100644
  " }}}1
  function! s:clean_line(line) abort " {{{1
    return substitute(a:line, '\s*\\\@<!%.*', '', '')
--- 
-2.41.0
-
