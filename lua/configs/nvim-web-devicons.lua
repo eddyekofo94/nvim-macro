@@ -34,6 +34,12 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Data),
       name = 'Data',
     },
+    el = {
+      color = '#a374ea',
+      cterm_color = '61',
+      icon = vim.trim(icons.Elisp),
+      name = 'Elisp',
+    }
   },
   override_by_filename = {
     run_datasets = {

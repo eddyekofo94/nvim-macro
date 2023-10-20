@@ -290,6 +290,7 @@ M.icons = setmetatable({
     Cuda                = '󱗼 ',
     Data                = '󰆼 ',
     Desktop             = '󰟀 ',
+    Elisp               = ' ',
     Raw                 = '󱨏 ',
     Sh                  = ' ',
   },
