@@ -970,7 +970,7 @@ local function setup_diagnostics_autoswitch()
     pattern = 'diff',
     group = groupid,
     callback = function(info)
-      if vim.v.option_new == '1' then
+      if vim.v.option_new then
         vim.diagnostic.disable(info.buf)
         vim.b._lsp_diagnostics_temp_disabled = true
       elseif

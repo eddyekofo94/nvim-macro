@@ -213,7 +213,7 @@ local autocmds = {
       group = 'TextwidthRelativeColorcolumn',
       desc = 'Set colorcolumn according to textwidth.',
       callback = function()
-        if vim.v.option_new ~= '0' then
+        if vim.v.option_new ~= 0 then
           vim.opt_local.colorcolumn = '+1'
         end
       end,
@@ -227,7 +227,7 @@ local autocmds = {
       group = 'DisableWinBarInDiffMode',
       desc = 'Disable winbar in diff mode.',
       callback = function()
-        if vim.v.option_new == '1' then
+        if vim.v.option_new then
           vim.w._winbar = vim.wo.winbar
           vim.wo.winbar = nil
           if vim.wo.culopt:find('both') or vim.wo.culopt:find('line') then
