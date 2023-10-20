@@ -7,8 +7,10 @@ M.opts = {
   general = {
     ---@type boolean|fun(buf: integer, win: integer): boolean
     enable = function(buf, win)
-      return vim.bo[buf].buftype == ''
-        and vim.api.nvim_buf_get_name(buf) ~= ''
+      local bufname = vim.api.nvim_buf_get_name(buf)
+      return bufname ~= ''
+        and vim.uv.fs_stat(bufname) ~= nil
+        and vim.bo[buf].buftype == ''
         and vim.fn.win_gettype(win) == ''
         and not vim.wo[win].diff
     end,
