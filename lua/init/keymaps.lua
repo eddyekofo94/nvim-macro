@@ -96,15 +96,15 @@ vim.keymap.set('n', 'gt', tabswitch(vim.cmd.tabnext))
 vim.keymap.set('n', 'gT', tabswitch(vim.cmd.tabprev))
 vim.keymap.set('n', 'gy', tabswitch(vim.cmd.tabprev)) -- gT is too hard to press
 
-vim.keymap.set({ 'n', 'x', 't' }, '<M-1>', tabswitch(vim.cmd.tabnext, 1))
-vim.keymap.set({ 'n', 'x', 't' }, '<M-2>', tabswitch(vim.cmd.tabnext, 2))
-vim.keymap.set({ 'n', 'x', 't' }, '<M-3>', tabswitch(vim.cmd.tabnext, 3))
-vim.keymap.set({ 'n', 'x', 't' }, '<M-4>', tabswitch(vim.cmd.tabnext, 4))
-vim.keymap.set({ 'n', 'x', 't' }, '<M-5>', tabswitch(vim.cmd.tabnext, 5))
-vim.keymap.set({ 'n', 'x', 't' }, '<M-6>', tabswitch(vim.cmd.tabnext, 6))
-vim.keymap.set({ 'n', 'x', 't' }, '<M-7>', tabswitch(vim.cmd.tabnext, 7))
-vim.keymap.set({ 'n', 'x', 't' }, '<M-8>', tabswitch(vim.cmd.tabnext, 8))
-vim.keymap.set({ 'n', 'x', 't' }, '<M-9>', tabswitch(vim.cmd.tabnext, 9))
+vim.keymap.set('n', '<Leader>1', tabswitch(vim.cmd.tabnext, 1))
+vim.keymap.set('n', '<Leader>2', tabswitch(vim.cmd.tabnext, 2))
+vim.keymap.set('n', '<Leader>3', tabswitch(vim.cmd.tabnext, 3))
+vim.keymap.set('n', '<Leader>4', tabswitch(vim.cmd.tabnext, 4))
+vim.keymap.set('n', '<Leader>5', tabswitch(vim.cmd.tabnext, 5))
+vim.keymap.set('n', '<Leader>6', tabswitch(vim.cmd.tabnext, 6))
+vim.keymap.set('n', '<Leader>7', tabswitch(vim.cmd.tabnext, 7))
+vim.keymap.set('n', '<Leader>8', tabswitch(vim.cmd.tabnext, 8))
+vim.keymap.set('n', '<Leader>9', tabswitch(vim.cmd.tabnext, 9))
 
 -- Correct misspelled word / mark as correct
 vim.keymap.set('i', '<C-S-L>', '<Esc>[szg`]a')
@@ -113,8 +113,8 @@ vim.keymap.set('i', '<C-l>', '<C-G>u<Esc>[s1z=`]a<C-G>u')
 -- Only clear highlights and message area and don't redraw if search
 -- highlighting is on to avoid flickering
 vim.keymap.set('n', '<C-l>', function()
-  return vim.v.hlsearch == 1 and '<Cmd>nohlsearch<Bar>diffupdate<Bar>echo<CR>'
-    or '<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-l><CR>'
+  return vim.v.hlsearch == 1 and '<Cmd>nohlsearch|diffupdate|echo<CR>'
+    or '<Cmd>nohlsearch|diffupdate|normal! <C-l><CR>'
 end, { expr = true })
 
 -- Don't include extra spaces around quotes
