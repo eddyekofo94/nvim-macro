@@ -297,6 +297,7 @@ M.icons = setmetatable({
     Markdown            = ' ',
     Raw                 = '󱨏 ',
     Sh                  = ' ',
+    Zip                 = '󰗄 ',
   },
   ui = {
     AngleDown           = ' ',

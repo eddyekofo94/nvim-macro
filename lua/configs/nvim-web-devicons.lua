@@ -3,8 +3,6 @@ local icons = require('utils.static').icons
 require('nvim-web-devicons').setup({
   override = {
     default_icon = {
-      color = '#b4b4b9',
-      cterm_color = '249',
       icon = vim.trim(icons.File),
       name = 'Default',
     },
@@ -81,6 +79,12 @@ require('nvim-web-devicons').setup({
       cterm_color = '74',
       icon = vim.trim(icons.Markdown),
       name = 'Markdown',
+    },
+    zip = {
+      color = '#e84d31',
+      cterm_color = '166',
+      icon = vim.trim(icons.Zip),
+      name = 'Zip',
     },
   },
   override_by_filename = {
