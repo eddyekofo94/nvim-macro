@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Wed 18 Oct 2023 11:40:06 PM CST
+-- Last Updated: Sun 22 Oct 2023 01:44:15 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -435,6 +435,9 @@ local hlgroups = {
   -- }}}2
 
   -- Plugins {{{2
+  -- netrw
+  netrwClassify = { link = 'Directory' },
+
   -- nvim-cmp
   CmpItemAbbrDeprecated = { strikethrough = true },
   CmpItemAbbrMatch = { fg = palette.salient },

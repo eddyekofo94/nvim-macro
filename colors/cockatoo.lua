@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Wed 18 Oct 2023 11:41:02 PM CST
+-- Last Updated: Sun 22 Oct 2023 01:42:57 PM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -35,7 +35,7 @@ local palette_variants = {
     iron           = '#313742',
     deepsea        = '#334154',
     ocean          = '#303846',
-    jeans          = '#262a34',
+    jeans          = '#262f3e',
     space          = '#13161f',
     black          = '#09080b',
     shadow         = '#09080b',
@@ -468,6 +468,9 @@ local hlgroups = {
   -- }}}2
 
   -- Plugins {{{2
+  -- netrw
+  netrwClassify = { link = 'Directory' },
+
   -- nvim-cmp
   CmpItemAbbr = { fg = palette.smoke },
   CmpItemAbbrDeprecated = { strikethrough = true },
