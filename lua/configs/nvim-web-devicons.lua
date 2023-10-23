@@ -7,7 +7,7 @@ require('nvim-web-devicons').setup({
       name = 'Default',
     },
     desktop = {
-      color = '#563d7c',
+      color = '#997bca',
       cterm_color = '60',
       icon = vim.trim(icons.Desktop),
       name = 'DesktopEntry',
@@ -85,6 +85,30 @@ require('nvim-web-devicons').setup({
       cterm_color = '166',
       icon = vim.trim(icons.Zip),
       name = 'Zip',
+    },
+    theme = {
+      color = '#7c9fd5',
+      cterm_color = '39',
+      icon = vim.trim(icons.Theme),
+      name = 'Theme',
+    },
+    colorscheme = {
+      color = '#7c9fd5',
+      cterm_color = '39',
+      icon = vim.trim(icons.Theme),
+      name = 'ColorScheme',
+    },
+    profile = {
+      color = '#6d8086',
+      cterm_color = '66',
+      icon = vim.trim(icons.Config),
+      name = 'Profile',
+    },
+    rc = {
+      color = '#6d8086',
+      cterm_color = '66',
+      icon = vim.trim(icons.Config),
+      name = 'Rc',
     },
   },
   override_by_filename = {
