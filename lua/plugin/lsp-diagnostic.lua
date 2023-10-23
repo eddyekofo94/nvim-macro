@@ -1014,7 +1014,6 @@ local function setup_diagnostic_signs()
       text = icons[sign_name],
       texthl = sign_name,
       numhl = sign_name,
-      culhl = sign_name .. 'Cul',
     })
   end
 end

@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sun 22 Oct 2023 01:42:57 PM CST
+-- Last Updated: Tue 24 Oct 2023 01:07:54 AM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -406,11 +406,6 @@ local hlgroups = {
   DiagnosticSignWarn = { link = 'DiagnosticWarn' },
   DiagnosticSignInfo = { link = 'DiagnosticInfo' },
   DiagnosticSignHint = { link = 'DiagnosticHint' },
-  DiagnosticSignOkCul = { link = 'DiagnosticError' },
-  DiagnosticSignErrorCul = { link = 'DiagnosticError' },
-  DiagnosticSignWarnCul = { link = 'DiagnosticWarn' },
-  DiagnosticSignInfoCul = { link = 'DiagnosticInfo' },
-  DiagnosticSignHintCul = { link = 'DiagnosticHint' },
   -- }}}2
 
   -- Filetype {{{2
