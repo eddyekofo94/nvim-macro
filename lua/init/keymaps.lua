@@ -158,6 +158,87 @@ vim.keymap.set('o', 'af', '<Cmd>silent! normal m`Vaf<CR><Cmd>silent! normal! ``<
 vim.keymap.set('o', 'if', '<Cmd>silent! normal m`Vif<CR><Cmd>silent! normal! ``<CR>', { silent = true, noremap = false })
 -- stylua: ignore end
 
+-- Use 'g{' and 'g}' to move to the first/last line of a paragraph
+vim.keymap.set({ 'n', 'x' }, 'g{', function()
+  local chunk_size = 10
+  local linenr = vim.fn.line('.')
+  local count = vim.v.count1
+
+  -- If current line is the first line of paragraph, move one line
+  -- upwards first to goto the first line of previous paragraph
+  if linenr >= 2 then
+    local lines = vim.api.nvim_buf_get_lines(0, linenr - 2, linenr, false)
+    if lines[1]:match('^$') and lines[2]:match('%S') then
+      linenr = linenr - 1
+    end
+  end
+
+  while linenr >= 1 do
+    local chunk = vim.api.nvim_buf_get_lines(
+      0,
+      math.max(0, linenr - chunk_size - 1),
+      linenr - 1,
+      false
+    )
+    for i, line in ipairs(vim.iter(chunk):rev():totable()) do
+      local current_linenr = linenr - i
+      if line:match('^$') then
+        count = count - 1
+        if count <= 0 then
+          vim.cmd("normal! m'")
+          vim.cmd(tostring(current_linenr + 1))
+          return
+        end
+      elseif current_linenr <= 1 then
+        vim.cmd("normal! m'")
+        vim.cmd('1')
+        return
+      end
+    end
+    linenr = linenr - chunk_size
+  end
+end, { noremap = false })
+
+vim.keymap.set({ 'n', 'x' }, 'g}', function()
+  local chunk_size = 10
+  local linenr = vim.fn.line('.')
+  local buf_line_count = vim.api.nvim_buf_line_count(0)
+  local count = vim.v.count1
+
+  -- If current line is the last line of paragraph, move one line
+  -- downwards first to goto the last line of next paragraph
+  if buf_line_count - linenr >= 1 then
+    local lines = vim.api.nvim_buf_get_lines(0, linenr - 1, linenr + 1, false)
+    if lines[1]:match('%S') and lines[2]:match('^$') then
+      linenr = linenr + 1
+    end
+  end
+
+  while linenr <= buf_line_count do
+    local chunk =
+      vim.api.nvim_buf_get_lines(0, linenr, linenr + chunk_size, false)
+    for i, line in ipairs(chunk) do
+      local current_linenr = linenr + i
+      if line:match('^$') then
+        count = count - 1
+        if count <= 0 then
+          vim.cmd("normal! m'")
+          vim.cmd(tostring(current_linenr - 1))
+          return
+        end
+      elseif current_linenr >= buf_line_count then
+        vim.cmd("normal! m'")
+        vim.cmd(tostring(buf_line_count))
+        return
+      end
+    end
+    linenr = linenr + chunk_size
+  end
+end, { noremap = false })
+
+vim.keymap.set('o', 'g{', '<Cmd>silent! normal Vg{<CR>', { noremap = false })
+vim.keymap.set('o', 'g}', '<Cmd>silent! normal Vg}<CR>', { noremap = false })
+
 -- Abbreaviations
 utils.keymap.command_abbrev('S', '%s')
 utils.keymap.command_abbrev(':', 'lua')
