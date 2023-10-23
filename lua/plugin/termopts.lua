@@ -34,6 +34,7 @@ local function term_set_keymaps_and_opts(buf)
   })
   vim.opt_local.nu = false
   vim.opt_local.rnu = false
+  vim.opt_local.spell = false
   vim.opt_local.statuscolumn = ''
   vim.opt_local.signcolumn = 'no'
   vim.opt_local.scrolloff = 0
