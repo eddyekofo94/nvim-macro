@@ -239,7 +239,7 @@ end, { noremap = false })
 vim.keymap.set('o', 'g{', '<Cmd>silent! normal Vg{<CR>', { noremap = false })
 vim.keymap.set('o', 'g}', '<Cmd>silent! normal Vg}<CR>', { noremap = false })
 
--- Abbreaviations
+-- Abbreviations
 utils.keymap.command_abbrev('S', '%s')
 utils.keymap.command_abbrev(':', 'lua')
 utils.keymap.command_abbrev('qa', 'qa!')
