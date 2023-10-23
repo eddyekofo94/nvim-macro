@@ -165,6 +165,7 @@ else
     'markup',
     'tools',
     'treesitter',
+    'colorschemes',
   })
 end
 
