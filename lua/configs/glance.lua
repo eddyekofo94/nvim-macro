@@ -108,6 +108,21 @@ glance.setup({
   },
 })
 
+---@return nil
+local function set_default_hlgroups()
+  utils.hl.set(0, 'GlanceBorderTop', { link = 'WinSeparator' })
+  utils.hl.set(0, 'GlancePreviewBorderBottom', { link = 'GlanceBorderTop' })
+  utils.hl.set(0, 'GlanceListBorderBottom', { link = 'GlanceBorderTop' })
+end
+
+set_default_hlgroups()
+
+vim.api.nvim_create_autocmd('ColorScheme', {
+  group = vim.api.nvim_create_augroup('GlanceSetDefaultHlgroups', {}),
+  desc = 'Set default hlgroups for glance.nvim.',
+  callback = set_default_hlgroups,
+})
+
 ---@diagnostic disable: duplicate-set-field
 -- Override LSP handler functions
 -- stylua: ignore start

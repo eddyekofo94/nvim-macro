@@ -243,3 +243,29 @@ local fzf_cmd_body = {
 vim.api.nvim_create_user_command('F', unpack(fzf_cmd_body))
 vim.api.nvim_create_user_command('FZ', unpack(fzf_cmd_body))
 vim.api.nvim_create_user_command('FZF', unpack(fzf_cmd_body))
+
+---Set telescope default hlgroups for a borderless view
+---@return nil
+local function set_default_hlgroups()
+  local hl_tl_norm =
+    utils.hl.get(0, { name = 'TelescopeNormal', link = false })
+  local hl_tl_pnorm =
+    utils.hl.get(0, { name = 'TelescopePromptNormal', link = false })
+  local hl_norm = utils.hl.get(0, { name = 'Normal', link = false })
+  if vim.tbl_isempty(hl_tl_norm) or hl_tl_norm.bg == hl_norm.bg then
+    utils.hl.set(0, 'TelescopeNormal', { bg = 'NormalFloat' })
+  end
+  if vim.tbl_isempty(hl_tl_pnorm) or hl_tl_pnorm.bg == hl_norm.bg then
+    utils.hl.set(0, 'TelescopePromptNormal', { bg = 'NormalFloat' })
+  end
+  utils.hl.set(0, 'TelescopeBorder', { link = 'TelescopeNormal' })
+  utils.hl.set(0, 'TelescopePromptBorder', { link = 'TelescopePromptNormal' })
+end
+
+set_default_hlgroups()
+
+vim.api.nvim_create_autocmd('ColorScheme', {
+  group = vim.api.nvim_create_augroup('FzfLuaSetDefaultHlgroups', {}),
+  desc = 'Set default hlgroups for fzf-lua.',
+  callback = set_default_hlgroups,
+})
