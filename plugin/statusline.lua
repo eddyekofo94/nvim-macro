@@ -305,3 +305,30 @@ vim.api.nvim_create_autocmd({ 'FileChangedShellPost', 'DiagnosticChanged' }, {
   group = groupid,
   command = redraw_cmd,
 })
+
+vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
+  group = groupid,
+  callback = function()
+    ---@param hlgroup_name string
+    ---@param attr table
+    ---@return nil
+    local function sethl(hlgroup_name, attr)
+      attr.fg = attr.fg or 'StatusLine'
+      attr.bg = attr.bg or 'StatusLine'
+      utils.hl.set_default(0, hlgroup_name, attr)
+    end
+    -- stylua: ignore start
+    sethl('StatusLineHeader', { bg = 'TabLine', bold = true })
+    sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'TabLine', bold = true })
+    sethl('StatusLineStrong', { bold = true })
+    sethl('StatusLineFaded', { fg = 'Comment' })
+    sethl('StatusLineGitAdded', { fg = 'GitSignsAdd' })
+    sethl('StatusLineGitChanged', { fg = 'GitSignsChange' })
+    sethl('StatusLineGitRemoved', { fg = 'GitSignsDelete' })
+    sethl('StatusLineDiagnosticError', { fg = 'LspDiagnosticsSignError' })
+    sethl('StatusLineDiagnosticHint', { fg = 'LspDiagnosticsSignHint' })
+    sethl('StatusLineDiagnosticInfo', { fg = 'LspDiagnosticsSignInformation' })
+    sethl('StatusLineDiagnosticWarn', { fg = 'LspDiagnosticsSignWarning' })
+    -- stylua: ignore end
+  end,
+})
