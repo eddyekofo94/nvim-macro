@@ -106,6 +106,12 @@ local fterm_opts_default = {
             vim.cmd.startinsert()
           end,
         },
+        prevent_shifting = {
+          priority = 100,
+          callback = function(term)
+            term:right_shift()
+          end,
+        }
       },
     },
   },
@@ -364,9 +370,19 @@ function fterm_t:update_win_size()
     normalize_fterm_winopts(self.opts.winopts)
   )
 
-  -- Prevent terminal contents from shifting left when
-  -- the window width is reduced
-  if vim.api.nvim_get_mode().mode:find('^t') then
+  self:right_shift()
+end
+
+---Shift the contents of the terminal to the right, prevent terminal contents
+---from shifting left when the terminal window width is reduced
+---@return nil
+function fterm_t:right_shift()
+  if
+    vim.api.nvim_get_mode().mode:find('^t')
+    and self:win_is_visible()
+    and vim.api.nvim_get_current_win()
+      == self.win[vim.api.nvim_get_current_tabpage()]
+  then
     local eventignore = vim.o.eventignore
     vim.opt.eventignore:append('CursorMoved')
     vim.opt.eventignore:append('InsertEnter')
