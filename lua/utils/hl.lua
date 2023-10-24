@@ -176,4 +176,137 @@ function M.set_default(ns_id, name, attr)
   return vim.api.nvim_set_hl(ns_id, name, M.normalize(attr))
 end
 
+-- stylua: ignore start
+local todec = {
+  ['0'] = 0,
+  ['1'] = 1,
+  ['2'] = 2,
+  ['3'] = 3,
+  ['4'] = 4,
+  ['5'] = 5,
+  ['6'] = 6,
+  ['7'] = 7,
+  ['8'] = 8,
+  ['9'] = 9,
+  ['A'] = 10,
+  ['B'] = 11,
+  ['C'] = 12,
+  ['D'] = 13,
+  ['E'] = 14,
+  ['F'] = 15,
+}
+
+local tohex = {
+  [0]  = '0',
+  [1]  = '1',
+  [2]  = '2',
+  [3]  = '3',
+  [4]  = '4',
+  [5]  = '5',
+  [6]  = '6',
+  [7]  = '7',
+  [8]  = '8',
+  [9]  = '9',
+  [10] = 'A',
+  [11] = 'B',
+  [12] = 'C',
+  [13] = 'D',
+  [14] = 'E',
+  [15] = 'F',
+}
+-- stylua: ignore end
+
+---Convert an integer from hexadecimal to decimal
+---@param hex string
+---@return integer dec
+function M.hex2dec(hex)
+  local digit = 1
+  local dec = 0
+  while digit <= #hex do
+    dec = dec + todec[string.sub(hex, digit, digit)] * 16 ^ (#hex - digit)
+    digit = digit + 1
+  end
+  return dec
+end
+
+---Convert an integer from decimal to hexadecimal
+---@param int integer
+---@return string hex
+function M.dec2hex(int)
+  local hex = ''
+  while int > 0 do
+    hex = tohex[int % 16] .. hex
+    int = math.floor(int / 16)
+  end
+  return hex
+end
+
+---Convert a hex color to rgb color
+---@param hex string hex code of the color
+---@return integer[] rgb
+function M.hex2rgb(hex)
+  return {
+    M.hex2dec(string.sub(hex, 1, 2)),
+    M.hex2dec(string.sub(hex, 3, 4)),
+    M.hex2dec(string.sub(hex, 5, 6)),
+  }
+end
+---Convert an rgb color to hex color
+---@param rgb integer[]
+---@return string
+function M.rgb2hex(rgb)
+  local hex = {
+    M.dec2hex(math.floor(rgb[1])),
+    M.dec2hex(math.floor(rgb[2])),
+    M.dec2hex(math.floor(rgb[3])),
+  }
+  hex = {
+    string.rep('0', 2 - #hex[1]) .. hex[1],
+    string.rep('0', 2 - #hex[2]) .. hex[2],
+    string.rep('0', 2 - #hex[3]) .. hex[3],
+  }
+  return table.concat(hex, '')
+end
+
+---Blend two colors
+---@param c1 string|number|table the first color, in hex, dec, or rgb
+---@param c2 string|number|table the second color, in hex, dec, or rgb
+---@param alpha number? between 0~1, weight of the first color, default to 0.5
+---@return { hex: string, dec: integer, r: integer, g: integer, b: integer }
+function M.cblend(c1, c2, alpha)
+  alpha = alpha or 0.5
+  c1 = type(c1) == 'number' and M.dec2hex(c1) or c1
+  c2 = type(c2) == 'number' and M.dec2hex(c2) or c2
+  local rgb1 = type(c1) == 'string' and M.hex2rgb(c1:gsub('#', '', 1)) or c1
+  local rgb2 = type(c2) == 'string' and M.hex2rgb(c2:gsub('#', '', 1)) or c2
+  local rgb_blended = {
+    alpha * rgb1[1] + (1 - alpha) * rgb2[1],
+    alpha * rgb1[2] + (1 - alpha) * rgb2[2],
+    alpha * rgb1[3] + (1 - alpha) * rgb2[3],
+  }
+  local hex = M.rgb2hex(rgb_blended)
+  return {
+    hex = '#' .. hex,
+    dec = M.hex2dec(hex),
+    r = math.floor(rgb_blended[1]),
+    g = math.floor(rgb_blended[2]),
+    b = math.floor(rgb_blended[3]),
+  }
+end
+
+---Blend two hlgroups
+---@param h1 string|table the first hlgroup name or highlight attribute table
+---@param h2 string|table the second hlgroup name or highlight attribute table
+---@param alpha number? between 0~1, weight of the first color, default to 0.5
+---@return table: merged color or highlight attributes
+function M.blend(h1, h2, alpha)
+  -- stylua: ignore start
+  h1 = type(h1) == 'table' and h1 or M.get(0, { name = h1, link = false })
+  h2 = type(h2) == 'table' and h1 or M.get(0, { name = h2, link = false })
+  local fg = h1.fg and h2.fg and M.cblend(h1.fg, h2.fg, alpha).dec or h1.fg or h2.fg
+  local bg = h1.bg and h2.bg and M.cblend(h1.bg, h2.bg, alpha).dec or h1.bg or h2.bg
+  return vim.tbl_deep_extend('force', h1, h2, { fg = fg, bg = bg })
+  -- stylua: ignore end
+end
+
 return M
