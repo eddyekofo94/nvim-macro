@@ -75,27 +75,28 @@ vim.keymap.set('n', ']b', '<Cmd>exec v:count1 . "bn"<CR>')
 vim.keymap.set('n', '[b', '<Cmd>exec v:count1 . "bp"<CR>')
 
 -- Tabpages
----@param default function
----@param count number?
+---@param tab_action function
+---@param default_count number?
 ---@return function
-local function tabswitch(default, count)
+local function tabswitch(tab_action, default_count)
   return function()
-    count = count or vim.v.count
-    local tabcount = vim.fn.tabpagenr('$')
-    if tabcount >= count then
-      default(count ~= 0 and count or nil)
+    local count = default_count or vim.v.count
+    local num_tabs = vim.fn.tabpagenr('$')
+    if num_tabs >= count then
+      tab_action(count ~= 0 and count or nil)
       return
     end
-    for _ = 1, count - tabcount do
+    vim.cmd.tablast()
+    for _ = 1, count - num_tabs do
       vim.cmd.tabnew()
     end
-    vim.cmd.tabnext('$')
   end
 end
 vim.keymap.set('n', 'gt', tabswitch(vim.cmd.tabnext))
 vim.keymap.set('n', 'gT', tabswitch(vim.cmd.tabprev))
 vim.keymap.set('n', 'gy', tabswitch(vim.cmd.tabprev)) -- gT is too hard to press
 
+vim.keymap.set('n', '<Leader>0', '<Cmd>0tabnew<CR>')
 vim.keymap.set('n', '<Leader>1', tabswitch(vim.cmd.tabnext, 1))
 vim.keymap.set('n', '<Leader>2', tabswitch(vim.cmd.tabnext, 2))
 vim.keymap.set('n', '<Leader>3', tabswitch(vim.cmd.tabnext, 3))
