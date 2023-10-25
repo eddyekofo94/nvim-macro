@@ -102,9 +102,12 @@ vim.api.nvim_create_autocmd('WinClosed', {
       and vim.api.nvim_win_is_valid(win)
       and vim.bo[vim.api.nvim_win_get_buf(win)].ft == 'rnvimr'
     then
-      win_call_keep_views(vim.api.nvim_tabpage_list_wins(0), function()
-        vim.go.cmdheight = vim.g.cmdheight
-      end)
+      win_call_keep_views(
+        vim.api.nvim_tabpage_list_wins(vim.api.nvim_win_get_tabpage(win)),
+        function()
+          vim.go.cmdheight = vim.g.cmdheight
+        end
+      )
       vim.g.cmdheight = nil
       vim.g.redraw_pending = true
     end
