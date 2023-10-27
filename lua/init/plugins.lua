@@ -154,6 +154,7 @@ if vim.g.vscode then
     'lib',
     'treesitter',
     'edit',
+    'colorschemes',
   })
 else
   enable_modules({
