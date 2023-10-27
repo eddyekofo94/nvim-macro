@@ -1,6 +1,5 @@
 _G.statusline = {}
 local utils = require('utils')
-local redraw_cmd = 'silent! redrawstatus'
 
 ---@type table<string, string>
 local signs_text_cache = {}
@@ -231,10 +230,9 @@ vim.api.nvim_create_autocmd('LspProgress', {
       -- No new report since the timer was set
       if _report_time == report_time then
         lsp_prog_data = nil
-        vim.cmd(redraw_cmd)
+        vim.cmd.redrawstatus()
       end
     end, 2048)
-    vim.cmd(redraw_cmd)
   end,
 })
 
@@ -274,37 +272,48 @@ local components = {
 }
 -- stylua: ignore end
 
+local stl = table.concat({
+  components.mode,
+  components.fname,
+  components.info,
+  components.align,
+  components.truncate,
+  components.lsp_progress,
+  components.diag,
+  components.pos,
+})
+
+local stl_nc = table.concat({
+  components.fname_nc,
+  components.align,
+  components.truncate,
+  components.pos_nc,
+})
+
 local groupid = vim.api.nvim_create_augroup('StatusLine', {})
-vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'CursorMoved' }, {
+vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
   group = groupid,
   callback = function()
-    vim.wo.statusline = table.concat({
-      components.mode,
-      components.fname,
-      components.info,
-      components.align,
-      components.truncate,
-      components.lsp_progress,
-      components.diag,
-      components.pos,
-    })
+    if vim.wo.stl ~= stl then
+      vim.wo.stl = stl
+    end
   end,
 })
 vim.api.nvim_create_autocmd('WinLeave', {
   group = groupid,
   callback = function()
-    vim.wo.statusline = table.concat({
-      components.fname_nc,
-      components.align,
-      components.truncate,
-      components.pos_nc,
-    })
+    if vim.wo.stl ~= stl_nc then
+      vim.wo.stl = stl_nc
+    end
   end,
 })
-vim.api.nvim_create_autocmd({ 'FileChangedShellPost', 'DiagnosticChanged' }, {
-  group = groupid,
-  command = redraw_cmd,
-})
+vim.api.nvim_create_autocmd(
+  { 'FileChangedShellPost', 'DiagnosticChanged', 'LspProgress' },
+  {
+    group = groupid,
+    command = 'redrawstatus',
+  }
+)
 
 vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
   group = groupid,
