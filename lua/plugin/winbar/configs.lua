@@ -11,6 +11,7 @@ M.opts = {
       return bufname ~= ''
         and vim.uv.fs_stat(bufname) ~= nil
         and vim.bo[buf].buftype == ''
+        and vim.bo[buf].filetype:match('git') == nil
         and vim.fn.win_gettype(win) == ''
         and not vim.wo[win].diff
     end,
@@ -194,6 +195,11 @@ M.opts = {
     win_configs = {
       border = 'none',
       style = 'minimal',
+      relative = 'win',
+      win = function(menu)
+        return menu.prev_menu and menu.prev_menu.win
+          or vim.fn.getmousepos().winid
+      end,
       row = function(menu)
         return menu.prev_menu
             and menu.prev_menu.clicked_at
@@ -213,11 +219,6 @@ M.opts = {
         end
         local _, range = bar:get_component_at(math.max(0, mouse.wincol - 1))
         return range and range.start or mouse.wincol
-      end,
-      relative = 'win',
-      win = function(menu)
-        return menu.prev_menu and menu.prev_menu.win
-          or vim.fn.getmousepos().winid
       end,
       height = function(menu)
         return math.max(
