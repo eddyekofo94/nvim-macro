@@ -11,21 +11,13 @@ require('flatten').setup({
       end
       return false
     end,
-    post_open = function(bufnr, winnr, ft, _)
-      vim.api.nvim_set_current_win(winnr)
-      -- If the file is a git commit or git rebase, create one-shot autocmd to
-      -- delete its buffer on write
-      if ft == 'gitcommit' or ft == 'gitrebase' then
-        vim.api.nvim_create_autocmd('BufWritePost', {
-          buffer = bufnr,
-          once = true,
-          callback = function()
-            vim.defer_fn(function()
-              vim.api.nvim_buf_delete(bufnr, {})
-            end, 50)
-            return true
-          end,
-        })
+    post_open = function(buf, win, ft, _)
+      vim.api.nvim_set_current_win(win)
+      if
+        (ft == 'gitcommit' or ft == 'gitrebase')
+        and vim.api.nvim_buf_get_name(buf):find('.git/rebase-merge')
+      then
+        vim.bo[buf].bufhidden = 'wipe'
       end
     end,
   },
