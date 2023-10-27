@@ -457,8 +457,8 @@ function winbar_menu_t:make_buf()
         self:quick_navigation(cursor)
       end
 
-      -- Update hover highlights
       self:update_hover_hl(self.prev_cursor)
+      self:update_scrollbar()
     end,
   })
   vim.api.nvim_create_autocmd('WinScrolled', {
