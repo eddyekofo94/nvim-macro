@@ -86,6 +86,12 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Zip),
       name = 'Zip',
     },
+    rar = {
+      color = '#e84d31',
+      cterm_color = '166',
+      icon = vim.trim(icons.Zip),
+      name = 'Zip',
+    },
     theme = {
       color = '#7c9fd5',
       cterm_color = '39',
