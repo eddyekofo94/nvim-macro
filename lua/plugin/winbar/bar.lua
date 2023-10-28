@@ -220,19 +220,18 @@ function winbar_symbol_t:cat(plain)
   end
   local icon_highlighted = utils.stl.hl(self.icon, self.icon_hl)
   local name_highlighted = utils.stl.hl(self.name, self.name_hl)
-  if self.on_click and self.bar_idx then
-    self.cache.decorated_str = utils.stl.make_clickable(
-      icon_highlighted .. name_highlighted,
-      string.format(
-        'v:lua.winbar.on_click_callbacks.buf%s.win%s.fn%s',
-        self.bar.buf,
-        self.bar.win,
-        self.bar_idx
+  self.cache.decorated_str = self.on_click
+      and self.bar_idx
+      and utils.stl.make_clickable(
+        icon_highlighted .. name_highlighted,
+        string.format(
+          'v:lua.winbar.on_click_callbacks.buf%s.win%s.fn%s',
+          self.bar.buf,
+          self.bar.win,
+          self.bar_idx
+        )
       )
-    )
-    return self.cache.decorated_str
-  end
-  self.cache.decorated_str = icon_highlighted .. name_highlighted
+    or icon_highlighted .. name_highlighted
   return self.cache.decorated_str
 end
 
