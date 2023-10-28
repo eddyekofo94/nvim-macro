@@ -126,6 +126,12 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Sh),
       name = 'ShellRunDatasets',
     },
+    configure = {
+      color = '#6d8086',
+      cterm_color = '66',
+      icon = vim.trim(icons.Config),
+      name = 'Configure',
+    },
     ['package.json'] = {
       color = '#bbbbbb',
       cterm_color = '250',
