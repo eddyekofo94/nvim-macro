@@ -244,12 +244,27 @@ cmp.setup({
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, cmp_item)
-      ---@type table<string, string> override icons with `entry.source.name`
-      local icon_override = {
-        cmdline = icons.Terminal,
-        calc = icons.Calculator,
-      }
-      cmp_item.kind = icon_override[entry.source.name] or icons[cmp_item.kind]
+      if cmp_item.kind == 'File' then
+        local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
+        if devicons_ok then
+          local icon, icon_hl = devicons.get_icon(
+            vim.fs.basename(cmp_item.word),
+            vim.fn.fnamemodify(cmp_item.word, ':e'),
+            { default = true }
+          )
+          cmp_item.kind = icon or cmp_item.kind
+          cmp_item.kind_hl_group = icon_hl or cmp_item.kind_hl_group
+        end
+      else
+        ---@type table<string, string> override icons with `entry.source.name`
+        local icon_override = {
+          cmdline = icons.Terminal,
+          calc = icons.Calculator,
+        }
+        cmp_item.kind = icon_override[entry.source.name]
+          or icons[cmp_item.kind]
+          or ''
+      end
       ---@param field string
       ---@param min_width integer
       ---@param max_width integer
