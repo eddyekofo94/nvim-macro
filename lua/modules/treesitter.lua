@@ -21,11 +21,6 @@ return {
     config = function()
       require('configs.nvim-treesitter')
     end,
-    dependencies = {
-      'nvim-treesitter-textobjects',
-      'nvim-ts-context-commentstring',
-      'nvim-treesitter-endwise',
-    },
   },
 
   {

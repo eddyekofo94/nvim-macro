@@ -32,6 +32,12 @@ vim.api.nvim_create_autocmd('CmdWinEnter', {
   end,
 })
 
+---@param buf integer buffer handler
+---@return boolean
+local function buf_is_large(_, buf)
+  return vim.api.nvim_buf_line_count(buf) > 4096
+end
+
 ---@diagnostic disable-next-line: missing-fields
 ts_configs.setup({
   ensure_installed = require('utils.static').langs:list('ts'),
@@ -39,18 +45,24 @@ ts_configs.setup({
   ignore_install = {},
   highlight = {
     enable = not vim.g.vscode,
-    disable = { 'markdown', 'tex', 'latex' },
+    disable = function(ft, buf)
+      return vim.tbl_contains({ 'markdown', 'tex', 'latex' }, ft)
+        or buf_is_large(ft, buf)
+    end,
     additional_vim_regex_highlighting = false,
   },
   context_commentstring = {
     enable = true,
     enable_autocmd = false,
+    disable = buf_is_large,
   },
   endwise = {
     enable = true,
+    disable = buf_is_large,
   },
   incremental_selection = {
     enable = true,
+    disable = buf_is_large,
     keymaps = {
       init_selection = false,
       node_incremental = 'an',
@@ -59,6 +71,8 @@ ts_configs.setup({
     },
   },
   textobjects = {
+    enable = true,
+    disable = buf_is_large,
     select = {
       enable = true,
       lookahead = true, -- Automatically jump forward to textobj
