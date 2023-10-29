@@ -1,4 +1,4 @@
-_G.statuscolumn = {}
+_G.stc = {}
 local utils = require('utils')
 local ffi = require('ffi')
 
@@ -11,7 +11,7 @@ local merged_hlgroups = {}
 
 ---Record line number highlights for each line in each window
 ---@type table<integer, table<integer, string>>
-local win_linenr_hl = {}
+local win_numhl = {}
 
 ---Return true if CursorLineSign highlight is to be used in current line,
 ---lua clone of neovim/src/nvim/drawline.c use_cursor_line_highlight()
@@ -45,13 +45,13 @@ local function get_sign_def(sign_name, sign_group)
       return
     end
     sign_def.text = vim.trim(sign_def.text)
+    -- Add missing culhl to sign definition
     if not sign_def.culhl then
       local texthl = sign_def.texthl
       local culhl = texthl .. 'Cul'
       if not merged_hlgroups[culhl] and vim.fn.hlexists(culhl) == 0 then
         local components = { 'CursorLineSign', texthl }
-        local merged_hl_attr = utils.hl.merge(unpack(components))
-        vim.api.nvim_set_hl(0, culhl, merged_hl_attr)
+        utils.hl.set_default(0, culhl, utils.hl.merge(unpack(components)))
         merged_hlgroups[culhl] = components
       end
       sign_def.culhl = culhl
@@ -67,14 +67,15 @@ end
 ---@param prefixes string[] prefixes of the sign name
 ---@param sign_group string group name of the signs
 ---@return string sign string representation of the sign with highlight
-function _G.statuscolumn.get_sign(prefixes, sign_group)
+function _G.stc.get_sign_str(prefixes, sign_group)
   local bufnum = vim.api.nvim_get_current_buf()
   local lnum = vim.v.lnum
   local win = vim.api.nvim_get_current_win()
 
   -- Clear line number highlight group cache
-  win_linenr_hl[win] = win_linenr_hl[win] or {}
-  win_linenr_hl[win][lnum] = nil
+  if win_numhl[win] then
+    win_numhl[win][lnum] = nil
+  end
 
   local signs = vim.tbl_filter(
     function(sign)
@@ -104,16 +105,16 @@ function _G.statuscolumn.get_sign(prefixes, sign_group)
 
   if
     not sign_def
-    or vim.v.virtnum ~= 0 -- Don't show git delete signs in virtual line
-      and sign_def
-      and sign_def.name:match('Git%w*[Dd]elete$')
+    -- Don't show git delete signs in virtual line
+    or vim.v.virtnum ~= 0 and sign_def.name:match('Git%w*[Dd]elete$')
   then
     return ' '
   end
 
   -- Record line number highlight group if the sign has 'numhl' set
   if sign_def.numhl then
-    win_linenr_hl[win][lnum] = sign_def.numhl
+    win_numhl[win] = win_numhl[win] or {}
+    win_numhl[win][lnum] = sign_def.numhl
   end
 
   return utils.stl.hl(
@@ -124,27 +125,49 @@ end
 
 ---Return the line number highlight group at current line
 ---@return string line number highlight group
-function _G.statuscolumn.get_lnum_hl()
+local function get_lnum_hl()
   local win = vim.api.nvim_get_current_win()
   local lnum = vim.v.lnum
-  if
-    not use_culhl()
-    or not win_linenr_hl[win]
-    or not win_linenr_hl[win][lnum]
-  then
+  -- Not at cursorline or no highlight for number set
+  if not use_culhl() or not win_numhl[win] or not win_numhl[win][lnum] then
     return ''
   end
-  local numhl = win_linenr_hl[win][lnum]
-  local cursor_numhl = numhl .. 'CulNr'
-  if
-    not merged_hlgroups[cursor_numhl] and vim.fn.hlexists(cursor_numhl) == 0
-  then
+  local numhl = win_numhl[win][lnum] -- lnum hlgroup set by sign
+  local cul_numhl = numhl .. 'CulNr' -- lnum hlgroup set by cursorline
+  -- Merge the above two hlgroups -- we are at the current line
+  -- and there is a sign at the current line, so both hlgroups should be used
+  if not merged_hlgroups[cul_numhl] and vim.fn.hlexists(cul_numhl) == 0 then
     local compoents = { 'CursorLineNr', numhl }
-    local merged_hl_attr = utils.hl.merge(unpack(compoents))
-    vim.api.nvim_set_hl(0, cursor_numhl, merged_hl_attr)
-    merged_hlgroups[cursor_numhl] = compoents
+    utils.hl.set_default(0, cul_numhl, utils.hl.merge(unpack(compoents)))
+    merged_hlgroups[cul_numhl] = compoents
   end
-  return cursor_numhl
+  return cul_numhl
+end
+
+---@return string line number string representation
+function _G.stc.get_lnum_str()
+  local nu = vim.wo.nu
+  local rnu = vim.wo.rnu
+  if not nu and not rnu or vim.v.virtnum ~= 0 then
+    return ''
+  end
+  local hl = get_lnum_hl()
+  if not nu then
+    return utils.stl.hl(vim.v.relnum .. ' ', hl)
+  end
+  if not rnu then
+    return utils.stl.hl(vim.v.lnum .. ' ', hl)
+  end
+  return utils.stl.hl(
+    (
+      vim.v.relnum ~= 0 and vim.v.relnum
+      or string.format(
+        '%-' .. math.max(3, #tostring(vim.api.nvim_buf_line_count(0))) .. 'd',
+        vim.v.lnum
+      )
+    ) .. ' ',
+    hl
+  )
 end
 
 ffi.cdef([[
@@ -162,7 +185,7 @@ ffi.cdef([[
 
 ---Return the fold column at current line, without foldlevel numbers
 ---@return string
-function _G.statuscolumn.foldcol()
+function _G.stc.get_foldcol_str()
   local lnum = vim.v.lnum
   local fcs = vim.opt.fillchars:get()
   local fold_is_opened = vim.fn.foldclosed(lnum) == -1
@@ -184,18 +207,18 @@ end
 -- 3. Git signs
 -- 4. Fold column
 local stc = table.concat({
-  '%{%&scl==#"no"?"":(v:virtnum?"":v:lua.statuscolumn.get_sign(["Dap","Diagnostic"],"dapdiags"))%} ',
-  '%=%{%"%#".v:lua.statuscolumn.get_lnum_hl()."#".(v:virtnum?"":(&nu?(&rnu?(v:relnum?v:relnum:printf("%-".max([3,len(line("$"))])."S",v:lnum)):v:lnum)." ":(&rnu?v:relnum." ":"")))%}',
-  '%{%&scl==#"no"?"":(v:lua.statuscolumn.get_sign(["GitSigns"],"gitsigns"))%}',
-  '%{%&fdc==#"0"?"":(v:lua.statuscolumn.foldcol())%} ',
+  '%{%&scl==#"no"?"":(v:virtnum?"":v:lua.stc.get_sign_str(["Dap","Diagnostic"],"dapdiags"))%} ',
+  '%=%{%v:lua.stc.get_lnum_str()%}',
+  '%{%&scl==#"no"?"":(v:lua.stc.get_sign_str(["GitSigns"],"gitsigns"))%}',
+  '%{%&fdc==#"0"?"":(v:lua.stc.get_foldcol_str())%} ',
 })
 
-local groupid = vim.api.nvim_create_augroup('StatusColumn', {})
+local groupid = vim.api.nvim_create_augroup('stc', {})
 vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
   group = groupid,
   desc = 'Set statusline for each window.',
   callback = function(info)
-    vim.wo.statuscolumn = info.file and vim.bo.bt == '' and stc or ''
+    vim.wo.stc = info.file and vim.bo.bt == '' and stc or ''
   end,
 })
 vim.api.nvim_create_autocmd('ColorScheme', {
@@ -203,7 +226,7 @@ vim.api.nvim_create_autocmd('ColorScheme', {
   desc = 'Update merged highlight groups when colorscheme changes.',
   callback = function()
     for hl, components in pairs(merged_hlgroups) do
-      vim.api.nvim_set_hl(0, hl, utils.hl.merge(unpack(components)))
+      utils.hl.set_default(0, hl, utils.hl.merge(unpack(components)))
     end
   end,
 })
@@ -211,6 +234,6 @@ vim.api.nvim_create_autocmd('WinClosed', {
   group = groupid,
   desc = 'Clear line number highlight group cache when window is closed.',
   callback = function(info)
-    win_linenr_hl[tonumber(info.match)] = nil
+    win_numhl[tonumber(info.match)] = nil
   end,
 })
