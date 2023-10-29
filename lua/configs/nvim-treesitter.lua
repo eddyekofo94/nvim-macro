@@ -15,6 +15,9 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.opt_local.foldmethod = 'expr'
         vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
       end
+      if utils.treesitter.ts_active(info.buf) then
+        vim.opt_local.foldtext = 'v:lua.vim.treesitter.foldtext()'
+      end
     end)
   end,
 })
