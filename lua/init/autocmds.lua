@@ -1,5 +1,31 @@
 local autocmds = {
   {
+    { 'BufReadPre' },
+    {
+      group = 'LargeFileSettings',
+      desc = 'Set settings for large files.',
+      callback = function(info)
+        if vim.b.large_file ~= nil then
+          return
+        end
+        vim.b.large_file = false
+        local stat = vim.uv.fs_stat(info.match)
+        if stat and stat.size > 1000000 then
+          vim.b.large_file = true
+          vim.opt_local.swapfile = false
+          vim.opt_local.undofile = false
+          vim.opt_local.breakindent = false
+          vim.opt_local.colorcolumn = ''
+          vim.opt_local.statuscolumn = ''
+          vim.opt_local.signcolumn = 'no'
+          vim.opt_local.foldcolumn = '0'
+          vim.opt_local.winbar = ''
+        end
+      end,
+    },
+  },
+
+  {
     { 'TextYankPost' },
     {
       pattern = '*',

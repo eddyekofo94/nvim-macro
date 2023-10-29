@@ -4,6 +4,7 @@ end
 vim.g.loaded_coplilot = true
 
 local copilot = require('copilot')
+local copilot_client = require('copilot.client')
 local suggestion = require('copilot.suggestion')
 local utils = require('utils')
 
@@ -29,3 +30,16 @@ vim.defer_fn(function()
     end
   end)
 end, 10)
+
+local _buf_attach = copilot_client.buf_attach
+
+---Do not attach copilot to large files
+---@param force? boolean
+---@return nil
+---@diagnostic disable-next-line: duplicate-set-field
+function copilot_client.buf_attach(force)
+  if vim.b.large_file and not force then
+    return
+  end
+  return _buf_attach(force)
+end

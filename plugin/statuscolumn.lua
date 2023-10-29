@@ -213,12 +213,16 @@ local stc = table.concat({
   '%{%&fdc==#"0"?"":(v:lua.stc.get_foldcol_str())%} ',
 })
 
-local groupid = vim.api.nvim_create_augroup('stc', {})
+local groupid = vim.api.nvim_create_augroup('StatusColumn', {})
 vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
   group = groupid,
-  desc = 'Set statusline for each window.',
+  desc = 'Set statuscolumn for each window.',
   callback = function(info)
-    vim.wo.stc = info.file and vim.bo.bt == '' and stc or ''
+    vim.opt_local.stc = info.file
+        and vim.bo.bt == ''
+        and not vim.b.large_file
+        and stc
+      or ''
   end,
 })
 vim.api.nvim_create_autocmd('ColorScheme', {

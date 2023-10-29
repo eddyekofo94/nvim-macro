@@ -35,7 +35,7 @@ vim.api.nvim_create_autocmd('CmdWinEnter', {
 ---@param buf integer buffer handler
 ---@return boolean
 local function buf_is_large(_, buf)
-  return vim.api.nvim_buf_line_count(buf) > 4096
+  return vim.b[buf].large_file == true
 end
 
 ---@diagnostic disable-next-line: missing-fields

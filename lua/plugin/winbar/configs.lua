@@ -10,6 +10,7 @@ M.opts = {
       local bufname = vim.api.nvim_buf_get_name(buf)
       return bufname ~= ''
         and vim.uv.fs_stat(bufname) ~= nil
+        and not vim.b.large_file
         and vim.bo[buf].buftype == ''
         and vim.bo[buf].filetype:match('git') == nil
         and vim.fn.win_gettype(win) == ''
