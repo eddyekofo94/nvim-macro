@@ -15,16 +15,12 @@ end
 
 local groupid = vim.api.nvim_create_augroup('SwitchBackground', {})
 
-vim.api.nvim_create_autocmd({ 'BufReadPre', 'UIEnter' }, {
+vim.api.nvim_create_autocmd('UIEnter', {
   once = true,
   nested = true,
   group = groupid,
   desc = 'Restore dark/light background and colorscheme from ShaDa.',
   callback = function()
-    if vim.g.theme_restored then
-      return
-    end
-    vim.g.theme_restored = true
     if vim.g.BACKGROUND and vim.g.BACKGROUND ~= vim.go.background then
       vim.go.background = vim.g.BACKGROUND
     end
