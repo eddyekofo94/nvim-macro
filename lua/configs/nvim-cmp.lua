@@ -241,6 +241,12 @@ local fuzzy_path_option = {
 
 ---@diagnostic disable missing-fields
 cmp.setup({
+  enabled = function()
+    if vim.b.cmp_disable == nil then
+      vim.b.cmp_disable = vim.api.nvim_buf_line_count(0) > 4096
+    end
+    return not vim.b.cmp_disable
+  end,
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, cmp_item)
