@@ -252,7 +252,7 @@ cmp.setup({
             vim.fn.fnamemodify(cmp_item.word, ':e'),
             { default = true }
           )
-          cmp_item.kind = icon or cmp_item.kind
+          cmp_item.kind = icon and icon .. ' ' or cmp_item.kind
           cmp_item.kind_hl_group = icon_hl or cmp_item.kind_hl_group
         end
       else
