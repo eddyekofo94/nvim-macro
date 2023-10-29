@@ -1,16 +1,8 @@
-_G.statuscol = {}
+_G.statuscolumn = {}
 local utils = require('utils')
+local ffi = require('ffi')
 
----@class sign_def
----@field name string?
----@field icon string?
----@field text string?
----@field texthl string?
----@field linehl string?
----@field numhl string?
----@field culhl string?
-
----@type table<string, table<string, sign_def>>
+---@type table<string, table<string, vim.fn.sign_getdefined.ret.item>>
 local signs_cache = {}
 
 ---Highlight groups created from merging other highlight groups
@@ -24,7 +16,7 @@ local win_linenr_hl = {}
 ---Get sign definition
 ---@param sign_name string sign name
 ---@param sign_group string group name of the signs
----@return sign_def? sign_def sign definition
+---@return vim.fn.sign_getdefined.ret.item? sign_def sign definition
 local function get_sign_def(sign_name, sign_group)
   if not signs_cache[sign_group] then
     signs_cache[sign_group] = {}
@@ -61,7 +53,7 @@ end
 ---@param prefixes string[] prefixes of the sign name
 ---@param sign_group string group name of the signs
 ---@return string sign string representation of the sign with highlight
-function _G.statuscol.get_sign(prefixes, sign_group)
+function _G.statuscolumn.get_sign(prefixes, sign_group)
   local bufnum = vim.api.nvim_get_current_buf()
   local cursorline = vim.api.nvim_win_get_cursor(0)[1]
   local lnum = vim.v.lnum
@@ -117,12 +109,12 @@ function _G.statuscol.get_sign(prefixes, sign_group)
     win_linenr_hl[winnr][lnum] = sign_def.numhl
   end
 
-  return utils.stl.hl(sign_def.text, hl, false)
+  return utils.stl.hl(sign_def.text, hl)
 end
 
 ---Return the line number highlight group at current line
 ---@return string line number highlight group
-function _G.statuscol.get_lnum_hl()
+function _G.statuscolumn.get_lnum_hl()
   local winnr = vim.api.nvim_get_current_win()
   local lnum = vim.v.lnum
   local cursorline = vim.api.nvim_win_get_cursor(0)[1]
@@ -148,25 +140,57 @@ function _G.statuscol.get_lnum_hl()
   return cursor_numhl
 end
 
+ffi.cdef([[
+  typedef struct {} Error;
+  typedef struct {} win_T;
+  typedef struct {
+    int start;  // line number where deepest fold starts
+    int level;  // fold level, when zero other fields are N/A
+    int llevel; // lowest level that starts in v:lnum
+    int lines;  // number of lines from v:lnum to end of closed fold
+  } foldinfo_T;
+  foldinfo_T fold_info(win_T* win, int lnum);
+  win_T *find_window_by_handle(int Window, Error *err);
+]])
+
+---Return the fold column at current line, without foldlevel numbers
+---@return string
+function _G.statuscolumn.foldcol()
+  local lnum = vim.v.lnum
+  local relnum = vim.v.relnum
+  local fcs = vim.opt.fillchars:get()
+  local fold_is_opened = vim.fn.foldclosed(lnum) == -1
+  local foldchar = (
+    ffi.C.fold_info(ffi.C.find_window_by_handle(0, ffi.new('Error')), lnum).start
+    ~= lnum
+  )
+      and fcs.foldsep
+    or fold_is_opened and fcs.foldopen
+    or fcs.foldclose
+  return vim.o.cul
+      and (vim.o.culopt:find('number') or vim.o.culopt:find('both'))
+      and relnum == 0
+      and utils.stl.hl(foldchar, 'CursorLineFold')
+    or utils.stl.hl(foldchar, 'FoldColumn')
+end
+
+-- 1. Diagnostic / Dap signs
+-- 2. Line number
+-- 3. Git signs
+-- 4. Fold column
+local stc = table.concat({
+  '%{%&scl==#"no"?"":(v:virtnum?"":v:lua.statuscolumn.get_sign(["Dap","Diagnostic"],"dapdiags"))%} ',
+  '%=%{%"%#".v:lua.statuscolumn.get_lnum_hl()."#".(v:virtnum?"":(&nu?(&rnu?(v:relnum?v:relnum:printf("%-".max([3,len(line("$"))])."S",v:lnum)):v:lnum)." ":(&rnu?v:relnum." ":"")))%}',
+  '%{%&scl==#"no"?"":(v:lua.statuscolumn.get_sign(["GitSigns"],"gitsigns"))%}',
+  '%{%&fdc==#"0"?"":(v:lua.statuscolumn.foldcol())%} ',
+})
+
 local groupid = vim.api.nvim_create_augroup('StatusColumn', {})
 vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
   group = groupid,
   desc = 'Set statusline for each window.',
   callback = function(info)
-    if info.file and vim.bo.bt == '' then
-      -- 1. Diagnostic / Dap signs
-      -- 2. Line number
-      -- 3. Git signs
-      -- 4. Fold column
-      vim.wo.statuscolumn = table.concat({
-        '%{%&scl==#"no"?"":(v:virtnum?"":v:lua.statuscol.get_sign(["Dap","Diagnostic"],"dapdiags"))%} ',
-        '%=%{%"%#".v:lua.statuscol.get_lnum_hl()."#".(v:virtnum?"":(&nu?(&rnu?(v:relnum?v:relnum:printf("%-".max([3,len(line("$"))])."S",v:lnum)):v:lnum)." ":(&rnu?v:relnum." ":"")))%}',
-        '%{%&scl==#"no"?"":(v:lua.statuscol.get_sign(["GitSigns"],"gitsigns"))." "%}',
-        '%C',
-      })
-    else
-      vim.wo.statuscolumn = ''
-    end
+    vim.wo.statuscolumn = info.file and vim.bo.bt == '' and stc or ''
   end,
 })
 vim.api.nvim_create_autocmd('ColorScheme', {
