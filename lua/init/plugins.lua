@@ -15,38 +15,9 @@ local function read_file(path)
   return content
 end
 
--- Apply and restore local patches on plugin update/install
-local function create_autocmd_applypatch()
-  vim.api.nvim_create_autocmd('User', {
-    pattern = { 'LazyInstall*', 'LazyUpdate*', 'LazyRestore*' },
-    group = vim.api.nvim_create_augroup('LazyPatches', {}),
-    callback = function(info)
-      local patches_path = vim.fs.joinpath(confpath, 'patches')
-      for patch in vim.fs.dir(patches_path) do
-        local patch_path = vim.fs.joinpath(patches_path, patch)
-        local plugin_path =
-          vim.fs.joinpath(vim.g.package_path, (patch:gsub('%.patch$', '')))
-        if vim.uv.fs_stat(plugin_path) then
-          utils.git.dir_execute(plugin_path, { 'restore', '.' })
-          if not info.match:find('Pre$') then
-            vim.notify('[plugins] applying patch ' .. patch)
-            utils.git.dir_execute(plugin_path, {
-              'apply',
-              '--ignore-space-change',
-              patch_path,
-            })
-          end
-        end
-      end
-    end,
-    desc = 'Reverse/Apply local patches on updating/intalling plugins.',
-  })
-end
-
 ---Install package manager if not already installed
 ---@return boolean success
 local function bootstrap()
-  create_autocmd_applypatch()
   vim.g.package_path = datapath .. '/site/pack/packages/opt'
   vim.g.package_lock = confpath .. '/package-lock.json'
   local lazy_path = vim.g.package_path .. '/lazy.nvim'
@@ -130,6 +101,31 @@ local function enable_modules(module_names)
   end
   require('lazy').setup(modules, config)
 end
+
+vim.api.nvim_create_autocmd('User', {
+  desc = 'Reverse/Apply local patches on updating/intalling plugins.',
+  pattern = { 'LazyInstall*', 'LazyUpdate*', 'LazyRestore*' },
+  group = vim.api.nvim_create_augroup('LazyPatches', {}),
+  callback = function(info)
+    local patches_path = vim.fs.joinpath(confpath, 'patches')
+    for patch in vim.fs.dir(patches_path) do
+      local patch_path = vim.fs.joinpath(patches_path, patch)
+      local plugin_path =
+        vim.fs.joinpath(vim.g.package_path, (patch:gsub('%.patch$', '')))
+      if vim.uv.fs_stat(plugin_path) then
+        utils.git.dir_execute(plugin_path, { 'restore', '.' })
+        if not info.match:find('Pre$') then
+          vim.notify('[plugins] applying patch ' .. patch)
+          utils.git.dir_execute(plugin_path, {
+            'apply',
+            '--ignore-space-change',
+            patch_path,
+          })
+        end
+      end
+    end
+  end,
+})
 
 if not bootstrap() then
   return
