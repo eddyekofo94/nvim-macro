@@ -13,6 +13,20 @@ local merged_hlgroups = {}
 ---@type table<integer, table<integer, string>>
 local win_linenr_hl = {}
 
+---Return true if CursorLineSign highlight is to be used in current line,
+---lua clone of neovim/src/nvim/drawline.c use_cursor_line_highlight()
+---@return boolean
+local function use_culhl()
+  -- Should follow the logic of c func use_cursor_line_nr() to determine if
+  -- CursorLineNr highlight is to be used in line number, but haven't found a
+  -- way to get param winlinevars_T *wlv
+  -- For signcolumn and foldcolumn, this should be enough
+  return vim.wo.cul
+      and (vim.wo.culopt:find('both') or vim.wo.culopt:find('number'))
+      and vim.v.relnum == 0
+    or false
+end
+
 ---Get sign definition
 ---@param sign_name string sign name
 ---@param sign_group string group name of the signs
@@ -55,13 +69,12 @@ end
 ---@return string sign string representation of the sign with highlight
 function _G.statuscolumn.get_sign(prefixes, sign_group)
   local bufnum = vim.api.nvim_get_current_buf()
-  local cursorline = vim.api.nvim_win_get_cursor(0)[1]
   local lnum = vim.v.lnum
-  local winnr = vim.api.nvim_get_current_win()
+  local win = vim.api.nvim_get_current_win()
 
   -- Clear line number highlight group cache
-  win_linenr_hl[winnr] = win_linenr_hl[winnr] or {}
-  win_linenr_hl[winnr][lnum] = nil
+  win_linenr_hl[win] = win_linenr_hl[win] or {}
+  win_linenr_hl[win][lnum] = nil
 
   local signs = vim.tbl_filter(
     function(sign)
@@ -98,36 +111,30 @@ function _G.statuscolumn.get_sign(prefixes, sign_group)
     return ' '
   end
 
-  -- Determine the highlight of the sign according to cursor line
-  local hl = sign_def.texthl
-  if lnum == cursorline and vim.wo.cul then
-    hl = sign_def.culhl
-  end
-
   -- Record line number highlight group if the sign has 'numhl' set
   if sign_def.numhl then
-    win_linenr_hl[winnr][lnum] = sign_def.numhl
+    win_linenr_hl[win][lnum] = sign_def.numhl
   end
 
-  return utils.stl.hl(sign_def.text, hl)
+  return utils.stl.hl(
+    sign_def.text,
+    use_culhl() and sign_def.culhl or sign_def.texthl
+  )
 end
 
 ---Return the line number highlight group at current line
 ---@return string line number highlight group
 function _G.statuscolumn.get_lnum_hl()
-  local winnr = vim.api.nvim_get_current_win()
+  local win = vim.api.nvim_get_current_win()
   local lnum = vim.v.lnum
-  local cursorline = vim.api.nvim_win_get_cursor(0)[1]
   if
-    lnum ~= cursorline
-    or not vim.wo.cul
-    or (vim.wo.culopt ~= 'both' and not (vim.wo.culopt:find('number')))
-    or not win_linenr_hl[winnr]
-    or not win_linenr_hl[winnr][lnum]
+    not use_culhl()
+    or not win_linenr_hl[win]
+    or not win_linenr_hl[win][lnum]
   then
     return ''
   end
-  local numhl = win_linenr_hl[winnr][lnum]
+  local numhl = win_linenr_hl[win][lnum]
   local cursor_numhl = numhl .. 'CulNr'
   if
     not merged_hlgroups[cursor_numhl] and vim.fn.hlexists(cursor_numhl) == 0
@@ -157,7 +164,6 @@ ffi.cdef([[
 ---@return string
 function _G.statuscolumn.foldcol()
   local lnum = vim.v.lnum
-  local relnum = vim.v.relnum
   local fcs = vim.opt.fillchars:get()
   local fold_is_opened = vim.fn.foldclosed(lnum) == -1
   local foldchar = (
@@ -167,11 +173,10 @@ function _G.statuscolumn.foldcol()
       and fcs.foldsep
     or fold_is_opened and fcs.foldopen
     or fcs.foldclose
-  return vim.o.cul
-      and (vim.o.culopt:find('number') or vim.o.culopt:find('both'))
-      and relnum == 0
-      and utils.stl.hl(foldchar, 'CursorLineFold')
-    or utils.stl.hl(foldchar, 'FoldColumn')
+  return utils.stl.hl(
+    foldchar,
+    use_culhl() and 'CursorLineFold' or 'FoldColumn'
+  )
 end
 
 -- 1. Diagnostic / Dap signs
