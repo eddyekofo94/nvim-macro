@@ -292,7 +292,7 @@ local stl_nc = table.concat({
 })
 
 local groupid = vim.api.nvim_create_augroup('StatusLine', {})
-vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter' }, {
+vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'CursorMoved' }, {
   group = groupid,
   callback = function()
     if vim.wo.stl ~= stl then
