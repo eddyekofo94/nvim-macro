@@ -13,6 +13,17 @@ local merged_hlgroups = {}
 ---@type table<integer, table<integer, string>>
 local win_numhl = {}
 
+---Get string representation of a string with highlight,
+---wrapper of utils.stl.hl
+---@param str? string sign symbol
+---@param hl? string name of the highlight group
+---@param restore? boolean restore highlight after the sign, default false
+---@return string sign string representation of the sign with highlight
+local function make_hl_str(str, hl, restore)
+  restore = restore == nil and false
+  return utils.stl.hl(str, hl, restore)
+end
+
 ---Return true if CursorLineSign highlight is to be used in current line,
 ---lua clone of neovim/src/nvim/drawline.c use_cursor_line_highlight()
 ---@return boolean
@@ -68,6 +79,12 @@ end
 ---@param sign_group string group name of the signs
 ---@return string sign string representation of the sign with highlight
 function _G.stc.get_sign_str(prefixes, sign_group)
+  local empty_signcol =
+    make_hl_str(' ', use_culhl() and 'CursorLineSign' or 'SignColumn')
+  if vim.v.virtnum ~= 0 and not vim.tbl_contains(prefixes, 'GitSigns') then
+    return empty_signcol
+  end
+
   local bufnum = vim.api.nvim_get_current_buf()
   local lnum = vim.v.lnum
   local win = vim.api.nvim_get_current_win()
@@ -92,7 +109,7 @@ function _G.stc.get_sign_str(prefixes, sign_group)
     })[1].signs
   )
   if vim.tbl_isempty(signs) then
-    return ' '
+    return empty_signcol
   end
 
   local sign_max_priority = { priority = -1 }
@@ -105,10 +122,10 @@ function _G.stc.get_sign_str(prefixes, sign_group)
 
   if
     not sign_def
-    -- Don't show git delete signs in virtual line
-    or vim.v.virtnum ~= 0 and sign_def.name:match('Git%w*[Dd]elete$')
+    or vim.v.virtnum ~= 0 -- Don't show git delete signs in virtual line
+      and sign_def.name:match('Git%w*[Dd]elete$')
   then
-    return ' '
+    return empty_signcol
   end
 
   -- Record line number highlight group if the sign has 'numhl' set
@@ -117,7 +134,7 @@ function _G.stc.get_sign_str(prefixes, sign_group)
     win_numhl[win][lnum] = sign_def.numhl
   end
 
-  return utils.stl.hl(
+  return make_hl_str(
     sign_def.text,
     use_culhl() and sign_def.culhl or sign_def.texthl
   )
@@ -128,12 +145,23 @@ end
 local function get_lnum_hl()
   local win = vim.api.nvim_get_current_win()
   local lnum = vim.v.lnum
-  -- Not at cursorline or no highlight for number set
-  if not use_culhl() or not win_numhl[win] or not win_numhl[win][lnum] then
-    return ''
+  local numhl = win_numhl[win] and win_numhl[win][lnum] -- lnum hlgroup set by sign
+  -- Not at cursorline
+  if not use_culhl() then
+    if numhl then
+      return numhl
+    end
+    local diff = lnum - vim.api.nvim_win_get_cursor(0)[1]
+    return diff == 1 and 'LineNrBelow'
+      or diff == -1 and 'LineNrAbove'
+      or 'LineNr'
   end
-  local numhl = win_numhl[win][lnum] -- lnum hlgroup set by sign
-  local cul_numhl = numhl .. 'CulNr' -- lnum hlgroup set by cursorline
+  -- At cursorline, no hlgroup set by sign
+  if not numhl then
+    return 'CursorLineNr'
+  end
+  -- At cursorline with hlgroup set by sign
+  local cul_numhl = numhl .. 'CulNr' -- lnum hlgroup used when sign & cul hl coexist
   -- Merge the above two hlgroups -- we are at the current line
   -- and there is a sign at the current line, so both hlgroups should be used
   if not merged_hlgroups[cul_numhl] and vim.fn.hlexists(cul_numhl) == 0 then
@@ -148,23 +176,25 @@ end
 function _G.stc.get_lnum_str()
   local nu = vim.wo.nu
   local rnu = vim.wo.rnu
-  if not nu and not rnu or vim.v.virtnum ~= 0 then
+  if not nu and not rnu then
     return ''
   end
-  local hl = get_lnum_hl()
+  local lnum_hl = get_lnum_hl()
+  if vim.v.virtnum ~= 0 then
+    return make_hl_str('%= ', lnum_hl)
+  end
   if not nu then
-    return utils.stl.hl('%=' .. vim.v.relnum, hl)
+    return make_hl_str('%=' .. vim.v.relnum, lnum_hl)
   end
   if not rnu then
-    return utils.stl.hl('%=' .. vim.v.lnum, hl)
+    return make_hl_str('%=' .. vim.v.lnum, lnum_hl)
   end
-  local relnum = vim.v.relnum
-  if relnum == 0 then
+  if vim.v.relnum == 0 then
     local lnum_padded =
       string.format('%-' .. (vim.wo.nuw - 1) .. 'd', vim.v.lnum)
-    return utils.stl.hl(lnum_padded .. '%=')
+    return make_hl_str('%=' .. lnum_padded, lnum_hl)
   end
-  return utils.stl.hl('%=' .. relnum, hl)
+  return make_hl_str('%=' .. vim.v.relnum, lnum_hl)
 end
 
 ffi.cdef([[
@@ -183,7 +213,7 @@ ffi.cdef([[
 ---Return the fold column at current line, without foldlevel numbers
 ---@return string
 function _G.stc.get_foldcol_str()
-  if vim.opt_local.foldcolumn:get() == '0' then
+  if vim.wo.foldcolumn == '0' then
     return ''
   end
   local lnum = vim.v.lnum
@@ -196,7 +226,7 @@ function _G.stc.get_foldcol_str()
       and fcs.foldsep
     or fold_is_opened and fcs.foldopen
     or fcs.foldclose
-  return utils.stl.hl(
+  return make_hl_str(
     foldchar,
     use_culhl() and 'CursorLineFold' or 'FoldColumn'
   )
@@ -207,7 +237,7 @@ end
 -- 3. Git signs
 -- 4. Fold column
 local stc = table.concat({
-  '%{%&scl==#"no"||v:virtnum?"":v:lua.stc.get_sign_str(["Dap","Diagnostic"],"dapdiags")%} ',
+  '%{%&scl==#"no"?"":v:lua.stc.get_sign_str(["Dap","Diagnostic"],"dapdiags")%} ',
   '%{%v:lua.stc.get_lnum_str()%}',
   '%{%&scl==#"no"?"":(" " . v:lua.stc.get_sign_str(["GitSigns"],"gitsigns"))%}',
   '%{%v:lua.stc.get_foldcol_str()%} ',
