@@ -153,21 +153,18 @@ function _G.stc.get_lnum_str()
   end
   local hl = get_lnum_hl()
   if not nu then
-    return utils.stl.hl(vim.v.relnum .. ' ', hl)
+    return utils.stl.hl('%=' .. vim.v.relnum, hl)
   end
   if not rnu then
-    return utils.stl.hl(vim.v.lnum .. ' ', hl)
+    return utils.stl.hl('%=' .. vim.v.lnum, hl)
   end
-  return utils.stl.hl(
-    (
-      vim.v.relnum ~= 0 and vim.v.relnum
-      or string.format(
-        '%-' .. math.max(3, #tostring(vim.api.nvim_buf_line_count(0))) .. 'd',
-        vim.v.lnum
-      )
-    ) .. ' ',
-    hl
-  )
+  local relnum = vim.v.relnum
+  if relnum == 0 then
+    local lnum_padded =
+      string.format('%-' .. (vim.wo.nuw - 1) .. 'd', vim.v.lnum)
+    return utils.stl.hl(lnum_padded .. '%=')
+  end
+  return utils.stl.hl('%=' .. relnum, hl)
 end
 
 ffi.cdef([[
@@ -186,6 +183,9 @@ ffi.cdef([[
 ---Return the fold column at current line, without foldlevel numbers
 ---@return string
 function _G.stc.get_foldcol_str()
+  if vim.opt_local.foldcolumn:get() == '0' then
+    return ''
+  end
   local lnum = vim.v.lnum
   local fcs = vim.opt.fillchars:get()
   local fold_is_opened = vim.fn.foldclosed(lnum) == -1
@@ -207,10 +207,10 @@ end
 -- 3. Git signs
 -- 4. Fold column
 local stc = table.concat({
-  '%{%&scl==#"no"?"":(v:virtnum?"":v:lua.stc.get_sign_str(["Dap","Diagnostic"],"dapdiags"))%} ',
-  '%=%{%v:lua.stc.get_lnum_str()%}',
-  '%{%&scl==#"no"?"":(v:lua.stc.get_sign_str(["GitSigns"],"gitsigns"))%}',
-  '%{%&fdc==#"0"?"":(v:lua.stc.get_foldcol_str())%} ',
+  '%{%&scl==#"no"||v:virtnum?"":v:lua.stc.get_sign_str(["Dap","Diagnostic"],"dapdiags")%} ',
+  '%{%v:lua.stc.get_lnum_str()%}',
+  '%{%&scl==#"no"?"":(" " . v:lua.stc.get_sign_str(["GitSigns"],"gitsigns"))%}',
+  '%{%v:lua.stc.get_foldcol_str()%} ',
 })
 
 local groupid = vim.api.nvim_create_augroup('StatusColumn', {})
