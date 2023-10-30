@@ -1,201 +1,46 @@
-_G.stc = {}
-local utils = require('utils')
 local ffi = require('ffi')
+local utils = require('utils')
+local make_hl = utils.stl.hl
 
 ---@type table<string, table<string, vim.fn.sign_getdefined.ret.item>>
-local signs_cache = {}
+local sign_cache = {}
 
----Highlight groups created from merging other highlight groups
----@type table<string, string[]>
-local merged_hlgroups = {}
+---@type table<integer, integer>
+local lnumw_cache = {}
 
----Record line number highlights for each line in each window
----@type table<integer, table<integer, string>>
-local win_numhl = {}
+---@class stc_shared_data_t
+---@field win integer
+---@field wp ffi.cdata* winpos_T C struct for window attributes
+---@field display_tick? integer display tick
+---@field buf_tick? integer b:changedtick
+---@field buf? integer
+---@field lnumw? integer number of digits of the largest line number
+---@field nu? boolean &number
+---@field rnu? boolean &relativenumber
+---@field nuw? integer &numberwidth
+---@field scl? string &signcolumn
+---@field cur? integer[] cursor position
+---@field cul? boolean &cursorline
+---@field culopt? string &cursorlineopt
+---@field culhl? boolean whether to use cursorline highlight at current line
+---@field lnumabovehl? boolean whether to use LineNrAbove at current line in number column
+---@field lnumbelowhl? boolean whether to use LineNrBelow at current line in number column
+---@field fdc? string &foldcolumn
+---@field foldopen? string fold open sign
+---@field foldclose? string fold close sign
+---@field foldsep? string fold separator sign
+---@field signs? vim.fn.sign[]
+---@field lnum? integer v:lnum
+---@field relnum? integer v:relnum
+---@field virtnum? integer v:virtnum
+---@field numhl? string line number highlight group
 
----Get string representation of a string with highlight,
----wrapper of utils.stl.hl
----@param str? string sign symbol
----@param hl? string name of the highlight group
----@param restore? boolean restore highlight after the sign, default false
----@return string sign string representation of the sign with highlight
-local function make_hl_str(str, hl, restore)
-  restore = restore == nil and false
-  return utils.stl.hl(str, hl, restore)
-end
+---Shared data in each window
+---@type table<string, stc_shared_data_t>
+local shared = {}
 
----Return true if CursorLineSign highlight is to be used in current line,
----lua clone of neovim/src/nvim/drawline.c use_cursor_line_highlight()
----@return boolean
-local function use_culhl()
-  -- Should follow the logic of c func use_cursor_line_nr() to determine if
-  -- CursorLineNr highlight is to be used in line number, but haven't found a
-  -- way to get param winlinevars_T *wlv
-  -- For signcolumn and foldcolumn, this should be enough
-  return vim.wo.cul
-      and (vim.wo.culopt:find('both') or vim.wo.culopt:find('number'))
-      and vim.v.relnum == 0
-    or false
-end
-
----Get sign definition
----@param sign_name string sign name
----@param sign_group string group name of the signs
----@return vim.fn.sign_getdefined.ret.item? sign_def sign definition
-local function get_sign_def(sign_name, sign_group)
-  if not signs_cache[sign_group] then
-    signs_cache[sign_group] = {}
-  end
-
-  local signs_group_cache = signs_cache[sign_group]
-  local sign_def = signs_group_cache[sign_name]
-
-  if not sign_def then
-    sign_def = vim.fn.sign_getdefined(sign_name)[1]
-    if not sign_def then
-      return
-    end
-    sign_def.text = vim.trim(sign_def.text)
-    -- Add missing culhl to sign definition
-    if not sign_def.culhl then
-      local texthl = sign_def.texthl
-      local culhl = texthl .. 'Cul'
-      if not merged_hlgroups[culhl] and vim.fn.hlexists(culhl) == 0 then
-        local components = { 'CursorLineSign', texthl }
-        utils.hl.set_default(0, culhl, utils.hl.merge(unpack(components)))
-        merged_hlgroups[culhl] = components
-      end
-      sign_def.culhl = culhl
-      vim.fn.sign_define(sign_def.name, sign_def)
-    end
-    signs_group_cache[sign_name] = sign_def
-  end
-
-  return sign_def
-end
-
----Return the sign at current line
----@param prefixes string[] prefixes of the sign name
----@param sign_group string group name of the signs
----@return string sign string representation of the sign with highlight
-function _G.stc.get_sign_str(prefixes, sign_group)
-  local empty_signcol =
-    make_hl_str(' ', use_culhl() and 'CursorLineSign' or 'SignColumn')
-  if vim.v.virtnum ~= 0 and not vim.tbl_contains(prefixes, 'GitSigns') then
-    return empty_signcol
-  end
-
-  local bufnum = vim.api.nvim_get_current_buf()
-  local lnum = vim.v.lnum
-  local win = vim.api.nvim_get_current_win()
-
-  -- Clear line number highlight group cache
-  if win_numhl[win] then
-    win_numhl[win][lnum] = nil
-  end
-
-  local signs = vim.tbl_filter(
-    function(sign)
-      for _, prefix in ipairs(prefixes) do
-        if vim.startswith(sign.name, prefix) then
-          return true
-        end
-      end
-      return false
-    end,
-    vim.fn.sign_getplaced(bufnum, {
-      group = '*',
-      lnum = lnum,
-    })[1].signs
-  )
-  if vim.tbl_isempty(signs) then
-    return empty_signcol
-  end
-
-  local sign_max_priority = { priority = -1 }
-  for _, sign in ipairs(signs) do
-    if sign.priority >= sign_max_priority.priority then
-      sign_max_priority = sign
-    end
-  end
-  local sign_def = get_sign_def(sign_max_priority.name, sign_group)
-
-  if
-    not sign_def
-    or vim.v.virtnum ~= 0 -- Don't show git delete signs in virtual line
-      and sign_def.name:match('Git%w*[Dd]elete$')
-  then
-    return empty_signcol
-  end
-
-  -- Record line number highlight group if the sign has 'numhl' set
-  if sign_def.numhl then
-    win_numhl[win] = win_numhl[win] or {}
-    win_numhl[win][lnum] = sign_def.numhl
-  end
-
-  return make_hl_str(
-    sign_def.text,
-    use_culhl() and sign_def.culhl or sign_def.texthl
-  )
-end
-
----Return the line number highlight group at current line
----@return string line number highlight group
-local function get_lnum_hl()
-  local win = vim.api.nvim_get_current_win()
-  local lnum = vim.v.lnum
-  local numhl = win_numhl[win] and win_numhl[win][lnum] -- lnum hlgroup set by sign
-  -- Not at cursorline
-  if not use_culhl() then
-    if numhl then
-      return numhl
-    end
-    local diff = lnum - vim.api.nvim_win_get_cursor(0)[1]
-    return diff == 1 and 'LineNrBelow'
-      or diff == -1 and 'LineNrAbove'
-      or 'LineNr'
-  end
-  -- At cursorline, no hlgroup set by sign
-  if not numhl then
-    return 'CursorLineNr'
-  end
-  -- At cursorline with hlgroup set by sign
-  local cul_numhl = numhl .. 'CulNr' -- lnum hlgroup used when sign & cul hl coexist
-  -- Merge the above two hlgroups -- we are at the current line
-  -- and there is a sign at the current line, so both hlgroups should be used
-  if not merged_hlgroups[cul_numhl] and vim.fn.hlexists(cul_numhl) == 0 then
-    local compoents = { 'CursorLineNr', numhl }
-    utils.hl.set_default(0, cul_numhl, utils.hl.merge(unpack(compoents)))
-    merged_hlgroups[cul_numhl] = compoents
-  end
-  return cul_numhl
-end
-
----@return string line number string representation
-function _G.stc.get_lnum_str()
-  local nu = vim.wo.nu
-  local rnu = vim.wo.rnu
-  if not nu and not rnu then
-    return ''
-  end
-  local lnum_hl = get_lnum_hl()
-  if vim.v.virtnum ~= 0 then
-    return make_hl_str('%= ', lnum_hl)
-  end
-  if not nu then
-    return make_hl_str('%=' .. vim.v.relnum, lnum_hl)
-  end
-  if not rnu then
-    return make_hl_str('%=' .. vim.v.lnum, lnum_hl)
-  end
-  if vim.v.relnum == 0 then
-    local lnum_padded =
-      string.format('%-' .. (vim.wo.nuw - 1) .. 'd', vim.v.lnum)
-    return make_hl_str('%=' .. lnum_padded, lnum_hl)
-  end
-  return make_hl_str('%=' .. vim.v.relnum, lnum_hl)
-end
+---@type table<string, fun(data: stc_shared_data_t, ...): string>
+local builders = {}
 
 ffi.cdef([[
   typedef struct {} Error;
@@ -206,68 +51,230 @@ ffi.cdef([[
     int llevel; // lowest level that starts in v:lnum
     int lines;  // number of lines from v:lnum to end of closed fold
   } foldinfo_T;
-  foldinfo_T fold_info(win_T* win, int lnum);
+  foldinfo_T fold_info(win_T* wp, int lnum);
   win_T *find_window_by_handle(int Window, Error *err);
+
+  // Display tick, incremented for each call to update_screen()
+  uint64_t display_tick;
 ]])
 
----Return the fold column at current line, without foldlevel numbers
----@return string
-function _G.stc.get_foldcol_str()
-  if vim.wo.foldcolumn == '0' then
-    return ''
+---Get sign definition
+---@param name string sign name
+---@return vim.fn.sign_getdefined.ret.item?
+local function get_sign_def(name)
+  local sign_def = sign_cache[name]
+  if sign_def then
+    return sign_def
   end
-  local lnum = vim.v.lnum
-  local fcs = vim.opt.fillchars:get()
-  local fold_is_opened = vim.fn.foldclosed(lnum) == -1
-  local foldchar = (
-    ffi.C.fold_info(ffi.C.find_window_by_handle(0, ffi.new('Error')), lnum).start
-    ~= lnum
-  )
-      and fcs.foldsep
-    or fold_is_opened and fcs.foldopen
-    or fcs.foldclose
-  return make_hl_str(
-    foldchar,
-    use_culhl() and 'CursorLineFold' or 'FoldColumn'
-  )
+  sign_def = vim.fn.sign_getdefined(name)[1]
+  if not sign_def then
+    return
+  end
+  sign_cache[name] = sign_def
+  return sign_def
 end
 
--- 1. Diagnostic / Dap signs
--- 2. Line number
--- 3. Git signs
--- 4. Fold column
-local stc = table.concat({
-  '%{%&scl==#"no"?"":v:lua.stc.get_sign_str(["Dap","Diagnostic"],"dapdiags")%} ',
-  '%{%v:lua.stc.get_lnum_str()%}',
-  '%{%&scl==#"no"?"":(" " . v:lua.stc.get_sign_str(["GitSigns"],"gitsigns"))%}',
-  '%{%v:lua.stc.get_foldcol_str()%} ',
-})
+---Returns the string representation of sign column to be shown
+---@param data stc_shared_data_t
+---@param filter fun(sign: vim.fn.sign): boolean
+---@return string
+function builders.signcol(data, filter)
+  if data.scl == 'no' then
+    return ''
+  end
+  local max_priority = -1
+  local sign_name_mp = nil
+  if data.virtnum ~= 0 then
+    goto signcol_ret_default
+  end
+  for _, sign in ipairs(data.signs) do
+    if sign.lnum > data.lnum then
+      break
+    end
+    if
+      sign.lnum == data.lnum
+      and sign.priority > max_priority
+      and filter(sign)
+    then
+      max_priority = sign.priority
+      sign_name_mp = sign.name
+    end
+  end
+  if sign_name_mp then
+    local sign_def = get_sign_def(sign_name_mp) --[[@as vim.fn.sign_getdefined.ret.item]]
+    data.numhl = sign_def.numhl
+    return make_hl(
+      vim.trim(sign_def.text),
+      data.culhl and sign_def.culhl or sign_def.texthl
+    )
+  end
+  ::signcol_ret_default::
+  return make_hl(' ', data.culhl and 'CursorLineSign' or 'SignColumn')
+end
 
-local groupid = vim.api.nvim_create_augroup('StatusColumn', {})
+---Return the line number highlight group at current line
+---@return string line number highlight group
+local function get_lnum_hl(data)
+  if data.numhl then
+    return data.numhl
+  end
+  return data.culhl and 'CursorLineNr'
+    or data.lnumabovehl and 'LineNrAbove'
+    or data.lnumbelowhl and 'LineNrBelow'
+    or 'LineNr'
+end
+
+---@param data stc_shared_data_t
+---@return string
+function builders.lnum(data)
+  local result = '' ---@type string|integer
+  if not data.nu and not data.rnu then
+    return ''
+  end
+  if data.virtnum ~= 0 then -- Drawing virtual line
+    goto lnum_ret_default
+  end
+  if not data.nu then
+    result = data.relnum
+    goto lnum_ret_default
+  end
+  if not data.rnu then
+    result = data.lnum
+    goto lnum_ret_default
+  end
+  if data.relnum == 0 then
+    result = string.format(
+      '%-' .. math.max(data.nuw - 1, data.lnumw) .. 'd',
+      data.lnum
+    )
+    goto lnum_ret_default
+  end
+  result = data.relnum
+  ::lnum_ret_default::
+  return '%=' .. make_hl(result .. ' ', get_lnum_hl(data))
+end
+
+---@param data stc_shared_data_t
+---@return string
+function builders.foldcol(data)
+  if data.fdc == '0' then
+    return ''
+  end
+  local lnum = data.lnum --[[@as integer]]
+  local foldinfo = ffi.C.fold_info(data.wp, lnum)
+  local foldchar = (data.virtnum ~= 0 or foldinfo.start ~= lnum)
+      and data.foldsep
+    or foldinfo.lines == 0 and data.foldopen
+    or data.foldclose
+  return make_hl(foldchar, data.culhl and 'CursorLineFold' or 'FoldColumn')
+end
+
+---@param sign vim.fn.sign
+---@return boolean
+local function gitsigns_filter(sign)
+  return sign.name:find('^Git') and true or false
+end
+
+---@param sign vim.fn.sign
+---@return boolean
+local function nongitsigns_filter(sign)
+  return not sign.name:find('^Git')
+end
+
+---Get number of digits of a decimal integer
+---@param number integer
+---@return integer
+local function numdigits(number)
+  local result = 0
+  while number >= 1 do
+    number = number / 10
+    result = result + 1
+  end
+  return result
+end
+
+---@return string
+function _G.get_statuscolumn()
+  local win = vim.g.statusline_winid
+  local display_tick = ffi.C.display_tick --[[@as uinteger]]
+  if not shared[win] then -- Initialize shared data
+    shared[win] = {
+      win = win,
+      wp = ffi.C.find_window_by_handle(win, ffi.new('Error')),
+      init = true,
+    }
+  end
+
+  local data = shared[win]
+  if not data.display_tick or data.display_tick < display_tick then -- Update shared data
+    local wo = vim.wo[win]
+    local fcs = vim.opt_local.fillchars:get()
+    local buf = vim.api.nvim_win_get_buf(win)
+    data.display_tick = display_tick
+    data.buf = buf
+    data.cur = vim.api.nvim_win_get_cursor(win)
+    data.cul = wo.cul
+    data.culopt = wo.culopt
+    data.nu = wo.nu
+    data.rnu = wo.rnu
+    data.nuw = wo.nuw
+    data.scl = wo.scl
+    data.fdc = wo.fdc
+    data.foldopen = fcs.foldopen or '-'
+    data.foldclose = fcs.foldclose or '+'
+    data.foldsep = fcs.foldsep or '|'
+    data.signs = vim.fn.sign_getplaced(buf, { group = '*' })[1].signs
+
+    local buf_tick = vim.api.nvim_buf_get_changedtick(buf)
+    if not data.buf_tick or data.buf_tick < buf_tick then
+      lnumw_cache[buf] = numdigits(vim.api.nvim_buf_line_count(buf))
+      data.buf_tick = buf_tick
+    end
+    -- Cache could be nil after BufWipeOut
+    data.lnumw = lnumw_cache[buf] or data.lnumw
+  end
+
+  data.numhl = nil
+  data.lnum = vim.v.lnum
+  data.relnum = vim.v.relnum
+  data.virtnum = vim.v.virtnum
+
+  local can_use_culhl = data.cul and data.culopt:find('[ou]') and true or false
+  data.culhl = can_use_culhl and data.lnum == data.cur[1]
+  data.lnumabovehl = can_use_culhl and data.lnum == data.cur[1] - 1
+  data.lnumbelowhl = can_use_culhl and data.lnum == data.cur[1] + 1
+
+  return builders.signcol(data, nongitsigns_filter)
+    .. ' '
+    .. builders.lnum(data)
+    .. builders.signcol(data, gitsigns_filter)
+    .. builders.foldcol(data)
+    .. ' '
+end
+
+local augroup = vim.api.nvim_create_augroup('StatusColumn', {})
 vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
-  group = groupid,
+  group = augroup,
   desc = 'Set statuscolumn for each window.',
   callback = function(info)
     vim.opt_local.stc = info.file
         and vim.bo.bt == ''
         and not vim.b.large_file
-        and stc
+        and '%!v:lua.get_statuscolumn()'
       or ''
   end,
 })
-vim.api.nvim_create_autocmd('ColorScheme', {
-  group = groupid,
-  desc = 'Update merged highlight groups when colorscheme changes.',
-  callback = function()
-    for hl, components in pairs(merged_hlgroups) do
-      utils.hl.set_default(0, hl, utils.hl.merge(unpack(components)))
-    end
+vim.api.nvim_create_autocmd('WinClosed', {
+  group = augroup,
+  desc = 'Clear per window shared data cache.',
+  callback = function(info)
+    shared[tonumber(info.match)] = nil
   end,
 })
-vim.api.nvim_create_autocmd('WinClosed', {
-  group = groupid,
-  desc = 'Clear line number highlight group cache when window is closed.',
+vim.api.nvim_create_autocmd('BufWipeOut', {
+  group = augroup,
+  desc = 'Clear per buffer lnum width cache.',
   callback = function(info)
-    win_numhl[tonumber(info.match)] = nil
+    lnumw_cache[info.buf] = nil
   end,
 })
