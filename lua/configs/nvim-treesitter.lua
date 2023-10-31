@@ -71,10 +71,9 @@ ts_configs.setup({
     },
   },
   textobjects = {
-    enable = true,
-    disable = buf_is_large,
     select = {
       enable = true,
+      disable = buf_is_large,
       lookahead = true, -- Automatically jump forward to textobj
       keymaps = {
         -- You can use the capture groups defined in textobjects.scm
@@ -96,6 +95,7 @@ ts_configs.setup({
     },
     move = {
       enable = true,
+      disable = buf_is_large,
       set_jumps = true, -- whether to set jumps in the jumplist
       goto_next_start = {
         [']m'] = '@function.outer',
@@ -138,6 +138,7 @@ ts_configs.setup({
     },
     swap = {
       enable = true,
+      disable = buf_is_large,
       swap_next = {
         ['<M-C-L>'] = '@parameter.inner',
       },
@@ -147,6 +148,7 @@ ts_configs.setup({
     },
     lsp_interop = {
       enable = true,
+      disable = buf_is_large,
       border = 'shadow',
       peek_definition_code = {
         ['<C-k>'] = '@function.outer',
