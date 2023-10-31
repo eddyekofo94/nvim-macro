@@ -129,7 +129,7 @@ local fterm_opts_default = {
     style = 'minimal',
     width = 0.75,
     height = 0.75,
-    row = 0.125,
+    row = 0.12,
     col = 0.125,
   },
 }
