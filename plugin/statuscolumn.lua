@@ -211,13 +211,16 @@ function _G.get_statuscolumn()
     data.foldsep = fcs.foldsep or '|'
     data.signs = vim.fn.sign_getplaced(buf, { group = '*' })[1].signs
 
-    local buf_tick = vim.api.nvim_buf_get_changedtick(buf)
-    if not data.buf_tick or data.buf_tick < buf_tick then
-      lnumw_cache[buf] = numdigits(vim.api.nvim_buf_line_count(buf))
-      data.buf_tick = buf_tick
+    -- lnum width is only needed when both &nu and &rnu are enabled
+    if data.nu and data.rnu then
+      local buf_tick = vim.api.nvim_buf_get_changedtick(buf)
+      if not data.buf_tick or data.buf_tick < buf_tick then
+        lnumw_cache[buf] = numdigits(vim.api.nvim_buf_line_count(buf))
+        data.buf_tick = buf_tick
+      end
+      -- Cache could be nil after BufWipeOut
+      data.lnumw = lnumw_cache[buf] or data.lnumw
     end
-    -- Cache could be nil after BufWipeOut
-    data.lnumw = lnumw_cache[buf] or data.lnumw
   end
 
   data.lnum = vim.v.lnum
