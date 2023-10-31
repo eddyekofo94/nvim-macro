@@ -118,6 +118,12 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Config),
       name = 'Rc',
     },
+    jar = {
+      color = '#cc3e44',
+      cterm_color = '167',
+      icon = vim.trim(icons.Java),
+      name = 'Jar',
+    },
   },
   override_by_filename = {
     run_datasets = {

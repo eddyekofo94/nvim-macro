@@ -293,6 +293,7 @@ M.icons = setmetatable({
     Desktop             = '󰟀 ',
     Elisp               = ' ',
     Git                 = '󰊢 ',
+    Java                = ' ',
     Lock                = '󰌾 ',
     Markdown            = ' ',
     Raw                 = '󱨏 ',
