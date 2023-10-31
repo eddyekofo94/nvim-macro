@@ -37,9 +37,10 @@ function bufopt_t:new(name, default)
   vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
     group = new_opt.augroup,
     callback = function(info)
-      if not new_opt.initialized[info.buf] then
-        vim.b[info.buf][name] = vim.g[name]
-        new_opt.initialized[info.buf] = true
+      local buf = info.buf
+      if vim.api.nvim_buf_is_valid(buf) and not new_opt.initialized[buf] then
+        vim.b[buf][name] = vim.g[name]
+        new_opt.initialized[buf] = true
       end
     end,
   })
