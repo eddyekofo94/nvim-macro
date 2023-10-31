@@ -149,7 +149,6 @@ Install the following debug adapters manually:
 
 - [Lazygit](https://github.com/jesseduffield/lazygit) for improved git integration
 - [Fd](https://github.com/sharkdp/fd), [Ripgrep](https://github.com/BurntSushi/ripgrep), and [Fzf](https://github.com/junegunn/fzf) for fuzzy search
-- [Neovim Remote](https://github.com/mhinz/neovim-remote) and [Ranger](https://github.com/ranger/ranger) for file manager support
 - [Pandoc](https://pandoc.org/), [custom scripts](https://github.com/Bekaboo/dot/tree/master/.scripts) and [TexLive](https://www.tug.org/texlive/) (for ArchLinux users, it is `texlive-core` and `texlive-extra`) for markdown → PDF conversion
 
 ## Installation
@@ -389,7 +388,6 @@ Total # of plugins: 43 (package manager included).
     - [flatten.nvim](https://github.com/willothy/flatten.nvim)
     - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
     - [git-conflict](akinsho/git-conflict.nvim)
-    - [rnvimr](https://github.com/kevinhwang91/rnvimr)
     - [nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua)
     - [vim-fugitive](https://github.com/tpope/vim-fugitive)
 - **Treesitter**

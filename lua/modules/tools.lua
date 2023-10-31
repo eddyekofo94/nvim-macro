@@ -97,13 +97,6 @@ return {
   },
 
   {
-    'kevinhwang91/rnvimr',
-    config = function()
-      require('configs.rnvimr')
-    end,
-  },
-
-  {
     'NvChad/nvim-colorizer.lua',
     event = { 'BufNew', 'BufRead' },
     config = function()
