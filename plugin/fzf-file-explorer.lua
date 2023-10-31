@@ -55,3 +55,6 @@ vim.api.nvim_create_autocmd('BufEnter', {
     fzf_edit_dir(info.match)
   end,
 })
+
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
