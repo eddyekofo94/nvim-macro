@@ -33,7 +33,6 @@ local lnumw_cache = {}
 ---@field lnum? integer v:lnum
 ---@field relnum? integer v:relnum
 ---@field virtnum? integer v:virtnum
----@field numhl? string line number highlight group
 
 ---Shared data in each window
 ---@type table<string, stc_shared_data_t>
@@ -102,7 +101,6 @@ function builders.signcol(data, filter)
   end
   if sign_name_mp then
     local sign_def = get_sign_def(sign_name_mp) --[[@as vim.fn.sign_getdefined.ret.item]]
-    data.numhl = sign_def.numhl
     return make_hl(
       vim.trim(sign_def.text),
       data.culhl and sign_def.culhl or sign_def.texthl
@@ -110,18 +108,6 @@ function builders.signcol(data, filter)
   end
   ::signcol_ret_default::
   return make_hl(' ', data.culhl and 'CursorLineSign' or 'SignColumn')
-end
-
----Return the line number highlight group at current line
----@return string line number highlight group
-local function get_lnum_hl(data)
-  if data.numhl then
-    return data.numhl
-  end
-  return data.culhl and 'CursorLineNr'
-    or data.lnumabovehl and 'LineNrAbove'
-    or data.lnumbelowhl and 'LineNrBelow'
-    or 'LineNr'
 end
 
 ---@param data stc_shared_data_t
@@ -151,7 +137,7 @@ function builders.lnum(data)
   end
   result = data.relnum
   ::lnum_ret_default::
-  return '%=' .. make_hl(result .. ' ', get_lnum_hl(data))
+  return '%=' .. result .. ' '
 end
 
 ---@param data stc_shared_data_t
@@ -234,15 +220,13 @@ function _G.get_statuscolumn()
     data.lnumw = lnumw_cache[buf] or data.lnumw
   end
 
-  data.numhl = nil
   data.lnum = vim.v.lnum
   data.relnum = vim.v.relnum
   data.virtnum = vim.v.virtnum
 
-  local can_use_culhl = data.cul and data.culopt:find('[ou]') and true or false
-  data.culhl = can_use_culhl and data.lnum == data.cur[1]
-  data.lnumabovehl = can_use_culhl and data.lnum == data.cur[1] - 1
-  data.lnumbelowhl = can_use_culhl and data.lnum == data.cur[1] + 1
+  data.culhl = data.cul
+    and data.culopt:find('[ou]')
+    and data.lnum == data.cur[1]
 
   return builders.signcol(data, nongitsigns_filter)
     .. ' '
