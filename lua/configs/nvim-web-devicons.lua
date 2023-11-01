@@ -34,6 +34,12 @@ require('nvim-web-devicons').setup({
     },
   },
   override_by_extension = {
+    asm = {
+      color = '#d65050',
+      cterm_color = '167',
+      icon = vim.trim(icons.Assembly),
+      name = 'Assembly',
+    },
     cu = {
       color = '#76b900',
       cterm_color = '2',

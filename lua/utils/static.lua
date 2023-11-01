@@ -287,6 +287,7 @@ M.icons = setmetatable({
     WhileStatement      = '󰑖 ',
   },
   ft = {
+    Assembly            = ' ',
     Config              = ' ',
     Cuda                = '󱗼 ',
     Data                = '󰆼 ',
