@@ -111,7 +111,7 @@ local fterm_opts_default = {
           callback = function(term)
             term:right_shift()
           end,
-        }
+        },
       },
     },
   },

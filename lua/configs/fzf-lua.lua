@@ -264,12 +264,14 @@ local function set_default_hlgroups()
     or hl_tl_norm.bg == hl_norm.bg
     or hl_tl_pnorm.bg == hl_norm.bg
   then
+    -- stylua: ignore start
     utils.hl.set(0, 'TelescopeNormal', { link = 'NormalFloat' })
     utils.hl.set(0, 'TelescopeBorder', { link = 'TelescopeNormal' })
     utils.hl.set(0, 'TelescopePromptNormal', utils.hl.blend('NormalFloat', 'Normal'))
     utils.hl.set(0, 'TelescopePromptBorder', { link = 'TelescopePromptNormal' })
     utils.hl.set(0, 'TelescopeSelection', { link = 'Visual' })
     utils.hl.set(0, 'TelescopeTitle', { fg = hl_norm.bg, bg = hl_speical.fg, bold = true })
+    -- stylua: ignore end
   end
 end
 
