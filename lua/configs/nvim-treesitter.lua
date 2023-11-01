@@ -7,7 +7,7 @@ vim.api.nvim_create_autocmd('FileType', {
   callback = function(info)
     vim.schedule(function()
       if
-        utils.treesitter.ts_active(info.buf)
+        utils.treesitter.is_active(info.buf)
         and vim.opt_local.foldmethod:get() ~= 'diff'
         and not utils.opt.foldexpr:last_set_from('modeline')
         and not utils.opt.foldmethod:last_set_from('modeline')
@@ -15,7 +15,7 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.opt_local.foldmethod = 'expr'
         vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
       end
-      if utils.treesitter.ts_active(info.buf) then
+      if utils.treesitter.is_active(info.buf) then
         vim.opt_local.foldtext = 'v:lua.vim.treesitter.foldtext()'
       end
     end)
