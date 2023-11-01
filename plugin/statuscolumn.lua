@@ -187,7 +187,6 @@ function _G.get_statuscolumn()
     shared[win] = {
       win = win,
       wp = ffi.C.find_window_by_handle(win, ffi.new('Error')),
-      init = true,
     }
   end
 
