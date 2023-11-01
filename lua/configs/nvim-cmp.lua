@@ -239,6 +239,9 @@ local fuzzy_path_option = {
   },
 }
 
+local icon_dot = vim.trim(icons.DotLarge)
+local icon_calc = icons.Calculator
+
 ---@diagnostic disable missing-fields
 cmp.setup({
   enabled = function()
@@ -261,8 +264,8 @@ cmp.setup({
       else
         ---@type table<string, string> override icons with `entry.source.name`
         local icon_override = {
-          cmdline = icons.Terminal,
-          calc = icons.Calculator,
+          cmdline = icon_dot,
+          calc = icon_calc,
         }
         cmp_item.kind = icon_override[entry.source.name]
           or icons[cmp_item.kind]
