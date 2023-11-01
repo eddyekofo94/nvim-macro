@@ -22,6 +22,7 @@ local utils = require('plugin.winbar.utils')
 ---@field sibling_idx integer? index of the symbol in its siblings
 ---@field range winbar_symbol_range_t?
 ---@field on_click fun(this: winbar_symbol_t, min_width: integer?, n_clicks: integer?, button: string?, modifiers: string?)|false|nil force disable on_click when false
+---@field callback_idx integer? idx of the on_click callback in `_G.winbar.callbacks[buf][win]`, use this to index callback function because `bar_idx` could change after truncate
 ---@field swap table<string, any>? swapped data of the symbol
 ---@field swapped table<string, true>? swapped fields of the symbol
 ---@field cache table caches string representation, length, etc. for the symbol
@@ -225,10 +226,10 @@ function winbar_symbol_t:cat(plain)
       and utils.stl.make_clickable(
         icon_highlighted .. name_highlighted,
         string.format(
-          'v:lua.winbar.on_click_callbacks.buf%s.win%s.fn%s',
+          'v:lua.winbar.callbacks.buf%s.win%s.fn%s',
           self.bar.buf,
           self.bar.win,
-          self.bar_idx
+          self.callback_idx
         )
       )
     or icon_highlighted .. name_highlighted
@@ -387,7 +388,7 @@ end
 ---@return nil
 function winbar_t:del()
   _G.winbar.bars[self.buf][self.win] = nil
-  _G.winbar.on_click_callbacks[self.buf][self.win] = nil
+  _G.winbar.callbacks['buf' .. self.buf]['win' .. self.win] = nil
   for _, component in ipairs(self.components) do
     component:del()
   end
@@ -542,11 +543,12 @@ function winbar_t:update()
       component:del()
     end
     self.components = {}
-    _G.winbar.on_click_callbacks['buf' .. self.buf]['win' .. self.win] = {}
+    _G.winbar.callbacks['buf' .. self.buf]['win' .. self.win] = {}
     for _, source in ipairs(self.sources) do
       local symbols = source.get_symbols(self.buf, self.win, cursor)
       for _, symbol in ipairs(symbols) do
         symbol.bar_idx = #self.components + 1
+        symbol.callback_idx = symbol.bar_idx
         symbol.bar = self
         table.insert(self.components, symbol)
         -- Register on_click callback for each symbol
@@ -556,7 +558,7 @@ function winbar_t:update()
           ---@param button string mouse button used
           ---@param modifiers string modifiers used
           ---@return nil
-          _G.winbar.on_click_callbacks['buf' .. self.buf]['win' .. self.win]['fn' .. symbol.bar_idx] = function(
+          _G.winbar.callbacks['buf' .. self.buf]['win' .. self.win]['fn' .. symbol.callback_idx] = function(
             min_width,
             n_clicks,
             button,

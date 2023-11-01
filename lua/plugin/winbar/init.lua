@@ -9,7 +9,7 @@ local utils = require('plugin.winbar.utils')
 ---(v:lua) only support calling global lua functions
 ---@type table<string, table<string, function>>
 ---@see winbar_t:update
-_G.winbar.on_click_callbacks = setmetatable({}, {
+_G.winbar.callbacks = setmetatable({}, {
   __index = function(self, buf)
     self[buf] = setmetatable({}, {
       __index = function(this, win)
@@ -67,6 +67,7 @@ local function setup(opts)
     callback = function(info)
       utils.bar.exec('del', { buf = info.buf })
       _G.winbar.bars[info.buf] = nil
+      _G.winbar.callbacks['buf' .. info.buf] = nil
     end,
     desc = 'Remove winbar from cache on buffer delete/unload/wipeout.',
   })
