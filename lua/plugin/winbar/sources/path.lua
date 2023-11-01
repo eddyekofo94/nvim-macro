@@ -6,16 +6,17 @@ local bar = require('plugin.winbar.bar')
 ---@return string icon
 ---@return string? icon_hl
 local function get_icon(path)
-  local icon = configs.opts.icons.kinds.symbols.File
+  local icon_kind_opts = configs.opts.icons.kinds
+  local icon = icon_kind_opts.symbols.File
   local icon_hl = 'WinBarIconKindFile'
   local stat = vim.uv.fs_stat(path)
   if not stat then
     return icon, icon_hl
   elseif stat.type == 'directory' then
-    icon = configs.opts.icons.kinds.symbols.Folder
+    icon = icon_kind_opts.symbols.Folder
     icon_hl = 'WinBarIconKindFolder'
   end
-  if configs.opts.icons.kinds.use_devicons then
+  if icon_kind_opts.use_devicons then
     local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
     if devicons_ok and stat and stat.type ~= 'directory' then
       local devicon, devicon_hl = devicons.get_icon(
@@ -36,6 +37,7 @@ end
 ---@param win integer window handler
 ---@return winbar_symbol_t
 local function convert(path, buf, win)
+  local path_opts = configs.opts.sources.path
   local icon, icon_hl = get_icon(path)
   return bar.winbar_symbol_t:new(setmetatable({
     buf = buf,
@@ -53,7 +55,7 @@ local function convert(path, buf, win)
       if k == 'children' then
         self.children = {}
         for name in vim.fs.dir(path) do
-          if configs.opts.sources.path.filter(name) then
+          if path_opts.filter(name) then
             table.insert(
               self.children,
               convert(vim.fs.joinpath(path, name), buf, win)
@@ -67,7 +69,7 @@ local function convert(path, buf, win)
         self.siblings = {}
         self.sibling_idx = 1
         for idx, name in vim.iter(vim.fs.dir(parent_dir)):enumerate() do
-          if configs.opts.sources.path.filter(name) then
+          if path_opts.filter(name) then
             table.insert(
               self.siblings,
               convert(vim.fs.joinpath(parent_dir, name), buf, win)
@@ -89,23 +91,21 @@ end
 ---@param _ integer[] cursor position, ignored
 ---@return winbar_symbol_t[] winbar symbols
 local function get_symbols(buf, win, _)
+  local path_opts = configs.opts.sources.path
   local symbols = {} ---@type winbar_symbol_t[]
-  local current_path = vim.fs.normalize(
-    vim.fn.fnamemodify((vim.api.nvim_buf_get_name(buf)), ':p')
-  )
+  local current_path = vim.fs.normalize((vim.api.nvim_buf_get_name(buf)))
+  local root = vim.fs.normalize(configs.eval(path_opts.relative_to, buf, win))
   while
-    current_path ~= '.'
+    current_path
+    and current_path ~= '.'
     and current_path ~= '/'
-    and current_path
-      ~= vim.fs.normalize(
-        configs.eval(configs.opts.sources.path.relative_to, buf, win)
-      )
+    and current_path ~= root
   do
     table.insert(symbols, 1, convert(current_path, buf, win))
     current_path = vim.fs.dirname(current_path)
   end
   if vim.bo[buf].mod then
-    symbols[#symbols] = configs.opts.sources.path.modified(symbols[#symbols])
+    symbols[#symbols] = path_opts.modified(symbols[#symbols])
   end
   return symbols
 end
