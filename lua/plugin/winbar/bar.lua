@@ -485,7 +485,7 @@ function winbar_t:cat(plain)
   local padding_left = string.rep(' ', self.padding.left)
   local padding_right = string.rep(' ', self.padding.right)
   result = result and padding_left .. result .. padding_right or ''
-  return plain and result or utils.stl.hl(result, 'DropBar')
+  return plain and result or utils.stl.hl(result, 'WinBar')
 end
 
 ---Reevaluate winbar string from components and redraw winbar

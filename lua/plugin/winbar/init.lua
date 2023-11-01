@@ -59,7 +59,7 @@ local function setup(opts)
       callback = function(info)
         utils.bar.attach(info.buf, 0)
       end,
-      desc = 'Attach dropbar',
+      desc = 'Attach winbar',
     })
   end
   vim.api.nvim_create_autocmd({ 'BufDelete', 'BufUnload', 'BufWipeOut' }, {
