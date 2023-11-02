@@ -75,23 +75,7 @@ local function enable_modules(module_names)
     install = { colorscheme = { 'nano', 'cockatoo' } },
     performance = {
       rtp = {
-        disabled_plugins = {
-          'gzip',
-          'tar',
-          'tarPlugin',
-          'zip',
-          'zipPlugin',
-          'getscript',
-          'getscriptPlugin',
-          'vimball',
-          'vimballPlugin',
-          'matchit',
-          '2html_plugin',
-          'logiPat',
-          'rrhelper',
-          'netrw',
-          'netrwPlugin',
-        },
+        disabled_plugins = {},
       },
     },
   }
