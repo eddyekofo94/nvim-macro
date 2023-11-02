@@ -1,4 +1,10 @@
-local groupid = vim.api.nvim_create_augroup('FzfFileExploer', {})
+if vim.g.loaded_fzf_file_explorer then
+  return
+end
+
+vim.g.loaded_fzf_file_explorer = 1
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 ---@type table<number, true>
 local buf_created = {}
@@ -35,6 +41,7 @@ local function fzf_edit_dir(dir)
   vim.cmd('FZF ' .. vim.fn.fnameescape(dir))
 end
 
+local groupid = vim.api.nvim_create_augroup('FzfFileExploer', {})
 vim.api.nvim_create_autocmd('UIEnter', {
   once = true,
   group = groupid,
@@ -82,6 +89,3 @@ vim.api.nvim_create_autocmd('BufWipeOut', {
     end)
   end,
 })
-
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
