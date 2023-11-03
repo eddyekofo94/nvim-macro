@@ -40,6 +40,24 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Assembly),
       name = 'Assembly',
     },
+    s = {
+      color = '#d65050',
+      cterm_color = '167',
+      icon = vim.trim(icons.Assembly),
+      name = 'S',
+    },
+    o = {
+      color = '#88a0a7',
+      cterm_color = '66',
+      icon = vim.trim(icons.Object),
+      name = 'O',
+    },
+    bak = {
+      color = '#6d8086',
+      cterm_color = '66',
+      icon = vim.trim(icons.Bak),
+      name = 'Bak',
+    },
     cu = {
       color = '#76b900',
       cterm_color = '2',
@@ -57,6 +75,12 @@ require('nvim-web-devicons').setup({
       cterm_color = '81',
       icon = vim.trim(icons.Data),
       name = 'Data',
+    },
+    pickle = {
+      color = '#ffbc03',
+      cterm_color = '214',
+      icon = vim.trim(icons.Data),
+      name = 'Pickle',
     },
     el = {
       color = '#a374ea',
@@ -94,6 +118,12 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Zip),
       name = 'Zip',
     },
+    ['7z'] = {
+      color = '#e84d31',
+      cterm_color = '166',
+      icon = vim.trim(icons.Zip),
+      name = '7z',
+    },
     rar = {
       color = '#e84d31',
       cterm_color = '166',
@@ -129,6 +159,24 @@ require('nvim-web-devicons').setup({
       cterm_color = '167',
       icon = vim.trim(icons.Java),
       name = 'Jar',
+    },
+    mp4 = {
+      color = '#FD971F',
+      cterm_color = '208',
+      icon = vim.trim(icons.Video),
+      name = 'Mp4',
+    },
+    mov = {
+      color = '#FD971F',
+      cterm_color = '208',
+      icon = vim.trim(icons.Video),
+      name = 'MOV',
+    },
+    avi = {
+      color = '#fd6c40',
+      cterm_color = '208',
+      icon = vim.trim(icons.Video),
+      name = 'AVI',
     },
   },
   override_by_filename = {

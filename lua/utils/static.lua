@@ -288,6 +288,7 @@ M.icons = setmetatable({
   },
   ft = {
     Assembly            = ' ',
+    Bak                 = '󰁯 ',
     Config              = ' ',
     Cuda                = '󱗼 ',
     Data                = '󰆼 ',
@@ -297,9 +298,11 @@ M.icons = setmetatable({
     Java                = ' ',
     Lock                = '󰌾 ',
     Markdown            = ' ',
+    Object              = ' ',
     Raw                 = '󱨏 ',
     Sh                  = ' ',
     Theme               = '󰏘 ',
+    Video               = '󰈰 ',
     Zip                 = '󰗄 ',
   },
   ui = {
