@@ -38,13 +38,13 @@ local autocmds = {
   },
 
   {
-    { 'BufLeave', 'FocusLost' },
+    { 'BufLeave', 'WinLeave', 'FocusLost' },
     {
       pattern = '*',
       nested = true,
       group = 'Autosave',
       desc = 'Autosave on focus change.',
-      command = 'if &bt ==# "" | silent! w | endif',
+      command = 'if &bt ==# "" && &mod | silent! w | endif',
     },
   },
 
