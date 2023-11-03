@@ -5,7 +5,7 @@ let b:did_indent = 1
 
 setlocal autoindent
 setlocal indentexpr=GetMarkdownIndent()
-setlocal indentkeys=!^F,o,O,0&,0=,0=<,0=>,0=le,0=ge,0=sim,0=approx,0=gg,0=ll,0=\\le,0=\\ge,0=\\sim,0=\\approx,0=\\gg,0=\\ll,0~,0-,0*,0+
+setlocal indentkeys=!^F,o,O,0&,<Space>
 
 function! s:in_mathzone(...) abort
   return !exists('g:loaded_vimtex') || !g:loaded_vimtex
@@ -48,8 +48,9 @@ function! GetMarkdownIndent() abort
   let l:prev_lnum = prevnonblank(v:lnum - 1)
   let l:prev_line = getline(l:prev_lnum)
   let l:sw = shiftwidth()
+  let l:default = indent(v:lnum)
   if l:prev_lnum == 0
-      return indent(v:lnum)
+      return l:default
   endif
 
   if s:in_mathzone()
@@ -58,8 +59,8 @@ function! GetMarkdownIndent() abort
     " '&' at the beginning if the current line starts with one of these
     " patterns
     let align_patterns =
-          \ '&\?\s*\(=\|>\|<\|\\\?\(le\|ge\|sim\|approx\|gg\|ll\)\)\|&'
-    if l:line =~# align_patterns
+          \ '\(&\s*\)\?\(=\|>\|<\|\\\?\(le\|ge\|sim\|approx\|gg\|ll\)\)\|&'
+    if l:line =~# printf('^\s*\(%s\)', align_patterns)
       let [l:prev_eq_lnum, l:eq_pos, l:_] =
             \ s:trimmed_prevnonblank_matches(v:lnum, align_patterns)
       if l:prev_eq_lnum > 0 && s:in_mathzone(l:prev_eq_lnum, 1)
@@ -78,15 +79,16 @@ function! GetMarkdownIndent() abort
         return indent(l:prev_lnum) - l:sw
       endif
     endif
+    return l:default
   endif
 
   if s:in_normalzone()
     " Reindent unordered list bullet points
-    if l:line =~# '^\s*[-*+]'
-      return indent(v:lnum) / l:sw * l:sw
+    if l:line =~# '^\s*[-*+]\s\+$'
+      return l:default / l:sw * l:sw
     endif
     " Reindent ordered list items
-    let l:order = str2nr(matchstr(l:line, '\(^\s*\)\@<=\d\+\.\@='))
+    let l:order = str2nr(matchstr(l:line, '\(^\s*\)\@<=\d\+\(\.\ \)\@='))
     if l:order > 0
       let [l:prev_item_lnum, l:_, l:prev_item_order] =
             \ s:trimmed_prevnonblank_matches(v:lnum, '^\d\+\.\@=')
@@ -120,5 +122,5 @@ function! GetMarkdownIndent() abort
     endif
   endif
 
-  return indent(v:lnum)
+  return l:default
 endfunction
