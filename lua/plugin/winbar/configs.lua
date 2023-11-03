@@ -10,7 +10,6 @@ M.opts = {
       local bufname = vim.api.nvim_buf_get_name(buf)
       return bufname ~= ''
         and vim.uv.fs_stat(bufname) ~= nil
-        and not vim.b.large_file
         and vim.bo[buf].buftype == ''
         and vim.bo[buf].filetype:match('git') == nil
         and vim.fn.win_gettype(win) == ''
@@ -249,10 +248,9 @@ M.opts = {
     path = {
       ---@type string|fun(buf: integer, win: integer): string
       relative_to = function(_, win)
-        local winnr = vim.api.nvim_win_is_valid(win)
-            and vim.api.nvim_win_get_number(win)
-          or nil
-        return vim.fn.getcwd(winnr)
+        -- Workaround for Vim:E5002: Cannot find window number
+        local ok, cwd = pcall(vim.fn.getcwd, win)
+        return ok and cwd or vim.fn.getcwd()
       end,
       ---Can be used to filter out files or directories
       ---based on their name

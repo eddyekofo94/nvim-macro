@@ -5,7 +5,7 @@ local conds = require('snippets.utils.conds')
 local snip_attr_map = {
   w = { wordTrig = true },
   W = { wordTrig = false },
-  -- cmp_luasnip cannot hanle snippets with regex triggers, see
+  -- cmp_luasnip cannot handle snippets with regex triggers, see
   -- https://github.com/L3MON4D3/LuaSnip/issues/931
   r = { regTrig = true, hidden = true },
   R = { regTrig = false },
