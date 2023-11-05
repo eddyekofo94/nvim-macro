@@ -102,6 +102,9 @@ M.langs = setmetatable({
     ts = 'latex',
     lsp_server = 'texlab',
   },
+  query = { -- Fix error `no parser for 'query' language` on `:InspectTree`
+    ts = 'query',
+  },
 }, langs_mt)
 
 -- Box drawing characters
