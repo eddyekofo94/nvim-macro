@@ -75,19 +75,20 @@ ls.setup({
   enable_autosnippets = true,
   store_selection_keys = '<Tab>',
   ext_opts = {
+    [ls_types.choiceNode] = {
+      active = {
+        virt_text = { { static.icons.Enum, 'Number' } },
+      },
+    },
     [ls_types.insertNode] = {
       unvisited = {
-        virt_text = {
-          { static.box.single.vt, 'Special' },
-        },
+        virt_text = { { static.box.single.vt, 'NonText' } },
         virt_text_pos = 'inline',
       },
     },
     [ls_types.exitNode] = {
       unvisited = {
-        virt_text = {
-          { static.box.single.vt, 'Special' },
-        },
+        virt_text = { { static.box.single.vt, 'NonText' } },
         virt_text_pos = 'inline',
       },
     },
