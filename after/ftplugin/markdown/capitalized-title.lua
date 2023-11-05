@@ -52,12 +52,29 @@ local function on_word_boundary(line, col)
   local char_before = line:sub(col - 1, col - 1)
   local char_before_before = line:sub(col - 2, col - 2)
   if
-    char_before:match('%w')
+    char_before:match('[%w_.]')
     or char_before == "'" and char_before_before:match('%w')
   then
     return false
   end
   return true
+end
+
+---Given current cursor position (column) and current line, determine if
+---the cursor is inside inline code
+---@param line string current line
+---@param col number current cursor position (column)
+---@return boolean
+local function inside_inline_code(line, col)
+  local idx = 0
+  local inside = false
+  while idx ~= col do
+    idx = idx + 1
+    if line:sub(idx, idx) == '`' then
+      inside = not inside
+    end
+  end
+  return inside
 end
 
 ---Determine if a word is the first word on a line
@@ -94,6 +111,8 @@ local function correct_word_before(line, col)
 end
 
 ---Capitalize the first letter of words on title line
+---@param info table information given to event handler
+---@return nil
 local function format_title(info)
   if not vim.bo[info.buf].filetype == 'markdown' or not opt_captitle:get() then
     return
@@ -107,7 +126,11 @@ local function format_title(info)
   local col = cursor[2]
   local current_line = api.nvim_get_current_line()
   local char_current = current_line:sub(col, col)
-  if on_word_boundary(current_line, col) and char_current:match('%a') then
+  if
+    on_word_boundary(current_line, col)
+    and char_current:match('%a')
+    and not inside_inline_code(current_line, col)
+  then
     current_line = current_line:sub(1, col - 1)
       .. string.upper(current_line:sub(col, col))
       .. current_line:sub(col + 1)
