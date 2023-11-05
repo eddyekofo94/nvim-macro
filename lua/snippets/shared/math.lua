@@ -1,7 +1,6 @@
 local uf = require('snippets.utils.funcs')
 local un = require('snippets.utils.nodes')
 local us = require('snippets.utils.snips')
-local conds = require('snippets.utils.conds')
 local ls = require('luasnip')
 local sn = ls.snippet_node
 local t = ls.text_node
@@ -135,7 +134,6 @@ return {
   us.samW({ trig = '=>', priority = 998 }, t('\\implies ')),
   us.samW({ trig = '|>' }, t('\\mapsto ')),
   us.samW({ trig = '><' }, t('\\bowtie ')),
-  us.samW({ trig = '=>' }, t('\\implies ')),
   us.samW({ trig = '**' }, t('\\cdot ')),
   us.samW({ trig = 'x<->' }, {
     t('\\xleftrightarrow['),
@@ -252,7 +250,7 @@ return {
   us.samW({ trig = 'lr}' }, { t('\\left{'), i(1), t('\\right}') }),
   us.samW({ trig = 'lr>' }, { t('\\left<'), i(1), t('\\right>') }),
   us.samW(
-    { trig = 'norm' },
+    { trig = 'nor' },
     { t('\\left\\lVert '), i(1), t(' \\right\\lVert') }
   ),
 
@@ -260,9 +258,9 @@ return {
   us.sambWr({ trig = '%s*sq' }, t('^{2}')),
   us.sambWr({ trig = '%s*cb' }, t('^{3}')),
   us.sambWr({ trig = '%s*inv' }, t('^{-1}')),
-  us.sambWr({ trig = '%s*compl' }, t('^{C}')),
+  us.sambWr({ trig = '%s*cm' }, t('^{C}')),
+  us.sambWr({ trig = '%s*tr' }, t('^{\\intercal}')),
 
-  us.samW({ trig = 'transp' }, t('^{\\intercal}')),
   us.samWr({ trig = '(\\?%w*_*%w*)vv' }, un.sdn(1, '\\vec{', '}')),
   us.samWr({ trig = '(\\?%w*_*%w*)hat' }, un.sdn(1, '\\hat{', '}')),
   us.samWr({ trig = '(\\?%w*_*%w*)bar' }, un.sdn(1, '\\bar{', '}')),
@@ -344,7 +342,6 @@ return {
     { trig = 'prop' },
     { trig = 'oc' },
   }, t('\\propto ')),
-  us.sam({ trig = '\\in f' }, t('\\infty')),
   us.sam({ trig = 'deg' }, t('\\degree')),
   us.sam({ trig = 'ang' }, t('\\angle ')),
   us.sam({ trig = 'mcal' }, { t('\\mathcal{'), i(1), t('}') }),
@@ -358,6 +355,8 @@ return {
   us.sam({ trig = 'o*' }, t('\\circledast ')),
   us.sam({ trig = 'dd' }, t('\\mathrm{d}')),
   us.sam({ trig = 'pp' }, t('\\partial ')),
+  us.msam({ { trig = 'DD' }, { trig = 'Dd' } }, t('\\Delta ')),
+  us.msam({ { trig = 'oo' }, { trig = '\\in f' } }, t('\\infty')),
 
   us.sam({ trig = 'set' }, { t('\\{'), i(1), t('\\}') }),
   us.sam({ trig = 'void' }, t('\\emptyset')),
@@ -525,13 +524,13 @@ return {
     t({ '\\begin{bmatrix}', '' }),
     un.idnt(1),
     i(1),
-    t({ '', '\\end{bmatrix}', '' }),
+    t({ '', '\\end{bmatrix}' }),
   }),
   us.sam({ trig = 'Pmat' }, {
     t({ '\\begin{pmatrix}', '' }),
     un.idnt(1),
     i(1),
-    t({ '', '\\', '' }),
+    t({ '', '\\end{pmatrix}' }),
   }),
   us.sam(
     { trig = 'aln' },
@@ -826,72 +825,4 @@ return {
     i(0),
     t('$'),
   }),
-  us.sar(
-    {
-      trig = '^(.*)\\\\',
-      condition = conds.in_mathzone
-        * conds.prev_line_matches('^%s*%$%$%s*$')
-        * conds.next_line_matches('^%s*%$%$%s*$'),
-      -- stylua: ignore start
-      show_condition = conds.in_mathzone
-        * conds.prev_line_matches('^%s*%$%$%s*$')
-        * conds.next_line_matches('^%s*%$%$%s*$'),
-      -- stylua: ignore end
-    },
-    c(1, {
-      un.fmtad(
-        [[
-          <idnt>\begin{<env>}
-          <idnt><idnt><text> \\
-          <idnt><idnt><i>
-          <idnt>\end{<env>}
-        ]],
-        {
-          idnt = un.idnt(1),
-          env = t('aligned'),
-          text = f(function(_, parent)
-            return vim.trim(parent.snippet.captures[1]):gsub('&?=', '&=')
-          end, {}, {}),
-          i = r(1, 'additional'),
-        }
-      ),
-      un.fmtad(
-        [[
-          <idnt>\begin{<env>}
-          <idnt><idnt><text> \\
-          <idnt><idnt><i>
-          <idnt>\end{<env>}
-        ]],
-        {
-          idnt = un.idnt(1),
-          env = t('align*'),
-          text = f(function(_, parent)
-            return vim.trim(parent.snippet.captures[1]):gsub('&?=', '&=')
-          end, {}, {}),
-          i = r(1, 'additional'),
-        }
-      ),
-      un.fmtad(
-        [[
-          <idnt>\begin{<env>}
-          <idnt><idnt><text> \\
-          <idnt><idnt><i>
-          <idnt>\end{<env>}
-        ]],
-        {
-          idnt = un.idnt(1),
-          env = t('align'),
-          text = f(function(_, parent)
-            return vim.trim(parent.snippet.captures[1]):gsub('&?=', '&=')
-          end, {}, {}),
-          i = r(1, 'additional'),
-        }
-      ),
-    }),
-    {
-      stored = {
-        additional = i(1),
-      },
-    }
-  ),
 }

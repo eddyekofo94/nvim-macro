@@ -32,6 +32,43 @@ M.snippets = {
       v = i(1),
     })
   ),
+  us.msn(
+    {
+      { trig = 'fn' },
+      { trig = 'fun' },
+      { trig = 'func' },
+      { trig = 'function' },
+    },
+    un.fmtad(
+      [[
+        function! <name>(<args>) abort
+        <idnt><body>
+        endfunction
+      ]],
+      {
+        name = i(1, 'FuncName'),
+        args = i(2),
+        body = i(3),
+        idnt = un.idnt(1),
+      }
+    )
+  ),
+  us.sn(
+    { trig = 'aug' },
+    un.fmtad(
+      [[
+        augroup <name>
+        <idnt>au!
+        <idnt><body>
+        augroup END
+      ]],
+      {
+        name = i(1, 'AugroupName'),
+        body = i(2),
+        idnt = un.idnt(1),
+      }
+    )
+  ),
 }
 
 return M
