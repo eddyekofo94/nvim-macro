@@ -62,14 +62,14 @@ local function setup(opts)
       desc = 'Attach winbar',
     })
   end
-  vim.api.nvim_create_autocmd({ 'BufDelete', 'BufUnload', 'BufWipeOut' }, {
+  vim.api.nvim_create_autocmd('BufWipeOut', {
     group = groupid,
     callback = function(info)
       utils.bar.exec('del', { buf = info.buf })
       _G.winbar.bars[info.buf] = nil
       _G.winbar.callbacks['buf' .. info.buf] = nil
     end,
-    desc = 'Remove winbar from cache on buffer delete/unload/wipeout.',
+    desc = 'Remove winbar from cache on buffer wipeout.',
   })
   if not vim.tbl_isempty(configs.opts.general.update_events.win) then
     vim.api.nvim_create_autocmd(configs.opts.general.update_events.win, {
