@@ -4,12 +4,12 @@ require('gitsigns').setup({
     style = 'minimal',
   },
   signs = {
-    add = { text = '┃' },
-    untracked = { text = '┃' },
-    change = { text = '┃' },
+    add = { text = '▍' },
+    untracked = { text = '▍' },
+    change = { text = '▍' },
     delete = { text = '▁' },
     topdelete = { text = '▔' },
-    changedelete = { text = '╋' },
+    changedelete = { text = '▍' },
   },
   -- Use vim legacy signs, for statuscol plugin to fetch gitsigns
   _extmark_signs = false,
