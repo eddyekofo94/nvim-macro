@@ -261,8 +261,8 @@ end
 local components = {
   align        = '%=',
   diag         = '%{%v:lua.statusline.diag()%}',
-  fname        = ' %#StatusLineStrong#%t%* ',
-  fname_nc     = ' %#StatusLineWeak#%t%* ',
+  fname        = ' %#StatusLineStrong#%{%&bt==#""?"%t":"%F"%}%* ',
+  fname_nc     = ' %#StatusLineWeak#%{%&bt==#""?"%t":"%F"%}%* ',
   info         = '%{%v:lua.statusline.info()%}',
   lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
   mode         = '%{%v:lua.statusline.mode()%}',
