@@ -50,7 +50,9 @@ vim.api.nvim_create_autocmd('Signal', {
       return
     end
     vim.g.sigtime = now
-    vim.cmd.rshada()
+    if not pcall(vim.cmd.rshada) then
+      return
+    end
     -- Must save the background and colorscheme name read from ShaDa
     -- because setting background or colorscheme will overwrite them
     local background = vim.g.BACKGROUND or 'dark'
@@ -70,9 +72,11 @@ vim.api.nvim_create_autocmd('Colorscheme', {
   callback = function()
     vim.g.BACKGROUND = vim.go.background
     vim.g.COLORSNAME = vim.g.colors_name
-    vim.cmd.wshada()
     local now = vim.uv.now()
-    if vim.g.sigtime and now - vim.g.sigtime < 500 then
+    if
+      vim.g.sigtime and now - vim.g.sigtime < 500
+      or not pcall(vim.cmd.wshada)
+    then
       return
     end
     vim.g.sigtime = now
