@@ -11,9 +11,11 @@ M.opts = {
       return bufname ~= ''
         and vim.uv.fs_stat(bufname) ~= nil
         and vim.bo[buf].buftype == ''
-        and vim.bo[buf].filetype:match('git') == nil
+        and vim.bo[buf].filetype ~= 'gitcommit'
+        and vim.bo[buf].filetype ~= 'gitrebase'
         and vim.fn.win_gettype(win) == ''
         and not vim.wo[win].diff
+        and vim.wo[win].winbar == ''
     end,
     attach_events = {
       'BufWinEnter',
