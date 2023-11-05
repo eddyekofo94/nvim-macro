@@ -50,7 +50,7 @@ end
 
 -- stylua: ignore start
 local patterns = fallback_tbl_t:new({
-  default = { '%)', '%]', '}', '"', "'", '`', ',', ';', '%.' },
+  default = { '%)', '%]', '}', '\\%)', '"', "'", '`', ',', ';', '%.' },
   content = {
     c = { '%*/' },
     cpp = { '%*/' },
@@ -66,7 +66,6 @@ local patterns = fallback_tbl_t:new({
       '\\right}',
       '\\right>',
       '\\%]',
-      '\\%)',
       '\\}',
       '-->',
       '%*%*%*',
@@ -85,7 +84,6 @@ local patterns = fallback_tbl_t:new({
       '\\right}',
       '\\right>',
       '\\%]',
-      '\\%)',
       '\\}',
       '%$',
     },
