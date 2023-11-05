@@ -1,4 +1,4 @@
-if vim.g.loaded_fzf_file_explorer then
+if vim.g.loaded_fzf_file_explorer or vim.fn.exists(':FZF') ~= 2 then
   return
 end
 
@@ -20,7 +20,7 @@ end
 ---@param dir string
 ---@return nil
 local function fzf_edit_dir(dir)
-  if not isdir(dir) or vim.fn.exists(':FZF') ~= 2 then
+  if not isdir(dir) then
     return
   end
   -- Switch to alternate buffer or create new buffer to
