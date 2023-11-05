@@ -19,13 +19,16 @@ local lnumw_cache = {}
 ---@field rnu? boolean &relativenumber
 ---@field nuw? integer &numberwidth
 ---@field scl? string &signcolumn
+---@field fdc? string &foldcolumn
+---@field show_nu? boolean whether to show line number (either &nu or &rnu is true)
+---@field show_scl? boolean whether to show sign column
+---@field show_fdc? boolean whether to show fold column
 ---@field cur? integer[] cursor position
 ---@field cul? boolean &cursorline
 ---@field culopt? string &cursorlineopt
 ---@field culhl? boolean whether to use cursorline highlight at current line
 ---@field lnumabovehl? boolean whether to use LineNrAbove at current line in number column
 ---@field lnumbelowhl? boolean whether to use LineNrBelow at current line in number column
----@field fdc? string &foldcolumn
 ---@field foldopen? string fold open sign
 ---@field foldclose? string fold close sign
 ---@field foldsep? string fold separator sign
@@ -75,15 +78,16 @@ end
 
 ---Returns the string representation of sign column to be shown
 ---@param data stc_shared_data_t
----@param filter fun(sign: vim.fn.sign): boolean
+---@param filter fun(sign: vim.fn.sign, data: stc_shared_data_t): boolean
+---@param virtual boolean whether to draw sign in virtual line
 ---@return string
-function builders.signcol(data, filter)
-  if data.scl == 'no' then
+function builders.signcol(data, filter, virtual)
+  if not data.show_scl then
     return ''
   end
   local max_priority = -1
   local sign_name_mp = nil
-  if data.virtnum ~= 0 then
+  if data.virtnum ~= 0 and not virtual then
     goto signcol_ret_default
   end
   for _, sign in ipairs(data.signs) do
@@ -93,7 +97,7 @@ function builders.signcol(data, filter)
     if
       sign.lnum == data.lnum
       and sign.priority > max_priority
-      and filter(sign)
+      and filter(sign, data)
     then
       max_priority = sign.priority
       sign_name_mp = sign.name
@@ -114,7 +118,7 @@ end
 ---@return string
 function builders.lnum(data)
   local result = '' ---@type string|integer
-  if not data.nu and not data.rnu then
+  if not data.show_nu then
     return ''
   end
   if data.virtnum ~= 0 then -- Drawing virtual line
@@ -143,7 +147,7 @@ end
 ---@param data stc_shared_data_t
 ---@return string
 function builders.foldcol(data)
-  if data.fdc == '0' then
+  if not data.show_fdc then
     return ''
   end
   local lnum = data.lnum --[[@as integer]]
@@ -156,9 +160,17 @@ function builders.foldcol(data)
 end
 
 ---@param sign vim.fn.sign
+---@param data stc_shared_data_t
 ---@return boolean
-local function gitsigns_filter(sign)
-  return sign.name:find('^Git') and true or false
+local function gitsigns_filter(sign, data)
+  local name = sign.name
+  if not name:find('^Git') then
+    return false
+  end
+  if data.virtnum ~= 0 then -- virtual lines, not showing git delete signs
+    return not name:find('[Dd]elete$')
+  end
+  return true
 end
 
 ---@param sign vim.fn.sign
@@ -205,6 +217,9 @@ function _G.get_statuscolumn()
     data.nuw = wo.nuw
     data.scl = wo.scl
     data.fdc = wo.fdc
+    data.show_nu = data.nu or data.rnu
+    data.show_scl = data.scl ~= 'no'
+    data.show_fdc = data.fdc ~= '0'
     data.foldopen = fcs.foldopen or '-'
     data.foldclose = fcs.foldclose or '+'
     data.foldsep = fcs.foldsep or '|'
@@ -231,11 +246,11 @@ function _G.get_statuscolumn()
     and data.lnum == data.cur[1]
 
   return builders.signcol(data, nongitsigns_filter)
-    .. ' '
+    .. (data.show_scl and ' ' or '')
     .. builders.lnum(data)
-    .. builders.signcol(data, gitsigns_filter)
+    .. builders.signcol(data, gitsigns_filter, true)
     .. builders.foldcol(data)
-    .. ' '
+    .. (data.show_fdc and ' ' or '')
 end
 
 local augroup = vim.api.nvim_create_augroup('StatusColumn', {})
