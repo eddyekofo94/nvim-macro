@@ -6,9 +6,11 @@ local static = require('utils.static')
 ---Load snippets for a given filetype
 ---@param ft string
 local function load_snippets(ft)
-  local snip_groups = require('snippets.' .. ft)
-  for _, snip_group in pairs(snip_groups) do
-    ls.add_snippets(ft, snip_group.snip or snip_group, snip_group.opts or {})
+  local ok, snip_groups = pcall(require, 'snippets.' .. ft)
+  if ok and type(snip_groups) == 'table' then
+    for _, snip_group in pairs(snip_groups) do
+      ls.add_snippets(ft, snip_group.snip or snip_group, snip_group.opts or {})
+    end
   end
 end
 
@@ -17,22 +19,31 @@ local function lazy_load_snippets()
     fn.globpath(fn.stdpath('config') .. '/lua/snippets', '*.lua'),
     '\n'
   )
-  vim.api.nvim_create_augroup('LuaSnipLazyLoadSnippets', { clear = true })
+  -- Record filetypes of all opened buffers
+  local opened_file_ftlist = {}
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    local ft = vim.bo[buf].ft
+    if ft ~= '' then
+      opened_file_ftlist[ft] = true
+    end
+  end
+  local groupid = vim.api.nvim_create_augroup('LuaSnipLazyLoadSnippets', {})
   for _, path in ipairs(snippets_path) do
     local ft = fn.fnamemodify(path, ':t:r')
-    -- Load snippet immediately if ft matches the filetype of current buffer
-    if ft == vim.bo.ft then
+    -- Load snippet immediately if ft matches the filetype of any opened buffer
+    if opened_file_ftlist[ft] then
       load_snippets(ft)
+    else -- Otherwise, load snippet when filetype is detected
+      vim.api.nvim_create_autocmd('FileType', {
+        once = true,
+        pattern = ft,
+        group = groupid,
+        callback = function()
+          load_snippets(ft)
+          return true
+        end,
+      })
     end
-    vim.api.nvim_create_autocmd('FileType', {
-      pattern = ft,
-      once = true,
-      group = 'LuaSnipLazyLoadSnippets',
-      callback = function()
-        load_snippets(ft)
-        return true
-      end,
-    })
   end
 end
 
