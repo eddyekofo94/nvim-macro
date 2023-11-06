@@ -241,6 +241,8 @@ local fuzzy_path_option = {
 
 local icon_dot = vim.trim(icons.DotLarge)
 local icon_calc = icons.Calculator
+local icon_folder = icons.Folder
+local icon_file = icons.File
 
 ---@diagnostic disable missing-fields
 cmp.setup({
@@ -250,18 +252,30 @@ cmp.setup({
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, cmp_item)
-      if cmp_item.kind == 'File' then
-        local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
-        if devicons_ok then
-          local icon, icon_hl = devicons.get_icon(
-            vim.fs.basename(cmp_item.word),
-            vim.fn.fnamemodify(cmp_item.word, ':e'),
-            { default = true }
-          )
-          cmp_item.kind = icon and icon .. ' ' or cmp_item.kind
-          cmp_item.kind_hl_group = icon_hl or cmp_item.kind_hl_group
+      local compltype = vim.fn.getcmdcompltype()
+      if -- Use special icons for file / directory completions
+        cmp_item.kind == 'File'
+        or cmp_item.kind == 'Folder'
+        or compltype == 'file'
+        or compltype == 'file_in_path'
+        or compltype == 'dir'
+      then
+        if cmp_item.word:match('/$') then -- Directories
+          cmp_item.kind = icon_folder
+          cmp_item.kind_hl_group = 'CmpItemKindFolder'
+        else -- Files
+          local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
+          if devicons_ok then
+            local icon, icon_hl = devicons.get_icon(
+              vim.fs.basename(cmp_item.word),
+              vim.fn.fnamemodify(cmp_item.word, ':e'),
+              { default = true }
+            )
+            cmp_item.kind = icon and icon .. ' ' or icon_file
+            cmp_item.kind_hl_group = icon_hl or 'CmpItemKindFile'
+          end
         end
-      else
+      else -- Use special icons for cmdline / calc completions
         ---@type table<string, string> override icons with `entry.source.name`
         local icon_override = {
           cmdline = icon_dot,
