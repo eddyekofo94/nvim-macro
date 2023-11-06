@@ -70,7 +70,7 @@ end
 ---@param range integer[][] 0-based range
 ---@param cursor integer[] 1,0-based cursor position
 ---@return boolean
-local function cursor_in_range(range, cursor)
+local function in_range(range, cursor)
   local cursor0 = { cursor[1] - 1, cursor[2] }
   -- stylua: ignore start
   return (
@@ -331,7 +331,7 @@ cmp.setup({
         end
       end,
       ['i'] = function(fallback)
-        if luasnip.jumpable(-1) then
+        if luasnip.locally_jumpable(-1) then
           local prev = luasnip.jump_destination(-1)
           local _, snip_dest_end = prev:get_buf_position()
           snip_dest_end[1] = snip_dest_end[1] + 1 -- (1, 0) indexed
@@ -355,7 +355,7 @@ cmp.setup({
       ['i'] = function(fallback)
         if luasnip.expandable() then
           luasnip.expand()
-        elseif luasnip.jumpable(1) then
+        elseif luasnip.locally_jumpable(1) then
           local buf = vim.api.nvim_get_current_buf()
           local line = vim.api.nvim_get_current_line()
           local cursor = vim.api.nvim_win_get_cursor(0)
@@ -377,11 +377,7 @@ cmp.setup({
             local parent = node_find_parent(current)
             local range = parent and { parent:get_buf_position() }
             local tabout_dest = tabout.get_jump_pos('<Tab>')
-            if
-              tabout_dest
-              and range
-              and cursor_in_range(range, tabout_dest)
-            then
+            if tabout_dest and range and in_range(range, tabout_dest) then
               tabout.do_key('<Tab>')
             else
               luasnip.jump(1)
