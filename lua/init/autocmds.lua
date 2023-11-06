@@ -125,6 +125,28 @@ local autocmds = {
   },
 
   {
+    { 'QuickFixCmdPost' },
+    {
+      group = 'QuickFixAutoOpen',
+      desc = 'Open quickfix window if there are results.',
+      callback = function(info)
+        if #vim.fn.getqflist() <= 1 then
+          return
+        end
+        if vim.startswith(info.match, 'l') then
+          vim.schedule(function()
+            vim.cmd('bel lwindow')
+          end)
+        else
+          vim.schedule(function()
+            vim.cmd('bot cwindow')
+          end)
+        end
+      end,
+    },
+  },
+
+  {
     { 'VimResized' },
     {
       group = 'EqualWinSize',
