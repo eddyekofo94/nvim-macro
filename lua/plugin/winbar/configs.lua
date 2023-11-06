@@ -30,7 +30,6 @@ M.opts = {
       win = {
         'CursorMoved',
         'CursorMovedI',
-        'WinEnter',
         'WinResized',
       },
       buf = {
