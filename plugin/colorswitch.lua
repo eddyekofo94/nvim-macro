@@ -46,13 +46,13 @@ vim.api.nvim_create_autocmd('Signal', {
     -- -> receiving signals from other nvim instances
     -- -> setting bg
     -- -> ...
-    if vim.g.sigtime and now - vim.g.sigtime < 500 then
+    if
+      vim.g.sigtime and now - vim.g.sigtime < 500
+      or not pcall(vim.cmd.rshada)
+    then
       return
     end
     vim.g.sigtime = now
-    if not pcall(vim.cmd.rshada) then
-      return
-    end
     -- Must save the background and colorscheme name read from ShaDa
     -- because setting background or colorscheme will overwrite them
     local background = vim.g.BACKGROUND or 'dark'
@@ -70,34 +70,29 @@ vim.api.nvim_create_autocmd('Colorscheme', {
   group = 'SwitchBackground',
   desc = 'Spawn setbg/setcolors on colorscheme change.',
   callback = function()
-    vim.g.BACKGROUND = vim.go.background
-    vim.g.COLORSNAME = vim.g.colors_name
-    local now = vim.uv.now()
-    if
-      vim.g.sigtime and now - vim.g.sigtime < 500
-      or not pcall(vim.cmd.wshada)
-    then
-      return
-    end
-    vim.g.sigtime = now
-    local pid = vim.fn.getpid()
-    if vim.fn.executable('setbg') == 1 then
-      vim.uv.spawn('setbg', {
-        args = {
-          vim.go.background,
-          '--exclude-nvim-processes=' .. pid,
-        },
-        stdio = { nil, nil, nil },
-      })
-    end
-    if vim.fn.executable('setcolors') == 1 then
-      vim.uv.spawn('setcolors', {
-        args = {
-          vim.g.colors_name,
-          '--exclude-nvim-processes=' .. pid,
-        },
-        stdio = { nil, nil, nil },
-      })
-    end
+    vim.defer_fn(function()
+      vim.g.BACKGROUND = vim.go.background
+      vim.g.COLORSNAME = vim.g.colors_name
+      local now = vim.uv.now()
+      if
+        vim.g.sigtime and now - vim.g.sigtime < 500
+        or not pcall(vim.cmd.wshada)
+      then
+        return
+      end
+      vim.g.sigtime = now
+      if vim.fn.executable('setbg') == 1 then
+        vim.uv.spawn('setbg', {
+          args = { vim.go.background },
+          stdio = { nil, nil, nil },
+        })
+      end
+      if vim.fn.executable('setcolors') == 1 then
+        vim.uv.spawn('setcolors', {
+          args = { vim.g.colors_name },
+          stdio = { nil, nil, nil },
+        })
+      end
+    end, 100)
   end,
 })
