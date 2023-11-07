@@ -45,8 +45,8 @@ return {
   {
     'junegunn/vim-easy-align',
     keys = {
-      { 'ga', mode = { 'n', 'x' } },
-      { 'gA', mode = { 'n', 'x' } },
+      { 'gl', mode = { 'n', 'x' } },
+      { 'gL', mode = { 'n', 'x' } },
     },
     config = function()
       require('configs.vim-easy-align')
