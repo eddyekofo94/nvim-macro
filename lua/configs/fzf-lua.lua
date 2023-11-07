@@ -33,7 +33,6 @@ fzf.setup({
       winopts = {
         number = false,
         relativenumber = false,
-        cursorline = false,
       },
     },
   },
@@ -98,12 +97,32 @@ fzf.setup({
   },
   actions = {
     files = {
-      ['default'] = actions.file_edit,
+      ['default'] = function(selected, opts)
+        if #selected > 1 then
+          actions.file_sel_to_qf(selected, opts)
+          vim.cmd.cfirst()
+          vim.cmd.copen()
+        else
+          actions.file_edit(selected, opts)
+        end
+      end,
       ['alt-s'] = actions.file_split,
       ['alt-v'] = actions.file_vsplit,
       ['alt-t'] = actions.file_tabedit,
-      ['alt-q'] = actions.file_sel_to_qf,
-      ['alt-l'] = actions.file_sel_to_ll,
+      ['alt-q'] = function(selected, opts)
+        actions.file_sel_to_qf(selected, opts)
+        if #selected > 1 then
+          vim.cmd.cfirst()
+          vim.cmd.copen()
+        end
+      end,
+      ['alt-l'] = function(selected, opts)
+        actions.file_sel_to_ll(selected, opts)
+        if #selected > 1 then
+          vim.cmd.cfirst()
+          vim.cmd.copen()
+        end
+      end,
     },
     buffers = {
       ['default'] = actions.buf_edit,
@@ -281,4 +300,13 @@ vim.api.nvim_create_autocmd('ColorScheme', {
   group = vim.api.nvim_create_augroup('FzfLuaSetDefaultHlgroups', {}),
   desc = 'Set default hlgroups for fzf-lua.',
   callback = set_default_hlgroups,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('FzfSetTMap', {}),
+  desc = 'Set terminal mappings in fzf buffer.',
+  pattern = 'fzf',
+  callback = function()
+    vim.keymap.set('t', '<C-_>', fzf.builtin)
+  end,
 })
