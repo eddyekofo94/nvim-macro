@@ -364,27 +364,6 @@ function winbar_menu_t:update_current_context_hl(linenr)
   end
 end
 
----Add highlights to the menu buffer
----@param hl_info winbar_menu_hl_info_t[]
----@return nil
-function winbar_menu_t:add_hl(hl_info)
-  if not self.buf then
-    return
-  end
-  for linenr, hl_line_info in ipairs(hl_info) do
-    for _, hl_symbol_info in ipairs(hl_line_info) do
-      utils.hl.buf_add_hl(
-        self.buf,
-        hl_symbol_info.ns or -1,
-        hl_symbol_info.hlgroup,
-        linenr - 1, -- 0-indexed
-        hl_symbol_info.start,
-        hl_symbol_info['end']
-      )
-    end
-  end
-end
-
 ---Make a buffer for the menu and set buffer-local keymaps
 ---Must be called after self:eval_win_configs()
 ---Side effect: change self.buf, self.hl_info
@@ -394,6 +373,8 @@ function winbar_menu_t:make_buf()
     return
   end
   self.buf = vim.api.nvim_create_buf(false, true)
+
+  -- Get lines and highlights for each line
   local lines = {} ---@type string[]
   local hl_info = {} ---@type winbar_menu_hl_info_t[][]
   for _, entry in ipairs(self.entries) do
@@ -411,11 +392,30 @@ function winbar_menu_t:make_buf()
     )
     table.insert(hl_info, entry_hl_info)
   end
+
+  -- Fill the buffer with lines, then add highlights
   vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
-  self:add_hl(hl_info)
+  for linenr, hl_line_info in ipairs(hl_info) do
+    for _, hl_symbol_info in ipairs(hl_line_info) do
+      utils.hl.buf_add_hl(
+        self.buf,
+        hl_symbol_info.ns or -1,
+        hl_symbol_info.hlgroup,
+        linenr - 1, -- 0-indexed
+        hl_symbol_info.start,
+        hl_symbol_info['end']
+      )
+    end
+  end
+
+  -- Update highlight at cursor position for the first time if initial
+  -- cursor position is set, later updates of cursor highlights will be
+  -- triggered by autocmds
   if self.cursor then
     self:update_current_context_hl(self.cursor[1])
   end
+
+  -- Set buffer local options
   vim.bo[self.buf].ma = false
   vim.bo[self.buf].ft = 'winbar_menu'
 
