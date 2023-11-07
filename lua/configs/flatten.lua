@@ -1,6 +1,6 @@
 require('flatten').setup({
   window = {
-    open = 'alternate',
+    open = 'smart',
   },
   callbacks = {
     should_block = function(argv)
