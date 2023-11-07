@@ -68,7 +68,9 @@ local function set_keymap()
 end
 
 ls.setup({
-  history = true,
+  keep_roots = true,
+  link_roots = false,
+  link_children = true,
   region_check_events = 'CursorMoved,CursorMovedI',
   delete_check_events = 'TextChanged,TextChangedI',
   update_events = 'TextChanged,TextChangedI,InsertLeave',
