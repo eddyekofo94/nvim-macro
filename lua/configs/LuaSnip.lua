@@ -5,6 +5,7 @@ local static = require('utils.static')
 
 ---Load snippets for a given filetype
 ---@param ft string
+---@return nil
 local function load_snippets(ft)
   local ok, snip_groups = pcall(require, 'snippets.' .. ft)
   if ok and type(snip_groups) == 'table' then
@@ -14,6 +15,7 @@ local function load_snippets(ft)
   end
 end
 
+---@return nil
 local function lazy_load_snippets()
   local snippets_path = vim.split(
     fn.globpath(fn.stdpath('config') .. '/lua/snippets', '*.lua'),
@@ -47,24 +49,14 @@ local function lazy_load_snippets()
   end
 end
 
-local function set_keymap()
-  vim.keymap.set({ 'n', 's' }, '<Tab>', function()
-    if ls.jumpable(1) then
-      ls.jump(1)
-      return '<Ignore>'
-    else
-      return '<Tab>'
-    end
-  end, { noremap = false, expr = true })
-  vim.keymap.set({ 'n', 's' }, '<S-Tab>', function()
-    ls.jump(-1)
-  end, { noremap = false })
-  vim.keymap.set('s', '<C-n>', function()
-    return ls.choice_active() and '<Plug>luasnip-next-choice' or '<C-n>'
-  end, { silent = true, expr = true })
-  vim.keymap.set('s', '<C-p>', function()
-    return ls.choice_active() and '<Plug>luasnip-prev-choice' or '<C-p>'
-  end, { silent = true, expr = true })
+---@return nil
+local function set_keymaps()
+  -- stylua: ignore start
+  vim.keymap.set('s', '<Tab>',   function() ls.jump(1) end)
+  vim.keymap.set('s', '<S-Tab>', function() ls.jump(-1) end)
+  vim.keymap.set('s', '<C-n>',   function() return ls.choice_active() and '<Plug>luasnip-next-choice' or '<C-n>' end, { expr = true })
+  vim.keymap.set('s', '<C-p>',   function() return ls.choice_active() and '<Plug>luasnip-prev-choice' or '<C-p>' end, { expr = true })
+  -- stylua: ignore end
 end
 
 ls.setup({
@@ -98,4 +90,4 @@ ls.setup({
 })
 
 lazy_load_snippets()
-set_keymap()
+set_keymaps()
