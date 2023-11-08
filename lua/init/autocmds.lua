@@ -44,7 +44,7 @@ local autocmds = {
       nested = true,
       group = 'Autosave',
       desc = 'Autosave on focus change.',
-      command = 'if &bt ==# "" && &mod | silent! w | endif',
+      command = 'if &bt ==# "" | silent! update | endif',
     },
   },
 
