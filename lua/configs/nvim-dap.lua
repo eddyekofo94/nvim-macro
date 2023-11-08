@@ -28,11 +28,11 @@ vim.api.nvim_create_user_command(
 )
 
 -- stylua: ignore start
-vim.fn.sign_define('DapBreakpoint',          { text = vim.trim(static.icons.DotLarge), texthl = 'Tea' })
-vim.fn.sign_define('DapBreakpointCondition', { text = vim.trim(static.icons.Diamond), texthl = 'Conditional' })
-vim.fn.sign_define('DapBreakpointRejected',  { text = vim.trim(static.icons.DotLarge), texthl = 'Iron' })
-vim.fn.sign_define('DapLogPoint',            { text = vim.trim(static.icons.Log), texthl = 'Skyblue' })
-vim.fn.sign_define('DapStopped',             { text = vim.trim(static.icons.ArrowRight), texthl = 'yellow' })
+vim.fn.sign_define('DapBreakpoint',          { text = vim.trim(static.icons.DotLarge), texthl = 'DiagnosticSignHint' })
+vim.fn.sign_define('DapBreakpointCondition', { text = vim.trim(static.icons.Diamond), texthl = 'DiagnosticSignInfo' })
+vim.fn.sign_define('DapBreakpointRejected',  { text = vim.trim(static.icons.DotLarge), texthl = 'DiagnosticSignWarn' })
+vim.fn.sign_define('DapLogPoint',            { text = vim.trim(static.icons.Log), texthl = 'DiagnosticSignOk' })
+vim.fn.sign_define('DapStopped',             { text = vim.trim(static.icons.ArrowRight), texthl = 'DiagnosticSignError' })
 -- stylua: ignore end
 
 dap.adapters = require('configs.dap-configs.adapters')
