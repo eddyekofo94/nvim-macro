@@ -286,13 +286,16 @@ function winbar_menu_t:get_component_at(pos, look_ahead)
 end
 
 ---"Click" the component at the given position in the winbar menu
----Side effects: update self.clicked_at
+---Side effects: update self.clicked_at, close sub-menus
 ---@param pos integer[] 1,0-indexed, byte-indexed
 ---@param min_width integer?
 ---@param n_clicks integer?
 ---@param button string?
 ---@param modifiers string?
 function winbar_menu_t:click_at(pos, min_width, n_clicks, button, modifiers)
+  if self.sub_menu then
+    self.sub_menu:close()
+  end
   self.clicked_at = pos
   vim.api.nvim_win_set_cursor(self.win, pos)
   local component = self:get_component_at(pos)
@@ -304,13 +307,16 @@ function winbar_menu_t:click_at(pos, min_width, n_clicks, button, modifiers)
 end
 
 ---"Click" the component in the winbar menu
----Side effects: update self.clicked_at
+---Side effects: update self.clicked_at, close sub-menus
 ---@param symbol winbar_symbol_t
 ---@param min_width integer?
 ---@param n_clicks integer?
 ---@param button string?
 ---@param modifiers string?
 function winbar_menu_t:click_on(symbol, min_width, n_clicks, button, modifiers)
+  if self.sub_menu then
+    self.sub_menu:close()
+  end
   local row = symbol.entry.idx
   local col = symbol.entry.padding.left
   for idx, component in ipairs(symbol.entry.components) do
@@ -329,6 +335,9 @@ end
 ---@param pos integer[]? byte-indexed, 1,0-indexed cursor/mouse position
 ---@return nil
 function winbar_menu_t:update_hover_hl(pos)
+  if not self.buf then
+    return
+  end
   utils.hl.range_single(self.buf, 'WinBarMenuHoverSymbol')
   utils.hl.range_single(self.buf, 'WinBarMenuHoverIcon')
   utils.hl.range_single(self.buf, 'WinBarMenuHoverEntry')
@@ -337,22 +346,13 @@ function winbar_menu_t:update_hover_hl(pos)
   end
   utils.hl.line_single(self.buf, 'WinBarMenuHoverEntry', pos[1])
   local component, range = self:get_component_at({ pos[1], pos[2] })
+  local hlgroup = component and component.name == '' and 'WinBarMenuHoverIcon'
+    or 'WinBarMenuHoverSymbol'
   if component and component.on_click and range then
-    utils.hl.range_single(
-      self.buf,
-      component and component.name == '' and 'WinBarMenuHoverIcon'
-        or 'WinBarMenuHoverSymbol',
-      {
-        start = {
-          line = pos[1] - 1,
-          character = range.start,
-        },
-        ['end'] = {
-          line = pos[1] - 1,
-          character = range['end'],
-        },
-      }
-    )
+    utils.hl.range_single(self.buf, hlgroup, {
+      start = { line = pos[1] - 1, character = range.start },
+      ['end'] = { line = pos[1] - 1, character = range['end'] },
+    })
   end
 end
 
