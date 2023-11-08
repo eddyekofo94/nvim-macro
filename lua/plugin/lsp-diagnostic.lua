@@ -1005,6 +1005,37 @@ local function setup_lsp_autoformat()
   })
 end
 
+local lsp_autostop_pending
+---Automatically stop LSP servers that no longer attaches to any buffers
+---
+---  Once `BufWipeout` is triggered, wait for 60s before checking and
+---  stopping servers, in this way the callback will be invoked once
+---  every 60 seconds at most and can stop multiple clients at once
+---  if possible, which is more efficient than checking and stopping
+---  clients on every `BufWipeout` events
+---
+---@return nil
+local function setup_lsp_autostop()
+  vim.api.nvim_create_autocmd('BufWipeout', {
+    group = vim.api.nvim_create_augroup('LspAutoStop', {}),
+    desc = 'Automatically stop idle language servers.',
+    callback = function()
+      if lsp_autostop_pending then
+        return
+      end
+      lsp_autostop_pending = true
+      vim.defer_fn(function()
+        lsp_autostop_pending = nil
+        for _, client in ipairs(vim.lsp.get_clients()) do
+          if vim.tbl_isempty(vim.lsp.get_buffers_by_client_id(client.id)) then
+            vim.lsp.stop_client(client.id, true)
+          end
+        end
+      end, 60000)
+    end,
+  })
+end
+
 ---Set up diagnostic signs
 ---@return nil
 local function setup_diagnostic_signs()
@@ -1022,9 +1053,14 @@ end
 ---Set up LSP and diagnostic
 ---@return nil
 local function setup()
+  if vim.g.loaded_lsp_diagnostics ~= nil then
+    return
+  end
+  vim.g.loaded_lsp_diagnostics = true
   setup_keymaps()
   setup_lsp_overrides()
   setup_lsp_autoformat()
+  setup_lsp_autostop()
   setup_diagnostic_signs()
   setup_diagnostics_autoswitch()
   setup_commands('Lsp', subcommands.lsp.buf, vim.lsp.buf)
