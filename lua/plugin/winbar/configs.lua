@@ -70,7 +70,10 @@ M.opts = {
         local invisible = range['end'].line - vim.fn.line('w$') + 1
         if invisible > 0 then
           local view = vim.fn.winsaveview()
-          view.topline = view.topline + invisible
+          view.topline = math.min(
+            view.topline + invisible,
+            math.max(1, range.start.line - vim.wo.scrolloff + 1)
+          )
           vim.fn.winrestview(view)
         end
       end,
