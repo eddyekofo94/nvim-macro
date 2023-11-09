@@ -54,13 +54,13 @@ function! GetMarkdownIndent() abort
   endif
 
   if s:in_mathzone()
-    " Align to the equal sign of the first previous line that contains
+    " Align to the first previous line that has
     " '='/'>'/'<'/'\le'/'\ge'/'\sim'/'\approx'/'\gg'/'\ll' or variants with
     " '&' at the beginning if the current line starts with one of these
     " patterns
     let align_patterns =
-          \ '\(&\s*\)\?\(=\|>\|<\|\\\?\(le\|ge\|sim\|approx\|gg\|ll\)\)\|&'
-    if l:line =~# printf('^\s*\(%s\)', align_patterns)
+          \ '^\s*\(\(&\s*\)\?\(=\|>\|<\|\\\(le\|ge\|sim\|approx\|gg\|ll\)\>\)\|&\)'
+    if l:line =~# align_patterns
       let [l:prev_eq_lnum, l:eq_pos, l:_] =
             \ s:trimmed_prevnonblank_matches(v:lnum, align_patterns)
       if l:prev_eq_lnum > 0 && s:in_mathzone(l:prev_eq_lnum, 1)
