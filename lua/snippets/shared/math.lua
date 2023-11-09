@@ -251,7 +251,7 @@ return {
   us.samW({ trig = 'lr>' }, { t('\\left<'), i(1), t('\\right>') }),
   us.samW(
     { trig = 'nor' },
-    { t('\\left\\lVert '), i(1), t(' \\right\\lVert') }
+    { t('\\left\\lVert '), i(1), t(' \\right\\rVert') }
   ),
 
   us.sambWr({ trig = '%s*ks' }, t('^{*}')),
