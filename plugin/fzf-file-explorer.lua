@@ -78,7 +78,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
   end,
 })
 
-vim.api.nvim_create_autocmd('BufWipeOut', {
+vim.api.nvim_create_autocmd('BufDelete', {
   group = groupid,
   callback = function(info)
     -- Remove buffer creation record

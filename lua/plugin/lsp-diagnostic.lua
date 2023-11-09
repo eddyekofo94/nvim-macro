@@ -1008,15 +1008,15 @@ end
 local lsp_autostop_pending
 ---Automatically stop LSP servers that no longer attaches to any buffers
 ---
----  Once `BufWipeout` is triggered, wait for 60s before checking and
+---  Once `BufDelete` is triggered, wait for 60s before checking and
 ---  stopping servers, in this way the callback will be invoked once
 ---  every 60 seconds at most and can stop multiple clients at once
 ---  if possible, which is more efficient than checking and stopping
----  clients on every `BufWipeout` events
+---  clients on every `BufDelete` events
 ---
 ---@return nil
 local function setup_lsp_autostop()
-  vim.api.nvim_create_autocmd('BufWipeout', {
+  vim.api.nvim_create_autocmd('BufDelete', {
     group = vim.api.nvim_create_augroup('LspAutoStop', {}),
     desc = 'Automatically stop idle language servers.',
     callback = function()

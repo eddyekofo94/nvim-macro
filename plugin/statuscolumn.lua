@@ -232,7 +232,7 @@ function _G.get_statuscolumn()
         lnumw_cache[buf] = numdigits(vim.api.nvim_buf_line_count(buf))
         data.buf_tick = buf_tick
       end
-      -- Cache could be nil after BufWipeOut
+      -- Cache could be nil after BufDelete
       data.lnumw = lnumw_cache[buf] or data.lnumw
     end
   end
@@ -272,7 +272,7 @@ vim.api.nvim_create_autocmd('WinClosed', {
     shared[tonumber(info.match)] = nil
   end,
 })
-vim.api.nvim_create_autocmd('BufWipeOut', {
+vim.api.nvim_create_autocmd('BufDelete', {
   group = augroup,
   desc = 'Clear per buffer lnum width cache.',
   callback = function(info)

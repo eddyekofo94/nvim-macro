@@ -62,7 +62,7 @@ local function setup(opts)
       desc = 'Attach winbar',
     })
   end
-  vim.api.nvim_create_autocmd('BufWipeOut', {
+  vim.api.nvim_create_autocmd('BufDelete', {
     group = groupid,
     callback = function(info)
       utils.bar.exec('del', { buf = info.buf })
