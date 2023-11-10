@@ -21,9 +21,46 @@ M.snippets = {
   us.sn({ trig = 'ty' }, t('threadIdy.y')),
   us.sn({ trig = 'tz' }, t('threadIdz.z')),
   us.sn(
-    { trig = 'idx' },
+    {
+      trig = 'idx1',
+      dscr = 'Indexes for 1D grid',
+    },
     un.fmtd(
       [[
+      const int bw = blockDim.x;
+      const int bx = blockIdx.x;
+      const int tx = threadIdx.x;
+    ]],
+      {}
+    )
+  ),
+  us.sn(
+    {
+      trig = 'idx2',
+      dscr = 'Indexes for 2D grid',
+    },
+    un.fmtd(
+      [[
+      const int bw = blockDim.x;
+      const int bh = blockDim.y;
+      const int bx = blockIdx.x;
+      const int by = blockIdx.y;
+      const int tx = threadIdx.x;
+      const int ty = threadIdx.y;
+    ]],
+      {}
+    )
+  ),
+  us.sn(
+    {
+      trig = 'idx3',
+      dscr = 'Indexes for 3D grid',
+    },
+    un.fmtd(
+      [[
+      const int bw = blockDim.x;
+      const int bh = blockDim.y;
+      const int bd = blockDim.z;
       const int bx = blockIdx.x;
       const int by = blockIdx.y;
       const int bz = blockIdx.z;
