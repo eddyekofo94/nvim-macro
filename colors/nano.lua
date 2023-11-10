@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Tue 24 Oct 2023 01:07:47 AM CST
+-- Last Updated: Sat 11 Nov 2023 05:14:30 AM CST
 
 -- Palette {{{
 -- stylua: ignore start
@@ -113,9 +113,9 @@ local hlgroups = {
   TermCursor = { fg = palette.subtle, bg = palette.popout },
   TermCursorNC = { fg = palette.critical, bg = palette.subtle },
   DiffAdd = { bg = palette.grass },
-  DiffChange = { link = 'None' },
+  DiffChange = { bg = palette.lavender },
   DiffDelete = { fg = palette.faint },
-  DiffText = { bg = palette.lavender },
+  DiffText = { fg = palette.foreground, bg = palette.violet },
   Directory = { fg = palette.faded },
   EndOfBuffer = { fg = palette.subtle },
   ErrorMsg = { fg = palette.popout },
@@ -719,6 +719,7 @@ local hlgroup_override_variants = {
   dark = {
     String = { fg = palette.popout },
     CmpItemAbbrMatch = { fg = palette.critical },
+    DiffText = { fg = palette.background, bg = palette.faded },
     TelescopePreviewMatch = { fg = palette.critical, bold = true },
     TelescopeMatching = { fg = palette.critical, bold = true },
   },
