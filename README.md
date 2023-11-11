@@ -51,7 +51,7 @@
 - Massive [TeX math snippets](https://github.com/Bekaboo/nvim/blob/master/lua/snippets/shared/math.lua)
 - Custom UI elements ([statusline](https://github.com/Bekaboo/nvim/blob/master/plugin/statusline.lua), [statuscolumn](https://github.com/Bekaboo/nvim/blob/master/plugin/statuscolumn.lua), [winbar](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/winbar)) and [colorschemes](https://github.com/Bekaboo/nvim/tree/master/colors)
 - [Fine-tuned plugins](https://github.com/Bekaboo/nvim/tree/master/lua/configs) with [custom patches](https://github.com/Bekaboo/nvim/tree/master/patches)
-- Fast startup around [15 ~ 35 ms](#startuptime-statistics)
+- Fast startup around [15 ~ 35 ms](#startuptime-profiling)
 
 ## Requirements and Dependencies
 
