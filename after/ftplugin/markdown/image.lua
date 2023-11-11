@@ -76,6 +76,7 @@ local function insert_image()
   end
   _G.handler_drawio = uv.spawn(
     'drawio',
+     ---@diagnostic disable-next-line: missing-fields
     {
       args = { vim.fs.joinpath(path, fname) },
       detached = true,

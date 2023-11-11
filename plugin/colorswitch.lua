@@ -82,12 +82,14 @@ vim.api.nvim_create_autocmd('Colorscheme', {
       end
       vim.g.sigtime = now
       if vim.fn.executable('setbg') == 1 then
+        ---@diagnostic disable-next-line: missing-fields, missing-parameter
         vim.uv.spawn('setbg', {
           args = { vim.go.background },
           stdio = { nil, nil, nil },
         })
       end
       if vim.fn.executable('setcolors') == 1 then
+        ---@diagnostic disable-next-line: missing-fields, missing-parameter
         vim.uv.spawn('setcolors', {
           args = { vim.g.colors_name },
           stdio = { nil, nil, nil },

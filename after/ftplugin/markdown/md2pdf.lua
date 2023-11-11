@@ -83,7 +83,7 @@ local function complete_md_to_pdf(arglead, _, _)
 end
 
 ---Close a handler if it is not nil and not closing
----@param handler userdata|nil
+---@param handler uv.uv_process_t?
 local function close_handler(handler)
   if handler and not handler:is_closing() then
     handler:close()
@@ -97,6 +97,7 @@ local function spawn_viewer(files, opts)
   close_handler(_G.handler_viewer)
   _G.handler_viewer = vim.uv.spawn(
     opts.viewer,
+    ---@diagnostic disable-next-line: missing-fields
     { args = files },
     vim.schedule_wrap(function(code_viewer, _)
       close_handler(_G.handler_viewer)
@@ -121,9 +122,8 @@ local function spawn_pandoc(args, opts)
   close_handler(_G.handler_md2pdf)
   _G.handler_md2pdf = vim.uv.spawn(
     'md2pdf',
-    {
-      args = { '--' .. opts['pdf-engine'], unpack(args) },
-    },
+    ---@diagnostic disable-next-line: missing-fields
+    { args = { '--' .. opts['pdf-engine'], unpack(args) } },
     vim.schedule_wrap(function(code_md2pdf, _)
       close_handler(_G.handler_md2pdf)
       if code_md2pdf ~= 0 then
