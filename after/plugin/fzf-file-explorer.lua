@@ -6,6 +6,9 @@ vim.g.loaded_fzf_file_explorer = 1
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- Clear netrw autocmds
+local groupid = vim.api.nvim_create_augroup('FileExplorer', {})
+
 ---@type table<number, true>
 local buf_created = {}
 
@@ -41,7 +44,6 @@ local function fzf_edit_dir(dir)
   vim.cmd('FZF ' .. vim.fn.fnameescape(dir))
 end
 
-local groupid = vim.api.nvim_create_augroup('FzfFileExploer', {})
 vim.api.nvim_create_autocmd('UIEnter', {
   once = true,
   group = groupid,
@@ -57,6 +59,7 @@ vim.api.nvim_create_autocmd('UIEnter', {
 
 vim.api.nvim_create_autocmd('BufEnter', {
   group = groupid,
+  desc = 'Open directory with fzf.',
   callback = function(info)
     -- Defer opening fzf window until UIEnter autocmd
     -- for colorshemes to be loaded
@@ -80,6 +83,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
 
 vim.api.nvim_create_autocmd('BufDelete', {
   group = groupid,
+  desc = 'Clear buffer creation record.',
   callback = function(info)
     -- Remove buffer creation record
     vim.schedule(function()
