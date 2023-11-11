@@ -177,7 +177,7 @@ local function tmux_mapkey_fallback(key, command, condition)
     or function()
       return not tmux_is_zoomed() and nvim_tabpage_has_only_win()
     end
-  require('utils').keymap.amend({ 'n', 'x' }, key, function(fallback)
+  require('utils').keymap.amend({ 'n', 'x', 't' }, key, function(fallback)
     if condition() then
       tmux_exec(command)
       return
@@ -194,10 +194,10 @@ local function setup()
   end
   vim.g.loaded_tmux = true
 
-  vim.keymap.set({ 'n', 'x' }, '<M-h>', navigate_wrap('h'))
-  vim.keymap.set({ 'n', 'x' }, '<M-j>', navigate_wrap('j'))
-  vim.keymap.set({ 'n', 'x' }, '<M-k>', navigate_wrap('k'))
-  vim.keymap.set({ 'n', 'x' }, '<M-l>', navigate_wrap('l'))
+  vim.keymap.set({ 'n', 'x', 't' }, '<M-h>', navigate_wrap('h'))
+  vim.keymap.set({ 'n', 'x', 't' }, '<M-j>', navigate_wrap('j'))
+  vim.keymap.set({ 'n', 'x', 't' }, '<M-k>', navigate_wrap('k'))
+  vim.keymap.set({ 'n', 'x', 't' }, '<M-l>', navigate_wrap('l'))
 
   -- stylua: ignore start
   tmux_mapkey_fallback('<M-p>', 'last-pane')
@@ -214,12 +214,14 @@ local function setup()
   tmux_mapkey_fallback('<M-+>', [[run "tmux resize-pane -y $(($(tmux display -p '#{pane_height}') + 2))"]], function() return not tmux_is_zoomed() and (nvim_at_border('j') and (nvim_at_border('k') or not tmux_at_border('j'))) end)
   -- stylua: ignore end
 
-  -- Use a unified keymap `<C-space>[` to escape from vim terminal mode or enter
-  -- tmux visual mode
+  -- Use <C-Space>[ and <C-Space>: (same keybindings as in tmux)
+  -- to exit terminal mode and enter command mode
+  -- stylua: ignore start
   vim.keymap.set('t', '<C-Space>[', '<C-\\><C-n>')
-  vim.keymap.set({ 'n', 'v', 'o', 'i', 'c', 'l' }, '<C-Space>[', function()
-    tmux_exec('copy-mode')
-  end)
+  vim.keymap.set('t', '<C-Space>:', '<C-\\><C-n>:')
+  vim.keymap.set({ 'n', 'v', 'o', 'i', 'c', 'l' }, '<C-Space>[', function() tmux_exec('copy-mode') end)
+  vim.keymap.set({ 'n', 'v', 'o', 'i', 'c', 'l' }, '<C-Space>:', function() tmux_exec('command-prompt') end)
+  -- stylua: ignore end
 
   -- Set @is_vim and register relevant autocmds callbacks if not already
   -- in a vim/nvim session
