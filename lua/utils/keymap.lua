@@ -99,8 +99,11 @@ function M.fallback_fn(def)
       feed(def.callback())
     end
   else
+    -- Escape rhs to avoid nvim_eval() interpreting
+    -- special characters
+    local rhs = vim.fn.escape(def.rhs, '\\')
     return function()
-      feed(vim.api.nvim_eval(def.rhs))
+      feed(vim.api.nvim_eval(rhs))
     end
   end
 end
