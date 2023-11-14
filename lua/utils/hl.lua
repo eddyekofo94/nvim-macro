@@ -13,7 +13,7 @@ local M = {}
 ---vim.api.nvim_get_hl()
 ---@param ns_id integer
 ---@param opts table{ name: string?, id: integer?, link: boolean? }
----@return table highlight attributes
+---@return vim.api.keyset.highlight: highlight attributes
 function M.get(ns_id, opts)
   if not opts.name then
     return vim.api.nvim_get_hl(ns_id, opts)
@@ -86,7 +86,7 @@ end
 ---Merge highlight attributes, use values from the right most hl group
 ---if there are conflicts
 ---@vararg string highlight group names
----@return table merged highlight attributes
+---@return vim.api.keyset.highlight: merged highlight attributes
 function M.merge(...)
   -- Eliminate nil values in vararg
   local hl_names = {}
@@ -137,7 +137,7 @@ end
 ---   retrieve the attributes of the linked highlight group, then merge
 ---   with other attributes
 ---Side effect: change `attr` table
----@param attr table highlight attributes
+---@param attr vim.api.keyset.highlight highlight attributes
 ---@return table: normalized highlight attributes
 function M.normalize(attr)
   if attr.link then
@@ -163,7 +163,7 @@ end
 ---Wrapper of nvim_set_hl(), normalize highlight attributes before setting
 ---@param ns_id integer namespace id
 ---@param name string
----@param attr table highlight attributes
+---@param attr vim.api.keyset.highlight highlight attributes
 ---@return nil
 function M.set(ns_id, name, attr)
   return vim.api.nvim_set_hl(ns_id, name, M.normalize(attr))
@@ -172,7 +172,7 @@ end
 ---Set default highlight attributes, normalize highlight attributes before setting
 ---@param ns_id integer namespace id
 ---@param name string
----@param attr table highlight attributes
+---@param attr vim.api.keyset.highlight highlight attributes
 ---@return nil
 function M.set_default(ns_id, name, attr)
   attr.default = true
