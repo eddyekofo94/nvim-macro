@@ -1,0 +1,43 @@
+diff --git a/plugin/lspconfig.lua b/plugin/lspconfig.lua
+index 1a731eb..8dcdb78 100644
+--- a/plugin/lspconfig.lua
++++ b/plugin/lspconfig.lua
+@@ -89,7 +89,7 @@ end, {
+ api.nvim_create_user_command('LspRestart', function(info)
+   local detach_clients = {}
+   for _, client in ipairs(get_clients_from_cmd_args(info.args)) do
+-    client.stop()
++    client.stop(true)
+     if vim.tbl_count(client.attached_buffers) > 0 then
+       detach_clients[client.name] = { client, client.attached_buffers }
+     end
+@@ -122,12 +122,10 @@ end, {
+ 
+ api.nvim_create_user_command('LspStop', function(info)
+   local current_buf = vim.api.nvim_get_current_buf()
+-  local server_id, force
++  local server_id
+   local arguments = vim.split(info.args, '%s')
+   for _, v in pairs(arguments) do
+-    if v == '++force' then
+-      force = true
+-    elseif v:find '^[0-9]+$' then
++    if v:find '^[0-9]+$' then
+       server_id = v
+     end
+   end
+@@ -136,12 +134,12 @@ api.nvim_create_user_command('LspStop', function(info)
+     local servers_on_buffer = lsp.get_active_clients { bufnr = current_buf }
+     for _, client in ipairs(servers_on_buffer) do
+       if client.attached_buffers[current_buf] then
+-        client.stop(force)
++        client.stop(true)
+       end
+     end
+   else
+     for _, client in ipairs(get_clients_from_cmd_args(server_id)) do
+-      client.stop(force)
++      client.stop(true)
+     end
+   end
+ end, {
