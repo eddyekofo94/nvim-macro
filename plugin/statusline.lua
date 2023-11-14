@@ -111,6 +111,22 @@ statusline.flags = {
 }
 ---@diagnostic enable: undefined-field
 
+---@return string
+function statusline.word_count()
+  local num_words = vim.fn.wordcount().words
+  return num_words == 0 and ''
+    or num_words .. ' word' .. (num_words > 1 and 's' or '')
+end
+
+---Text filetypes
+---@type table<string, true>
+local ft_text = {
+  [''] = true,
+  ['latex'] = true,
+  ['markdown'] = true,
+  ['text'] = true,
+}
+
 ---Additional info for the current buffer enclosed in parentheses
 ---@return string
 function statusline.info()
@@ -125,6 +141,9 @@ function statusline.info()
     end
   end
   add_section(statusline.ft())
+  if ft_text[vim.bo.ft] and not vim.b.large_file then
+    add_section(statusline.word_count())
+  end
   add_section(statusline.branch())
   add_section(statusline.gitdiff())
   add_section(statusline.flags.md_captitle())
@@ -188,6 +207,9 @@ function statusline.diag()
         .. utils.stl.hl(icon, icon_hl)
         .. utils.stl.hl(cnt .. '/' .. ws_cnt, 'StatusLineFaded')
     end
+  end
+  if str:find('%S') then
+    str = str .. ' '
   end
   diag_str_cache[buf] = str
   return str
@@ -264,15 +286,15 @@ end
 ---@type table<string, string>
 local components = {
   align        = '%=',
-  diag         = '%{%v:lua.statusline.diag()%} ',
+  diag         = '%{%v:lua.statusline.diag()%}',
   fname        = ' %#StatusLineStrong#%{%&bt==#""?"%t":"%F"%}%* ',
   fname_nc     = ' %#StatusLineWeak#%{%&bt==#""?"%t":"%F"%}%* ',
   info         = '%{%v:lua.statusline.info()%}',
   lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
   mode         = '%{%v:lua.statusline.mode()%}',
   padding      = '%#None#  %*',
-  pos          = '%#StatusLineFaded#%l:%c%* ',
-  pos_nc       = '%#StatusLineWeak#%l:%c%* ',
+  pos          = '%#StatusLineFaded#%{%&ru?"%l:%c ":""%}%*',
+  pos_nc       = '%#StatusLineWeak#%{%&ru?"%l:%c ":""%}%*',
   truncate     = '%<',
 }
 -- stylua: ignore end
