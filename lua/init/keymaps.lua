@@ -59,6 +59,34 @@ vim.keymap.set({ 'x', 'n' }, '<C-w>+', 'v:count ? "<C-w>+" : "2<C-w>+"', { expr 
 vim.keymap.set({ 'x', 'n' }, '<C-w>-', 'v:count ? "<C-w>-" : "2<C-w>-"', { expr = true })
 -- stylua: ignore end
 
+-- Terminal mode keymaps
+-- stylua: ignore start
+vim.keymap.set('t', '<M-W>',      '<Cmd>wincmd W<CR>')
+vim.keymap.set('t', '<M-H>',      '<Cmd>wincmd H<CR>')
+vim.keymap.set('t', '<M-J>',      '<Cmd>wincmd J<CR>')
+vim.keymap.set('t', '<M-K>',      '<Cmd>wincmd K<CR>')
+vim.keymap.set('t', '<M-L>',      '<Cmd>wincmd L<CR>')
+vim.keymap.set('t', '<M-=>',      '<Cmd>wincmd =<CR>')
+vim.keymap.set('t', '<M-_>',      '<Cmd>wincmd _<CR>')
+vim.keymap.set('t', '<M-|>',      '<Cmd>wincmd |<CR>')
+vim.keymap.set('t', '<M->>',      '"<Cmd>wincmd 4" . (winnr() == winnr("l") ? "<" : ">") . "<CR>"', { expr = true })
+vim.keymap.set('t', '<M-<>',      '"<Cmd>wincmd 4" . (winnr() == winnr("l") ? ">" : "<") . "<CR>"', { expr = true })
+vim.keymap.set('t', '<M-.>',      '"<Cmd>wincmd 4" . (winnr() == winnr("l") ? "<" : ">") . "<CR>"', { expr = true })
+vim.keymap.set('t', '<M-,>',      '"<Cmd>wincmd 4" . (winnr() == winnr("l") ? ">" : "<") . "<CR>"', { expr = true })
+vim.keymap.set('t', '<M-+>',      '<Cmd>wincmd 2+<CR>')
+vim.keymap.set('t', '<M-->',      '<Cmd>wincmd 2-<CR>')
+vim.keymap.set('t', '<M-r>',      '<Cmd>wincmd r<CR>')
+vim.keymap.set('t', '<M-R>',      '<Cmd>wincmd R<CR>')
+vim.keymap.set('t', '<M-x>',      '<Cmd>wincmd x<CR>')
+vim.keymap.set('t', '<M-p>',      '<Cmd>wincmd p<CR>')
+vim.keymap.set('t', '<M-c>',      '<Cmd>wincmd c<CR>')
+vim.keymap.set('t', '<M-w>',      '<Cmd>wincmd w<CR>')
+vim.keymap.set('t', '<M-h>',      '<Cmd>wincmd h<CR>')
+vim.keymap.set('t', '<M-j>',      '<Cmd>wincmd j<CR>')
+vim.keymap.set('t', '<M-k>',      '<Cmd>wincmd k<CR>')
+vim.keymap.set('t', '<M-l>',      '<Cmd>wincmd l<CR>')
+-- stylua: ignore end
+
 -- More consistent behavior when &wrap is set
 -- stylua: ignore start
 vim.keymap.set({ 'n', 'x' }, 'j',      'v:count ? "j"       : "gj"',     { expr = true })
