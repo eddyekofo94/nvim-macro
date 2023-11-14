@@ -466,9 +466,9 @@ cmp.setup({
     comparators = {
       require('cmp_fuzzy_path.compare'),
       cmp.config.compare.kind,
-      cmp.config.compare.exact,
-      cmp.config.compare.recently_used,
       cmp.config.compare.locality,
+      cmp.config.compare.recently_used,
+      cmp.config.compare.exact,
       cmp.config.compare.score,
     },
   },
