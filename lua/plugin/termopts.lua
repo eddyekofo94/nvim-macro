@@ -91,14 +91,14 @@ local function setup(buf)
     end,
   })
 
-  vim.api.nvim_create_autocmd({ 'BufWinLeave', 'WinLeave' }, {
+  vim.api.nvim_create_autocmd('ModeChanged', {
     group = groupid,
-    desc = 'Record mode when leaving terminal window.',
+    desc = 'Record mode in terminal buffer.',
     callback = function(info)
       if vim.bo[info.buf].bt == 'terminal' then
         vim.b[info.buf].termode = vim.api.nvim_get_mode().mode
       end
-    end,
+    end
   })
 
   vim.api.nvim_create_autocmd({ 'BufWinEnter', 'WinEnter' }, {
