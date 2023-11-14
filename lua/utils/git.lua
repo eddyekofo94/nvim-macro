@@ -42,7 +42,7 @@ end
 ---Execute git command in current directory synchronously
 ---@param cmd string[] git command to execute
 ---@param error_lev number? log level to use for errors, hide errors if nil or false
----@reurn { success: boolean, output: string }
+---@return { success: boolean, output: string }
 function M.execute(cmd, error_lev)
   local shell_args = { 'git', unpack(cmd) }
   local shell_out = vim.fn.system(shell_args)
