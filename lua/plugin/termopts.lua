@@ -24,25 +24,6 @@ local function term_set_local_keymaps_and_opts(buf)
     return
   end
 
-  -- Set initial terminal split size
-  local winnr = vim.fn.winnr()
-  local wintype = vim.fn.win_gettype(winnr)
-  if wintype == '' then
-    if
-      vim.fn.winnr('j') == winnr
-      and vim.fn.winnr('k') == winnr
-      and vim.api.nvim_win_get_width(0) > vim.go.columns * 0.35
-    then
-      vim.cmd('vertical resize ' .. math.ceil(vim.go.columns * 0.35))
-    elseif
-      vim.fn.winnr('h') == winnr
-      and vim.fn.winnr('l') == winnr
-      and vim.api.nvim_win_get_height(0) > vim.go.lines * 0.35
-    then
-      vim.cmd('resize ' .. math.ceil(vim.go.lines * 0.35))
-    end
-  end
-
   -- Use <Esc> to exit terminal mode when running a shell,
   -- use double <Esc> to send <Esc> to shell
   vim.keymap.set('t', '<Esc>', function()
@@ -69,7 +50,7 @@ local function term_set_local_keymaps_and_opts(buf)
   vim.opt_local.spell = false
   vim.opt_local.statuscolumn = ''
   vim.opt_local.signcolumn = 'no'
-  if wintype == 'popup' then
+  if vim.fn.win_gettype() == 'popup' then
     vim.opt_local.scrolloff = 0
     vim.opt_local.sidescrolloff = 0
   end
