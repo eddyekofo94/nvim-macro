@@ -269,10 +269,14 @@ function statusline.lsp_progress()
     return ''
   end
   local value = lsp_prog_data.result.value
+  local client = vim.lsp.get_client_by_id(lsp_prog_data.client_id)
+  if not client then
+    return ''
+  end
   return utils.stl.hl(
     string.format(
       '%s: %s%s%s ',
-      vim.lsp.get_client_by_id(lsp_prog_data.client_id).name,
+      client.name,
       value.title,
       value.message and string.format(' %s', value.message) or '',
       value.percentage and string.format(' [%d%%%%]', value.percentage) or ''
