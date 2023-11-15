@@ -113,9 +113,14 @@ statusline.flags = {
 
 ---@return string
 function statusline.word_count()
-  local num_words = vim.fn.wordcount().words
+  local wordcount = vim.fn.wordcount()
+  local num_words = wordcount.words
+  local num_vis_words = wordcount.visual_words
   return num_words == 0 and ''
-    or num_words .. ' word' .. (num_words > 1 and 's' or '')
+    or (num_vis_words and num_vis_words .. '/' or '')
+      .. num_words
+      .. ' word'
+      .. (num_words > 1 and 's' or '')
 end
 
 ---Text filetypes
