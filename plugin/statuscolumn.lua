@@ -258,11 +258,15 @@ vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
   group = augroup,
   desc = 'Set statuscolumn for each window.',
   callback = function(info)
-    vim.opt_local.stc = info.file
-        and vim.bo.bt == ''
-        and not vim.b.large_file
-        and '%!v:lua.get_statuscolumn()'
-      or ''
+    if
+      info.file
+      and vim.bo.bt == ''
+      and vim.wo.stc == ''
+      and vim.fn.win_gettype() == ''
+      and not vim.b.large_file
+    then
+      vim.opt_local.stc = '%!v:lua.get_statuscolumn()'
+    end
   end,
 })
 vim.api.nvim_create_autocmd('WinClosed', {
