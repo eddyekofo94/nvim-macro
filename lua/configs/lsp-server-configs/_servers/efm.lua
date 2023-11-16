@@ -32,7 +32,7 @@ local function restore_formatter(client)
   end
 end
 
-local groupid = vim.api.nvim_create_augroup('EfmDisableOtherFormatters', {})
+local groupid = vim.api.nvim_create_augroup('Efm', {})
 vim.api.nvim_create_autocmd('LspAttach', {
   group = groupid,
   callback = function(info)
@@ -55,6 +55,16 @@ vim.api.nvim_create_autocmd('LspDetach', {
       for _, client in ipairs(vim.lsp.get_clients({ bufnr = info.buf })) do
         restore_formatter(client)
       end
+    end
+  end,
+})
+vim.api.nvim_create_autocmd('LspDetach', {
+  group = groupid,
+  desc = 'Remove corresponding entry in formatter_disabled table on LspDetach.',
+  callback = function(info)
+    local id = info.data and info.data.client_id
+    if id then
+      formatter_disabled[id] = nil
     end
   end,
 })
