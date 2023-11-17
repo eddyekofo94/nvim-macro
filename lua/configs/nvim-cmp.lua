@@ -243,6 +243,12 @@ local icon_dot = vim.trim(icons.DotLarge)
 local icon_calc = icons.Calculator
 local icon_folder = icons.Folder
 local icon_file = icons.File
+local compltype_path = {
+  dir = true,
+  file = true,
+  file_in_path = true,
+  runtime = true,
+}
 
 ---@diagnostic disable missing-fields
 cmp.setup({
@@ -253,9 +259,7 @@ cmp.setup({
     fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, cmp_item)
       local compltype = vim.fn.getcmdcompltype()
-      local complpath = compltype == 'file'
-        or compltype == 'file_in_path'
-        or compltype == 'dir'
+      local complpath = compltype_path[compltype]
       -- Fix cmp path completion not escaping special characters
       -- (e.g. `#`, spaces) in cmdline,
       if complpath then
