@@ -185,10 +185,18 @@ vim.api.nvim_create_autocmd('DiagnosticChanged', {
 
 vim.api.nvim_create_autocmd('BufDelete', {
   group = groupid,
-  desc = 'Clear diagnostics cache for the status line.',
+  desc = 'Clear and update diagnostics cache for the status line.',
   callback = function(info)
-    diag_str_cache[info.buf] = nil
-    diag_cnt_cache[info.buf] = nil
+    local buf = info.buf
+    local diag_buf_cnt = diag_cnt_cache[buf]
+    if not diag_buf_cnt then
+      return
+    end
+    for diag_nr, diag_cnt in pairs(diag_buf_cnt) do
+      diag_ws_cnt_cache[diag_nr] = diag_ws_cnt_cache[diag_nr] - diag_cnt
+    end
+    diag_cnt_cache[buf] = nil
+    diag_str_cache = {}
   end,
 })
 
