@@ -253,13 +253,18 @@ cmp.setup({
     fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, cmp_item)
       local compltype = vim.fn.getcmdcompltype()
-      if -- Use special icons for file / directory completions
-        cmp_item.kind == 'File'
-        or cmp_item.kind == 'Folder'
-        or compltype == 'file'
+      local complpath = compltype == 'file'
         or compltype == 'file_in_path'
         or compltype == 'dir'
-      then
+      -- Fix cmp path completion not escaping special characters
+      -- (e.g. `#`, spaces) in cmdline,
+      if complpath then
+        local path_escaped = vim.fn.fnameescape(cmp_item.word)
+        cmp_item.word = path_escaped
+        cmp_item.abbr = path_escaped
+      end
+      -- Use special icons for file / directory completions
+      if cmp_item.kind == 'File' or cmp_item.kind == 'Folder' or complpath then
         if cmp_item.word:match('/$') then -- Directories
           cmp_item.kind = icon_folder
           cmp_item.kind_hl_group = 'CmpItemKindFolder'
