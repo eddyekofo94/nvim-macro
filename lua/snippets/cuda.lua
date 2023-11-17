@@ -117,7 +117,7 @@ M.snippets = {
   }, un.fmtad('cudaFree(<ptr>);', { ptr = i(1) })),
   -- `dim3` structure
   us.sn(
-    { trig = 'dim' },
+    { trig = 'dim3' },
     un.fmtad('dim3 <name>(<x>, <y>, <z>);', {
       name = c(1, {
         i(nil, 'dimGrid'),
@@ -127,6 +127,18 @@ M.snippets = {
       y = i(3),
       z = i(4),
     })
+  ),
+  us.sn(
+    {
+      trig = 'kc',
+      dscr = 'Kernel call',
+    },
+    un.fmtd('[kernek_fn]<<<[dim_grid], [dim_blk]>>>([args]);', {
+      kernek_fn = i(1, 'KernelFunction'),
+      dim_grid = i(2, 'dimGrid'),
+      dim_blk = i(3, 'dimBlock'),
+      args = i(4),
+    }, { delimiters = '[]' })
   ),
 }
 

@@ -50,6 +50,7 @@ npairs.add_rules({
         [[\s\((\|[\|{\|\*\/\)]]) == 0
     end),
 
+  Rule('<<<', '>>>', { 'cuda' }),
   Rule('/*', '*/', { 'c', 'cpp' }),
   Rule('$', '$', { 'markdown', 'tex' })                                :with_pair(cond.none()),
   Rule('*', '*', { 'markdown' })                                       :with_pair(cond.none()),
