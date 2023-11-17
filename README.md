@@ -349,7 +349,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 43 (package manager included).
+Total # of plugins: 44 (package manager included).
 
 - **Lib**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -390,6 +390,7 @@ Total # of plugins: 43 (package manager included).
     - [git-conflict](akinsho/git-conflict.nvim)
     - [nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua)
     - [vim-fugitive](https://github.com/tpope/vim-fugitive)
+    - [oil.nvim](https://github.com/stevearc/oil.nvim)
 - **Treesitter**
     - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
     - [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)
