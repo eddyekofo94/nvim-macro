@@ -7,6 +7,212 @@ local icons = require('utils.static').icons
 local icon_file = vim.trim(icons.File)
 local icon_dir = vim.trim(icons.Folder)
 
+local preview_wins = {} ---@type table<integer, integer>
+local preview_bufs = {} ---@type table<integer, integer>
+local preview_max_fsize = 1000000
+local preview_debounce = 64 -- ms
+local preview_request_last_timestamp = 0
+
+---Generate lines for preview window when preview is not available
+---@param msg string
+---@param height integer
+---@param width integer
+---@return string[]
+local function nopreview(msg, height, width)
+  local lines = {}
+  local fillchar = vim.opt_local.fillchars:get().diff or '-'
+  local msglen = #msg + 4
+  local padlen_l = math.max(0, math.floor((width - msglen) / 2))
+  local padlen_r = math.max(0, width - msglen - padlen_l)
+  local line_fill = fillchar:rep(width)
+  local half_fill_l = fillchar:rep(padlen_l)
+  local half_fill_r = fillchar:rep(padlen_r)
+  local line_above = half_fill_l .. string.rep(' ', msglen) .. half_fill_r
+  local line_below = line_above
+  local line_msg = half_fill_l .. '  ' .. msg .. '  ' .. half_fill_r
+  local half_height_u = math.max(0, math.floor((height - 3) / 2))
+  local half_height_d = math.max(0, height - 3 - half_height_u)
+  for _ = 1, half_height_u do
+    table.insert(lines, line_fill)
+  end
+  table.insert(lines, line_above)
+  table.insert(lines, line_msg)
+  table.insert(lines, line_below)
+  for _ = 1, half_height_d do
+    table.insert(lines, line_fill)
+  end
+  return lines
+end
+
+---End preview for oil window `win`
+---Close preview window and delete preview buffer
+---@param oil_win? integer oil window ID
+---@return nil
+local function end_preview(oil_win)
+  oil_win = oil_win or vim.api.nvim_get_current_win()
+  local preview_win = preview_wins[oil_win]
+  local preview_buf = preview_bufs[oil_win]
+  if preview_win and vim.api.nvim_win_is_valid(preview_win) then
+    vim.api.nvim_win_close(preview_win, true)
+  end
+  if preview_buf and vim.api.nvim_win_is_valid(preview_buf) then
+    vim.api.nvim_win_close(preview_buf, true)
+  end
+  preview_wins[oil_win] = nil
+  preview_bufs[oil_win] = nil
+end
+
+---Preview file under cursor in a split
+---@return nil
+local function preview()
+  local entry = oil.get_cursor_entry()
+  local fname = entry and entry.name
+  local dir = oil.get_current_dir()
+  if not dir or not fname then
+    return
+  end
+  local fpath = vim.fs.joinpath(dir, fname)
+  local stat = vim.uv.fs_stat(fpath)
+  if not stat or (stat.type ~= 'file' and stat.type ~= 'directory') then
+    return
+  end
+  local oil_win = vim.api.nvim_get_current_win()
+  local preview_win = preview_wins[oil_win]
+  local preview_buf = preview_bufs[oil_win]
+  if
+    not preview_win
+    or not preview_buf
+    or not vim.api.nvim_win_is_valid(preview_win)
+    or not vim.api.nvim_buf_is_valid(preview_buf)
+  then
+    local oil_win_height = vim.api.nvim_win_get_height(oil_win)
+    local oil_win_width = vim.api.nvim_win_get_width(oil_win)
+    vim.cmd(oil_win_width > 6 * oil_win_height and 'vertical new' or 'new')
+    preview_win = vim.api.nvim_get_current_win()
+    preview_buf = vim.api.nvim_get_current_buf()
+    preview_wins[oil_win] = preview_win
+    preview_bufs[oil_win] = preview_buf
+    vim.bo[preview_buf].filetype = 'oil_preview'
+    vim.bo[preview_buf].buftype = 'nofile'
+    vim.bo[preview_buf].bufhidden = 'wipe'
+    vim.bo[preview_buf].swapfile = false
+    vim.bo[preview_buf].buflisted = false
+    vim.opt_local.spell = false
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+    vim.opt_local.signcolumn = 'no'
+    vim.opt_local.foldcolumn = '0'
+    vim.opt_local.winbar = ''
+    vim.api.nvim_set_current_win(oil_win)
+  end
+  -- Preview buffer already contains contents of file to preview
+  local preview_bufname = vim.fn.bufname(preview_buf)
+  local preview_bufnewname = 'oil_preview://' .. fpath
+  if preview_bufname == preview_bufnewname then
+    return
+  end
+  local preview_win_height = vim.api.nvim_win_get_height(preview_win)
+  local preview_win_width = vim.api.nvim_win_get_width(preview_win)
+  local add_syntax = false
+  local lines = {}
+  lines = stat.type == 'directory'
+      and vim.fn.systemlist('ls -lhA ' .. vim.fn.shellescape(fpath))
+    or stat.size == 0 and nopreview(
+      'Empty file',
+      preview_win_height,
+      preview_win_width
+    )
+    or stat.size > preview_max_fsize and nopreview(
+      'File too large to preview',
+      preview_win_height,
+      preview_win_width
+    )
+    or not vim.fn.system('file ' .. vim.fn.shellescape(fpath)):match('text') and nopreview(
+      'Binary file, no preview available',
+      preview_win_height,
+      preview_win_width
+    )
+    or (function()
+        add_syntax = true
+        return true
+      end)()
+      and vim
+        .iter(io.lines(fpath))
+        :map(function(line)
+          return (line:gsub('\x0d$', ''))
+        end)
+        :totable()
+  vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, lines)
+  vim.api.nvim_buf_set_name(preview_buf, preview_bufnewname)
+  vim.api.nvim_buf_call(preview_buf, function()
+    vim.treesitter.stop(preview_buf)
+  end)
+  vim.bo[preview_buf].syntax = ''
+  if not add_syntax then
+    return
+  end
+  local ft = vim.filetype.match({
+    buf = preview_buf,
+    filename = fpath,
+  })
+  if ft and not pcall(vim.treesitter.start, preview_buf, ft) then
+    vim.bo[preview_buf].syntax = ft
+  end
+end
+
+local groupid_preview = vim.api.nvim_create_augroup('OilPreview', {})
+vim.api.nvim_create_autocmd({ 'CursorMoved', 'WinScrolled' }, {
+  desc = 'Update floating preview window when cursor moves or window scrolls.',
+  group = groupid_preview,
+  pattern = 'oil:///*',
+  callback = function()
+    local oil_win = vim.api.nvim_get_current_win()
+    local preview_win = preview_wins[oil_win]
+    if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then
+      end_preview()
+      return
+    end
+    local current_request_timestamp = vim.uv.now()
+    preview_request_last_timestamp = current_request_timestamp
+    vim.defer_fn(function()
+      if preview_request_last_timestamp == current_request_timestamp then
+        preview()
+      end
+    end, preview_debounce)
+  end,
+})
+vim.api.nvim_create_autocmd('BufEnter', {
+  desc = 'Close preview window when leaving oil buffers.',
+  group = groupid_preview,
+  callback = function(info)
+    if vim.bo[info.buf].filetype ~= 'oil' then
+      end_preview()
+    end
+  end,
+})
+vim.api.nvim_create_autocmd('WinClosed', {
+  desc = 'Close preview window when closing oil windows.',
+  group = groupid_preview,
+  callback = function(info)
+    local win = tonumber(info.match)
+    if win and preview_wins[win] then
+      end_preview(win)
+    end
+  end,
+})
+
+---Toggle floating preview window
+---@return nil
+local function toggle_preview()
+  local oil_win = vim.api.nvim_get_current_win()
+  local preview_win = preview_wins[oil_win]
+  if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then
+    preview()
+    return
+  end
+  end_preview()
+end
+
 oil.setup({
   columns = {
     { 'permissions', highlight = 'Special' },
@@ -23,12 +229,18 @@ oil.setup({
   },
   cleanup_delay_ms = 0,
   delete_to_trash = true,
-  trash_command = 'trash-put',
   skip_confirm_for_simple_edits = true,
   prompt_save_on_select_new_entry = true,
   use_default_keymaps = false,
+  view_options = {
+    is_always_hidden = function(name)
+      return name == '..'
+    end,
+  },
   keymaps = {
     ['g?'] = 'actions.show_help',
+    ['K'] = toggle_preview,
+    ['<C-k>'] = toggle_preview,
     ['-'] = 'actions.parent',
     ['='] = 'actions.select',
     ['+'] = 'actions.select',
@@ -36,7 +248,7 @@ oil.setup({
     ['<C-h>'] = 'actions.toggle_hidden',
     ['gs'] = 'actions.change_sort',
     ['gx'] = 'actions.open_external',
-    ['yy'] = 'actions.copy_entry_path',
+    ['gy'] = 'actions.copy_entry_path',
     ['<C-o>'] = { -- Prevent jumping to file buffers by accident
       mode = 'n',
       expr = true,
@@ -97,7 +309,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'TextChanged' }, {
     if vim.bo[info.buf].filetype == 'oil' then
       local cwd = vim.fs.normalize(vim.fn.getcwd(vim.fn.winnr()))
       local oildir = vim.fs.normalize(oil.get_current_dir())
-      if cwd ~= oildir then
+      if cwd ~= oildir and vim.uv.fs_stat(oildir) then
         vim.cmd.lcd(oildir)
       end
     end
@@ -123,6 +335,7 @@ vim.api.nvim_create_autocmd('DirChanged', {
 ---@return nil
 local function oil_sethl()
   local sethl = require('utils.hl').set
+  sethl(0, 'OilLink', { fg = 'Special', italic = true })
   sethl(0, 'OilCopy', { fg = 'DiagnosticSignHint', bold = true })
   sethl(0, 'OilMove', { fg = 'DiagnosticSignWarn', bold = true })
   sethl(0, 'OilChange', { fg = 'DiagnosticSignWarn', bold = true })

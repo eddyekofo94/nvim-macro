@@ -106,7 +106,7 @@ return {
 
   {
     'stevearc/oil.nvim',
-    lazy = true,
+    cmd = 'Oil',
     init = function() -- Load oil on startup only when editing a directory
       vim.g.loaded_fzf_file_explorer = 1
       vim.g.loaded_netrw = 1
@@ -128,7 +128,7 @@ return {
           local stat = vim.uv.fs_stat(path)
           if stat and stat.type == 'directory' then
             vim.schedule(function()
-              require('oil').open(path)
+              pcall(require('oil').open, path)
             end)
             return true
           end
