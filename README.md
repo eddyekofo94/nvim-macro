@@ -94,7 +94,7 @@ favorite package manager:
 - Markdown: install [Marksman](https://github.com/artempyanykh/marksman)
 - \*General-purpose LSP: install [EFM Language Server](https://github.com/mattn/efm-langserver)
     - Already configured for [Black](https://github.com/psf/black), [Shfmt](https://github.com/mvdan/sh), and [StyLua](https://github.com/JohnnyMorganz/StyLua)
-    - Find configuration in [lua/configs/lsp-server-configs/efm.lua](https://github.com/Bekaboo/nvim/tree/master/lua/configs/lsp-server-configs/efm.lua)
+    - Find configuration in [lua/configs/lsp-server-configs/_servers/efm.lua](https://github.com/Bekaboo/nvim/tree/master/lua/configs/lsp-server-configs/_servers/efm.lua)
 
 To add support for other languages, install corresponding LS manually and
 append the language and its language server to `M.langs` in [lua/utils/static.lua](https://github.com/Bekaboo/nvim/blob/master/lua/utils/static.lua)
@@ -398,7 +398,7 @@ Total # of plugins: 44 (package manager included).
     - [nvim-treesitter-endwise](https://github.com/RRethy/nvim-treesitter-endwise)
     - [treesj](https://github.com/Wansmer/treesj)
     - [cellular-automaton.nvim](https://github.com/Eandrju/cellular-automaton.nvim)
-- **DEBUG**
+- **Debug**
     - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
     - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
     - [one-small-step-for-vimkind](https://github.com/jbyuki/one-small-step-for-vimkind)
