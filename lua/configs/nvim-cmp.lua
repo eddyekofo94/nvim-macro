@@ -376,7 +376,10 @@ cmp.setup({
           end
           if node_has_length(current) then
             if
-              cursor_at_end_of_range({ current:get_buf_position() }, cursor)
+              current.next_choice
+              or cursor_at_end_of_range({
+                current:get_buf_position(),
+              }, cursor)
             then
               luasnip.jump(1)
             else
