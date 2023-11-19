@@ -118,6 +118,12 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Zip),
       name = 'Zip',
     },
+    gz = {
+      color = '#e84d31',
+      cterm_color = '166',
+      icon = vim.trim(icons.Zip),
+      name = 'gz',
+    },
     ['7z'] = {
       color = '#e84d31',
       cterm_color = '166',
