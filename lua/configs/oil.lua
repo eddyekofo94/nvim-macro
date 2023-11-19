@@ -147,6 +147,15 @@ local function preview()
   vim.api.nvim_buf_call(preview_buf, function()
     vim.treesitter.stop(preview_buf)
   end)
+  -- If previewing a directory, change cwd to that directory
+  -- so that we can `gf` to files in the preview buffer;
+  -- else change cwd to the parent directory of the file in preview
+  vim.api.nvim_win_call(preview_win, function()
+    local target_dir = stat.type == 'directory' and fpath or dir
+    if not vim.fn.getcwd(0) ~= target_dir then
+      vim.cmd.lcd(target_dir)
+    end
+  end)
   vim.bo[preview_buf].syntax = ''
   if not add_syntax then
     return
