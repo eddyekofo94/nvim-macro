@@ -222,6 +222,12 @@ local function toggle_preview()
   end_preview()
 end
 
+local preview_mapping = {
+  mode = { 'n', 'x' },
+  desc = 'Toggle preview',
+  callback = toggle_preview,
+}
+
 oil.setup({
   columns = {
     { 'permissions', highlight = 'Special' },
@@ -248,8 +254,8 @@ oil.setup({
   },
   keymaps = {
     ['g?'] = 'actions.show_help',
-    ['K'] = toggle_preview,
-    ['<C-k>'] = toggle_preview,
+    ['K'] = preview_mapping,
+    ['<C-k>'] = preview_mapping,
     ['-'] = 'actions.parent',
     ['='] = 'actions.select',
     ['+'] = 'actions.select',
@@ -262,7 +268,7 @@ oil.setup({
       mode = 'n',
       expr = true,
       buffer = true,
-      desc = 'Jump to previous location in oil buffer.',
+      desc = 'Jump to older cursor position in oil buffer',
       callback = function()
         local jumplist = vim.fn.getjumplist()
         local prevloc = jumplist[1][jumplist[2]]
@@ -277,7 +283,7 @@ oil.setup({
       mode = 'n',
       expr = true,
       buffer = true,
-      desc = 'Jump to previous location in oil buffer.',
+      desc = 'Jump to newer cursor position in oil buffer',
       callback = function()
         local jumplist = vim.fn.getjumplist()
         local newloc = jumplist[1][jumplist[2] + 2]
