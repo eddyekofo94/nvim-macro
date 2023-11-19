@@ -98,7 +98,7 @@ local function setup(buf)
       if vim.bo[info.buf].bt == 'terminal' then
         vim.b[info.buf].termode = vim.api.nvim_get_mode().mode
       end
-    end
+    end,
   })
 
   vim.api.nvim_create_autocmd({ 'BufWinEnter', 'WinEnter' }, {
