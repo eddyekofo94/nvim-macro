@@ -285,6 +285,18 @@ M.syntax = {
     i(1),
     t(')'),
   }),
+  us.msn(
+    {
+      {
+        trig = 'pl',
+        dscr = 'Print a line',
+      },
+    },
+    un.fmtad('print(<q><v><q>)', {
+      q = un.qt(),
+      v = t('------------------------------------------------------------'),
+    })
+  ),
   us.msn({
     { trig = 'rq' },
     { trig = 'req' },
