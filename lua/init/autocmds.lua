@@ -12,6 +12,7 @@ local autocmds = {
         local stat = vim.uv.fs_stat(info.match)
         if stat and stat.size > 1000000 then
           vim.b.large_file = true
+          vim.opt_local.spell = false
           vim.opt_local.swapfile = false
           vim.opt_local.undofile = false
           vim.opt_local.breakindent = false
@@ -20,6 +21,15 @@ local autocmds = {
           vim.opt_local.signcolumn = 'no'
           vim.opt_local.foldcolumn = '0'
           vim.opt_local.winbar = ''
+          vim.api.nvim_create_autocmd('BufReadPost', {
+            buffer = info.buf,
+            once = true,
+            callback = function()
+              vim.opt_local.syntax = ''
+              vim.opt_local.filetype = ''
+              return true
+            end
+          })
         end
       end,
     },
