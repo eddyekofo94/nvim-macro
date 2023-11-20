@@ -179,7 +179,6 @@ function M.set_default(ns_id, name, attr)
   return vim.api.nvim_set_hl(ns_id, name, M.normalize(attr))
 end
 
--- stylua: ignore start
 local todec = {
   ['0'] = 0,
   ['1'] = 1,
@@ -191,6 +190,12 @@ local todec = {
   ['7'] = 7,
   ['8'] = 8,
   ['9'] = 9,
+  ['a'] = 10,
+  ['b'] = 11,
+  ['c'] = 12,
+  ['d'] = 13,
+  ['e'] = 14,
+  ['f'] = 15,
   ['A'] = 10,
   ['B'] = 11,
   ['C'] = 12,
@@ -198,26 +203,6 @@ local todec = {
   ['E'] = 14,
   ['F'] = 15,
 }
-
-local tohex = {
-  [0]  = '0',
-  [1]  = '1',
-  [2]  = '2',
-  [3]  = '3',
-  [4]  = '4',
-  [5]  = '5',
-  [6]  = '6',
-  [7]  = '7',
-  [8]  = '8',
-  [9]  = '9',
-  [10] = 'A',
-  [11] = 'B',
-  [12] = 'C',
-  [13] = 'D',
-  [14] = 'E',
-  [15] = 'F',
-}
--- stylua: ignore end
 
 ---Convert an integer from hexadecimal to decimal
 ---@param hex string
@@ -234,14 +219,11 @@ end
 
 ---Convert an integer from decimal to hexadecimal
 ---@param int integer
+---@param n_digits integer? number of digits used for the hex code
 ---@return string hex
-function M.dec2hex(int)
-  local hex = ''
-  while int > 0 do
-    hex = tohex[int % 16] .. hex
-    int = math.floor(int / 16)
-  end
-  return hex
+function M.dec2hex(int, n_digits)
+  return not n_digits and string.format('%x', int)
+    or string.format('%0' .. n_digits .. 'x', int)
 end
 
 ---Convert a hex color to rgb color
@@ -278,8 +260,8 @@ end
 ---@return { hex: string, dec: integer, r: integer, g: integer, b: integer }
 function M.cblend(c1, c2, alpha)
   alpha = alpha or 0.5
-  c1 = type(c1) == 'number' and M.dec2hex(c1) or c1
-  c2 = type(c2) == 'number' and M.dec2hex(c2) or c2
+  c1 = type(c1) == 'number' and M.dec2hex(c1, 6) or c1
+  c2 = type(c2) == 'number' and M.dec2hex(c2, 6) or c2
   local rgb1 = type(c1) == 'string' and M.hex2rgb(c1:gsub('#', '', 1)) or c1
   local rgb2 = type(c2) == 'string' and M.hex2rgb(c2:gsub('#', '', 1)) or c2
   local rgb_blended = {
