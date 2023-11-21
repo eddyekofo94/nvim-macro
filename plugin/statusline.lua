@@ -127,7 +127,7 @@ end
 ---@type table<string, true>
 local ft_text = {
   [''] = true,
-  ['latex'] = true,
+  ['tex'] = true,
   ['markdown'] = true,
   ['text'] = true,
 }
