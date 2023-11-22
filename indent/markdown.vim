@@ -67,18 +67,6 @@ function! GetMarkdownIndent() abort
         return indent(l:prev_eq_lnum) + l:eq_pos
       endif
     endif
-    if s:in_mathzone(l:prev_lnum, 1)
-      " Add extra indent if previous line starts with `align_patterns`
-      " and has no trailing double backslash '\\'
-      if l:prev_line =~# align_patterns && l:prev_line !~# '\\\\\s*$'
-        return indent(l:prev_lnum) + l:sw
-      endif
-      " Reduce indent if previous line ends with '\\' but does not contain
-      " `align_patterns`
-      if l:prev_line !~# align_patterns && l:prev_line =~# '\\\\\s*$'
-        return indent(l:prev_lnum) - l:sw
-      endif
-    endif
     return l:default
   endif
 
