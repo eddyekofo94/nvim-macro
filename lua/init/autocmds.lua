@@ -111,7 +111,7 @@ local autocmds = {
             vim.cmd.lcd(proj_dir)
             return
           end
-          local dirname = vim.fs.dirname(info.file)
+          local dirname = vim.fs.dirname(info.file) --[[@as string]]
           local stat = vim.uv.fs_stat(dirname)
           if stat and stat.type == 'directory' and proj_dir ~= current_dir then
             vim.cmd.lcd(dirname)

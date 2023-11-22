@@ -3,214 +3,231 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 11 Nov 2023 05:14:30 AM CST
+-- Last Updated: Tue 21 Nov 2023 07:35:49 PM CST
+
+-- Clear hlgroups and set colors_name {{{
+vim.cmd.hi('clear')
+vim.g.colors_name = 'nano'
+-- }}}
 
 -- Palette {{{
 -- stylua: ignore start
-local palette_variants = {
-  dark = {
-    foreground = '#cbced2',
-    background = '#2e3440',
-    highlight  = '#3b4252',
-    critical   = '#ebcb8b',
-    salient    = '#81a1c0',
-    strong     = '#e5e7ec',
-    popout     = '#d08770',
-    subtle     = '#434c5e',
-    shaded     = '#4f596e',
-    faint      = '#6d7d9a',
-    faded      = '#99aac8',
-    grass      = '#43565a',
-    tea        = '#495c60',
-    pine       = '#79968b',
-    lavender   = '#48506e',
-    violet     = '#616b96',
-    vermillion = '#c85926',
-    black      = '#1c2027',
-  },
-  light = {
-    foreground = '#495b64',
-    background = '#ffffff',
-    highlight  = '#f5f8fa',
-    critical   = '#ff6f00',
-    salient    = '#673ab7',
-    strong     = '#000000',
-    popout     = '#f09276',
-    subtle     = '#e9eef1',
-    shaded     = '#dde3e6',
-    faint      = '#bec8cc',
-    faded      = '#9fadb4',
-    grass      = '#e8f5e9',
-    tea        = '#ccdcdb',
-    pine       = '#608c88',
-    lavender   = '#f4eef8',
-    violet     = '#d9caf0',
-    vermillion = '#ff6f00',
-    black      = '#5b6c75',
-  },
-}
+local c_foreground
+local c_background
+local c_highlight
+local c_critical
+local c_salient
+local c_strong
+local c_popout
+local c_subtle
+local c_shaded
+local c_faint
+local c_faded
+local c_grass
+local c_tea
+local c_pine
+local c_lavender
+local c_violet
+local c_vermillion
+local c_black
+
+if vim.go.bg == 'dark' then
+  c_foreground = '#cbced2'
+  c_background = '#2e3440'
+  c_highlight  = '#3b4252'
+  c_critical   = '#ebcb8b'
+  c_salient    = '#81a1c0'
+  c_strong     = '#e5e7ec'
+  c_popout     = '#d08770'
+  c_subtle     = '#434c5e'
+  c_shaded     = '#4f596e'
+  c_faint      = '#6d7d9a'
+  c_faded      = '#99aac8'
+  c_grass      = '#43565a'
+  c_tea        = '#495c60'
+  c_pine       = '#79968b'
+  c_lavender   = '#48506e'
+  c_violet     = '#616b96'
+  c_vermillion = '#c85926'
+  c_black      = '#1c2027'
+else
+  c_foreground = '#495b64'
+  c_background = '#ffffff'
+  c_highlight  = '#f5f8fa'
+  c_critical   = '#ff6f00'
+  c_salient    = '#673ab7'
+  c_strong     = '#000000'
+  c_popout     = '#f09276'
+  c_subtle     = '#e9eef1'
+  c_shaded     = '#dde3e6'
+  c_faint      = '#bec8cc'
+  c_faded      = '#9fadb4'
+  c_grass      = '#e8f5e9'
+  c_tea        = '#ccdcdb'
+  c_pine       = '#608c88'
+  c_lavender   = '#f4eef8'
+  c_violet     = '#d9caf0'
+  c_vermillion = '#ff6f00'
+  c_black      = '#5b6c75'
+end
 -- stylua: ignore end
-local palette = palette_variants[vim.go.bg]
 -- }}}
 
--- Terminal colors {{{
-local termcolor_variants = {
-  dark = {
-    terminal_color_0 = palette.subtle,
-    terminal_color_8 = palette.faded,
-    terminal_color_1 = palette.popout,
-    terminal_color_9 = palette.popout,
-    terminal_color_2 = palette.pine,
-    terminal_color_10 = palette.pine,
-    terminal_color_3 = palette.critical,
-    terminal_color_11 = palette.critical,
-    terminal_color_4 = palette.faint,
-    terminal_color_12 = palette.faded,
-    terminal_color_5 = palette.strong,
-    terminal_color_13 = palette.strong,
-    terminal_color_6 = palette.salient,
-    terminal_color_14 = palette.salient,
-    terminal_color_7 = palette.faded,
-    terminal_color_15 = palette.faded,
-  },
-  light = {
-    terminal_color_0 = palette.subtle,
-    terminal_color_8 = palette.faded,
-    terminal_color_1 = palette.critical,
-    terminal_color_9 = palette.critical,
-    terminal_color_2 = palette.pine,
-    terminal_color_10 = palette.pine,
-    terminal_color_3 = palette.popout,
-    terminal_color_11 = palette.popout,
-    terminal_color_4 = palette.faint,
-    terminal_color_12 = palette.faded,
-    terminal_color_5 = palette.strong,
-    terminal_color_13 = palette.strong,
-    terminal_color_6 = palette.salient,
-    terminal_color_14 = palette.salient,
-    terminal_color_7 = palette.faded,
-    terminal_color_15 = palette.faded,
-  },
-}
-local termcolors = termcolor_variants[vim.go.bg]
+-- Set terminal colors {{{
+-- stylua: ignore start
+if vim.go.bg == 'dark' then
+  vim.g.terminal_color_0  = c_subtle
+  vim.g.terminal_color_1  = c_popout
+  vim.g.terminal_color_2  = c_pine
+  vim.g.terminal_color_3  = c_critical
+  vim.g.terminal_color_4  = c_faint
+  vim.g.terminal_color_5  = c_strong
+  vim.g.terminal_color_6  = c_salient
+  vim.g.terminal_color_7  = c_faded
+  vim.g.terminal_color_8  = c_faded
+  vim.g.terminal_color_9  = c_popout
+  vim.g.terminal_color_10 = c_pine
+  vim.g.terminal_color_11 = c_critical
+  vim.g.terminal_color_12 = c_faded
+  vim.g.terminal_color_13 = c_strong
+  vim.g.terminal_color_14 = c_salient
+  vim.g.terminal_color_15 = c_faded
+else
+  vim.g.terminal_color_0  = c_subtle
+  vim.g.terminal_color_1  = c_critical
+  vim.g.terminal_color_2  = c_pine
+  vim.g.terminal_color_3  = c_popout
+  vim.g.terminal_color_4  = c_faint
+  vim.g.terminal_color_5  = c_strong
+  vim.g.terminal_color_6  = c_salient
+  vim.g.terminal_color_7  = c_faded
+  vim.g.terminal_color_8  = c_faded
+  vim.g.terminal_color_9  = c_critical
+  vim.g.terminal_color_10 = c_pine
+  vim.g.terminal_color_11 = c_popout
+  vim.g.terminal_color_12 = c_faded
+  vim.g.terminal_color_13 = c_strong
+  vim.g.terminal_color_14 = c_salient
+  vim.g.terminal_color_15 = c_faded
+end
+-- stylua: ignore end
 -- }}}
 
 -- Highlight groups {{{1
 local hlgroups = {
   -- Common {{{2
-  Normal = { fg = palette.foreground, bg = palette.background },
-  NormalFloat = { fg = palette.foreground, bg = palette.subtle },
-  NormalNC = { link = 'Normal' },
-  ColorColumn = { bg = palette.highlight },
-  Conceal = { fg = palette.foreground },
-  Cursor = { fg = palette.subtle, bg = palette.foreground },
-  CursorColumn = { bg = palette.highlight },
-  CursorIM = { link = 'Cursor' },
-  CursorLine = { bg = palette.highlight },
-  CursorLineNr = { fg = palette.faded, bold = true },
-  DebugPC = { bg = palette.subtle },
-  lCursor = { link = 'Cursor' },
-  TermCursor = { fg = palette.subtle, bg = palette.popout },
-  TermCursorNC = { fg = palette.critical, bg = palette.subtle },
-  DiffAdd = { bg = palette.grass },
-  DiffChange = { bg = palette.lavender },
-  DiffDelete = { fg = palette.faint },
-  DiffText = { fg = palette.foreground, bg = palette.violet },
-  Directory = { fg = palette.faded },
-  EndOfBuffer = { fg = palette.subtle },
-  ErrorMsg = { fg = palette.popout },
-  FoldColumn = { fg = palette.faded },
-  Folded = { fg = palette.faded, bg = palette.subtle },
-  FloatBorder = { fg = palette.foreground, bg = palette.subtle },
-  FloatShadow = { bg = palette.black, blend = 70 },
-  FloatShadowThrough = { link = 'None' },
-  HealthSuccess = { fg = palette.faded },
-  Search = { bg = palette.subtle },
-  IncSearch = { fg = palette.background, bg = palette.popout, bold = true },
+  ColorColumn = { bg = c_highlight },
+  Conceal = { fg = c_foreground },
   CurSearch = { link = 'IncSearch' },
-  LineNr = { fg = palette.faint },
-  ModeMsg = { fg = palette.foreground },
-  MoreMsg = { fg = palette.foreground },
+  Cursor = { fg = c_subtle, bg = c_foreground },
+  CursorColumn = { bg = c_highlight },
+  CursorIM = { link = 'Cursor' },
+  CursorLine = { bg = c_highlight },
+  CursorLineNr = { fg = c_faded, bold = true },
+  DebugPC = { bg = c_subtle },
+  DiffAdd = { bg = c_grass },
+  DiffChange = { bg = c_lavender },
+  DiffDelete = { fg = c_faint },
+  DiffText = { fg = c_foreground, bg = c_violet },
+  Directory = { fg = c_faded },
+  EndOfBuffer = { fg = c_subtle },
+  ErrorMsg = { fg = c_popout },
+  FloatBorder = { fg = c_foreground, bg = c_subtle },
+  FloatShadow = { bg = c_black, blend = 70 },
+  FloatShadowThrough = { link = 'None' },
+  FoldColumn = { fg = c_faded },
+  Folded = { fg = c_faded, bg = c_subtle },
+  HealthSuccess = { fg = c_faded },
+  IncSearch = { fg = c_background, bg = c_popout, bold = true },
+  LineNr = { fg = c_faint },
+  MatchParen = { bg = c_subtle, bold = true },
+  ModeMsg = { fg = c_foreground },
+  MoreMsg = { fg = c_foreground },
   MsgArea = { link = 'Normal' },
   MsgSeparator = { link = 'StatusLine' },
-  MatchParen = { bg = palette.subtle, bold = true },
-  NonText = { fg = palette.shaded },
-  Pmenu = { fg = palette.faded, bg = palette.highlight },
-  PmenuSbar = { bg = palette.subtle },
-  PmenuSel = { fg = palette.foreground, bg = palette.subtle, bold = true },
-  PmenuThumb = { bg = palette.popout },
-  Question = { fg = palette.foreground },
+  NonText = { fg = c_shaded },
+  Normal = { fg = c_foreground, bg = c_background },
+  NormalFloat = { fg = c_foreground, bg = c_subtle },
+  NormalNC = { link = 'Normal' },
+  Pmenu = { fg = c_faded, bg = c_highlight },
+  PmenuSbar = { bg = c_subtle },
+  PmenuSel = { fg = c_foreground, bg = c_subtle, bold = true },
+  PmenuThumb = { bg = c_popout },
+  Question = { fg = c_foreground },
   QuickFixLine = { link = 'Visual' },
-  SignColumn = { fg = palette.faded },
-  SpecialKey = { fg = palette.salient },
+  Search = { bg = c_subtle },
+  SignColumn = { fg = c_faded },
+  SpecialKey = { fg = c_salient },
   SpellBad = { underdashed = true },
   SpellCap = { link = 'SpellBad' },
   SpellLocal = { link = 'SpellBad' },
   SpellRare = { link = 'SpellBad' },
-  StatusLine = { fg = palette.foreground, bg = palette.subtle },
-  StatusLineNC = { fg = palette.faded, bg = palette.subtle },
+  StatusLine = { fg = c_foreground, bg = c_subtle },
+  StatusLineNC = { fg = c_faded, bg = c_subtle },
   Substitute = { link = 'Search' },
   TabLine = { link = 'StatusLine' },
-  TabLineSel = { fg = palette.strong, bg = palette.background, bold = true },
-  TabLineFill = { fg = palette.foreground, bg = palette.subtle },
-  Title = { fg = palette.foreground, bold = true },
-  VertSplit = { fg = palette.subtle },
-  Visual = { bg = palette.subtle },
+  TabLineFill = { fg = c_foreground, bg = c_subtle },
+  TabLineSel = { fg = c_strong, bg = c_background, bold = true },
+  TermCursor = { fg = c_subtle, bg = c_popout },
+  TermCursorNC = { fg = c_critical, bg = c_subtle },
+  Title = { fg = c_foreground, bold = true },
+  VertSplit = { fg = c_subtle },
+  Visual = { bg = c_subtle },
   VisualNOS = { link = 'Visual' },
-  WarningMsg = { fg = palette.popout },
+  WarningMsg = { fg = c_popout },
   Whitespace = { link = 'NonText' },
   WildMenu = { link = 'PmenuSel' },
+  WinBar = { fg = c_foreground },
+  WinBarNC = { fg = c_faded },
   WinSeparator = { link = 'VertSplit' },
-  WinBar = { fg = palette.foreground },
-  WinBarNC = { fg = palette.faded },
+  lCursor = { link = 'Cursor' },
   -- }}}2
 
   -- Syntax {{{2
-  Comment = { fg = palette.faint },
-  Constant = { fg = palette.faded },
-  String = { fg = palette.faded },
-  -- String = { fg = palette.popout },
+  Comment = { fg = c_faint },
+  Constant = { fg = c_faded },
+  String = { fg = c_faded },
   DocumentKeyword = { link = 'Keyword' },
-  Character = { fg = palette.critical },
-  Number = { fg = palette.faded },
+  Character = { fg = c_critical },
+  Number = { fg = c_faded },
   Boolean = { link = 'Constant' },
-  Array = { fg = palette.critical },
+  Array = { fg = c_critical },
   Float = { link = 'Number' },
-  Identifier = { fg = palette.foreground },
-  Builtin = { fg = palette.foreground },
+  Identifier = { fg = c_foreground },
+  Builtin = { fg = c_foreground },
   Field = { link = 'None' },
-  Enum = { fg = palette.faded },
-  Namespace = { fg = palette.foreground },
-  Function = { fg = palette.strong, bold = true },
-  Statement = { fg = palette.salient },
-  Specifier = { fg = palette.salient },
-  Object = { fg = palette.salient },
-  Conditional = { fg = palette.salient },
-  Repeat = { fg = palette.salient },
-  Label = { fg = palette.salient },
-  Operator = { fg = palette.salient },
-  Keyword = { fg = palette.salient },
-  Exception = { fg = palette.salient },
-  PreProc = { fg = palette.salient },
+  Enum = { fg = c_faded },
+  Namespace = { fg = c_foreground },
+  Function = { fg = c_strong, bold = true },
+  Statement = { fg = c_salient },
+  Specifier = { fg = c_salient },
+  Object = { fg = c_salient },
+  Conditional = { fg = c_salient },
+  Repeat = { fg = c_salient },
+  Label = { fg = c_salient },
+  Operator = { fg = c_salient },
+  Keyword = { fg = c_salient },
+  Exception = { fg = c_salient },
+  PreProc = { fg = c_salient },
   PreCondit = { link = 'PreProc' },
   Include = { link = 'PreProc' },
   Define = { link = 'PreProc' },
-  Macro = { fg = palette.foreground },
-  Type = { fg = palette.salient },
+  Macro = { fg = c_foreground },
+  Type = { fg = c_salient },
   StorageClass = { link = 'Keyword' },
   Structure = { link = 'Type' },
-  Typedef = { fg = palette.salient },
-  Special = { fg = palette.critical },
+  Typedef = { fg = c_salient },
+  Special = { fg = c_critical },
   SpecialChar = { link = 'Special' },
-  Tag = { fg = palette.subtle, underline = true },
-  Delimiter = { fg = palette.foreground },
-  Bracket = { fg = palette.foreground },
+  Tag = { fg = c_subtle, underline = true },
+  Delimiter = { fg = c_foreground },
+  Bracket = { fg = c_foreground },
   SpecialComment = { link = 'SpecialChar' },
   Debug = { link = 'Special' },
   Underlined = { underline = true },
-  Ignore = { fg = palette.subtle },
-  Error = { fg = palette.popout },
-  Todo = { fg = palette.background, bg = palette.popout, bold = true },
+  Ignore = { fg = c_subtle },
+  Error = { fg = c_popout },
+  Todo = { fg = c_background, bg = c_popout, bold = true },
   -- }}}2
 
   -- Treesitter syntax {{{2
@@ -298,10 +315,7 @@ local hlgroups = {
   ['@tag.delimiter'] = { link = 'Delimiter' },
   ['@text.strong'] = { bold = true },
   ['@text.strike'] = { strikethrough = true },
-  ['@text.emphasis'] = {
-    fg = palette.popout,
-    bold = true,
-  },
+  ['@text.emphasis'] = { fg = c_popout, bold = true },
   ['@text.underline'] = { underline = true },
   ['@keyword.operator'] = { link = 'Operator' },
   -- }}}2
@@ -339,30 +353,21 @@ local hlgroups = {
   -- }}}2
 
   -- Diagnostic {{{2
-  DiagnosticOk = { fg = palette.faded },
-  DiagnosticError = { fg = palette.critical },
-  DiagnosticWarn = { fg = palette.popout },
-  DiagnosticInfo = { fg = palette.salient },
-  DiagnosticHint = { fg = palette.foreground },
-  DiagnosticVirtualTextOk = { fg = palette.faded, bg = palette.highlight },
-  DiagnosticVirtualTextError = {
-    fg = palette.critical,
-    bg = palette.highlight,
-  },
-  DiagnosticVirtualTextWarn = { fg = palette.popout, bg = palette.highlight },
-  DiagnosticVirtualTextInfo = {
-    fg = palette.salient,
-    bg = palette.highlight,
-  },
-  DiagnosticVirtualTextHint = {
-    fg = palette.foreground,
-    bg = palette.highlight,
-  },
-  DiagnosticUnderlineOk = { underline = true, sp = palette.faded },
-  DiagnosticUnderlineError = { undercurl = true, sp = palette.critical },
-  DiagnosticUnderlineWarn = { undercurl = true, sp = palette.popout },
-  DiagnosticUnderlineInfo = { undercurl = true, sp = palette.salient },
-  DiagnosticUnderlineHint = { undercurl = true, sp = palette.subtle },
+  DiagnosticOk = { fg = c_faded },
+  DiagnosticError = { fg = c_critical },
+  DiagnosticWarn = { fg = c_popout },
+  DiagnosticInfo = { fg = c_salient },
+  DiagnosticHint = { fg = c_foreground },
+  DiagnosticVirtualTextOk = { fg = c_faded, bg = c_highlight },
+  DiagnosticVirtualTextError = { fg = c_critical, bg = c_highlight },
+  DiagnosticVirtualTextWarn = { fg = c_popout, bg = c_highlight },
+  DiagnosticVirtualTextInfo = { fg = c_salient, bg = c_highlight },
+  DiagnosticVirtualTextHint = { fg = c_foreground, bg = c_highlight },
+  DiagnosticUnderlineOk = { underline = true, sp = c_faded },
+  DiagnosticUnderlineError = { undercurl = true, sp = c_critical },
+  DiagnosticUnderlineWarn = { undercurl = true, sp = c_popout },
+  DiagnosticUnderlineInfo = { undercurl = true, sp = c_salient },
+  DiagnosticUnderlineHint = { undercurl = true, sp = c_subtle },
   DiagnosticFloatingOk = { link = 'DiagnosticOk' },
   DiagnosticFloatingError = { link = 'DiagnosticError' },
   DiagnosticFloatingWarn = { link = 'DiagnosticWarn' },
@@ -377,33 +382,33 @@ local hlgroups = {
 
   -- Filetype {{{2
   -- HTML
-  htmlArg = { fg = palette.foreground },
+  htmlArg = { fg = c_foreground },
   htmlBold = { bold = true },
   htmlBoldItalic = { bold = true, italic = true },
-  htmlTag = { fg = palette.foreground },
+  htmlTag = { fg = c_foreground },
   htmlTagName = { link = 'Tag' },
-  htmlSpecialTagName = { fg = palette.strong },
-  htmlEndTag = { fg = palette.strong },
-  htmlH1 = { fg = palette.salient, bold = true },
-  htmlH2 = { fg = palette.salient, bold = true },
-  htmlH3 = { fg = palette.salient, bold = true },
-  htmlH4 = { fg = palette.salient, bold = true },
-  htmlH5 = { fg = palette.salient, bold = true },
-  htmlH6 = { fg = palette.salient, bold = true },
+  htmlSpecialTagName = { fg = c_strong },
+  htmlEndTag = { fg = c_strong },
+  htmlH1 = { fg = c_salient, bold = true },
+  htmlH2 = { fg = c_salient, bold = true },
+  htmlH3 = { fg = c_salient, bold = true },
+  htmlH4 = { fg = c_salient, bold = true },
+  htmlH5 = { fg = c_salient, bold = true },
+  htmlH6 = { fg = c_salient, bold = true },
   htmlItalic = { italic = true },
-  htmlLink = { fg = palette.faded, underline = true },
+  htmlLink = { fg = c_faded, underline = true },
   htmlSpecialChar = { link = 'SpecialChar' },
-  htmlTitle = { fg = palette.foreground },
+  htmlTitle = { fg = c_foreground },
   -- Json
   jsonKeyword = { link = 'Keyword' },
-  jsonBraces = { fg = palette.foreground },
+  jsonBraces = { fg = c_foreground },
   -- Markdown
   markdownBold = { bold = true },
   markdownBoldItalic = { bold = true, italic = true },
-  markdownCode = { fg = palette.popout },
+  markdownCode = { fg = c_popout },
   markdownError = { link = 'None' },
   markdownEscape = { link = 'None' },
-  markdownListMarker = { fg = palette.critical },
+  markdownListMarker = { fg = c_critical },
   markdownH1 = { link = 'htmlH1' },
   markdownH2 = { link = 'htmlH2' },
   markdownH3 = { link = 'htmlH3' },
@@ -414,19 +419,19 @@ local hlgroups = {
   shDeref = { link = 'Macro' },
   shDerefVar = { link = 'Macro' },
   -- Git
-  gitHash = { fg = palette.faded },
+  gitHash = { fg = c_faded },
   -- Checkhealth
-  helpHeader = { fg = palette.foreground, bold = true },
-  helpSectionDelim = { fg = palette.faded, bold = true },
-  helpCommand = { fg = palette.salient },
-  helpBacktick = { fg = palette.salient },
+  helpHeader = { fg = c_foreground, bold = true },
+  helpSectionDelim = { fg = c_faded, bold = true },
+  helpCommand = { fg = c_salient },
+  helpBacktick = { fg = c_salient },
   -- Man
-  manBold = { fg = palette.salient, bold = true },
-  manItalic = { fg = palette.faded, italic = true },
-  manOptionDesc = { fg = palette.faded },
+  manBold = { fg = c_salient, bold = true },
+  manItalic = { fg = c_faded, italic = true },
+  manOptionDesc = { fg = c_faded },
   manReference = { link = 'htmlLink' },
   manSectionHeading = { link = 'manBold' },
-  manUnderline = { fg = palette.popout },
+  manUnderline = { fg = c_popout },
   -- }}}2
 
   -- Plugins {{{2
@@ -435,84 +440,84 @@ local hlgroups = {
 
   -- nvim-cmp
   CmpItemAbbrDeprecated = { strikethrough = true },
-  CmpItemAbbrMatch = { fg = palette.salient },
+  CmpItemAbbrMatch = { fg = c_salient },
   CmpItemAbbrMatchFuzzy = { link = 'CmpItemAbbrMatch' },
   CmpItemKindText = { link = 'String' },
   CmpItemKindMethod = { link = 'Function' },
   CmpItemKindFunction = { link = 'Function' },
   CmpItemKindConstructor = { link = 'Function' },
-  CmpItemKindField = { fg = palette.salient },
+  CmpItemKindField = { fg = c_salient },
   CmpItemKindProperty = { link = 'CmpItemKindField' },
-  CmpItemKindVariable = { fg = palette.popout },
+  CmpItemKindVariable = { fg = c_popout },
   CmpItemKindReference = { link = 'CmpItemKindVariable' },
-  CmpItemKindModule = { fg = palette.salient },
-  CmpItemKindEnum = { fg = palette.faded },
+  CmpItemKindModule = { fg = c_salient },
+  CmpItemKindEnum = { fg = c_faded },
   CmpItemKindEnumMember = { link = 'CmpItemKindEnum' },
   CmpItemKindKeyword = { link = 'Keyword' },
   CmpItemKindOperator = { link = 'Operator' },
-  CmpItemKindSnippet = { fg = palette.pine },
-  CmpItemKindColor = { fg = palette.faded },
+  CmpItemKindSnippet = { fg = c_pine },
+  CmpItemKindColor = { fg = c_faded },
   CmpItemKindConstant = { link = 'Constant' },
-  CmpItemKindCopilot = { fg = palette.salient },
+  CmpItemKindCopilot = { fg = c_salient },
   CmpItemKindValue = { link = 'Number' },
   CmpItemKindClass = { link = 'Type' },
   CmpItemKindStruct = { link = 'Type' },
-  CmpItemKindEvent = { fg = palette.tea },
-  CmpItemKindInterface = { fg = palette.faded },
+  CmpItemKindEvent = { fg = c_tea },
+  CmpItemKindInterface = { fg = c_faded },
   CmpItemKindFile = { link = 'DevIconDefault' },
   CmpItemKindFolder = { link = 'Directory' },
-  CmpItemKindUnit = { fg = palette.salient },
-  CmpItemKind = { fg = palette.foreground },
+  CmpItemKindUnit = { fg = c_salient },
+  CmpItemKind = { fg = c_foreground },
   CmpItemMenu = { link = 'Pmenu' },
-  CmpVirtualText = { fg = palette.faint, italic = true },
+  CmpVirtualText = { fg = c_faint, italic = true },
 
   -- gitsigns
-  GitSignsAdd = { fg = palette.tea },
-  GitSignsAddInline = { fg = palette.pine },
-  GitSignsAddLnInline = { fg = palette.pine },
-  GitSignsAddPreview = { fg = palette.pine },
-  GitSignsChange = { fg = palette.violet },
-  GitSignsChangeInline = { fg = palette.violet },
-  GitSignsChangeLnInline = { fg = palette.violet },
-  GitSignsCurrentLineBlame = { fg = palette.violet },
-  GitSignsDelete = { fg = palette.vermillion },
-  GitSignsDeleteInline = { fg = palette.popout },
-  GitSignsDeleteLnInline = { fg = palette.popout },
-  GitSignsDeletePreview = { fg = palette.popout },
-  GitSignsDeleteVirtLnInLine = { fg = palette.popout },
-  GitSignsUntracked = { fg = palette.subtle },
-  GitSignsUntrackedLn = { fg = palette.subtle },
-  GitSignsUntrackedNr = { fg = palette.subtle },
+  GitSignsAdd = { fg = c_tea },
+  GitSignsAddInline = { fg = c_pine },
+  GitSignsAddLnInline = { fg = c_pine },
+  GitSignsAddPreview = { fg = c_pine },
+  GitSignsChange = { fg = c_violet },
+  GitSignsChangeInline = { fg = c_violet },
+  GitSignsChangeLnInline = { fg = c_violet },
+  GitSignsCurrentLineBlame = { fg = c_violet },
+  GitSignsDelete = { fg = c_vermillion },
+  GitSignsDeleteInline = { fg = c_popout },
+  GitSignsDeleteLnInline = { fg = c_popout },
+  GitSignsDeletePreview = { fg = c_popout },
+  GitSignsDeleteVirtLnInLine = { fg = c_popout },
+  GitSignsUntracked = { fg = c_subtle },
+  GitSignsUntrackedLn = { fg = c_subtle },
+  GitSignsUntrackedNr = { fg = c_subtle },
 
   -- fugitive
   fugitiveHash = { link = 'gitHash' },
   fugitiveHeader = { link = 'Title' },
-  fugitiveHeading = { fg = palette.critical, bold = true },
-  fugitiveHelpTag = { fg = palette.critical },
-  fugitiveSymbolicRef = { fg = palette.strong },
-  fugitiveStagedModifier = { fg = palette.pine, bold = true },
-  fugitiveUnstagedModifier = { fg = palette.salient, bold = true },
-  fugitiveUntrackedModifier = { fg = palette.faded, bold = true },
-  fugitiveStagedHeading = { fg = palette.pine, bold = true },
-  fugitiveUnstagedHeading = { fg = palette.salient, bold = true },
-  fugitiveUntrackedHeading = { fg = palette.faded, bold = true },
-  DiffAdded = { fg = palette.pine },
+  fugitiveHeading = { fg = c_critical, bold = true },
+  fugitiveHelpTag = { fg = c_critical },
+  fugitiveSymbolicRef = { fg = c_strong },
+  fugitiveStagedModifier = { fg = c_pine, bold = true },
+  fugitiveUnstagedModifier = { fg = c_salient, bold = true },
+  fugitiveUntrackedModifier = { fg = c_faded, bold = true },
+  fugitiveStagedHeading = { fg = c_pine, bold = true },
+  fugitiveUnstagedHeading = { fg = c_salient, bold = true },
+  fugitiveUntrackedHeading = { fg = c_faded, bold = true },
+  DiffAdded = { fg = c_pine },
 
   -- telescope
-  TelescopeNormal = { fg = palette.faded, bg = palette.subtle },
-  TelescopePromptNormal = { bg = palette.highlight },
-  TelescopeTitle = { fg = palette.subtle, bg = palette.faded, bold = true },
-  TelescopeBorder = { fg = palette.foreground, bg = palette.subtle },
-  TelescopePromptBorder = { fg = palette.foreground, bg = palette.highlight },
-  TelescopePreviewLine = { bg = palette.shaded },
-  TelescopePreviewMatch = { fg = palette.salient, bold = true },
-  TelescopeMatching = { fg = palette.salient, bold = true },
+  TelescopeNormal = { fg = c_faded, bg = c_subtle },
+  TelescopePromptNormal = { bg = c_highlight },
+  TelescopeTitle = { fg = c_subtle, bg = c_faded, bold = true },
+  TelescopeBorder = { fg = c_foreground, bg = c_subtle },
+  TelescopePromptBorder = { fg = c_foreground, bg = c_highlight },
+  TelescopePreviewLine = { bg = c_shaded },
+  TelescopePreviewMatch = { fg = c_salient, bold = true },
+  TelescopeMatching = { fg = c_salient, bold = true },
   TelescopePromptCounter = { link = 'Comment' },
-  TelescopePromptPrefix = { fg = palette.critical },
-  TelescopeSelection = { fg = palette.foreground, bg = palette.shaded },
-  TelescopeMultiIcon = { fg = palette.salient, bold = true },
-  TelescopeMultiSelection = { bg = palette.shaded, bold = true },
-  TelescopeSelectionCaret = { fg = palette.critical, bg = palette.shaded },
+  TelescopePromptPrefix = { fg = c_critical },
+  TelescopeSelection = { fg = c_foreground, bg = c_shaded },
+  TelescopeMultiIcon = { fg = c_salient, bold = true },
+  TelescopeMultiSelection = { bg = c_shaded, bold = true },
+  TelescopeSelectionCaret = { fg = c_critical, bg = c_shaded },
 
   -- fzf-lua
   FzfLuaBufFlagAlt = { link = 'CursorLineNr' },
@@ -528,43 +533,43 @@ local hlgroups = {
 
   -- nvim-dap-ui
   DapUIBreakpointsCurrentLine = { link = 'CursorLineNr' },
-  DapUIBreakpointsInfo = { fg = palette.faded },
+  DapUIBreakpointsInfo = { fg = c_faded },
   DapUIBreakpointsPath = { link = 'Directory' },
-  DapUICurrentFrameName = { fg = palette.faded, bold = true },
-  DapUIDecoration = { fg = palette.strong },
+  DapUICurrentFrameName = { fg = c_faded, bold = true },
+  DapUIDecoration = { fg = c_strong },
   DapUIFloatBorder = { link = 'FloatBorder' },
   DapUILineNumber = { link = 'LineNr' },
-  DapUIModifiedValue = { fg = palette.salient, bold = true },
+  DapUIModifiedValue = { fg = c_salient, bold = true },
   DapUINormalFloat = { link = 'NormalFloat' },
-  DapUIPlayPause = { fg = palette.faded },
-  DapUIPlayPauseNC = { fg = palette.faded },
-  DapUIRestart = { fg = palette.faded },
-  DapUIRestartNC = { fg = palette.faded },
-  DapUIScope = { fg = palette.critical },
+  DapUIPlayPause = { fg = c_faded },
+  DapUIPlayPauseNC = { fg = c_faded },
+  DapUIRestart = { fg = c_faded },
+  DapUIRestartNC = { fg = c_faded },
+  DapUIScope = { fg = c_critical },
   DapUISource = { link = 'Directory' },
-  DapUIStepBack = { fg = palette.salient },
-  DapUIStepBackRC = { fg = palette.salient },
-  DapUIStepInto = { fg = palette.salient },
-  DapUIStepIntoRC = { fg = palette.salient },
-  DapUIStepOut = { fg = palette.salient },
-  DapUIStepOutRC = { fg = palette.salient },
-  DapUIStepOver = { fg = palette.salient },
-  DapUIStepOverRC = { fg = palette.salient },
-  DapUIStop = { fg = palette.popout },
-  DapUIStopNC = { fg = palette.popout },
-  DapUIStoppedThread = { fg = palette.faded },
-  DapUIThread = { fg = palette.foreground },
+  DapUIStepBack = { fg = c_salient },
+  DapUIStepBackRC = { fg = c_salient },
+  DapUIStepInto = { fg = c_salient },
+  DapUIStepIntoRC = { fg = c_salient },
+  DapUIStepOut = { fg = c_salient },
+  DapUIStepOutRC = { fg = c_salient },
+  DapUIStepOver = { fg = c_salient },
+  DapUIStepOverRC = { fg = c_salient },
+  DapUIStop = { fg = c_popout },
+  DapUIStopNC = { fg = c_popout },
+  DapUIStoppedThread = { fg = c_faded },
+  DapUIThread = { fg = c_foreground },
   DapUIType = { link = 'Type' },
   DapUIValue = { link = 'Number' },
   DapUIVariable = { link = 'Identifier' },
   DapUIWatchesEmpty = { link = 'Comment' },
   DapUIWatchesError = { link = 'Error' },
-  DapUIWatchesValue = { fg = palette.critical },
+  DapUIWatchesValue = { fg = c_critical },
 
   -- vimtex
-  texArg = { fg = palette.foreground },
-  texArgNew = { fg = palette.salient },
-  texCmd = { fg = palette.strong },
+  texArg = { fg = c_foreground },
+  texArgNew = { fg = c_salient },
+  texCmd = { fg = c_strong },
   texCmdBib = { link = 'texCmd' },
   texCmdClass = { link = 'texCmd' },
   texCmdDef = { link = 'texCmd' },
@@ -589,7 +594,7 @@ local hlgroups = {
   texCmdVerb = { link = 'texCmd' },
   texComment = { link = 'Comment' },
   texDefParm = { link = 'Keyword' },
-  texDelim = { fg = palette.foreground },
+  texDelim = { fg = c_foreground },
   texE3Cmd = { link = 'texCmd' },
   texE3Delim = { link = 'texDelim' },
   texE3Opt = { link = 'texOpt' },
@@ -601,145 +606,125 @@ local hlgroups = {
   texFileOpt = { link = 'texOpt' },
   texFilesArg = { link = 'texFileArg' },
   texFilesOpt = { link = 'texFileOpt' },
-  texLength = { fg = palette.salient },
-  texLigature = { fg = palette.foreground },
-  texOpt = { fg = palette.foreground },
-  texOptEqual = { fg = palette.critical },
-  texOptSep = { fg = palette.critical },
-  texParm = { fg = palette.foreground },
-  texRefArg = { fg = palette.salient },
+  texLength = { fg = c_salient },
+  texLigature = { fg = c_foreground },
+  texOpt = { fg = c_foreground },
+  texOptEqual = { fg = c_critical },
+  texOptSep = { fg = c_critical },
+  texParm = { fg = c_foreground },
+  texRefArg = { fg = c_salient },
   texRefOpt = { link = 'texOpt' },
-  texSymbol = { fg = palette.critical },
+  texSymbol = { fg = c_critical },
   texTitleArg = { link = 'Title' },
-  texVerbZone = { fg = palette.foreground },
-  texZone = { fg = palette.subtle },
-  texMathArg = { fg = palette.foreground },
+  texVerbZone = { fg = c_foreground },
+  texZone = { fg = c_subtle },
+  texMathArg = { fg = c_foreground },
   texMathCmd = { link = 'texCmd' },
-  texMathSub = { fg = palette.foreground },
-  texMathOper = { fg = palette.critical },
-  texMathZone = { fg = palette.strong },
-  texMathDelim = { fg = palette.foreground },
+  texMathSub = { fg = c_foreground },
+  texMathOper = { fg = c_critical },
+  texMathZone = { fg = c_strong },
+  texMathDelim = { fg = c_foreground },
   texMathError = { link = 'Error' },
-  texMathGroup = { fg = palette.foreground },
-  texMathSuper = { fg = palette.foreground },
-  texMathSymbol = { fg = palette.strong },
-  texMathZoneLD = { fg = palette.foreground },
-  texMathZoneLI = { fg = palette.foreground },
-  texMathZoneTD = { fg = palette.foreground },
-  texMathZoneTI = { fg = palette.foreground },
+  texMathGroup = { fg = c_foreground },
+  texMathSuper = { fg = c_foreground },
+  texMathSymbol = { fg = c_strong },
+  texMathZoneLD = { fg = c_foreground },
+  texMathZoneLI = { fg = c_foreground },
+  texMathZoneTD = { fg = c_foreground },
+  texMathZoneTI = { fg = c_foreground },
   texMathCmdText = { link = 'texCmd' },
-  texMathZoneEnv = { fg = palette.foreground },
-  texMathArrayArg = { fg = palette.strong },
+  texMathZoneEnv = { fg = c_foreground },
+  texMathArrayArg = { fg = c_strong },
   texMathCmdStyle = { link = 'texCmd' },
-  texMathDelimMod = { fg = palette.foreground },
-  texMathSuperSub = { fg = palette.foreground },
-  texMathDelimZone = { fg = palette.foreground },
-  texMathStyleBold = { fg = palette.foreground, bold = true },
-  texMathStyleItal = { fg = palette.foreground, italic = true },
-  texMathEnvArgName = { fg = palette.salient },
+  texMathDelimMod = { fg = c_foreground },
+  texMathSuperSub = { fg = c_foreground },
+  texMathDelimZone = { fg = c_foreground },
+  texMathStyleBold = { fg = c_foreground, bold = true },
+  texMathStyleItal = { fg = c_foreground, italic = true },
+  texMathEnvArgName = { fg = c_salient },
   texMathErrorDelim = { link = 'Error' },
-  texMathDelimZoneLD = { fg = palette.faded },
-  texMathDelimZoneLI = { fg = palette.faded },
-  texMathDelimZoneTD = { fg = palette.faded },
-  texMathDelimZoneTI = { fg = palette.faded },
-  texMathZoneEnsured = { fg = palette.foreground },
-  texMathCmdStyleBold = { fg = palette.strong, bold = true },
-  texMathCmdStyleItal = { fg = palette.strong, italic = true },
-  texMathStyleConcArg = { fg = palette.foreground },
-  texMathZoneEnvStarred = { fg = palette.foreground },
+  texMathDelimZoneLD = { fg = c_faded },
+  texMathDelimZoneLI = { fg = c_faded },
+  texMathDelimZoneTD = { fg = c_faded },
+  texMathDelimZoneTI = { fg = c_faded },
+  texMathZoneEnsured = { fg = c_foreground },
+  texMathCmdStyleBold = { fg = c_strong, bold = true },
+  texMathCmdStyleItal = { fg = c_strong, italic = true },
+  texMathStyleConcArg = { fg = c_foreground },
+  texMathZoneEnvStarred = { fg = c_foreground },
 
   -- lazy.nvim
   LazyDir = { link = 'Directory' },
   LazyUrl = { link = 'htmlLink' },
   LazySpecial = { link = 'Special' },
-  LazyCommit = { fg = palette.faded },
-  LazyReasonFt = { fg = palette.salient },
-  LazyReasonCmd = { fg = palette.salient },
-  LazyReasonPlugin = { fg = palette.salient },
-  LazyReasonSource = { fg = palette.salient },
-  LazyReasonRuntime = { fg = palette.salient },
-  LazyReasonEvent = { fg = palette.salient },
-  LazyReasonKeys = { fg = palette.faded },
-  LazyButton = { bg = palette.subtle },
-  LazyButtonActive = { bg = palette.shaded, bold = true },
-  LazyH1 = { fg = palette.subtle, bg = palette.faint, bold = true },
+  LazyCommit = { fg = c_faded },
+  LazyReasonFt = { fg = c_salient },
+  LazyReasonCmd = { fg = c_salient },
+  LazyReasonPlugin = { fg = c_salient },
+  LazyReasonSource = { fg = c_salient },
+  LazyReasonRuntime = { fg = c_salient },
+  LazyReasonEvent = { fg = c_salient },
+  LazyReasonKeys = { fg = c_faded },
+  LazyButton = { bg = c_subtle },
+  LazyButtonActive = { bg = c_shaded, bold = true },
+  LazyH1 = { fg = c_subtle, bg = c_faint, bold = true },
 
   -- copilot.lua
-  CopilotSuggestion = { fg = palette.faint, italic = true },
-  CopilotAnnotation = { fg = palette.faint, italic = true },
+  CopilotSuggestion = { fg = c_faint, italic = true },
+  CopilotAnnotation = { fg = c_faint, italic = true },
 
   -- statusline
-  StatusLineDiagnosticError = { fg = palette.critical, bg = palette.subtle },
-  StatusLineDiagnosticHint = { fg = palette.foreground, bg = palette.subtle },
-  StatusLineDiagnosticInfo = { fg = palette.salient, bg = palette.subtle },
-  StatusLineDiagnosticWarn = { fg = palette.popout, bg = palette.subtle },
-  StatusLineFaded = { fg = palette.faded, bg = palette.subtle },
-  StatusLineGitAdded = { fg = palette.pine, bg = palette.subtle },
-  StatusLineGitChanged = { fg = palette.faded, bg = palette.subtle },
-  StatusLineGitRemoved = { fg = palette.popout, bg = palette.subtle },
-  StatusLineHeader = { fg = palette.background, bg = palette.faded },
-  StatusLineHeaderModified = { fg = palette.background, bg = palette.popout },
-  StatusLineStrong = { fg = palette.strong, bg = palette.subtle, bold = true },
+  StatusLineDiagnosticError = { fg = c_critical, bg = c_subtle },
+  StatusLineDiagnosticHint = { fg = c_foreground, bg = c_subtle },
+  StatusLineDiagnosticInfo = { fg = c_salient, bg = c_subtle },
+  StatusLineDiagnosticWarn = { fg = c_popout, bg = c_subtle },
+  StatusLineFaded = { fg = c_faded, bg = c_subtle },
+  StatusLineGitAdded = { fg = c_pine, bg = c_subtle },
+  StatusLineGitChanged = { fg = c_faded, bg = c_subtle },
+  StatusLineGitRemoved = { fg = c_popout, bg = c_subtle },
+  StatusLineHeader = { fg = c_background, bg = c_faded },
+  StatusLineHeaderModified = { fg = c_background, bg = c_popout },
+  StatusLineStrong = { fg = c_strong, bg = c_subtle, bold = true },
 
   -- winbar
-  WinBarIconUIIndicator = { fg = palette.salient },
-  WinBarMenuNormalFloat = { fg = palette.foreground, bg = palette.highlight },
-  WinBarMenuHoverIcon = { fg = palette.salient, bg = palette.faint },
-  WinBarMenuHoverEntry = { fg = palette.foreground, bg = palette.subtle },
-  WinBarMenuCurrentContext = { fg = palette.foreground, bg = palette.subtle },
+  WinBarIconUIIndicator = { fg = c_salient },
+  WinBarMenuNormalFloat = { fg = c_foreground, bg = c_highlight },
+  WinBarMenuHoverIcon = { fg = c_salient, bg = c_faint },
+  WinBarMenuHoverEntry = { fg = c_foreground, bg = c_subtle },
+  WinBarMenuCurrentContext = { fg = c_foreground, bg = c_subtle },
 
   -- glance.nvim
   GlanceBorderTop = { link = 'WinSeparator' },
   GlancePreviewBorderBottom = { link = 'GlanceBorderTop' },
   GlanceListBorderBottom = { link = 'GlanceBorderTop' },
   GlanceFoldIcon = { link = 'Comment' },
-  GlanceListCount = { fg = palette.background, bg = palette.faint },
-  GlanceListCursorLine = { bg = palette.shaded },
+  GlanceListCount = { fg = c_background, bg = c_faint },
+  GlanceListCursorLine = { bg = c_shaded },
   GlanceListNormal = { link = 'NormalFloat' },
-  GlanceListMatch = { bg = palette.shaded, bold = true },
+  GlanceListMatch = { bg = c_shaded, bold = true },
   GlancePreviewNormal = { link = 'Pmenu' },
-  GlancePreviewMatch = { bg = palette.shaded },
-  GlanceWinBarFilename = {
-    fg = palette.faded,
-    bg = palette.subtle,
-    bold = true,
-  },
-  GlanceWinBarFilepath = { fg = palette.faded, bg = palette.subtle },
-  GlanceWinBarTitle = {
-    fg = palette.faded,
-    bg = palette.subtle,
-    bold = true,
-  },
+  GlancePreviewMatch = { bg = c_shaded },
+  GlanceWinBarFilename = { fg = c_faded, bg = c_subtle, bold = true },
+  GlanceWinBarFilepath = { fg = c_faded, bg = c_subtle },
+  GlanceWinBarTitle = { fg = c_faded, bg = c_subtle, bold = true },
   -- }}}2
 }
 -- }}}1
 
 -- Highlight group overrides {{{1
-local hlgroup_override_variants = {
-  dark = {
-    String = { fg = palette.popout },
-    CmpItemAbbrMatch = { fg = palette.critical },
-    DiffText = { fg = palette.background, bg = palette.faded },
-    TelescopePreviewMatch = { fg = palette.critical, bold = true },
-    TelescopeMatching = { fg = palette.critical, bold = true },
-  },
-  light = {},
-}
-local hlgroup_overrides = hlgroup_override_variants[vim.go.bg]
+if vim.go.bg == 'dark' then
+  hlgroups.String = { fg = c_popout }
+  hlgroups.CmpItemAbbrMatch = { fg = c_critical }
+  hlgroups.DiffText = { fg = c_background, bg = c_faded }
+  hlgroups.TelescopePreviewMatch = { fg = c_critical, bold = true }
+  hlgroups.TelescopeMatching = { fg = c_critical, bold = true }
+end
 -- }}}1
 
 -- Set highlight groups {{{1
-vim.cmd.hi('clear')
-for termcolor, hex in pairs(termcolors) do
-  vim.g[termcolor] = hex
-end
 for hlgroup_name, hlgroup_attr in pairs(hlgroups) do
   vim.api.nvim_set_hl(0, hlgroup_name, hlgroup_attr)
 end
-for hlgroup_name, hlgroup_attr in pairs(hlgroup_overrides) do
-  vim.api.nvim_set_hl(0, hlgroup_name, hlgroup_attr)
-end
-vim.g.colors_name = 'nano'
 -- }}}1
 
 -- vim:ts=2:sw=2:sts=2:fdm=marker:fdl=0
