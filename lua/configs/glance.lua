@@ -171,7 +171,7 @@ glance.setup({
 
 ---@return nil
 local function set_default_hlgroups()
-  utils.hl.set(0, 'GlanceBorderTop', { link = 'WinSeparator' })
+  utils.hl.set(0, 'GlanceBorderTop', { fg = 'WinSeparator' })
   utils.hl.set(0, 'GlancePreviewBorderBottom', { link = 'GlanceBorderTop' })
   utils.hl.set(0, 'GlanceListBorderBottom', { link = 'GlanceBorderTop' })
 end
