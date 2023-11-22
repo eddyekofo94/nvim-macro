@@ -78,9 +78,12 @@ function! GetMarkdownIndent() abort
     " Reindent ordered list items
     let l:order = str2nr(matchstr(l:line, '\(^\s*\)\@<=\d\+\(\.\ \)\@='))
     if l:order > 0
+      let [l:prev_heading_lnum, l:_, l:_] =
+            \ s:trimmed_prevnonblank_matches(v:lnum, '^#')
       let [l:prev_item_lnum, l:_, l:prev_item_order] =
             \ s:trimmed_prevnonblank_matches(v:lnum, '^\d\+\.\@=')
-      if s:in_normalzone(l:prev_item_lnum, 1)
+      if s:in_normalzone(l:prev_item_lnum, 1) &&
+            \ l:prev_heading_lnum < l:prev_item_lnum
         return str2nr(l:order) > l:prev_item_order
               \ ? indent(l:prev_item_lnum)
               \ : indent(l:prev_item_lnum) + l:sw
