@@ -116,6 +116,12 @@ return {
       })
     end),
   }),
+  -- determinant
+  us.sam({ trig = 'det' }, {
+    t('\\mathrm{det}\\left('),
+    i(1),
+    t('\\right)'),
+  }),
 
   us.samW({ trig = '==' }, t('&= ')),
   us.samW({ trig = ':=' }, t('\\coloneqq ')),
