@@ -50,12 +50,16 @@ local function insert_image()
 
   -- create directory and blank image file
   local fname = title:gsub('%s+', '_'):lower() .. '.drawio.png'
-  local path = vim.fs.joinpath(fn.expand('%:p:h'), 'pic', fn.expand('%:t:r'))
+  local path = vim.fs.joinpath(
+    fn.expand('%:p:h') --[[@as string]],
+    'pic',
+    fn.expand('%:t:r')
+  )
   make_image_dir(path)
   vim.system({
     'cp',
     vim.fs.joinpath(
-      fn.stdpath('config'),
+      fn.stdpath('config') --[[@as string]],
       'ftplugin',
       'markdown',
       'reousrces',
@@ -111,7 +115,11 @@ local function paste_image()
   end
 
   -- Make directory for the image
-  local path = vim.fs.joinpath(fn.expand('%:p:h'), 'pic', fn.expand('%:t:r'))
+  local path = vim.fs.joinpath(
+    fn.expand('%:p:h') --[[@as string]],
+    'pic',
+    fn.expand('%:t:r')
+  )
   make_image_dir(path)
 
   -- Get image name
