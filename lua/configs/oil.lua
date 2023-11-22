@@ -144,9 +144,6 @@ local function preview()
         :totable()
   vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, lines)
   vim.api.nvim_buf_set_name(preview_buf, preview_bufnewname)
-  vim.api.nvim_buf_call(preview_buf, function()
-    vim.treesitter.stop(preview_buf)
-  end)
   -- If previewing a directory, change cwd to that directory
   -- so that we can `gf` to files in the preview buffer;
   -- else change cwd to the parent directory of the file in preview
@@ -155,6 +152,9 @@ local function preview()
     if not vim.fn.getcwd(0) ~= target_dir then
       vim.cmd.lcd(target_dir)
     end
+  end)
+  vim.api.nvim_buf_call(preview_buf, function()
+    vim.treesitter.stop(preview_buf)
   end)
   vim.bo[preview_buf].syntax = ''
   if not add_syntax then
@@ -233,7 +233,12 @@ oil.setup({
     { 'permissions', highlight = 'Special' },
     { 'size', highlight = 'Operator' },
     { 'mtime', highlight = 'Number' },
-    { 'icon', default_file = icon_file, directory = icon_dir },
+    {
+      'icon',
+      default_file = icon_file,
+      directory = icon_dir,
+      add_padding = false,
+    },
   },
   win_options = {
     number = false,
@@ -350,6 +355,8 @@ vim.api.nvim_create_autocmd('DirChanged', {
 ---@return nil
 local function oil_sethl()
   local sethl = require('utils.hl').set
+  sethl(0, 'OilDir', { fg = 'Constant' })
+  sethl(0, 'OilDirIcon', { fg = 'Directory' })
   sethl(0, 'OilLink', { fg = 'Special', italic = true })
   sethl(0, 'OilCopy', { fg = 'DiagnosticSignHint', bold = true })
   sethl(0, 'OilMove', { fg = 'DiagnosticSignWarn', bold = true })
