@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Wed 22 Nov 2023 10:12:29 PM CST
+-- Last Updated: Thu 23 Nov 2023 01:53:23 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -46,7 +46,6 @@ local c_lotusGray
 local c_lotusRed0
 local c_lotusRed1
 local c_lotusRed2
-local c_lotusWhite
 local c_roninYellow
 local c_springBlue
 local c_springGreen
@@ -97,7 +96,6 @@ if vim.go.bg == 'dark' then
   c_lotusRed0     = '#d7474b'
   c_lotusRed1     = '#e84444'
   c_lotusRed2     = '#d9a594'
-  c_lotusWhite    = '#e7dba0'
   c_roninYellow   = '#ff9e3b'
   c_springBlue    = '#7fb4ca'
   c_springGreen   = '#98bb6c'
@@ -109,7 +107,7 @@ if vim.go.bg == 'dark' then
   c_waveBlue1     = '#2d4f67'
   c_waveRed       = '#e46876'
   c_winterBlue    = '#252535'
-  c_winterGreen   = '#2b3328'
+  c_winterGreen   = '#262825'
   c_winterRed     = '#43242b'
   c_winterYellow  = '#322e29'
 else
@@ -147,19 +145,18 @@ else
   c_lotusRed0     = '#d7474b'
   c_lotusRed1     = '#e84444'
   c_lotusRed2     = '#d9a594'
-  c_lotusWhite    = '#b48e3c'
   c_roninYellow   = '#ff9e3b'
   c_springBlue    = '#7fb4ca'
   c_springGreen   = '#98bb6c'
   c_springViolet  = '#938aa9'
   c_sumiInk6      = '#b1b1d2'
-  c_waveAqua0     = '#6a9589'
+  c_waveAqua0     = '#69827b'
   c_waveAqua1     = '#7aa89f'
   c_waveBlue0     = '#223249'
   c_waveBlue1     = '#2d4f67'
   c_waveRed       = '#e46876'
   c_winterBlue    = '#d4d4f0'
-  c_winterGreen   = '#d0dccb'
+  c_winterGreen   = '#d5dcd2'
   c_winterRed     = '#e6c2c7'
   c_winterYellow  = '#e2dcd4'
 end
@@ -276,7 +273,7 @@ local hlgroups = {
   WildMenu = { link = 'Pmenu' },
   WinBar = { bg = 'NONE', fg = c_dragonFg1, bold = true },
   WinBarNC = { bg = 'NONE', fg = c_dragonAsh, bold = false },
-  WinSeparator = { bg = c_dragonBg2, fg = c_dragonBg2 },
+  WinSeparator = { fg = c_dragonBg4 },
   lCursor = { link = 'Cursor' },
   -- }}}2
 
@@ -317,8 +314,8 @@ local hlgroups = {
   ['@punctuation.bracket'] = { fg = c_dragonGray1 },
   ['@punctuation.delimiter'] = { fg = c_dragonGray1 },
   ['@punctuation.special'] = { fg = c_dragonTeal },
-  ['@string.escape'] = { fg = c_lotusWhite },
-  ['@string.regex'] = { fg = c_lotusWhite },
+  ['@string.escape'] = { fg = c_dragonOrange0 },
+  ['@string.regex'] = { fg = c_dragonOrange0 },
   ['@symbol'] = { fg = c_dragonFg0 },
   ['@tag.attribute'] = { fg = c_dragonFg0 },
   ['@tag.delimiter'] = { fg = c_dragonGray1 },
@@ -392,7 +389,7 @@ local hlgroups = {
   DiagnosticUnderlineInfo = { sp = c_dragonBlue0, undercurl = true },
   DiagnosticUnderlineWarn = { sp = c_autumnYellow, undercurl = true },
   DiagnosticVirtualTextError = { bg = c_winterRed, fg = c_lotusRed0 },
-  DiagnosticVirtualTextHint = { bg = c_dragonBg2, fg = c_waveAqua0 },
+  DiagnosticVirtualTextHint = { bg = c_winterGreen, fg = c_waveAqua0 },
   DiagnosticVirtualTextInfo = { bg = c_winterBlue, fg = c_dragonBlue0 },
   DiagnosticVirtualTextWarn = { bg = c_winterYellow, fg = c_autumnYellow },
   -- }}}
