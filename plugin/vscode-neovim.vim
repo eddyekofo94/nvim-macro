@@ -2,6 +2,9 @@ if !exists('g:vscode')
   finish
 endif
 
+" Use VSCode syntax highlighting
+syntax off
+
 " LSP keymap settings
 function! s:vscodeGoToDefinition(str)
     if exists('b:vscode_controlled') && b:vscode_controlled

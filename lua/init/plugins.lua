@@ -117,9 +117,8 @@ end
 if vim.g.vscode then
   enable_modules({
     'lib',
-    'treesitter',
     'edit',
-    'colorschemes',
+    'treesitter',
   })
 else
   enable_modules({
