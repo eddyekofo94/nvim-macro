@@ -334,22 +334,13 @@ local stl_nc = table.concat({
   components.pos_nc,
 })
 
-vim.api.nvim_create_autocmd({ 'UIEnter', 'WinEnter', 'CursorMoved' }, {
-  group = groupid,
-  callback = function()
-    if vim.wo.stl ~= stl then
-      vim.wo.stl = stl
-    end
-  end,
-})
-vim.api.nvim_create_autocmd('WinLeave', {
-  group = groupid,
-  callback = function()
-    if vim.wo.stl ~= stl_nc then
-      vim.wo.stl = stl_nc
-    end
-  end,
-})
+---Get statusline string
+---@return string
+function statusline.get()
+  return vim.g.statusline_winid == vim.api.nvim_get_current_win() and stl
+    or stl_nc
+end
+
 vim.api.nvim_create_autocmd(
   { 'FileChangedShellPost', 'DiagnosticChanged', 'LspProgress' },
   {
@@ -384,3 +375,5 @@ vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
     -- stylua: ignore end
   end,
 })
+
+vim.go.statusline = '%!v:lua.statusline.get()'
