@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu 23 Nov 2023 01:53:23 PM CST
+-- Last Updated: Fri 24 Nov 2023 01:36:40 AM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -235,7 +235,7 @@ local hlgroups = {
   IncSearch = { bg = c_carpYellow, fg = c_waveBlue0 },
   LineNr = { fg = c_dragonBg5 },
   MatchParen = { bg = c_dragonBg4 },
-  ModeMsg = { fg = c_roninYellow, bold = true },
+  ModeMsg = { fg = c_dragonRed, bold = true },
   MoreMsg = { fg = c_dragonBlue0 },
   MsgArea = { fg = c_dragonFg1 },
   MsgSeparator = { bg = c_dragonBg0 },
@@ -243,13 +243,13 @@ local hlgroups = {
   Normal = { bg = c_dragonBg1, fg = c_dragonFg0 },
   NormalFloat = { bg = c_dragonBg0, fg = c_dragonFg1 },
   NormalNC = { link = 'Normal' },
-  Pmenu = { bg = c_waveBlue0, fg = c_dragonFg1 },
-  PmenuSbar = { bg = c_waveBlue0 },
-  PmenuSel = { bg = c_waveBlue1, fg = 'NONE' },
-  PmenuThumb = { bg = c_waveBlue1 },
+  Pmenu = { bg = c_dragonBg3, fg = c_dragonFg1 },
+  PmenuSbar = { bg = c_dragonBg4 },
+  PmenuSel = { bg = c_dragonBg4, fg = 'NONE' },
+  PmenuThumb = { bg = c_dragonBg5 },
   Question = { link = 'MoreMsg' },
   QuickFixLine = { bg = c_dragonBg3 },
-  Search = { bg = c_waveBlue1, fg = c_dragonFg0 },
+  Search = { bg = c_dragonBg4, fg = c_dragonFg0 },
   SignColumn = { fg = c_dragonGray2 },
   SpellBad = { underdashed = true },
   SpellCap = { underdashed = true },
@@ -266,7 +266,7 @@ local hlgroups = {
   Title = { bold = true, fg = c_dragonBlue1 },
   Underlined = { fg = c_dragonTeal, underline = true },
   VertSplit = { link = 'WinSeparator' },
-  Visual = { bg = c_waveBlue0 },
+  Visual = { bg = c_dragonBg4 },
   VisualNOS = { link = 'Visual' },
   WarningMsg = { fg = c_roninYellow },
   Whitespace = { fg = c_dragonBg5 },
@@ -545,7 +545,7 @@ local hlgroups = {
   -- winbar
   WinBarMenuCurrentContext = { bg = c_dragonBg3 },
   WinBarMenuHoverEntry = { bg = c_dragonBg3 },
-  WinBarMenuSbar = { bg = c_dragonBg0 },
+  WinBarMenuSbar = { bg = c_dragonBg2 },
   WinBarMenuThumb = { bg = c_dragonBg5 },
 
   -- glance.nvim
