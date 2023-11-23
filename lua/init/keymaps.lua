@@ -300,6 +300,13 @@ vim.keymap.set('o', 'g{', '<Cmd>silent! normal Vg{<CR>', { noremap = false })
 vim.keymap.set('o', 'g}', '<Cmd>silent! normal Vg}<CR>', { noremap = false })
 
 -- Abbreviations
+vim.keymap.set('!a', 'ture', 'true')
+vim.keymap.set('!a', 'Ture', 'True')
+vim.keymap.set('!a', 'flase', 'false')
+vim.keymap.set('!a', 'fasle', 'false')
+vim.keymap.set('!a', 'Flase', 'False')
+vim.keymap.set('!a', 'Fasle', 'False')
+
 utils.keymap.command_abbrev('S', '%s')
 utils.keymap.command_abbrev(':', 'lua')
 utils.keymap.command_abbrev('qa', 'qa!')
