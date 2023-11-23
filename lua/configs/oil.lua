@@ -52,7 +52,11 @@ local function end_preview(oil_win)
   oil_win = oil_win or vim.api.nvim_get_current_win()
   local preview_win = preview_wins[oil_win]
   local preview_buf = preview_bufs[oil_win]
-  if preview_win and vim.api.nvim_win_is_valid(preview_win) then
+  if
+    preview_win
+    and vim.api.nvim_win_is_valid(preview_win)
+    and vim.fn.winbufnr(preview_win) == preview_buf
+  then
     vim.api.nvim_win_close(preview_win, true)
   end
   if preview_buf and vim.api.nvim_win_is_valid(preview_buf) then
@@ -104,6 +108,20 @@ local function preview()
     vim.opt_local.foldcolumn = '0'
     vim.opt_local.winbar = ''
     vim.api.nvim_set_current_win(oil_win)
+  end
+  -- Set keymap for opening the file from preview buffer
+  if stat.type == 'file' then
+    vim.keymap.set('n', '<CR>', function()
+      vim.cmd.edit(fpath)
+      vim.api.nvim_win_close(oil_win, false)
+      end_preview(oil_win)
+    end, {
+      buffer = preview_buf,
+    })
+  else
+    pcall(vim.keymap.del, 'n', '<CR>', {
+      buffer = preview_buf,
+    })
   end
   -- Preview buffer already contains contents of file to preview
   local preview_bufname = vim.fn.bufname(preview_buf)
@@ -342,7 +360,7 @@ vim.api.nvim_create_autocmd('DirChanged', {
     if vim.bo[info.buf].filetype == 'oil' then
       vim.defer_fn(function()
         local cwd = vim.fs.normalize(vim.fn.getcwd(vim.fn.winnr()))
-        local oildir = vim.fs.normalize(oil.get_current_dir())
+        local oildir = vim.fs.normalize(oil.get_current_dir() or '')
         if cwd ~= oildir then
           oil.open(cwd)
         end
