@@ -13,6 +13,19 @@ local preview_max_fsize = 1000000
 local preview_debounce = 64 -- ms
 local preview_request_last_timestamp = 0
 
+---Change window-local directory to `dir`
+---@param dir string
+---@return nil
+local function lcd(dir)
+  local ok = pcall(vim.cmd.lcd, dir)
+  if not ok then
+    vim.notify(
+      '[oil.nvim] failed to cd to ' .. dir,
+      vim.log.levels.WARN
+    )
+  end
+end
+
 ---Generate lines for preview window when preview is not available
 ---@param msg string
 ---@param height integer
@@ -168,7 +181,7 @@ local function preview()
   vim.api.nvim_win_call(preview_win, function()
     local target_dir = stat.type == 'directory' and fpath or dir
     if not vim.fn.getcwd(0) ~= target_dir then
-      vim.cmd.lcd(target_dir)
+      lcd(target_dir)
     end
   end)
   vim.api.nvim_buf_call(preview_buf, function()
@@ -348,7 +361,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'TextChanged' }, {
       local cwd = vim.fs.normalize(vim.fn.getcwd(vim.fn.winnr()))
       local oildir = vim.fs.normalize(oil.get_current_dir())
       if cwd ~= oildir and vim.uv.fs_stat(oildir) then
-        vim.cmd.lcd(oildir)
+        lcd(oildir)
       end
     end
   end,
