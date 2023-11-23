@@ -305,13 +305,13 @@ local components = {
   align        = '%=',
   diag         = '%{%v:lua.statusline.diag()%}',
   fname        = ' %#StatusLineStrong#%{%&bt==#""?"%t":"%F"%}%* ',
-  fname_nc     = ' %#StatusLineWeak#%{%&bt==#""?"%t":"%F"%}%* ',
+  fname_nc     = ' %{%&bt==#""?"%t":"%F"%} ',
   info         = '%{%v:lua.statusline.info()%}',
   lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
   mode         = '%{%v:lua.statusline.mode()%}',
   padding      = '%#None#  %*',
   pos          = '%#StatusLineFaded#%{%&ru?"%l:%c ":""%}%*',
-  pos_nc       = '%#StatusLineWeak#%{%&ru?"%l:%c ":""%}%*',
+  pos_nc       = '%{%&ru?"%l:%c ":""%}',
   truncate     = '%<',
 }
 -- stylua: ignore end
@@ -334,7 +334,7 @@ local stl_nc = table.concat({
   components.pos_nc,
 })
 
-vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'CursorMoved' }, {
+vim.api.nvim_create_autocmd({ 'UIEnter', 'WinEnter', 'CursorMoved' }, {
   group = groupid,
   callback = function()
     if vim.wo.stl ~= stl then
@@ -373,14 +373,14 @@ vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
     sethl('StatusLineHeader', { bg = 'TabLine', bold = true })
     sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'TabLine', bold = true })
     sethl('StatusLineStrong', { bold = true })
-    sethl('StatusLineFaded', { fg = 'Comment' })
+    sethl('StatusLineFaded', { fg = 'StatusLineNC' })
     sethl('StatusLineGitAdded', { fg = 'GitSignsAdd' })
     sethl('StatusLineGitChanged', { fg = 'GitSignsChange' })
     sethl('StatusLineGitRemoved', { fg = 'GitSignsDelete' })
-    sethl('StatusLineDiagnosticError', { fg = 'LspDiagnosticsSignError' })
-    sethl('StatusLineDiagnosticHint', { fg = 'LspDiagnosticsSignHint' })
-    sethl('StatusLineDiagnosticInfo', { fg = 'LspDiagnosticsSignInformation' })
-    sethl('StatusLineDiagnosticWarn', { fg = 'LspDiagnosticsSignWarning' })
+    sethl('StatusLineDiagnosticError', { fg = 'DiagnosticSignError' })
+    sethl('StatusLineDiagnosticHint', { fg = 'DiagnosticSignHint' })
+    sethl('StatusLineDiagnosticInfo', { fg = 'DiagnosticSignInfo' })
+    sethl('StatusLineDiagnosticWarn', { fg = 'DiagnosticSignWarn' })
     -- stylua: ignore end
   end,
 })
