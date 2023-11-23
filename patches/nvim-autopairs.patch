@@ -1,3 +1,17 @@
+diff --git a/lua/nvim-autopairs.lua b/lua/nvim-autopairs.lua
+index cb7912c..efd6cbd 100644
+--- a/lua/nvim-autopairs.lua
++++ b/lua/nvim-autopairs.lua
+@@ -473,7 +473,8 @@ M.autopairs_map = function(bufnr, char)
+             end
+         end
+     end
+-    return M.autopairs_afterquote(new_text, utils.esc(char))
++    return (M.config.enable_abbr and utils.esc(utils.key.abbr) or "")
++        .. M.autopairs_afterquote(new_text, utils.esc(char))
+ end
+ 
+ M.autopairs_insert = function(bufnr, char)
 diff --git a/lua/nvim-autopairs/ts-conds.lua b/lua/nvim-autopairs/ts-conds.lua
 index 668dd40..5ca3ef6 100644
 --- a/lua/nvim-autopairs/ts-conds.lua
