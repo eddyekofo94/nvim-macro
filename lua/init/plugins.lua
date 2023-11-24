@@ -72,7 +72,7 @@ local function enable_modules(module_names)
     },
     checker = { enabled = false },
     change_detection = { notify = false },
-    install = { colorscheme = { 'nano', 'cockatoo' } },
+    install = { colorscheme = { 'nano', 'cockatoo', 'dragon' } },
     performance = {
       rtp = {
         disabled_plugins = {},
