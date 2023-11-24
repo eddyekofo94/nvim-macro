@@ -31,35 +31,6 @@ local lowercase_words = {
 ---@type bufopt_t
 local opt_captitle = utils.classes.bufopt_t:new('captitle', true)
 
----Given current line, determine if it is a title line
----@param lnum integer
----@return boolean
-local function on_title_line(lnum)
-  local current_line = api.nvim_buf_get_lines(0, lnum - 1, lnum, false)[1]
-  if not current_line then
-    return false
-  end
-  return not utils.ft.markdown.in_codeblock(lnum)
-    and current_line:match('^#+%s')
-end
-
----Given current cursor position (column) and current line, determine if
----the cursor is on a word boundary
----@param line string current line
----@param col number current cursor position (column)
----@return boolean
-local function on_word_boundary(line, col)
-  local char_before = line:sub(col - 1, col - 1)
-  local char_before_before = line:sub(col - 2, col - 2)
-  if
-    char_before:match('[%w_.]')
-    or char_before == "'" and char_before_before:match('%w')
-  then
-    return false
-  end
-  return true
-end
-
 ---Given current cursor position (column) and current line, determine if
 ---the cursor is inside inline code
 ---@param line string current line
@@ -77,39 +48,6 @@ local function inside_inline_code(line, col)
   return inside
 end
 
----Determine if a word is the first word on a line
----@param line string the line where the word is located
----@param col number current cursor position (column)
----@param word string word to check
----@return boolean
-local function first_word(line, col, word)
-  local text_before = line:sub(1, col - #word - 1)
-  if text_before:match('%w') then
-    return false
-  end
-  return true
-end
-
----Given current cursor position (column) and current line, correct
----the word before the cursor if it should be in lower case
----@param line string current line
----@param col number current cursor position (column)
-local function correct_word_before(line, col)
-  local word_before = line:sub(1, col - 1):match('%w+$')
-  if word_before == nil then
-    return
-  end
-
-  if
-    lowercase_words[word_before:lower()]
-    and not first_word(line, col, word_before)
-  then
-    word_before = word_before:lower()
-    line = line:sub(1, col - #word_before - 1) .. word_before .. line:sub(col)
-    api.nvim_set_current_line(line)
-  end
-end
-
 ---Capitalize the first letter of words on title line
 ---@param info table information given to event handler
 ---@return nil
@@ -119,24 +57,37 @@ local function format_title(info)
   end
 
   local cursor = api.nvim_win_get_cursor(0)
-  if not on_title_line(cursor[1]) then
+  local line = api.nvim_get_current_line()
+  local lnum = vim.fn.line('.')
+  if
+    not line:match('^#+%s')
+    or utils.ft.markdown.in_codeblock(lnum)
+    or inside_inline_code(line, cursor[2])
+  then
     return
   end
 
-  local col = cursor[2]
-  local current_line = api.nvim_get_current_line()
-  local char_current = current_line:sub(col, col)
-  if
-    on_word_boundary(current_line, col)
-    and char_current:match('%a')
-    and not inside_inline_code(current_line, col)
-  then
-    current_line = current_line:sub(1, col - 1)
-      .. string.upper(current_line:sub(col, col))
-      .. current_line:sub(col + 1)
-    api.nvim_set_current_line(current_line)
-  elseif char_current:match('%W') and char_current ~= '-' then
-    correct_word_before(current_line, col)
+  local word = line:sub(1, cursor[2]):match('[%w_]+$')
+  if word == nil then
+    return
+  end
+
+  local word_lower = word:lower()
+  if word_lower ~= word and lowercase_words[word_lower] then
+    line = line:sub(1, cursor[2] - #word)
+      .. word_lower
+      .. line:sub(cursor[2] + 1)
+    api.nvim_set_current_line(line)
+    return
+  end
+
+  local word_cap = word:sub(1, 1):upper() .. word:sub(2)
+  if word_cap ~= word and not lowercase_words[word_lower] then
+    line = line:sub(1, cursor[2] - #word)
+      .. word_cap
+      .. line:sub(cursor[2] + 1)
+    api.nvim_set_current_line(line)
+    return
   end
 end
 
