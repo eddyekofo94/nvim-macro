@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Tue 21 Nov 2023 07:35:49 PM CST
+-- Last Updated: Fri 24 Nov 2023 10:55:59 AM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -399,9 +399,11 @@ local hlgroups = {
   htmlLink = { fg = c_faded, underline = true },
   htmlSpecialChar = { link = 'SpecialChar' },
   htmlTitle = { fg = c_foreground },
+
   -- Json
   jsonKeyword = { link = 'Keyword' },
   jsonBraces = { fg = c_foreground },
+
   -- Markdown
   markdownBold = { bold = true },
   markdownBoldItalic = { bold = true, italic = true },
@@ -415,16 +417,20 @@ local hlgroups = {
   markdownH4 = { link = 'htmlH4' },
   markdownH5 = { link = 'htmlH5' },
   markdownH6 = { link = 'htmlH6' },
+
   -- Shell
   shDeref = { link = 'Macro' },
   shDerefVar = { link = 'Macro' },
+
   -- Git
   gitHash = { fg = c_faded },
+
   -- Checkhealth
   helpHeader = { fg = c_foreground, bold = true },
   helpSectionDelim = { fg = c_faded, bold = true },
   helpCommand = { fg = c_salient },
   helpBacktick = { fg = c_salient },
+
   -- Man
   manBold = { fg = c_salient, bold = true },
   manItalic = { fg = c_faded, italic = true },

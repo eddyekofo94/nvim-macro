@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Wed 22 Nov 2023 08:56:07 PM CST
+-- Last Updated: Fri 24 Nov 2023 10:56:41 AM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -458,9 +458,11 @@ local hlgroups = {
   htmlLink = { fg = c_flashlight, underline = true },
   htmlSpecialChar = { fg = c_beige },
   htmlTitle = { fg = c_pigeon },
+
   -- Json
   jsonKeyword = { link = 'Keyword' },
   jsonBraces = { fg = c_smoke },
+
   -- Markdown
   markdownBold = { fg = c_aqua, bold = true },
   markdownBoldItalic = { fg = c_skyblue, bold = true, italic = true },
@@ -474,16 +476,20 @@ local hlgroups = {
   markdownH4 = { link = 'htmlH4' },
   markdownH5 = { link = 'htmlH5' },
   markdownH6 = { link = 'htmlH6' },
+
   -- Shell
   shDeref = { link = 'Macro' },
   shDerefVar = { link = 'Macro' },
+
   -- Git
   gitHash = { fg = c_pigeon },
+
   -- Checkhealth
   helpHeader = { fg = c_pigeon, bold = true },
   helpSectionDelim = { fg = c_ochre, bold = true },
   helpCommand = { fg = c_turquoise },
   helpBacktick = { fg = c_turquoise },
+
   -- Man
   manBold = { fg = c_ochre, bold = true },
   manItalic = { fg = c_turquoise, italic = true },
@@ -753,17 +759,9 @@ local hlgroups = {
   GlanceListNormal = { bg = c_deepsea },
   GlanceListMatch = { bg = c_thunder, bold = true },
   GlancePreviewNormal = { link = 'Pmenu' },
-  GlanceWinBarFilename = {
-    fg = c_pigeon,
-    bg = c_deepsea,
-    bold = true,
-  },
+  GlanceWinBarFilename = { fg = c_pigeon, bg = c_deepsea, bold = true },
   GlanceWinBarFilepath = { fg = c_pigeon, bg = c_deepsea },
-  GlanceWinBarTitle = {
-    fg = c_pigeon,
-    bg = c_deepsea,
-    bold = true,
-  },
+  GlanceWinBarTitle = { fg = c_pigeon, bg = c_deepsea, bold = true },
   -- }}}2
 
   -- Extra {{{2

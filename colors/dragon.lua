@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri 24 Nov 2023 01:36:40 AM CST
+-- Last Updated: Fri 24 Nov 2023 10:54:24 AM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -349,10 +349,7 @@ local hlgroups = {
   ['@lsp.type.variable'] = { fg = 'NONE' },
   ['@lsp.typemod.function.builtin'] = { link = '@function.builtin' },
   ['@lsp.typemod.function.defaultLibrary'] = { link = '@function.builtin' },
-  ['@lsp.typemod.function.readonly'] = {
-    bold = true,
-    fg = c_dragonBlue1,
-  },
+  ['@lsp.typemod.function.readonly'] = { bold = true, fg = c_dragonBlue1 },
   ['@lsp.typemod.keyword.documentation'] = { link = 'Special' },
   ['@lsp.typemod.method.defaultLibrary'] = { link = '@function.builtin' },
   ['@lsp.typemod.operator.controlFlow'] = { link = '@exception' },
@@ -397,6 +394,7 @@ local hlgroups = {
   -- Filetype {{{2
   -- Git
   gitHash = { fg = c_dragonAsh },
+
   -- HTML
   htmlBold = { bold = true },
   htmlBoldItalic = { bold = true, italic = true },
@@ -413,6 +411,7 @@ local hlgroups = {
   htmlString = { fg = c_dragonAsh },
   htmlTagName = { link = 'Tag' },
   htmlTitle = { link = 'Title' },
+
   -- Markdown
   markdownBold = { bold = true },
   markdownBoldItalic = { bold = true, italic = true },
@@ -427,12 +426,14 @@ local hlgroups = {
   markdownH5 = { link = 'htmlH5' },
   markdownH6 = { link = 'htmlH6' },
   markdownListMarker = { fg = c_autumnYellow },
+
   -- Checkhealth
   healthError = { fg = c_lotusRed0 },
   healthSuccess = { fg = c_springGreen },
   healthWarning = { fg = c_roninYellow },
   helpHeader = { link = 'Title' },
   helpSectionDelim = { link = 'Title' },
+
   -- Qf
   qfFileName = { link = 'Directory' },
   qfLineNr = { link = 'lineNr' },
