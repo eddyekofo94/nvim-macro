@@ -47,7 +47,6 @@ au('LargeFileSettings', {
 au('YankHighlight', {
   'TextYankPost',
   {
-    group = 'YankHighlight',
     desc = 'Highlight the selection on yank.',
     callback = function()
       vim.highlight.on_yank({ higroup = 'Visual', timeout = 200 })
@@ -59,7 +58,6 @@ au('Autosave', {
   { 'BufLeave', 'WinLeave', 'FocusLost' },
   {
     nested = true,
-    group = 'Autosave',
     desc = 'Autosave on focus change.',
     command = 'if &bt ==# "" | silent! update | endif',
   },
@@ -292,7 +290,6 @@ au('DisableWinBarInDiffMode', {
 au('UpdateTimestamp', {
   'BufWritePre',
   {
-    group = 'UpdateTimestamp',
     desc = 'Update timestamp automatically.',
     callback = function(info)
       if not vim.bo[info.buf].ma or not vim.bo[info.buf].mod then
