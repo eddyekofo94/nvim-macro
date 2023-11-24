@@ -158,7 +158,7 @@ local function preview()
       preview_win_height,
       preview_win_width
     )
-    or not vim.fn.system('file ' .. vim.fn.shellescape(fpath)):match('text') and nopreview(
+    or not vim.fn.system({ 'file', fpath }):match('text') and nopreview(
       'Binary file, no preview available',
       preview_win_height,
       preview_win_width
