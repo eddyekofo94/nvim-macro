@@ -12,6 +12,7 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
         update_interval = 32,
         enable = function(buf, win)
           return vim.fn.win_gettype(win) == ''
+            and not vim.wo[win].diff
             and vim.wo[win].winbar == ''
             and vim.bo[buf].bt == ''
             and (
