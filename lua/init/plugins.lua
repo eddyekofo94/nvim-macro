@@ -21,9 +21,8 @@ local function bootstrap()
   vim.g.package_path = datapath .. '/site/pack/packages/opt'
   vim.g.package_lock = confpath .. '/package-lock.json'
   local lazy_path = vim.g.package_path .. '/lazy.nvim'
-  vim.opt.rtp:prepend(lazy_path)
-  vim.opt.pp:prepend(lazy_path)
   if vim.uv.fs_stat(lazy_path) then
+    vim.opt.rtp:prepend(lazy_path)
     return true
   end
 
@@ -57,6 +56,7 @@ local function bootstrap()
     '[plugins] lazy.nvim cloned to ' .. lazy_path,
     vim.log.levels.INFO
   )
+  vim.opt.rtp:prepend(lazy_path)
   return true
 end
 
