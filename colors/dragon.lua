@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri 24 Nov 2023 03:26:14 PM CST
+-- Last Updated: Sat 25 Nov 2023 12:42:17 AM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -107,7 +107,7 @@ if vim.go.bg == 'dark' then
   c_waveBlue1     = '#2d4f67'
   c_waveRed       = '#e46876'
   c_winterBlue    = '#252535'
-  c_winterGreen   = '#262825'
+  c_winterGreen   = '#2e322d'
   c_winterRed     = '#43242b'
   c_winterYellow  = '#322e29'
 else
