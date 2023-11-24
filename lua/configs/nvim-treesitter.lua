@@ -41,7 +41,7 @@ end
 ---@diagnostic disable-next-line: missing-fields
 ts_configs.setup({
   ensure_installed = require('utils.static').langs:list('ts'),
-  sync_install = true,
+  sync_install = false,
   ignore_install = {},
   highlight = {
     enable = not vim.g.vscode,
