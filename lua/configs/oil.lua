@@ -123,19 +123,10 @@ local function preview()
     vim.api.nvim_set_current_win(oil_win)
   end
   -- Set keymap for opening the file from preview buffer
-  if stat.type == 'file' then
-    vim.keymap.set('n', '<CR>', function()
-      vim.cmd.edit(fpath)
-      vim.api.nvim_win_close(oil_win, false)
-      end_preview(oil_win)
-    end, {
-      buffer = preview_buf,
-    })
-  else
-    pcall(vim.keymap.del, 'n', '<CR>', {
-      buffer = preview_buf,
-    })
-  end
+  vim.keymap.set('n', '<CR>', function()
+    vim.cmd.edit(fpath)
+    end_preview(oil_win)
+  end, { buffer = preview_buf })
   -- Preview buffer already contains contents of file to preview
   local preview_bufname = vim.fn.bufname(preview_buf)
   local preview_bufnewname = 'oil_preview://' .. fpath
