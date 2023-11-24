@@ -1,6 +1,6 @@
 local utils = require('utils')
-local confpath = vim.fn.stdpath('config')
-local datapath = vim.fn.stdpath('data')
+local confpath = vim.fn.stdpath('config') --[[@as string]]
+local datapath = vim.fn.stdpath('data') --[[@as string]]
 
 ---Read file contents
 ---@param path string
