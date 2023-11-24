@@ -108,7 +108,7 @@ function! GetMarkdownIndent() abort
       let l:ordered_list_extra_indent =
             \ match(l:prev_line, '\(^\s*\d\+\.\s*\)\@<=\S')
       if l:ordered_list_extra_indent >= 0
-        return indent(l:prev_lnum) + l:ordered_list_extra_indent
+        return l:ordered_list_extra_indent
       endif
     endif
   endif
