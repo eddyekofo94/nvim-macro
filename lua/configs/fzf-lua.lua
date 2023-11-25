@@ -287,10 +287,20 @@ local function set_default_hlgroups()
     or hl_tl_pnorm.bg == hl_norm.bg
   then
     -- stylua: ignore start
-    utils.hl.set(0, 'TelescopeNormal', { link = 'NormalFloat' })
+    utils.hl.set(0, 'FzfLuaBufFlagAlt', { link = 'CursorLineNr' })
+    utils.hl.set(0, 'FzfLuaBufFlagCur', { link = 'CursorLineNr' })
+    utils.hl.set(0, 'FzfLuaBufLineNr', { link = 'LineNr' })
+    utils.hl.set(0, 'FzfLuaBufName', { link = 'Directory' })
+    utils.hl.set(0, 'FzfLuaBufNr', { link = 'LineNr' })
+    utils.hl.set(0, 'FzfLuaCursor', { link = 'None' })
+    utils.hl.set(0, 'FzfLuaHeaderBind', { link = 'Special' })
+    utils.hl.set(0, 'FzfLuaHeaderText', { link = 'Special' })
+    utils.hl.set(0, 'FzfLuaTabMarker', { link = 'Keyword' })
+    utils.hl.set(0, 'FzfLuaTabTitle', { link = 'Title' })
     utils.hl.set(0, 'TelescopeBorder', { link = 'TelescopeNormal' })
-    utils.hl.set(0, 'TelescopePromptNormal', utils.hl.blend('NormalFloat', 'Normal'))
+    utils.hl.set(0, 'TelescopeNormal', { link = 'NormalFloat' })
     utils.hl.set(0, 'TelescopePromptBorder', { link = 'TelescopePromptNormal' })
+    utils.hl.set(0, 'TelescopePromptNormal', utils.hl.blend('NormalFloat', 'Normal'))
     utils.hl.set(0, 'TelescopeSelection', { link = 'Visual' })
     utils.hl.set(0, 'TelescopeTitle', { fg = hl_norm.bg, bg = hl_speical.fg, bold = true })
     -- stylua: ignore end

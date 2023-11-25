@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri 24 Nov 2023 10:56:41 AM CST
+-- Last Updated: Sat 25 Nov 2023 08:58:31 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -583,17 +583,6 @@ local hlgroups = {
   TelescopePromptCounter = { link = 'Comment' },
   TelescopePromptPrefix = { fg = c_orange },
   TelescopeSelectionCaret = { fg = c_orange, bg = c_thunder },
-
-  -- fzf-lua (can share some hlgroups with telescope)
-  FzfLuaBufFlagAlt = { link = 'FzfLuaBufFlagCur' },
-  FzfLuaBufFlagCur = { link = 'CursorLineNr' },
-  FzfLuaBufLineNr = { link = 'LineNr' },
-  FzfLuaBufName = { link = 'Directory' },
-  FzfLuaBufNr = { link = 'LineNr' },
-  FzfLuaHeaderBind = { link = 'Comment' },
-  FzfLuaHeaderText = { link = 'Comment' },
-  FzfLuaTabMarker = { link = 'Keyword' },
-  FzfLuaTabTitle = { link = 'Title' },
 
   -- nvim-dap-ui
   DapUIBreakpointsCurrentLine = { link = 'CursorLineNr' },
