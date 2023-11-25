@@ -8,9 +8,11 @@ local function tmux_get_socket()
 end
 
 ---@param command string tmux command to execute
+---@param global boolean? command should be executed globally instead of in current pane
 ---@return string tmux command output
-local function tmux_exec(command)
-  command = string.format('tmux -S %s %s', tmux_get_socket(), command)
+local function tmux_exec(command, global)
+  command = global and string.format('tmux %s', command)
+    or string.format('tmux -S %s %s', tmux_get_socket(), command)
   local handle = assert(
     io.popen(command),
     string.format('[tmux-nav]: unable to execute: [%s]', command)
@@ -214,14 +216,11 @@ local function setup()
   tmux_mapkey_fallback('<M-+>', [[run "tmux resize-pane -y $(($(tmux display -p '#{pane_height}') + 2))"]], function() return not tmux_is_zoomed() and (nvim_at_border('j') and (nvim_at_border('k') or not tmux_at_border('j'))) end)
   -- stylua: ignore end
 
-  -- Use <C-Space>[ and <C-Space>: (same keybindings as in tmux)
-  -- to exit terminal mode and enter command mode
-  -- stylua: ignore start
+  -- Use <C-Space>[ and (same keybindings as in tmux) to exit terminal mode
   vim.keymap.set('t', '<C-Space>[', '<C-\\><C-n>')
-  vim.keymap.set('t', '<C-Space>:', '<C-\\><C-n>:')
-  vim.keymap.set({ 'n', 'v', 'o', 'i', 'c', 'l' }, '<C-Space>[', function() tmux_exec('copy-mode') end)
-  vim.keymap.set({ 'n', 'v', 'o', 'i', 'c', 'l' }, '<C-Space>:', function() tmux_exec('command-prompt') end)
-  -- stylua: ignore end
+  vim.keymap.set({ 'n', 'v', 'o', 'i', 'c', 'l' }, '<C-Space>[', function()
+    tmux_exec('copy-mode')
+  end)
 
   -- Set @is_vim and register relevant autocmds callbacks if not already
   -- in a vim/nvim session
