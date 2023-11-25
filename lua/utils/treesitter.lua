@@ -5,7 +5,10 @@ local M = {}
 ---@return boolean
 function M.is_active(buf)
   buf = buf or vim.api.nvim_get_current_buf()
-  local ok = pcall(vim.treesitter.get_parser, buf or 0, vim.b[buf].ft)
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return false
+  end
+  local ok = pcall(vim.treesitter.get_parser, buf, vim.b[buf].ft)
   return ok and true or false
 end
 
