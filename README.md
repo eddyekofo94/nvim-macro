@@ -69,7 +69,7 @@ Tree-sitter installation and configuration is handled by [nvim-treesitter](https
 To add or remove support for a language, install or uninstall the corresponding
 parser using `:TSInstall` or `:TSUninstall`.
 
-To make the change persistent, add or remove corresponding entries in `M.langs`
+To make the change permanent, add or remove corresponding entries in `M.langs`
 in [lua/utils/static.lua](https://github.com/Bekaboo/nvim/blob/master/lua/utils/static.lua).
 
 ### LSP
@@ -87,7 +87,7 @@ favorite package manager:
 
 - C/C++: install [Clang](https://clang.llvm.org/)
 - Lua: install [LuaLS](https://github.com/LuaLS/lua-language-server)
-- Python: install [PyLSP](https://github.com/python-lsp/python-lsp-server)
+  - Python: install [Jedi Language Server](https://github.com/pappasam/jedi-language-server)
 - Rust: install [Rust Analyzer](https://rust-analyzer.github.io/)
 - LaTeX: install [TexLab](https://github.com/latex-lsp/texlab)
 - VimL: install [VimLS](https://github.com/iamcco/vim-language-server)
