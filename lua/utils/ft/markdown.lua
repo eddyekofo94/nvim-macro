@@ -17,8 +17,30 @@ function M.in_codeblock_regex(lnum, buf)
   return result
 end
 
+---Check if cursor position is in a markdown inline code, using regex
+---@param cursor integer[]? default to current cursor position
+---@param buf integer? default to current buffer
+---@return boolean
+function M.in_codeinline_regex(cursor, buf)
+  cursor = cursor or vim.api.nvim_win_get_cursor(0)
+  buf = buf or 0
+  local line =
+    vim.api.nvim_buf_get_lines(buf, cursor[1] - 1, cursor[1], false)[1]
+  local idx = 0
+  local inside = false
+  while idx ~= cursor[2] do
+    idx = idx + 1
+    if line:sub(idx, idx) == '`' then
+      inside = not inside
+    end
+  end
+  return inside
+end
+
 ---Check if the current line is a markdown code block
 ---@param lnum integer? default to current line number
+---@param buf integer? default to current buffer
+---@return boolean
 function M.in_codeblock(lnum, buf)
   buf = buf or 0
   lnum = lnum or vim.api.nvim_win_get_cursor(0)[1]
@@ -26,6 +48,19 @@ function M.in_codeblock(lnum, buf)
     return utils.treesitter.in_tsnode('fenced_code_block', { lnum, 0 }, buf)
   end
   return M.in_codeblock_regex(lnum, buf)
+end
+
+---Check if cursor position is in a markdown inline code
+---@param cursor integer[]? default to current cursor position
+---@param buf integer? default to current buffer
+---@return boolean
+function M.in_codeinline(cursor, buf)
+  buf = buf or 0
+  cursor = cursor or vim.api.nvim_win_get_cursor(0)
+  if utils.treesitter.is_active(buf) then
+    return utils.treesitter.in_tsnode('inline', cursor, buf)
+  end
+  return M.in_codeinline_regex(cursor, buf)
 end
 
 ---Returns whether the cursor is in a math zone

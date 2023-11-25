@@ -31,23 +31,6 @@ local lowercase_words = {
 ---@type bufopt_t
 local opt_captitle = utils.classes.bufopt_t:new('captitle', true)
 
----Given current cursor position (column) and current line, determine if
----the cursor is inside inline code
----@param line string current line
----@param col number current cursor position (column)
----@return boolean
-local function inside_inline_code(line, col)
-  local idx = 0
-  local inside = false
-  while idx ~= col do
-    idx = idx + 1
-    if line:sub(idx, idx) == '`' then
-      inside = not inside
-    end
-  end
-  return inside
-end
-
 ---Capitalize the first letter of words on title line
 ---@param info table information given to event handler
 ---@return nil
@@ -62,7 +45,7 @@ local function format_title(info)
   if
     not line:match('^#+%s')
     or utils.ft.markdown.in_codeblock(lnum)
-    or inside_inline_code(line, cursor[2])
+    or utils.ft.markdown.in_codeinline(cursor)
   then
     return
   end
