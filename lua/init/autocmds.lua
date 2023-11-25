@@ -349,18 +349,6 @@ au('UpdateTimestamp', {
 })
 
 au('FixVirtualEditCursorPos', {
-  'CursorMoved',
-  {
-    desc = 'Record cursor position in visual mode if virtualedit is set.',
-    callback = function()
-      if vim.wo.ve:find('all') then
-        vim.w.ve_cursor = vim.fn.getcurpos()
-      end
-    end,
-  },
-})
-
-au('FixVirtualEditCursorPos', {
   'ModeChanged',
   {
     desc = 'Keep cursor position after entering normal mode from visual mode with virtual edit enabled.',
@@ -371,6 +359,16 @@ au('FixVirtualEditCursorPos', {
           vim.w.ve_cursor[2],
           vim.w.ve_cursor[3] + vim.w.ve_cursor[4] - 1,
         })
+      end
+    end,
+  },
+}, {
+  'CursorMoved',
+  {
+    desc = 'Record cursor position in visual mode if virtualedit is set.',
+    callback = function()
+      if vim.wo.ve:find('all') then
+        vim.w.ve_cursor = vim.fn.getcurpos()
       end
     end,
   },
