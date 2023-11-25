@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 25 Nov 2023 12:42:17 AM CST
+-- Last Updated: Sat 25 Nov 2023 10:35:16 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -65,8 +65,8 @@ if vim.go.bg == 'dark' then
   c_autumnGreen   = '#76946a'
   c_autumnRed     = '#c34043'
   c_autumnYellow  = '#dca561'
-  c_carpYellow    = '#d2b788'
-  c_dragonAqua    = '#8ea4a2'
+  c_carpYellow    = '#c8ae81'
+  c_dragonAqua    = '#95aeac'
   c_dragonAsh     = '#626462'
   c_dragonBg0     = '#0d0c0c'
   c_dragonBg1     = '#181616'
@@ -145,7 +145,7 @@ else
   c_lotusRed0     = '#d7474b'
   c_lotusRed1     = '#e84444'
   c_lotusRed2     = '#d9a594'
-  c_roninYellow   = '#ff9e3b'
+  c_roninYellow   = '#c87b2e'
   c_springBlue    = '#7fb4ca'
   c_springGreen   = '#98bb6c'
   c_springViolet  = '#938aa9'
@@ -217,7 +217,7 @@ local hlgroups = {
   CursorColumn = { link = 'CursorLine' },
   CursorIM = { link = 'Cursor' },
   CursorLine = { bg = c_dragonBg2 },
-  CursorLineNr = { fg = c_dragonRed, bold = true },
+  CursorLineNr = { fg = c_dragonGray0, bold = true },
   DebugPC = { bg = c_winterRed },
   DiffAdd = { bg = c_winterGreen },
   DiffChange = { bg = c_winterBlue },
@@ -249,7 +249,7 @@ local hlgroups = {
   PmenuThumb = { bg = c_dragonBg5 },
   Question = { link = 'MoreMsg' },
   QuickFixLine = { bg = c_dragonBg3 },
-  Search = { bg = c_dragonBg4, fg = c_dragonFg0 },
+  Search = { bg = c_dragonBg4 },
   SignColumn = { fg = c_dragonGray2 },
   SpellBad = { underdashed = true },
   SpellCap = { underdashed = true },
@@ -372,23 +372,23 @@ local hlgroups = {
   -- }}}
 
   -- Diagnostic {{{2
-  DiagnosticError = { fg = c_lotusRed0 },
-  DiagnosticHint = { fg = c_waveAqua0 },
-  DiagnosticInfo = { fg = c_dragonBlue0 },
-  DiagnosticOk = { fg = c_springGreen },
-  DiagnosticWarn = { fg = c_autumnYellow },
-  DiagnosticSignError = { fg = c_lotusRed0 },
-  DiagnosticSignHint = { fg = c_waveAqua0 },
-  DiagnosticSignInfo = { fg = c_dragonBlue0 },
-  DiagnosticSignWarn = { fg = c_autumnYellow },
-  DiagnosticUnderlineError = { sp = c_lotusRed0, undercurl = true },
-  DiagnosticUnderlineHint = { sp = c_waveAqua0, undercurl = true },
-  DiagnosticUnderlineInfo = { sp = c_dragonBlue0, undercurl = true },
-  DiagnosticUnderlineWarn = { sp = c_autumnYellow, undercurl = true },
-  DiagnosticVirtualTextError = { bg = c_winterRed, fg = c_lotusRed0 },
-  DiagnosticVirtualTextHint = { bg = c_winterGreen, fg = c_waveAqua0 },
-  DiagnosticVirtualTextInfo = { bg = c_winterBlue, fg = c_dragonBlue0 },
-  DiagnosticVirtualTextWarn = { bg = c_winterYellow, fg = c_autumnYellow },
+  DiagnosticError = { fg = c_dragonRed },
+  DiagnosticHint = { fg = c_dragonAqua },
+  DiagnosticInfo = { fg = c_dragonBlue1 },
+  DiagnosticOk = { fg = c_dragonGreen1 },
+  DiagnosticWarn = { fg = c_carpYellow },
+  DiagnosticSignError = { fg = c_dragonRed },
+  DiagnosticSignHint = { fg = c_dragonAqua },
+  DiagnosticSignInfo = { fg = c_dragonBlue1 },
+  DiagnosticSignWarn = { fg = c_carpYellow },
+  DiagnosticUnderlineError = { sp = c_dragonRed, undercurl = true },
+  DiagnosticUnderlineHint = { sp = c_dragonAqua, undercurl = true },
+  DiagnosticUnderlineInfo = { sp = c_dragonBlue1, undercurl = true },
+  DiagnosticUnderlineWarn = { sp = c_carpYellow, undercurl = true },
+  DiagnosticVirtualTextError = { bg = c_winterRed, fg = c_dragonRed },
+  DiagnosticVirtualTextHint = { bg = c_winterGreen, fg = c_dragonAqua },
+  DiagnosticVirtualTextInfo = { bg = c_winterBlue, fg = c_dragonBlue1 },
+  DiagnosticVirtualTextWarn = { bg = c_winterYellow, fg = c_carpYellow },
   -- }}}
 
   -- Filetype {{{2
@@ -540,6 +540,9 @@ local hlgroups = {
   LazyProgressTodo = { fg = c_dragonBg5 },
 
   -- statusline
+  StatusLineGitAdded = { bg = c_dragonBg3, fg = c_dragonGreen1 },
+  StatusLineGitChanged = { bg = c_dragonBg3, fg = c_carpYellow },
+  StatusLineGitRemoved = { bg = c_dragonBg3, fg = c_dragonRed },
   StatusLineHeader = { bg = c_dragonBg5, fg = c_dragonFg1 },
   StatusLineHeaderModified = { bg = c_dragonRed, fg = c_dragonBg1 },
 
@@ -554,6 +557,8 @@ local hlgroups = {
   GlanceIndent = { link = 'None' },
   GlanceListBorderBottom = { link = 'GlanceBorderTop' },
   GlanceListCount = { bg = c_dragonPink, fg = c_dragonBg1 },
+  GlanceListCursorLine = { bg = c_dragonBg4 },
+  GlanceListMatch = { bg = c_dragonBg5 },
   GlanceListNormal = { bg = c_dragonBg3, fg = c_dragonFg0 },
   GlancePreviewBorderBottom = { link = 'GlanceBorderTop' },
   GlancePreviewNormal = { bg = c_dragonBg2, fg = c_dragonFg0 },
@@ -567,21 +572,35 @@ local hlgroups = {
 -- Highlight group overrides {{{1
 if vim.go.bg == 'light' then
   hlgroups.CursorLine = { bg = c_dragonBg2 }
+  hlgroups.DiagnosticSignWarn = { fg = c_autumnYellow }
+  hlgroups.DiagnosticUnderlineWarn = { sp = c_autumnYellow, undercurl = true }
+  hlgroups.DiagnosticVirtualTextWarn = { bg = c_winterYellow, fg = c_autumnYellow }
+  hlgroups.DiagnosticWarn = { fg = c_autumnYellow }
+  hlgroups.GlanceListCursorLine = { bg = c_dragonBg1 }
+  hlgroups.GlanceListMatch = { bg = c_dragonBg4 }
+  hlgroups.GlanceListNormal = { bg = c_dragonBg0, fg = c_dragonFg0 }
+  hlgroups.GlanceWinBarFilename = { bg = c_dragonBg0, fg = c_dragonFg1 }
+  hlgroups.GlanceWinBarFilepath = { bg = c_dragonBg0, fg = c_dragonAsh }
+  hlgroups.GlanceWinBarTitle = { bg = c_dragonBg0, fg = c_dragonFg1, bold = true }
   hlgroups.IncSearch = { bg = c_autumnYellow, fg = c_dragonBg0, bold = true }
   hlgroups.Keyword = { fg = c_dragonRed }
+  hlgroups.ModeMsg = { fg = c_dragonRed, bold = true }
   hlgroups.Pmenu = { bg = c_dragonBg0, fg = c_dragonFg1 }
   hlgroups.PmenuSbar = { bg = c_dragonBg2 }
-  hlgroups.PmenuSel = { bg = c_dragonBg1, fg = 'NONE' }
+  hlgroups.PmenuSel = { bg = c_dragonBg2, fg = 'NONE' }
   hlgroups.PmenuThumb = { bg = c_dragonBg5 }
   hlgroups.Search = { bg = c_dragonBg3, fg = c_dragonFg0 }
   hlgroups.StatusLine = { bg = c_dragonBg0, bold = true }
+  hlgroups.StatusLineGitAdded = { bg = c_dragonBg0, fg = c_dragonGreen1 }
+  hlgroups.StatusLineGitChanged = { bg = c_dragonBg0, fg = c_autumnYellow }
+  hlgroups.StatusLineGitRemoved = { bg = c_dragonBg0, fg = c_dragonRed }
   hlgroups.StatusLineHeader = { bg = c_dragonBg5, fg = c_dragonBg0 }
   hlgroups.StatusLineHeaderModified = { bg = c_dragonRed, fg = c_dragonBg0 }
   hlgroups.Visual = { bg = c_dragonBg3 }
-  hlgroups.WinBarMenuHoverEntry = { bg = c_dragonBg1 }
+  hlgroups.WinBarMenuCurrentContext = { bg = c_dragonBg2 }
+  hlgroups.WinBarMenuHoverEntry = { bg = c_dragonBg2 }
   hlgroups.WinBarMenuSbar = { link = 'PmenuSbar' }
   hlgroups.WinBarMenuThumb = { link = 'PmenuThumb' }
-  hlgroups.ModeMsg = { fg = c_dragonRed, bold = true }
   hlgroups['@parameter'] = { link = 'Identifier' }
 end
 -- }}}1
