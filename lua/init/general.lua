@@ -54,8 +54,6 @@ opt.backupdir:remove('.')
 opt.list = true
 opt.listchars = {
   tab      = '→ ',
-  extends  = '…',
-  precedes = '…',
   nbsp     = '␣',
   trail    = '·',
 }
