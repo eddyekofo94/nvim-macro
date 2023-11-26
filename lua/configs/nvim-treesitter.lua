@@ -51,11 +51,6 @@ ts_configs.setup({
     end,
     additional_vim_regex_highlighting = false,
   },
-  context_commentstring = {
-    enable = true,
-    enable_autocmd = false,
-    disable = buf_is_large,
-  },
   endwise = {
     enable = true,
     disable = buf_is_large,
