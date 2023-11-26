@@ -184,6 +184,12 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Video),
       name = 'AVI',
     },
+    ipynb = {
+      color = '#f27726',
+      cterm_color = '166',
+      icon = vim.trim(icons.Ipynb),
+      name = 'Ipynb',
+    },
   },
   override_by_filename = {
     run_datasets = {
