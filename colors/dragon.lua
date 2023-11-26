@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 25 Nov 2023 10:35:16 PM CST
+-- Last Updated: Sun 26 Nov 2023 07:38:46 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -329,8 +329,24 @@ local hlgroups = {
   ['@text.math'] = { link = 'Constant' },
   ['@text.note'] = { bg = c_waveAqua0, fg = c_waveBlue0, bold = true },
   ['@text.quote'] = { link = '@parameter' },
+  ['@text.reference.markdown_inline'] = { link = 'htmlLink' },
   ['@text.strong'] = { bold = true },
   ['@text.title'] = { link = 'Function' },
+  ['@text.title.1.markdown'] = { fg = c_dragonRed },
+  ['@text.title.2.markdown'] = { fg = c_dragonRed },
+  ['@text.title.3.markdown'] = { fg = c_dragonRed },
+  ['@text.title.4.markdown'] = { fg = c_dragonRed },
+  ['@text.title.5.markdown'] = { fg = c_dragonRed },
+  ['@text.title.6.markdown'] = { fg = c_dragonRed },
+  ['@text.title.1.marker.markdown'] = { link = 'Delimiter' },
+  ['@text.title.2.marker.markdown'] = { link = 'Delimiter' },
+  ['@text.title.3.marker.markdown'] = { link = 'Delimiter' },
+  ['@text.title.4.marker.markdown'] = { link = 'Delimiter' },
+  ['@text.title.5.marker.markdown'] = { link = 'Delimiter' },
+  ['@text.title.6.marker.markdown'] = { link = 'Delimiter' },
+  ['@text.todo.checked'] = { fg = c_dragonAsh },
+  ['@text.todo.unchecked'] = { fg = c_dragonRed },
+  ['@text.uri.markdown_inline'] = { link = 'htmlString' },
   ['@text.warning'] = { bg = c_roninYellow, fg = c_waveBlue0, bold = true },
   ['@variable'] = { fg = c_dragonFg0 },
   ['@variable.builtin'] = { fg = c_dragonRed, italic = true },
@@ -574,14 +590,16 @@ if vim.go.bg == 'light' then
   hlgroups.CursorLine = { bg = c_dragonBg2 }
   hlgroups.DiagnosticSignWarn = { fg = c_autumnYellow }
   hlgroups.DiagnosticUnderlineWarn = { sp = c_autumnYellow, undercurl = true }
-  hlgroups.DiagnosticVirtualTextWarn = { bg = c_winterYellow, fg = c_autumnYellow }
+  hlgroups.DiagnosticVirtualTextWarn =
+    { bg = c_winterYellow, fg = c_autumnYellow }
   hlgroups.DiagnosticWarn = { fg = c_autumnYellow }
   hlgroups.GlanceListCursorLine = { bg = c_dragonBg1 }
   hlgroups.GlanceListMatch = { bg = c_dragonBg4 }
   hlgroups.GlanceListNormal = { bg = c_dragonBg0, fg = c_dragonFg0 }
   hlgroups.GlanceWinBarFilename = { bg = c_dragonBg0, fg = c_dragonFg1 }
   hlgroups.GlanceWinBarFilepath = { bg = c_dragonBg0, fg = c_dragonAsh }
-  hlgroups.GlanceWinBarTitle = { bg = c_dragonBg0, fg = c_dragonFg1, bold = true }
+  hlgroups.GlanceWinBarTitle =
+    { bg = c_dragonBg0, fg = c_dragonFg1, bold = true }
   hlgroups.IncSearch = { bg = c_autumnYellow, fg = c_dragonBg0, bold = true }
   hlgroups.Keyword = { fg = c_dragonRed }
   hlgroups.ModeMsg = { fg = c_dragonRed, bold = true }

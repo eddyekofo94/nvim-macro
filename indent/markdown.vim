@@ -17,6 +17,17 @@ function! s:in_normalzone(...) abort
         \ || !call('vimtex#syntax#in_mathzone', a:000)
 endfunction
 
+function! s:in_codeblock(...) abort
+  let l:lnum = get(a:000, 0, v:lnum)
+  let l:bufnr = get(a:000, 1, bufnr('%'))
+  return luaeval(printf('require("utils.ft.markdown").in_codeblock(%d, %d)'
+        \ , l:lnum, l:bufnr))
+endfunction
+
+function! s:ts_active() abort
+  return luaeval('require("utils.treesitter").is_active()')
+endfunction
+
 " Find the first previous non-blank line that matches the given pattern if
 " trimmed, stops on the first line that has a larger indent than its next
 " non-blank line
@@ -51,6 +62,10 @@ function! GetMarkdownIndent() abort
   let l:default = indent(v:lnum)
   if l:prev_lnum == 0
       return l:default
+  endif
+
+  if s:ts_active() && s:in_codeblock()
+    return nvim_treesitter#indent()
   endif
 
   if s:in_mathzone()

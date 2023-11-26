@@ -46,6 +46,10 @@ ts_configs.setup({
   highlight = {
     enable = not vim.g.vscode,
     disable = function(ft, buf)
+      -- We will manually apply treesitter highlighting in markdown
+      -- files in syntax/markdown.vim to get better inline code
+      -- highlighting while still preserving math conceal provided
+      -- by vimtex regex syntax rules
       return vim.tbl_contains({ 'markdown', 'tex', 'latex' }, ft)
         or buf_is_large(ft, buf)
     end,
@@ -64,6 +68,16 @@ ts_configs.setup({
       scope_incremental = 'aN',
       node_decremental = 'in',
     },
+  },
+  indent = {
+    enable = true,
+    disable = function(ft, buf)
+      -- We will use treesitter indent expr in markdown
+      -- files in indent/markdown.vim to get better alignment
+      -- for math block and list items
+      return vim.tbl_contains({ 'markdown', 'tex', 'latex' }, ft)
+        or buf_is_large(ft, buf)
+    end,
   },
   textobjects = {
     select = {
