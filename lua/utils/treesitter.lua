@@ -13,12 +13,12 @@ function M.is_active(buf)
 end
 
 ---Returns whether cursor is in a specific type of treesitter node
----@param type string type of node
+---@param ntype string|function(type: string): boolean type of node, or function to check node type
 ---@param pos integer[]? 1,0-indexed position, default: current cursor position
 ---@param buf integer? default: current buffer
 ---@param mode string? default: current mode
 ---@return boolean
-function M.in_tsnode(type, pos, buf, mode)
+function M.in_tsnode(ntype, pos, buf, mode)
   pos = pos or vim.api.nvim_win_get_cursor(0)
   buf = buf or vim.api.nvim_get_current_buf()
   mode = mode or vim.api.nvim_get_mode().mode
@@ -35,7 +35,10 @@ function M.in_tsnode(type, pos, buf, mode)
   if not node then
     return false
   end
-  return node:type():match(type) ~= nil
+  if type(ntype) == 'string' then
+    return node:type():match(ntype) ~= nil
+  end
+  return ntype(node:type())
 end
 
 return M

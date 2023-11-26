@@ -45,7 +45,9 @@ function M.in_codeblock(lnum, buf)
   buf = buf or 0
   lnum = lnum or vim.api.nvim_win_get_cursor(0)[1]
   if utils.treesitter.is_active(buf) then
-    return utils.treesitter.in_tsnode('fenced_code_block', { lnum, 0 }, buf)
+    return utils.treesitter.in_tsnode(function(ntype)
+      return ntype:match('fence') and ntype:match('code') and true or false
+    end, { lnum, 0 }, buf)
   end
   return M.in_codeblock_regex(lnum, buf)
 end
