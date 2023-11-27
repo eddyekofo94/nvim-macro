@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sun 26 Nov 2023 07:38:46 PM CST
+-- Last Updated: Wed 29 Nov 2023 11:58:42 AM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -111,7 +111,7 @@ if vim.go.bg == 'dark' then
   c_winterRed     = '#43242b'
   c_winterYellow  = '#322e29'
 else
-  c_autumnGreen   = '#b4b366'
+  c_autumnGreen   = '#969438'
   c_autumnRed     = '#b73242'
   c_autumnYellow  = '#a0713c'
   c_carpYellow    = '#debe97'
@@ -193,7 +193,7 @@ else
   vim.g.terminal_color_5  = c_springViolet
   vim.g.terminal_color_6  = c_dragonAqua
   vim.g.terminal_color_7  = c_dragonBg5
-  vim.g.terminal_color_8  = c_dragonBg0
+  vim.g.terminal_color_8  = c_dragonBg5
   vim.g.terminal_color_9  = c_waveRed
   vim.g.terminal_color_10 = c_dragonGreen0
   vim.g.terminal_color_11 = c_carpYellow
@@ -296,7 +296,7 @@ local hlgroups = {
   SpecialKey = { fg = c_dragonGray2 },
   Statement = { fg = c_dragonViolet },
   String = { fg = c_dragonGreen1 },
-  Todo = { fg = c_waveBlue0, bg = c_dragonBlue0, bold = true },
+  Todo = { fg = c_dragonBg0, bg = c_dragonBlue0, bold = true },
   Type = { fg = c_dragonAqua },
   -- }}}2
 
