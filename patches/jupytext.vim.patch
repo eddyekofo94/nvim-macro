@@ -1,0 +1,76 @@
+diff --git a/plugin/jupytext.vim b/plugin/jupytext.vim
+index decb0c5..fcde820 100644
+--- a/plugin/jupytext.vim
++++ b/plugin/jupytext.vim
+@@ -284,15 +284,8 @@ function s:read_from_ipynb()
+         " jupytext_file does not exist if filename_exists was false, e.g. when
+         " we edit a new file (vim new.ipynb)
+         call s:debugmsg("read ".fnameescape(b:jupytext_file))
+-        silent execute "read ++enc=utf-8 ".fnameescape(b:jupytext_file)
++        silent execute "keepalt read ++enc=utf-8 ".fnameescape(b:jupytext_file)
+     endif
+-    if b:jupytext_file_exists
+-        let l:register_unload_cmd = "autocmd jupytext_ipynb BufUnload <buffer> call s:cleanup(\"".fnameescape(b:jupytext_file)."\", 0)"
+-    else
+-        let l:register_unload_cmd = "autocmd jupytext_ipynb BufUnload <buffer> call s:cleanup(\"".fnameescape(b:jupytext_file)."\", 1)"
+-    endif
+-    call s:debugmsg(l:register_unload_cmd)
+-    silent execute l:register_unload_cmd
+ 
+     let l:register_write_cmd = "autocmd jupytext_ipynb BufWriteCmd,FileWriteCmd <buffer> call s:write_to_ipynb()"
+     call s:debugmsg(l:register_write_cmd)
+@@ -311,26 +304,13 @@ function s:read_from_ipynb()
+     set undolevels=-1
+     silent 1delete
+     let &undolevels = levels
+-    if has("patch-8.1.1113")
+-        silent execute "autocmd jupytext_ipynb BufEnter <buffer> ++once redraw | echo fnamemodify(b:jupytext_file, ':.').' via jupytext.'"
+-    else
+-        silent execute "autocmd jupytext_ipynb BufEnter <buffer> redraw | echo fnamemodify(b:jupytext_file, ':.').' via jupytext.'"
+-    endif
+-
+ endfunction
+ 
+ 
+ function s:get_jupytext_file(filename, fmt)
+-    " strip file extension
+-    let l:fileroot = fnamemodify(a:filename, ':r')
+-    " the folder in which filename is
+-    let l:head = fnamemodify(l:fileroot, ':h')
+-    " the fileroot without the folder
+-    let l:tail = fnamemodify(l:fileroot, ':t')
+-    " file extension from fmt
+-    let l:extension = s:jupytext_extension_map[a:fmt]
+-    let l:jupytext_file = l:fileroot . "." . l:extension
+-    return l:jupytext_file
++    " This uses the /tmp directory and assumes that directory are separated
++    " by /, which is true on *nix systems, enough for me
++    return '/tmp/jupytext'.substitute(fnamemodify(a:filename, ':r'), '/', '%', 'g').'.'.a:fmt
+ endfunction
+ 
+ 
+@@ -341,6 +321,7 @@ function s:write_to_ipynb() abort
+     call s:debugmsg("Updating notebook from ".b:jupytext_file)
+     let l:cmd = g:jupytext_command." --from=" . g:jupytext_fmt
+     \         . " " . g:jupytext_to_ipynb_opts . " "
++    \         . " --output=".shellescape(filename) . " "
+     \         . shellescape(b:jupytext_file)
+     call s:debugmsg("cmd: ".l:cmd)
+     let l:output=system(l:cmd)
+@@ -349,16 +330,6 @@ function s:write_to_ipynb() abort
+         echoerr l:cmd.": ".v:shell_error
+     else
+         setlocal nomodified
+-        echo expand("%") . " saved via jupytext."
+-    endif
+-endfunction
+-
+-
+-function s:cleanup(jupytext_file, delete)
+-    call s:debugmsg("a:jupytext_file:".a:jupytext_file)
+-    if a:delete
+-        call s:debugmsg("deleting ".fnameescape(a:jupytext_file))
+-        call delete(expand(fnameescape(a:jupytext_file)))
+     endif
+ endfunction
+ 

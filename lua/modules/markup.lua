@@ -26,4 +26,70 @@ return {
       require('configs.vim-table-mode')
     end,
   },
+
+  {
+    '3rd/image.nvim',
+    event = { 'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb' },
+    build = 'luarocks --lua-version 5.1 --local install magick',
+    config = function()
+      require('configs.image')
+    end,
+  },
+
+  {
+    'jmbuhr/otter.nvim',
+    ft = { 'markdown' },
+    dependencies = {
+      'nvim-cmp',
+      'nvim-lspconfig',
+      'nvim-treesitter',
+    },
+    config = function()
+      require('configs.otter')
+    end,
+  },
+
+  {
+    'benlubas/molten-nvim',
+    ft = 'python',
+    event = 'BufEnter *.ipynb',
+    build = ':UpdateRemotePlugins',
+    dependencies = { 'image.nvim', 'otter.nvim' },
+    config = function()
+      require('configs.molten')
+    end,
+  },
+
+  {
+    'goerz/jupytext.vim',
+    build = 'jupytext --version',
+    lazy = true,
+    init = function()
+      vim.api.nvim_create_autocmd('BufReadCmd', {
+        desc = 'Lazy load jupytext.vim.',
+        once = true,
+        pattern = '*.ipynb',
+        group = vim.api.nvim_create_augroup('JupyTextLoad', {}),
+        callback = function(info)
+          vim.opt.rtp:prepend(
+            vim.fs.joinpath(vim.g.package_path, 'jupytext.vim')
+          )
+          vim.schedule(function()
+            vim.cmd.runtime('plugin/jupytext.vim')
+            vim.cmd.edit(info.match)
+          end)
+          return true
+        end,
+      })
+    end,
+  },
+
+  {
+    'lukas-reineke/headlines.nvim',
+    ft = { 'markdown', 'norg', 'org', 'qml' },
+    dependencies = 'nvim-treesitter',
+    config = function()
+      require('configs.headlines')
+    end,
+  },
 }

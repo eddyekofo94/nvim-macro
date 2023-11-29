@@ -350,7 +350,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 44 (package manager included).
+Total # of plugins: 49 (package manager included).
 
 - **Lib**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -377,6 +377,11 @@ Total # of plugins: 44 (package manager included).
     - [vimtex](https://github.com/lervag/vimtex)
     - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
     - [vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
+    - [image.nvim](https://github.com/3rd/image.nvim)
+    - [otter.nvim](https://github.com/jmbuhr/otter.nvim)
+    - [molten-nvim](https://github.com/benlubas/molten-nvim)
+    - [jupytext.vim](https://github.com/goerz/jupytext.vim)
+    - [headlines.nvim](https://github.com/lukas-reineke/headlines.nvim)
 - **Edit**
     - [nvim-surround](https://github.com/kylechui/nvim-surround)
     - [Comment.nvim](https://github.com/numToStr/Comment.nvim)
