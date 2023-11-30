@@ -24,8 +24,6 @@ local function lazygit_toggle(root)
         termopts = { toggle_keys = { toggle_key } },
       })
     end
-  else
-    vim.notify('[lazygit] vim.uv.cwd() failed!', vim.log.levels.WARN)
   end
 end
 
