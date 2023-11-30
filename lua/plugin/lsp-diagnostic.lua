@@ -948,42 +948,6 @@ local function setup_commands(meta, subcommand_info_list, fn_scope)
   end
 end
 
----Automatically enable / disable diagnostics on mode change & optionset
----@return nil
-local function setup_diagnostics_autoswitch()
-  local groupid = vim.api.nvim_create_augroup('LspDiagnosticSwitch', {})
-  vim.api.nvim_create_autocmd('ModeChanged', {
-    desc = 'LSP diagnostics on mode change.',
-    group = groupid,
-    callback = function(info)
-      if vim.fn.match(info.match, '.*:[iRsS\x13].*') ~= -1 then
-        vim.diagnostic.disable(info.buf)
-        vim.b._lsp_diagnostics_temp_disabled = true
-      elseif not vim.wo.diff and vim.b._lsp_diagnostics_temp_disabled then
-        vim.diagnostic.enable(info.buf)
-        vim.b._lsp_diagnostics_temp_disabled = nil
-      end
-    end,
-  })
-  vim.api.nvim_create_autocmd('OptionSet', {
-    desc = 'Disable diagnostics in diff mode.',
-    pattern = 'diff',
-    group = groupid,
-    callback = function(info)
-      if vim.v.option_new then
-        vim.diagnostic.disable(info.buf)
-        vim.b._lsp_diagnostics_temp_disabled = true
-      elseif
-        vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
-        and vim.b._lsp_diagnostics_temp_disabled
-      then
-        vim.diagnostic.enable(info.buf)
-        vim.b._lsp_diagnostics_temp_disabled = nil
-      end
-    end,
-  })
-end
-
 ---@return nil
 local function setup_lsp_autoformat()
   ---@type bufopt_t
@@ -1061,7 +1025,6 @@ local function setup()
   setup_lsp_autoformat()
   setup_lsp_autostop()
   setup_diagnostic_signs()
-  setup_diagnostics_autoswitch()
   setup_commands('Lsp', subcommands.lsp.buf, vim.lsp.buf)
   setup_commands('Diagnostic', subcommands.diagnostic, vim.diagnostic)
 end
