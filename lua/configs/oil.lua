@@ -19,10 +19,7 @@ local preview_request_last_timestamp = 0
 local function lcd(dir)
   local ok = pcall(vim.cmd.lcd, dir)
   if not ok then
-    vim.notify(
-      '[oil.nvim] failed to cd to ' .. dir,
-      vim.log.levels.WARN
-    )
+    vim.notify('[oil.nvim] failed to cd to ' .. dir, vim.log.levels.WARN)
   end
 end
 
@@ -250,10 +247,31 @@ local preview_mapping = {
   callback = toggle_preview,
 }
 
+local permission_hlgroups = setmetatable({
+  ['-'] = 'OilPermissionNone',
+  ['r'] = 'OilPermissionRead',
+  ['w'] = 'OilPermissionWrite',
+  ['x'] = 'OilPermissionExecute',
+}, {
+  __index = function()
+    return 'OilDir'
+  end,
+})
+
 oil.setup({
   columns = {
-    { 'permissions', highlight = 'Special' },
-    { 'size', highlight = 'Operator' },
+    {
+      'permissions',
+      highlight = function(permission_str)
+        local hls = {}
+        for i = 1, #permission_str do
+          local char = permission_str:sub(i, i)
+          table.insert(hls, { permission_hlgroups[char], i - 1, i })
+        end
+        return hls
+      end,
+    },
+    { 'size', highlight = 'Special' },
     { 'mtime', highlight = 'Number' },
     {
       'icon',
@@ -385,6 +403,10 @@ local function oil_sethl()
   sethl(0, 'OilChange', { fg = 'DiagnosticSignWarn', bold = true })
   sethl(0, 'OilCreate', { fg = 'DiagnosticSignInfo', bold = true })
   sethl(0, 'OilDelete', { fg = 'DiagnosticSignError', bold = true })
+  sethl(0, 'OilPermissionNone', { fg = 'NonText' })
+  sethl(0, 'OilPermissionRead', { fg = 'DiagnosticSignWarn' })
+  sethl(0, 'OilPermissionWrite', { fg = 'DiagnosticSignError' })
+  sethl(0, 'OilPermissionExecute', { fg = 'DiagnosticSignOk' })
 end
 oil_sethl()
 
