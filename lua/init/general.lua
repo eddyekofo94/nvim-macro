@@ -5,10 +5,8 @@ local opt = vim.opt
 opt.cursorline     = true
 opt.colorcolumn    = '80'
 opt.foldlevelstart = 99
-opt.guifont        = 'JetbrainsMono Nerd Font:h13'
 opt.helpheight     = 10
 opt.showmode       = false
-opt.mouse          = 'a'
 opt.mousemoveevent = true
 opt.number         = true
 opt.ruler          = true
@@ -21,16 +19,18 @@ opt.splitbelow     = true
 opt.swapfile       = false
 opt.termguicolors  = true
 opt.undofile       = true
-opt.updatetime     = 10
 opt.wrap           = false
 opt.linebreak      = true
-opt.breakindent    = true -- Freeze nvim when editing long line with &wrap set
+opt.breakindent    = true
 opt.smoothscroll   = true
-opt.completeopt    = 'menuone'
 opt.conceallevel   = 2
 opt.autowriteall   = true
 opt.virtualedit    = 'block'
+opt.completeopt    = 'menuone'
 -- stylua: ignore end
+
+-- Font for GUI
+opt.guifont = 'JetbrainsMono NF Light:h13'
 
 -- Cursor shape
 opt.gcr = {
