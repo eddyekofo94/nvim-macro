@@ -21,7 +21,7 @@ return {
   {
     'dhruvasagar/vim-table-mode',
     cmd = 'TableModToggle',
-    ft = { 'markdown', 'text' },
+    ft = 'markdown',
     config = function()
       require('configs.vim-table-mode')
     end,
