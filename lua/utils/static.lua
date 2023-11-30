@@ -55,6 +55,7 @@ M.langs = setmetatable({
   cuda = {
     ts = 'cuda',
     ft = 'cuda',
+    lsp_server = 'clangd',
   },
   fish = {
     ts = 'fish',
