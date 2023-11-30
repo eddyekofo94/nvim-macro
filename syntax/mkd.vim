@@ -113,7 +113,6 @@ HtmlHiLink mkdBlockquote       Comment
 HtmlHiLink mkdListItem         markdownListMarker
 HtmlHiLink mkdListItemCheckbox markdownListMarker
 HtmlHiLink mkdRule             Identifier
-HtmlHiLink mkdLineBreak        Visual
 HtmlHiLink mkdFootnotes        htmlLink
 HtmlHiLink mkdLink             htmlLink
 HtmlHiLink mkdURL              htmlString
