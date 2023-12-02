@@ -262,6 +262,7 @@ function winbar_symbol_t:jump()
   if not self.range or not self.win then
     return
   end
+  vim.cmd("normal! m'")
   vim.api.nvim_win_set_cursor(self.win, {
     self.range.start.line + 1,
     self.range.start.character,
