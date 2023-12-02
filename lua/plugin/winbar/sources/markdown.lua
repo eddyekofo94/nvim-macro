@@ -62,6 +62,7 @@ setmetatable(markdown_heading_buf_symbols, {
 ---@return nil
 local function parse_buf(buf, lnum_end, incremental)
   if not vim.api.nvim_buf_is_valid(buf) then
+    markdown_heading_buf_symbols[buf] = nil
     return
   end
   local symbols_parsed = markdown_heading_buf_symbols[buf]
