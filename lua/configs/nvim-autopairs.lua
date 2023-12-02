@@ -24,17 +24,20 @@ npairs.setup({
   },
 })
 
--- stylua: ignore start
 npairs.add_rules({
   -- Add spaces between parenthesis
   Rule(' ', ' ')
     :with_pair(function(opts)
       local pairs_single_char = { '()', '[]', '{}' }
       local pairs_double_char = { '/**/' }
+      local line_before_cur = opts.line:sub(1, opts.col-1)
       if
         vim.bo[opts.bufnr].ft == 'markdown'
-        and opts.line:match('^- ')
         and utils.ft.markdown.in_normalzone()
+        and (
+          line_before_cur:match('^%s*[-*+]%s%[$')
+          or line_before_cur:match('^%s*%d+%.%s%[$')
+        )
       then
         pairs_single_char = { '()', '{}' }
       end
