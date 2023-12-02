@@ -35,7 +35,6 @@ au('LargeFileSettings', {
           once = true,
           callback = function()
             vim.opt_local.syntax = ''
-            vim.opt_local.filetype = ''
             return true
           end,
         })
