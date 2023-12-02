@@ -96,7 +96,7 @@ syn match  mkdRule              /^\s*\*\s\{0,1}\*\s\{0,1}\*\(\*\|\s\)*$/
 syn match  mkdRule              /^\s*-\s\{0,1}-\s\{0,1}-\(-\|\s\)*$/
 syn match  mkdRule              /^\s*_\s\{0,1}_\s\{0,1}_\(_\|\s\)*$/
 
-execute 'syn region mkdStrike matchgroup=htmlStrike start="\%(\~\~\)" end="\%(\~\~\)"' . s:concealends
+execute 'syn region mkdStrike matchgroup=htmlStrike start="\%(\~\~\)\~\@!" end="\%(\~\~\)\~\@!"' . s:concealends
 HtmlHiLink mkdStrike        htmlStrike
 
 syn cluster mkdNonListItem contains=@htmlTop,htmlItalic,htmlBold,htmlBoldItalic,mkdFootnotes,mkdInlineURL,mkdLink,mkdLinkDef,mkdLineBreak,mkdBlockquote,mkdCodeBlock,mkdCode,mkdRule,htmlH1,htmlH2,htmlH3,htmlH4,htmlH5,htmlH6,mkdMath,mkdStrike
