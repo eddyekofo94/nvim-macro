@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 25 Nov 2023 08:58:10 PM CST
+-- Last Updated: Sat 02 Dec 2023 02:58:19 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -353,7 +353,7 @@ local hlgroups = {
   -- }}}2
 
   -- Diagnostic {{{2
-  DiagnosticOk = { fg = c_faded },
+  DiagnosticOk = { fg = c_pine },
   DiagnosticError = { fg = c_critical },
   DiagnosticWarn = { fg = c_popout },
   DiagnosticInfo = { fg = c_salient },

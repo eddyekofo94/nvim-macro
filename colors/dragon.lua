@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Wed 29 Nov 2023 11:58:42 AM CST
+-- Last Updated: Sun 03 Dec 2023 02:11:51 AM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -357,6 +357,7 @@ local hlgroups = {
   ['@lsp.mod.typeHint'] = { link = 'Type' },
   ['@lsp.type.builtinConstant'] = { link = '@constant.builtin' },
   ['@lsp.type.comment'] = { fg = 'NONE' },
+  ['@lsp.type.macro'] = {},
   ['@lsp.type.magicFunction'] = { link = '@function.builtin' },
   ['@lsp.type.method'] = { link = '@method' },
   ['@lsp.type.namespace'] = { link = '@namespace' },
