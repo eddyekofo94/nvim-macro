@@ -5,31 +5,37 @@ return {
     config = function()
       require('configs.nvim-cmp')
     end,
-    dependencies = 'LuaSnip',
+    dependencies = 'L3MON4D3/LuaSnip',
   },
 
   {
     'hrsh7th/cmp-calc',
     event = 'InsertEnter',
-    dependencies = 'nvim-cmp',
+    dependencies = 'hrsh7th/nvim-cmp',
   },
 
   {
     'hrsh7th/cmp-cmdline',
     event = 'CmdlineEnter',
-    dependencies = 'nvim-cmp',
+    dependencies = 'hrsh7th/nvim-cmp',
   },
 
   {
     'hrsh7th/cmp-nvim-lsp',
     event = 'InsertEnter',
-    dependencies = { 'nvim-cmp', 'nvim-lspconfig' },
+    dependencies = {
+      'hrsh7th/nvim-cmp',
+      'neovim/nvim-lspconfig',
+    },
   },
 
   {
     'hrsh7th/cmp-nvim-lsp-signature-help',
     event = 'InsertEnter',
-    dependencies = { 'nvim-cmp', 'nvim-lspconfig' },
+    dependencies = {
+      'hrsh7th/nvim-cmp',
+      'neovim/nvim-lspconfig',
+    },
   },
 
   {
@@ -41,28 +47,34 @@ return {
     'tzachar/cmp-fuzzy-path',
     event = { 'CmdlineEnter', 'InsertEnter' },
     dependencies = {
-      'fuzzy.nvim',
-      'nvim-cmp',
-      'telescope-fzf-native.nvim',
+      'tzachar/fuzzy.nvim',
+      'hrsh7th/nvim-cmp',
+      'nvim-telescope/telescope-fzf-native.nvim',
     },
   },
 
   {
     'hrsh7th/cmp-buffer',
     event = { 'CmdlineEnter', 'InsertEnter' },
-    dependencies = 'nvim-cmp',
+    dependencies = 'hrsh7th/nvim-cmp',
   },
 
   {
     'rcarriga/cmp-dap',
     lazy = true,
-    dependencies = { 'nvim-dap', 'nvim-cmp' },
+    dependencies = {
+      'mfussenegger/nvim-dap',
+      'hrsh7th/nvim-cmp',
+    },
   },
 
   {
     'saadparwaiz1/cmp_luasnip',
     event = 'InsertEnter',
-    dependencies = { 'nvim-cmp', 'LuaSnip' },
+    dependencies = {
+      'hrsh7th/nvim-cmp',
+      'L3MON4D3/LuaSnip',
+    },
   },
 
   {

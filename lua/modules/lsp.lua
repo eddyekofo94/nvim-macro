@@ -11,7 +11,7 @@ return {
   {
     'p00f/clangd_extensions.nvim',
     ft = { 'c', 'cpp' },
-    dependencies = 'nvim-lspconfig',
+    dependencies = 'neovim/nvim-lspconfig',
     config = function()
       require('configs.clangd_extensions')
     end,

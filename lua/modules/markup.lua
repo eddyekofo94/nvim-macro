@@ -40,9 +40,9 @@ return {
     'jmbuhr/otter.nvim',
     ft = { 'markdown' },
     dependencies = {
-      'nvim-cmp',
-      'nvim-lspconfig',
-      'nvim-treesitter',
+      'hrsh7th/nvim-cmp',
+      'neovim/nvim-lspconfig',
+      'nvim-treesitter/nvim-treesitter',
     },
     config = function()
       require('configs.otter')
@@ -54,7 +54,10 @@ return {
     ft = 'python',
     event = 'BufEnter *.ipynb',
     build = ':UpdateRemotePlugins',
-    dependencies = { 'image.nvim', 'otter.nvim' },
+    dependencies = {
+      '3rd/image.nvim',
+      'jmbuhr/otter.nvim',
+    },
     config = function()
       require('configs.molten')
     end,
@@ -87,7 +90,7 @@ return {
   {
     'lukas-reineke/headlines.nvim',
     ft = { 'markdown', 'norg', 'org', 'qml' },
-    dependencies = 'nvim-treesitter',
+    dependencies = 'nvim-treesitter/nvim-treesitter',
     config = function()
       require('configs.headlines')
     end,

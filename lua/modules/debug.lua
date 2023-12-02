@@ -10,7 +10,10 @@ return {
       'DapToggleBreakPoint',
     },
     keys = { '<F5>', '<F8>', '<F9>', '<F21>', '<F45>' },
-    dependencies = { 'cmp-dap', 'nvim-dap-ui' },
+    dependencies = {
+      'rcarriga/cmp-dap',
+      'rcarriga/nvim-dap-ui',
+    },
     config = function()
       require('configs.nvim-dap')
     end,
@@ -19,7 +22,7 @@ return {
   {
     'jbyuki/one-small-step-for-vimkind',
     cmd = 'DapOSVLaunchServer',
-    dependencies = 'nvim-dap',
+    dependencies = 'mfussenegger/nvim-dap',
     config = function()
       require('configs.one-small-step-for-vimkind')
     end,
@@ -28,7 +31,10 @@ return {
   {
     'rcarriga/nvim-dap-ui',
     lazy = true,
-    dependencies = { 'nvim-dap', 'nvim-web-devicons' },
+    dependencies = {
+      'mfussenegger/nvim-dap',
+      'kyazdani42/nvim-web-devicons',
+    },
     config = function()
       require('configs.nvim-dap-ui')
     end,

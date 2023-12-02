@@ -22,22 +22,22 @@ return {
       require('configs.nvim-treesitter')
     end,
     dependencies = {
-      'nvim-treesitter-textobjects',
-      'nvim-ts-context-commentstring',
-      'nvim-treesitter-endwise',
+      'nvim-treesitter/nvim-treesitter-textobjects',
+      'JoosepAlviste/nvim-ts-context-commentstring',
+      'RRethy/nvim-treesitter-endwise',
     },
   },
 
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
     lazy = true,
-    dependencies = 'nvim-treesitter',
+    dependencies = 'nvim-treesitter/nvim-treesitter',
   },
 
   {
     'JoosepAlviste/nvim-ts-context-commentstring',
     lazy = true,
-    dependencies = 'nvim-treesitter',
+    dependencies = 'nvim-treesitter/nvim-treesitter',
   },
 
   {
@@ -51,7 +51,7 @@ return {
       '<Leader>t',
       '<Leader>T',
     },
-    dependencies = 'nvim-treesitter',
+    dependencies = 'nvim-treesitter/nvim-treesitter',
     config = function()
       require('configs.treesj')
     end,
@@ -61,12 +61,12 @@ return {
     'Eandrju/cellular-automaton.nvim',
     event = 'FileType',
     cmd = 'CellularAutomaton',
-    dependencies = 'nvim-treesitter',
+    dependencies = 'nvim-treesitter/nvim-treesitter',
   },
 
   {
     'RRethy/nvim-treesitter-endwise',
     event = 'FileType',
-    dependencies = 'nvim-treesitter',
+    dependencies = 'nvim-treesitter/nvim-treesitter',
   },
 }

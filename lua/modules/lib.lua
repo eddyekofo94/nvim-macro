@@ -18,6 +18,6 @@ return {
     -- the root folder of this plugin
     build = 'make',
     lazy = true,
-    dependencies = { 'plenary.nvim' },
+    dependencies = 'nvim-lua/plenary.nvim',
   },
 }
