@@ -258,8 +258,31 @@ local permission_hlgroups = setmetatable({
   end,
 })
 
+local type_hlgroups = setmetatable({
+  ['-'] = 'OilTypeFile',
+  ['d'] = 'OilTypeDir',
+  ['f'] = 'OilTypeFifo',
+  ['l'] = 'OilTypeLink',
+}, {
+  __index = function()
+    return 'OilTypeFile'
+  end,
+})
+
 oil.setup({
   columns = {
+    {
+      'type',
+      icons = {
+        directory = 'd',
+        fifo = 'f',
+        file = '-',
+        link = 'l',
+      },
+      highlight = function(type_str)
+        return type_hlgroups[type_str]
+      end,
+    },
     {
       'permissions',
       highlight = function(permission_str)
@@ -395,9 +418,10 @@ vim.api.nvim_create_autocmd('DirChanged', {
 ---@return nil
 local function oil_sethl()
   local sethl = require('utils.hl').set
-  sethl(0, 'OilDir', { fg = 'Constant' })
+  sethl(0, 'OilDir', { fg = 'Directory' })
   sethl(0, 'OilDirIcon', { fg = 'Directory' })
-  sethl(0, 'OilLink', { fg = 'Special', italic = true })
+  sethl(0, 'OilLink', { fg = 'Constant' })
+  sethl(0, 'OilLinkTarget', { fg = 'Comment' })
   sethl(0, 'OilCopy', { fg = 'DiagnosticSignHint', bold = true })
   sethl(0, 'OilMove', { fg = 'DiagnosticSignWarn', bold = true })
   sethl(0, 'OilChange', { fg = 'DiagnosticSignWarn', bold = true })
@@ -407,6 +431,10 @@ local function oil_sethl()
   sethl(0, 'OilPermissionRead', { fg = 'DiagnosticSignWarn' })
   sethl(0, 'OilPermissionWrite', { fg = 'DiagnosticSignError' })
   sethl(0, 'OilPermissionExecute', { fg = 'DiagnosticSignOk' })
+  sethl(0, 'OilTypeDir', { fg = 'Directory' })
+  sethl(0, 'OilTypeFifo', { fg = 'Special' })
+  sethl(0, 'OilTypeFile', { fg = 'NonText' })
+  sethl(0, 'OilTypeLink', { fg = 'Constant' })
 end
 oil_sethl()
 
