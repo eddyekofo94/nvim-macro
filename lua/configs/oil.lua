@@ -263,6 +263,7 @@ local type_hlgroups = setmetatable({
   ['d'] = 'OilTypeDir',
   ['f'] = 'OilTypeFifo',
   ['l'] = 'OilTypeLink',
+  ['s'] = 'OilTypeSocket',
 }, {
   __index = function()
     return 'OilTypeFile'
@@ -278,6 +279,7 @@ oil.setup({
         fifo = 'f',
         file = '-',
         link = 'l',
+        socket = 's',
       },
       highlight = function(type_str)
         return type_hlgroups[type_str]
@@ -435,6 +437,7 @@ local function oil_sethl()
   sethl(0, 'OilTypeFifo', { fg = 'Special' })
   sethl(0, 'OilTypeFile', { fg = 'NonText' })
   sethl(0, 'OilTypeLink', { fg = 'Constant' })
+  sethl(0, 'OilTypeSocket', { fg = 'OilSocket' })
 end
 oil_sethl()
 
