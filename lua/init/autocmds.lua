@@ -121,7 +121,8 @@ au('AutoCwd', {
         if
           info.file == ''
           or not vim.api.nvim_buf_is_valid(info.buf)
-          or not vim.bo[info.buf].ma
+          or vim.bo[info.buf].bt ~= ''
+          or (vim.uv.fs_stat(info.file) or {}).type ~= 'file'
         then
           return
         end
