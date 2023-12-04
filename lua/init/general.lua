@@ -33,7 +33,7 @@ opt.completeopt    = 'menuone'
 opt.formatoptions:append('n')
 
 -- Font for GUI
-opt.guifont = 'JetbrainsMono NF Light:h13'
+opt.guifont = 'JetbrainsMono NF ExtraLight:h13'
 
 -- Cursor shape
 opt.gcr = {
