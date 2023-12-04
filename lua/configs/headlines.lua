@@ -12,19 +12,13 @@ require('headlines').setup({
 ---@return nil
 local function set_default_hlgroups()
   local hl = require('utils.hl')
-  local bg = hl.cblend(
-    '#ffffff',
-    hl.get(0, {
-      name = 'CursorLine',
-    }).bg,
-    0.05
-  ).dec
-  hl.set(0, 'CodeBlock', { bg = bg })
-  hl.set(0, 'markdownCode', { bg = bg, fg = 'markdownCode' })
-  hl.set(0, '@text.literal.markdown_inline', {
-    bg = bg,
-    fg = '@text.literal.markdown_inline',
-  })
+  hl.set(0, 'CodeBlock', { bg = 'NormalFloat' })
+  hl.set(0, 'markdownCode', { bg = 'NormalFloat', fg = 'markdownCode' })
+  hl.set(
+    0,
+    '@text.literal.markdown_inline',
+    { bg = 'NormalFloat', fg = '@text.literal.markdown_inline' }
+  )
 end
 set_default_hlgroups()
 
