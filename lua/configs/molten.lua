@@ -373,14 +373,7 @@ vim.api.nvim_create_autocmd('User', {
 ---@return nil
 local function set_default_hlgroups()
   local hl = require('utils.hl')
-  local bg = hl.cblend(
-    '#ffffff',
-    hl.get(0, {
-      name = 'CursorLine',
-    }).bg,
-    0.05
-  ).dec
-  hl.set(0, 'MoltenCell', { bg = bg })
+  hl.set(0, 'MoltenCell', { bg = 'NormalFloat' })
   hl.set(0, 'MoltenOutputWin', { link = 'Comment' })
   hl.set(0, 'MoltenOutputWinNC', { link = 'Comment' })
 end
