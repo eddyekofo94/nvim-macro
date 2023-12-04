@@ -104,7 +104,10 @@ function builders.signcol(data, filter, virtual)
     end
   end
   if sign_name_mp then
-    local sign_def = get_sign_def(sign_name_mp) --[[@as vim.fn.sign_getdefined.ret.item]]
+    local sign_def = get_sign_def(sign_name_mp)
+    if not sign_def then
+      return ''
+    end
     return make_hl(
       vim.trim(sign_def.text),
       data.culhl and sign_def.culhl or sign_def.texthl
