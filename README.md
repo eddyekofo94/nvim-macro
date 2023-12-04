@@ -571,7 +571,7 @@ Total # of plugins: 49 (package manager included).
     022.500  000.143  000.143: require('vim._system')
     024.289  002.133: first screen update
     024.292  000.003: --- NVIM STARTED ---
-    ````
+    ```
 
     </details>
 
