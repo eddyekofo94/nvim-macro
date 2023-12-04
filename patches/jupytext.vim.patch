@@ -1,25 +1,51 @@
 diff --git a/plugin/jupytext.vim b/plugin/jupytext.vim
-index decb0c5..fcde820 100644
+index decb0c5..2302d94 100644
 --- a/plugin/jupytext.vim
 +++ b/plugin/jupytext.vim
-@@ -284,15 +284,8 @@ function s:read_from_ipynb()
+@@ -267,30 +267,24 @@ function s:read_from_ipynb()
+     call s:debugmsg("filename exists: ".l:filename_exists)
+     call s:debugmsg("jupytext_file: ".b:jupytext_file)
+     call s:debugmsg("jupytext_file exists: ".b:jupytext_file_exists)
+-    if (l:filename_exists && !b:jupytext_file_exists)
+-        call s:debugmsg("Generate file ".b:jupytext_file)
+-        let l:cmd = g:jupytext_command." --to=".g:jupytext_fmt
+-        \         . " --output=".shellescape(b:jupytext_file) . " "
+-        \         . shellescape(l:filename)
+-        call s:debugmsg("cmd: ".l:cmd)
+-        let l:output=system(l:cmd)
+-        call s:debugmsg(l:output)
+-        if v:shell_error
+-            echoerr l:cmd.": ".v:shell_error
+-            return
+-        endif
++    call s:debugmsg("Generate file ".b:jupytext_file)
++    let l:cmd = g:jupytext_command." --to=".g:jupytext_fmt
++    \         . " --output=".shellescape(b:jupytext_file) . " "
++    \         . shellescape(l:filename)
++    call s:debugmsg("cmd: ".l:cmd)
++    let l:output=system(l:cmd)
++    call s:debugmsg(l:output)
++    if v:shell_error
++        echoerr l:cmd.": ".v:shell_error
++        return
+     endif
+     if filereadable(b:jupytext_file)
          " jupytext_file does not exist if filename_exists was false, e.g. when
          " we edit a new file (vim new.ipynb)
          call s:debugmsg("read ".fnameescape(b:jupytext_file))
 -        silent execute "read ++enc=utf-8 ".fnameescape(b:jupytext_file)
-+        silent execute "keepalt read ++enc=utf-8 ".fnameescape(b:jupytext_file)
-     endif
+-    endif
 -    if b:jupytext_file_exists
 -        let l:register_unload_cmd = "autocmd jupytext_ipynb BufUnload <buffer> call s:cleanup(\"".fnameescape(b:jupytext_file)."\", 0)"
 -    else
 -        let l:register_unload_cmd = "autocmd jupytext_ipynb BufUnload <buffer> call s:cleanup(\"".fnameescape(b:jupytext_file)."\", 1)"
--    endif
--    call s:debugmsg(l:register_unload_cmd)
--    silent execute l:register_unload_cmd
++        silent execute "keepalt read ++enc=utf-8 ".fnameescape(b:jupytext_file)
+     endif
++    let l:register_unload_cmd = "autocmd jupytext_ipynb BufUnload <buffer> call s:cleanup(\"".fnameescape(b:jupytext_file)."\")"
+     call s:debugmsg(l:register_unload_cmd)
+     silent execute l:register_unload_cmd
  
-     let l:register_write_cmd = "autocmd jupytext_ipynb BufWriteCmd,FileWriteCmd <buffer> call s:write_to_ipynb()"
-     call s:debugmsg(l:register_write_cmd)
-@@ -311,26 +304,13 @@ function s:read_from_ipynb()
+@@ -311,26 +305,13 @@ function s:read_from_ipynb()
      set undolevels=-1
      silent 1delete
      let &undolevels = levels
@@ -49,7 +75,7 @@ index decb0c5..fcde820 100644
  endfunction
  
  
-@@ -341,6 +321,7 @@ function s:write_to_ipynb() abort
+@@ -341,6 +322,7 @@ function s:write_to_ipynb() abort
      call s:debugmsg("Updating notebook from ".b:jupytext_file)
      let l:cmd = g:jupytext_command." --from=" . g:jupytext_fmt
      \         . " " . g:jupytext_to_ipynb_opts . " "
@@ -57,20 +83,24 @@ index decb0c5..fcde820 100644
      \         . shellescape(b:jupytext_file)
      call s:debugmsg("cmd: ".l:cmd)
      let l:output=system(l:cmd)
-@@ -349,16 +330,6 @@ function s:write_to_ipynb() abort
+@@ -349,17 +331,14 @@ function s:write_to_ipynb() abort
          echoerr l:cmd.": ".v:shell_error
      else
          setlocal nomodified
 -        echo expand("%") . " saved via jupytext."
--    endif
--endfunction
--
--
+     endif
+ endfunction
+ 
+ 
 -function s:cleanup(jupytext_file, delete)
--    call s:debugmsg("a:jupytext_file:".a:jupytext_file)
++function s:cleanup(jupytext_file)
+     call s:debugmsg("a:jupytext_file:".a:jupytext_file)
 -    if a:delete
 -        call s:debugmsg("deleting ".fnameescape(a:jupytext_file))
 -        call delete(expand(fnameescape(a:jupytext_file)))
-     endif
+-    endif
++    call s:debugmsg("deleting ".fnameescape(a:jupytext_file))
++    call delete(expand(fnameescape(a:jupytext_file)))
  endfunction
+ 
  
