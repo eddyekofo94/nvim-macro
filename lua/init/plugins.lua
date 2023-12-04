@@ -104,7 +104,7 @@ vim.api.nvim_create_autocmd('User', {
             'apply',
             '--ignore-space-change',
             patch_path,
-          })
+          }, vim.log.levels.WARN)
         end
       end
     end
