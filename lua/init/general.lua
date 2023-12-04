@@ -29,6 +29,9 @@ opt.virtualedit    = 'block'
 opt.completeopt    = 'menuone'
 -- stylua: ignore end
 
+-- Recognize numbered lists when formatting text
+opt.formatoptions:append('n')
+
 -- Font for GUI
 opt.guifont = 'JetbrainsMono NF Light:h13'
 
