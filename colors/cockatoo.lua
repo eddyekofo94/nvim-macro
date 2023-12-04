@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 25 Nov 2023 08:58:31 PM CST
+-- Last Updated: Tue 05 Dec 2023 04:59:26 AM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -730,7 +730,6 @@ local hlgroups = {
   StatusLineDiagnosticHint = { fg = c_pigeon, bg = c_deepsea },
   StatusLineDiagnosticInfo = { fg = c_smoke, bg = c_deepsea },
   StatusLineDiagnosticWarn = { fg = c_earth, bg = c_deepsea },
-  StatusLineFaded = { fg = c_pigeon, bg = c_deepsea },
   StatusLineGitAdded = { fg = c_tea, bg = c_deepsea },
   StatusLineGitChanged = { fg = c_lavender, bg = c_deepsea },
   StatusLineGitRemoved = { fg = c_scarlet, bg = c_deepsea },

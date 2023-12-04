@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sun 03 Dec 2023 02:11:51 AM CST
+-- Last Updated: Tue 05 Dec 2023 05:18:35 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -174,7 +174,7 @@ if vim.go.bg == 'dark' then
   vim.g.terminal_color_5  = c_dragonPink
   vim.g.terminal_color_6  = c_dragonAqua
   vim.g.terminal_color_7  = c_dragonFg1
-  vim.g.terminal_color_8  = c_dragonGray0
+  vim.g.terminal_color_8  = c_dragonBg4
   vim.g.terminal_color_9  = c_waveRed
   vim.g.terminal_color_10 = c_dragonGreen0
   vim.g.terminal_color_11 = c_autumnYellow
@@ -193,7 +193,7 @@ else
   vim.g.terminal_color_5  = c_springViolet
   vim.g.terminal_color_6  = c_dragonAqua
   vim.g.terminal_color_7  = c_dragonBg5
-  vim.g.terminal_color_8  = c_dragonBg5
+  vim.g.terminal_color_8  = c_dragonBg3
   vim.g.terminal_color_9  = c_waveRed
   vim.g.terminal_color_10 = c_dragonGreen0
   vim.g.terminal_color_11 = c_carpYellow
@@ -357,7 +357,7 @@ local hlgroups = {
   ['@lsp.mod.typeHint'] = { link = 'Type' },
   ['@lsp.type.builtinConstant'] = { link = '@constant.builtin' },
   ['@lsp.type.comment'] = { fg = 'NONE' },
-  ['@lsp.type.macro'] = {},
+  ['@lsp.type.macro'] = { fg = c_dragonPink },
   ['@lsp.type.magicFunction'] = { link = '@function.builtin' },
   ['@lsp.type.method'] = { link = '@method' },
   ['@lsp.type.namespace'] = { link = '@namespace' },
@@ -607,13 +607,13 @@ if vim.go.bg == 'light' then
   hlgroups.Pmenu = { bg = c_dragonBg0, fg = c_dragonFg1 }
   hlgroups.PmenuSbar = { bg = c_dragonBg2 }
   hlgroups.PmenuSel = { bg = c_dragonBg2, fg = 'NONE' }
-  hlgroups.PmenuThumb = { bg = c_dragonBg5 }
+  hlgroups.PmenuThumb = { bg = c_dragonFg0 }
   hlgroups.Search = { bg = c_dragonBg3, fg = c_dragonFg0 }
-  hlgroups.StatusLine = { bg = c_dragonBg0, bold = true }
+  hlgroups.StatusLine = { bg = c_dragonBg0 }
   hlgroups.StatusLineGitAdded = { bg = c_dragonBg0, fg = c_dragonGreen1 }
   hlgroups.StatusLineGitChanged = { bg = c_dragonBg0, fg = c_autumnYellow }
   hlgroups.StatusLineGitRemoved = { bg = c_dragonBg0, fg = c_dragonRed }
-  hlgroups.StatusLineHeader = { bg = c_dragonBg5, fg = c_dragonBg0 }
+  hlgroups.StatusLineHeader = { bg = c_dragonFg0, fg = c_dragonBg0 }
   hlgroups.StatusLineHeaderModified = { bg = c_dragonRed, fg = c_dragonBg0 }
   hlgroups.Visual = { bg = c_dragonBg3 }
   hlgroups.WinBarMenuCurrentContext = { bg = c_dragonBg2 }

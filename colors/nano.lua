@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 02 Dec 2023 02:58:19 PM CST
+-- Last Updated: Tue 05 Dec 2023 04:59:28 AM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -672,7 +672,6 @@ local hlgroups = {
   StatusLineDiagnosticHint = { fg = c_foreground, bg = c_subtle },
   StatusLineDiagnosticInfo = { fg = c_salient, bg = c_subtle },
   StatusLineDiagnosticWarn = { fg = c_popout, bg = c_subtle },
-  StatusLineFaded = { fg = c_faded, bg = c_subtle },
   StatusLineGitAdded = { fg = c_pine, bg = c_subtle },
   StatusLineGitChanged = { fg = c_faded, bg = c_subtle },
   StatusLineGitRemoved = { fg = c_popout, bg = c_subtle },
