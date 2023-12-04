@@ -42,11 +42,11 @@ local function setup_keymaps()
     end
   end
   -- stylua: ignore start
+  vim.keymap.set({ 'n' }, 'gq;', vim.lsp.buf.format)
   vim.keymap.set({ 'n', 'x' }, '<Leader>ca', vim.lsp.buf.code_action)
   vim.keymap.set({ 'n', 'x' }, '<Leader>r', vim.lsp.buf.rename)
   vim.keymap.set({ 'n', 'x' }, '<Leader>e', vim.diagnostic.open_float)
   vim.keymap.set({ 'n', 'x' }, '<leader>E', vim.diagnostic.setqflist)
-  vim.keymap.set({ 'n', 'x' }, 'gq;', vim.lsp.buf.format)
   vim.keymap.set({ 'n', 'x' }, '[e', utils.keymap.count_wrap(vim.diagnostic.goto_prev))
   vim.keymap.set({ 'n', 'x' }, ']e', utils.keymap.count_wrap(vim.diagnostic.goto_next))
   vim.keymap.set({ 'n', 'x' }, '[E', utils.keymap.count_wrap(goto_diagnostic('prev', 'ERROR')))
