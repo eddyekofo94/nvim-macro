@@ -250,6 +250,11 @@ local compltype_path = {
   runtime = true,
 }
 
+---@return integer[] buffer numbers
+local function source_buf_get_bufnrs()
+  return vim.b.large_file and {} or { vim.api.nvim_get_current_buf() }
+end
+
 ---@diagnostic disable missing-fields
 cmp.setup({
   enabled = function()
@@ -465,7 +470,13 @@ cmp.setup({
       -- Suppress LSP completion when workspace is not ready yet
       entry_filter = entry_filter,
     },
-    { name = 'buffer', max_item_count = 8 },
+    {
+      name = 'buffer',
+      max_item_count = 8,
+      option = {
+        get_bufnrs = source_buf_get_bufnrs,
+      },
+    },
     {
       name = 'fuzzy_path',
       entry_filter = entry_filter_fuzzy_path,
@@ -499,11 +510,25 @@ cmp.setup({
 -- Use buffer source for `/`.
 cmp.setup.cmdline('/', {
   enabled = true,
-  sources = { { name = 'buffer' } },
+  sources = {
+    {
+      name = 'buffer',
+      option = {
+        get_bufnrs = source_buf_get_bufnrs,
+      },
+    },
+  },
 })
 cmp.setup.cmdline('?', {
   enabled = true,
-  sources = { { name = 'buffer' } },
+  sources = {
+    {
+      name = 'buffer',
+      option = {
+        get_bufnrs = source_buf_get_bufnrs,
+      },
+    },
+  },
 })
 -- Use cmdline & path source for ':'.
 cmp.setup.cmdline(':', {
@@ -541,7 +566,13 @@ cmp.setup.cmdline('@', {
         ignore_cmds = {},
       },
     },
-    { name = 'buffer', group_index = 3 },
+    {
+      name = 'buffer',
+      group_index = 3,
+      option = {
+        get_bufnrs = source_buf_get_bufnrs,
+      },
+    },
   },
 })
 
