@@ -112,6 +112,7 @@ return {
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
       vim.api.nvim_create_autocmd('BufEnter', {
+        nested = true,
         group = vim.api.nvim_create_augroup('OilInit', {}),
         callback = function(info)
           local path = info.file
@@ -127,9 +128,7 @@ return {
           end
           local stat = vim.uv.fs_stat(path)
           if stat and stat.type == 'directory' then
-            vim.schedule(function()
-              pcall(require('oil').open, path)
-            end)
+            pcall(require('oil').open, path)
             return true
           end
         end,
