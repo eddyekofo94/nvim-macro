@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Tue 05 Dec 2023 05:18:35 PM CST
+-- Last Updated: Tue 05 Dec 2023 07:54:32 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -563,12 +563,6 @@ local hlgroups = {
   StatusLineHeader = { bg = c_dragonBg5, fg = c_dragonFg1 },
   StatusLineHeaderModified = { bg = c_dragonRed, fg = c_dragonBg1 },
 
-  -- winbar
-  WinBarMenuCurrentContext = { bg = c_dragonBg3 },
-  WinBarMenuHoverEntry = { bg = c_dragonBg3 },
-  WinBarMenuSbar = { bg = c_dragonBg2 },
-  WinBarMenuThumb = { bg = c_dragonBg5 },
-
   -- glance.nvim
   GlanceBorderTop = { fg = c_dragonBg3 },
   GlanceIndent = { link = 'None' },
@@ -606,8 +600,8 @@ if vim.go.bg == 'light' then
   hlgroups.ModeMsg = { fg = c_dragonRed, bold = true }
   hlgroups.Pmenu = { bg = c_dragonBg0, fg = c_dragonFg1 }
   hlgroups.PmenuSbar = { bg = c_dragonBg2 }
-  hlgroups.PmenuSel = { bg = c_dragonBg2, fg = 'NONE' }
-  hlgroups.PmenuThumb = { bg = c_dragonFg0 }
+  hlgroups.PmenuSel = { bg = c_autumnYellow, fg = c_dragonBg0 }
+  hlgroups.PmenuThumb = { bg = c_dragonBg4 }
   hlgroups.Search = { bg = c_dragonBg3, fg = c_dragonFg0 }
   hlgroups.StatusLine = { bg = c_dragonBg0 }
   hlgroups.StatusLineGitAdded = { bg = c_dragonBg0, fg = c_dragonGreen1 }
@@ -616,10 +610,6 @@ if vim.go.bg == 'light' then
   hlgroups.StatusLineHeader = { bg = c_dragonFg0, fg = c_dragonBg0 }
   hlgroups.StatusLineHeaderModified = { bg = c_dragonRed, fg = c_dragonBg0 }
   hlgroups.Visual = { bg = c_dragonBg3 }
-  hlgroups.WinBarMenuCurrentContext = { bg = c_dragonBg2 }
-  hlgroups.WinBarMenuHoverEntry = { bg = c_dragonBg2 }
-  hlgroups.WinBarMenuSbar = { link = 'PmenuSbar' }
-  hlgroups.WinBarMenuThumb = { link = 'PmenuThumb' }
   hlgroups['@parameter'] = { link = 'Identifier' }
 end
 -- }}}1
