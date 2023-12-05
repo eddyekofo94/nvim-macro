@@ -84,7 +84,7 @@ function statusline.branch()
   ---@diagnostic disable-next-line: undefined-field
   local branch = vim.b.gitsigns_status_dict and vim.b.gitsigns_status_dict.head
     or utils.git.branch()
-  return branch == '' and '' or utils.stl.hl('#', 'StatusLineFaded') .. branch
+  return branch == '' and '' or '#' .. branch
 end
 
 ---Get current filetype
@@ -218,7 +218,9 @@ function statusline.diag()
       str = str
         .. (str == '' and '' or ' ')
         .. utils.stl.hl(icon, icon_hl)
-        .. utils.stl.hl(cnt .. '/' .. ws_cnt, 'StatusLineFaded')
+        .. cnt
+        .. '/'
+        .. ws_cnt
     end
   end
   if str:find('%S') then
@@ -228,73 +230,116 @@ function statusline.diag()
   return str
 end
 
----@class lsp_progress_data_t
----@field client_id integer
----@field result lsp_progress_data_result_t
+local spinner_end_keep = 2000 -- ms
+local spinner_status_keep = 600 -- ms
+local spinner_progress_keep = 80 -- ms
+local spinner_icon_done = vim.trim(utils.static.icons.Ok)
+local spinner_timer = vim.uv.new_timer()
 
----@class lsp_progress_data_result_t
----@field token integer
----@field value lsp_progress_data_result_value_t
+local spinner_icons = {
+  '⠋',
+  '⠙',
+  '⠹',
+  '⠸',
+  '⠼',
+  '⠴',
+  '⠦',
+  '⠧',
+  '⠇',
+  '⠏',
+}
 
----@class lsp_progress_data_result_value_t
----@field kind 'begin'|'report'|'end'
----@field title string
----@field message string?
----@field percentage integer?
+---Id and additional info of language servers in progress
+---@type table<integer, { name: string, timestamp: integer, type: 'begin'|'report'|'end' }>
+local server_info_in_progress = {}
 
-local lsp_prog_data ---@type lsp_progress_data_t?
-local report_time ---@type integer?
 vim.api.nvim_create_autocmd('LspProgress', {
   desc = 'Update LSP progress info for the status line.',
   group = groupid,
   callback = function(info)
-    local data = info.data
-    -- Filter out-of-order progress updates
-    if
-      lsp_prog_data
-      and lsp_prog_data.client_id == data.client_id
-      and lsp_prog_data.result.value.title == data.result.value.title
-      and (data.result.value.percentage or 100)
-        < (lsp_prog_data.result.value.percentage or 0)
-    then
-      return
+    if spinner_timer then
+      spinner_timer:start(
+        spinner_progress_keep,
+        spinner_progress_keep,
+        vim.schedule_wrap(vim.cmd.redrawstatus)
+      )
     end
-    lsp_prog_data = data
-    report_time = vim.uv.now()
-    local _report_time = report_time
-    if data.result.value.kind == 'end' then
-      lsp_prog_data.result.value.message = vim.trim(utils.static.icons.Ok)
-    end
+
+    local id = info.data.client_id
+    local now = vim.uv.now()
+    server_info_in_progress[id] = {
+      name = vim.lsp.get_client_by_id(id).name,
+      timestamp = now,
+      type = info.data.result.value.kind,
+    } -- Update LSP progress data
     -- Clear client message after a short time if no new message is received
     vim.defer_fn(function()
       -- No new report since the timer was set
-      if _report_time == report_time then
-        lsp_prog_data = nil
+      local last_timestamp = (server_info_in_progress[id] or {}).timestamp
+      if not last_timestamp or last_timestamp == now then
+        server_info_in_progress[id] = nil
+        if vim.tbl_isempty(server_info_in_progress) and spinner_timer then
+          spinner_timer:stop()
+        end
         vim.cmd.redrawstatus()
       end
-    end, 2048)
+    end, spinner_end_keep)
   end,
 })
 
 ---@return string
 function statusline.lsp_progress()
-  if not lsp_prog_data then
+  if vim.tbl_isempty(server_info_in_progress) then
     return ''
   end
-  local value = lsp_prog_data.result.value
-  local client = vim.lsp.get_client_by_id(lsp_prog_data.client_id)
-  if not client then
+
+  local buf = vim.api.nvim_get_current_buf()
+  local server_ids = {}
+  for id, _ in pairs(server_info_in_progress) do
+    if vim.tbl_contains(vim.lsp.get_buffers_by_client_id(id), buf) then
+      table.insert(server_ids, id)
+    end
+  end
+  if vim.tbl_isempty(server_ids) then
     return ''
   end
-  return utils.stl.hl(
-    string.format(
-      '%s: %s%s%s ',
-      client.name,
-      value.title,
-      value.message and string.format(' %s', value.message) or '',
-      value.percentage and string.format(' [%d%%%%]', value.percentage) or ''
+
+  local now = vim.uv.now()
+  ---@return boolean
+  local function allow_changing_state()
+    return not vim.b.spinner_state_changed
+      or now - vim.b.spinner_state_changed > spinner_status_keep
+  end
+
+  if
+    #server_ids == 1
+    and server_info_in_progress[server_ids[1]].type == 'end'
+  then
+    if vim.b.spinner_icon ~= spinner_icon_done and allow_changing_state() then
+      vim.b.spinner_state_changed = now
+      vim.b.spinner_icon = spinner_icon_done
+    end
+  else
+    local spinner_icon_progress = spinner_icons[math.ceil(
+      now / spinner_progress_keep
+    ) % #spinner_icons + 1]
+    if vim.b.spinner_icon ~= spinner_icon_done then
+      vim.b.spinner_icon = spinner_icon_progress
+    elseif allow_changing_state() then
+      vim.b.spinner_state_changed = now
+      vim.b.spinner_icon = spinner_icon_progress
+    end
+  end
+
+  return string.format(
+    '%s %s ',
+    table.concat(
+      vim.tbl_map(function(id)
+        return server_info_in_progress[id].name
+      end, server_ids),
+      ', '
     ),
-    'StatusLineFaded'
+    vim.b.spinner_icon
   )
 end
 
@@ -310,8 +355,7 @@ local components = {
   lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
   mode         = '%{%v:lua.statusline.mode()%}',
   padding      = '%#None#  %*',
-  pos          = '%#StatusLineFaded#%{%&ru?"%l:%c ":""%}%*',
-  pos_nc       = '%{%&ru?"%l:%c ":""%}',
+  pos          = '%{%&ru?"%l:%c ":""%}',
   truncate     = '%<',
 }
 -- stylua: ignore end
@@ -331,7 +375,7 @@ local stl_nc = table.concat({
   components.fname_nc,
   components.align,
   components.truncate,
-  components.pos_nc,
+  components.pos,
 })
 
 ---Get statusline string
@@ -364,7 +408,6 @@ vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
     sethl('StatusLineHeader', { bg = 'TabLine', bold = true })
     sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'TabLine', bold = true })
     sethl('StatusLineStrong', { bold = true })
-    sethl('StatusLineFaded', { fg = 'StatusLineNC' })
     sethl('StatusLineGitAdded', { fg = 'GitSignsAdd' })
     sethl('StatusLineGitChanged', { fg = 'GitSignsChange' })
     sethl('StatusLineGitRemoved', { fg = 'GitSignsDelete' })
