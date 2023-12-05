@@ -58,6 +58,19 @@ require('gitsigns').setup({
     map('n', '<leader>gp', gs.preview_hunk)
     map('n', '<leader>gb', gs.blame_line)
 
+    map('x', '<leader>gs', function()
+      gs.stage_hunk({
+        vim.fn.line('.'),
+        vim.fn.line('v'),
+      })
+    end)
+    map('x', '<leader>gr', function()
+      gs.reset_hunk({
+        vim.fn.line('.'),
+        vim.fn.line('v'),
+      })
+    end)
+
     -- Text object
     map(
       { 'o', 'x' },
