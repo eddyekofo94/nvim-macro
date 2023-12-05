@@ -157,76 +157,44 @@ function statusline.info()
     or string.format('(%s) ', table.concat(info, ', '))
 end
 
-local diag_str_cache = {} ---@type table<integer, string>
-local diag_cnt_cache = {} ---@type table<integer, integer[]>
-local diag_ws_cnt_cache = {} ---@type integer[]
-
 vim.api.nvim_create_autocmd('DiagnosticChanged', {
   group = groupid,
   desc = 'Update diagnostics cache for the status line.',
   callback = function(info)
-    diag_str_cache = {}
-    diag_cnt_cache[info.buf] = diag_cnt_cache[info.buf] or {}
-    local buf_cnt = diag_cnt_cache[info.buf]
-    local buf_cnt_save = vim.deepcopy(buf_cnt)
-    for k, _ in pairs(buf_cnt) do
-      buf_cnt[k] = 0
-    end
+    local b = vim.b[info.buf]
+    local diag_cnt_cache = { 0, 0, 0, 0 }
     for _, diagnostic in ipairs(info.data.diagnostics) do
-      buf_cnt[diagnostic.severity] = (buf_cnt[diagnostic.severity] or 0) + 1
+      diag_cnt_cache[diagnostic.severity] = diag_cnt_cache[diagnostic.severity]
+        + 1
     end
-    for diag_nr = 1, 4 do
-      diag_ws_cnt_cache[diag_nr] = (diag_ws_cnt_cache[diag_nr] or 0)
-        - (buf_cnt_save[diag_nr] or 0)
-        + (buf_cnt[diag_nr] or 0)
-    end
-  end,
-})
-
-vim.api.nvim_create_autocmd('BufDelete', {
-  group = groupid,
-  desc = 'Clear and update diagnostics cache for the status line.',
-  callback = function(info)
-    local buf = info.buf
-    local diag_buf_cnt = diag_cnt_cache[buf]
-    if not diag_buf_cnt then
-      return
-    end
-    for diag_nr, diag_cnt in pairs(diag_buf_cnt) do
-      diag_ws_cnt_cache[diag_nr] = diag_ws_cnt_cache[diag_nr] - diag_cnt
-    end
-    diag_cnt_cache[buf] = nil
-    diag_str_cache = {}
+    b.diag_str_cache = nil
+    b.diag_cnt_cache = diag_cnt_cache
   end,
 })
 
 ---Get string representation of diagnostics for current buffer
 ---@return string
 function statusline.diag()
-  local buf = vim.api.nvim_get_current_buf()
-  if diag_str_cache[buf] then
-    return diag_str_cache[buf]
+  if vim.b.diag_str_cache then
+    return vim.b.diag_str_cache
   end
   local str = ''
-  local buf_cnt = diag_cnt_cache[buf] or {}
+  local buf_cnt = vim.b.diag_cnt_cache or {}
   for serverity_nr, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
     local cnt = buf_cnt[serverity_nr] or 0
-    local ws_cnt = diag_ws_cnt_cache[serverity_nr] or 0
-    if cnt + ws_cnt > 0 then
+    if cnt > 0 then
       local icon = signs_text_cache['DiagnosticSign' .. severity]
       local icon_hl = 'StatusLineDiagnostic' .. severity
       str = str
         .. (str == '' and '' or ' ')
         .. utils.stl.hl(icon, icon_hl)
         .. cnt
-        .. '/'
-        .. ws_cnt
     end
   end
   if str:find('%S') then
     str = str .. ' '
   end
-  diag_str_cache[buf] = str
+  vim.b.diag_str_cache = str
   return str
 end
 
