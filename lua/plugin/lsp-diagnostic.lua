@@ -60,7 +60,6 @@ local function setup_keymaps()
   vim.keymap.set({ 'n', 'x' }, 'g.', vim.lsp.buf.references)
   vim.keymap.set({ 'n', 'x' }, 'gd', if_supports_lsp_method('textDocument/definition', 'definition', 'gd'), { expr = true })
   vim.keymap.set({ 'n', 'x' }, 'gD', if_supports_lsp_method('textDocument/typeDefinition', 'type_definition', 'gD'), { expr = true })
-  vim.keymap.set({ 'n', 'x' }, 'K', if_supports_lsp_method('textDocument/hover', 'hover', 'K'), { expr = true })
   -- stylua: ignore end
 end
 
