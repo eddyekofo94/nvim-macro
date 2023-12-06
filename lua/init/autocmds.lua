@@ -105,7 +105,7 @@ au('LastPosJmp', {
       local ft = vim.bo[info.buf].ft
       -- don't apply to git messages
       if ft ~= 'gitcommit' and ft ~= 'gitrebase' then
-        vim.cmd('silent! normal! g`"')
+        vim.cmd('silent! normal! g`"zvzz')
       end
     end,
   },
