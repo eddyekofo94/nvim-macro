@@ -1,14 +1,31 @@
 diff --git a/plugin/lspconfig.lua b/plugin/lspconfig.lua
-index 1a731eb..9db9f71 100644
+index 1a731eb..906724b 100644
 --- a/plugin/lspconfig.lua
 +++ b/plugin/lspconfig.lua
-@@ -86,10 +86,25 @@ end, {
+@@ -72,6 +72,7 @@ api.nvim_create_user_command('LspStart', function(info)
+     local config = require('lspconfig.configs')[server_name]
+     if config then
+       config.launch()
++      vim.notify('[lspconfig] launched client ' .. config.name)
+       return
+     end
+   end
+@@ -79,6 +80,7 @@ api.nvim_create_user_command('LspStart', function(info)
+   local matching_configs = require('lspconfig.util').get_config_by_ft(vim.bo.filetype)
+   for _, config in ipairs(matching_configs) do
+     config.launch()
++    vim.notify('[lspconfig] launched client ' .. config.name)
+   end
+ end, {
+   desc = 'Manually launches a language server',
+@@ -86,10 +88,26 @@ end, {
    complete = lsp_complete_configured_servers,
  })
  
 +local function stop_client(client, force, num_trials)
 +  num_trials = num_trials or 4
 +  if client.is_stopped() then
++    vim.notify('[lspconfig] stopped client ' .. client.name)
 +    return
 +  end
 +  if force or num_trials <= 0 then
@@ -29,7 +46,15 @@ index 1a731eb..9db9f71 100644
      if vim.tbl_count(client.attached_buffers) > 0 then
        detach_clients[client.name] = { client, client.attached_buffers }
      end
-@@ -136,12 +151,12 @@ api.nvim_create_user_command('LspStop', function(info)
+@@ -104,6 +122,7 @@ api.nvim_create_user_command('LspRestart', function(info)
+         if client.is_stopped() then
+           for buf in pairs(attached_buffers) do
+             require('lspconfig.configs')[client_name].launch(buf)
++            vim.notify('[lspconfig] launched client ' .. client_name)
+           end
+           detach_clients[client_name] = nil
+         end
+@@ -136,12 +155,12 @@ api.nvim_create_user_command('LspStop', function(info)
      local servers_on_buffer = lsp.get_active_clients { bufnr = current_buf }
      for _, client in ipairs(servers_on_buffer) do
        if client.attached_buffers[current_buf] then
