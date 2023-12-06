@@ -4,7 +4,9 @@ return {
     event = { 'FileType' },
     cmd = { 'LspInfo', 'LspStart' },
     config = function()
-      require('configs.nvim-lspconfig')
+      vim.schedule(function()
+        require('configs.nvim-lspconfig')
+      end)
     end,
   },
 

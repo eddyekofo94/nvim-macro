@@ -19,7 +19,9 @@ return {
     },
     event = 'FileType',
     config = function()
-      require('configs.nvim-treesitter')
+      vim.schedule(function()
+        require('configs.nvim-treesitter')
+      end)
     end,
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
