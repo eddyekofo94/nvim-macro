@@ -9,95 +9,49 @@ vim.opt_global.shada:prepend('!')
 
 -- 1. Restore dark/light background and colorscheme from ShaDa so that nvim
 --    "remembers" the background and colorscheme when it is restarted.
--- 2. Change background on receiving signal SIGUSER1 to make nvim colorscheme
---    consistent with the system background.
---    - The signal is sent by setbg/setcolors scripts when the background or
---      colorscheme is changed by the user.
--- 3. Spawn setbg/setcolors on colorscheme change to make other nvim instances
+-- 2. Spawn setbg/setcolors on colorscheme change to make other nvim instances
 --    and system color consistent with the current nvim instance.
 
-local groupid = vim.api.nvim_create_augroup('SwitchBackground', {})
+local saved = utils.fs.read_json(colors_file)
+  or {
+    bg = 'dark',
+    colors_name = 'nano',
+  }
 
-vim.api.nvim_create_autocmd('UIEnter', {
-  once = true,
-  nested = true,
-  group = groupid,
-  desc = 'Restore dark/light background and colorscheme from ShaDa.',
-  callback = function()
-    if vim.g.BACKGROUND and vim.g.BACKGROUND ~= vim.go.background then
-      vim.go.background = vim.g.BACKGROUND
-    end
-    if not vim.g.colors_name or vim.g.COLORSNAME ~= vim.g.colors_name then
-      vim.cmd('silent! colorscheme ' .. (vim.g.COLORSNAME or 'nano'))
-    end
-    return true
-  end,
-})
+if saved.bg and saved.bg ~= vim.go.bg then
+  vim.go.bg = saved.bg
+end
 
-vim.api.nvim_create_autocmd('Signal', {
-  nested = true,
-  pattern = 'SIGUSR1',
-  group = groupid,
-  desc = 'Change background on receiving signal SIGUSER1.',
-  callback = function()
-    local now = vim.uv.now()
-    -- Check the last time when a signal is received/sent to avoid
-    -- the infinite loop of
-    -- -> receiving signal
-    -- -> setting bg
-    -- -> sending signals to other nvim instances
-    -- -> receiving signals from other nvim instances
-    -- -> setting bg
-    -- -> ...
-    if
-      vim.g.sigtime and now - vim.g.sigtime < 500
-      or not pcall(vim.cmd.rshada)
-    then
-      return
-    end
-    vim.g.sigtime = now
-    -- Must save the background and colorscheme name read from ShaDa
-    -- because setting background or colorscheme will overwrite them
-    local background = vim.g.BACKGROUND or 'dark'
-    local colors_name = vim.g.COLORSNAME or 'nano'
-    if vim.go.background ~= background then
-      vim.go.background = background
-    end
-    if vim.g.colors_name ~= colors_name then
-      vim.cmd('silent! colorscheme ' .. colors_name)
-    end
-  end,
-})
+if saved.colors_name and saved.colors_name ~= vim.g.colors_name then
+  vim.cmd.colorscheme({
+    args = { saved.colors_name },
+    mods = { emsg_silent = true },
+  })
+end
+
+local last_set ---@type integer?
+local min_interval = 500 -- ms
 
 vim.api.nvim_create_autocmd('Colorscheme', {
-  group = 'SwitchBackground',
+  group = vim.api.nvim_create_augroup('ColorSwitch', {}),
   desc = 'Spawn setbg/setcolors on colorscheme change.',
   callback = function()
-    vim.defer_fn(function()
-      vim.g.BACKGROUND = vim.go.background
-      vim.g.COLORSNAME = vim.g.colors_name
-      local now = vim.uv.now()
-      if
-        vim.g.sigtime and now - vim.g.sigtime < 500
-        or not pcall(vim.cmd.wshada)
-      then
+    local now = vim.uv.now()
+    if last_set and now - last_set < min_interval then
+      return
+    end
+    last_set = now
+
+    local data = utils.fs.read_json(colors_file)
+    if data.colors_name ~= vim.g.colors_name or data.bg ~= vim.go.bg then
+      data.colors_name = vim.g.colors_name
+      data.bg = vim.go.bg
+      if not utils.fs.write_json(colors_file, data) then
         return
       end
-      vim.g.sigtime = now
-      if vim.fn.executable('setbg') == 1 then
-        ---@diagnostic disable-next-line: missing-fields, missing-parameter
-        vim.uv.spawn('setbg', {
-          args = { vim.go.background },
-          stdio = { nil, nil, nil },
-        })
-      end
-      if vim.fn.executable('setcolors') == 1 then
-        ---@diagnostic disable-next-line: missing-fields, missing-parameter
-        vim.uv.spawn('setcolors', {
-          args = { vim.g.colors_name },
-          stdio = { nil, nil, nil },
-        })
-      end
-    end, 100)
+    end
+
+    pcall(vim.system, { 'setbg', vim.go.bg })
+    pcall(vim.system, { 'setcolors', vim.g.colors_name })
   end,
 })

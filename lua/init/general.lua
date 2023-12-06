@@ -1,3 +1,7 @@
+-- Enable faster lua loader using byte-compilation
+-- https://github.com/neovim/neovim/commit/2257ade3dc2daab5ee12d27807c0b3bcf103cd29
+vim.loader.enable()
+
 local g = vim.g
 local opt = vim.opt
 
