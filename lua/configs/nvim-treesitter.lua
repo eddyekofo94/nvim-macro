@@ -22,16 +22,6 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
-vim.api.nvim_create_autocmd('CmdWinEnter', {
-  group = vim.api.nvim_create_augroup('CmdWinRegexVimHl', {}),
-  desc = 'Use regex vim highlight in command window.',
-  callback = function(info)
-    if info.match == ':' then
-      vim.cmd('TSBufDisable highlight')
-    end
-  end,
-})
-
 ---@param buf integer buffer handler
 ---@return boolean
 local function buf_is_large(_, buf)
@@ -51,7 +41,7 @@ ts_configs.setup({
       -- highlighting while still preserving math conceal provided
       -- by vimtex regex syntax rules
       return vim.tbl_contains({ 'markdown', 'tex', 'latex' }, ft)
-        or buf_is_large(ft, buf)
+        or buf_is_large(ft, buf) or vim.fn.win_gettype() == 'command'
     end,
     additional_vim_regex_highlighting = false,
   },
