@@ -1,5 +1,5 @@
 diff --git a/lua/headlines/init.lua b/lua/headlines/init.lua
-index 2e000b8..6987c46 100644
+index 2e000b8..50e4d5b 100644
 --- a/lua/headlines/init.lua
 +++ b/lua/headlines/init.lua
 @@ -199,7 +199,7 @@ M.setup = function(config)
@@ -16,7 +16,7 @@ index 2e000b8..6987c46 100644
      vim.api.nvim_buf_clear_namespace(0, M.namespace, 0, -1)
  
 -    if not c or not c.query then
-+    if not c or not c.query or vim.bo.buftype ~= '' then
++    if not c or not c.query or vim.fn.win_gettype() ~= '' then
          return
      end
  
