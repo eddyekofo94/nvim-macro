@@ -128,6 +128,7 @@ return {
           end
           local stat = vim.uv.fs_stat(path)
           if stat and stat.type == 'directory' then
+            vim.api.nvim_exec_autocmds('UIEnter', {})
             pcall(require('oil').open, path)
             return true
           end
