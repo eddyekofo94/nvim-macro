@@ -49,6 +49,19 @@ index 72e87fc..4650a9c 100644
    local adapter = assert(config.get_adapter_by_scheme(scheme))
  
    if vim.endswith(bufname, "/") then
+diff --git a/lua/oil/keymap_util.lua b/lua/oil/keymap_util.lua
+index 5f8f321..9175a03 100644
+--- a/lua/oil/keymap_util.lua
++++ b/lua/oil/keymap_util.lua
+@@ -111,7 +111,7 @@ M.show_help = function(keymaps)
+     height = math.min(editor_height, #lines),
+     zindex = 150,
+     style = "minimal",
+-    border = "rounded",
++    border = "solid",
+   })
+   local function close()
+     if vim.api.nvim_win_is_valid(winid) then
 diff --git a/lua/oil/util.lua b/lua/oil/util.lua
 index 027b5db..6649f43 100644
 --- a/lua/oil/util.lua
