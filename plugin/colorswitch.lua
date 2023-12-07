@@ -4,10 +4,11 @@ if vim.env.COLORTERM ~= 'truecolor' and vim.fn.has('gui_running') == 0 then
   return
 end
 
--- Make sure that global variables BACKGROUND and COLORSNAME are saved to ShaDa
-vim.opt_global.shada:prepend('!')
+local utils = require('utils')
+local colors_file =
+  vim.fs.joinpath(vim.fn.stdpath('state') --[[@as string]], 'colors.json')
 
--- 1. Restore dark/light background and colorscheme from ShaDa so that nvim
+-- 1. Restore dark/light background and colorscheme from json so that nvim
 --    "remembers" the background and colorscheme when it is restarted.
 -- 2. Spawn setbg/setcolors on colorscheme change to make other nvim instances
 --    and system color consistent with the current nvim instance.

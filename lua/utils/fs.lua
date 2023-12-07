@@ -44,4 +44,42 @@ function M.proj_dir(path, patterns)
   end
 end
 
+---Read file contents
+---@param path string
+---@return string?
+function M.read_file(path)
+  local file = io.open(path, 'r')
+  if not file then
+    return nil
+  end
+  local content = file:read('*a')
+  file:close()
+  return content or ''
+end
+
+---Read json contents as lua table
+---@param path string
+---@param opts table? same option table as `vim.json.decode()`
+---@return table
+function M.read_json(path, opts)
+  opts = opts or {}
+  local str = M.read_file(path)
+  local ok, tbl = pcall(vim.json.decode, str, opts)
+  return ok and tbl or {}
+end
+
+---Write json contents
+---@param path string
+---@param tbl table
+---@return boolean success
+function M.write_json(path, tbl)
+  local file = io.open(path, 'w')
+  if not file then
+    return false
+  end
+  file:write(vim.json.encode(tbl))
+  file:close()
+  return true
+end
+
 return M

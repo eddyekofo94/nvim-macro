@@ -1,6 +1,3 @@
--- Make sure colorscheme is loaded
-vim.api.nvim_exec_autocmds('UIEnter', {})
-
 local fzf = require('fzf-lua')
 local actions = require('fzf-lua.actions')
 local utils = require('utils')
