@@ -364,13 +364,13 @@ vim.api.nvim_create_autocmd(
 vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
   group = groupid,
   callback = function()
+    local default_attr = utils.hl.get(0, { name = 'StatusLine' })
     ---@param hlgroup_name string
     ---@param attr table
     ---@return nil
     local function sethl(hlgroup_name, attr)
-      attr.fg = attr.fg or 'StatusLine'
-      attr.bg = attr.bg or 'StatusLine'
-      utils.hl.set_default(0, hlgroup_name, attr)
+      local merged_attr = vim.tbl_deep_extend('keep', attr, default_attr)
+      utils.hl.set_default(0, hlgroup_name, merged_attr)
     end
     -- stylua: ignore start
     sethl('StatusLineHeader', { bg = 'TabLine', bold = true })
