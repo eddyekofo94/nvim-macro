@@ -26,6 +26,7 @@ local utils = require('plugin.winbar.utils')
 ---@field swap table<string, any>? swapped data of the symbol
 ---@field swapped table<string, true>? swapped fields of the symbol
 ---@field cache table caches string representation, length, etc. for the symbol
+---@field opts winbar_symbol_opts_t? options passed to `winbar_symbol_t:new()` when the symbols is created
 local winbar_symbol_t = {}
 
 function winbar_symbol_t:__index(k)
@@ -79,8 +80,112 @@ end
 ---@field swapped table<string, true>? swapped fields of the symbol
 ---@field cache table? caches string representation, length, etc. for the symbol
 
+---Default `on_click()` callback for winbar symbols
+---@param symbol winbar_symbol_t
+---@return nil
+local function default_on_click(symbol, _, _, _, _)
+  -- Update current context highlights if the symbol
+  -- is shown inside a menu
+  if symbol.entry and symbol.entry.menu then
+    symbol.entry.menu:update_current_context_hl(symbol.entry.idx)
+  elseif symbol.bar then
+    symbol.bar:update_current_context_hl(symbol.bar_idx)
+  end
+
+  -- Determine menu configs
+  local prev_win = nil ---@type integer?
+  local entries_source = nil ---@type winbar_symbol_t[]?
+  local init_cursor = nil ---@type integer[]?
+  local win_configs = {}
+  if symbol.bar then -- If symbol inside a winbar
+    prev_win = symbol.bar.win
+    entries_source = symbol.opts.siblings
+    init_cursor = symbol.opts.sibling_idx and { symbol.opts.sibling_idx, 0 }
+    ---@param tbl number[]
+    local function _sum(tbl)
+      local sum = 0
+      for _, v in ipairs(tbl) do
+        sum = sum + v
+      end
+      return sum
+    end
+    if symbol.bar.in_pick_mode then
+      win_configs.relative = 'win'
+      win_configs.win = vim.api.nvim_get_current_win()
+      win_configs.row = 0
+      win_configs.col = symbol.bar.padding.left
+        + _sum(vim.tbl_map(
+          function(component)
+            return component:displaywidth()
+              + symbol.bar.separator:displaywidth()
+          end,
+          vim.tbl_filter(function(component)
+            return component.bar_idx < symbol.bar_idx
+          end, symbol.bar.components)
+        ))
+    end
+  elseif symbol.entry and symbol.entry.menu then -- If inside a menu
+    prev_win = symbol.entry.menu.win
+    entries_source = symbol.opts.children
+  end
+
+  -- Toggle existing menu
+  if symbol.menu then
+    symbol.menu:toggle({
+      prev_win = prev_win,
+      win_configs = win_configs,
+    })
+    return
+  end
+
+  -- Create a new menu for the symbol
+  if not entries_source or vim.tbl_isempty(entries_source) then
+    return
+  end
+  local menu = require('plugin.winbar.menu')
+  symbol.menu = menu.winbar_menu_t:new({
+    prev_win = prev_win,
+    cursor = init_cursor,
+    win_configs = win_configs,
+    ---@param sym winbar_symbol_t
+    entries = vim.tbl_map(function(sym)
+      local menu_indicator_icon = configs.opts.icons.ui.menu.indicator
+      local menu_indicator_on_click = nil
+      if not sym.children or vim.tbl_isempty(sym.children) then
+        menu_indicator_icon =
+          string.rep(' ', vim.fn.strdisplaywidth(menu_indicator_icon))
+        menu_indicator_on_click = false
+      end
+      return menu.winbar_menu_entry_t:new({
+        components = {
+          sym:merge({
+            name = '',
+            icon = menu_indicator_icon,
+            icon_hl = 'WinBarIconUIIndicator',
+            on_click = menu_indicator_on_click,
+          }),
+          sym:merge({
+            on_click = function()
+              local current_menu = symbol.menu
+              while current_menu and current_menu.prev_menu do
+                current_menu = current_menu.prev_menu
+              end
+              if current_menu then
+                current_menu:close(false)
+              end
+              sym:jump()
+            end,
+          }),
+        },
+      })
+    end, entries_source),
+  })
+  symbol.menu:toggle()
+end
+
 ---Create a winbar symbol instance, with drop-down menu support
 ---@param opts winbar_symbol_opts_t?
+---@return winbar_symbol_t
 function winbar_symbol_t:new(opts)
   return setmetatable({
     _ = setmetatable(
@@ -88,110 +193,8 @@ function winbar_symbol_t:new(opts)
         name = '',
         icon = '',
         cache = {},
-        on_click = opts
-          ---@param this winbar_symbol_t
-          and function(this, _, _, _, _)
-            -- Update current context highlights if the symbol
-            -- is shown inside a menu
-            if this.entry and this.entry.menu then
-              this.entry.menu:update_current_context_hl(this.entry.idx)
-            elseif this.bar then
-              this.bar:update_current_context_hl(this.bar_idx)
-            end
-
-            -- Determine menu configs
-            local prev_win = nil ---@type integer?
-            local entries_source = nil ---@type winbar_symbol_t[]?
-            local init_cursor = nil ---@type integer[]?
-            local win_configs = {}
-            if this.bar then -- If symbol inside a winbar
-              prev_win = this.bar.win
-              entries_source = opts.siblings
-              init_cursor = opts.sibling_idx and { opts.sibling_idx, 0 }
-              ---@param tbl number[]
-              local function _sum(tbl)
-                local sum = 0
-                for _, v in ipairs(tbl) do
-                  sum = sum + v
-                end
-                return sum
-              end
-              if this.bar.in_pick_mode then
-                win_configs.relative = 'win'
-                win_configs.win = vim.api.nvim_get_current_win()
-                win_configs.row = 0
-                win_configs.col = this.bar.padding.left
-                  + _sum(vim.tbl_map(
-                    function(component)
-                      return component:displaywidth()
-                        + this.bar.separator:displaywidth()
-                    end,
-                    vim.tbl_filter(function(component)
-                      return component.bar_idx < this.bar_idx
-                    end, this.bar.components)
-                  ))
-              end
-            elseif this.entry and this.entry.menu then -- If inside a menu
-              prev_win = this.entry.menu.win
-              entries_source = opts.children
-            end
-
-            -- Toggle existing menu
-            if this.menu then
-              this.menu:toggle({
-                prev_win = prev_win,
-                win_configs = win_configs,
-              })
-              return
-            end
-
-            -- Create a new menu for the symbol
-            if not entries_source or vim.tbl_isempty(entries_source) then
-              return
-            end
-            local menu = require('plugin.winbar.menu')
-            this.menu = menu.winbar_menu_t:new({
-              prev_win = prev_win,
-              cursor = init_cursor,
-              win_configs = win_configs,
-              ---@param sym winbar_symbol_t
-              entries = vim.tbl_map(function(sym)
-                local menu_indicator_icon =
-                  configs.opts.icons.ui.menu.indicator
-                local menu_indicator_on_click = nil
-                if not sym.children or vim.tbl_isempty(sym.children) then
-                  menu_indicator_icon = string.rep(
-                    ' ',
-                    vim.fn.strdisplaywidth(menu_indicator_icon)
-                  )
-                  menu_indicator_on_click = false
-                end
-                return menu.winbar_menu_entry_t:new({
-                  components = {
-                    sym:merge({
-                      name = '',
-                      icon = menu_indicator_icon,
-                      icon_hl = 'WinBarIconUIIndicator',
-                      on_click = menu_indicator_on_click,
-                    }),
-                    sym:merge({
-                      on_click = function()
-                        local current_menu = this.menu
-                        while current_menu and current_menu.prev_menu do
-                          current_menu = current_menu.prev_menu
-                        end
-                        if current_menu then
-                          current_menu:close(false)
-                        end
-                        sym:jump()
-                      end,
-                    }),
-                  },
-                })
-              end, entries_source),
-            })
-            this.menu:toggle()
-          end,
+        opts = opts,
+        on_click = opts and default_on_click,
       }, opts or {}),
       getmetatable(opts or {})
     ),
@@ -485,8 +488,7 @@ function winbar_t:cat(plain)
   -- Must add highlights to padding, else nvim will automatically truncate it
   local padding_left = string.rep(' ', self.padding.left)
   local padding_right = string.rep(' ', self.padding.right)
-  result = result and padding_left .. result .. padding_right or ''
-  return plain and result or utils.stl.hl(result, 'WinBar')
+  return result and padding_left .. result .. padding_right or ''
 end
 
 ---Reevaluate winbar string from components and redraw winbar
@@ -496,10 +498,11 @@ function winbar_t:redraw()
   local new_str = self:cat()
   if new_str ~= self.string_cache then
     self.string_cache = new_str
-    -- Actually we should use vim.api.nvim_win_call() to wrap this command so
-    -- that the winbar at self.win is redrawn, vim.api.nvim_win_call() is slow
-    -- and cause flickering and tearing when there's constantly updating
-    -- floating windows (e.g. nvim-cmp's completion windows)
+    -- Actually we should use `vim.api.nvim_win_call()` to wrap this command so
+    -- that only the winbar at self.win is redrawn
+    -- However`vim.api.nvim_win_call()` is slow and cause flickering and
+    -- tearing when there's constantly updating floating windows
+    -- (e.g. nvim-cmp's completion windows)
     vim.cmd('silent! redrawstatus!')
   end
 end
