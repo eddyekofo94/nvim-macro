@@ -1,39 +1,47 @@
 local utils = require('utils')
-local confpath = vim.fn.stdpath('config') --[[@as string]]
-local datapath = vim.fn.stdpath('data') --[[@as string]]
-
----Read file contents
----@param path string
----@return string?
-local function read_file(path)
-  local file = io.open(path, 'r')
-  if not file then
-    return nil
-  end
-  local content = file:read('*a')
-  file:close()
-  return content
-end
+local conf_path = vim.fn.stdpath('config') --[[@as string]]
+local data_path = vim.fn.stdpath('data') --[[@as string]]
+local state_path = vim.fn.stdpath('state') --[[@as string]]
 
 ---Install package manager if not already installed
 ---@return boolean success
 local function bootstrap()
-  vim.g.package_path = datapath .. '/site/pack/packages/opt'
-  vim.g.package_lock = confpath .. '/package-lock.json'
-  local lazy_path = vim.g.package_path .. '/lazy.nvim'
+  vim.g.package_path = vim.fs.joinpath(data_path, 'site/pack/packages/opt')
+  vim.g.package_lock = vim.fs.joinpath(conf_path, 'package-lock.json')
+  local lazy_path = vim.fs.joinpath(vim.g.package_path, 'lazy.nvim')
   if vim.uv.fs_stat(lazy_path) then
     vim.opt.rtp:prepend(lazy_path)
     return true
   end
 
-  local lock = read_file(vim.g.package_lock)
-  local lock_data = lock and vim.json.decode(lock) or nil
-  local commit = lock_data
-      and lock_data['lazy.nvim']
-      and lock_data['lazy.nvim'].commit
-    or nil
+  local startup_file = vim.fs.joinpath(state_path, 'startup.json')
+  local startup_data = utils.fs.read_json(startup_file)
+  if startup_data.bootstrap == false then
+    return false
+  end
+
+  local response = ''
+  vim.ui.input({
+    prompt = '[plugins] package manager not found, bootstrap? [y/N/never] ',
+  }, function(r)
+    response = r
+  end)
+
+  if vim.fn.match(response, '[Nn][Ee][Vv][Ee][Rr]') >= 0 then
+    startup_data.bootstrap = false
+    utils.fs.write_json(startup_file, startup_data)
+    return false
+  end
+
+  if vim.fn.match(response, '^[Yy]\\([Ee][Ss]\\)\\?$') < 0 then
+    return false
+  end
+
+  print('\n')
+  local lock_data = utils.fs.read_json(vim.g.package_lock)
+  local commit = lock_data['lazy.nvim'] and lock_data['lazy.nvim'].commit
   local url = 'https://github.com/folke/lazy.nvim.git'
-  vim.notify('[plugins] installing lazy.nvim...', vim.log.levels.INFO)
+  vim.notify('[plugins] installing lazy.nvim...')
   vim.fn.mkdir(vim.g.package_path, 'p')
   if
     not utils.git.execute({
@@ -45,6 +53,7 @@ local function bootstrap()
   then
     return false
   end
+
   if commit then
     utils.git.dir_execute(
       lazy_path,
@@ -52,10 +61,7 @@ local function bootstrap()
       vim.log.levels.INFO
     )
   end
-  vim.notify(
-    '[plugins] lazy.nvim cloned to ' .. lazy_path,
-    vim.log.levels.INFO
-  )
+  vim.notify('[plugins] lazy.nvim cloned to ' .. lazy_path)
   vim.opt.rtp:prepend(lazy_path)
   return true
 end
@@ -91,7 +97,7 @@ vim.api.nvim_create_autocmd('User', {
   pattern = { 'LazyInstall*', 'LazyUpdate*', 'LazyRestore*' },
   group = vim.api.nvim_create_augroup('LazyPatches', {}),
   callback = function(info)
-    local patches_path = vim.fs.joinpath(confpath, 'patches')
+    local patches_path = vim.fs.joinpath(conf_path, 'patches')
     for patch in vim.fs.dir(patches_path) do
       local patch_path = vim.fs.joinpath(patches_path, patch)
       local plugin_path =
