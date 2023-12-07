@@ -333,7 +333,28 @@ oil.setup({
     ['<C-h>'] = 'actions.toggle_hidden',
     ['gs'] = 'actions.change_sort',
     ['gx'] = 'actions.open_external',
-    ['gy'] = 'actions.copy_entry_path',
+    ['gy'] = {
+      mode = 'n',
+      buffer = true,
+      desc = 'Yank the filepath of the entry under the cursor to a register',
+      callback = function()
+        local entry = oil.get_cursor_entry()
+        local dir = oil.get_current_dir()
+        if not entry or not dir then
+          return
+        end
+        local entry_path = dir .. entry.name
+        vim.fn.setreg('"', entry_path)
+        vim.fn.setreg(vim.v.register, entry_path)
+        vim.notify(
+          string.format(
+            "[oil] yanked '%s' to register '%s'",
+            entry_path,
+            vim.v.register
+          )
+        )
+      end,
+    },
     ['<C-o>'] = { -- Prevent jumping to file buffers by accident
       mode = 'n',
       expr = true,
