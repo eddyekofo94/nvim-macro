@@ -30,18 +30,13 @@ if saved.colors_name and saved.colors_name ~= vim.g.colors_name then
   })
 end
 
-local last_set ---@type integer?
-local min_interval = 500 -- ms
-
 vim.api.nvim_create_autocmd('Colorscheme', {
   group = vim.api.nvim_create_augroup('ColorSwitch', {}),
   desc = 'Spawn setbg/setcolors on colorscheme change.',
   callback = function()
-    local now = vim.uv.now()
-    if last_set and now - last_set < min_interval then
+    if vim.g.script_set_bg or vim.g.script_set_colors then
       return
     end
-    last_set = now
 
     local data = utils.fs.read_json(colors_file)
     if data.colors_name ~= vim.g.colors_name or data.bg ~= vim.go.bg then
