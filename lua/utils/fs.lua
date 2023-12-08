@@ -57,27 +57,15 @@ function M.read_file(path)
   return content or ''
 end
 
----Read json contents as lua table
+---Write string into file
 ---@param path string
----@param opts table? same option table as `vim.json.decode()`
----@return table
-function M.read_json(path, opts)
-  opts = opts or {}
-  local str = M.read_file(path)
-  local ok, tbl = pcall(vim.json.decode, str, opts)
-  return ok and tbl or {}
-end
-
----Write json contents
----@param path string
----@param tbl table
 ---@return boolean success
-function M.write_json(path, tbl)
+function M.write_file(path, str)
   local file = io.open(path, 'w')
   if not file then
     return false
   end
-  file:write(vim.json.encode(tbl))
+  file:write(str)
   file:close()
   return true
 end

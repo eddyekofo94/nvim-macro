@@ -15,7 +15,7 @@ local function bootstrap()
   end
 
   local startup_file = vim.fs.joinpath(state_path, 'startup.json')
-  local startup_data = utils.fs.read_json(startup_file)
+  local startup_data = utils.json.read(startup_file)
   if startup_data.bootstrap == false then
     return false
   end
@@ -29,7 +29,7 @@ local function bootstrap()
 
   if vim.fn.match(response, '[Nn][Ee][Vv][Ee][Rr]') >= 0 then
     startup_data.bootstrap = false
-    utils.fs.write_json(startup_file, startup_data)
+    utils.json.write(startup_file, startup_data)
     return false
   end
 
@@ -38,7 +38,7 @@ local function bootstrap()
   end
 
   print('\n')
-  local lock_data = utils.fs.read_json(vim.g.package_lock)
+  local lock_data = utils.json.read(vim.g.package_lock)
   local commit = lock_data['lazy.nvim'] and lock_data['lazy.nvim'].commit
   local url = 'https://github.com/folke/lazy.nvim.git'
   vim.notify('[plugins] installing lazy.nvim...')

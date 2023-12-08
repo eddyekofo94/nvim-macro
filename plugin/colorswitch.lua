@@ -13,7 +13,7 @@ local colors_file =
 -- 2. Spawn setbg/setcolors on colorscheme change to make other nvim instances
 --    and system color consistent with the current nvim instance.
 
-local saved = utils.fs.read_json(colors_file)
+local saved = utils.json.read(colors_file)
 saved.bg = saved.bg or 'dark'
 saved.colors_name = saved.colors_name or 'nano'
 
@@ -36,11 +36,11 @@ vim.api.nvim_create_autocmd('Colorscheme', {
       return
     end
 
-    local data = utils.fs.read_json(colors_file)
+    local data = utils.json.read(colors_file)
     if data.colors_name ~= vim.g.colors_name or data.bg ~= vim.go.bg then
       data.colors_name = vim.g.colors_name
       data.bg = vim.go.bg
-      if not utils.fs.write_json(colors_file, data) then
+      if not utils.json.write(colors_file, data) then
         return
       end
     end
