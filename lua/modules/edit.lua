@@ -38,11 +38,6 @@ return {
   },
 
   {
-    'h-hg/fcitx.nvim',
-    event = 'InsertEnter',
-  },
-
-  {
     'junegunn/vim-easy-align',
     keys = {
       { 'gl', mode = { 'n', 'x' } },
