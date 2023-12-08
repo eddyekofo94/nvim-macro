@@ -1,4 +1,4 @@
-require('init.general')
-require('init.keymaps')
-require('init.autocmds')
-require('init.packages')
+require('core.general')
+require('core.keymaps')
+require('core.autocmds')
+require('core.packages')
