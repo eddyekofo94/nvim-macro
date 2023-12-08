@@ -14,10 +14,8 @@ local colors_file =
 --    and system color consistent with the current nvim instance.
 
 local saved = utils.fs.read_json(colors_file)
-  or {
-    bg = 'dark',
-    colors_name = 'nano',
-  }
+saved.bg = saved.bg or 'dark'
+saved.colors_name = saved.colors_name or 'nano'
 
 if saved.bg and saved.bg ~= vim.go.bg then
   vim.go.bg = saved.bg
