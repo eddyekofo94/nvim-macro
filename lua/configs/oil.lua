@@ -261,7 +261,7 @@ local permission_hlgroups = setmetatable({
 local type_hlgroups = setmetatable({
   ['-'] = 'OilTypeFile',
   ['d'] = 'OilTypeDir',
-  ['f'] = 'OilTypeFifo',
+  ['p'] = 'OilTypeFifo',
   ['l'] = 'OilTypeLink',
   ['s'] = 'OilTypeSocket',
 }, {
@@ -276,7 +276,7 @@ oil.setup({
       'type',
       icons = {
         directory = 'd',
-        fifo = 'f',
+        fifo = 'p',
         file = '-',
         link = 'l',
         socket = 's',
