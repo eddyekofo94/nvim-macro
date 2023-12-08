@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Tue 05 Dec 2023 04:59:28 AM CST
+-- Last Updated: Fri 08 Dec 2023 08:06:19 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -136,7 +136,7 @@ local hlgroups = {
   FloatShadow = { bg = c_black, blend = 70 },
   FloatShadowThrough = { link = 'None' },
   FoldColumn = { fg = c_faded },
-  Folded = { fg = c_faded, bg = c_subtle },
+  Folded = { fg = c_faded, bg = c_highlight },
   HealthSuccess = { fg = c_faded },
   IncSearch = { fg = c_background, bg = c_popout, bold = true },
   LineNr = { fg = c_faint },
