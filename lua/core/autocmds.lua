@@ -127,20 +127,13 @@ au('AutoCwd', {
           return
         end
         local current_dir = vim.fn.getcwd(0)
-        local proj_dir = require('utils').fs.proj_dir(info.file)
+        local target_dir = require('utils').fs.proj_dir(info.file)
+          or vim.fs.dirname(info.file)
+        local stat = target_dir and vim.uv.fs_stat(target_dir)
         -- Prevent unnecessary directory change, which triggers
         -- DirChanged autocmds that may update winbar unexpectedly
-        if current_dir == proj_dir then
-          return
-        end
-        if proj_dir then
-          vim.cmd.lcd(proj_dir)
-          return
-        end
-        local dirname = vim.fs.dirname(info.file) --[[@as string]]
-        local stat = vim.uv.fs_stat(dirname)
-        if stat and stat.type == 'directory' and proj_dir ~= current_dir then
-          vim.cmd.lcd(dirname)
+        if current_dir ~= target_dir and stat and stat.type == 'directory' then
+          vim.cmd.lcd(target_dir)
         end
       end)
     end,
@@ -198,57 +191,72 @@ au('AutoHlCursorLine', {
       local winlist = vim.api.nvim_list_wins()
       for _, win in ipairs(winlist) do
         vim.api.nvim_win_call(win, function()
-          vim.opt_local.winhl:append({ CursorLine = '', CursorColumn = '' })
+          vim.opt_local.winhl:append({
+            CursorLine = '',
+            CursorColumn = '',
+          })
         end)
       end
       return true
     end,
   },
 }, {
-  { 'BufWinEnter', 'WinEnter', 'InsertLeave' },
+  { 'BufWinEnter', 'WinEnter' },
   {
     callback = function()
-      vim.defer_fn(function()
-        if vim.fn.win_gettype() ~= '' then
-          return
-        end
-        local winhl = vim.opt_local.winhl:get()
-        -- Restore CursorLine and CursorColumn for current window
-        -- if not in inert/replace/select mode
-        if
-          (winhl['CursorLine'] or winhl['CursorColumn'])
-          and vim.fn.match(vim.fn.mode(), '[iRsS\x13].*') == -1
-        then
-          vim.opt_local.winhl:remove({
-            'CursorLine',
-            'CursorColumn',
+      if
+        vim.fn.win_gettype() ~= ''
+        or vim.api.nvim_get_mode().mode:match('^[iRsS\x13]')
+      then
+        return
+      end
+      -- Restore CursorLine and CursorColumn in current window
+      local winhl = vim.opt_local.winhl:get()
+      if winhl['CursorLine'] or winhl['CursorColumn'] then
+        vim.opt_local.winhl:remove({
+          'CursorLine',
+          'CursorColumn',
+        })
+      end
+      -- Conceal cursor line and cursor column in the previous window
+      -- if current window is a normal window
+      local current_win = vim.api.nvim_get_current_win()
+      local prev_win = vim.fn.win_getid(vim.fn.winnr('#'))
+      if
+        prev_win ~= 0
+        and prev_win ~= current_win
+        and vim.api.nvim_win_is_valid(prev_win)
+      then
+        vim.api.nvim_win_call(prev_win, function()
+          vim.opt_local.winhl:append({
+            CursorLine = '',
+            CursorColumn = '',
           })
-        end
-        -- Conceal cursor line and cursor column in the previous window
-        -- if current window is a normal window
-        local current_win = vim.api.nvim_get_current_win()
-        local prev_win = vim.fn.win_getid(vim.fn.winnr('#'))
-        if
-          prev_win ~= 0
-          and prev_win ~= current_win
-          and vim.api.nvim_win_is_valid(prev_win)
-          and vim.fn.win_gettype(current_win) == ''
-        then
-          vim.api.nvim_win_call(prev_win, function()
-            vim.opt_local.winhl:append({
-              CursorLine = '',
-              CursorColumn = '',
-            })
-          end)
-        end
-      end, 10)
+        end)
+      end
     end,
   },
 }, {
   'InsertEnter',
   {
     callback = function()
-      vim.opt_local.winhl:append({ CursorLine = '', CursorColumn = '' })
+      vim.opt_local.winhl:append({
+        CursorLine = '',
+        CursorColumn = '',
+      })
+    end,
+  },
+}, {
+  'InsertLeave',
+  {
+    callback = function()
+      local winhl = vim.opt_local.winhl:get()
+      if winhl['CursorLine'] or winhl['CursorColumn'] then
+        vim.opt_local.winhl:remove({
+          'CursorLine',
+          'CursorColumn',
+        })
+      end
     end,
   },
 })
