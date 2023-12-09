@@ -84,7 +84,16 @@ au('Autosave', {
   {
     nested = true,
     desc = 'Autosave on focus change.',
-    command = 'if &bt ==# "" | silent! update | endif',
+    callback = function(info)
+      if
+        vim.bo[info.buf].bt == ''
+        and (vim.uv.fs_stat(info.file) or {}).type == 'file'
+      then
+        vim.cmd.update({
+          mods = { emsg_silent = true },
+        })
+      end
+    end,
   },
 })
 
