@@ -22,7 +22,7 @@ local function bootstrap()
 
   local response = ''
   vim.ui.input({
-    prompt = '[plugins] package manager not found, bootstrap? [y/N/never] ',
+    prompt = '[packages] package manager not found, bootstrap? [y/N/never] ',
   }, function(r)
     response = r
   end)
@@ -41,7 +41,7 @@ local function bootstrap()
   local lock_data = utils.json.read(vim.g.package_lock)
   local commit = lock_data['lazy.nvim'] and lock_data['lazy.nvim'].commit
   local url = 'https://github.com/folke/lazy.nvim.git'
-  vim.notify('[plugins] installing lazy.nvim...')
+  vim.notify('[packages] installing lazy.nvim...')
   vim.fn.mkdir(vim.g.package_path, 'p')
   if
     not utils.git.execute({
@@ -61,7 +61,7 @@ local function bootstrap()
       vim.log.levels.INFO
     )
   end
-  vim.notify('[plugins] lazy.nvim cloned to ' .. lazy_path)
+  vim.notify('[packages] lazy.nvim cloned to ' .. lazy_path)
   vim.opt.rtp:prepend(lazy_path)
   return true
 end
@@ -105,7 +105,7 @@ vim.api.nvim_create_autocmd('User', {
       if vim.uv.fs_stat(plugin_path) then
         utils.git.dir_execute(plugin_path, { 'restore', '.' })
         if not info.match:find('Pre$') then
-          vim.notify('[plugins] applying patch ' .. patch)
+          vim.notify('[packages] applying patch ' .. patch)
           utils.git.dir_execute(plugin_path, {
             'apply',
             '--ignore-space-change',
