@@ -304,6 +304,7 @@ M.icons = setmetatable({
     Lock                = '󰌾 ',
     Markdown            = ' ',
     Object              = ' ',
+    Pdf                 = ' ',
     Raw                 = '󱨏 ',
     Sh                  = ' ',
     Theme               = '󰏘 ',

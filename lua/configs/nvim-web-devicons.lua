@@ -32,6 +32,12 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Git),
       name = 'GitCommit',
     },
+    pdf = {
+      color = '#d65d0e',
+      cterm_color = '166',
+      icon = vim.trim(icons.Pdf),
+      name = 'Pdf',
+    }
   },
   override_by_extension = {
     asm = {
