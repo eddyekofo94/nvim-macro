@@ -88,15 +88,95 @@ vim.keymap.set('t', '<M-k>',      '<Cmd>wincmd k<CR>')
 vim.keymap.set('t', '<M-l>',      '<Cmd>wincmd l<CR>')
 -- stylua: ignore end
 
+---@param linenr integer? line number
+---@return boolean
+local function is_wrapped(linenr)
+  linenr = linenr or vim.fn.line('.')
+  return vim.opt.wrap:get()
+    and vim.fn.strdisplaywidth(vim.fn.getline(linenr) --[[@as string]])
+      >= vim.api.nvim_win_get_width(0)
+end
+
+---@param key string
+---@param remap string
+---@return fun(): string
+local function map_wrapped(key, remap)
+  return function()
+    return is_wrapped() and remap or key
+  end
+end
+
+---@param key string
+---@param remap string
+---@return fun(): string
+local function map_wrapped_cur_or_next_line_nocount(key, remap)
+  return function()
+    return vim.v.count == 0
+        and (is_wrapped() or is_wrapped(vim.fn.line('.') + 1))
+        and remap
+      or key
+  end
+end
+
+---@param key string
+---@param remap string
+---@return fun(): string
+local function map_wrapped_cur_or_prev_line_nocount(key, remap)
+  return function()
+    return vim.v.count == 0
+        and (is_wrapped() or is_wrapped(vim.fn.line('.') - 1))
+        and remap
+      or key
+  end
+end
+
+---@param key string
+---@param remap string
+---@return fun(): string
+local function map_wrapped_first_line_nocount(key, remap)
+  return function()
+    return vim.v.count == 0 and is_wrapped(1) and remap or key
+  end
+end
+
+---@param key string
+---@param remap string
+---@return fun(): string
+local function map_wrapped_last_line_nocount(key, remap)
+  return function()
+    return vim.v.count == 0 and is_wrapped(vim.fn.line('$')) and remap or key
+  end
+end
+
+---@param key string
+---@param remap string
+---@return fun(): string
+local function map_wrapped_eol(key, remap)
+  local remap_esc = vim.api.nvim_replace_termcodes(remap, true, true, true)
+  return function()
+    if not is_wrapped() then
+      return key
+    end
+    vim.api.nvim_feedkeys(remap_esc, 'nx', false)
+    return vim.fn.col('.') == vim.fn.col('$') - 1 and key or remap
+  end
+end
+
 -- More consistent behavior when &wrap is set
 -- stylua: ignore start
-vim.keymap.set({ 'n', 'x' }, 'j',      'v:count ? "j"       : "gj"',     { expr = true })
-vim.keymap.set({ 'n', 'x' }, 'k',      'v:count ? "k"       : "gk"',     { expr = true })
-vim.keymap.set({ 'n', 'x' }, '0',      '&wrap   ? "g0"      : "0"',      { expr = true })
-vim.keymap.set({ 'n', 'x' }, '$',      '&wrap   ? "g$"      : "$"',      { expr = true })
-vim.keymap.set({ 'n', 'x' }, '^',      '&wrap   ? "g^"      : "^"',      { expr = true })
-vim.keymap.set({ 'n', 'x' }, '<Home>', '&wrap   ? "g<Home>" : "<Home>"', { expr = true })
-vim.keymap.set({ 'n', 'x' }, '<End>',  '&wrap   ? "g<End>"  : "<End>"',  { expr = true })
+vim.keymap.set({ 'n', 'x' }, 'j',        map_wrapped_cur_or_next_line_nocount('j', 'gj'),               { expr = true })
+vim.keymap.set({ 'n', 'x' }, 'k',        map_wrapped_cur_or_prev_line_nocount('k', 'gk'),               { expr = true })
+vim.keymap.set({ 'n', 'x' }, '<Down>',   map_wrapped_cur_or_next_line_nocount('<Down>', 'g<Down>'),     { expr = true })
+vim.keymap.set({ 'n', 'x' }, '<Up>',     map_wrapped_cur_or_prev_line_nocount('<Up>', 'g<Up>'),         { expr = true })
+vim.keymap.set({ 'n', 'x' }, 'gg',       map_wrapped_first_line_nocount('gg', 'gg99999gk'),             { expr = true })
+vim.keymap.set({ 'n', 'x' }, 'G',        map_wrapped_last_line_nocount('G', 'G99999gj'),                { expr = true })
+vim.keymap.set({ 'n', 'x' }, '<C-Home>', map_wrapped_first_line_nocount('<C-Home>', '<C-Home>99999gk'), { expr = true })
+vim.keymap.set({ 'n', 'x' }, '<C-End>',  map_wrapped_last_line_nocount('<C-End>', '<C-End>99999gj'),    { expr = true })
+vim.keymap.set({ 'n', 'x' }, '0',        map_wrapped('0', 'g0'),             { expr = true })
+vim.keymap.set({ 'n', 'x' }, '$',        map_wrapped_eol('$', 'g$'),         { expr = true })
+vim.keymap.set({ 'n', 'x' }, '^',        map_wrapped('^', 'g^'),             { expr = true })
+vim.keymap.set({ 'n', 'x' }, '<Home>',   map_wrapped('<Home>', 'g<Home>'),   { expr = true })
+vim.keymap.set({ 'n', 'x' }, '<End>',    map_wrapped_eol('<End>', 'g<End>'), { expr = true })
 -- stylua: ignore end
 
 -- Buffer navigation
