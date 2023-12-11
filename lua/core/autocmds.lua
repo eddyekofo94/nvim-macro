@@ -390,3 +390,31 @@ au('FixVirtualEditCursorPos', {
     end,
   },
 })
+
+au('FixCmdLineIskeyword', {
+  'CmdLineEnter',
+  {
+    desc = 'Have consistent &iskeyword in command-line mode.',
+    callback = function(info)
+      vim.g._isk_buf = info.buf
+      vim.g._isk_save = vim.bo[info.buf].isk
+      vim.cmd.setlocal('isk&')
+    end,
+  },
+}, {
+  'CmdLineLeave',
+  {
+    desc = 'Restore &iskeyword after leaving command-line mode.',
+    callback = function()
+      if
+        vim.g._isk_buf
+        and vim.api.nvim_buf_is_valid(vim.g._isk_buf)
+        and vim.g._isk_save ~= vim.b[vim.g._isk_buf].isk
+      then
+        vim.bo[vim.g._isk_buf].isk = vim.g._isk_save
+        vim.g._isk_buf = nil
+        vim.g._isk_save = nil
+      end
+    end,
+  },
+})
