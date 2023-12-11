@@ -303,33 +303,6 @@ au('TextwidthRelativeColorcolumn', {
   },
 })
 
-au('DisableWinBarInDiffMode', {
-  'OptionSet',
-  {
-    pattern = 'diff',
-    desc = 'Disable winbar in diff mode.',
-    callback = function()
-      if vim.v.option_new then
-        vim.w._winbar = vim.wo.winbar
-        vim.wo.winbar = nil
-        if vim.wo.culopt:find('both') or vim.wo.culopt:find('line') then
-          vim.w._culopt = vim.wo.culopt
-          vim.wo.culopt = 'number'
-        end
-      else
-        if vim.w._winbar then
-          vim.wo.winbar = vim.w._winbar
-          vim.w._winbar = nil
-        end
-        if vim.w._culopt then
-          vim.wo.culopt = vim.w._culopt
-          vim.w._culopt = nil
-        end
-      end
-    end,
-  },
-})
-
 au('UpdateTimestamp', {
   'BufWritePre',
   {
