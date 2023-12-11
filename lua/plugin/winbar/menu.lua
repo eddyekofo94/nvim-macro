@@ -185,7 +185,7 @@ end
 ---@field clicked_at integer[]? last position where the menu was clicked, byte-indexed, 1,0-indexed
 ---@field prev_cursor integer[]? previous cursor position
 ---@field symbol_previewed winbar_symbol_t? symbol being previewed
----@field scrollbar { thumb: integer, sbar: integer }? scrollbar window handlers
+---@field scrollbar { thumb: integer, background: integer }? scrollbar window handlers
 local winbar_menu_t = {}
 winbar_menu_t.__index = winbar_menu_t
 
@@ -505,6 +505,7 @@ function winbar_menu_t:update_scrollbar()
     or not self.buf
     or not vim.api.nvim_win_is_valid(self.win)
     or not vim.api.nvim_buf_is_valid(self.buf)
+    or not configs.opts.menu.scrollbar.enable
   then
     return
   end
@@ -544,12 +545,12 @@ function winbar_menu_t:update_scrollbar()
       win = self.win,
       zindex = menu_win_configs.zindex,
     }
-    self.scrollbar.sbar = vim.api.nvim_open_win(
+    self.scrollbar.background = vim.api.nvim_open_win(
       vim.api.nvim_create_buf(false, true),
       false,
       win_configs
     )
-    vim.wo[self.scrollbar.sbar].winhl = 'NormalFloat:WinBarMenuSbar'
+    vim.wo[self.scrollbar.background].winhl = 'NormalFloat:WinBarMenuSbar'
 
     win_configs.row = offset
     win_configs.height = thumb_height
@@ -573,8 +574,8 @@ function winbar_menu_t:close_scrollbar()
   if vim.api.nvim_win_is_valid(self.scrollbar.thumb) then
     vim.api.nvim_win_close(self.scrollbar.thumb, true)
   end
-  if vim.api.nvim_win_is_valid(self.scrollbar.sbar) then
-    vim.api.nvim_win_close(self.scrollbar.sbar, true)
+  if vim.api.nvim_win_is_valid(self.scrollbar.background) then
+    vim.api.nvim_win_close(self.scrollbar.background, true)
   end
   self.scrollbar = nil
 end

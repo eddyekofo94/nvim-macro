@@ -128,6 +128,10 @@ M.opts = {
     -- When on, set the cursor to the closest clickable component
     -- on CursorMoved
     quick_navigation = true,
+    -- Menu scrollbar options
+    scrollbar = {
+      enable = true,
+    },
     entry = {
       padding = {
         left = 1,
