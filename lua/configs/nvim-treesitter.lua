@@ -148,7 +148,7 @@ ts_configs.setup({
     lsp_interop = {
       enable = true,
       disable = buf_is_large,
-      border = 'shadow',
+      border = 'solid',
       peek_definition_code = {
         ['<C-k>'] = '@function.outer',
       },
