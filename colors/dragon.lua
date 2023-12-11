@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 09 Dec 2023 02:09:33 PM CST
+-- Last Updated: Mon 11 Dec 2023 10:55:30 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -271,8 +271,8 @@ local hlgroups = {
   WarningMsg = { fg = c_roninYellow },
   Whitespace = { fg = c_dragonBg4 },
   WildMenu = { link = 'Pmenu' },
-  WinBar = { bg = 'NONE', fg = c_dragonFg1, bold = true },
-  WinBarNC = { bg = 'NONE', fg = c_dragonAsh, bold = false },
+  WinBar = { bg = 'NONE', fg = c_dragonFg1 },
+  WinBarNC = { link = 'WinBar' },
   WinSeparator = { fg = c_dragonBg4 },
   lCursor = { link = 'Cursor' },
   -- }}}2
