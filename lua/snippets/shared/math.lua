@@ -550,7 +550,7 @@ return {
         {
           env = t('aligned'),
           idnt = un.idnt(1),
-          text = r(1, 'text'),
+          text = r(0, 'text'),
         }
       ),
       un.fmtad(
@@ -562,7 +562,7 @@ return {
         {
           env = t('align*'),
           idnt = un.idnt(1),
-          text = r(1, 'text'),
+          text = r(0, 'text'),
         }
       ),
       un.fmtad(
@@ -574,13 +574,13 @@ return {
         {
           env = t('align'),
           idnt = un.idnt(1),
-          text = r(1, 'text'),
+          text = r(0, 'text'),
         }
       ),
     }),
     {
       stored = {
-        text = i(1),
+        text = i(0),
       },
     }
   ),
@@ -596,7 +596,7 @@ return {
         {
           env = t('equation'),
           idnt = un.idnt(1),
-          text = r(1, 'text'),
+          text = r(0, 'text'),
         }
       ),
       un.fmtad(
@@ -608,13 +608,13 @@ return {
         {
           env = t('equation*'),
           idnt = un.idnt(1),
-          text = r(1, 'text'),
+          text = r(0, 'text'),
         }
       ),
     }),
     {
       stored = {
-        text = i(1),
+        text = i(0),
       },
     }
   ),
@@ -820,7 +820,7 @@ return {
   }, {
     t({ '$', '' }),
     un.idnt(1),
-    i(1),
+    i(0),
     t({ '', '$$' }),
   }),
   us.sa({
