@@ -23,21 +23,29 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'markdown', 'norg', 'org' },
   callback = function(info)
     vim.schedule(function()
+      local buf = info.buf
+      if
+        not vim.api.nvim_buf_is_valid(buf)
+        or not vim.bo[buf].ma
+        or not utils.treesitter.is_active(buf)
+      then
+        return
+      end
       ot.activate({ 'python', 'bash', 'lua' })
       -- stylua: ignore start
-      vim.api.nvim_buf_create_user_command(info.buf, 'OtterRename', ot.ask_rename, {})
-      vim.api.nvim_buf_create_user_command(info.buf, 'OtterHover', ot.ask_hover, {})
-      vim.api.nvim_buf_create_user_command(info.buf, 'OtterReferences', ot.ask_references, {})
-      vim.api.nvim_buf_create_user_command(info.buf, 'OtterTypeDefinition', ot.ask_type_definition, {})
-      vim.api.nvim_buf_create_user_command(info.buf, 'OtterDefinition', ot.ask_definition, {})
-      vim.api.nvim_buf_create_user_command(info.buf, 'OtterFormat', ot.ask_format, {})
-      vim.api.nvim_buf_create_user_command(info.buf, 'OtterDocumentSymbols', ot.ask_document_symbols, {})
-      vim.keymap.set('n', '<Leader>r', action_fallback('rename'),          { buffer = info.buf })
-      vim.keymap.set('n', 'K',         action_fallback('hover'),           { buffer = info.buf })
-      vim.keymap.set('n', 'g/',        action_fallback('references'),      { buffer = info.buf })
-      vim.keymap.set('n', 'gD',        action_fallback('type_definition'), { buffer = info.buf })
-      vim.keymap.set('n', 'gd',        action_fallback('definition'),      { buffer = info.buf })
-      vim.keymap.set('n', 'gq;',       action_fallback('format'),          { buffer = info.buf })
+      vim.api.nvim_buf_create_user_command(buf, 'OtterRename', ot.ask_rename, {})
+      vim.api.nvim_buf_create_user_command(buf, 'OtterHover', ot.ask_hover, {})
+      vim.api.nvim_buf_create_user_command(buf, 'OtterReferences', ot.ask_references, {})
+      vim.api.nvim_buf_create_user_command(buf, 'OtterTypeDefinition', ot.ask_type_definition, {})
+      vim.api.nvim_buf_create_user_command(buf, 'OtterDefinition', ot.ask_definition, {})
+      vim.api.nvim_buf_create_user_command(buf, 'OtterFormat', ot.ask_format, {})
+      vim.api.nvim_buf_create_user_command(buf, 'OtterDocumentSymbols', ot.ask_document_symbols, {})
+      vim.keymap.set('n', '<Leader>r', action_fallback('rename'),          { buffer = buf })
+      vim.keymap.set('n', 'K',         action_fallback('hover'),           { buffer = buf })
+      vim.keymap.set('n', 'g/',        action_fallback('references'),      { buffer = buf })
+      vim.keymap.set('n', 'gD',        action_fallback('type_definition'), { buffer = buf })
+      vim.keymap.set('n', 'gd',        action_fallback('definition'),      { buffer = buf })
+      vim.keymap.set('n', 'gq;',       action_fallback('format'),          { buffer = buf })
       -- stylua: ignore end
     end)
   end,
