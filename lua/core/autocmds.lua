@@ -339,19 +339,18 @@ au('UpdateTimestamp', {
         return
       end
       local lines = vim.api.nvim_buf_get_lines(info.buf, 0, 8, false)
-      local update = false
+      local updated = false
       for idx, line in ipairs(lines) do
-        -- Example: "Fri 07 Jul 2023 12:04:05 AM CDT"
         local new_str, pos = line:gsub(
-          '%u%U%U%s+%d%d%s+%u%U%U%s+%d%d%d%d%s+%d%d:%d%d:%d%d%s+%u%u%s+%u+',
-          os.date('%a %d %b %Y %I:%M:%S %p %Z')
+          'Last Updated:.*',
+          'Last Updated: ' .. os.date('%a %d %b %Y %I:%M:%S %p %Z')
         )
         if pos > 0 then
-          update = true
+          updated = true
           lines[idx] = new_str
         end
       end
-      if update then
+      if updated then
         -- Only join further change with the previous undo block
         -- when the current undo block is a leaf node (no further change),
         -- see `:h undojoin` and `:h E790`
