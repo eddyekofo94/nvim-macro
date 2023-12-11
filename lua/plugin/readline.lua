@@ -5,6 +5,11 @@ local map = vim.keymap.set
 local col = vim.fn.col
 local line = vim.fn.line
 
+local regex_keyword_at_beginning = vim.regex([=[^\s*[[:keyword:]]*]=])
+local regex_nonkeyword_at_beginning = vim.regex([=[^\s*[^[:keyword:] ]*]=])
+local regex_keyword_at_end = vim.regex([=[[[:keyword:]]*\s*$]=])
+local regex_nonkeyword_at_end = vim.regex([=[[^[:keyword:] ]*\s*$]=])
+
 ---Check if string is empty
 ---@param str string
 ---@return boolean
@@ -14,13 +19,14 @@ end
 
 ---Match non-empty string
 ---@param str string
----@vararg string patterns to match
+---@vararg vim.regex compiled vim regex
 ---@return string
 local function match_nonempty(str, ...)
   local patterns = { ... }
   local capture = ''
   for _, pattern in ipairs(patterns) do
-    capture = str:match(pattern) or capture
+    local match_start, match_end = pattern:match_str(str)
+    capture = match_start and str:sub(match_start + 1, match_end) or capture
     if not str_isempty(capture) then
       return capture
     end
@@ -55,7 +61,11 @@ end
 local function get_word_after(str, colnr)
   str = str or get_current_line()
   colnr = colnr or get_current_col()
-  return match_nonempty(str:sub(colnr), '^%s*[%w_]*', '^%s*[^%s%w_]*')
+  return match_nonempty(
+    str:sub(colnr),
+    regex_keyword_at_beginning,
+    regex_nonkeyword_at_beginning
+  )
 end
 
 ---Get word before cursor
@@ -65,7 +75,11 @@ end
 local function get_word_before(str, colnr)
   str = str or get_current_line()
   colnr = colnr or get_current_col() - 1
-  return match_nonempty(str:sub(1, colnr), '[%w_]*%s*$', '[^%s%w_]*%s*$')
+  return match_nonempty(
+    str:sub(1, colnr),
+    regex_keyword_at_end,
+    regex_nonkeyword_at_end
+  )
 end
 
 ---Check if current line is the last line
@@ -109,14 +123,15 @@ function M.setup()
   map('!', '<C-a>', '<Home>')
   map('!', '<C-e>', '<End>')
   map('!', '<C-d>', '<Del>')
-  map('!', '<C-y>', 'pumvisible() ? "<C-y>" : "<C-r>-"', { expr = true })
   map('c', '<C-b>', '<Left>')
   map('c', '<C-f>', '<Right>')
   map('c', '<C-_>', '<C-f>')
-  map('c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>')
   map('!', '<C-BS>', '<C-w>')
   map('!', '<M-BS>', '<C-w>')
   map('!', '<M-Del>', '<C-w>')
+
+  map('!', '<C-y>', 'pumvisible() ? "<C-y>" : "<C-r>-"', { expr = true })
+  map('c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>')
 
   map('i', '<C-b>', function()
     if first_line() and start_of_line() then
