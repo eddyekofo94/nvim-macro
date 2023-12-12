@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Mon 11 Dec 2023 10:55:30 PM CST
+-- Last Updated: Tue 12 Dec 2023 12:17:12 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -258,9 +258,9 @@ local hlgroups = {
   StatusLine = { bg = c_dragonBg3, fg = c_dragonFg1 },
   StatusLineNC = { bg = c_dragonBg2, fg = c_dragonBg5 },
   Substitute = { bg = c_autumnRed, fg = c_dragonFg0 },
-  TabLine = { bg = c_dragonBg0, fg = c_dragonGray2 },
-  TabLineFill = { bg = c_dragonBg1 },
-  TabLineSel = { bg = c_dragonBg3, fg = c_dragonFg1 },
+  TabLine = { link = 'StatusLineNC' },
+  TabLineFill = { link = 'Normal' },
+  TabLineSel = { link = 'StatusLine' },
   TermCursor = { fg = c_dragonBg1, bg = c_dragonRed },
   TermCursorNC = { fg = c_dragonBg1, bg = c_dragonAsh },
   Title = { bold = true, fg = c_dragonBlue1 },
