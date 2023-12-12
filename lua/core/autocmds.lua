@@ -114,7 +114,11 @@ au('LastPosJmp', {
       local ft = vim.bo[info.buf].ft
       -- don't apply to git messages
       if ft ~= 'gitcommit' and ft ~= 'gitrebase' then
-        vim.cmd('silent! normal! g`"zvzz')
+        vim.cmd.normal({
+          'g`"zvzz',
+          bang = true,
+          mods = { emsg_silent = true },
+        })
       end
     end,
   },
@@ -171,11 +175,15 @@ au('QuickFixAutoOpen', {
       end
       if vim.startswith(info.match, 'l') then
         vim.schedule(function()
-          vim.cmd('bel lwindow')
+          vim.cmd.lwindow({
+            mods = { split = 'belowright' },
+          })
         end)
       else
         vim.schedule(function()
-          vim.cmd('bot cwindow')
+          vim.cmd.cwindow({
+            mods = { split = 'botright' },
+          })
         end)
       end
     end,
@@ -387,6 +395,25 @@ au('FixCmdLineIskeyword', {
         vim.g._isk_buf = nil
         vim.g._isk_save = nil
       end
+    end,
+  },
+})
+
+au('DeferSetSpell', {
+  { 'BufReadPre', 'BufModifiedSet' },
+  {
+    desc = 'Defer setting spell options to improve startup time.',
+    callback = function(info)
+      local buf = info.buf
+      if
+        not vim.b[buf].spell_checked
+        and not vim.wo.spell
+        and vim.bo[buf].ma
+        and vim.bo[buf].bt == ''
+      then
+        vim.opt_local.spell = true
+      end
+      vim.b[buf].spell_checked = true
     end,
   },
 })

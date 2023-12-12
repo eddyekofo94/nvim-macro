@@ -83,7 +83,6 @@ opt.autoindent  = true
 opt.ignorecase  = true
 opt.smartcase   = true
 
-opt.spell         = true
 opt.spellcapcheck = ''
 opt.spelllang     = 'en,cjk'
 opt.spelloptions  = 'camel'
