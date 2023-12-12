@@ -91,10 +91,13 @@ vim.keymap.set('t', '<M-l>',      '<Cmd>wincmd l<CR>')
 ---@param linenr integer? line number
 ---@return boolean
 local function is_wrapped(linenr)
+  if not vim.wo.wrap then
+    return false
+  end
   linenr = linenr or vim.fn.line('.')
-  return vim.opt.wrap:get()
-    and vim.fn.strdisplaywidth(vim.fn.getline(linenr) --[[@as string]])
-      >= vim.api.nvim_win_get_width(0)
+  local wininfo = vim.fn.getwininfo(vim.api.nvim_get_current_win())[1]
+  return vim.fn.strdisplaywidth(vim.fn.getline(linenr) --[[@as string]])
+    >= wininfo.width - wininfo.textoff
 end
 
 ---@param key string
