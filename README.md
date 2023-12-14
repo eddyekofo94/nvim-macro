@@ -149,21 +149,32 @@ Install the following debug adapters manually:
 
 - [Lazygit](https://github.com/jesseduffield/lazygit) for improved git integration
 - [Fd](https://github.com/sharkdp/fd), [Ripgrep](https://github.com/BurntSushi/ripgrep), and [Fzf](https://github.com/junegunn/fzf) for fuzzy search
-- [Pandoc](https://pandoc.org/), [custom scripts](https://github.com/Bekaboo/dot/tree/master/.scripts) and [TexLive](https://www.tug.org/texlive/) (for ArchLinux users, it is `texlive-core` and `texlive-extra`) for markdown → PDF conversion
+- [Pandoc](https://pandoc.org/), [custom scripts](https://github.com/Bekaboo/dot/tree/master/.scripts) and [TexLive](https://www.tug.org/texlive/) (for ArchLinux users, it is `texlive-core` and `texlive-extra`) for markdown → PDF conversion (`:MarkdownToPDF`)
+- [Draw.io desktop](https://www.drawio.com/blog/diagrams-offline) for creating and inserting simple PNG diagrams in markdown files (`:MarkdownInsertImage`)
+- [Node.js](https://nodejs.org/en) for installing dependencies for [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
+- [Jupytext](https://github.com/mwouts/jupytext) and [Pynvim](https://github.com/neovim/pynvim) for editing Jupyter notebooks
 
 ## Installation
 
-1. Backup your own settings.
-2. Make sure you have satisfied the requirements.
-3. Clone this repo to your config directory
+1. Make sure you have required dependencies installed.
+2. Clone this repo to your config directory
 
     ```
-    git clone https://github.com/Bekaboo/nvim ~/.config/nvim
+    git clone https://github.com/Bekaboo/nvim ~/.config/nvim-bekaboo
     ```
 
-4. Open neovim, manually run `:Lazy sync` if lazy.nvim does not
-    automatically sync.
-5. Run `:checkhealth` to check potential dependency issues.
+4. Open neovim using 
+
+    ```sh
+    NVIM_APPNAME=nvim-bekaboo nvim
+    ```
+
+    On first installation, neovim will prompt you to decide whether to install
+    third-party plugins, press `y` to install, `n` to skip, `never` to skip and
+    disable the prompt in the future (aka "do not ask again").
+
+5. After entering neovim, Run `:checkhealth` to check potential dependency
+   issues.
 6. Enjoy!
 
 ## Config Structure
@@ -302,7 +313,7 @@ corresponding plugin keymaps.
         <img src="https://github.com/Bekaboo/nvim/assets/76579810/035eb032-bbe5-48a5-abaf-4b334516c2cd" width=47.5%>
     </div>
 
-`cockatoo` and `nano` are two builtin custom colorschemes, with seperate
+`cockatoo` and `nano` are two builtin custom colorschemes, with separate
 palettes for dark and light background.
 
 Neovim is configured to restore the previous background and colorscheme
@@ -422,7 +433,7 @@ Total # of plugins: 48 (package manager included).
 - [statusline](https://github.com/Bekaboo/nvim/tree/master/plugin/statusline.lua)
     - custom statusline inspired by [nano-emacs](https://github.com/rougier/nano-emacs)
 - [tabout](https://github.com/Bekaboo/nvim/tree/master/plugin/tabout.lua)
-    - tab in and out with `<Tab>` and `<S-Tab>`
+    - tab out and in with `<Tab>` and `<S-Tab>`
 - [vscode-neovim](https://github.com/Bekaboo/nvim/tree/master/plugin/vscode-neovim.vim)
     - integration with [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim)
 - [winbar](https://github.com/Bekaboo/nvim/blob/master/plugin/winbar.lua)
