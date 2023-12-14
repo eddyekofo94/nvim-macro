@@ -150,7 +150,7 @@ ts_configs.setup({
       disable = buf_is_large,
       border = 'solid',
       peek_definition_code = {
-        ['<C-k>'] = '@function.outer',
+        ['<Leader>K'] = '@function.outer',
       },
     },
   },

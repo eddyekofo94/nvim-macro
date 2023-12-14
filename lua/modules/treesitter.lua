@@ -45,14 +45,7 @@ return {
   {
     'Wansmer/treesj',
     cmd = { 'TSJToggle', 'TSJSplit', 'TSJJoin' },
-    keys = {
-      '<Leader>j',
-      '<Leader>J',
-      '<Leader>s',
-      '<Leader>S',
-      '<Leader>t',
-      '<Leader>T',
-    },
+    keys = { '<M-C-K>', '<M-NL>', 'g<M-NL>' },
     dependencies = 'nvim-treesitter/nvim-treesitter',
     config = function()
       require('configs.treesj')

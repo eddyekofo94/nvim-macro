@@ -219,9 +219,12 @@ vim.keymap.set('n', '<Leader>7', tabswitch(vim.cmd.tabnext, 7))
 vim.keymap.set('n', '<Leader>8', tabswitch(vim.cmd.tabnext, 8))
 vim.keymap.set('n', '<Leader>9', tabswitch(vim.cmd.tabnext, 9))
 
+-- Complete line
+vim.keymap.set('i', '<C-l>', '<C-x><C-l>')
+
 -- Correct misspelled word / mark as correct
-vim.keymap.set('i', '<C-S-L>', '<Esc>[szg`]a')
-vim.keymap.set('i', '<C-l>', '<C-G>u<Esc>[s1z=`]a<C-G>u')
+vim.keymap.set('i', '<C-g>+', '<Esc>[szg`]a')
+vim.keymap.set('i', '<C-g>=', '<C-g>u<Esc>[s1z=`]a<C-G>u')
 
 -- Only clear highlights and message area and don't redraw if search
 -- highlighting is on to avoid flickering
