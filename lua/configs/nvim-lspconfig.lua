@@ -6,7 +6,7 @@ vim.api.nvim_create_autocmd('VimResized', {
   callback = function()
     if vim.bo.ft == 'lspinfo' then
       vim.api.nvim_win_close(0, true)
-      vim.cmd('LspInfo')
+      vim.cmd.LspInfo()
     end
   end,
 })

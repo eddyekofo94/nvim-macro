@@ -265,7 +265,7 @@ function winbar_symbol_t:jump()
   if not self.range or not self.win then
     return
   end
-  vim.cmd("normal! m'")
+  vim.cmd.normal({ "m'", bang = true })
   vim.api.nvim_win_set_cursor(self.win, {
     self.range.start.line + 1,
     self.range.start.character,
@@ -504,7 +504,10 @@ function winbar_t:redraw()
     -- However`vim.api.nvim_win_call()` is slow and cause flickering and
     -- tearing when there's constantly updating floating windows
     -- (e.g. nvim-cmp's completion windows)
-    vim.cmd('silent! redrawstatus!')
+    vim.cmd.redrawstatus({
+      bang = true,
+      mods = { emsg_silent = true },
+    })
   end
 end
 

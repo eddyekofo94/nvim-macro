@@ -16,7 +16,9 @@ vim.api.nvim_create_autocmd('BufWritePre', {
       vim.bo[info.buf].ft == 'markdown'
       and vim.api.nvim_get_current_line():match('^%s*|')
     then
-      vim.cmd('silent! TableModeRealign')
+      vim.cmd.TableModeRealign({
+        mods = { emsg_silent = true },
+      })
     end
   end,
 })

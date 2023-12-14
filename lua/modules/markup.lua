@@ -78,7 +78,7 @@ return {
             vim.fs.joinpath(vim.g.package_path, 'jupytext.vim')
           )
           vim.schedule(function()
-            vim.cmd.runtime('plugin/jupytext.vim')
+            vim.cmd.runtime({ 'plugin/jupytext.vim', bang = true })
             vim.cmd.edit(info.match)
           end)
           return true

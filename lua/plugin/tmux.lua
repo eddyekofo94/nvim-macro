@@ -142,8 +142,10 @@ end
 ---@param count integer? default to 1
 ---@return nil
 local function nvim_navigate(direction, count)
-  count = count or 1
-  vim.cmd.wincmd(count .. direction)
+  vim.cmd.wincmd({
+    direction,
+    count = count,
+  })
 end
 
 ---@param direction nvim_direction_t

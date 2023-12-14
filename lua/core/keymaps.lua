@@ -328,12 +328,12 @@ vim.keymap.set({ 'n', 'x' }, 'g{', function()
       if line:match('^$') then
         count = count - 1
         if count <= 0 then
-          vim.cmd("normal! m'")
+          vim.cmd.normal({ "m'", bang = true })
           vim.cmd(tostring(current_linenr + 1))
           return
         end
       elseif current_linenr <= 1 then
-        vim.cmd("normal! m'")
+        vim.cmd.normal({ "m'", bang = true })
         vim.cmd('1')
         return
       end
@@ -365,12 +365,12 @@ vim.keymap.set({ 'n', 'x' }, 'g}', function()
       if line:match('^$') then
         count = count - 1
         if count <= 0 then
-          vim.cmd("normal! m'")
+          vim.cmd.normal({ "m'", bang = true })
           vim.cmd(tostring(current_linenr - 1))
           return
         end
       elseif current_linenr >= buf_line_count then
-        vim.cmd("normal! m'")
+        vim.cmd.normal({ "m'", bang = true })
         vim.cmd(tostring(buf_line_count))
         return
       end

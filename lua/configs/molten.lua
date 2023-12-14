@@ -336,8 +336,10 @@ local function setup_buf_keymaps_and_commands(buf)
   end
 
   --stylua: ignore start
-  vim.keymap.set('n', '<C-j>', '<Cmd>noau MoltenEnterOutput<CR>', { buffer = buf })
-  vim.keymap.set('n', '<C-c>', '<Cmd>MoltenInterrupt<CR>', { buffer = buf })
+  vim.keymap.set('n', '<C-c>', vim.cmd.MoltenInterrupt, { buffer = buf })
+  vim.keymap.set('n', '<C-j>', function()
+    vim.cmd.MoltenEnterOutput({ mods = { noautocmd = true } })
+  end, { buffer = buf })
 
   if ft == 'markdown' then
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunLine', run_line, {})
@@ -349,12 +351,12 @@ local function setup_buf_keymaps_and_commands(buf)
     vim.keymap.set('n', '<LocalLeader>k', run_cell_above, { buffer = buf })
     vim.keymap.set('n', '<LocalLeader>j', run_cell_below, { buffer = buf })
     vim.keymap.set('n', '<CR>', run_cell_current, { buffer = buf })
-    vim.keymap.set('x', '<CR>', ':<C-u>MoltenNotebookRunVisual<CR>', { buffer = buf, silent = true })
+    vim.keymap.set('x', '<CR>', vim.cmd.MoltenNotebookRunVisual, { buffer = buf, silent = true })
     vim.keymap.set('n', '<LocalLeader>r', run_operator, { buffer = buf })
   else -- ft == 'python'
-    vim.keymap.set('n', '<CR>', '<Cmd>MoltenReevaluateCell<CR>', { buffer = buf })
-    vim.keymap.set('x', '<CR>', ':<C-u>MoltenEvaluateVisual<CR>', { buffer = buf, silent = true })
-    vim.keymap.set('n', '<LocalLeader>r', '<Cmd>MoltenEvaluateOperator<CR>', { buffer = buf })
+    vim.keymap.set('n', '<CR>', vim.cmd.MoltenReevaluateCell, { buffer = buf })
+    vim.keymap.set('x', '<CR>', vim.cmd.MoltenEvaluateVisual, { buffer = buf, silent = true })
+    vim.keymap.set('n', '<LocalLeader>r', vim.cmd.MoltenEvaluateOperator, { buffer = buf })
   end
   --stylua: ignore end
 end
@@ -373,7 +375,7 @@ vim.api.nvim_create_autocmd('User', {
 ---@return nil
 local function set_default_hlgroups()
   local hl = require('utils.hl')
-  hl.set(0, 'MoltenCell', { bg = 'NormalFloat' })
+  hl.set(0, 'MoltenCell', { bg = 'CursorLine' })
   hl.set(0, 'MoltenOutputWin', { link = 'Comment' })
   hl.set(0, 'MoltenOutputWinNC', { link = 'Comment' })
 end

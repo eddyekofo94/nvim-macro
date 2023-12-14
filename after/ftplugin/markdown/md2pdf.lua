@@ -149,7 +149,7 @@ local function md_to_pdf(tbl)
   local args, opts = parse_args(tbl.fargs)
   args = vim.tbl_deep_extend('force', { vim.fn.expand('%') }, args)
   opts = vim.tbl_deep_extend('force', { ['pdf-engine'] = 'pdflatex' }, opts)
-  vim.cmd('silent! wall')
+  vim.cmd.update({ mods = { emsg_silent = true } })
   spawn_pandoc(args, opts)
 end
 
