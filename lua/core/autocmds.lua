@@ -403,17 +403,26 @@ au('DeferSetSpell', {
   { 'BufReadPre', 'BufModifiedSet' },
   {
     desc = 'Defer setting spell options to improve startup time.',
-    callback = function(info)
-      local buf = info.buf
-      if
-        not vim.b[buf].spell_checked
-        and not vim.wo.spell
-        and vim.bo[buf].ma
-        and vim.bo[buf].bt == ''
-      then
-        vim.opt_local.spell = true
-      end
-      vim.b[buf].spell_checked = true
+    callback = function()
+      local win = vim.api.nvim_get_current_win()
+      -- Schedule setting spell to avoid glitch (SpellBad highlight
+      -- disappearing quickly after scheduled treesitter parser is attached)
+      vim.schedule(function()
+        vim.api.nvim_win_call(win, function()
+          local buf = vim.api.nvim_win_get_buf(win)
+          if
+              vim.b[buf].spell_checked
+              or vim.b[buf].large_file
+              or vim.wo[win].spell
+              or vim.bo[buf].bt ~= ''
+              or not vim.bo[buf].ma
+          then
+            return
+          end
+          vim.opt_local.spell = true
+          vim.b[buf].spell_checked = true
+        end)
+      end)
     end,
   },
 })
