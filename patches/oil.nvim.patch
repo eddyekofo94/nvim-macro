@@ -1,17 +1,8 @@
 diff --git a/lua/oil/init.lua b/lua/oil/init.lua
-index 72e87fc..4650a9c 100644
+index daeb66c..6372432 100644
 --- a/lua/oil/init.lua
 +++ b/lua/oil/init.lua
-@@ -7,7 +7,7 @@ local M = {}
- ---@field parsed_name nil|string
- 
- ---@alias oil.EntryType "file"|"directory"|"socket"|"link"|"fifo"
-----@alias oil.TextChunk string|string[]
-+---@alias oil.TextChunk string|string[]|{ [1]: string, [2]: { [1]: string, [2]: integer, [3]: integer }[] }
- ---@alias oil.CrossAdapterAction "copy"|"move"
- 
- ---@class (exact) oil.Adapter
-@@ -361,6 +361,19 @@ end
+@@ -364,6 +364,19 @@ end
  ---Open oil browser for a directory
  ---@param dir nil|string When nil, open the parent of the current buffer, or the cwd if current buffer is not a file
  M.open = function(dir)
@@ -31,7 +22,7 @@ index 72e87fc..4650a9c 100644
    local config = require("oil.config")
    local util = require("oil.util")
    local view = require("oil.view")
-@@ -816,6 +829,17 @@ local function load_oil_buffer(bufnr)
+@@ -815,6 +828,17 @@ local function load_oil_buffer(bufnr)
      util.rename_buffer(bufnr, bufname)
    end
  
@@ -62,30 +53,3 @@ index 5f8f321..9175a03 100644
    })
    local function close()
      if vim.api.nvim_win_is_valid(winid) then
-diff --git a/lua/oil/util.lua b/lua/oil/util.lua
-index 027b5db..6649f43 100644
---- a/lua/oil/util.lua
-+++ b/lua/oil/util.lua
-@@ -302,7 +302,21 @@ M.render_table = function(lines, col_width)
-       table.insert(pieces, text)
-       local col_end = col + text:len() + 1
-       if hl then
--        table.insert(highlights, { hl, #str_lines, col, col_end })
-+        if type(hl) == "table" then
-+          -- hl has the form { [1]: hl_name, [2]: col_start, [3]: col_end }[]
-+          -- Notice that col_start and col_end are relative position inside
-+          -- that col, so we need to add the offset to them
-+          for _, sub_hl in ipairs(hl) do
-+            table.insert(highlights, {
-+              sub_hl[1],
-+              #str_lines,
-+              col + sub_hl[2],
-+              col + sub_hl[3],
-+            })
-+          end
-+        else
-+          table.insert(highlights, { hl, #str_lines, col, col_end })
-+        end
-       end
-       col = col_end
-     end
