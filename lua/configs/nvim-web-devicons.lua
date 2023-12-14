@@ -184,6 +184,24 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Video),
       name = 'MOV',
     },
+    m4v = {
+      color = '#FD971F',
+      cterm_color = '208',
+      icon = vim.trim(icons.Video),
+      name = 'M4V',
+    },
+    mkv = {
+      color = '#FD971F',
+      cterm_color = '208',
+      icon = vim.trim(icons.Video),
+      name = 'Mkv',
+    },
+    webm = {
+      color = '#FD971F',
+      cterm_color = '208',
+      icon = vim.trim(icons.Video),
+      name = 'Webm',
+    },
     avi = {
       color = '#fd6c40',
       cterm_color = '208',
