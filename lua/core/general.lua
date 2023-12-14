@@ -17,6 +17,7 @@ opt.ruler          = true
 opt.pumheight      = 16
 opt.scrolloff      = 4
 opt.sidescrolloff  = 8
+opt.sidescroll     = 0
 opt.signcolumn     = 'yes:1'
 opt.splitright     = true
 opt.splitbelow     = true
