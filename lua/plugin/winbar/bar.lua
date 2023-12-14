@@ -276,12 +276,13 @@ function winbar_symbol_t:jump()
 end
 
 ---Preview the symbol in the source window
+---@param orig_view table? use this view as original view
 ---@return nil
-function winbar_symbol_t:preview()
+function winbar_symbol_t:preview(orig_view)
   if not self.range or not self.win or not self.buf then
     return
   end
-  self.view = vim.api.nvim_win_call(self.win, vim.fn.winsaveview)
+  self.view = orig_view or vim.api.nvim_win_call(self.win, vim.fn.winsaveview)
   utils.hl.range_single(self.buf, 'WinBarPreview', self.range)
   vim.api.nvim_win_set_cursor(self.win, {
     self.range.start.line + 1,
