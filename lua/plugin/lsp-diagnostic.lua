@@ -87,18 +87,6 @@ local function setup_lsp_overrides()
     end
   end
 
-  -- Configure diagnostics style
-  vim.lsp.handlers['textDocument/publishDiagnostics'] =
-    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-      -- Enable underline, use default values
-      underline = true,
-      -- Enable virtual text, override spacing to 4
-      virtual_text = {
-        spacing = 4,
-        prefix = vim.trim(utils.static.icons.AngleLeft),
-      },
-    })
-
   -- Configure hovering window style
   local opts_override_floating_preview = {
     border = 'solid',
@@ -998,9 +986,9 @@ local function setup_lsp_autostop()
   })
 end
 
----Set up diagnostic signs
+---Set up diagnostic signs and virtual text
 ---@return nil
-local function setup_diagnostic_signs()
+local function setup_diagnostic()
   local icons = utils.static.icons
   for _, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
     local sign_name = 'DiagnosticSign' .. severity
@@ -1010,6 +998,12 @@ local function setup_diagnostic_signs()
       numhl = sign_name,
     })
   end
+  vim.diagnostic.config({
+    virtual_text = {
+      spacing = 4,
+      prefix = vim.trim(utils.static.icons.AngleLeft),
+    },
+  })
 end
 
 ---Set up LSP and diagnostic
@@ -1023,7 +1017,7 @@ local function setup()
   setup_lsp_overrides()
   setup_lsp_autoformat()
   setup_lsp_autostop()
-  setup_diagnostic_signs()
+  setup_diagnostic()
   setup_commands('Lsp', subcommands.lsp.buf, vim.lsp.buf)
   setup_commands('Diagnostic', subcommands.diagnostic, vim.diagnostic)
 end
