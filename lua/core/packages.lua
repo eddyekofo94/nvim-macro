@@ -129,12 +129,12 @@ if vim.g.vscode then
 else
   enable_modules({
     'lib',
-    'completion',
-    'debug',
-    'edit',
     'lsp',
-    'markup',
+    'edit',
+    'debug',
     'tools',
+    'markup',
+    'completion',
     'treesitter',
     'colorschemes',
   })
