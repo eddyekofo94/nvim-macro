@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Tue 12 Dec 2023 12:17:12 PM CST
+-- Last Updated: Thu 14 Dec 2023 11:44:22 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -411,6 +411,17 @@ local hlgroups = {
   -- Filetype {{{2
   -- Git
   gitHash = { fg = c_dragonAsh },
+
+  -- Sh/Bash
+  bashSpecialVariables = { link = 'Constant' },
+  shAstQuote = { link = 'Constant' },
+  shCaseEsac = { link = 'Operator' },
+  shDeref = { link = 'Special' },
+  shDerefSimple = { link = 'shDerefVar' },
+  shDerefVar = { link = 'Constant' },
+  shNoQuote = { link = 'shAstQuote' },
+  shQuote = { link = 'String' },
+  shTestOpr = { link = 'Operator' },
 
   -- HTML
   htmlBold = { bold = true },
