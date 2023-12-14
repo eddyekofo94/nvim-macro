@@ -1,2 +1,4 @@
-vim.bo.commentstring = [[/*%s*/]]
-vim.bo.formatoptions = vim.bo.formatoptions .. 'o'
+vim.cmd.runtime({
+  'ftplugin/cpp.vim',
+  bang = true,
+})
