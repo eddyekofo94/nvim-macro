@@ -339,6 +339,9 @@ local function setup_buf_keymaps_and_commands(buf)
   vim.keymap.set('n', '<C-c>', vim.cmd.MoltenInterrupt, { buffer = buf })
   vim.keymap.set('n', '<C-j>', function()
     vim.cmd.MoltenEnterOutput({ mods = { noautocmd = true } })
+    if vim.bo.ft == 'molten_output' then
+      vim.keymap.set('n', '<C-k>', '<C-w>c', { buffer = true })
+    end
   end, { buffer = buf })
 
   if ft == 'markdown' then
