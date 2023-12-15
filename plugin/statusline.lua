@@ -351,18 +351,17 @@ vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
       local merged_attr = vim.tbl_deep_extend('keep', attr, default_attr)
       utils.hl.set_default(0, hlgroup_name, merged_attr)
     end
-    sethl('StatusLineHeader', { bg = 'TabLine', bold = true })
+    if vim.env.COLORTERM or vim.fn.has('gui_running') == 1 then
+      sethl('StatusLineHeader', { bg = 'TabLine' })
+    end
     sethl('StatusLineGitAdded', { fg = 'GitSignsAdd' })
     sethl('StatusLineGitChanged', { fg = 'GitSignsChange' })
     sethl('StatusLineGitRemoved', { fg = 'GitSignsDelete' })
-    sethl('StatusLineDiagnosticError', { fg = 'DiagnosticSignError' })
     sethl('StatusLineDiagnosticHint', { fg = 'DiagnosticSignHint' })
     sethl('StatusLineDiagnosticInfo', { fg = 'DiagnosticSignInfo' })
     sethl('StatusLineDiagnosticWarn', { fg = 'DiagnosticSignWarn' })
-    sethl(
-      'StatusLineHeaderModified',
-      { fg = 'Special', bg = 'TabLine', bold = true }
-    )
+    sethl('StatusLineDiagnosticError', { fg = 'DiagnosticSignError' })
+    sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'TabLine' })
   end,
 })
 
