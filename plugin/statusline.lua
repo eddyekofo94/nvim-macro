@@ -93,24 +93,6 @@ function statusline.ft()
   return vim.bo.ft == '' and '' or vim.bo.ft:gsub('^%l', string.upper)
 end
 
----@type table<string, fun(): string>
----@diagnostic disable: undefined-field
-statusline.flags = {
-  md_captitle = function()
-    return vim.bo.ft == 'markdown' and vim.b.captitle and 'md-cap-title' or ''
-  end,
-  lsp_autofmt = function()
-    return vim.b.lsp_autofmt_enabled
-        and not vim.tbl_isempty(vim.lsp.get_clients({
-          bufnr = 0,
-          method = 'textDocument/formatting',
-        }))
-        and 'lsp-auto-format'
-      or ''
-  end,
-}
----@diagnostic enable: undefined-field
-
 ---@return string
 function statusline.word_count()
   local wordcount = vim.fn.wordcount()
@@ -151,8 +133,6 @@ function statusline.info()
   end
   add_section(statusline.branch())
   add_section(statusline.gitdiff())
-  add_section(statusline.flags.md_captitle())
-  add_section(statusline.flags.lsp_autofmt())
   return vim.tbl_isempty(info) and ''
     or string.format('(%s) ', table.concat(info, ', '))
 end
@@ -317,8 +297,7 @@ end
 local components = {
   align        = '%=',
   diag         = '%{%v:lua.statusline.diag()%}',
-  fname        = ' %#StatusLineStrong#%{%&bt==#""?"%t":"%F"%}%* ',
-  fname_nc     = ' %{%&bt==#""?"%t":"%F"%} ',
+  fname        = ' %{%&bt==#""?"%t":"%F"%} ',
   info         = '%{%v:lua.statusline.info()%}',
   lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
   mode         = '%{%v:lua.statusline.mode()%}',
@@ -340,7 +319,7 @@ local stl = table.concat({
 })
 
 local stl_nc = table.concat({
-  components.fname_nc,
+  components.fname,
   components.align,
   components.truncate,
   components.pos,
@@ -372,10 +351,7 @@ vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
       local merged_attr = vim.tbl_deep_extend('keep', attr, default_attr)
       utils.hl.set_default(0, hlgroup_name, merged_attr)
     end
-    -- stylua: ignore start
     sethl('StatusLineHeader', { bg = 'TabLine', bold = true })
-    sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'TabLine', bold = true })
-    sethl('StatusLineStrong', { bold = true })
     sethl('StatusLineGitAdded', { fg = 'GitSignsAdd' })
     sethl('StatusLineGitChanged', { fg = 'GitSignsChange' })
     sethl('StatusLineGitRemoved', { fg = 'GitSignsDelete' })
@@ -383,7 +359,10 @@ vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
     sethl('StatusLineDiagnosticHint', { fg = 'DiagnosticSignHint' })
     sethl('StatusLineDiagnosticInfo', { fg = 'DiagnosticSignInfo' })
     sethl('StatusLineDiagnosticWarn', { fg = 'DiagnosticSignWarn' })
-    -- stylua: ignore end
+    sethl(
+      'StatusLineHeaderModified',
+      { fg = 'Special', bg = 'TabLine', bold = true }
+    )
   end,
 })
 
