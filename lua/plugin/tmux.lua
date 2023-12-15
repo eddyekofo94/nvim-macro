@@ -175,16 +175,39 @@ local function navigate_wrap(direction)
   end
 end
 
+---@return boolean
+local function tmux_mapkey_default_condition()
+  return not tmux_is_zoomed() and nvim_tabpage_has_only_win()
+end
+
+---@return boolean
+local function tmux_mapkey_close_win_condition()
+  return not tmux_is_zoomed() and nvim_has_only_win()
+end
+
+---@return boolean
+local function tmux_mapkey_resize_pane_horiz_condition()
+  return not tmux_is_zoomed()
+    and (
+      nvim_at_border('l') and (nvim_at_border('h') or not tmux_at_border('l'))
+    )
+end
+
+---@return boolean
+local function tmux_mapkey_resize_pane_vert_condition()
+  return not tmux_is_zoomed()
+    and (
+      nvim_at_border('j') and (nvim_at_border('k') or not tmux_at_border('j'))
+    )
+end
+
 ---Map a key in normal and visual mode to a tmux command with fallback
 ---@param key string
 ---@param command string
 ---@param condition? fun(): boolean
 ---@return nil
 local function tmux_mapkey_fallback(key, command, condition)
-  condition = condition
-    or function()
-      return not tmux_is_zoomed() and nvim_tabpage_has_only_win()
-    end
+  condition = condition or tmux_mapkey_default_condition
   require('utils').keymap.amend({ 'n', 'x', 't' }, key, function(fallback)
     if condition() then
       tmux_exec(command)
@@ -213,13 +236,13 @@ local function setup()
   tmux_mapkey_fallback('<M-r>', 'swap-pane -D')
   tmux_mapkey_fallback('<M-o>', "confirm 'kill-pane -a'")
   tmux_mapkey_fallback('<M-=>', "confirm 'select-layout tiled'")
-  tmux_mapkey_fallback('<M-c>', 'confirm kill-pane', function() return not tmux_is_zoomed() and nvim_has_only_win() end)
-  tmux_mapkey_fallback('<M-<>', 'resize-pane -L 4', function() return not tmux_is_zoomed() and (nvim_at_border('l') and (nvim_at_border('h') or not tmux_at_border('l'))) end)
-  tmux_mapkey_fallback('<M->>', 'resize-pane -R 4', function() return not tmux_is_zoomed() and (nvim_at_border('l') and (nvim_at_border('h') or not tmux_at_border('l'))) end)
-  tmux_mapkey_fallback('<M-,>', 'resize-pane -L 4', function() return not tmux_is_zoomed() and (nvim_at_border('l') and (nvim_at_border('h') or not tmux_at_border('l'))) end)
-  tmux_mapkey_fallback('<M-.>', 'resize-pane -R 4', function() return not tmux_is_zoomed() and (nvim_at_border('l') and (nvim_at_border('h') or not tmux_at_border('l'))) end)
-  tmux_mapkey_fallback('<M-->', [[run "tmux resize-pane -y $(($(tmux display -p '#{pane_height}') - 2))"]], function() return not tmux_is_zoomed() and (nvim_at_border('j') and (nvim_at_border('k') or not tmux_at_border('j'))) end)
-  tmux_mapkey_fallback('<M-+>', [[run "tmux resize-pane -y $(($(tmux display -p '#{pane_height}') + 2))"]], function() return not tmux_is_zoomed() and (nvim_at_border('j') and (nvim_at_border('k') or not tmux_at_border('j'))) end)
+  tmux_mapkey_fallback('<M-c>', 'confirm kill-pane', tmux_mapkey_close_win_condition)
+  tmux_mapkey_fallback('<M-<>', 'resize-pane -L 4', tmux_mapkey_resize_pane_horiz_condition)
+  tmux_mapkey_fallback('<M->>', 'resize-pane -R 4', tmux_mapkey_resize_pane_horiz_condition)
+  tmux_mapkey_fallback('<M-,>', 'resize-pane -L 4', tmux_mapkey_resize_pane_horiz_condition)
+  tmux_mapkey_fallback('<M-.>', 'resize-pane -R 4', tmux_mapkey_resize_pane_horiz_condition)
+  tmux_mapkey_fallback('<M-->', [[run "tmux resize-pane -y $(($(tmux display -p '#{pane_height}') - 2))"]], tmux_mapkey_resize_pane_vert_condition)
+  tmux_mapkey_fallback('<M-+>', [[run "tmux resize-pane -y $(($(tmux display -p '#{pane_height}') + 2))"]], tmux_mapkey_resize_pane_vert_condition)
   -- stylua: ignore end
 
   -- Use <C-Space>[ and (same keybindings as in tmux) to exit terminal mode
