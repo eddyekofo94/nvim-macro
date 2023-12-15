@@ -137,7 +137,9 @@ end
 ---Check if nvim has only one window in current tab
 ---@return boolean
 local function nvim_tabpage_has_only_win()
-  return vim.fn.winnr('$') <= 1
+  return #vim.tbl_filter(function(win)
+    return vim.fn.win_gettype(win) ~= 'popup'
+  end, vim.api.nvim_tabpage_list_wins(0)) <= 1
 end
 
 ---@param direction nvim_direction_t
