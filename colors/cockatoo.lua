@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Tue 05 Dec 2023 04:59:26 AM CST
+-- Last Updated: Fri 15 Dec 2023 01:56:54 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -735,7 +735,6 @@ local hlgroups = {
   StatusLineGitRemoved = { fg = c_scarlet, bg = c_deepsea },
   StatusLineHeader = { fg = c_jeans, bg = c_pigeon },
   StatusLineHeaderModified = { fg = c_jeans, bg = c_ochre },
-  StatusLineStrong = { fg = c_white, bg = c_deepsea, bold = true },
 
   -- glance.nvim
   GlanceBorderTop = { link = 'WinSeparator' },

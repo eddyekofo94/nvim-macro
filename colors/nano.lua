@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri 08 Dec 2023 08:06:19 PM CST
+-- Last Updated: Fri 15 Dec 2023 03:33:19 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -145,7 +145,7 @@ local hlgroups = {
   MoreMsg = { fg = c_foreground },
   MsgArea = { link = 'Normal' },
   MsgSeparator = { link = 'StatusLine' },
-  NonText = { fg = c_shaded },
+  NonText = { fg = c_faded },
   Normal = { fg = c_foreground, bg = c_background },
   NormalFloat = { fg = c_foreground, bg = c_subtle },
   NormalNC = { link = 'Normal' },
@@ -677,7 +677,6 @@ local hlgroups = {
   StatusLineGitRemoved = { fg = c_popout, bg = c_subtle },
   StatusLineHeader = { fg = c_background, bg = c_faded },
   StatusLineHeaderModified = { fg = c_background, bg = c_popout },
-  StatusLineStrong = { fg = c_strong, bg = c_subtle, bold = true },
 
   -- winbar
   WinBarIconUIIndicator = { fg = c_salient },
