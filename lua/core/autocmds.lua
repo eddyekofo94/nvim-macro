@@ -408,6 +408,9 @@ au('DeferSetSpell', {
       -- Schedule setting spell to avoid glitch (SpellBad highlight
       -- disappearing quickly after scheduled treesitter parser is attached)
       vim.schedule(function()
+        if not vim.api.nvim_win_is_valid(win) then
+          return
+        end
         vim.api.nvim_win_call(win, function()
           local buf = vim.api.nvim_win_get_buf(win)
           if
