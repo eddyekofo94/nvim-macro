@@ -1,9 +1,23 @@
-<h1 align="center"> Bekaboo's Neovim Configuration </h1>
+## Neovim :: M Λ C R O
+
+**Neovim :: M Λ C R O** is a collection of Neovim configuration files inspired
+by [Emacs / N Λ N O](https://github.com/rougier/nano-emacs).
+
+The goal of macro-neovim is to provide a clean and elegant user interface
+while remaining practical for daily tasks, striking a balance between a
+streamlined design and effective functionality. See [showcases](#showcases) to
+get a glimpse of the basic usage and what this configuration looks like.
+
+This is a highly personalized and opinionated Neovim configuration, not a
+distribution. While it's not meant for direct use, you're welcome to fork,
+experiment, and adapt it to your liking. Feel free to use it as a starting
+point for your configuration or borrow elements you find useful. Issues and PRs
+are welcome.
 
 <center>
     <div>
-        <img src="https://github.com/Bekaboo/nvim/assets/76579810/ff20fc73-4d21-478b-ae13-728832e4f3db" width=47.5%>
-        <img src="https://github.com/Bekaboo/nvim/assets/76579810/1f2ceeaf-3b78-4777-afc7-db0b7f6ba69a" width=47.5%>
+        <img src="https://github.com/Bekaboo/nvim/assets/76579810/299137e7-9438-489b-b98b-7211a62678ae" width=46%> &nbsp &nbsp
+        <img src="https://github.com/Bekaboo/nvim/assets/76579810/9e546e33-7678-47e2-8a80-368d7c59534a" width=46%>
     </div>
 </center>
 
@@ -27,17 +41,18 @@
   - [Installing Packages to a New Module](#installing-packages-to-a-new-module)
   - [General Settings and Options](#general-settings-and-options)
   - [Keymaps](#keymaps)
-  - [Colorscheme](#colorscheme)
+  - [Colorschemes](#colorschemes)
   - [Auto Commands](#auto-commands)
   - [LSP Server Configurations](#lsp-server-configurations)
   - [DAP Configurations](#dap-configurations)
   - [Snippets](#snippets)
   - [Enabling VSCode Integration](#enabling-vscode-integration)
 - [Appendix](#appendix)
+  - [Showcases](#showcases)
   - [Default Modules and Plugins of Choice](#default-modules-and-plugins-of-choice)
     - [Third Party Plugins](#third-party-plugins)
     - [Local Plugins](#local-plugins)
-  - [Startuptime Profiling](#startuptime-profiling)
+  - [Startuptime](#startuptime)
 <!--toc:end-->
 
 ## Features
@@ -46,18 +61,28 @@
     - Install and manage packages in groups
     - Make it easy to use different set of configuration for different use
       cases
+- Clean and uncluttered UI, including customized versions of:
+    - [winbar](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/winbar)
+    - [statusline](https://github.com/Bekaboo/nvim/blob/master/plugin/statusline.lua)
+    - [statuscolumn](https://github.com/Bekaboo/nvim/blob/master/plugin/statuscolumn.lua)
+    - [colorschemes](https://github.com/Bekaboo/nvim/tree/master/colors)
+    - [intro message](https://github.com/Bekaboo/nvim/blob/master/plugin/intro.lua)
 - [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) integration
     - Feels at home in VSCode when you occasionally need it
 - Massive [TeX math snippets](https://github.com/Bekaboo/nvim/blob/master/lua/snippets/shared/math.lua)
-- Custom UI elements ([statusline](https://github.com/Bekaboo/nvim/blob/master/plugin/statusline.lua), [statuscolumn](https://github.com/Bekaboo/nvim/blob/master/plugin/statuscolumn.lua), [winbar](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/winbar)) and [colorschemes](https://github.com/Bekaboo/nvim/tree/master/colors)
+- Show images in markdown files (requires [Kitty terminal](https://github.com/kovidgoyal/kitty))
+- Editing Jupyter Notebooks like markdown files, run code in cells with simple
+  command and shortcuts
 - [Fine-tuned plugins](https://github.com/Bekaboo/nvim/tree/master/lua/configs) with [custom patches](https://github.com/Bekaboo/nvim/tree/master/patches)
-- Fast startup around [15 ~ 35 ms](#startuptime-profiling)
+- Optimized for large files, open any file larger than 100 MB and edit like
+  butter
+- Fast startup around [~35 ms](#startuptime)
 
 ## Requirements and Dependencies
 
 ### Basic
 
-- [Neovim](https://github.com/neovim/neovim) ***nightly***
+- [Neovim](https://github.com/neovim/neovim) ***nightly***, for exact version see [nvim-version.txt](https://github.com/Bekaboo/nvim/blob/master/nvim-version.txt)
 - [Git](https://git-scm.com/)
 - A decent terminal emulator
 - A nerd font, e.g. [JetbrainsMono Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono)
@@ -151,6 +176,7 @@ Install the following debug adapters manually:
 - [Pandoc](https://pandoc.org/), [custom scripts](https://github.com/Bekaboo/dot/tree/master/.scripts) and [TexLive](https://www.tug.org/texlive/) (for ArchLinux users, it is `texlive-core` and `texlive-extra`) for markdown → PDF conversion (`:MarkdownToPDF`)
 - [Draw.io desktop](https://www.drawio.com/blog/diagrams-offline) for creating and inserting simple PNG diagrams in markdown files (`:MarkdownInsertImage`)
 - [Node.js](https://nodejs.org/en) for installing dependencies for [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
+- [Luarocks](https://github.com/luarocks/luarocks) for installing dependencies for [image.nvim](https://github.com/3rd/image.nvim)
 - [Jupytext](https://github.com/mwouts/jupytext) and [Pynvim](https://github.com/neovim/pynvim) for editing Jupyter notebooks
 
 ## Installation
@@ -159,13 +185,13 @@ Install the following debug adapters manually:
 2. Clone this repo to your config directory
 
     ```
-    git clone https://github.com/Bekaboo/nvim ~/.config/nvim-bekaboo
+    git clone https://github.com/Bekaboo/nvim ~/.config/nvim-macro
     ```
 
 4. Open neovim using 
 
     ```sh
-    NVIM_APPNAME=nvim-bekaboo nvim
+    NVIM_APPNAME=nvim-macro nvim
     ```
 
     On first installation, neovim will prompt you to decide whether to install
@@ -185,11 +211,11 @@ Install the following debug adapters manually:
 ├── ftplugin                    # custom filetype plugins
 ├── init.lua                    # entry of config
 ├── lua
-│   ├── init                    # files under this folder is required by 'init.lua'
+│   ├── core                    # files under this folder is required by 'init.lua'
 │   │   ├── autocmds.lua
 │   │   ├── general.lua         # options and general settings
 │   │   ├── keymaps.lua
-│   │   └── plugins.lua         # specify which modules to use in different conditions
+│   │   └── packages.lua        # bootstraps package manager and specifies what packages to include
 │   ├── modules                 # all plugin specifications and configs go here
 │   │   ├── lib.lua             # plugin specifications in module 'lib'
 │   │   ├── completion.lua      # plugin specifications in module 'completion'
@@ -199,7 +225,7 @@ Install the following debug adapters manually:
 │   │   ├── misc.lua
 │   │   ├── tools.lua
 │   │   ├── treesitter.lua
-│   │   └── ui.lua
+│   │   └── colorschemes.lua
 │   ├── configs                 # configs for each plugin
 │   ├── snippets                # snippets
 │   ├── plugin                  # the actual implementation of custom plugins
@@ -212,7 +238,7 @@ Install the following debug adapters manually:
 ### Managing Plugins with Modules
 
 In order to enable or disable a module, one need to change the table in
-[lua/init/plugins.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua) passed to `manage_plugins()`, for example
+[lua/core/packages.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/packages.lua) passed to `manage_plugins()`, for example
 
 ```lua
 enable_modules({
@@ -277,7 +303,7 @@ return {
 }
 ```
 
-After creating the new module `bar`, enable it in [lua/init/plugins.lua](hub.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua):
+After creating the new module `bar`, enable it in [lua/core/packages.lua](hub.com/Bekaboo/nvim/blob/master/lua/core/packages.lua):
 
 ```lua
 enable_modules({
@@ -289,44 +315,29 @@ enable_modules({
 
 ### General Settings and Options
 
-See [lua/init/general.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/general.lua).
+See [lua/core/general.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/general.lua).
 
 ### Keymaps
 
-See [lua/init/keymaps.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/keymaps.lua), or see module config files for
+See [lua/core/keymaps.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/keymaps.lua), or see module config files for
 corresponding plugin keymaps.
 
-### Colorscheme
+### Colorschemes
 
-- Nano
-
-    <div>
-        <img src="https://github.com/Bekaboo/nvim/assets/76579810/a79e1322-114c-46c8-80ff-c29129f8cb2a" width=47.5%>
-        <img src="https://github.com/Bekaboo/nvim/assets/76579810/be61e9bf-84d8-472a-a3b1-a0d2962e636a" width=47.5%>
-    </div>
-
-- Cockatoo
-
-    <div>
-        <img src="https://github.com/Bekaboo/nvim/assets/76579810/de4c61f6-a8a8-409d-bb6d-6bb144e65832" width=47.5%>
-        <img src="https://github.com/Bekaboo/nvim/assets/76579810/035eb032-bbe5-48a5-abaf-4b334516c2cd" width=47.5%>
-    </div>
-
-`cockatoo` and `nano` are two builtin custom colorschemes, with separate
-palettes for dark and light background.
+`cockatoo`, `nano`, and `dragon` are three builtin custom colorschemes, with
+separate palettes for dark and light background.
 
 Neovim is configured to restore the previous background and colorscheme
-settings on startup, so there is no need to set them up in the config
-file explicitly.
+settings on startup, so there is no need to set them up in the config file
+explicitly.
 
-To disable the auto-restore feature, remove corresponding lines in
-[lua/init/autocmds.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/autocmds.lua)
+To disable the auto-restore feature, remove the plugin [plugin/colorswitch.lua](https://github.com/Bekaboo/nvim/tree/master/plugin/colorswitch.lua).
 
-To tweak this colorscheme, see [colors/cockatoo.lua](https://github.com/Bekaboo/nvim/tree/master/colors/cockatoo.lua) and [colors/nano.lua](https://github.com/Bekaboo/nvim/tree/master/colors/nano.lua)
+To tweak this colorscheme, edit corresponding colorscheme files under [colors](https://github.com/Bekaboo/nvim/tree/master/colors).
 
 ### Auto Commands
 
-See [lua/init/autocmds.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/autocmds.lua).
+See [lua/core/autocmds.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/autocmds.lua).
 
 ### LSP Server Configurations
 
@@ -346,7 +357,7 @@ are defined under [lua/snippets](https://github.com/Bekaboo/nvim/tree/master/lua
 
 VSCode integration takes advantages of the modular design, allowing to use
 a different set of modules when Neovim is launched by VSCode, relevant code is
-in [plugin/vscode-neovim.vim](https://github.com/Bekaboo/nvim/blob/master/plugin/vscode-neovim.vim) and [lua/init/plugins.lua](https://github.com/Bekaboo/nvim/blob/master/lua/init/plugins.lua).
+in [plugin/vscode-neovim.vim](https://github.com/Bekaboo/nvim/blob/master/plugin/vscode-neovim.vim) and [lua/core/packages.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/packages.lua).
 
 To make VSCode integration work, please install [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) in VSCode
 and configure it correctly.
@@ -356,11 +367,43 @@ and it should work out of the box.
 
 ## Appendix
 
+### Showcases
+
+- File manager using [oil.nvim](https://github.com/stevearc/oil.nvim)
+
+    <img src="https://github.com/Bekaboo/nvim/assets/76579810/26bb146f-7637-4f68-acd7-baecc08f1eaf" width=75%>
+
+- DAP support powered by [nvim-dap](https://github.com/mfussenegger/nvim-dap) and [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
+
+    <img src="https://github.com/Bekaboo/nvim/assets/76579810/f6c7e6ce-283b-43d7-8bc3-e8b24513a03b" width=75%>
+
+- Rendering images in markdown files with [image.nvim](https://github.com/3rd/image.nvim)
+
+    <img src="https://github.com/Bekaboo/nvim/assets/76579810/af2a3b2b-0601-482f-bf1e-b14e091ff179" width=75%>
+
+- Jupyter Notebook integration using [jupytext.vim](https://github.com/goerz/jupytexthttps://github.com/benlubas/molten-nvim.vim) and [molten-nvim](https://github.com/benlubas/molten-nvim)
+
+    <img src="https://github.com/Bekaboo/nvim/assets/76579810/ce212348-8b89-4a03-a222-ab74f0338a7d" width=75%>
+
+- Winbar with IDE-like drop-down menus using [dropbar.nvim](https://github.com/Bekaboo/dropbar.nvim)
+
+    <img src="https://github.com/Bekaboo/nvim/assets/76579810/247401a9-6127-4d73-bb21-ceb847d8f7b9" width=75%>
+
+- LSP hover & completion thanks to Neovim builtin LSP client and [nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
+
+    <img src="https://github.com/Bekaboo/nvim/assets/76579810/13589137-b5c7-4104-810c-f8cdc56f9d1b" width=75%>
+    <img src="https://github.com/Bekaboo/nvim/assets/76579810/60c5b599-4191-494d-ad83-1ca7a84eab17" width=75%>
+
+- Git integration: [fugitive](https://github.com/tpope/vim-fugitive) and [gitsigns.nvim](https://github.com/tpope/vim-fugitive)
+
+    <img src="https://github.com/Bekaboo/nvim/assets/76579810/a5e0a41d-4e85-4bfc-a39d-cc7b76abedcf" width=75%>
+    <img src="https://github.com/Bekaboo/nvim/assets/76579810/73da4ee1-8f6c-440a-9eb9-0bcf3bc8e3ea" width=75%>
+
 ### Default Modules and Plugins of Choice
 
 #### Third Party Plugins
 
-Total # of plugins: 48 (package manager included).
+Total # of plugins: 52 (package manager included).
 
 - **Lib**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -417,14 +460,30 @@ Total # of plugins: 48 (package manager included).
     - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
     - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
     - [one-small-step-for-vimkind](https://github.com/jbyuki/one-small-step-for-vimkind)
+- **Colorschemes**
+    - [kanagawa.nvim](https://github.com/rebelot/kanagawa.nvim)
+    - [rose-pine/neovim](https://github.com/rose-pine/neovim)
+    - [everforest](https://github.com/sainnhe/everforest)
+    - [gruvbox-material](https://github.com/sainnhe/gruvbox-material)
 
 #### Local Plugins
 
 - [colorcolumn](https://github.com/Bekaboo/nvim/tree/master/plugin/colorcolumn.lua)
     - shows color column dynamically based on current line width
     - released as [deadcolumn.nvim](https://github.com/Bekaboo/deadcolumn.nvim)
+- [colorswitch](https://github.com/Bekaboo/nvim/tree/master/plugin/colorswitch.lua)
+    - remembers and restores previous background and colorscheme settings
+    - syncs background and colorscheme settings among multiple Neovim instances
+      if scripts [setbg](https://github.com/Bekaboo/dot/blob/master/.scripts/setbg) and [setcolors](https://github.com/Bekaboo/dot/blob/master/.scripts/setcolors) are in `$PATH`
 - [expandtab](https://github.com/Bekaboo/nvim/tree/master/plugin/expandtab.lua)
     - always use spaces for alignment
+- [im](https://github.com/Bekaboo/nvim/tree/master/plugin/im.lua)
+    - switches and restores fcitx state in each buffer asynchronouly
+- [intro](https://github.com/Bekaboo/nvim/tree/master/plugin/intro.lua)
+    - shows a custom intro message on startup
+- [lsp-diagnostic](https://github.com/Bekaboo/nvim/tree/master/plugin/lsp-diagnostic.lua)
+    - sets up LSP and diagnostic options and commands on `LspAttach` or
+      `DiagnosticChanged`
 - [readline](https://github.com/Bekaboo/nvim/tree/master/plugin/readline.lua)
     - readline-like keybindings in insert and command mode
 - [statuscolumn](https://github.com/Bekaboo/nvim/tree/master/plugin/statuscolumn.lua)
@@ -433,13 +492,18 @@ Total # of plugins: 48 (package manager included).
     - custom statusline inspired by [nano-emacs](https://github.com/rougier/nano-emacs)
 - [tabout](https://github.com/Bekaboo/nvim/tree/master/plugin/tabout.lua)
     - tab out and in with `<Tab>` and `<S-Tab>`
+- [termopts](https://github.com/Bekaboo/nvim/tree/master/plugin/termopts.lua)
+    - some nice setup for terminal buffers
+- [tmux](https://github.com/Bekaboo/nvim/tree/master/plugin/tmux.lua)
+    - integration with tmux, provides unified keymaps for navigation, resizing,
+      and many other window operations
 - [vscode-neovim](https://github.com/Bekaboo/nvim/tree/master/plugin/vscode-neovim.vim)
     - integration with [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim)
 - [winbar](https://github.com/Bekaboo/nvim/blob/master/plugin/winbar.lua)
     - a winbar with drop-down menus and multiple backends
     - released as [dropbar.nvim](https://github.com/Bekaboo/dropbar.nvim)
 
-### Startuptime Profiling
+### Startuptime
 
 - Last update: 2023-11-07
 
