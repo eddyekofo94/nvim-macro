@@ -385,16 +385,16 @@ au('DeferSetSpell', {
     desc = 'Defer setting spell options to improve startup time.',
     callback = function(info)
       local buf = info.buf
+      local win = vim.api.nvim_get_current_win()
       if
-        vim.b[buf].spell_checked
-        or vim.b[buf].large_file
-        or vim.wo.spell
-        or vim.bo[buf].bt ~= ''
-        or not vim.bo[buf].ma
+        not vim.b[buf].spell_checked
+        and not vim.b[buf].large_file
+        and not vim.wo[win].spell
+        and vim.bo[buf].bt == ''
+        and vim.bo[buf].ma
       then
-        return
+        vim.opt_local.spell = true
       end
-      vim.opt_local.spell = true
       vim.b[buf].spell_checked = true
     end,
   },
