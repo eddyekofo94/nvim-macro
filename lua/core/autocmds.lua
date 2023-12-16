@@ -223,7 +223,7 @@ au('AutoHlCursorLine', {
     callback = function()
       if
         vim.fn.win_gettype() ~= ''
-        or vim.api.nvim_get_mode().mode:match('^[iRsS\x13]')
+        or vim.api.nvim_get_mode().mode:match('^[itRsS\x13]')
       then
         return
       end
@@ -254,25 +254,25 @@ au('AutoHlCursorLine', {
     end,
   },
 }, {
-  'InsertEnter',
+  'ModeChanged',
   {
-    callback = function()
-      vim.opt_local.winhl:append({
-        CursorLine = '',
-        CursorColumn = '',
-      })
-    end,
-  },
-}, {
-  'InsertLeave',
-  {
+    pattern = { '[itRss\x13]*:*', '*:[itRss\x13]*' },
     callback = function()
       local winhl = vim.opt_local.winhl:get()
-      if winhl['CursorLine'] or winhl['CursorColumn'] then
-        vim.opt_local.winhl:remove({
-          'CursorLine',
-          'CursorColumn',
-        })
+      if vim.v.event.new_mode:match('^[itRss\x13]') then
+        if not winhl['CursorLine'] or not winhl['CursorColumn'] then
+          vim.opt_local.winhl:append({
+            CursorLine = '',
+            CursorColumn = '',
+          })
+        end
+      else
+        if winhl['CursorLine'] or winhl['CursorColumn'] then
+          vim.opt_local.winhl:remove({
+            'CursorLine',
+            'CursorColumn',
+          })
+        end
       end
     end,
   },

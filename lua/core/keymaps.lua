@@ -61,6 +61,8 @@ vim.keymap.set({ 'x', 'n' }, '<C-w>-', 'v:count ? "<C-w>-" : "2<C-w>-"', { expr 
 
 -- Terminal mode keymaps
 -- stylua: ignore start
+vim.keymap.set('t', '<M-v>',      '<Cmd>wincmd v<CR>')
+vim.keymap.set('t', '<M-s>',      '<Cmd>wincmd s<CR>')
 vim.keymap.set('t', '<M-W>',      '<Cmd>wincmd W<CR>')
 vim.keymap.set('t', '<M-H>',      '<Cmd>wincmd H<CR>')
 vim.keymap.set('t', '<M-J>',      '<Cmd>wincmd J<CR>')

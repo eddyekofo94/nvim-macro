@@ -1,10 +1,12 @@
 ---Check if a file is a git (commit, rebase, etc.) file
 ---@param fpath string
 ---@return boolean
-local function is_gitfile(fpath)
+local function should_block_file(fpath)
+  fpath = vim.fs.normalize(fpath)
   return (
     fpath:find('.git/rebase-merge', 1, true)
     or fpath:find('.git/COMMIT_EDITMSG', 1, true)
+    or fpath:find('^/tmp')
   )
       and true
     or false
@@ -12,22 +14,13 @@ end
 
 require('flatten').setup({
   window = {
-    open = 'smart',
+    open = 'current',
   },
   callbacks = {
-    should_nest = function()
-      local files = vim.fn.argv() --[=[@as string[]]=]
-      for _, file in ipairs(files) do
-        if file:find('^/tmp') then
-          return true
-        end
-      end
-      return false
-    end,
     should_block = function()
       local files = vim.fn.argv() --[=[@as string[]]=]
       for _, file in ipairs(files) do
-        if is_gitfile(file) then
+        if should_block_file(file) then
           return true
         end
       end
@@ -36,7 +29,7 @@ require('flatten').setup({
     post_open = function(buf, win)
       vim.api.nvim_set_current_win(win)
       local bufname = vim.api.nvim_buf_get_name(buf)
-      if is_gitfile(bufname) then
+      if should_block_file(bufname) then
         vim.bo[buf].bufhidden = 'wipe'
       end
     end,
