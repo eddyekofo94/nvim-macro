@@ -278,26 +278,6 @@ au('AutoHlCursorLine', {
   },
 })
 
-au('UpdateFolds', {
-  'BufWinEnter',
-  {
-    desc = 'Update folds on BufEnter.',
-    callback = function(info)
-      if not vim.b[info.buf].foldupdated then
-        vim.b[info.buf].foldupdated = true
-        vim.cmd.normal({ 'zx', bang = true })
-      end
-    end,
-  },
-}, {
-  'BufUnload',
-  {
-    callback = function(info)
-      vim.b[info.buf].foldupdated = nil
-    end,
-  },
-})
-
 au('TextwidthRelativeColorcolumn', {
   'OptionSet',
   {
