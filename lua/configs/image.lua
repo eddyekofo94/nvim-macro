@@ -6,10 +6,6 @@ package.path = table.concat({
 
 require('image').setup({
   backend = 'kitty',
-  integrations = {
-    markdown = { enabled = false },
-    neorg = { enabled = false },
-  },
   window_overlap_clear_enabled = true,
   tmux_show_only_in_active_window = true,
   window_overlap_clear_ft_ignore = {},

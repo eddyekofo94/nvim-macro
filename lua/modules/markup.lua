@@ -29,7 +29,10 @@ return {
 
   {
     '3rd/image.nvim',
-    event = { 'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb' },
+    event = {
+      'FileType markdown,norg',
+      'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb',
+    },
     build = 'luarocks --lua-version 5.1 --local install magick',
     config = function()
       require('configs.image')
