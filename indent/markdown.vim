@@ -116,7 +116,7 @@ function! GetMarkdownIndent() abort
     if l:line =~# '^\s*$' && l:prev_lnum == v:lnum - 1 &&
           \ s:in_normalzone(l:prev_lnum, 1)
       " Align unordered list multi-line items
-      let l:prev_line_char_pos = match(l:prev_line, '\(^\s*[-*+]\s*\)\@<=\S')
+      let l:prev_line_char_pos = match(l:prev_line, '\(^\s*[-*+]\s\+\)\@<=\S')
       if l:prev_line_char_pos >= 0
         return l:prev_line_char_pos
       endif
