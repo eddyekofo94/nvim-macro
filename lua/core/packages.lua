@@ -94,31 +94,6 @@ local function enable_modules(module_names)
   require('lazy').setup(modules, config)
 end
 
-vim.api.nvim_create_autocmd('User', {
-  desc = 'Reverse/Apply local patches on updating/intalling plugins.',
-  pattern = { 'LazyInstall*', 'LazyUpdate*', 'LazyRestore*' },
-  group = vim.api.nvim_create_augroup('LazyPatches', {}),
-  callback = function(info)
-    local patches_path = vim.fs.joinpath(conf_path, 'patches')
-    for patch in vim.fs.dir(patches_path) do
-      local patch_path = vim.fs.joinpath(patches_path, patch)
-      local plugin_path =
-        vim.fs.joinpath(vim.g.package_path, (patch:gsub('%.patch$', '')))
-      if vim.uv.fs_stat(plugin_path) then
-        utils.git.dir_execute(plugin_path, { 'restore', '.' })
-        if not info.match:find('Pre$') then
-          vim.notify('[packages] applying patch ' .. patch)
-          utils.git.dir_execute(plugin_path, {
-            'apply',
-            '--ignore-space-change',
-            patch_path,
-          }, vim.log.levels.WARN)
-        end
-      end
-    end
-  end,
-})
-
 if not bootstrap() then
   return
 end
@@ -142,5 +117,37 @@ else
   })
 end
 
--- a handy abbreviation
+vim.api.nvim_create_autocmd('User', {
+  desc = 'Reverse/Apply local patches on updating/intalling plugins.',
+  group = vim.api.nvim_create_augroup('LazyPatches', {}),
+  pattern = {
+    'LazyInstall*',
+    'LazyUpdate*',
+    'LazyRestore*',
+  },
+  callback = function(info)
+    local patches_path = vim.fs.joinpath(conf_path, 'patches')
+    for patch in vim.fs.dir(patches_path) do
+      local patch_path = vim.fs.joinpath(patches_path, patch)
+      local plugin_path =
+        vim.fs.joinpath(vim.g.package_path, (patch:gsub('%.patch$', '')))
+      if vim.uv.fs_stat(plugin_path) then
+        utils.git.dir_execute(plugin_path, {
+          'restore',
+          '.',
+        })
+        if not info.match:find('Pre$') then
+          vim.notify('[packages] applying patch ' .. patch)
+          utils.git.dir_execute(plugin_path, {
+            'apply',
+            '--ignore-space-change',
+            patch_path,
+          }, vim.log.levels.WARN)
+        end
+      end
+    end
+  end,
+})
+
+-- A handy abbreviation
 utils.keymap.command_abbrev('lz', 'Lazy')
