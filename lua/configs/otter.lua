@@ -31,7 +31,8 @@ vim.api.nvim_create_autocmd('FileType', {
       then
         return
       end
-      ot.activate({ 'python', 'bash', 'lua' })
+      -- Enable completion only, disable diagnostics
+      ot.activate({ 'python', 'bash', 'lua' }, true, false)
       -- stylua: ignore start
       vim.api.nvim_buf_create_user_command(buf, 'OtterRename', ot.ask_rename, {})
       vim.api.nvim_buf_create_user_command(buf, 'OtterHover', ot.ask_hover, {})
