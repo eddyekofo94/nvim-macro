@@ -65,14 +65,14 @@ are welcome.
     - [statuscolumn](https://github.com/Bekaboo/nvim/blob/master/plugin/statuscolumn.lua)
     - [colorschemes](https://github.com/Bekaboo/nvim/tree/master/colors)
     - [intro message](https://github.com/Bekaboo/nvim/blob/master/plugin/intro.lua)
-- [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) integration
-    - Feels at home in VSCode when you occasionally need it
+- [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) integration, makes you feel at home in VSCode when you
+  occasionally need it
 - Massive [TeX math snippets](https://github.com/Bekaboo/nvim/blob/master/lua/snippets/shared/math.lua)
-- Show images in markdown files (requires [Kitty terminal](https://github.com/kovidgoyal/kitty))
-- Editing Jupyter Notebooks like markdown files, run code in cells with simple
-  command and shortcuts
+- Image rendering in markdown files (requires [Kitty terminal](https://github.com/kovidgoyal/kitty))
+- Jupyter Notebook integration: edit notebooks like markdown files, run code in
+  cells with simple commands and shortcuts
 - [Fine-tuned plugins](https://github.com/Bekaboo/nvim/tree/master/lua/configs) with [custom patches](https://github.com/Bekaboo/nvim/tree/master/patches)
-- Optimized for large files, open any file larger than 100 MB and edit like
+- Optimization for large files, open any file larger than 100 MB and edit like
   butter
 - Fast startup around [~35 ms](#startuptime)
 
@@ -110,7 +110,7 @@ favorite package manager:
 
 - C/C++: install [Clang](https://clang.llvm.org/)
 - Lua: install [LuaLS](https://github.com/LuaLS/lua-language-server)
-  - Python: install [Jedi Language Server](https://github.com/pappasam/jedi-language-server)
+- Python: install [Jedi Language Server](https://github.com/pappasam/jedi-language-server)
 - Rust: install [Rust Analyzer](https://rust-analyzer.github.io/)
 - LaTeX: install [TexLab](https://github.com/latex-lsp/texlab)
 - VimL: install [VimLS](https://github.com/iamcco/vim-language-server)
@@ -174,7 +174,7 @@ Install the following debug adapters manually:
 - [Pandoc](https://pandoc.org/), [custom scripts](https://github.com/Bekaboo/dot/tree/master/.scripts) and [TexLive](https://www.tug.org/texlive/) (for ArchLinux users, it is `texlive-core` and `texlive-extra`) for markdown → PDF conversion (`:MarkdownToPDF`)
 - [Draw.io desktop](https://www.drawio.com/blog/diagrams-offline) for creating and inserting simple PNG diagrams in markdown files (`:MarkdownInsertImage`)
 - [Node.js](https://nodejs.org/en) for installing dependencies for [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
-- [Luarocks](https://github.com/luarocks/luarocks) for installing dependencies for [image.nvim](https://github.com/3rd/image.nvim)
+- [Magick LuaRocks](https://github.com/leafo/magick), [ImageMagick](https://github.com/ImageMagick/ImageMagick) executable, and [Kitty terminal](https://github.com/kovidgoyal/kitty) for in-place image preview in markdown files
 - [Jupytext](https://github.com/mwouts/jupytext) and [Pynvim](https://github.com/neovim/pynvim) for editing Jupyter notebooks
 
 ## Installation
@@ -301,7 +301,7 @@ return {
 }
 ```
 
-After creating the new module `bar`, enable it in [lua/core/packages.lua](hub.com/Bekaboo/nvim/blob/master/lua/core/packages.lua):
+After creating the new module `bar`, enable it in [lua/core/packages.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/packages.lua):
 
 ```lua
 enable_modules({
@@ -379,7 +379,7 @@ and it should work out of the box.
 
     <img src="https://github.com/Bekaboo/nvim/assets/76579810/af2a3b2b-0601-482f-bf1e-b14e091ff179" width=75%>
 
-- Jupyter Notebook integration using [jupytext.vim](https://github.com/goerz/jupytexthttps://github.com/benlubas/molten-nvim.vim) and [molten-nvim](https://github.com/benlubas/molten-nvim)
+- Jupyter Notebook integration using [jupytext.vim](https://github.com/goerz/jupytext) and [molten-nvim](https://github.com/benlubas/molten-nvim)
 
     <img src="https://github.com/Bekaboo/nvim/assets/76579810/ce212348-8b89-4a03-a222-ab74f0338a7d" width=75%>
 
@@ -445,7 +445,7 @@ Total # of plugins: 52 (package manager included).
     - [fzf-lua](https://github.com/ibhagwan/fzf-lua)
     - [flatten.nvim](https://github.com/willothy/flatten.nvim)
     - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
-    - [git-conflict](akinsho/git-conflict.nvim)
+    - [git-conflict](https://github.com/akinsho/git-conflict.nvim)
     - [nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua)
     - [vim-fugitive](https://github.com/tpope/vim-fugitive)
     - [oil.nvim](https://github.com/stevearc/oil.nvim)
@@ -522,7 +522,12 @@ Total # of plugins: 52 (package manager included).
 
 - Machine: Dell XPS-13-7390
 
-- Command: `nvim --startuptime startuptime.log +'call timer_start(0, {-> execute('\''qall!'\'')})'`
+- Command:
+
+    ```sh
+    nvim --startuptime startuptime.log \
+        +'call timer_start(0, {-> execute('\''qall!'\'')})'
+    ```
 
     <details>
       <summary>startuptime log</summary>
