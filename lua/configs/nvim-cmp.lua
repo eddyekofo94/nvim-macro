@@ -185,7 +185,6 @@ local fuzzy_path_option = {
     '-E=*.git/',
     '-E=*.gz',
     '-E=*.ico',
-    '-E=*.ipynb',
     '-E=*.iso',
     '-E=*.jar',
     '-E=*.jpeg',
