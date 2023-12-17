@@ -82,67 +82,6 @@ local function complete_md_to_pdf(arglead, _, _)
   return {}
 end
 
----Close a handler if it is not nil and not closing
----@param handler uv.uv_process_t?
-local function close_handler(handler)
-  if handler and not handler:is_closing() then
-    handler:close()
-  end
-end
-
----Spawn a viewer
----@param files string[] files to be viewed
----@param opts table<string, string> options
-local function spawn_viewer(files, opts)
-  close_handler(_G.handler_viewer)
-  _G.handler_viewer = vim.uv.spawn(
-    opts.viewer,
-    ---@diagnostic disable-next-line: missing-fields
-    { args = files },
-    vim.schedule_wrap(function(code_viewer, _)
-      close_handler(_G.handler_viewer)
-      if code_viewer ~= 0 then
-        vim.notify(
-          string.format(
-            'viewer %s failed with code %d',
-            opts.viewer,
-            code_viewer
-          ),
-          vim.log.levels.ERROR
-        )
-      end
-    end)
-  )
-end
-
----Spawn md2pdf shell script
----@param args string[] markdown files to be converted
----@param opts table<string, string> options
-local function spawn_pandoc(args, opts)
-  close_handler(_G.handler_md2pdf)
-  _G.handler_md2pdf = vim.uv.spawn(
-    'md2pdf',
-    ---@diagnostic disable-next-line: missing-fields
-    { args = { '--' .. opts['pdf-engine'], unpack(args) } },
-    vim.schedule_wrap(function(code_md2pdf, _)
-      close_handler(_G.handler_md2pdf)
-      if code_md2pdf ~= 0 then
-        vim.notify(
-          string.format('md2pdf failed with code %d', code_md2pdf),
-          vim.log.levels.ERROR
-        )
-      elseif opts.viewer then
-        local fname_pdfs = {}
-        for _, fname in ipairs(args) do
-          local fname_pdf = fname:gsub('%.md$', '.pdf')
-          table.insert(fname_pdfs, fname_pdf)
-        end
-        spawn_viewer(fname_pdfs, opts)
-      end
-    end)
-  )
-end
-
 ---Convert markdown to pdf
 ---@param tbl table information passed to the command
 local function md_to_pdf(tbl)
@@ -150,7 +89,49 @@ local function md_to_pdf(tbl)
   args = vim.tbl_deep_extend('force', { vim.fn.expand('%') }, args)
   opts = vim.tbl_deep_extend('force', { ['pdf-engine'] = 'pdflatex' }, opts)
   vim.cmd.update({ mods = { emsg_silent = true } })
-  spawn_pandoc(args, opts)
+  vim.system(
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    { 'md2pdf', '--' .. opts['pdf-engine'], unpack(args) },
+    {},
+    function(obj)
+      if obj.code ~= 0 then
+        vim.schedule(function()
+          vim.notify(
+            string.format(
+              '[markdown-md2pdf] md2pdf failed with code %d: %s',
+              obj.code,
+              obj.stderr
+            ),
+            vim.log.levels.ERROR
+          )
+        end)
+        return
+      end
+      if opts.viewer then
+        local fname_pdfs = {}
+        for _, fname in ipairs(args) do
+          ---@diagnostic disable-next-line: param-type-mismatch
+          local fname_pdf = fname:gsub('%.md$', '.pdf')
+          table.insert(fname_pdfs, fname_pdf)
+        end
+        vim.system({ opts.viewer, unpack(fname_pdfs) }, {}, function(_obj)
+          if _obj.code ~= 0 then
+            vim.schedule(function()
+              vim.notify(
+                string.format(
+                  '[markdown-md2pdf] viewer %s failed with code %d: %s',
+                  opts.viewer,
+                  _obj.code,
+                  _obj.stderr
+                ),
+                vim.log.levels.ERROR
+              )
+            end)
+          end
+        end)
+      end
+    end
+  )
 end
 
 vim.api.nvim_buf_create_user_command(0, 'MarkdownToPDF', md_to_pdf, {
