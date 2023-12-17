@@ -321,6 +321,15 @@ function _G._molten_nb_run_opfunc(_)
   })
 end
 
+local keycode_to_normal_mode =
+  vim.api.nvim_replace_termcodes('<C-\\><C-n>', true, false, true)
+
+---Send keycode to enter normal mode
+---@return nil
+local function to_normal_mode()
+  vim.api.nvim_feedkeys(keycode_to_normal_mode, 'nx', false)
+end
+
 ---Set buffer-local keymaps and commands
 ---@param buf integer? buffer handler, defaults to current buffer
 ---@return nil
@@ -354,12 +363,18 @@ local function setup_buf_keymaps_and_commands(buf)
     vim.keymap.set('n', '<LocalLeader>k', run_cell_above, { buffer = buf })
     vim.keymap.set('n', '<LocalLeader>j', run_cell_below, { buffer = buf })
     vim.keymap.set('n', '<CR>', run_cell_current, { buffer = buf })
-    vim.keymap.set('x', '<CR>', vim.cmd.MoltenNotebookRunVisual, { buffer = buf, silent = true })
+    vim.keymap.set('x', '<CR>', function()
+      to_normal_mode()
+      vim.cmd.MoltenNotebookRunVisual()
+    end, { buffer = buf, silent = true })
     vim.keymap.set('n', '<LocalLeader>r', run_operator, { buffer = buf })
   else -- ft == 'python'
     vim.keymap.set('n', '<CR>', vim.cmd.MoltenReevaluateCell, { buffer = buf })
-    vim.keymap.set('x', '<CR>', vim.cmd.MoltenEvaluateVisual, { buffer = buf, silent = true })
     vim.keymap.set('n', '<LocalLeader>r', vim.cmd.MoltenEvaluateOperator, { buffer = buf })
+    vim.keymap.set('x', '<CR>', function()
+      to_normal_mode()
+      vim.cmd.MoltenEvaluateVisual()
+    end, { buffer = buf, silent = true })
   end
   --stylua: ignore end
 end
