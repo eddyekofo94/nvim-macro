@@ -95,14 +95,20 @@ end
 
 ---@return string
 function statusline.word_count()
+  if vim.b.wc_str and vim.b.wc_changedtick == vim.b.changedtick then
+    return vim.b.wc_str
+  end
   local wordcount = vim.fn.wordcount()
   local num_words = wordcount.words
   local num_vis_words = wordcount.visual_words
-  return num_words == 0 and ''
+  local wc_str = num_words == 0 and ''
     or (num_vis_words and num_vis_words .. '/' or '')
       .. num_words
       .. ' word'
       .. (num_words > 1 and 's' or '')
+  vim.b.wc_str = wc_str
+  vim.b.wc_changedtick = vim.b.changedtick
+  return wc_str
 end
 
 ---Text filetypes
