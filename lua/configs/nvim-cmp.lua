@@ -548,32 +548,15 @@ cmp.setup.cmdline(':', {
     },
   },
 })
--- Complete vim.ui.input()
-cmp.setup.cmdline('@', {
-  enabled = true,
-  sources = {
-    {
-      name = 'fuzzy_path',
-      group_index = 1,
-      entry_filter = entry_filter_fuzzy_path,
-      option = fuzzy_path_option,
-    },
-    {
-      name = 'cmdline',
-      group_index = 2,
-      option = {
-        ignore_cmds = {},
-      },
-    },
-    {
-      name = 'buffer',
-      group_index = 3,
-      option = {
-        get_bufnrs = source_buf_get_bufnrs,
-      },
-    },
-  },
-})
+
+-- cmp does not work with cmdline with type other than `:`, '/', and '?', e.g.
+-- it does not respect the completion option of `input()`/`vim.ui.input()`, see
+-- https://github.com/hrsh7th/nvim-cmp/issues/1690
+-- https://github.com/hrsh7th/nvim-cmp/discussions/1073
+cmp.setup.cmdline('@', { enabled = false })
+cmp.setup.cmdline('>', { enabled = false })
+cmp.setup.cmdline('-', { enabled = false })
+cmp.setup.cmdline('=', { enabled = false })
 
 -- Completion in DAP buffers
 cmp.setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
