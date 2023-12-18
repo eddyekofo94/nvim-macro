@@ -33,7 +33,10 @@ return {
       'FileType markdown,norg',
       'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb',
     },
-    build = 'luarocks --lua-version 5.1 --local install magick',
+    build = {
+      'magick --version',
+      'luarocks --lua-version 5.1 --local install magick',
+    },
     config = function()
       require('configs.image')
     end,
