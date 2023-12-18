@@ -97,26 +97,9 @@ end
 if not bootstrap() then
   return
 end
-if vim.g.vscode then
-  enable_modules({
-    'lib',
-    'edit',
-    'treesitter',
-  })
-else
-  enable_modules({
-    'lib',
-    'lsp',
-    'edit',
-    'debug',
-    'tools',
-    'markup',
-    'completion',
-    'treesitter',
-    'colorschemes',
-  })
-end
 
+-- Reverse/Apply local patches on updating/intalling plugins,
+-- must be created before setting lazy to apply the patches properly
 vim.api.nvim_create_autocmd('User', {
   desc = 'Reverse/Apply local patches on updating/intalling plugins.',
   group = vim.api.nvim_create_augroup('LazyPatches', {}),
@@ -148,6 +131,26 @@ vim.api.nvim_create_autocmd('User', {
     end
   end,
 })
+
+if vim.g.vscode then
+  enable_modules({
+    'lib',
+    'edit',
+    'treesitter',
+  })
+else
+  enable_modules({
+    'lib',
+    'lsp',
+    'edit',
+    'debug',
+    'tools',
+    'markup',
+    'completion',
+    'treesitter',
+    'colorschemes',
+  })
+end
 
 -- A handy abbreviation
 utils.keymap.command_abbrev('lz', 'Lazy')
