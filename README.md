@@ -1,6 +1,6 @@
 ## Neovim :: M Λ C R O
 
-**Neovim :: M Λ C R O** is a collection of Neovim configuration files inspired
+[**Neovim :: M Λ C R O**](https://github.com/Bekaboo/nvim) is a collection of Neovim configuration files inspired
 by [Emacs / N Λ N O](https://github.com/rougier/nano-emacs).
 
 The goal of macro-neovim is to provide a clean and elegant user interface
@@ -22,7 +22,6 @@ are welcome.
 ## Table of Contents
 
 <!--toc:start-->
-- [Table of Contents](#table-of-contents)
 - [Features](#features)
 - [Requirements and Dependencies](#requirements-and-dependencies)
   - [Basic](#basic)
@@ -32,6 +31,7 @@ are welcome.
   - [Formatter](#formatter)
   - [Other External Tools](#other-external-tools)
 - [Installation](#installation)
+- [Uninstallation](#uninstallation)
 - [Config Structure](#config-structure)
 - [Tweaking this Configuration](#tweaking-this-configuration)
   - [Managing Plugins with Modules](#managing-plugins-with-modules)
@@ -49,7 +49,7 @@ are welcome.
   - [Showcases](#showcases)
   - [Default Modules and Plugins of Choice](#default-modules-and-plugins-of-choice)
     - [Third Party Plugins](#third-party-plugins)
-    - [Local Plugins](#local-plugins)
+    - [Builtin Plugins](#builtin-plugins)
   - [Startuptime](#startuptime)
 <!--toc:end-->
 
@@ -196,9 +196,50 @@ Install the following debug adapters manually:
     third-party plugins, press `y` to install, `n` to skip, `never` to skip and
     disable the prompt in the future (aka "do not ask again").
 
+    The suggestion is to use `n` to skip installing plugins on first launch,
+    and see if everything works OK under a bare minimum setup. Depending on
+    your needs, you can choose whether to install third-party plugins later
+    using `y`/`yes` or `never` on the second launch.
+
+    **Some notes about third-party plugins**
+
+    Installing third-party plugins is known to cause issues in some cases,
+    including:
+
+    1. Partially cloned plugins and missing dependencies due to slow network
+       connection
+    2. Building failure especially for plugins like [telescope-fzf-native.nvim](https://github.com/nvim-telescope/telescope-fzf-native.nvim)
+       and [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim) due to missing building dependencies or slow
+       installation process
+    3. Some plugins like [copilot.lua](https://github.com/zbirenbaum/copilot.lua) needs authentication to work
+    4. Treesitter plugins can easily cause issues if you are on a different
+       nvim version, check [nvim-version.txt](https://github.com/Bekaboo/nvim/blob/master/nvim-version.txt) for the version of nvim targeted by
+       this config
+
+    To avoid these issues,
+
+    1. Ensure you have a fast network before installing third-party plugins
+    2. If the building process failed, go to corresponding project directory
+       under `g:package_path` and manually run the build command from there.
+       The build commands are declared in module specification files under
+       [lua/modules](https://github.com/Bekaboo/nvim/tree/master/lua/modules)
+    3. Disable [copilot.lua](https://github.com/zbirenbaum/copilot.lua) if you do not have access to it
+    4. Ensure you are on the same version of nvim as specified in
+       [nvim-version.txt](https://github.com/Bekaboo/nvim/blob/master/nvim-version.txt) if you encounter any issue related to treesitter
+
 5. After entering neovim, Run `:checkhealth` to check potential dependency
    issues.
 6. Enjoy!
+
+## Uninstallation
+
+You can uninstall this config completely by simply removing the following
+paths:
+
+- `stdpath('config')`
+- `stdpath('cache')`
+- `stdpath('state')`
+- `stdpath('data')`
 
 ## Config Structure
 
@@ -466,42 +507,46 @@ Total # of plugins: 52 (package manager included).
     - [everforest](https://github.com/sainnhe/everforest)
     - [gruvbox-material](https://github.com/sainnhe/gruvbox-material)
 
-#### Local Plugins
+#### Builtin Plugins
 
 - [colorcolumn](https://github.com/Bekaboo/nvim/tree/master/plugin/colorcolumn.lua)
-    - shows color column dynamically based on current line width
-    - released as [deadcolumn.nvim](https://github.com/Bekaboo/deadcolumn.nvim)
+    - Shows color column dynamically based on current line width
+    - Released as [deadcolumn.nvim](https://github.com/Bekaboo/deadcolumn.nvim)
 - [colorswitch](https://github.com/Bekaboo/nvim/tree/master/plugin/colorswitch.lua)
-    - remembers and restores previous background and colorscheme settings
-    - syncs background and colorscheme settings among multiple Neovim instances
+    - Remembers and restores previous background and colorscheme settings
+    - Syncs background and colorscheme settings among multiple Neovim instances
       if scripts [setbg](https://github.com/Bekaboo/dot/blob/master/.scripts/setbg) and [setcolors](https://github.com/Bekaboo/dot/blob/master/.scripts/setcolors) are in `$PATH`
 - [expandtab](https://github.com/Bekaboo/nvim/tree/master/plugin/expandtab.lua)
-    - always use spaces for alignment
+    - Always use spaces for alignment, even if `&expandtab` is not set
 - [im](https://github.com/Bekaboo/nvim/tree/master/plugin/im.lua)
-    - switches and restores fcitx state in each buffer asynchronouly
+    - Switches and restores fcitx state in each buffer asynchronouly
 - [intro](https://github.com/Bekaboo/nvim/tree/master/plugin/intro.lua)
-    - shows a custom intro message on startup
+    - Shows a custom intro message on startup
 - [lsp-diagnostic](https://github.com/Bekaboo/nvim/tree/master/plugin/lsp-diagnostic.lua)
-    - sets up LSP and diagnostic options and commands on `LspAttach` or
+    - Sets up LSP and diagnostic options and commands on `LspAttach` or
       `DiagnosticChanged`
 - [readline](https://github.com/Bekaboo/nvim/tree/master/plugin/readline.lua)
-    - readline-like keybindings in insert and command mode
+    - Readline-like keybindings in insert and command mode
 - [statuscolumn](https://github.com/Bekaboo/nvim/tree/master/plugin/statuscolumn.lua)
-    - custom statuscolumn, with git signs on the right of line numbers
+    - Custom statuscolumn, with git signs on the right of line numbers
 - [statusline](https://github.com/Bekaboo/nvim/tree/master/plugin/statusline.lua)
-    - custom statusline inspired by [nano-emacs](https://github.com/rougier/nano-emacs)
+    - Custom statusline inspired by [nano-emacs](https://github.com/rougier/nano-emacs)
 - [tabout](https://github.com/Bekaboo/nvim/tree/master/plugin/tabout.lua)
-    - tab out and in with `<Tab>` and `<S-Tab>`
+    - Tab out and in with `<Tab>` and `<S-Tab>`
 - [termopts](https://github.com/Bekaboo/nvim/tree/master/plugin/termopts.lua)
-    - some nice setup for terminal buffers
+    - Some nice setup for terminal buffers
 - [tmux](https://github.com/Bekaboo/nvim/tree/master/plugin/tmux.lua)
-    - integration with tmux, provides unified keymaps for navigation, resizing,
+    - Integration with tmux, provides unified keymaps for navigation, resizing,
       and many other window operations
 - [vscode-neovim](https://github.com/Bekaboo/nvim/tree/master/plugin/vscode-neovim.vim)
-    - integration with [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim)
+    - Integration with [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim)
 - [winbar](https://github.com/Bekaboo/nvim/blob/master/plugin/winbar.lua)
-    - a winbar with drop-down menus and multiple backends
-    - released as [dropbar.nvim](https://github.com/Bekaboo/dropbar.nvim)
+    - A winbar with drop-down menus and multiple backends
+    - Released as [dropbar.nvim](https://github.com/Bekaboo/dropbar.nvim)
+- [markdown-capitalized-title](https://github.com/Bekaboo/nvim/blob/master/after/ftplugin/markdown/capitalized-title.lua)
+    - Automatically capitalize the first letter of each word in markdown titles
+    - Use `:MarkdownSetCapTitle enable/disable` to enable or disable this
+      feature
 
 ### Startuptime
 
@@ -516,7 +561,7 @@ Total # of plugins: 52 (package manager included).
     Run "nvim -V1 -v" for more info
     ```
 
-- Config Commit: `02172098091cf5b1b93bb9b5af2d4e21c128499e` (#2021)
+- Config Commit: `02172098` (#2021)
 
 - System: Arch Linux 6.1.61-1-lts
 
