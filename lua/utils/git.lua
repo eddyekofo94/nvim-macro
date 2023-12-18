@@ -96,7 +96,7 @@ function M.branch(path)
 end
 
 ---Store git diff stats for each buffer
----@type table<string, {added: integer, removed: integer, changed: integer}>
+---@type table<integer, {added: integer, removed: integer, changed: integer}>
 local buf_diffstats = {}
 
 vim.api.nvim_create_autocmd('BufWrite', {
