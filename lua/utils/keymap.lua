@@ -11,6 +11,17 @@ function M.command_abbrev(trig, command, opts)
   end, vim.tbl_deep_extend('keep', { expr = true }, opts or {}))
 end
 
+---Set keymap that only expand when the trigger is at the position of
+---a command
+---@param trig string
+---@param command string
+---@param opts table?
+function M.command_map(trig, command, opts)
+  vim.keymap.set('c', trig, function()
+    return vim.fn.getcmdcompltype() == 'command' and command or trig
+  end, vim.tbl_deep_extend('keep', { expr = true }, opts or {}))
+end
+
 ---@class keymap_def_t
 ---@field lhs string
 ---@field lhsraw string
