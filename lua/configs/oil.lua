@@ -337,6 +337,31 @@ oil.setup({
     ['<C-h>'] = 'actions.toggle_hidden',
     ['gs'] = 'actions.change_sort',
     ['gx'] = 'actions.open_external',
+    ['go'] = {
+      mode = 'n',
+      buffer = true,
+      desc = 'Choose an external program to open the entry under the cursor',
+      callback = function()
+        local entry = oil.get_cursor_entry()
+        local dir = oil.get_current_dir()
+        if not entry or not dir then
+          return
+        end
+        local entry_path = vim.fs.joinpath(dir, entry.name)
+        local response
+        vim.ui.input({
+          prompt = 'Open with: ',
+          completion = 'shellcmd',
+        }, function(r)
+          response = r
+        end)
+        if not response then
+          return
+        end
+        print('\n')
+        vim.system({ response, entry_path })
+      end,
+    },
     ['gy'] = {
       mode = 'n',
       buffer = true,
