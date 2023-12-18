@@ -372,7 +372,7 @@ oil.setup({
         if not entry or not dir then
           return
         end
-        local entry_path = dir .. entry.name
+        local entry_path = vim.fs.joinpath(dir, entry.name)
         vim.fn.setreg('"', entry_path)
         vim.fn.setreg(vim.v.register, entry_path)
         vim.notify(
