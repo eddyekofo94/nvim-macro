@@ -284,18 +284,15 @@ vim.keymap.set('o', 'if', '<Cmd>silent! normal m`Vif<CR><Cmd>silent! normal! ``<
 function _G.textobj_fold(motion)
   local lnum = vim.fn.line('.') --[[@as integer]]
   local sel_start = vim.fn.line('v')
-  local foldlev = vim.fn.foldlevel(lnum)
-  local foldlev_prev = vim.fn.foldlevel(lnum - 1)
+  local lev = vim.fn.foldlevel(lnum)
+  local levp = vim.fn.foldlevel(lnum - 1)
   -- Multi-line selection with cursor on top of selection
   if sel_start > lnum then
-    return (
-      foldlev == 0 and 'zk'
-      or (foldlev > foldlev_prev and foldlev_prev > 0 and 'k' or '')
-    )
+    return (lev == 0 and 'zk' or lev > levp and levp > 0 and 'k' or '')
       .. vim.v.count1
       .. (motion == 'i' and ']zkV[zj' or ']zV[z')
   end
-  return (foldlev == 0 and 'zj' or (foldlev > foldlev_prev and 'j' or ''))
+  return (lev == 0 and 'zj' or lev > levp and 'j' or '')
     .. vim.v.count1
     .. (motion == 'i' and '[zjV]zk' or '[zV]z')
 end
