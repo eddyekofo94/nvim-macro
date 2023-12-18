@@ -6,7 +6,7 @@ local state_path = vim.fn.stdpath('state') --[[@as string]]
 ---Install package manager if not already installed
 ---@return boolean success
 local function bootstrap()
-  vim.g.package_path = vim.fs.joinpath(data_path, 'site/pack/packages/opt')
+  vim.g.package_path = vim.fs.joinpath(data_path, 'packages')
   vim.g.package_lock = vim.fs.joinpath(conf_path, 'package-lock.json')
   local lazy_path = vim.fs.joinpath(vim.g.package_path, 'lazy.nvim')
   if vim.uv.fs_stat(lazy_path) then
