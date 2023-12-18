@@ -1,11 +1,14 @@
+local opts = {
+  headline_highlights = {},
+  codeblock_highlight = 'CodeBlock',
+  fat_headlines = false,
+}
+
 require('headlines').setup({
-  markdown = {
-    headline_highlights = {},
-    codeblock_highlight = 'CodeBlock',
-    fat_headlines = false,
-    fat_headline_upper_string = '',
-    fat_headline_lower_string = '',
-  },
+  markdown = opts,
+  norg = opts,
+  org = opts,
+  rmd = opts,
 })
 
 ---Set default highlight groups for headlines.nvim
