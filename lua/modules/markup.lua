@@ -34,6 +34,7 @@ return {
       'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb',
     },
     build = {
+      'ueberzug version',
       'magick --version',
       'luarocks --lua-version 5.1 --local install magick',
     },
