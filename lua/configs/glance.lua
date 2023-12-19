@@ -1,7 +1,7 @@
 local glance = require('glance')
 local actions = glance.actions
 local utils = require('utils')
-local horiz = vim.opt.fillchars:get().horiz
+local horiz = vim.opt.fillchars:get().horiz or utils.static.box.single.hr
 
 glance.setup({
   height = 16,

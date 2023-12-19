@@ -277,6 +277,8 @@ cmp.setup({
           cmp_item.kind = icon_folder
           cmp_item.kind_hl_group = 'CmpItemKindFolder'
         else -- Files
+          local icon = icon_file
+          local icon_hl = 'CmpItemKindFile'
           local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
           if devicons_ok then
             local icon, icon_hl = devicons.get_icon(
@@ -284,9 +286,10 @@ cmp.setup({
               vim.fn.fnamemodify(cmp_item.word, ':e'),
               { default = true }
             )
-            cmp_item.kind = icon and icon .. ' ' or icon_file
-            cmp_item.kind_hl_group = icon_hl or 'CmpItemKindFile'
+            icon = icon and icon .. ' '
           end
+          cmp_item.kind = icon or icon_file
+          cmp_item.kind_hl_group = icon_hl or 'CmpItemKindFile'
         end
       else -- Use special icons for cmdline / calc completions
         ---@type table<string, string> override icons with `entry.source.name`

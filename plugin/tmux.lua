@@ -1,4 +1,4 @@
-if vim.env.TMUX and not vim.tbl_isempty(vim.api.nvim_list_uis()) then
+if vim.env.TMUX and vim.g.has_ui then
   vim.schedule(function()
     require('plugin.tmux').setup()
   end)

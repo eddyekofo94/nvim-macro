@@ -191,18 +191,22 @@ local spinner_progress_keep = 80 -- ms
 local spinner_icon_done = vim.trim(utils.static.icons.Ok)
 local spinner_timer = vim.uv.new_timer()
 
-local spinner_icons = {
-  '⠋',
-  '⠙',
-  '⠹',
-  '⠸',
-  '⠼',
-  '⠴',
-  '⠦',
-  '⠧',
-  '⠇',
-  '⠏',
+local spinner_icons = not vim.g.modern_ui and {
+  vim.trim(utils.static.icons.Dot),
+  vim.trim(utils.static.icons.DotLarge)
 }
+  or {
+    '⠋',
+    '⠙',
+    '⠹',
+    '⠸',
+    '⠼',
+    '⠴',
+    '⠦',
+    '⠧',
+    '⠇',
+    '⠏',
+  }
 
 ---Id and additional info of language servers in progress
 ---@type table<integer, { name: string, timestamp: integer, type: 'begin'|'report'|'end' }>
@@ -358,7 +362,7 @@ vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
       local merged_attr = vim.tbl_deep_extend('keep', attr, default_attr)
       utils.hl.set_default(0, hlgroup_name, merged_attr)
     end
-    if vim.env.COLORTERM or vim.fn.has('gui_running') == 1 then
+    if vim.g.modern_ui then
       sethl('StatusLineHeader', { bg = 'TabLine' })
     end
     sethl('StatusLineGitAdded', { fg = 'GitSignsAdd' })

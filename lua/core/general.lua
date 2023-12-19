@@ -5,6 +5,10 @@ vim.loader.enable()
 local g = vim.g
 local opt = vim.opt
 
+g.has_ui = #vim.api.nvim_list_uis() > 0
+g.modern_ui = g.has_ui
+  and (vim.env.COLORTERM == 'truecolor' or vim.fn.has('gui_running') == 1)
+
 -- stylua: ignore start
 opt.cursorline     = true
 opt.colorcolumn    = '80'
@@ -22,7 +26,6 @@ opt.signcolumn     = 'yes:1'
 opt.splitright     = true
 opt.splitbelow     = true
 opt.swapfile       = false
-opt.termguicolors  = true
 opt.undofile       = true
 opt.wrap           = false
 opt.linebreak      = true
@@ -33,6 +36,10 @@ opt.autowriteall   = true
 opt.virtualedit    = 'block'
 opt.completeopt    = 'menuone'
 -- stylua: ignore end
+
+if g.modern_ui then
+  opt.termguicolors = true
+end
 
 -- Recognize numbered lists when formatting text
 opt.formatoptions:append('n')
@@ -62,17 +69,21 @@ opt.backupdir:remove('.')
 opt.list = true
 opt.listchars = {
   tab      = '→ ',
-  nbsp     = '␣',
   trail    = '·',
 }
 opt.fillchars = {
   fold      = '·',
-  foldopen  = '',
-  foldclose = '',
   foldsep   = ' ',
-  diff      = '╱',
   eob       = ' ',
 }
+if g.modern_ui then
+  opt.listchars:append({ nbsp = '␣' })
+  opt.fillchars:append({
+    foldopen  = '',
+    foldclose = '',
+    diff      = '╱',
+  })
+end
 
 opt.ts          = 4
 opt.softtabstop = 4

@@ -1,6 +1,6 @@
 -- Colorschemes other than the default colorscheme looks bad when the terminal
 -- does not support truecolor
-if vim.env.COLORTERM ~= 'truecolor' and vim.fn.has('gui_running') == 0 then
+if not vim.g.modern_ui then
   return
 end
 

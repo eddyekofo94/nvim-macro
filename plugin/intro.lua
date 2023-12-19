@@ -1,9 +1,11 @@
 -- Disable default intro message
 vim.opt.shortmess:append('I')
 
-if vim.fn.argc() > 0 or vim.tbl_isempty(vim.api.nvim_list_uis()) then
+if vim.fn.argc() > 0 or not vim.g.has_ui then
   return
 end
+
+local logo = vim.g.modern_ui and 'M Λ C R O' or 'M A C R O'
 
 ---@class intro_chunk_t
 ---@field text string
@@ -23,7 +25,7 @@ local lines = {
   {
     chunks = {
       {
-        text = 'Neovim :: M Λ C R O',
+        text = string.format('Neovim :: %s', logo),
         hl = 'Normal',
       },
       {
@@ -35,7 +37,7 @@ local lines = {
   {
     chunks = {
       {
-        text = 'Copyright (c) 2023 - M Λ C R O developers',
+        text = string.format('Copyright (c) 2023 - %s developers', logo),
         hl = 'NonText',
       },
     },
