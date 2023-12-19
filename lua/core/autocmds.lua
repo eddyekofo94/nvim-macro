@@ -354,26 +354,37 @@ au('FixVirtualEditCursorPos', {
 au('FixCmdLineIskeyword', {
   'CmdLineEnter',
   {
-    desc = 'Have consistent &iskeyword in command-line mode.',
+    desc = 'Have consistent &iskeyword and &lisp in Ex command-line mode.',
+    pattern = ':',
     callback = function(info)
-      vim.g._isk_buf = info.buf
+      -- Only use default &iskeyword and &lisp settings in
+      -- Ex mode command-line, since it should always be treated as vimscript;
+      -- for other types of command lines e.g. search command ('/', '?') or
+      -- i_CTRL-r_= ('=') command it is useful to keep the original value of
+      -- &iskeyword and &lisp
+      vim.g._isk_lisp_buf = info.buf
       vim.g._isk_save = vim.bo[info.buf].isk
+      vim.g._lisp_save = vim.bo[info.buf].lisp
       vim.cmd.setlocal('isk&')
+      vim.cmd.setlocal('lisp&')
     end,
   },
 }, {
   'CmdLineLeave',
   {
     desc = 'Restore &iskeyword after leaving command-line mode.',
+    pattern = ':',
     callback = function()
       if
-        vim.g._isk_buf
-        and vim.api.nvim_buf_is_valid(vim.g._isk_buf)
-        and vim.g._isk_save ~= vim.b[vim.g._isk_buf].isk
+        vim.g._isk_lisp_buf
+        and vim.api.nvim_buf_is_valid(vim.g._isk_lisp_buf)
+        and vim.g._isk_save ~= vim.b[vim.g._isk_lisp_buf].isk
       then
-        vim.bo[vim.g._isk_buf].isk = vim.g._isk_save
-        vim.g._isk_buf = nil
+        vim.bo[vim.g._isk_lisp_buf].isk = vim.g._isk_save
+        vim.bo[vim.g._isk_lisp_buf].lisp = vim.g._lisp_save
         vim.g._isk_save = nil
+        vim.g._lisp_save = nil
+        vim.g._isk_lisp_buf = nil
       end
     end,
   },
