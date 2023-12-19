@@ -1,15 +1,17 @@
+local icons = require('utils').static.icons
+
 require('gitsigns').setup({
   preview_config = {
     border = 'solid',
     style = 'minimal',
   },
   signs = {
-    add = { text = '▍' },
-    untracked = { text = '▍' },
-    change = { text = '▍' },
-    delete = { text = '▁' },
-    topdelete = { text = '▔' },
-    changedelete = { text = '▍' },
+    add = { text = vim.trim(icons.GitSignAdd) },
+    untracked = { text = vim.trim(icons.GitSignUntracked) },
+    change = { text = vim.trim(icons.GitSignChange) },
+    delete = { text = vim.trim(icons.GitSignDelete) },
+    topdelete = { text = vim.trim(icons.GitSignTopdelete) },
+    changedelete = { text = vim.trim(icons.GitSignChangedelete) },
   },
   -- Use vim legacy signs, for statuscol plugin to fetch gitsigns
   _extmark_signs = false,
