@@ -1,3 +1,7 @@
+if not vim.g.modern_ui then
+  vim.g.vimtex_syntax_conceal_disable = true
+end
+
 vim.g.vimtex_format_enabled = 1
 vim.g.vimtex_imaps_enabled = 0
 vim.g.vimtex_mappings_prefix = '<LocalLeader>t'
