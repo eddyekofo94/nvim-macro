@@ -312,7 +312,6 @@ local components = {
   info         = '%{%v:lua.statusline.info()%}',
   lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
   mode         = '%{%v:lua.statusline.mode()%}',
-  padding      = '%#None#  %*',
   pos          = '%{%&ru?"%l:%c ":""%}',
   truncate     = '%<',
 }
