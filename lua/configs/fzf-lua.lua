@@ -4,6 +4,17 @@ local utils = require('utils')
 
 local e = vim.fn.shellescape
 
+local img_preview_command = vim.g.modern_ui
+    and vim.fn.executable('ueberzug') == 1
+    and { 'ueberzug' }
+  or nil
+local html_preview_command = vim.fn.executable('w3m') == 1
+    and { 'w3m', '-dump' }
+  or nil
+local pdf_preview_command = vim.fn.executable('pdftotext') == 1
+    and { 'pdftotext', '-l', '10', '-nopgbrk', '-nodiag', '-q', '<file>', '-' }
+  or nil
+
 local cfg_smallwin_nopreview = {
   previewer = false,
   winopts = {
@@ -159,20 +170,11 @@ fzf.setup({
         disable = { 'tex', 'markdown' },
       },
       extensions = {
-        ['html'] = { 'w3m', '-dump' },
-        ['jpg'] = { 'ueberzug' },
-        ['png'] = { 'ueberzug' },
-        ['svg'] = { 'ueberzug' },
-        ['pdf'] = {
-          'pdftotext',
-          '-l',
-          '10',
-          '-nopgbrk',
-          '-nodiag',
-          '-q',
-          '<file>',
-          '-',
-        },
+        ['html'] = html_preview_command,
+        ['jpg'] = img_preview_command,
+        ['png'] = img_preview_command,
+        ['svg'] = img_preview_command,
+        ['pdf'] = pdf_preview_command,
       },
     },
   },
