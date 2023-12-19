@@ -6,8 +6,9 @@ local groupid = vim.api.nvim_create_augroup('StatusLine', {})
 local signs_text_cache = setmetatable({}, {
   __index = function(self, key)
     local sign_def = vim.fn.sign_getdefined(key)[1]
-    self[key] = sign_def and sign_def.text
-    return self[key] or ''
+    local sign_text = sign_def and sign_def.text
+    self[key] = sign_text
+    return sign_text or ''
   end,
 })
 
