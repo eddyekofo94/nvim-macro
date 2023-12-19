@@ -29,6 +29,13 @@ return {
 
   {
     '3rd/image.nvim',
+    enabled = function()
+      if vim.g.modern_ui then
+        vim.g.image_enabled = true
+        return true
+      end
+      return false
+    end,
     event = {
       'FileType markdown,norg',
       'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb',

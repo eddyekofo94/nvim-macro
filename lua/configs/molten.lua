@@ -1,4 +1,7 @@
-vim.g.molten_image_provider = 'image.nvim'
+if vim.g.image_enaled then
+  vim.g.molten_image_provider = 'image.nvim'
+end
+
 vim.g.molten_enter_output_behavior = 'open_and_enter'
 vim.g.molten_output_win_max_height = 16
 vim.g.molten_output_win_cover_gutter = false
