@@ -120,7 +120,7 @@ return {
     Ok                  = 'v ',
     Diamond             = '◆ ',
     Dot                 = '• ',
-    DotLarge            = '* ',
+    DotLarge            = '• ',
     Ellipsis            = '. ',
     GitSignAdd          = '+ ',
     GitSignChange       = '~ ',

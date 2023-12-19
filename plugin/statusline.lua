@@ -188,14 +188,14 @@ end
 local spinner_end_keep = 2000 -- ms
 local spinner_status_keep = 600 -- ms
 local spinner_progress_keep = 80 -- ms
-local spinner_icon_done = vim.trim(utils.static.icons.Ok)
 local spinner_timer = vim.uv.new_timer()
 
-local spinner_icons = not vim.g.modern_ui and {
-  vim.trim(utils.static.icons.Dot),
-  vim.trim(utils.static.icons.DotLarge)
-}
-  or {
+local spinner_icons ---@type string[]
+local spinner_icon_done ---@type string
+
+if vim.g.modern_ui then
+  spinner_icon_done = vim.trim(utils.static.icons.Ok)
+  spinner_icons = {
     '⠋',
     '⠙',
     '⠹',
@@ -207,6 +207,18 @@ local spinner_icons = not vim.g.modern_ui and {
     '⠇',
     '⠏',
   }
+else
+  spinner_icon_done = '[++++]'
+  spinner_icons = {
+    '[    ]',
+    '[=   ]',
+    '[==  ]',
+    '[=== ]',
+    '[ ===]',
+    '[  ==]',
+    '[   =]',
+  }
+end
 
 ---Id and additional info of language servers in progress
 ---@type table<integer, { name: string, timestamp: integer, type: 'begin'|'report'|'end' }>
