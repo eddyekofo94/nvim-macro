@@ -9,6 +9,8 @@ local function au(group, ...)
   end
 end
 
+local fn = vim.fn
+
 au('LargeFileSettings', {
   'BufReadPre',
   {
@@ -200,6 +202,44 @@ au('EqualWinSize', {
     command = 'wincmd =',
   },
 })
+
+local general_group = 'General Settings'
+
+au(general_group, {
+  'BufEnter',
+  {
+    callback = function()
+      vim.opt.formatoptions:remove({ 'c', 'r', 'o' })
+    end,
+    desc = 'Disable New Line Comment',
+  },
+})
+
+au(general_group, {
+  'FileType',
+  {
+    pattern = { 'c', 'go', 'cpp', 'py', 'java', 'cs' },
+    callback = function()
+      vim.bo.shiftwidth = 4
+    end,
+    desc = 'Set shiftwidth to 4 in these filetypes',
+  },
+})
+
+-- au(general_group, {
+--   'ModeChanged',
+--   {
+--     callback = function()
+--       if fn.getcmdtype() == '/' or fn.getcmdtype() == '?' then
+--         vim.opt.hlsearch = true
+--       else
+--         vim.opt.hlsearch = false
+--       end
+--     end,
+--     group = general_group,
+--     desc = 'Highlighting matched words when searching',
+--   },
+-- })
 
 -- Show cursor line and cursor column only in current window
 au('AutoHlCursorLine', {
