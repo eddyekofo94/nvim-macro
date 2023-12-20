@@ -30,14 +30,11 @@ function M.set_keymap(modes, lhs, rhs, opts)
   if type(opts) == 'string' then
     opts = { desc = opts }
   end
-  if modes == nil or '' then
-    modes = { 'n', 'x' }
-  end
   vim.keymap.set(modes, lhs, rhs, opts)
 end
 
-function M.set_buf_keymap(mode, key, rhs)
-  vim.keymap.set(mode, key, rhs, { buffer = self.buf })
+function M.set_buf_keymap(mode, key, rhs, opts)
+  vim.keymap.set(mode, key, rhs, { buffer = 0 })
 end
 
 ---Set abbreviation that only expand when the trigger is at the position of

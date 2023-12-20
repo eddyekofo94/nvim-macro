@@ -119,6 +119,7 @@ else
     'early-retirement',
     'conform',
     'winsep',
+    'flash',
     'which-key',
     'mini',
     'lsp.mason',

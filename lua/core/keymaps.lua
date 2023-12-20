@@ -1,5 +1,7 @@
 local utils = require('utils')
 local utils_keymap = require('utils.keymap')
+local map = utils_keymap.set_keymap
+local nxo = utils_keymap.nxo
 
 local Keymap = {}
 
@@ -50,6 +52,29 @@ Keymap.new('n', '<Up>', '<Nop>')
   :bind(Keymap.new('i', '<left>', '<nop>'))
   :execute()
 
+-- Whatever you delete, make it go away
+map({ 'n', 'x' }, 'c', '"_c')
+map(nxo, '%', 'gg0vG$')
+map({ 'n', 'x' }, 'C', '"_C')
+map({ 'n', 'x' }, 'S', '"_S', "Don't save to register")
+
+map({ 'n', 'x' }, 'x', '"_x')
+map('x', 'X', '"_c')
+
+-- select until the end of line
+map('x', 'v', '$h')
+
+-- don't yank on paste
+map('x', 'p', '"_dP')
+
+-- Easier line-wise movement
+map(nxo, 'gh', 'g^')
+map(nxo, 'gl', 'g$')
+
+map('v', '/', '"fy/\\V<C-R>f<CR>')
+map('v', '*', '"fy/\\V<C-R>f<CR>')
+
+map('v', '<c-r>w', ':%s/<c-r><c-w>//g<left><left>', 'change the current word')
 -- Multi-window operations
 -- stylua: ignore start
 vim.keymap.set({ 'x', 'n' }, '<C-j>',      '<C-d>')

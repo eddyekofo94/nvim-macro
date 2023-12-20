@@ -17,8 +17,6 @@ return {
             WinSeparator = { fg = colors.surface2 },
             OverLength = { fg = colors.red, bg = colors.base },
 
-            -- Telescope
-            -- TelescopeBorder = { fg = colors.surface0 },
             -- TScontext
             TreesitterContextBottom = {
               sp = colors.surface0, -- INFO: don't know about this
@@ -81,8 +79,8 @@ return {
             },
             underlines = {
               errors = { 'undercurl' },
-              hints = { 'underline' },
-              warnings = { 'underline' },
+              hints = { 'undercurl' },
+              warnings = { 'undercurl' },
               information = { 'underline' },
             },
           },

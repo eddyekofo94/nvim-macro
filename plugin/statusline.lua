@@ -51,54 +51,6 @@ local modes = {
 }
 -- stylua: ignore end
 
-function statusline.progress_provider()
-  if vim.lsp.status then
-    return ''
-  end
-  local Lsp = vim.lsp.util.get_progress_messages()[1]
-
-  if Lsp then
-    local msg = Lsp.message or ''
-    local percentage = Lsp.percentage
-    if not percentage then
-      return ''
-    end
-    local title = Lsp.title or ''
-    local spinners = {
-      '',
-      '󰀚',
-      '',
-    }
-    local success_icon = {
-      '',
-      '',
-      '',
-    }
-    local ms = vim.loop.hrtime() / 1000000
-    local frame = math.floor(ms / 120) % #spinners
-
-    if percentage >= 70 then
-      return string.format(
-        ' %%<%s %s %s (%s%%%%) ',
-        success_icon[frame + 1],
-        title,
-        msg,
-        percentage
-      )
-    end
-
-    return string.format(
-      ' %%<%s %s %s (%s%%%%) ',
-      spinners[frame + 1],
-      title,
-      msg,
-      percentage
-    )
-  end
-
-  return ''
-end
-
 ---Get string representation of the current mode
 ---@return string
 function statusline.mode()
@@ -382,13 +334,18 @@ end
 -- don't think it works as intended but I am happy with it
 -- I wanted to return just the filename when not in focus
 function statusline.filename()
-  -- local file_path = vim.fn.expand('%:' .. workspace_path .. ':.')
-
   if vim.api.nvim_get_current_win() then
-    return get_file_icon() .. vim.fn.expand('%:.')
-    -- return file_path
+    -- get_file_icon()
+    return get_file_icon()
+      .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+      -- .. vim.loop.cwd(0)
+      .. '..'
+      .. vim.fn.expand('%:.')
   else
-    return ' %{%&bt==#""?"%t":"%F"%} '
+    -- return ' %{%&bt==#""?"%t":"%F"%} '
+    return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+      .. ' '
+      .. vim.fn.expand('%:.')
   end
 end
 
@@ -399,7 +356,7 @@ end
 local components = {
   align        = '%=',
   diag         = '%{%v:lua.statusline.diag()%}',
-    cwd         = '%{%v:lua.statusline.get_cwd()%}',
+  cwd         = '%{%v:lua.statusline.get_cwd()%}',
   fname        = '%{%v:lua.statusline.filename() %} ',
   info         = '%{%v:lua.statusline.info()%}',
   lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
