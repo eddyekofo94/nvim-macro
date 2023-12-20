@@ -162,6 +162,23 @@ local ft_text = {
   ['text'] = true,
 }
 
+local assets = {
+  dir = '󰉖 ',
+  file = '󰈙 ',
+}
+
+local get_file_icon = function()
+  local filename = vim.fn.expand('%:t')
+  local extension = vim.fn.expand('%:e')
+  local present, icons = pcall(require, 'nvim-web-devicons')
+  local icon = present and icons.get_icon(filename, extension) or assets.file
+  return ' ' .. icon .. ' '
+end
+
+function statusline.get_cwd()
+  return assets.dir .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+end
+
 ---Additional info for the current buffer enclosed in parentheses
 ---@return string
 function statusline.info()
@@ -175,6 +192,7 @@ function statusline.info()
       table.insert(info, section)
     end
   end
+  add_section(statusline.get_cwd())
   add_section(statusline.ft())
   if ft_text[vim.bo.ft] and not vim.b.large_file then
     add_section(statusline.word_count())
@@ -367,12 +385,13 @@ function statusline.filename()
   -- local file_path = vim.fn.expand('%:' .. workspace_path .. ':.')
 
   if vim.api.nvim_get_current_win() then
-    return vim.fn.expand('%:.')
+    return get_file_icon() .. vim.fn.expand('%:.')
     -- return file_path
   else
     return ' %{%&bt==#""?"%t":"%F"%} '
   end
 end
+
 
 -- stylua: ignore start
 ---Statusline components
@@ -380,6 +399,7 @@ end
 local components = {
   align        = '%=',
   diag         = '%{%v:lua.statusline.diag()%}',
+    cwd         = '%{%v:lua.statusline.get_cwd()%}',
   fname        = '%{%v:lua.statusline.filename() %} ',
   info         = '%{%v:lua.statusline.info()%}',
   lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',

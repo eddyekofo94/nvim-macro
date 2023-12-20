@@ -33,6 +33,21 @@ ts_configs.setup({
   ensure_installed = require('utils.static').langs:list('ts'),
   sync_install = false,
   ignore_install = {},
+  matchup = {
+    enable = true,
+    disable = function(_lang, buffer)
+      return vim.api.nvim_buf_line_count(buffer) > 20000
+    end,
+  },
+  autotag = {
+    enable = true,
+    disable = function(buffer)
+      return vim.api.nvim_buf_line_count(buffer) > 20000
+    end,
+  },
+  autopairs = {
+    enable = true,
+  },
   highlight = {
     enable = not vim.g.vscode,
     disable = function(ft, buf)
@@ -41,7 +56,8 @@ ts_configs.setup({
       -- highlighting while still preserving math conceal provided
       -- by vimtex regex syntax rules
       return vim.tbl_contains({ 'markdown', 'tex', 'latex' }, ft)
-        or buf_is_large(ft, buf) or vim.fn.win_gettype() == 'command'
+        or buf_is_large(ft, buf)
+        or vim.fn.win_gettype() == 'command'
     end,
     additional_vim_regex_highlighting = false,
   },

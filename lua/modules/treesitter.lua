@@ -1,7 +1,9 @@
 return {
   {
     'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
+    build = function()
+      require('nvim-treesitter.install').update({ with_sync = true })()
+    end,
     cmd = {
       'TSInstall',
       'TSInstallSync',
@@ -24,16 +26,14 @@ return {
       end)
     end,
     dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
+      {
+        'nvim-treesitter/nvim-treesitter-textobjects',
+        init = function() end,
+      },
+      'nvim-treesitter/nvim-treesitter-context',
       'JoosepAlviste/nvim-ts-context-commentstring',
       'RRethy/nvim-treesitter-endwise',
     },
-  },
-
-  {
-    'nvim-treesitter/nvim-treesitter-textobjects',
-    lazy = true,
-    dependencies = 'nvim-treesitter/nvim-treesitter',
   },
 
   {
