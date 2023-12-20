@@ -347,7 +347,6 @@ local function setup_buf_keymaps_and_commands(buf)
     return
   end
 
-  --stylua: ignore start
   vim.keymap.set('n', '<C-c>', vim.cmd.MoltenInterrupt, { buffer = buf })
   vim.keymap.set('n', '<C-j>', function()
     vim.cmd.MoltenEnterOutput({ mods = { noautocmd = true } })
@@ -357,6 +356,7 @@ local function setup_buf_keymaps_and_commands(buf)
   end, { buffer = buf })
 
   if ft == 'markdown' then
+    --stylua: ignore start
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunLine', run_line, {})
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunCellAbove', run_cell_above, {})
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunCellBelow', run_cell_below, {})
@@ -369,7 +369,7 @@ local function setup_buf_keymaps_and_commands(buf)
     vim.keymap.set('x', '<CR>', function()
       to_normal_mode()
       vim.cmd.MoltenNotebookRunVisual()
-    end, { buffer = buf, silent = true })
+    end, { buffer = buf })
     vim.keymap.set('n', '<LocalLeader>r', run_operator, { buffer = buf })
   else -- ft == 'python'
     vim.keymap.set('n', '<CR>', vim.cmd.MoltenReevaluateCell, { buffer = buf })
@@ -377,7 +377,7 @@ local function setup_buf_keymaps_and_commands(buf)
     vim.keymap.set('x', '<CR>', function()
       to_normal_mode()
       vim.cmd.MoltenEvaluateVisual()
-    end, { buffer = buf, silent = true })
+    end, { buffer = buf })
   end
   --stylua: ignore end
 end
