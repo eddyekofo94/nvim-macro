@@ -238,7 +238,7 @@ local fuzzy_path_option = {
   },
 }
 
-local icon_dot = vim.trim(icons.DotLarge)
+local icon_dot = icons.DotLarge
 local icon_calc = icons.Calculator
 local icon_folder = icons.Folder
 local icon_file = icons.File
