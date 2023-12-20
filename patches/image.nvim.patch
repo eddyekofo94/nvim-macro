@@ -1,0 +1,13 @@
+diff --git a/lua/image/utils/logger.lua b/lua/image/utils/logger.lua
+index 688cad8..3a93fcc 100644
+--- a/lua/image/utils/logger.lua
++++ b/lua/image/utils/logger.lua
+@@ -67,7 +67,7 @@ return {
+   throw = create_logger({
+     prefix = "[image.nvim]",
+     formatter = default_log_formatter,
+-    handler = error,
++    handler = function() end,
+     output_file = "/tmp/nvim-image.txt",
+   }),
+   debug = create_logger({
