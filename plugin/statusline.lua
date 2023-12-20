@@ -247,11 +247,17 @@ local spinner_progress_keep = 80 -- ms
 local spinner_icon_done = vim.trim(get_succes_frame())
 local spinner_timer = vim.uv.new_timer()
 
-local spinner_icons = {
-  ' ',
-  '󰀚 ',
-  ' ',
-}
+-- local spinner_icons = {
+--   ' ',
+--   '󰀚 ',
+--   ' ',
+-- }
+
+-- local spinner_icons =
+--   { ' ', '󰪞 ', '󰪟 ', '󰪠 ', '󰪢 ', '󰪣 ', '󰪤 ', '󰪥 ' }
+-- local spinners = { "󰸶", "󰸸", "󰸷", "󰸴", "󰸵", "󰸳" }
+
+local spinner_icons = { ' ', ' ', ' ', '󰺕 ', ' ', ' ' }
 
 ---Id and additional info of language servers in progress
 ---@type table<integer, { name: string, timestamp: integer, type: 'begin'|'report'|'end' }>
