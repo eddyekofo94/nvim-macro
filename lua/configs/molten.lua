@@ -324,15 +324,6 @@ function _G._molten_nb_run_opfunc(_)
   })
 end
 
-local keycode_to_normal_mode =
-  vim.api.nvim_replace_termcodes('<C-\\><C-n>', true, false, true)
-
----Send keycode to enter normal mode
----@return nil
-local function to_normal_mode()
-  vim.api.nvim_feedkeys(keycode_to_normal_mode, 'nx', false)
-end
-
 ---Set buffer-local keymaps and commands
 ---@param buf integer? buffer handler, defaults to current buffer
 ---@return nil
@@ -347,6 +338,17 @@ local function setup_buf_keymaps_and_commands(buf)
     return
   end
 
+  vim.api.nvim_create_user_command(
+    'MoltenHideCellHl',
+    'hi! clear MoltenCell',
+    { desc = 'Hide the current code cell highlight in molten.' }
+  )
+  vim.api.nvim_create_user_command(
+    'MoltenShowCellHl',
+    'hi! link MoltenCell CursorLine',
+    { desc = 'Show the current code cell highlight in molten.' }
+  )
+
   vim.keymap.set('n', '<C-c>', vim.cmd.MoltenInterrupt, { buffer = buf })
   vim.keymap.set('n', '<C-j>', function()
     vim.cmd.MoltenEnterOutput({ mods = { noautocmd = true } })
@@ -360,31 +362,25 @@ local function setup_buf_keymaps_and_commands(buf)
   -- Use otter to recognized codeblocks in markdown files,
   -- so we can run current codeblock directly without selection
   -- using `<CR>`, and other good stuffs
+  -- stylua: ignore start
   if ft == 'markdown' and otk_ok then
-    --stylua: ignore start
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunLine', run_line, {})
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunCellAbove', run_cell_above, {})
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunCellBelow', run_cell_below, {})
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunCellCurrent', run_cell_current, {})
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunVisual', run_visual, { range = true })
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunOperator', run_operator, {})
+    vim.keymap.set('n', '<LocalLeader><LocalLeader>', run_operator, { buffer = buf })
     vim.keymap.set('n', '<LocalLeader>k', run_cell_above, { buffer = buf })
     vim.keymap.set('n', '<LocalLeader>j', run_cell_below, { buffer = buf })
-    vim.keymap.set('n', '<LocalLeader>r', run_operator, { buffer = buf })
     vim.keymap.set('n', '<CR>', run_cell_current, { buffer = buf })
-    vim.keymap.set('x', '<CR>', function()
-      to_normal_mode()
-      vim.cmd.MoltenNotebookRunVisual()
-    end, { buffer = buf })
+    vim.keymap.set('x', '<CR>', ':<C-u>MoltenNotebookRunVisual<CR>', { buffer = buf })
   else -- ft == 'python' or otter.keeper not found
-    vim.keymap.set('n', '<LocalLeader>r', vim.cmd.MoltenEvaluateOperator, { buffer = buf })
-    vim.keymap.set('n', '<CR>', vim.cmd.MoltenReevaluateCell, { buffer = buf })
-    vim.keymap.set('x', '<CR>', function()
-      to_normal_mode()
-      vim.cmd.MoltenEvaluateVisual()
-    end, { buffer = buf })
+    vim.keymap.set('n', '<LocalLeader><LocalLeader>', vim.cmd.MoltenEvaluateOperator, { buffer = buf })
+    vim.keymap.set('n', '<CR>', '<Cmd>MoltenReevaluateCell<CR>', { buffer = buf })
+    vim.keymap.set('x', '<CR>', ':<C-u>MoltenNotebookRunVisual<CR>', { buffer = buf })
   end
-  --stylua: ignore end
+  -- stylua: ignore end
 end
 
 local groupid = vim.api.nvim_create_augroup('MoltenSetup', {})
@@ -401,7 +397,7 @@ vim.api.nvim_create_autocmd('User', {
 ---@return nil
 local function set_default_hlgroups()
   local hl = require('utils.hl')
-  hl.set(0, 'MoltenCell', { bg = 'CursorLine' })
+  hl.set(0, 'MoltenCell', {}) -- Hide cell highlight by default
   hl.set(0, 'MoltenOutputWin', { link = 'Comment' })
   hl.set(0, 'MoltenOutputWinNC', { link = 'Comment' })
 end
