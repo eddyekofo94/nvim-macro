@@ -955,6 +955,30 @@ local function setup_lsp_autoformat()
   })
 end
 
+---Stop a client 'softly'
+---@param client lsp.Client
+---@param force boolean?
+---@param num_trials integer? default: 4
+local function soft_stop_client(client, force, num_trials)
+  -- Abort if client is already stopped or reconnects to some buffers
+  if
+    client.is_stopped() ---@diagnostic disable-line: invisible
+    or not vim.tbl_isempty(vim.lsp.get_buffers_by_client_id(client.id))
+  then
+    return
+  end
+  num_trials = num_trials or 4
+  if force or num_trials <= 0 then
+    vim.notify('[LSP] force stopping detached client ' .. client.name)
+    client.stop(true)
+    return
+  end
+  client.stop()
+  vim.defer_fn(function()
+    soft_stop_client(client, force, num_trials - 1)
+  end, 500)
+end
+
 local lsp_autostop_pending
 ---Automatically stop LSP servers that no longer attaches to any buffers
 ---
@@ -978,7 +1002,7 @@ local function setup_lsp_autostop()
         lsp_autostop_pending = nil
         for _, client in ipairs(vim.lsp.get_clients()) do
           if vim.tbl_isempty(vim.lsp.get_buffers_by_client_id(client.id)) then
-            vim.lsp.stop_client(client.id, true)
+            soft_stop_client(client)
           end
         end
       end, 60000)
