@@ -1,3 +1,16 @@
+diff --git a/lua/output_window.lua b/lua/output_window.lua
+index 27eb679..86f82bd 100644
+--- a/lua/output_window.lua
++++ b/lua/output_window.lua
+@@ -9,7 +9,7 @@ M.calculate_window_position = function(buf_line)
+   local pos = vim.fn.screenpos(win, buf_line, 0)
+   local win_off = vim.fn.getwininfo(win)[1].winrow
+ 
+-  return pos.row - (win_off - 1)
++  return pos.row - (win_off - 1) + (vim.wo[win].winbar == '' and 1 or 0)
+ end
+ 
+ return M
 diff --git a/rplugin/python3/molten/__init__.py b/rplugin/python3/molten/__init__.py
 index def1b6f..707263e 100644
 --- a/rplugin/python3/molten/__init__.py
