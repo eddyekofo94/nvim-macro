@@ -6,6 +6,9 @@ local g = vim.g
 local opt = vim.opt
 
 -- stylua: ignore start
+opt.shortmess:append "Aco" -- Disable asking
+opt.whichwrap:append "<,>,[,],h,l"
+opt.iskeyword:append "-"
 opt.cursorline     = true
 opt.colorcolumn    = '80'
 opt.foldlevelstart = 99

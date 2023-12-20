@@ -1,12 +1,13 @@
 local utils = require('utils')
-local utils_keymap = require("utils.keymap")
+local utils_keymap = require('utils.keymap')
 
 local Keymap = {}
 
 Keymap.__index = Keymap
 function Keymap.new(mode, lhs, rhs, opts)
   local action = function()
-    local merged_opts = vim.tbl_extend("force", { noremap = true, silent = true }, opts or {})
+    local merged_opts =
+      vim.tbl_extend('force', { noremap = true, silent = true }, opts or {})
     vim.keymap.set(mode, lhs, rhs, merged_opts)
   end
   return setmetatable({ action = action }, Keymap)
@@ -21,33 +22,32 @@ function Keymap:execute()
   self.action()
 end
 
--- vim.keymap.set({ 'n', 'x' }, '<Space>', '<Ignore>')
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-vim.keymap.set('n', '<Leader><space>', '<Cmd>FZF<CR>')
+-- vim.keymap.set('n', '<Leader><space>', '<Cmd>FZF<CR>')
 
 -- move over a closing element in insert mode
-vim.keymap.set("i", "<C-l>", function()
+vim.keymap.set('i', '<C-l>', function()
   return utils_keymap.escapePair()
-end, { desc = "move over a closing element in insert mode" })
+end, { desc = 'move over a closing element in insert mode' })
 
 -- better window movement
-Keymap.new("n", "<M-h>", "<C-w>h")
-  :bind(Keymap.new("n", "<M-j>", "<C-w>j"))
-  :bind(Keymap.new("n", "<M-k>", "<C-w>k"))
-  :bind(Keymap.new("n", "<M-l>", "<C-w>l"))
+Keymap.new('n', '<M-h>', '<C-w>h')
+  :bind(Keymap.new('n', '<M-j>', '<C-w>j'))
+  :bind(Keymap.new('n', '<M-k>', '<C-w>k'))
+  :bind(Keymap.new('n', '<M-l>', '<C-w>l'))
   :execute()
 
 -- HARD MODE - Disabled arrows
-Keymap.new("n", "<Up>", "<Nop>")
-  :bind(Keymap.new("n", "<Down>", "<Nop>"))
-  :bind(Keymap.new("n", "<Left>", "<Nop>"))
-  :bind(Keymap.new("n", "<Right>", "<Nop>"))
-  :bind(Keymap.new("i", "<right>", "<nop>"))
-  :bind(Keymap.new("i", "<up>", "<nop>"))
-  :bind(Keymap.new("i", "<down>", "<nop>"))
-  :bind(Keymap.new("i", "<left>", "<nop>"))
+Keymap.new('n', '<Up>', '<Nop>')
+  :bind(Keymap.new('n', '<Down>', '<Nop>'))
+  :bind(Keymap.new('n', '<Left>', '<Nop>'))
+  :bind(Keymap.new('n', '<Right>', '<Nop>'))
+  :bind(Keymap.new('i', '<right>', '<nop>'))
+  :bind(Keymap.new('i', '<up>', '<nop>'))
+  :bind(Keymap.new('i', '<down>', '<nop>'))
+  :bind(Keymap.new('i', '<left>', '<nop>'))
   :execute()
 
 -- Multi-window operations

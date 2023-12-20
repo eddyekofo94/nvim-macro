@@ -64,4 +64,15 @@ return {
     event = 'FileType',
     dependencies = 'nvim-treesitter/nvim-treesitter',
   },
+
+  {
+    'RRethy/vim-illuminate',
+    -- INFO: disabled for now
+    -- enabled = false,
+    event = 'BufReadPre',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+    },
+    -- config = require "custom.configs.illuminate",
+  },
 }
