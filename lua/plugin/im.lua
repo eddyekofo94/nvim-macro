@@ -40,18 +40,20 @@ local function setup()
   end
 
   local groupid = vim.api.nvim_create_augroup('IMSwitch', {})
-  vim.api.nvim_create_autocmd('InsertEnter', {
+  vim.api.nvim_create_autocmd('ModeChanged', {
     group = groupid,
-    callback = im_activate,
-  })
-  vim.api.nvim_create_autocmd('CmdlineEnter', {
-    group = groupid,
-    pattern = '[/\\?]',
-    callback = im_activate,
-  })
-  vim.api.nvim_create_autocmd({ 'CmdlineLeave', 'InsertLeave' }, {
-    group = groupid,
-    callback = im_deactivate,
+    pattern = { '[ictRss\x13]*:*', '*:[ictRss\x13]*' },
+    callback = function()
+      local mode = vim.fn.mode()
+      if
+        mode:match('^[itRss\x13]')
+        or mode:match('^c') and vim.fn.getcmdtype():match('[/?]')
+      then
+        im_activate()
+      else
+        im_deactivate()
+      end
+    end,
   })
 end
 
