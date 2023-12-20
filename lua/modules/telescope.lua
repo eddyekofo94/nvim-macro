@@ -4,11 +4,11 @@ return {
     'nvim-telescope/telescope.nvim',
     lazy = false,
     keys = {
-      {
-        '<leader><space>',
-        Util.telescope('files', { cwd = '%:p:h' }),
-        desc = 'Find Files (current)',
-      },
+      -- {
+      --   '<leader><space>',
+      --   Util.telescope('files', { cwd = '%:p:h' }),
+      --   desc = 'Find Files (current)',
+      -- },
       {
         --  BUG: 2023-11-22 09:08 AM - This is somehow not working,
         -- it is listing the branches instead
@@ -40,45 +40,45 @@ return {
         '<cmd>Telescope command_history<cr>',
         desc = 'Command History',
       },
-      {
-        '<leader>p',
-        Util.telescope('files'),
-        desc = 'Find Files (root dir)',
-      },
-      {
-        '<leader>sF',
-        Util.telescope('files', { cwd = false }),
-        desc = 'Find Files (cwd)',
-      },
-      {
-        '<leader>ss',
-        Util.telescope('live_grep'),
-        desc = 'Live Grep (root dir)',
-      },
-      {
-        '<leader>sH',
-        Util.telescope('live_grep', { cwd = false }),
-        desc = 'Live Grep (cwd)',
-      },
-      {
-        '<leader>sg',
-        Util.telescope('grep_string'),
-        desc = 'Grep String (root dir)',
-        mode = {
-          'n',
-          'x',
-        },
-      },
+      -- {
+      --   '<leader>p',
+      --   Util.telescope('files'),
+      --   desc = 'Find Files (root dir)',
+      -- },
+      -- {
+      --   '<leader>sF',
+      --   Util.telescope('files', { cwd = false }),
+      --   desc = 'Find Files (cwd)',
+      -- },
+      -- {
+      --   '<leader>ss',
+      --   Util.telescope('live_grep'),
+      --   desc = 'Live Grep (root dir)',
+      -- },
+      -- {
+      --   '<leader>sH',
+      --   Util.telescope('live_grep', { cwd = false }),
+      --   desc = 'Live Grep (cwd)',
+      -- },
+      -- {
+      --   '<leader>sg',
+      --   Util.telescope('grep_string'),
+      --   desc = 'Grep String (root dir)',
+      --   mode = {
+      --     'n',
+      --     'x',
+      --   },
+      -- },
       { 'sk', '<cmd>Telescope keymaps<cr>', desc = 'Keymaps' },
-      {
-        '<leader>sG',
-        Util.telescope('grep_string', { cwd = false }),
-        desc = 'Grep String',
-        mode = {
-          'n',
-          'x',
-        },
-      },
+      -- {
+      --   '<leader>sG',
+      --   Util.telescope('grep_string', { cwd = false }),
+      --   desc = 'Grep String',
+      --   mode = {
+      --     'n',
+      --     'x',
+      --   },
+      -- },
       -- Git
       {
         '<leader>sx',
