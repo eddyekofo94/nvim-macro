@@ -209,11 +209,11 @@ M.icons = setmetatable({
     StackFrameCurrent   = ' ',
   },
   diagnostics = {
-    DiagnosticSignError = '󰅚 ',
-    DiagnosticSignHint  = '󰌶 ',
-    DiagnosticSignInfo  = '󰋽 ',
-    DiagnosticSignOk    = '󰄬 ',
-    DiagnosticSignWarn  = '󰀪 ',
+    DiagnosticSignError = " ",
+    DiagnosticSignHint  = " ",
+    DiagnosticSignInfo  = " ",
+    DiagnosticSignOk    = " ",
+    DiagnosticSignWarn  = " ",
   },
   kinds = {
     Array               = '󰅪 ',

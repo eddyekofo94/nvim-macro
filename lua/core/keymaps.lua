@@ -1,11 +1,60 @@
 local utils = require('utils')
+local utils_keymap = require("utils.keymap")
 
-vim.keymap.set({ 'n', 'x' }, '<Space>', '<Ignore>')
+local Keymap = {}
+
+Keymap.__index = Keymap
+function Keymap.new(mode, lhs, rhs, opts)
+  local action = function()
+    local merged_opts = vim.tbl_extend("force", { noremap = true, silent = true }, opts or {})
+    vim.keymap.set(mode, lhs, rhs, merged_opts)
+  end
+  return setmetatable({ action = action }, Keymap)
+end
+
+function Keymap:bind(nextMapping)
+  self.action()
+  return nextMapping
+end
+
+function Keymap:execute()
+  self.action()
+end
+
+-- vim.keymap.set({ 'n', 'x' }, '<Space>', '<Ignore>')
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.keymap.set('n', '<Leader><space>', '<Cmd>FZF<CR>')
+
+-- move over a closing element in insert mode
+vim.keymap.set("i", "<C-l>", function()
+  return utils_keymap.escapePair()
+end, { desc = "move over a closing element in insert mode" })
+
+-- better window movement
+Keymap.new("n", "<M-h>", "<C-w>h")
+  :bind(Keymap.new("n", "<M-j>", "<C-w>j"))
+  :bind(Keymap.new("n", "<M-k>", "<C-w>k"))
+  :bind(Keymap.new("n", "<M-l>", "<C-w>l"))
+  :execute()
+
+-- HARD MODE - Disabled arrows
+Keymap.new("n", "<Up>", "<Nop>")
+  :bind(Keymap.new("n", "<Down>", "<Nop>"))
+  :bind(Keymap.new("n", "<Left>", "<Nop>"))
+  :bind(Keymap.new("n", "<Right>", "<Nop>"))
+  :bind(Keymap.new("i", "<right>", "<nop>"))
+  :bind(Keymap.new("i", "<up>", "<nop>"))
+  :bind(Keymap.new("i", "<down>", "<nop>"))
+  :bind(Keymap.new("i", "<left>", "<nop>"))
+  :execute()
+
 -- Multi-window operations
 -- stylua: ignore start
+vim.keymap.set({ 'x', 'n' }, '<C-j>',      '<C-d>')
+vim.keymap.set({ 'x', 'n' }, '<C-k>',      '<C-u>')
+
 vim.keymap.set({ 'x', 'n' }, '<M-W>',      '<C-w>W')
 vim.keymap.set({ 'x', 'n' }, '<M-H>',      '<C-w>H')
 vim.keymap.set({ 'x', 'n' }, '<M-J>',      '<C-w>J')
@@ -20,7 +69,7 @@ vim.keymap.set({ 'x', 'n' }, '<M-.>',      '(v:count ? "" : 4) . (winnr() == win
 vim.keymap.set({ 'x', 'n' }, '<M-,>',      '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w>>" : "<C-w><")', { expr = true })
 vim.keymap.set({ 'x', 'n' }, '<M-+>',      'v:count ? "<C-w>+" : "2<C-w>+"', { expr = true })
 vim.keymap.set({ 'x', 'n' }, '<M-->',      'v:count ? "<C-w>-" : "2<C-w>-"', { expr = true })
-vim.keymap.set({ 'x', 'n' }, '<M-p>',      '<C-w>p')
+vim.keymap.set({ 'x', 'n' }, '<M-l>',      '<C-w>p')
 vim.keymap.set({ 'x', 'n' }, '<M-r>',      '<C-w>r')
 vim.keymap.set({ 'x', 'n' }, '<M-v>',      '<C-w>v')
 vim.keymap.set({ 'x', 'n' }, '<M-s>',      '<C-w>s')
@@ -45,18 +94,18 @@ vim.keymap.set({ 'x', 'n' }, '<M-g>t',     '<C-w>gt')
 vim.keymap.set({ 'x', 'n' }, '<M-g>T',     '<C-w>gT')
 vim.keymap.set({ 'x', 'n' }, '<M-w>',      '<C-w><C-w>')
 vim.keymap.set({ 'x', 'n' }, '<M-h>',      '<C-w><C-h>')
-vim.keymap.set({ 'x', 'n' }, '<M-j>',      '<C-w><C-j>')
+-- vim.keymap.set({ 'x', 'n' }, '<M-j>',      '<C-w><C-j>')
 vim.keymap.set({ 'x', 'n' }, '<M-k>',      '<C-w><C-k>')
 vim.keymap.set({ 'x', 'n' }, '<M-l>',      '<C-w><C-l>')
 vim.keymap.set({ 'x', 'n' }, '<M-g><M-]>', '<C-w>g<C-]>')
 vim.keymap.set({ 'x', 'n' }, '<M-g><Tab>', '<C-w>g<Tab>')
 
-vim.keymap.set({ 'x', 'n' }, '<C-w>>', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w><" : "<C-w>>")', { expr = true })
-vim.keymap.set({ 'x', 'n' }, '<C-w><', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w>>" : "<C-w><")', { expr = true })
-vim.keymap.set({ 'x', 'n' }, '<C-w>,', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w><" : "<C-w>>")', { expr = true })
-vim.keymap.set({ 'x', 'n' }, '<C-w>.', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w>>" : "<C-w><")', { expr = true })
-vim.keymap.set({ 'x', 'n' }, '<C-w>+', 'v:count ? "<C-w>+" : "2<C-w>+"', { expr = true })
-vim.keymap.set({ 'x', 'n' }, '<C-w>-', 'v:count ? "<C-w>-" : "2<C-w>-"', { expr = true })
+-- vim.keymap.set({ 'x', 'n' }, '<C-w>>', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w><" : "<C-w>>")', { expr = true })
+-- vim.keymap.set({ 'x', 'n' }, '<C-w><', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w>>" : "<C-w><")', { expr = true })
+-- vim.keymap.set({ 'x', 'n' }, '<C-w>,', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w><" : "<C-w>>")', { expr = true })
+-- vim.keymap.set({ 'x', 'n' }, '<C-w>.', '(v:count ? "" : 4) . (winnr() == winnr("l") ? "<C-w>>" : "<C-w><")', { expr = true })
+-- vim.keymap.set({ 'x', 'n' }, '<C-w>+', 'v:count ? "<C-w>+" : "2<C-w>+"', { expr = true })
+-- vim.keymap.set({ 'x', 'n' }, '<C-w>-', 'v:count ? "<C-w>-" : "2<C-w>-"', { expr = true })
 -- stylua: ignore end
 
 -- Terminal mode keymaps
@@ -206,11 +255,11 @@ local function tabswitch(tab_action, default_count)
     end
   end
 end
-vim.keymap.set('n', 'gt', tabswitch(vim.cmd.tabnext))
-vim.keymap.set('n', 'gT', tabswitch(vim.cmd.tabprev))
-vim.keymap.set('n', 'gy', tabswitch(vim.cmd.tabprev)) -- gT is too hard to press
+-- vim.keymap.set('n', 'gt', tabswitch(vim.cmd.tabnext))
+-- vim.keymap.set('n', 'gT', tabswitch(vim.cmd.tabprev))
+-- vim.keymap.set('n', 'gy', tabswitch(vim.cmd.tabprev)) -- gT is too hard to press
 
-vim.keymap.set('n', '<Leader>0', '<Cmd>0tabnew<CR>')
+-- vim.keymap.set('n', '<Leader>0', '<Cmd>0tabnew<CR>')
 vim.keymap.set('n', '<Leader>1', tabswitch(vim.cmd.tabnext, 1))
 vim.keymap.set('n', '<Leader>2', tabswitch(vim.cmd.tabnext, 2))
 vim.keymap.set('n', '<Leader>3', tabswitch(vim.cmd.tabnext, 3))
@@ -222,7 +271,7 @@ vim.keymap.set('n', '<Leader>8', tabswitch(vim.cmd.tabnext, 8))
 vim.keymap.set('n', '<Leader>9', tabswitch(vim.cmd.tabnext, 9))
 
 -- Complete line
-vim.keymap.set('i', '<C-l>', '<C-x><C-l>')
+-- vim.keymap.set('i', '<C-l>', '<C-x><C-l>')
 
 -- Correct misspelled word / mark as correct
 vim.keymap.set('i', '<C-g>+', '<Esc>[szg`]a')

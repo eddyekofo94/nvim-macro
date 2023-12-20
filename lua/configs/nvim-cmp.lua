@@ -1,7 +1,7 @@
 local cmp = require('cmp')
 local luasnip = require('luasnip')
 local tabout = require('plugin.tabout')
-local icons = require('utils.static').icons
+local icons_local = require('utils.static').icons
 
 ---Choose the closer destination between two destinations
 ---@param dest1 number[]?
@@ -238,10 +238,10 @@ local fuzzy_path_option = {
   },
 }
 
-local icon_dot = vim.trim(icons.DotLarge)
-local icon_calc = icons.Calculator
-local icon_folder = icons.Folder
-local icon_file = icons.File
+local icon_dot = vim.trim(icons_local.DotLarge)
+local icon_calc = icons_local.Calculator
+local icon_folder = icons_local.Folder
+local icon_file = icons_local.File
 local compltype_path = {
   dir = true,
   file = true,
@@ -249,6 +249,46 @@ local compltype_path = {
   runtime = true,
 }
 
+local lspkind = require('lspkind')
+
+lspkind.init({
+  preset = 'codicons',
+})
+
+local cmp_ui = {
+  icons = true,
+  lspkind_text = true,
+  style = 'default', -- default/flat_light/flat_dark/atom/atom_colored
+  border_color = 'grey_fg', -- only applicable for "default" style, use color names from base30 variables
+  selected_item_bg = 'colored', -- colored / simple
+}
+
+-- local cmp_style = cmp_ui.style
+
+local formatting_style = {
+  -- default fields order i.e completion word + item.kind + item.kind icons
+  fields = { 'abbr', 'kind', 'menu' },
+
+  format = function(_, item)
+    local icons = lspkind
+    local icon = (cmp_ui.icons and icons[item.kind]) or ''
+
+    -- if cmp_style == 'atom' or cmp_style == 'atom_colored' then
+    --   icon = ' ' .. icon .. ' '
+    --   item.menu = cmp_ui.lspkind_text and '   (' .. item.kind .. ')' or ''
+    --   item.kind = icon
+    -- else
+    --   icon = cmp_ui.lspkind_text and (' ' .. icon .. ' ') or icon
+    --   item.kind =
+    --     string.format('%s %s', icon, cmp_ui.lspkind_text and item.kind or '')
+    -- end
+
+    icon = cmp_ui.lspkind_text and (' ' .. icon .. ' ') or icon
+    item.kind =
+      string.format('%s %s', icon, cmp_ui.lspkind_text and item.kind or '')
+    return item
+  end,
+}
 ---@return integer[] buffer numbers
 local function source_buf_get_bufnrs()
   return vim.b.large_file and {} or { vim.api.nvim_get_current_buf() }
@@ -295,7 +335,7 @@ cmp.setup({
           calc = icon_calc,
         }
         cmp_item.kind = icon_override[entry.source.name]
-          or icons[cmp_item.kind]
+          or icons_local[cmp_item.kind]
           or ''
       end
       ---@param field string
@@ -326,6 +366,7 @@ cmp.setup({
       end
       clamp('abbr', vim.go.pw, math.max(60, math.ceil(vim.o.columns * 0.4)))
       clamp('menu', 0, math.max(16, math.ceil(vim.o.columns * 0.2)))
+      -- clamp(formatting_style.format())
       return cmp_item
     end,
   },
@@ -335,6 +376,47 @@ cmp.setup({
     end,
   },
   mapping = {
+    ['<C-Space>'] = cmp.mapping({
+      i = cmp.mapping.complete(),
+      c = function(
+        _ --[[fallback]]
+      )
+        if cmp.visible() then
+          if not cmp.confirm({ select = true }) then
+            return
+          end
+        else
+          cmp.complete()
+        end
+      end,
+    }),
+    ['<CR>'] = cmp.mapping.confirm({
+      i = function(fallback)
+        if cmp.visible() and cmp.get_active_entry() then
+          cmp.confirm({
+            -- For Copilot -- INFO: not using this (yet)
+            behavior = cmp.ConfirmBehavior.Insert,
+            -- Only when explicitly selected
+            select = false,
+          })
+        else
+          -- fallback()
+          cmp.confirm({
+            -- For Copilot -- INFO: not using this (yet)
+            behavior = cmp.ConfirmBehavior.Insert,
+            -- Only when explicitly selected
+            select = false,
+          })
+        end
+      end,
+      s = cmp.mapping.confirm({ select = true }),
+      c = cmp.mapping.confirm({
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = true,
+      }),
+      -- behavior = cmp.ConfirmBehavior.Insert,
+      -- select = true,
+    }),
     ['<S-Tab>'] = {
       ['c'] = function()
         if cmp.visible() then
@@ -404,7 +486,7 @@ cmp.setup({
         end
       end,
     },
-    ['<C-p>'] = {
+    ['<C-k>'] = {
       ['c'] = cmp.mapping.select_prev_item(),
       ['i'] = function()
         if cmp.visible() then
@@ -416,7 +498,7 @@ cmp.setup({
         end
       end,
     },
-    ['<C-n>'] = {
+    ['<C-j>'] = {
       ['c'] = cmp.mapping.select_next_item(),
       ['i'] = function()
         if cmp.visible() then
@@ -428,8 +510,8 @@ cmp.setup({
         end
       end,
     },
-    ['<Down>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
-    ['<Up>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
+    ['<C-j>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
+    ['<C-k>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
     ['<PageDown>'] = cmp.mapping(
       cmp.mapping.select_next_item({
         count = vim.o.pumheight ~= 0 and math.ceil(vim.o.pumheight / 2) or 8,

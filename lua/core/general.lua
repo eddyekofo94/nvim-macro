@@ -12,9 +12,10 @@ opt.foldlevelstart = 99
 opt.helpheight     = 10
 opt.showmode       = false
 opt.mousemoveevent = true
+opt.relativenumber = true
 opt.number         = true
 opt.ruler          = true
-opt.pumheight      = 16
+opt.pumheight      = 10
 opt.scrolloff      = 4
 opt.sidescrolloff  = 8
 opt.sidescroll     = 0
@@ -32,21 +33,43 @@ opt.conceallevel   = 2
 opt.autowriteall   = true
 opt.virtualedit    = 'block'
 opt.completeopt    = 'menuone'
+opt.sessionoptions = "resize,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 -- stylua: ignore end
+
+-- Use ripgrep as grep tool
+vim.o.grepprg = 'rg --vimgrep --no-heading'
+vim.o.grepformat = '%f:%l:%c:%m,%f:%l:%m'
 
 -- Recognize numbered lists when formatting text
 opt.formatoptions:append('n')
 
 -- Font for GUI
-opt.guifont = 'JetbrainsMono NF ExtraLight:h13'
+-- opt.guifont = 'JetbrainsMono NF ExtraLight:h13'
 
 -- Cursor shape
 opt.gcr = {
   'i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor',
-  'n-v:block-Curosr/lCursor',
+  'i-ci:ver30-Cursor-blinkwait500-blinkon400-blinkoff300',
+  'n-v:block-Curosr/lCursor-blinkon10',
   'o:hor50-Curosr/lCursor',
   'r-cr:hor20-Curosr/lCursor',
 }
+
+-- Disable comments on next line
+vim.cmd([[autocmd FileType * set formatoptions-=ro]])
+
+vim.opt.undodir = vim.fn.stdpath('data') .. 'undo'
+
+vim.o.wildoptions = 'pum'
+
+vim.cmd(
+  [[highlight HighlightedyankRegion cterm=reverse gui=reverse guifg=reverse guibg=reverse]]
+)
+
+vim.cmd([[
+  let &t_Cs = "\e[4:3m"
+  let &t_Ce = "\e[4:0m"
+]])
 
 -- Use histogram algorithm for diffing, generates more readable diffs in
 -- situations where two lines are swapped
@@ -85,7 +108,7 @@ opt.ignorecase  = true
 opt.smartcase   = true
 
 opt.spellcapcheck = ''
-opt.spelllang     = 'en,cjk'
+opt.spelllang     = 'en'
 opt.spelloptions  = 'camel'
 opt.spellsuggest  = 'best,9'
 

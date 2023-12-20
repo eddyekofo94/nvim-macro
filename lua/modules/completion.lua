@@ -39,6 +39,10 @@ return {
   },
 
   {
+    'onsails/lspkind-nvim',
+  },
+
+  {
     'tzachar/fuzzy.nvim',
     lazy = true,
   },
@@ -79,6 +83,7 @@ return {
 
   {
     'zbirenbaum/copilot.lua',
+    enabled = false,
     cmd = 'Copilot',
     event = 'InsertEnter',
     config = function()

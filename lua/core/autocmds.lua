@@ -74,7 +74,10 @@ au('YankHighlight', {
   {
     desc = 'Highlight the selection on yank.',
     callback = function()
-      vim.highlight.on_yank({ higroup = 'Visual', timeout = 200 })
+      vim.highlight.on_yank({
+        higroup = 'HighlightedyankRegion',
+        timeout = 500,
+      })
     end,
   },
 })

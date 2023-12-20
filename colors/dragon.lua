@@ -3,14 +3,14 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu 14 Dec 2023 11:44:22 PM CST
+-- Last Updated: Tue 19 Dec 2023 10:52:01 AM UTC
 
--- Clear hlgroups and set colors_name {{{
+-- Clear hlgroups and set colors_name 
 vim.cmd.hi('clear')
 vim.g.colors_name = 'dragon'
--- }}}
 
--- Palette {{{
+
+-- Palette 
 -- stylua: ignore start
 local c_autumnGreen
 local c_autumnRed
@@ -161,9 +161,9 @@ else
   c_winterYellow  = '#e2dcd4'
 end
 -- stylua: ignore end
--- }}}
 
--- Terminal colors {{{
+
+-- Terminal colors 
 -- stylua: ignore start
 if vim.go.bg == 'dark' then
   vim.g.terminal_color_0  = c_dragonBg0
@@ -205,11 +205,11 @@ else
   vim.g.terminal_color_17 = c_dragonOrange1
 end
 -- stylua: ignore end
---- }}}
+-
 
--- Highlight groups {{{1
+-- Highlight groups 
 local hlgroups = {
-  -- UI {{{2
+  -- UI 
   ColorColumn = { bg = c_dragonBg2 },
   Conceal = { bold = true, fg = c_dragonGray2 },
   CurSearch = { link = 'IncSearch' },
@@ -275,9 +275,9 @@ local hlgroups = {
   WinBarNC = { link = 'WinBar' },
   WinSeparator = { fg = c_dragonBg4 },
   lCursor = { link = 'Cursor' },
-  -- }}}2
+  
 
-  -- Syntax {{{2
+  -- Syntax 
   Boolean = { fg = c_dragonOrange0, bold = true },
   Character = { link = 'String' },
   Comment = { fg = c_dragonAsh },
@@ -298,9 +298,9 @@ local hlgroups = {
   String = { fg = c_dragonGreen1 },
   Todo = { fg = c_dragonBg0, bg = c_dragonBlue0, bold = true },
   Type = { fg = c_dragonAqua },
-  -- }}}2
+  
 
-  -- Treesitter syntax {{{2
+  -- Treesitter syntax 
   ['@attribute'] = { link = 'Constant' },
   ['@constructor'] = { fg = c_dragonTeal },
   ['@constructor.lua'] = { fg = c_dragonViolet },
@@ -350,9 +350,9 @@ local hlgroups = {
   ['@text.warning'] = { bg = c_roninYellow, fg = c_waveBlue0, bold = true },
   ['@variable'] = { fg = c_dragonFg0 },
   ['@variable.builtin'] = { fg = c_dragonRed, italic = true },
-  -- }}}
+  
 
-  -- LSP semantic {{{2
+  -- LSP semantic 
   ['@lsp.mod.readonly'] = { link = 'Constant' },
   ['@lsp.mod.typeHint'] = { link = 'Type' },
   ['@lsp.type.builtinConstant'] = { link = '@constant.builtin' },
@@ -376,9 +376,9 @@ local hlgroups = {
   ['@lsp.typemod.variable.global'] = { link = 'Constant' },
   ['@lsp.typemod.variable.injected'] = { link = '@variable' },
   ['@lsp.typemod.variable.static'] = { link = 'Constant' },
-  -- }}}
+  
 
-  -- LSP {{{2
+  -- LSP 
   LspCodeLens = { fg = c_dragonAsh },
   LspInfoBorder = { link = 'FloatBorder' },
   LspInlayHint = { link = 'DiagnosticVirtualTextHint' },
@@ -386,9 +386,9 @@ local hlgroups = {
   LspReferenceText = { bg = c_winterYellow },
   LspReferenceWrite = { bg = c_winterYellow, underline = true },
   LspSignatureActiveParameter = { fg = c_roninYellow },
-  -- }}}
+  
 
-  -- Diagnostic {{{2
+  -- Diagnostic 
   DiagnosticError = { fg = c_dragonRed },
   DiagnosticHint = { fg = c_dragonAqua },
   DiagnosticInfo = { fg = c_dragonBlue1 },
@@ -406,9 +406,9 @@ local hlgroups = {
   DiagnosticVirtualTextHint = { bg = c_winterGreen, fg = c_dragonAqua },
   DiagnosticVirtualTextInfo = { bg = c_winterBlue, fg = c_dragonBlue1 },
   DiagnosticVirtualTextWarn = { bg = c_winterYellow, fg = c_carpYellow },
-  -- }}}
+  
 
-  -- Filetype {{{2
+  -- Filetype 
   -- Git
   gitHash = { fg = c_dragonAsh },
 
@@ -465,9 +465,9 @@ local hlgroups = {
   -- Qf
   qfFileName = { link = 'Directory' },
   qfLineNr = { link = 'lineNr' },
-  -- }}}
+  
 
-  -- Plugins {{{2
+  -- Plugins 
   -- nvim-cmp
   CmpCompletion = { link = 'Pmenu' },
   CmpCompletionBorder = { bg = c_waveBlue0, fg = c_waveBlue1 },
@@ -587,11 +587,11 @@ local hlgroups = {
   GlanceWinBarFilename = { bg = c_dragonBg3, fg = c_dragonFg1 },
   GlanceWinBarFilepath = { bg = c_dragonBg3, fg = c_dragonAsh },
   GlanceWinBarTitle = { bg = c_dragonBg3, fg = c_dragonFg1, bold = true },
-  -- }}}
+  
 }
--- }}}1
 
--- Highlight group overrides {{{1
+
+-- Highlight group overrides 
 if vim.go.bg == 'light' then
   hlgroups.CursorLine = { bg = c_dragonBg2 }
   hlgroups.DiagnosticSignWarn = { fg = c_autumnYellow }
@@ -623,12 +623,12 @@ if vim.go.bg == 'light' then
   hlgroups.Visual = { bg = c_dragonBg3 }
   hlgroups['@parameter'] = { link = 'Identifier' }
 end
--- }}}1
 
--- Set highlight groups {{{1
+
+-- Set highlight groups 
 for hlgroup_name, hlgroup_attr in pairs(hlgroups) do
   vim.api.nvim_set_hl(0, hlgroup_name, hlgroup_attr)
 end
--- }}}1
+
 
 -- vim:ts=2:sw=2:sts=2:fdm=marker:fdl=0

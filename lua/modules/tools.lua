@@ -23,6 +23,22 @@ return {
   },
 
   {
+    'notjedi/nvim-rooter.lua',
+    lazy = false,
+    config = function()
+      require('nvim-rooter').setup({
+        fallback_to_parent = false,
+      })
+    end,
+  },
+
+  {
+    'MTDL9/vim-log-highlighting',
+    event = 'VeryLazy',
+    ft = 'log',
+  },
+
+  {
     'willothy/flatten.nvim',
     event = 'BufReadPre',
     config = function()
@@ -87,6 +103,15 @@ return {
   {
     'stevearc/oil.nvim',
     cmd = 'Oil',
+    keys = {
+      {
+        '-',
+        function()
+          require('oil').open()
+        end,
+        { desc = 'Open parent directory' },
+      },
+    },
     init = function() -- Load oil on startup only when editing a directory
       vim.g.loaded_fzf_file_explorer = 1
       vim.g.loaded_netrw = 1

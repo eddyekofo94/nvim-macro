@@ -51,6 +51,54 @@ local modes = {
 }
 -- stylua: ignore end
 
+function statusline.progress_provider()
+  if vim.lsp.status then
+    return ''
+  end
+  local Lsp = vim.lsp.util.get_progress_messages()[1]
+
+  if Lsp then
+    local msg = Lsp.message or ''
+    local percentage = Lsp.percentage
+    if not percentage then
+      return ''
+    end
+    local title = Lsp.title or ''
+    local spinners = {
+      '',
+      '󰀚',
+      '',
+    }
+    local success_icon = {
+      '',
+      '',
+      '',
+    }
+    local ms = vim.loop.hrtime() / 1000000
+    local frame = math.floor(ms / 120) % #spinners
+
+    if percentage >= 70 then
+      return string.format(
+        ' %%<%s %s %s (%s%%%%) ',
+        success_icon[frame + 1],
+        title,
+        msg,
+        percentage
+      )
+    end
+
+    return string.format(
+      ' %%<%s %s %s (%s%%%%) ',
+      spinners[frame + 1],
+      title,
+      msg,
+      percentage
+    )
+  end
+
+  return ''
+end
+
 ---Get string representation of the current mode
 ---@return string
 function statusline.mode()
@@ -84,7 +132,7 @@ function statusline.branch()
   ---@diagnostic disable-next-line: undefined-field
   local branch = vim.b.gitsigns_status_dict and vim.b.gitsigns_status_dict.head
     or utils.git.branch()
-  return branch == '' and '' or '#' .. branch
+  return branch == '' and '' or ' ' .. branch
 end
 
 ---Get current filetype
@@ -163,7 +211,8 @@ function statusline.diag()
   for serverity_nr, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
     local cnt = buf_cnt[serverity_nr] or 0
     if cnt > 0 then
-      local icon = signs_text_cache['DiagnosticSign' .. severity]
+      -- local icon = signs_text_cache['DiagnosticSign' .. severity]
+      local icon = ' '
       local icon_hl = 'StatusLineDiagnostic' .. severity
       str = str
         .. (str == '' and '' or ' ')
@@ -178,23 +227,30 @@ function statusline.diag()
   return str
 end
 
+local success_icon = {
+  '󰄳 ',
+  '󰄳 ',
+  '󰄳 ',
+}
+
+local function get_succes_frame()
+  local ms = vim.loop.hrtime() / 1000000
+  local frame = math.floor(ms / 120) % #success_icon
+  return string.format(success_icon[frame + 1])
+end
+
 local spinner_end_keep = 2000 -- ms
 local spinner_status_keep = 600 -- ms
 local spinner_progress_keep = 80 -- ms
-local spinner_icon_done = vim.trim(utils.static.icons.Ok)
+
+-- local spinner_icon_done = vim.trim(success_icon[1])
+local spinner_icon_done = vim.trim(get_succes_frame())
 local spinner_timer = vim.uv.new_timer()
 
 local spinner_icons = {
-  '⠋',
-  '⠙',
-  '⠹',
-  '⠸',
-  '⠼',
-  '⠴',
-  '⠦',
-  '⠧',
-  '⠇',
-  '⠏',
+  ' ',
+  '󰀚 ',
+  ' ',
 }
 
 ---Id and additional info of language servers in progress
@@ -265,12 +321,18 @@ function statusline.lsp_progress()
   then
     if vim.b.spinner_icon ~= spinner_icon_done and allow_changing_state() then
       vim.b.spinner_state_changed = now
-      vim.b.spinner_icon = spinner_icon_done
+      vim.b.spinner_icon = spinner_icon_done .. ' ' -- INFO: keep the space there
     end
   else
-    local spinner_icon_progress = spinner_icons[math.ceil(
-      now / spinner_progress_keep
-    ) % #spinner_icons + 1]
+    -- INFO: a way to edit this?
+    -- local spinner_icon_progress = spinner_icons[math.ceil(
+    --   now / spinner_progress_keep
+    -- ) % #spinner_icons + 1]
+
+    local ms = vim.loop.hrtime() / 1000000
+    local spinner_icon_progress =
+      spinner_icons[math.floor(ms / 120) % #spinner_icons + 1]
+
     if vim.b.spinner_icon ~= spinner_icon_done then
       vim.b.spinner_icon = spinner_icon_progress
     elseif allow_changing_state() then
@@ -291,13 +353,28 @@ function statusline.lsp_progress()
   )
 end
 
+-- local workspace_path = vim.lsp.buf.list_workspace_folders()[1]
+-- local rel_path = vim.lsp.buf.list_workspace_folders()[1]
+-- don't think it works as intended but I am happy with it
+-- I wanted to return just the filename when not in focus
+function statusline.filename()
+  -- local file_path = vim.fn.expand('%:' .. workspace_path .. ':.')
+
+  if vim.api.nvim_get_current_win() then
+    return vim.fn.expand('%:.')
+    -- return file_path
+  else
+    return ' %{%&bt==#""?"%t":"%F"%} '
+  end
+end
+
 -- stylua: ignore start
 ---Statusline components
 ---@type table<string, string>
 local components = {
   align        = '%=',
   diag         = '%{%v:lua.statusline.diag()%}',
-  fname        = ' %{%&bt==#""?"%t":"%F"%} ',
+  fname        = '%{%v:lua.statusline.filename() %} ',
   info         = '%{%v:lua.statusline.info()%}',
   lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
   mode         = '%{%v:lua.statusline.mode()%}',
@@ -310,11 +387,11 @@ local components = {
 local stl = table.concat({
   components.mode,
   components.fname,
-  components.info,
+  components.diag,
   components.align,
   components.truncate,
   components.lsp_progress,
-  components.diag,
+  components.info,
   components.pos,
 })
 

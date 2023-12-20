@@ -84,15 +84,17 @@ fzf.setup({
       -- Rotate preview clockwise/counter-clockwise
       ['<F5>'] = 'toggle-preview-ccw',
       ['<F6>'] = 'toggle-preview-cw',
-      ['<S-down>'] = 'preview-page-down',
-      ['<S-up>'] = 'preview-page-up',
+      ['<C-j>'] = 'down',
+      ['<C-k>'] = 'down',
+      ['<C-d>'] = 'preview-page-down',
+      ['<C-u>'] = 'preview-page-up',
       ['<S-left>'] = 'preview-page-reset',
     },
     fzf = {
       -- fzf '--bind=' options
       ['ctrl-z'] = 'abort',
-      ['ctrl-k'] = 'kill-line',
-      ['ctrl-u'] = 'unix-line-discard',
+      ['ctrl-q'] = 'kill-line',
+      -- ['ctrl-u'] = 'unix-line-discard',
       ['ctrl-a'] = 'beginning-of-line',
       ['ctrl-e'] = 'end-of-line',
       ['alt-a'] = 'toggle-all',
