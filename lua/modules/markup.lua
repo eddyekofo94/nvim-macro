@@ -61,7 +61,6 @@ return {
     ft = 'python',
     event = 'BufEnter *.ipynb',
     build = ':UpdateRemotePlugins',
-    dependencies = 'jmbuhr/otter.nvim',
     config = function()
       require('configs.molten')
     end,

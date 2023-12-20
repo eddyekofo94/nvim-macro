@@ -168,7 +168,7 @@ local function extract_cells(lang, code_chunks, range, partial)
   return chunks
 end
 
-local otk = require('otter.keeper')
+local otk
 
 ---@type table<string, true>
 local not_runnable = {
@@ -355,7 +355,12 @@ local function setup_buf_keymaps_and_commands(buf)
     end
   end, { buffer = buf })
 
-  if ft == 'markdown' then
+  local otk_ok
+  otk_ok, otk = pcall(require, 'otter.keeper')
+  -- Use otter to recognized codeblocks in markdown files,
+  -- so we can run current codeblock directly without selection
+  -- using `<CR>`, and other good stuffs
+  if ft == 'markdown' and otk_ok then
     --stylua: ignore start
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunLine', run_line, {})
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunCellAbove', run_cell_above, {})
@@ -365,15 +370,15 @@ local function setup_buf_keymaps_and_commands(buf)
     vim.api.nvim_buf_create_user_command(buf, 'MoltenNotebookRunOperator', run_operator, {})
     vim.keymap.set('n', '<LocalLeader>k', run_cell_above, { buffer = buf })
     vim.keymap.set('n', '<LocalLeader>j', run_cell_below, { buffer = buf })
+    vim.keymap.set('n', '<LocalLeader>r', run_operator, { buffer = buf })
     vim.keymap.set('n', '<CR>', run_cell_current, { buffer = buf })
     vim.keymap.set('x', '<CR>', function()
       to_normal_mode()
       vim.cmd.MoltenNotebookRunVisual()
     end, { buffer = buf })
-    vim.keymap.set('n', '<LocalLeader>r', run_operator, { buffer = buf })
-  else -- ft == 'python'
-    vim.keymap.set('n', '<CR>', vim.cmd.MoltenReevaluateCell, { buffer = buf })
+  else -- ft == 'python' or otter.keeper not found
     vim.keymap.set('n', '<LocalLeader>r', vim.cmd.MoltenEvaluateOperator, { buffer = buf })
+    vim.keymap.set('n', '<CR>', vim.cmd.MoltenReevaluateCell, { buffer = buf })
     vim.keymap.set('x', '<CR>', function()
       to_normal_mode()
       vim.cmd.MoltenEvaluateVisual()
