@@ -9,7 +9,6 @@ g.has_ui = #vim.api.nvim_list_uis() > 0
 g.modern_ui = g.has_ui and vim.env.DISPLAY ~= nil
 
 -- stylua: ignore start
-opt.cursorline     = true
 opt.colorcolumn    = '80'
 opt.foldlevelstart = 99
 opt.helpheight     = 10
@@ -37,6 +36,7 @@ opt.completeopt    = 'menuone'
 -- stylua: ignore end
 
 if g.modern_ui then
+  opt.cursorline = true
   opt.termguicolors = true
 end
 
