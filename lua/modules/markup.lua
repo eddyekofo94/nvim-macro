@@ -9,12 +9,11 @@ return {
 
   {
     'iamcco/markdown-preview.nvim',
-    build = 'cd app && npm install && cd - && git restore .',
+    enabled = vim.g.modern_ui or false,
     ft = 'markdown',
-    init = function()
-      vim.g.mkdp_filetypes = { 'markdown' }
-      vim.g.mkdp_auto_close = 0
-      vim.g.mkdp_theme = 'light'
+    build = 'cd app && npm install && cd - && git restore .',
+    config = function()
+      require('configs.markdown-preview')
     end,
   },
 
@@ -29,13 +28,7 @@ return {
 
   {
     '3rd/image.nvim',
-    enabled = function()
-      if vim.g.modern_ui then
-        vim.g.image_enabled = true
-        return true
-      end
-      return false
-    end,
+    enabled = vim.g.modern_ui or false,
     event = {
       'FileType markdown,norg',
       'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb',
@@ -68,10 +61,7 @@ return {
     ft = 'python',
     event = 'BufEnter *.ipynb',
     build = ':UpdateRemotePlugins',
-    dependencies = {
-      '3rd/image.nvim',
-      'jmbuhr/otter.nvim',
-    },
+    dependencies = 'jmbuhr/otter.nvim',
     config = function()
       require('configs.molten')
     end,

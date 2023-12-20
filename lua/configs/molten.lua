@@ -1,4 +1,4 @@
-if vim.g.image_enaled then
+if pcall(require, 'image') then
   vim.g.molten_image_provider = 'image.nvim'
 end
 
