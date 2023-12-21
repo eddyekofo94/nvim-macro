@@ -538,85 +538,38 @@ return {
     i(1),
     t({ '', '\\end{pmatrix}' }),
   }),
+  -- Cannot use choose node + restore node with jump index 0 here because of a
+  -- weird limitation of LuaSnip, see
+  -- https://github.com/L3MON4D3/LuaSnip/issues/1093
   us.sam(
     { trig = 'aln' },
-    c(1, {
-      un.fmtad(
-        [[
+    un.fmtad(
+      [[
         \begin{<env>}
         <idnt><text>
         \end{<env>}
-        ]],
-        {
-          env = t('aligned'),
-          idnt = un.idnt(1),
-          text = r(0, 'text'),
-        }
-      ),
-      un.fmtad(
-        [[
-        \begin{<env>}
-        <idnt><text>
-        \end{<env>}
-        ]],
-        {
-          env = t('align*'),
-          idnt = un.idnt(1),
-          text = r(0, 'text'),
-        }
-      ),
-      un.fmtad(
-        [[
-        \begin{<env>}
-        <idnt><text>
-        \end{<env>}
-        ]],
-        {
-          env = t('align'),
-          idnt = un.idnt(1),
-          text = r(0, 'text'),
-        }
-      ),
-    }),
-    {
-      stored = {
+      ]],
+      {
+        env = i(1, 'align'),
+        idnt = un.idnt(1),
         text = i(0),
-      },
-    }
+      }
+    )
   ),
   us.sam(
     { trig = 'eqt' },
-    c(1, {
-      un.fmtad(
-        [[
+    un.fmtad(
+      [[
         \begin{<env>}
         <idnt><text>
         \end{<env>}
-        ]],
-        {
-          env = t('equation'),
-          idnt = un.idnt(1),
-          text = r(0, 'text'),
-        }
-      ),
-      un.fmtad(
-        [[
-        \begin{<env>}
-        <idnt><text>
-        \end{<env>}
-        ]],
-        {
-          env = t('equation*'),
-          idnt = un.idnt(1),
-          text = r(0, 'text'),
-        }
-      ),
-    }),
-    {
-      stored = {
+      ]],
+      {
+        env = i(1, 'equation'),
+        idnt = un.idnt(1),
         text = i(0),
-      },
-    }
+      }
+    )
   ),
   us.sam({ trig = 'case' }, {
     t({ '\\begin{cases}', '' }),
