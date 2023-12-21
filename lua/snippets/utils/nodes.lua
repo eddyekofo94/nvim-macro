@@ -34,14 +34,6 @@ local function function_indent_node(depth, argnode_references, node_opts)
   end, argnode_references, node_opts)
 end
 
-local quotation_cache = {}
-vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeOut', 'BufUnload' }, {
-  group = vim.api.nvim_create_augroup('LuaSnipClearQuotationCache', {}),
-  callback = function(info)
-    quotation_cache[info.buf] = nil
-  end,
-})
-
 ---Returns function node that returns a quotation mark based on the number of
 ---double quotes and single quotes in the first 128 lines current buffer
 ---@param argnode_references number|table?
@@ -49,19 +41,7 @@ vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeOut', 'BufUnload' }, {
 ---@return table node
 local function function_quotation_node(argnode_references, opts)
   return f(function()
-    local buf = vim.api.nvim_get_current_buf()
-    if quotation_cache[buf] then
-      return quotation_cache[buf]
-    end
-    local lines = vim.api.nvim_buf_get_lines(buf, 0, 128, false)
-    local num_double_quotes = 0
-    local num_single_quotes = 0
-    for _, line in ipairs(lines) do
-      num_double_quotes = num_double_quotes + line:gsub('[^"]', ''):len()
-      num_single_quotes = num_single_quotes + line:gsub("[^']", ''):len()
-    end
-    quotation_cache[buf] = num_double_quotes > num_single_quotes and '"' or "'"
-    return quotation_cache[buf]
+    return require('snippets.utils.funcs').get_quotation_type()
   end, argnode_references, opts)
 end
 

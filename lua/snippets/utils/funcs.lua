@@ -57,9 +57,37 @@ local function get_char_after()
   return line:sub(col, col)
 end
 
+local quotation_cache = {}
+vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeOut', 'BufUnload' }, {
+  group = vim.api.nvim_create_augroup('LuaSnipClearQuotationCache', {}),
+  callback = function(info)
+    quotation_cache[info.buf] = nil
+  end,
+})
+
+---Get which quotation mark (single or double) is preferred in current buffer
+---@param buf integer?
+---@return '"'|''"
+local function get_quotation_type(buf)
+  buf = buf or vim.api.nvim_get_current_buf()
+  if quotation_cache[buf] then
+    return quotation_cache[buf]
+  end
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, 128, false)
+  local num_double_quotes = 0
+  local num_single_quotes = 0
+  for _, line in ipairs(lines) do
+    num_double_quotes = num_double_quotes + line:gsub('[^"]', ''):len()
+    num_single_quotes = num_single_quotes + line:gsub("[^']", ''):len()
+  end
+  quotation_cache[buf] = num_double_quotes > num_single_quotes and '"' or "'"
+  return quotation_cache[buf]
+end
+
 return {
   snip_set_attr = snip_set_attr,
   add_attr = add_attr,
   get_char_after = get_char_after,
   get_indent_depth = get_indent_depth,
+  get_quotation_type = get_quotation_type,
 }

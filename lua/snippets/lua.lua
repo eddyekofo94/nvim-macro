@@ -8,6 +8,7 @@ local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
 local c = ls.choice_node
+local d = ls.dynamic_node
 local r = ls.restore_node
 
 M.syntax = {
@@ -291,6 +292,7 @@ M.syntax = {
     un.fmtad('print(<q><v><q>)', {
       q = un.qt(),
       v = c(1, {
+        -- stylua: ignore start
         i(nil, '-----------------------------------------------------------------'),
         i(nil, '================================================================='),
         i(nil, '.................................................................'),
@@ -301,6 +303,7 @@ M.syntax = {
         i(nil, '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'),
         i(nil, '#################################################################'),
         i(nil, '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'),
+        -- stylua: ignore end
       }),
     })
   ),
@@ -402,10 +405,14 @@ M.nvim = {
       { trig = 'pck' },
       { trig = 'pcheck' },
     },
-    un.fmtad('print(<q><v>: <q> .. vim.inspect(<v>)<e>)', {
+    un.fmtad('print(<q><v_esc>: <q> .. vim.inspect(<v>)<e>)', {
       q = un.qt(),
       v = i(1),
-      e = i(2),
+      v_esc = d(2, function(texts)
+        local str = vim.fn.escape(texts[1][1], '\\' .. uf.get_quotation_type())
+        return sn(nil, i(1, str))
+      end, { 1 }),
+      e = i(3),
     })
   ),
   us.msn(
@@ -414,9 +421,13 @@ M.nvim = {
       { trig = 'ck' },
       { trig = 'check' },
     },
-    un.fmtad('<q><v>: <q> .. vim.inspect(<v>)', {
+    un.fmtad('<q><v_esc>: <q> .. vim.inspect(<v>)', {
       q = un.qt(),
       v = i(1),
+      v_esc = d(2, function(texts)
+        local str = vim.fn.escape(texts[1][1], '\\' .. uf.get_quotation_type())
+        return sn(nil, i(1, str))
+      end, { 1 }),
     })
   ),
   us.msnr(
@@ -424,13 +435,17 @@ M.nvim = {
       { trig = '(%S*)(%s*)%.%.%s*ck' },
       { trig = '(%S*)(%s*)%.%.%s*check' },
     },
-    un.fmtad('<spc>.. <q>, <v>: <q> .. vim.inspect(<v>)', {
+    un.fmtad('<spc>.. <q>, <v_esc>: <q> .. vim.inspect(<v>)', {
       spc = f(function(_, snip, _)
         return snip.captures[1] == '' and snip.captures[2]
           or snip.captures[1] .. ' '
       end, {}, {}),
       q = un.qt(),
       v = i(1),
+      v_esc = d(2, function(texts)
+        local str = vim.fn.escape(texts[1][1], '\\' .. uf.get_quotation_type())
+        return sn(nil, i(1, str))
+      end, { 1 }),
     })
   ),
 }
