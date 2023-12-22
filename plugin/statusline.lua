@@ -208,7 +208,7 @@ if vim.g.modern_ui then
     '⠏',
   }
 else
-  spinner_icon_done = '[++++]'
+  spinner_icon_done = '[done]'
   spinner_icons = {
     '[    ]',
     '[=   ]',
