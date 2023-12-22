@@ -277,7 +277,7 @@ paths:
 ### Managing Plugins with Modules
 
 In order to enable or disable a module, one need to change the table in
-[lua/core/packages.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/packages.lua) passed to `manage_plugins()`, for example
+[lua/core/packages.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/packages.lua) passed to `enable_modules()`, for example
 
 ```lua
 enable_modules({
@@ -287,9 +287,6 @@ enable_modules({
   -- ...
 })
 ```
-
-the format of argument passed to `manage_plugins` is the same as that passed to
-lazy.nvim's setup function.
 
 ### Installing Packages to an Existing Module
 
