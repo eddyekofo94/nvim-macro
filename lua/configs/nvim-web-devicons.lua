@@ -37,7 +37,7 @@ require('nvim-web-devicons').setup({
       cterm_color = '166',
       icon = vim.trim(icons.Pdf),
       name = 'Pdf',
-    }
+    },
   },
   override_by_extension = {
     asm = {

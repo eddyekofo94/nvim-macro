@@ -110,7 +110,7 @@ local function setup()
     pattern = '*:[ictRss\x13]*',
     callback = function(info)
       input_mode_enter_callback(info.buf)
-    end
+    end,
   })
   vim.api.nvim_create_autocmd('ModeChanged', {
     desc = 'Deactivate input method when leaving input modes.',

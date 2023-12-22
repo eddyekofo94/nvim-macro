@@ -26,6 +26,7 @@ npairs.setup({
 
 npairs.add_rules({
   -- Add spaces between parenthesis
+  -- stylua: ignore start
   Rule(' ', ' ')
     :with_pair(function(opts)
       local pairs_single_char = { '()', '[]', '{}' }
@@ -73,5 +74,6 @@ npairs.add_rules({
   Rule('\\left\\lVert ',    ' \\right\\rVert',  { 'markdown', 'tex' }) :with_pair(cond.not_before_text('\\right\\lVert')),
   Rule('\\begin{bmatrix} ', ' \\end{bmatrix}',  { 'markdown', 'tex' }) :with_pair(cond.not_before_text('\\end{bmatrix}')),
   Rule('\\begin{pmatrix} ', ' \\end{pmatrix}',  { 'markdown', 'tex' }) :with_pair(cond.not_before_text('\\end{pmatrix}')),
+  -- stylua: ignore end
 })
 -- stylua: ignore end

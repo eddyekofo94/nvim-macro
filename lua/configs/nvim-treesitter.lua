@@ -41,7 +41,8 @@ ts_configs.setup({
       -- highlighting while still preserving math conceal provided
       -- by vimtex regex syntax rules
       return vim.tbl_contains({ 'markdown', 'tex', 'latex' }, ft)
-        or buf_is_large(ft, buf) or vim.fn.win_gettype() == 'command'
+        or buf_is_large(ft, buf)
+        or vim.fn.win_gettype() == 'command'
     end,
     additional_vim_regex_highlighting = false,
   },
