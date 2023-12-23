@@ -11,6 +11,19 @@ index 044499c..961e3d2 100644
            filler[#filler + 1] = { { " ", "" } }
          end
  
+diff --git a/lua/image/renderer.lua b/lua/image/renderer.lua
+index 22b4645..07ddada 100644
+--- a/lua/image/renderer.lua
++++ b/lua/image/renderer.lua
+@@ -299,7 +299,7 @@ local render = function(image)
+ 
+   -- crop bottom
+   if absolute_y + height > bounds.bottom then
+-    cropped_pixel_height = (bounds.bottom - absolute_y + 1) * term_size.cell_height
++    cropped_pixel_height = (bounds.bottom - absolute_y) * term_size.cell_height
+     needs_crop = true
+   end
+ 
 diff --git a/lua/image/utils/logger.lua b/lua/image/utils/logger.lua
 index 688cad8..3a93fcc 100644
 --- a/lua/image/utils/logger.lua
