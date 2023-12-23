@@ -420,10 +420,10 @@ function winbar_menu_t:make_buf()
   vim.bo[self.buf].ft = 'winbar_menu'
 
   -- Set buffer-local keymaps
-  -- Default modes: normal and visual
+  -- Default modes: normal
   for key, mapping in pairs(configs.opts.menu.keymaps) do
     if type(mapping) == 'function' or type(mapping) == 'string' then
-      vim.keymap.set({ 'x', 'n' }, key, mapping, { buffer = self.buf })
+      vim.keymap.set('n', key, mapping, { buffer = self.buf })
     elseif type(mapping) == 'table' then
       for mode, rhs in pairs(mapping) do
         vim.keymap.set(mode, key, rhs, { buffer = self.buf })

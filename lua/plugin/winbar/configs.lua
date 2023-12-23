@@ -140,6 +140,8 @@ M.opts = {
     },
     ---@type table<string, string|function|table<string, string|function>>
     keymaps = {
+      ['q'] = '<C-w>q',
+      ['<Esc>'] = '<C-w>q',
       ['<LeftMouse>'] = function()
         local menu = utils.menu.get_current()
         if not menu then
