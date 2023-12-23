@@ -1,3 +1,16 @@
+diff --git a/lua/image/image.lua b/lua/image/image.lua
+index 044499c..961e3d2 100644
+--- a/lua/image/image.lua
++++ b/lua/image/image.lua
+@@ -79,7 +79,7 @@ function Image:render(geometry)
+         end
+ 
+         local filler = {}
+-        for _ = 0, height - 1 do
++        for _ = 0, height do
+           filler[#filler + 1] = { { " ", "" } }
+         end
+ 
 diff --git a/lua/image/utils/logger.lua b/lua/image/utils/logger.lua
 index 688cad8..3a93fcc 100644
 --- a/lua/image/utils/logger.lua
@@ -11,3 +24,18 @@ index 688cad8..3a93fcc 100644
      output_file = "/tmp/nvim-image.txt",
    }),
    debug = create_logger({
+diff --git a/lua/image/utils/offsets.lua b/lua/image/utils/offsets.lua
+index d6a31de..cbda4b0 100644
+--- a/lua/image/utils/offsets.lua
++++ b/lua/image/utils/offsets.lua
+@@ -19,7 +19,9 @@ end
+ ---@return { x: number, y: number }
+ local get_global_offsets = function(window_id)
+   local x = 0
+-  local y = 0
++  -- add extra vertical offset to avoid image from covering its link
++  -- when tmux status line is at top
++  local y = 1
+   -- if vim.opt.number then x = x + vim.opt.numberwidth:get() end
+   -- if vim.opt.signcolumn ~= "no" then x = x + 2 end
+ 
