@@ -233,7 +233,7 @@ vim.api.nvim_create_autocmd('WinClosed', {
   end,
 })
 
----Toggle floating preview window
+---Toggle preview window
 ---@return nil
 local function toggle_preview()
   local oil_win = vim.api.nvim_get_current_win()
