@@ -74,12 +74,14 @@ local function format_title(info)
   end
 end
 
+local buf = vim.api.nvim_get_current_buf()
 api.nvim_create_autocmd('TextChangedI', {
-  group = api.nvim_create_augroup('MarkdownAutoFormatTitle', {}),
+  group = api.nvim_create_augroup('MarkdownAutoFormatTitle' .. buf, {}),
+  buffer = buf,
   callback = format_title,
 })
 
-api.nvim_buf_create_user_command(0, 'MarkdownSetCapTitle', function(info)
+api.nvim_buf_create_user_command(buf, 'MarkdownSetCapTitle', function(info)
   local parsed_args = utils.command.parse_cmdline_args(info.fargs)
   if info.bang then
     return opt_captitle:scope_action(parsed_args, 'toggle')
