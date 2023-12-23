@@ -89,4 +89,137 @@ function M.update_preview(mouse)
   last_previewed_menu = menu
 end
 
+---@class winbar_select_opts_t
+---Text to be displayed at the top of the menu
+---@field prompt? string
+---Function to format each item in the menu.
+---Required if `items` is not a list of strings.
+---The second return value is a list of virtual text chunks to be displayed below the item. If
+---nothing is returned for the second value, no virtual text will be displayed.
+---@field format_item? fun(item: any): string, string[][]?
+
+---`vim.ui.select()` replacement
+---@generic T string|table
+---@param items T[] list of items to be selected
+---@param opts winbar_select_opts_t
+---@param on_choice fun(T?, integer?): nil
+function M.select(items, opts, on_choice)
+  if not items then
+    return
+  end
+
+  opts = opts or {}
+
+  local bar = require('plugin.winbar.bar')
+  local menu = require('plugin.winbar.menu')
+  local configs = require('plugin.winbar.configs')
+
+  -- Determine maximum width of the icon, for entries ranges from 1 to 9
+  -- they will be labeled and mapped with numbers, the rest will be labeled
+  -- and mapped with Meta + letter chosen from `pivots`, for even more items,
+  -- they will be labeled with number but no key mapped for them
+  local num_items = #items
+  local pivots = configs.opts.bar.pick.pivots
+  local len_pivots = #pivots
+  local num_bits = num_items == 1 and 1 or math.ceil(math.log10(num_items))
+  local icon_width = num_bits <= 1 and 1 or math.max(num_bits, #'M-a')
+  local icon_format = string.format('%%+%ds. ', icon_width)
+  local entries = vim
+    .iter(items)
+    :enumerate()
+    :map(function(idx, item)
+      local text = item
+      local virt_text
+
+      -- Support custom formats for items like some
+      -- other ui-select plugins do
+      if opts.format_item then
+        text, virt_text = opts.format_item(item)
+      end
+
+      return menu.winbar_menu_entry_t:new({
+        -- `virt_text` will only be shown if returned from `format_item`
+        virt_text = virt_text,
+        components = {
+          bar.winbar_symbol_t:new({
+            icon = string.format(
+              icon_format,
+              (idx <= 9 or idx > 9 + len_pivots) and idx
+                or 'M-' .. pivots:sub(idx - 9, idx - 9)
+            ),
+            icon_hl = 'WinBarIconUIIndicator',
+            name = text,
+            on_click = function(self)
+              self.entry.menu:close()
+              if on_choice then
+                on_choice(item, idx)
+              end
+            end,
+          }),
+        },
+      })
+    end)
+    :totable()
+
+  local win = vim.api.nvim_get_current_win()
+  local screenrow = vim.fn.screenpos(win, vim.fn.line('.'), 0).row
+  local screenrows_left = vim.go.lines - screenrow
+  local win_configs = {
+    col = 0,
+    relative = 'cursor',
+    title = opts.prompt,
+  }
+  -- Change border settings if the default top border is empty
+  -- to allow prompt to be displayed
+  if opts.prompt then
+    local border = configs.opts.menu.win_configs.border
+    local border_none_with_prompt = { '', ' ', '', '', '', '', '', '' }
+    if border == 'none' or border == 'shadow' then
+      win_configs.border = border_none_with_prompt
+    elseif type(border) == 'table' then
+      if #border == 1 and border[1] == '' then
+        win_configs.border = border_none_with_prompt
+      elseif #border > 1 and border[2] == '' then
+        local border_cp = vim.deepcopy(border)
+        border_cp[2] = ' '
+        win_configs.border = border_cp
+      end
+    end
+  end
+  -- Place menu above or below the cursor depending on the available
+  -- screen space
+  if screenrow > screenrows_left then
+    win_configs.row = 0
+    win_configs.anchor = 'SW'
+  else
+    win_configs.row = 1
+    win_configs.anchor = 'NW'
+  end
+
+  local smenu = menu.winbar_menu_t:new({
+    prev_win = win,
+    entries = entries,
+    win_configs = win_configs,
+  })
+
+  smenu:open()
+
+  -- Set buffer-local keymaps
+  if smenu.buf and vim.api.nvim_buf_is_valid(smenu.buf) then
+    -- Press a number to go to the corresponding item
+    for i = 1, math.min(9, num_items) do
+      local i_str = tostring(i)
+      vim.keymap.set('n', i_str, function()
+        vim.cmd(i_str)
+      end, { buffer = smenu.buf })
+    end
+    -- Press Meta + letter to go to the corresponding item
+    for i = 1, math.min(len_pivots, num_items - 9) do
+      vim.keymap.set('n', string.format('<M-%s>', pivots:sub(i, i)), function()
+        vim.cmd(tostring(i + 9))
+      end, { buffer = smenu.buf })
+    end
+  end
+end
+
 return M
