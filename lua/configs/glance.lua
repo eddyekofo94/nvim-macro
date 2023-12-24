@@ -65,7 +65,7 @@ glance.setup({
       ['zo'] = actions.open_fold,
       ['zc'] = actions.close_fold,
       ['za'] = actions.toggle_fold,
-      ['<Tab>'] = actions.toggle_fold,
+      ['='] = actions.toggle_fold,
       ['<CR>'] = actions.jump,
       ['<C-w><C-h>'] = actions.enter_win('preview'),
       ['<C-w><C-p>'] = actions.enter_win('preview'),
