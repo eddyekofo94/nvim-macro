@@ -281,7 +281,7 @@ cmp.setup({
           local icon_hl = 'CmpItemKindFile'
           local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
           if devicons_ok then
-            local icon, icon_hl = devicons.get_icon(
+            icon, icon_hl = devicons.get_icon(
               vim.fs.basename(cmp_item.word),
               vim.fn.fnamemodify(cmp_item.word, ':e'),
               { default = true }
