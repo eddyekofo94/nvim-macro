@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu 14 Dec 2023 11:44:22 PM CST
+-- Last Updated: Tue 26 Dec 2023 06:16:42 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -508,7 +508,7 @@ local hlgroups = {
 
   -- gitsigns
   GitSignsAdd = { fg = c_autumnGreen },
-  GitSignsChange = { fg = c_carpYellow },
+  GitSignsChange = { fg = c_springViolet },
   GitSignsDelete = { fg = c_lotusRed0 },
   GitSignsDeletePreview = { bg = c_winterRed },
 
@@ -600,7 +600,7 @@ if vim.go.bg == 'light' then
     { bg = c_winterYellow, fg = c_autumnYellow }
   hlgroups.DiagnosticWarn = { fg = c_autumnYellow }
   hlgroups.GlanceListCursorLine = { bg = c_dragonBg1 }
-  hlgroups.GlanceListMatch = { bg = c_dragonBg4 }
+  hlgroups.GlanceListMatch = { bg = c_dragonBg3 }
   hlgroups.GlanceListNormal = { bg = c_dragonBg0, fg = c_dragonFg0 }
   hlgroups.GlanceWinBarFilename = { bg = c_dragonBg0, fg = c_dragonFg1 }
   hlgroups.GlanceWinBarFilepath = { bg = c_dragonBg0, fg = c_dragonAsh }
