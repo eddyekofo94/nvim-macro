@@ -1014,19 +1014,25 @@ end
 ---@return nil
 local function setup_diagnostic()
   local icons = utils.static.icons
-  for _, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
-    local sign_name = 'DiagnosticSign' .. severity
-    vim.fn.sign_define(sign_name, {
-      text = icons[sign_name],
-      texthl = sign_name,
-      numhl = sign_name,
-    })
-  end
   vim.diagnostic.config({
     virtual_text = {
       spacing = 4,
       prefix = vim.trim(utils.static.icons.AngleLeft),
     },
+    signs = {
+      text = {
+        [vim.diagnostic.severity.ERROR] = icons.DiagnosticSignError,
+        [vim.diagnostic.severity.WARN] = icons.DiagnosticSignWarn,
+        [vim.diagnostic.severity.INFO] = icons.DiagnosticSignInfo,
+        [vim.diagnostic.severity.HINT] = icons.DiagnosticSignHint,
+      },
+      numhl = {
+        [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
+        [vim.diagnostic.severity.WARN] = 'DiagnosticSignWarn',
+        [vim.diagnostic.severity.INFO] = 'DiagnosticSignInfo',
+        [vim.diagnostic.severity.HINT] = 'DiagnosticSignHint',
+      },
+    }
   })
 end
 

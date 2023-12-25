@@ -13,8 +13,6 @@ require('gitsigns').setup({
     topdelete = { text = vim.trim(icons.GitSignTopdelete) },
     changedelete = { text = vim.trim(icons.GitSignChangedelete) },
   },
-  -- Use vim legacy signs, for statuscol plugin to fetch gitsigns
-  _extmark_signs = false,
   current_line_blame = false,
   current_line_blame_opts = {
     virt_text = true,

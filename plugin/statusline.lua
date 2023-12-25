@@ -2,15 +2,15 @@ _G.statusline = {}
 local utils = require('utils')
 local groupid = vim.api.nvim_create_augroup('StatusLine', {})
 
----@type table<string, string>
-local signs_text_cache = setmetatable({}, {
-  __index = function(self, key)
-    local sign_def = vim.fn.sign_getdefined(key)[1]
-    local sign_text = sign_def and sign_def.text
-    self[key] = sign_text
-    return sign_text or ''
-  end,
-})
+local diag_signs_default_text = { 'E', 'W', 'I', 'H' }
+
+---@param severity integer
+---@return string
+local function get_diag_sign_text(severity)
+  local diag_config = vim.diagnostic.config()
+  local signs = diag_config and diag_config.signs and diag_config.signs.text
+  return signs and signs[severity] or diag_signs_default_text[severity]
+end
 
 -- stylua: ignore start
 local modes = {
@@ -170,11 +170,11 @@ function statusline.diag()
   for serverity_nr, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
     local cnt = buf_cnt[serverity_nr] or 0
     if cnt > 0 then
-      local icon = signs_text_cache['DiagnosticSign' .. severity]
+      local icon_text = get_diag_sign_text(serverity_nr)
       local icon_hl = 'StatusLineDiagnostic' .. severity
       str = str
         .. (str == '' and '' or ' ')
-        .. utils.stl.hl(icon, icon_hl)
+        .. utils.stl.hl(icon_text, icon_hl)
         .. cnt
     end
   end

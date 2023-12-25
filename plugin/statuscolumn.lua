@@ -2,9 +2,6 @@ local ffi = require('ffi')
 local utils = require('utils')
 local make_hl = utils.stl.hl
 
----@type table<string, table<string, vim.fn.sign_getdefined.ret.item>>
-local sign_cache = {}
-
 ---@type table<integer, integer>
 local lnumw_cache = {}
 
@@ -32,10 +29,20 @@ local lnumw_cache = {}
 ---@field foldopen? string fold open sign
 ---@field foldclose? string fold close sign
 ---@field foldsep? string fold separator sign
----@field signs? vim.fn.sign[]
+---@field extsigns? extmark_sign_t[] extmark signs, see `:h extmarks`
 ---@field lnum? integer v:lnum
 ---@field relnum? integer v:relnum
 ---@field virtnum? integer v:virtnum
+
+---@class extmark_sign_t
+---@field [1] integer extmark_id
+---@field [2] integer row, 0-indexed
+---@field [3] integer col, 0-indexed
+---@field [4] extmark_sign_details_t details
+
+---@class extmark_sign_details_t: vim.api.keyset.set_extmark
+---@field sign_name string? only set when sign is defined using legacy `sign_define()`
+---@field ns_id integer
 
 ---Shared data in each window
 ---@type table<string, stc_shared_data_t>
@@ -60,58 +67,45 @@ ffi.cdef([[
   uint64_t display_tick;
 ]])
 
----Get sign definition
----@param name string sign name
----@return vim.fn.sign_getdefined.ret.item?
-local function get_sign_def(name)
-  local sign_def = sign_cache[name]
-  if sign_def then
-    return sign_def
-  end
-  sign_def = vim.fn.sign_getdefined(name)[1]
-  if not sign_def then
-    return
-  end
-  sign_cache[name] = sign_def
-  return sign_def
-end
-
 ---Returns the string representation of sign column to be shown
 ---@param data stc_shared_data_t
----@param filter fun(sign: vim.fn.sign, data: stc_shared_data_t): boolean
+---@param filter fun(sign: extmark_sign_t, data: stc_shared_data_t): boolean
 ---@param virtual boolean whether to draw sign in virtual line
 ---@return string
 function builders.signcol(data, filter, virtual)
   if not data.show_scl then
     return ''
   end
-  local max_priority = -1
-  local sign_name_mp = nil
   if data.virtnum ~= 0 and not virtual then
     goto signcol_ret_default
   end
-  for _, sign in ipairs(data.signs) do
-    if sign.lnum > data.lnum then
-      break
+  do
+    ---@type extmark_sign_details_t?
+    local sign_details
+    for _, sign in ipairs(data.extsigns) do
+      local lnum = sign[2] + 1 -- 0-indexed to 1-indexed
+      local current_sign_details = sign[4]
+      if lnum > data.lnum then
+        break
+      end
+      if
+        lnum == data.lnum
+        and filter(sign, data)
+        and (
+          not sign_details
+          or current_sign_details.priority > sign_details.priority
+        )
+      then
+        sign_details = current_sign_details
+      end
     end
-    if
-      sign.lnum == data.lnum
-      and sign.priority > max_priority
-      and filter(sign, data)
-    then
-      max_priority = sign.priority
-      sign_name_mp = sign.name
+    if sign_details then
+      return make_hl(
+        vim.trim(sign_details.sign_text),
+        data.culhl and sign_details.cursorline_hl_group
+          or sign_details.sign_hl_group
+      )
     end
-  end
-  if sign_name_mp then
-    local sign_def = get_sign_def(sign_name_mp)
-    if not sign_def then
-      return ''
-    end
-    return make_hl(
-      vim.trim(sign_def.text),
-      data.culhl and sign_def.culhl or sign_def.texthl
-    )
   end
   ::signcol_ret_default::
   return make_hl(' ', data.culhl and 'CursorLineSign' or 'SignColumn')
@@ -162,11 +156,19 @@ function builders.foldcol(data)
   return make_hl(foldchar, data.culhl and 'CursorLineFold' or 'FoldColumn')
 end
 
----@param sign vim.fn.sign
+---Get a valid name of an extmark sign
+---@param sign extmark_sign_t
+---@return string
+local function extsign_get_name(sign)
+  local details = sign[4]
+  return details.sign_name or details.sign_hl_group or ''
+end
+
+---@param sign extmark_sign_t
 ---@param data stc_shared_data_t
 ---@return boolean
 local function gitsigns_filter(sign, data)
-  local name = sign.name
+  local name = extsign_get_name(sign)
   if not name:find('^Git') then
     return false
   end
@@ -176,10 +178,10 @@ local function gitsigns_filter(sign, data)
   return true
 end
 
----@param sign vim.fn.sign
+---@param sign extmark_sign_t
 ---@return boolean
 local function nongitsigns_filter(sign)
-  return not sign.name:find('^Git')
+  return not extsign_get_name(sign):find('^Git')
 end
 
 ---Get number of digits of a decimal integer
@@ -226,7 +228,10 @@ function _G.get_statuscolumn()
     data.foldopen = fcs.foldopen or '-'
     data.foldclose = fcs.foldclose or '+'
     data.foldsep = fcs.foldsep or '|'
-    data.signs = vim.fn.sign_getplaced(buf, { group = '*' })[1].signs
+    data.extsigns = vim.api.nvim_buf_get_extmarks(buf, -1, 0, -1, {
+      type = 'sign',
+      details = true,
+    })
 
     -- lnum width is only needed when both &nu and &rnu are enabled
     if data.nu and data.rnu then
