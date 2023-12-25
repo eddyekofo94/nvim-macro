@@ -458,7 +458,7 @@ vim.api.nvim_create_autocmd('DirChanged', {
       vim.defer_fn(function()
         local cwd = vim.fs.normalize(vim.fn.getcwd(vim.fn.winnr()))
         local oildir = vim.fs.normalize(oil.get_current_dir() or '')
-        if cwd ~= oildir then
+        if cwd ~= oildir and vim.bo.ft == 'oil' then
           oil.open(cwd)
         end
       end, 100)
