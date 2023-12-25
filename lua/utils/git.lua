@@ -73,6 +73,10 @@ vim.api.nvim_create_autocmd('FileChangedShellPost', {
 ---@return string branch name
 function M.branch(buf)
   buf = buf or vim.api.nvim_get_current_buf()
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return ''
+  end
+
   local branch = vim.b[buf].git_branch
   if branch then
     return branch
@@ -85,7 +89,8 @@ function M.branch(buf)
       { 'git', '-C', dir, 'rev-parse', '--abbrev-ref', 'HEAD' },
       { stderr = false },
       function(err, _)
-        vim.b[buf].git_branch = err.stdout:gsub('\n.*', '')
+        local buf_branch = err.stdout:gsub('\n.*', '')
+        pcall(vim.api.nvim_buf_set_var, buf, 'git_branch', buf_branch)
       end
     )
   end
@@ -104,6 +109,10 @@ vim.api.nvim_create_autocmd({ 'BufWrite', 'FileChangedShellPost' }, {
 ---@return {added: integer?, removed: integer?, changed: integer?} diff stats
 function M.diffstat(buf)
   buf = buf or vim.api.nvim_get_current_buf()
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return {}
+  end
+
   if vim.b[buf].git_diffstat then
     return vim.b[buf].git_diffstat
   end
@@ -140,7 +149,7 @@ function M.diffstat(buf)
           end
         end
       end
-      vim.b[buf].git_diffstat = stat
+      pcall(vim.api.nvm_buf_set_var, buf, 'git_diffstat', stat)
     end)
   end
   return vim.b[buf].git_diffstat
