@@ -37,7 +37,6 @@ opt.completeopt    = 'menuone'
 
 if g.modern_ui then
   opt.cursorline = true
-  opt.termguicolors = true
 end
 
 -- Recognize numbered lists when formatting text
