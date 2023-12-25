@@ -91,6 +91,7 @@ function builders.signcol(data, filter, virtual)
       if
         lnum == data.lnum
         and filter(sign, data)
+        and current_sign_details.sign_text
         and (
           not sign_details
           or current_sign_details.priority > sign_details.priority
