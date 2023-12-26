@@ -316,7 +316,7 @@ oil.setup({
     foldcolumn = '0',
     statuscolumn = '',
   },
-  cleanup_delay_ms = 0,
+  cleanup_delay_ms = false,
   delete_to_trash = true,
   skip_confirm_for_simple_edits = true,
   prompt_save_on_select_new_entry = true,
@@ -335,6 +335,7 @@ oil.setup({
     ['+'] = 'actions.select',
     ['<CR>'] = 'actions.select',
     ['<C-h>'] = 'actions.toggle_hidden',
+    ['gh'] = 'actions.toggle_hidden',
     ['gs'] = 'actions.change_sort',
     ['gx'] = 'actions.open_external',
     ['go'] = {
@@ -382,36 +383,6 @@ oil.setup({
             vim.v.register
           )
         )
-      end,
-    },
-    ['<C-o>'] = { -- Prevent jumping to file buffers by accident
-      mode = 'n',
-      expr = true,
-      buffer = true,
-      desc = 'Jump to older cursor position in oil buffer',
-      callback = function()
-        local jumplist = vim.fn.getjumplist()
-        local prevloc = jumplist[1][jumplist[2]]
-        return prevloc
-            and vim.api.nvim_buf_is_valid(prevloc.bufnr)
-            and vim.bo[prevloc.bufnr].ft == 'oil'
-            and '<C-o>'
-          or '<Ignore>'
-      end,
-    },
-    ['<C-i>'] = {
-      mode = 'n',
-      expr = true,
-      buffer = true,
-      desc = 'Jump to newer cursor position in oil buffer',
-      callback = function()
-        local jumplist = vim.fn.getjumplist()
-        local newloc = jumplist[1][jumplist[2] + 2]
-        return newloc
-            and vim.api.nvim_buf_is_valid(newloc.bufnr)
-            and vim.bo[newloc.bufnr].ft == 'oil'
-            and '<C-i>'
-          or '<Ignore>'
       end,
     },
   },

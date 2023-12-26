@@ -98,6 +98,15 @@ opt.spelllang     = 'en,cjk'
 opt.spelloptions  = 'camel'
 opt.spellsuggest  = 'best,9'
 
+-- netrw settings
+g.netrw_banner          = 0
+g.netrw_cursor          = 5
+g.netrw_keepdir         = 0
+g.netrw_keepj           = ''
+g.netrw_list_hide       = [[\(^\|\s\s\)\zs\.\S\+]]
+g.netrw_liststyle       = 1
+g.netrw_localcopydircmd = 'cp -r'
+
 -- disable plugins shipped with neovim
 g.loaded_2html_plugin      = 1
 g.loaded_gzip              = 1
