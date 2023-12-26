@@ -36,8 +36,8 @@ npairs.add_rules({
         vim.bo[opts.bufnr].ft == 'markdown'
         and utils.ft.markdown.in_normalzone()
         and (
-          line_before_cur:match('^%s*[-*+]%s%[$')
-          or line_before_cur:match('^%s*%d+%.%s%[$')
+          line_before_cur:match('^%s*[-*+]%s+%[$')
+          or line_before_cur:match('^%s*%d+%.%s+%[$')
         )
       then
         pairs_single_char = { '()', '{}' }
