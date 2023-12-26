@@ -214,6 +214,18 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Ipynb),
       name = 'Ipynb',
     },
+    ppt = {
+      icon = '󰈧',
+      color = '#cb4a32',
+      cterm_color = '160',
+      name = 'Ppt',
+    },
+    pptx = {
+      icon = '󰈧',
+      color = '#cb4a32',
+      cterm_color = '160',
+      name = 'Pptx',
+    },
   },
   override_by_filename = {
     run_datasets = {
