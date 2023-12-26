@@ -11,10 +11,6 @@ local d = ls.dynamic_node
 local r = ls.restore_node
 
 M.snippets = {
-  us.san({ trig = 'none' }, t('None')),
-  us.san({ trig = 'true' }, t('True')),
-  us.san({ trig = 'false' }, t('False')),
-  us.san({ trig = 'flase' }, t('False')),
   us.sn({
     trig = 'ret',
     desc = 'return statement',
