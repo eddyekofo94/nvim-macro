@@ -48,6 +48,10 @@ require('flatten').setup({
       local bufname = vim.api.nvim_buf_get_name(buf)
       if should_block_file(bufname) then
         vim.bo[buf].bufhidden = 'wipe'
+        local keymap_utils = require('utils.keymap')
+        keymap_utils.command_abbrev('wq', 'b#', { buffer = buf })
+        keymap_utils.command_abbrev('bw', 'b#', { buffer = buf })
+        keymap_utils.command_abbrev('bd', 'b#', { buffer = buf })
       end
     end,
   },
