@@ -92,10 +92,12 @@ vim.keymap.set('t', '<M-l>',      '<Cmd>wincmd l<CR>')
 
 -- More consistent behavior when &wrap is set
 -- stylua: ignore start
-vim.keymap.set({ 'n', 'x' }, 'j',      'v:count ? "j"      : "gj"',        { expr = true })
-vim.keymap.set({ 'n', 'x' }, 'k',      'v:count ? "k"      : "gk"',        { expr = true })
-vim.keymap.set({ 'n', 'x' }, '<Down>', 'v:count ? "<Down>" : "g<Down>"',   { expr = true })
-vim.keymap.set({ 'n', 'x' }, '<Up>',   'v:count ? "<Up>"   : "g<Up>"',     { expr = true })
+vim.keymap.set({ 'n', 'x' }, 'j', 'v:count ? "j" : "gj"', { expr = true })
+vim.keymap.set({ 'n', 'x' }, 'k', 'v:count ? "k" : "gk"', { expr = true })
+vim.keymap.set({ 'n', 'x' }, '<Down>', 'v:count ? "<Down>" : "g<Down>"', { expr = true, replace_keycodes = false })
+vim.keymap.set({ 'n', 'x' }, '<Up>',   'v:count ? "<Up>"   : "g<Up>"',   { expr = true, replace_keycodes = false })
+vim.keymap.set({ 'i' }, '<Down>', '<Cmd>norm! g<Down><CR>')
+vim.keymap.set({ 'i' }, '<Up>',   '<Cmd>norm! g<Up><CR>')
 -- stylua: ignore end
 
 -- Buffer navigation
