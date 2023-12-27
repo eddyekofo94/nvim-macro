@@ -4,12 +4,31 @@ local groupid = vim.api.nvim_create_augroup('StatusLine', {})
 
 local diag_signs_default_text = { 'E', 'W', 'I', 'H' }
 
----@param severity integer
+local diag_severity_map = {
+  [1] = 'ERROR',
+  [2] = 'WARN',
+  [3] = 'INFO',
+  [4] = 'HINT',
+  ERROR = 1,
+  WARN = 2,
+  INFO = 3,
+  HINT = 4,
+}
+
+---@param severity integer|string
 ---@return string
 local function get_diag_sign_text(severity)
   local diag_config = vim.diagnostic.config()
-  local signs = diag_config and diag_config.signs and diag_config.signs.text
-  return signs and signs[severity] or diag_signs_default_text[severity]
+  local signs_text = diag_config
+    and diag_config.signs
+    and type(diag_config.signs) == 'table'
+    and diag_config.signs.text
+  return signs_text
+      and (signs_text[severity] or signs_text[diag_severity_map[severity]])
+    or (
+      diag_signs_default_text[severity]
+      or diag_signs_default_text[diag_severity_map[severity]]
+    )
 end
 
 -- stylua: ignore start
