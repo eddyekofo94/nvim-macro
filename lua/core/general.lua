@@ -37,6 +37,12 @@ opt.completeopt    = 'menuone'
 
 if g.modern_ui then
   opt.cursorline = true
+else
+  -- nvim 0.10.0 automatically enables termguicolors. When using nvim inside
+  -- tmux in Linux tty, where $TERM is set to 'tmux-256color' but $DISPLAY is
+  -- not set, termguicolors is automatically set. This is undesirable, so we
+  -- need to explicitly disable it in this case
+  opt.termguicolors = false
 end
 
 -- Recognize numbered lists when formatting text
