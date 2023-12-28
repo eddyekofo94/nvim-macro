@@ -60,6 +60,9 @@ opt.diffopt:append('algorithm:histogram')
 -- Use system clipboard
 opt.clipboard:append('unnamedplus')
 
+-- Align columns in quickfix window
+opt.quickfixtextfunc = [[v:lua.require'utils.misc'.qftf]]
+
 opt.backup = true
 opt.backupdir:remove('.')
 
