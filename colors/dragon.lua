@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Tue 26 Dec 2023 06:16:42 PM CST
+-- Last Updated: Thu 28 Dec 2023 11:11:52 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -232,7 +232,7 @@ local hlgroups = {
   FoldColumn = { fg = c_dragonBg5 },
   Folded = { bg = c_dragonBg2, fg = c_lotusGray },
   Ignore = { link = 'NonText' },
-  IncSearch = { bg = c_carpYellow, fg = c_waveBlue0 },
+  IncSearch = { reverse = true },
   LineNr = { fg = c_dragonBg5 },
   MatchParen = { bg = c_dragonBg4 },
   ModeMsg = { fg = c_dragonRed, bold = true },
@@ -508,7 +508,7 @@ local hlgroups = {
 
   -- gitsigns
   GitSignsAdd = { fg = c_autumnGreen },
-  GitSignsChange = { fg = c_springViolet },
+  GitSignsChange = { fg = c_sumiInk6 },
   GitSignsDelete = { fg = c_lotusRed0 },
   GitSignsDeletePreview = { bg = c_winterRed },
 
@@ -606,7 +606,6 @@ if vim.go.bg == 'light' then
   hlgroups.GlanceWinBarFilepath = { bg = c_dragonBg0, fg = c_dragonAsh }
   hlgroups.GlanceWinBarTitle =
     { bg = c_dragonBg0, fg = c_dragonFg1, bold = true }
-  hlgroups.IncSearch = { bg = c_autumnYellow, fg = c_dragonBg0, bold = true }
   hlgroups.Keyword = { fg = c_dragonRed }
   hlgroups.ModeMsg = { fg = c_dragonRed, bold = true }
   hlgroups.Pmenu = { bg = c_dragonBg0, fg = c_dragonFg1 }
