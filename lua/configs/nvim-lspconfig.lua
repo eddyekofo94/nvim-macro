@@ -1,5 +1,8 @@
 ---Customize LspInfo floating window
-require('lspconfig.ui.windows').default_options.border = 'solid'
+require('lspconfig.ui.windows').default_options.border = vim.g.modern_ui
+    and 'solid'
+  or 'single'
+
 vim.api.nvim_create_autocmd('VimResized', {
   desc = 'Reload LspInfo floating window on VimResized.',
   group = vim.api.nvim_create_augroup('LspInfoResize', {}),

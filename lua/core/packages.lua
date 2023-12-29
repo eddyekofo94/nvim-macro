@@ -1,4 +1,5 @@
 local utils = require('utils')
+local icons = utils.static.icons
 local conf_path = vim.fn.stdpath('config') --[[@as string]]
 local data_path = vim.fn.stdpath('data') --[[@as string]]
 local state_path = vim.fn.stdpath('state') --[[@as string]]
@@ -61,6 +62,15 @@ local function bootstrap()
       vim.log.levels.INFO
     )
   end
+  local lazy_patch_path =
+    vim.fs.joinpath(conf_path, 'patches', 'lazy.nvim.patch')
+  if vim.uv.fs_stat(lazy_patch_path) and vim.uv.fs_stat(lazy_path) then
+    utils.git.dir_execute(lazy_path, {
+      'apply',
+      '--ignore-space-change',
+      lazy_patch_path,
+    }, vim.log.levels.WARN)
+  end
   vim.notify('[packages] lazy.nvim cloned to ' .. lazy_path)
   vim.opt.rtp:prepend(lazy_path)
   return true
@@ -73,8 +83,28 @@ local function enable_modules(module_names)
     root = vim.g.package_path,
     lockfile = vim.g.package_lock,
     ui = {
-      border = 'solid',
+      border = vim.g.modern_ui and 'solid' or 'single',
       size = { width = 0.7, height = 0.74 },
+      icons = {
+        cmd = icons.Cmd,
+        config = icons.Config,
+        event = icons.Event,
+        debug = '',
+        ft = icons.File,
+        init = icons.Config,
+        import = icons.ArrowLeft,
+        keys = icons.Keyboard,
+        lazy = icons.Lazy,
+        loaded = icons.CircleFilled,
+        not_loaded = icons.CircleOutline,
+        plugin = icons.Module,
+        runtime = icons.Neovim,
+        require = icons.Lua,
+        source = icons.Vim,
+        start = icons.Play,
+        task = icons.Ok,
+        list = { '' },
+      },
     },
     checker = { enabled = false },
     change_detection = { notify = false },

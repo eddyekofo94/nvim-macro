@@ -387,19 +387,19 @@ oil.setup({
     },
   },
   float = {
-    border = 'solid',
+    border = vim.g.modern_ui and 'solid' or 'single',
     win_options = {
       winblend = 0,
     },
   },
   preview = {
-    border = 'solid',
+    border = vim.g.modern_ui and 'solid' or 'single',
     win_options = {
       winblend = 0,
     },
   },
   progress = {
-    border = 'solid',
+    border = vim.g.modern_ui and 'solid' or 'single',
     win_options = {
       winblend = 0,
     },

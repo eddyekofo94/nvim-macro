@@ -49,7 +49,7 @@ index 5f8f321..9175a03 100644
      zindex = 150,
      style = "minimal",
 -    border = "rounded",
-+    border = "solid",
++    border = vim.g.modern_ui and "solid" or "single",
    })
    local function close()
      if vim.api.nvim_win_is_valid(winid) then

@@ -10,6 +10,7 @@ g.modern_ui = g.has_ui and vim.env.DISPLAY ~= nil
 
 -- stylua: ignore start
 opt.colorcolumn    = '80'
+opt.cursorline     = true
 opt.foldlevelstart = 99
 opt.helpheight     = 10
 opt.showmode       = false
@@ -35,14 +36,13 @@ opt.virtualedit    = 'block'
 opt.completeopt    = 'menuone'
 -- stylua: ignore end
 
-if g.modern_ui then
-  opt.cursorline = true
-else
+if not vim.g.modern_ui then
   -- nvim 0.10.0 automatically enables termguicolors. When using nvim inside
   -- tmux in Linux tty, where $TERM is set to 'tmux-256color' but $DISPLAY is
   -- not set, termguicolors is automatically set. This is undesirable, so we
   -- need to explicitly disable it in this case
   opt.termguicolors = false
+  opt.cursorlineopt = 'number'
 end
 
 -- Recognize numbered lists when formatting text

@@ -29,12 +29,15 @@ local cfg_smallwin_nopreview = {
 }
 
 fzf.setup({
+  -- Use nbsp in tty to avoid showing box chars
+  nbsp = not vim.g.modern_ui and '\xc2\xa0' or nil,
   winopts = {
     height = 0.75,
     width = 0.75,
-    row = 0.35,
+    row = 0.4,
     col = 0.5,
-    border = utils.static.borders.solid,
+    border = vim.g.modern_ui and utils.static.borders.solid
+      or utils.static.borders.single_clc,
     preview = {
       default = 'builtin',
       vertical = 'down:55%',
