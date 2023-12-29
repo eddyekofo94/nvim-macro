@@ -2,6 +2,7 @@ if pcall(require, 'image') then
   vim.g.molten_image_provider = 'image.nvim'
 end
 
+vim.g.molten_auto_init_behavior = 'init'
 vim.g.molten_enter_output_behavior = 'open_and_enter'
 vim.g.molten_output_win_max_height = 16
 vim.g.molten_output_win_cover_gutter = false
@@ -384,11 +385,16 @@ local function setup_buf_keymaps_and_commands(buf)
   -- stylua: ignore end
 end
 
+-- Setup for existing buffers
+for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+  setup_buf_keymaps_and_commands(buf)
+end
+
 local groupid = vim.api.nvim_create_augroup('MoltenSetup', {})
-vim.api.nvim_create_autocmd('User', {
-  group = groupid,
+vim.api.nvim_create_autocmd('FileType', {
   desc = 'Set buffer-local keymaps and commands for molten.',
-  pattern = 'MoltenInitPost',
+  pattern = { 'python', 'markdown' },
+  group = groupid,
   callback = function(info)
     setup_buf_keymaps_and_commands(info.buf)
   end,
