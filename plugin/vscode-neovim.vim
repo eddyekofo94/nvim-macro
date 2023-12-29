@@ -15,30 +15,27 @@ function! s:vscodeGoToDefinition(str)
     endif
 endfunction
 
-nnoremap K <Cmd>call VSCodeNotify('editor.action.showHover')<CR>
-nnoremap gD <Cmd>call <SID>vscodeGoToDefinition('revealDeclaration')<CR>
-nnoremap gd <Cmd>call <SID>vscodeGoToDefinition('revealDefinition')<CR>
+nnoremap K     <Cmd>call VSCodeNotify('editor.action.showHover')<CR>
+nnoremap gD    <Cmd>call <SID>vscodeGoToDefinition('revealDeclaration')<CR>
+nnoremap gd    <Cmd>call <SID>vscodeGoToDefinition('revealDefinition')<CR>
 nnoremap <C-]> <Cmd>call <SID>vscodeGoToDefinition('revealDefinition')<CR>
-nnoremap gO <Cmd>call VSCodeNotify('workbench.action.gotoSymbol')<CR>
-nnoremap <leader>K <Cmd>call VSCodeNotify('editor.action.peekDeclaration')<CR>
-nnoremap <leader>k <Cmd>call VSCodeNotify('editor.action.peekDefinition')<CR>
-nnoremap <leader>R <Cmd>call VSCodeNotify('editor.action.referenceSearch.trigger')<CR>
+nnoremap gO    <Cmd>call VSCodeNotify('workbench.action.gotoSymbol')<CR>
+nnoremap g.    <Cmd>call VSCodeNotify('editor.action.referenceSearch.trigger')<CR>
 
-xnoremap K <Cmd>call VSCodeNotify('editor.action.showHover')<CR>
-xnoremap gD <Cmd>call <SID>vscodeGoToDefinition('revealDeclaration')<CR>
-xnoremap gd <Cmd>call <SID>vscodeGoToDefinition('revealDefinition')<CR>
+xnoremap K     <Cmd>call VSCodeNotify('editor.action.showHover')<CR>
+xnoremap gD    <Cmd>call <SID>vscodeGoToDefinition('revealDeclaration')<CR>
+xnoremap gd    <Cmd>call <SID>vscodeGoToDefinition('revealDefinition')<CR>
 xnoremap <C-]> <Cmd>call <SID>vscodeGoToDefinition('revealDefinition')<CR>
-xnoremap gO <Cmd>call VSCodeNotify('workbench.action.gotoSymbol')<CR>
-xnoremap <leader>k <Cmd>call VSCodeNotify('editor.action.peekDeclaration')<CR>
-xnoremap <leader>K <Cmd>call VSCodeNotify('editor.action.peekDefinition')<CR>
-xnoremap <leader>R <Cmd>call VSCodeNotify('editor.action.referenceSearch.trigger')<CR>
+xnoremap gO    <Cmd>call VSCodeNotify('workbench.action.gotoSymbol')<CR>
+xnoremap g.    <Cmd>call VSCodeNotify('editor.action.referenceSearch.trigger')<CR>
 
 " Git keymap settings
 nnoremap ]c <Cmd>call VSCodeNotify('workbench.action.editor.nextChange')<CR>
 nnoremap [c <Cmd>call VSCodeNotify('workbench.action.editor.previousChange')<CR>
 
 " Navigation
-nnoremap <leader>ff <Cmd>call VSCodeNotify('workbench.action.quickOpen')<CR>
+nnoremap <Leader>ff <Cmd>call VSCodeNotify('workbench.action.quickOpen')<CR>
+nnoremap <Leader>.  <Cmd>call VSCodeNotify('workbench.action.quickOpen')<CR>
 
 " Window and buffer keymap settings
 function! s:split(...) abort
