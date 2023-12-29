@@ -90,6 +90,14 @@ vim.keymap.set('t', '<M-k>',      '<Cmd>wincmd k<CR>')
 vim.keymap.set('t', '<M-l>',      '<Cmd>wincmd l<CR>')
 -- stylua: ignore end
 
+-- Use <C-\><C-r> to insert contents of a register in terminal mode
+vim.keymap.set(
+  't',
+  [[<C-\><C-r>]],
+  [['<C-\><C-n>"' . nr2char(getchar()) . 'pi']],
+  { expr = true }
+)
+
 -- More consistent behavior when &wrap is set
 -- stylua: ignore start
 vim.keymap.set({ 'n', 'x' }, 'j', 'v:count ? "j" : "gj"', { expr = true })
