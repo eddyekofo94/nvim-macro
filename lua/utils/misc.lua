@@ -42,7 +42,7 @@ function M.qftf(info)
   ---@param item table
   ---@return string|integer
   local function _col_trans(item)
-    if item.col == item.end_col then
+    if item.col == item.end_col or item.end_col == 0 then
       return item.col
     end
     return string.format('%s-%s', item.col, item.end_col)
@@ -67,7 +67,7 @@ function M.qftf(info)
   ---@param item table
   ---@return string
   local function _nr_trans(item)
-    return item.nr == 0 and '' or ' ' .. item.nr
+    return item.nr <= 0 and '' or ' ' .. item.nr
   end
 
   local max_width = math.ceil(vim.go.columns / 2)
@@ -77,8 +77,8 @@ function M.qftf(info)
   local type_width = _get_width(_type_trans, max_width)
   local nr_width = _get_width(_nr_trans, max_width)
 
-  local format_str = vim.g.modern_ui and '%s %s col %s%s%s %s'
-    or '%s│%s col %s%s%s│ %s'
+  local format_str = vim.g.modern_ui and '%s %s:%s%s%s %s'
+    or '%s│%s:%s%s%s│ %s'
   return vim.tbl_map(function(item)
     if item.valid == 0 then
       return ''

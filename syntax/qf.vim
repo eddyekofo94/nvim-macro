@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:     Quickfix window
 " Maintainer:   Bekaboo <kankefengjing@gmail.com>
-" Last Updated: Thu 28 Dec 2023 04:14:22 AM CST
+" Last Updated: Thu 28 Dec 2023 10:41:11 PM CST
 
 if exists("b:current_syntax")
   finish
@@ -25,5 +25,15 @@ hi def link qfError   DiagnosticSignError
 hi def link qfInfo    DiagnosticSignInfo
 hi def link qfNote    DiagnosticSignHint
 hi def link qfWarning DiagnosticSignWarn
+
+syn match qfMsgError   "\(\<\(E\|ERROR\|error\)\>\s*[|│ ]\s*\)\@<=[^|│ ]\{-}$"
+syn match qfMsgInfo    "\(\<\(I\|INFO\|info\)\>\s*[|│ ]\s*\)\@<=[^|│ ]\{-}$"
+syn match qfMsgNote    "\(\<\(N\|H\|NOTE\|HINT\|note\|hint\)\>\s*[|│ ]\s*\)\@<=[^|│ ]\{-}$"
+syn match qfMsgWarning "\(\<\(W\|WARN\|warning\)\>\s*[|│ ]\s*\)\@<=[^|│ ]\{-}$"
+
+hi def link qfMsgError   NonText
+hi def link qfMsgInfo    NonText
+hi def link qfMsgNote    NonText
+hi def link qfMsgWarning NonText
 
 let b:current_syntax = "qf"

@@ -1,3 +1,8 @@
+-- If is quickfix list, always open it at the bottom of screen
+if vim.fn.win_gettype() == 'quickfix' then
+  vim.cmd.wincmd('J')
+end
+
 vim.bo.buflisted = false
 vim.opt_local.list = false
 vim.opt_local.spell = false
