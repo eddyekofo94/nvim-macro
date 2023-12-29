@@ -42,9 +42,38 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
         },
       },
     })
+
     vim.keymap.set('n', '<Leader>;', api.pick)
     vim.keymap.set('n', '[C', api.goto_context_start)
     vim.keymap.set('n', ']C', api.select_next_context)
+
+    ---Set WinBar & WinBarNC background to Normal background
+    ---@return nil
+    local function clear_winbar_bg()
+      local hl_normal = utils.hl.get(0, {
+        name = 'Normal',
+        link = false,
+      })
+
+      local function _clear_bg(name)
+        local hl = utils.hl.get(0, { name = name, link = false })
+        if hl_normal.bg ~= hl.bg or hl_normal.ctermbg ~= hl.ctermbg then
+          hl.bg = hl_normal.bg
+          hl.ctermbg = hl_normal.ctermbg
+          vim.api.nvim_set_hl(0, name, hl)
+        end
+      end
+
+      _clear_bg('WinBar')
+      _clear_bg('WinBarNC')
+    end
+
+    clear_winbar_bg()
+
+    vim.api.nvim_create_autocmd('ColorScheme', {
+      group = vim.api.nvim_create_augroup('WinBarHlClearBg', {}),
+      callback = clear_winbar_bg,
+    })
     return true
   end,
 })
