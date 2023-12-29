@@ -48,6 +48,6 @@ vim.api.nvim_create_autocmd('Colorscheme', {
     end
 
     pcall(vim.system, { 'setbg', vim.go.bg })
-    pcall(vim.system, { 'setcolors', vim.g.colors_name })
+    pcall(vim.system, { 'setcolor', vim.g.colors_name })
   end,
 })

@@ -512,7 +512,7 @@ Total # of plugins: 52 (package manager included).
 - [colorswitch](https://github.com/Bekaboo/nvim/tree/master/plugin/colorswitch.lua)
     - Remembers and restores previous background and colorscheme settings
     - Syncs background and colorscheme settings among multiple Neovim instances
-      if scripts [setbg](https://github.com/Bekaboo/dot/blob/master/.scripts/setbg) and [setcolors](https://github.com/Bekaboo/dot/blob/master/.scripts/setcolors) are in `$PATH`
+      if scripts [setbg](https://github.com/Bekaboo/dot/blob/master/.scripts/setbg) and [setcolor](https://github.com/Bekaboo/dot/blob/master/.scripts/setcolor) are in `$PATH`
 - [expandtab](https://github.com/Bekaboo/nvim/tree/master/plugin/expandtab.lua)
     - Always use spaces for alignment, even if `&expandtab` is not set
 - [im](https://github.com/Bekaboo/nvim/tree/master/plugin/im.lua)
