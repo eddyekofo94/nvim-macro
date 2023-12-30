@@ -104,7 +104,7 @@ function M.merge(...)
   return vim.tbl_extend('force', unpack(hl_attr))
 end
 
----@param attr_type 'fg'|'bg'
+---@param attr_type 'fg'|'bg'|'ctermfg'|'ctermbg'
 ---@param fbg? string|integer
 ---@param default? integer
 ---@return integer|string|nil
@@ -155,8 +155,14 @@ function M.normalize(attr)
     attr.link = nil
     return attr
   end
-  attr.fg = M.normalize_fg_or_bg('fg', attr.fg)
-  attr.bg = M.normalize_fg_or_bg('bg', attr.bg)
+  local fg = attr.fg
+  local bg = attr.bg
+  local ctermfg = attr.ctermfg
+  local ctermbg = attr.ctermbg
+  attr.fg = M.normalize_fg_or_bg('fg', fg)
+  attr.bg = M.normalize_fg_or_bg('bg', bg)
+  attr.ctermfg = M.normalize_fg_or_bg('ctermfg', ctermfg or fg)
+  attr.ctermbg = M.normalize_fg_or_bg('ctermbg', ctermbg or bg)
   return attr
 end
 
