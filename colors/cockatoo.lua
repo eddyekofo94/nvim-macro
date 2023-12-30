@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri 15 Dec 2023 01:56:54 PM CST
+-- Last Updated: Sat 30 Dec 2023 06:59:42 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -408,7 +408,6 @@ local hlgroups = {
   LspReferenceWrite = { link = 'LspReferenceText' },
   LspSignatureActiveParameter = { link = 'IncSearch' },
   LspInfoBorder = { link = 'FloatBorder' },
-  LspInlayHint = { link = 'DiagnosticVirtualTextHint' },
   -- }}}2
 
   -- Diagnostic {{{2

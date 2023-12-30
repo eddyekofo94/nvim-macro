@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu 28 Dec 2023 11:11:52 PM CST
+-- Last Updated: Sat 30 Dec 2023 06:59:45 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -381,7 +381,6 @@ local hlgroups = {
   -- LSP {{{2
   LspCodeLens = { fg = c_dragonAsh },
   LspInfoBorder = { link = 'FloatBorder' },
-  LspInlayHint = { link = 'DiagnosticVirtualTextHint' },
   LspReferenceRead = { link = 'LspReferenceText' },
   LspReferenceText = { bg = c_winterYellow },
   LspReferenceWrite = { bg = c_winterYellow, underline = true },
