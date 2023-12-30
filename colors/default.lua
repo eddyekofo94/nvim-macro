@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 30 Dec 2023 05:57:00 AM CST
+-- Last Updated: Sat 30 Dec 2023 02:53:54 PM CST
 
 vim.cmd.hi('clear')
 vim.g.colors_name = 'default'
@@ -19,5 +19,10 @@ if vim.go.background == 'dark' then
     ctermfg = 0,
   })
 end
+
+vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = 'NvimLightGreen', ctermfg = 10 })
+vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = 'NvimLightBlue', ctermfg = 12 })
+vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = 'NvimDarkRed', ctermfg = 9 })
+vim.api.nvim_set_hl(0, 'GitSignsDeletePreview', { bg = 'NvimDarkRed', ctermbg = 9 })
 
 -- vim:ts=2:sw=2:sts=2:fdm=marker:fdl=0
