@@ -5,6 +5,10 @@ if vim.fn.argc() > 0 or not vim.g.has_ui then
   return
 end
 
+-- Set eventignore to avoid triggering plugin lazy-loading handlers
+local eventignore = vim.go.eventignore
+vim.go.eventignore = 'all'
+
 local logo = vim.g.modern_ui and 'M Λ C R O' or 'M A C R O'
 
 ---@class intro_chunk_t
@@ -80,19 +84,12 @@ end
 win_config.row = math.floor((vim.go.lines - vim.go.ch - win_config.height) / 2)
 win_config.col = math.floor((vim.go.columns - win_config.width) / 2)
 if win_config.row < 4 or win_config.col < 8 then
+  -- Restore &eventignore before exit
+  vim.go.eventignore = eventignore
   return
 end
 
 -- Create the scratch buffer to display the intro message
--- Set eventignore to avoid triggering plugin lazy-loading handlers
-local eventignore = vim.go.eventignore
-vim.opt.eventignore:append({
-  'BufNew',
-  'OptionSet',
-  'TextChanged',
-  'BufModifiedSet',
-})
-
 local buf = vim.api.nvim_create_buf(false, true)
 vim.bo[buf].bufhidden = 'wipe'
 vim.bo[buf].buftype = 'nofile'
@@ -106,8 +103,6 @@ vim.api.nvim_buf_set_lines(
     return string.rep(' ', line.offset) .. line.text
   end, lines)
 )
-
-vim.go.eventignore = eventignore
 
 -- Apply highlight groups
 local ns = vim.api.nvim_create_namespace('NvimIntro')
@@ -152,3 +147,6 @@ vim.api.nvim_create_autocmd({
     return true
   end,
 })
+
+-- Restore &eventignore before exit
+vim.go.eventignore = eventignore
