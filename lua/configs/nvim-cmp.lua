@@ -502,6 +502,7 @@ cmp.setup({
     documentation = {
       max_width = 80,
       max_height = 20,
+      border = 'solid',
     },
   },
   performance = {
