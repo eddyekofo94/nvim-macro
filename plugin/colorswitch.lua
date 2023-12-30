@@ -38,16 +38,18 @@ vim.api.nvim_create_autocmd('Colorscheme', {
       return
     end
 
-    local data = utils.json.read(colors_file)
-    if data.colors_name ~= vim.g.colors_name or data.bg ~= vim.go.bg then
-      data.colors_name = vim.g.colors_name
-      data.bg = vim.go.bg
-      if not utils.json.write(colors_file, data) then
-        return
+    vim.schedule(function()
+      local data = utils.json.read(colors_file)
+      if data.colors_name ~= vim.g.colors_name or data.bg ~= vim.go.bg then
+        data.colors_name = vim.g.colors_name
+        data.bg = vim.go.bg
+        if not utils.json.write(colors_file, data) then
+          return
+        end
       end
-    end
 
-    pcall(vim.system, { 'setbg', vim.go.bg })
-    pcall(vim.system, { 'setcolor', vim.g.colors_name })
+      pcall(vim.system, { 'setbg', vim.go.bg })
+      pcall(vim.system, { 'setcolor', vim.g.colors_name })
+    end)
   end,
 })
