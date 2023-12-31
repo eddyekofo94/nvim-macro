@@ -27,9 +27,20 @@ fzf.setup({
         \ let &splitkeep = "topline" |
         \ let g:_fzf_leave_win = win_getid(winnr()) |
         \ let g:_fzf_leave_win_view = winsaveview() |
+        \ let last_win = win_getid(winnr('$')) |
+        \ let last_win_type = win_gettype(last_win) |
+        \ if last_win_type =~# 'quickfix\|loclist'
+            \ && nvim_win_get_width(last_win) == &columns |
+          \ let g:_fzf_swallow_qf_type = last_win_type |
+          \ let g:_fzf_swallow_qf_height = nvim_win_get_height(last_win) |
+          \ let g:_fzf_qf_cursor = nvim_win_get_cursor(last_win) |
+          \ call nvim_win_close(last_win, v:false) |
+          \ unlet last_win last_win_type |
+        \ endif |
         \ bo new |
         \ let w:winbar_no_attach = v:true |
-        \ resize 10 |
+        \ exe 'resize ' . (exists('g:_fzf_swallow_qf_height')
+          \ ? g:_fzf_swallow_qf_height : 10) |
         \ setlocal winfixheight
     ]],
     on_create = function()
@@ -53,14 +64,33 @@ fzf.setup({
         vim.go.splitkeep = vim.g._fzf_splitkeep
         vim.g._fzf_splitkeep = nil
       end
+
+      if vim.g._fzf_swallow_qf_type and vim.g._fzf_qf_cursor then
+        local cur_win = vim.api.nvim_get_current_win()
+        local cur_win_view = vim.fn.winsaveview()
+        vim.cmd({
+          cmd = vim.g._fzf_swallow_qf_type == 'quickfix' and 'copen'
+            or 'lopen',
+          mods = { split = 'botright' },
+          count = vim.g._fzf_swallow_qf_height,
+        })
+        vim.api.nvim_win_set_cursor(0, vim.g._fzf_qf_cursor)
+        vim.api.nvim_win_call(cur_win, function()
+          ---@diagnostic disable-next-line: param-type-mismatch
+          vim.fn.winrestview(cur_win_view)
+        end)
+      end
+      vim.g._fzf_swallow_qf_height = nil
+      vim.g._fzf_swallow_qf_type = nil
+      vim.g._fzf_qf_cursor = nil
+
       if
         vim.g._fzf_leave_win
         and vim.g._fzf_leave_win_view
         and vim.api.nvim_win_is_valid(vim.g._fzf_leave_win)
       then
-        vim.api.nvim_win_call(vim.g._fzf_leave_win, function()
-          vim.fn.winrestview(vim.g._fzf_leave_win_view)
-        end)
+        vim.api.nvim_set_current_win(vim.g._fzf_leave_win)
+        vim.fn.winrestview(vim.g._fzf_leave_win_view)
       end
       vim.g._fzf_leave_win = nil
       vim.g._fzf_leave_win_view = nil
