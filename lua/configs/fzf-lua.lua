@@ -2,32 +2,6 @@ local fzf = require('fzf-lua')
 local actions = require('fzf-lua.actions')
 local utils = require('utils')
 
-local e = vim.fn.shellescape
-
-local img_preview_command = vim.g.modern_ui
-    and vim.fn.executable('ueberzug') == 1
-    and { 'ueberzug' }
-  or nil
-local html_preview_command = vim.fn.executable('w3m') == 1
-    and { 'w3m', '-dump' }
-  or nil
-local pdf_preview_command = vim.fn.executable('pdftotext') == 1
-    and { 'pdftotext', '-l', '10', '-nopgbrk', '-nodiag', '-q', '<file>', '-' }
-  or nil
-
-local cfg_smallwin_nopreview = {
-  previewer = false,
-  winopts = {
-    height = 0.6,
-    width = 0.55,
-    row = 0.4,
-  },
-  fzf_opts = {
-    ['--no-preview'] = '',
-    ['--preview-window'] = e('hidden'),
-  },
-}
-
 ---Switch provider while preserving the last query and cwd
 ---@return nil
 local function switch_provider()
@@ -48,37 +22,54 @@ fzf.setup({
   -- Use nbsp in tty to avoid showing box chars
   nbsp = not vim.g.modern_ui and '\xc2\xa0' or nil,
   winopts = {
-    height = 0.75,
-    width = 0.75,
-    row = 0.4,
-    col = 0.5,
-    border = vim.g.modern_ui and utils.static.borders.solid
-      or utils.static.borders.single_clc,
-    preview = {
-      default = 'builtin',
-      vertical = 'down:55%',
-      horizontal = 'right:50%',
-      scrollbar = false,
-      delay = 32,
-      winopts = {
-        number = false,
-        relativenumber = false,
-      },
-    },
+    split = [[
+      let g:_fzf_splitkeep = &splitkeep |
+        \ let &splitkeep = "topline" |
+        \ let g:_fzf_leave_win = win_getid(winnr()) |
+        \ let g:_fzf_leave_win_view = winsaveview() |
+        \ bo new |
+        \ let w:winbar_no_attach = v:true |
+        \ resize 10 |
+        \ setlocal winfixheight
+    ]],
     on_create = function()
-      vim.keymap.set('t', '<M-s>', '<M-s>', { buffer = true })
-      vim.keymap.set('t', '<M-v>', '<M-v>', { buffer = true })
+      local buf = vim.api.nvim_get_current_buf()
+      -- Restore '<M-s>' and '<M-v>' in terminal mode mappings
+      -- They are originally mapped to split current window in core.keymaps,
+      -- which conflicts with fzf-lua's split keymaps
+      vim.keymap.set('t', '<M-s>', '<M-s>', { buffer = buf })
+      vim.keymap.set('t', '<M-v>', '<M-v>', { buffer = buf })
       vim.keymap.set(
         't',
         '<C-r>',
         [['<C-\><C-N>"' . nr2char(getchar()) . 'pi']],
-        { expr = true, buffer = true }
+        { expr = true, buffer = buf }
       )
     end,
+    on_close = function()
+      if vim.g._fzf_splitkeep then
+        vim.go.splitkeep = vim.g._fzf_splitkeep
+        vim.g._fzf_splitkeep = nil
+      end
+      if
+        vim.g._fzf_leave_win
+        and vim.g._fzf_leave_win_view
+        and vim.api.nvim_win_is_valid(vim.g._fzf_leave_win)
+      then
+        vim.api.nvim_win_call(vim.g._fzf_leave_win, function()
+          vim.fn.winrestview(vim.g._fzf_leave_win_view)
+        end)
+      end
+      vim.g._fzf_leave_win = nil
+      vim.g._fzf_leave_win_view = nil
+    end,
+    preview = {
+      hidden = 'hidden',
+    },
   },
   hls = {
-    normal = 'TelescopePromptNormal',
-    border = 'TelescopePromptBorder',
+    normal = 'TelescopeNormal',
+    border = 'TelescopeBorder',
     title = 'TelescopeTitle',
     help_normal = 'TelescopeNormal',
     help_border = 'TelescopeBorder',
@@ -93,15 +84,15 @@ fzf.setup({
   },
   fzf_colors = {
     ['fg'] = { 'fg', 'TelescopeNormal' },
-    ['bg'] = { 'bg', 'TelescopePromptNormal' },
+    ['bg'] = { 'bg', 'TelescopeNormal' },
     ['hl'] = { 'fg', 'TelescopeMatching' },
     ['fg+'] = { 'fg', 'TelescopeSelection' },
     ['bg+'] = { 'bg', 'TelescopeSelection' },
     ['hl+'] = { 'fg', 'TelescopeMatching' },
-    ['info'] = { 'fg', 'TelescopePromptCounter' },
+    ['info'] = { 'fg', 'TelescopeCounter' },
     ['border'] = { 'fg', 'TelescopeBorder' },
-    ['gutter'] = { 'bg', 'TelescopePromptNormal' },
-    ['prompt'] = { 'fg', 'TelescopePromptPrefix' },
+    ['gutter'] = { 'bg', 'TelescopeNormal' },
+    ['prompt'] = { 'fg', 'TelescopePrefix' },
     ['pointer'] = { 'fg', 'TelescopeSelectionCaret' },
     ['marker'] = { 'fg', 'TelescopeMultiIcon' },
   },
@@ -110,15 +101,6 @@ fzf.setup({
     builtin = {
       ['<F1>'] = 'toggle-help',
       ['<F2>'] = 'toggle-fullscreen',
-      -- Only valid with the 'builtin' previewer
-      ['<F3>'] = 'toggle-preview-wrap',
-      ['<F4>'] = 'toggle-preview',
-      -- Rotate preview clockwise/counter-clockwise
-      ['<F5>'] = 'toggle-preview-ccw',
-      ['<F6>'] = 'toggle-preview-cw',
-      ['<S-down>'] = 'preview-page-down',
-      ['<M-[>'] = 'preview-page-up',
-      ['<M-]>'] = 'preview-page-reset',
     },
     fzf = {
       -- fzf '--bind=' options
@@ -130,11 +112,6 @@ fzf.setup({
       ['alt-a'] = 'toggle-all',
       ['alt-}'] = 'last',
       ['alt-{'] = 'first',
-      -- Only valid with fzf previewers (bat/cat/git/etc)
-      ['f3'] = 'toggle-preview-wrap',
-      ['f4'] = 'toggle-preview',
-      ['alt-]'] = 'preview-page-down',
-      ['alt-['] = 'preview-page-up',
     },
   },
   actions = {
@@ -178,34 +155,20 @@ fzf.setup({
   fzf_opts = {
     ['--no-scrollbar'] = '',
     ['--no-separator'] = '',
-    ['--info'] = e('inline-right'),
-    ['--layout'] = e('reverse'),
-    ['--marker'] = e('+'),
-    ['--pointer'] = e('→'),
-    ['--prompt'] = e('/ '),
-    ['--border'] = e('none'),
-    ['--padding'] = e('0,1'),
-    ['--margin'] = e('0'),
-    ['--preview-window'] = e('border-sharp'),
-  },
-  previewers = {
-    builtin = {
-      treesitter = {
-        enable = true,
-        disable = { 'tex', 'markdown' },
-      },
-      extensions = {
-        ['html'] = html_preview_command,
-        ['jpg'] = img_preview_command,
-        ['png'] = img_preview_command,
-        ['svg'] = img_preview_command,
-        ['pdf'] = pdf_preview_command,
-      },
-    },
+    ['--info'] = 'inline-right',
+    ['--layout'] = 'reverse',
+    ['--marker'] = '+',
+    ['--pointer'] = '→',
+    ['--prompt'] = '/ ',
+    ['--border'] = 'none',
+    ['--padding'] = '0,1',
+    ['--margin'] = '0',
+    ['--no-preview'] = '',
+    ['--preview-window'] = 'hidden',
   },
   files = {
     fzf_opts = {
-      ['--info'] = e('inline-right'),
+      ['--info'] = 'inline-right',
     },
   },
   grep = {
@@ -221,33 +184,17 @@ fzf.setup({
       '-e',
     }, ' '),
     fzf_opts = {
-      ['--info'] = e('inline-right'),
+      ['--info'] = 'inline-right',
     },
   },
   lsp = {
     finder = {
       fzf_opts = {
-        ['--info'] = e('inline-right'),
+        ['--info'] = 'inline-right',
       },
     },
     symbols = {
       symbol_icons = vim.tbl_map(vim.trim, utils.static.icons.kinds),
-    },
-  },
-  builtin = cfg_smallwin_nopreview,
-  command_history = cfg_smallwin_nopreview,
-  commands = cfg_smallwin_nopreview,
-  registers = cfg_smallwin_nopreview,
-  search_history = cfg_smallwin_nopreview,
-  menus = cfg_smallwin_nopreview,
-  packadd = cfg_smallwin_nopreview,
-  filetypes = cfg_smallwin_nopreview,
-  spell_suggest = cfg_smallwin_nopreview,
-  autocmds = {
-    winopts = {
-      preview = {
-        layout = 'vertical',
-      },
     },
   },
 })
@@ -320,40 +267,29 @@ vim.api.nvim_create_user_command('FZF', unpack(fzf_cmd_body))
 ---Set telescope default hlgroups for a borderless view
 ---@return nil
 local function set_default_hlgroups()
-  local hl_norm = utils.hl.get(0, { name = 'Normal', link = false })
-  local hl_speical = utils.hl.get(0, { name = 'Special', link = false })
-  local hl_tl_norm = utils.hl.get(0, {
-    name = 'TelescopeNormal',
-    link = false,
-  })
-  local hl_tl_pnorm = utils.hl.get(0, {
-    name = 'TelescopePromptNormal',
-    link = false,
-  })
-  if
-    vim.tbl_isempty(hl_tl_norm)
-    or vim.tbl_isempty(hl_tl_pnorm)
-    or hl_tl_norm.bg == hl_norm.bg
-    or hl_tl_pnorm.bg == hl_norm.bg
-  then
-    -- stylua: ignore start
-    utils.hl.set(0, 'FzfLuaBufFlagAlt', { link = 'CursorLineNr' })
-    utils.hl.set(0, 'FzfLuaBufFlagCur', { link = 'CursorLineNr' })
-    utils.hl.set(0, 'FzfLuaBufLineNr', { link = 'LineNr' })
-    utils.hl.set(0, 'FzfLuaBufName', { link = 'Directory' })
-    utils.hl.set(0, 'FzfLuaBufNr', { link = 'LineNr' })
-    utils.hl.set(0, 'FzfLuaCursor', { link = 'None' })
-    utils.hl.set(0, 'FzfLuaHeaderBind', { link = 'Special' })
-    utils.hl.set(0, 'FzfLuaHeaderText', { link = 'Special' })
-    utils.hl.set(0, 'FzfLuaTabMarker', { link = 'Keyword' })
-    utils.hl.set(0, 'FzfLuaTabTitle', { link = 'Title' })
-    utils.hl.set(0, 'TelescopeBorder', { link = 'TelescopeNormal' })
-    utils.hl.set(0, 'TelescopeNormal', { link = 'NormalFloat' })
-    utils.hl.set(0, 'TelescopePromptBorder', { link = 'TelescopePromptNormal' })
-    utils.hl.set(0, 'TelescopePromptNormal', utils.hl.blend('NormalFloat', 'Normal'))
-    utils.hl.set(0, 'TelescopeSelection', { link = 'Visual' })
-    utils.hl.set(0, 'TelescopeTitle', { fg = hl_norm.bg, bg = hl_speical.fg, bold = true })
-    -- stylua: ignore end
+  local hl = utils.hl
+  local hl_norm = hl.get(0, { name = 'Normal', link = false })
+  local hl_speical = hl.get(0, { name = 'Special', link = false })
+  local hl_tl_norm = hl.get(0, { name = 'TelescopeNormal', link = false })
+  if not hl_tl_norm.bg or hl_tl_norm.bg == hl_norm.bg then
+    hl.set(0, 'FzfLuaBufFlagAlt', { link = 'CursorLineNr' })
+    hl.set(0, 'FzfLuaBufFlagCur', { link = 'CursorLineNr' })
+    hl.set(0, 'FzfLuaBufLineNr', { link = 'LineNr' })
+    hl.set(0, 'FzfLuaBufName', { link = 'Directory' })
+    hl.set(0, 'FzfLuaBufNr', { link = 'LineNr' })
+    hl.set(0, 'FzfLuaCursor', { link = 'None' })
+    hl.set(0, 'FzfLuaHeaderBind', { link = 'Special' })
+    hl.set(0, 'FzfLuaHeaderText', { link = 'Special' })
+    hl.set(0, 'FzfLuaTabMarker', { link = 'Keyword' })
+    hl.set(0, 'FzfLuaTabTitle', { link = 'Title' })
+    hl.set(0, 'TelescopeBorder', { link = 'TelescopeNormal' })
+    hl.set(0, 'TelescopeSelection', { link = 'Visual' })
+    hl.set(0, 'TelescopePrefix', { link = 'Operator' })
+    hl.set(0, 'TelescopeTitle', {
+      fg = hl_norm.bg,
+      bg = hl_speical.fg,
+      bold = true,
+    })
   end
 end
 

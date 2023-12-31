@@ -16,7 +16,9 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
           'BufWritePost',
         },
         enable = function(buf, win)
-          return vim.fn.win_gettype(win) == ''
+          return not vim.w[win].winbar_no_attach
+            and not vim.b[buf].winbar_no_attach
+            and vim.fn.win_gettype(win) == ''
             and vim.wo[win].winbar == ''
             and vim.bo[buf].bt == ''
             and (
