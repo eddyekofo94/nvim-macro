@@ -152,6 +152,153 @@ fzf.setup({
       ['ctrl-_'] = switch_provider,
     },
   },
+  helptags = {
+    actions = {
+      ['default'] = actions.help,
+      ['alt-s'] = actions.help,
+      ['alt-v'] = actions.help_vert,
+      ['alt-t'] = actions.help_tab,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  manpages = {
+    actions = {
+      ['default'] = actions.man,
+      ['alt-s'] = actions.man,
+      ['alt-v'] = actions.man_vert,
+      ['alt-t'] = actions.man_tab,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  keymaps = {
+    actions = {
+      ['default'] = actions.keymap_apply,
+      ['alt-s'] = actions.keymap_split,
+      ['alt-v'] = actions.keymap_vsplit,
+      ['alt-t'] = actions.keymap_tabedit,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  code_actions = {
+    actions = {
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  quickfix_stack = {
+    actions = {
+      ['default'] = actions.set_qflist,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  loclist_stack = {
+    actions = {
+      ['default'] = actions.set_qflist,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  colorschemes = {
+    actions = {
+      ['default'] = actions.colorscheme,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  highlights = {
+    actions = {
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  builtin = {
+    actions = {
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  profiles = {
+    actions = {
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  marks = {
+    actions = {
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  jumps = {
+    actions = {
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  commands = {
+    actions = {
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  command_history = {
+    actions = {
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  search_history = {
+    actions = {
+      ['default'] = actions.search_cr,
+      ['ctrl-e'] = actions.search,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  registers = {
+    actions = {
+      ['default'] = actions.paste_register,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  spell_suggest = {
+    actions = {
+      ['default'] = actions.spell_apply,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  filetypes = {
+    actions = {
+      ['default'] = actions.set_filetype,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  packadd = {
+    actions = {
+      ['default'] = actions.packadd,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  menus = {
+    actions = {
+      ['default'] = actions.exec_menu,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  tmux = {
+    buffers = {
+      actions = {
+        ['default'] = actions.tmux_buf_set_reg,
+        ['ctrl-_'] = switch_provider,
+      },
+    },
+  },
+  dap = {
+    commands = { ['ctrl-_'] = switch_provider },
+    configurations = { ['ctrl-_'] = switch_provider },
+    variables = { ['ctrl-_'] = switch_provider },
+    frames = { ['ctrl-_'] = switch_provider },
+  },
+  complete_path = {
+    actions = {
+      ['default'] = actions.complete,
+      ['ctrl-_'] = switch_provider,
+    },
+  },
+  complete_line = {
+    actions = {
+      ['ctrl-_'] = switch_provider,
+    },
+  },
   fzf_opts = {
     ['--no-scrollbar'] = '',
     ['--no-separator'] = '',
