@@ -115,8 +115,8 @@ fzf.setup({
       ['<F5>'] = 'toggle-preview-ccw',
       ['<F6>'] = 'toggle-preview-cw',
       ['<S-down>'] = 'preview-page-down',
-      ['<S-up>'] = 'preview-page-up',
-      ['<S-left>'] = 'preview-page-reset',
+      ['<M-[>'] = 'preview-page-up',
+      ['<M-]>'] = 'preview-page-reset',
     },
     fzf = {
       -- fzf '--bind=' options
@@ -126,11 +126,13 @@ fzf.setup({
       ['ctrl-a'] = 'beginning-of-line',
       ['ctrl-e'] = 'end-of-line',
       ['alt-a'] = 'toggle-all',
+      ['alt-}'] = 'last',
+      ['alt-{'] = 'first',
       -- Only valid with fzf previewers (bat/cat/git/etc)
       ['f3'] = 'toggle-preview-wrap',
       ['f4'] = 'toggle-preview',
-      ['shift-down'] = 'preview-page-down',
-      ['shift-up'] = 'preview-page-up',
+      ['alt-]'] = 'preview-page-down',
+      ['alt-['] = 'preview-page-up',
     },
   },
   actions = {
@@ -253,6 +255,10 @@ vim.keymap.set('n', "<Leader>'", fzf.resume)
 vim.keymap.set('n', '<Leader>,', fzf.buffers)
 vim.keymap.set('n', '<Leader>/', fzf.live_grep)
 vim.keymap.set('n', '<Leader>?', fzf.live_grep)
+vim.keymap.set('n', '<Leader>*', fzf.grep_cword)
+vim.keymap.set('x', '<Leader>*', fzf.grep_visual)
+vim.keymap.set('n', '<Leader>#', fzf.grep_cword)
+vim.keymap.set('x', '<Leader>#', fzf.grep_visual)
 vim.keymap.set('n', '<Leader>"', fzf.registers)
 vim.keymap.set('n', '<Leader>F', fzf.builtin)
 vim.keymap.set('n', '<Leader>o', fzf.oldfiles)
@@ -263,6 +269,9 @@ vim.keymap.set('n', '<Leader>q/', fzf.command_history)
 vim.keymap.set('n', '<Leader>f"', fzf.registers)
 vim.keymap.set('n', '<Leader>f', fzf.builtin)
 vim.keymap.set('n', '<Leader>f*', fzf.grep_cword)
+vim.keymap.set('x', '<Leader>f*', fzf.grep_visual)
+vim.keymap.set('n', '<Leader>f#', fzf.grep_cword)
+vim.keymap.set('x', '<Leader>f#', fzf.grep_visual)
 vim.keymap.set('n', '<Leader>f:', fzf.commands)
 vim.keymap.set('n', '<Leader>f/', fzf.live_grep)
 vim.keymap.set('n', '<Leader>f?', fzf.live_grep)

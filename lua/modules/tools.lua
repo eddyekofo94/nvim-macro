@@ -16,6 +16,8 @@ return {
       '<Leader>f',
       '<Leader>q:',
       '<Leader>q/',
+      { '<Leader>*', mode = { 'n', 'x' } },
+      { '<Leader>#', mode = { 'n', 'x' } },
     },
     config = function()
       require('configs.fzf-lua')
