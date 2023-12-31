@@ -39,6 +39,7 @@ fzf.setup({
       -- which conflicts with fzf-lua's split keymaps
       vim.keymap.set('t', '<M-s>', '<M-s>', { buffer = buf })
       vim.keymap.set('t', '<M-v>', '<M-v>', { buffer = buf })
+      vim.keymap.set('t', '<M-o>', '<Nop>', { buffer = buf })
       vim.keymap.set(
         't',
         '<C-r>',
