@@ -114,6 +114,9 @@ function M.normalize_fg_or_bg(attr_type, fbg, default)
   end
   local data_type = type(fbg)
   if data_type == 'number' then
+    if attr_type:match('^cterm') then
+      return fbg >= 0 and fbg <= 255 and fbg or default
+    end
     return fbg
   end
   if data_type == 'string' then
@@ -124,6 +127,9 @@ function M.normalize_fg_or_bg(attr_type, fbg, default)
       })[attr_type]
     end
     if fbg:match('^#%x%x%x%x%x%x$') then
+      if attr_type:match('^cterm') then
+        return default
+      end
       return fbg
     end
   end
