@@ -66,6 +66,8 @@ fzf.setup({
       },
     },
     on_create = function()
+      vim.keymap.set('t', '<M-s>', '<M-s>', { buffer = true })
+      vim.keymap.set('t', '<M-v>', '<M-v>', { buffer = true })
       vim.keymap.set(
         't',
         '<C-r>',
