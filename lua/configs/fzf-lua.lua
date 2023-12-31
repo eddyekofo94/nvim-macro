@@ -28,6 +28,22 @@ local cfg_smallwin_nopreview = {
   },
 }
 
+---Switch provider while preserving the last query and cwd
+---@return nil
+local function switch_provider()
+  local opts = {
+    query = fzf.config.__resume_data.last_query,
+    cwd = fzf.config.__resume_data.opts.cwd,
+  }
+  fzf.builtin({
+    actions = {
+      ['default'] = function(selected)
+        fzf[selected[1]](opts)
+      end,
+    },
+  })
+end
+
 fzf.setup({
   -- Use nbsp in tty to avoid showing box chars
   nbsp = not vim.g.modern_ui and '\xc2\xa0' or nil,
@@ -145,12 +161,14 @@ fzf.setup({
           vim.cmd.copen()
         end
       end,
+      ['ctrl-_'] = switch_provider,
     },
     buffers = {
       ['default'] = actions.buf_edit,
       ['alt-s'] = actions.buf_split,
       ['alt-v'] = actions.buf_vsplit,
       ['alt-t'] = actions.buf_tabedit,
+      ['ctrl-_'] = switch_provider,
     },
   },
   fzf_opts = {
@@ -217,6 +235,10 @@ fzf.setup({
   commands = cfg_smallwin_nopreview,
   registers = cfg_smallwin_nopreview,
   search_history = cfg_smallwin_nopreview,
+  menus = cfg_smallwin_nopreview,
+  packadd = cfg_smallwin_nopreview,
+  filetypes = cfg_smallwin_nopreview,
+  spell_suggest = cfg_smallwin_nopreview,
   autocmds = {
     winopts = {
       preview = {
@@ -330,13 +352,4 @@ vim.api.nvim_create_autocmd('ColorScheme', {
   group = vim.api.nvim_create_augroup('FzfLuaSetDefaultHlgroups', {}),
   desc = 'Set default hlgroups for fzf-lua.',
   callback = set_default_hlgroups,
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('FzfSetTMap', {}),
-  desc = 'Set terminal mappings in fzf buffer.',
-  pattern = 'fzf',
-  callback = function()
-    vim.keymap.set('t', '<C-_>', fzf.builtin)
-  end,
 })
