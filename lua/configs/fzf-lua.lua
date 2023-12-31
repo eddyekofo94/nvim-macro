@@ -39,6 +39,7 @@ fzf.setup({
       -- which conflicts with fzf-lua's split keymaps
       vim.keymap.set('t', '<M-s>', '<M-s>', { buffer = buf })
       vim.keymap.set('t', '<M-v>', '<M-v>', { buffer = buf })
+      vim.keymap.set('t', '<M-l>', '<M-l>', { buffer = buf })
       vim.keymap.set('t', '<M-o>', '<Nop>', { buffer = buf })
       vim.keymap.set(
         't',
@@ -139,8 +140,8 @@ fzf.setup({
       ['alt-l'] = function(selected, opts)
         actions.file_sel_to_ll(selected, opts)
         if #selected > 1 then
-          vim.cmd.cfirst()
-          vim.cmd.copen()
+          vim.cmd.lfirst()
+          vim.cmd.lopen()
         end
       end,
       ['ctrl-_'] = switch_provider,
