@@ -1,8 +1,17 @@
 diff --git a/lua/cmp_fuzzy_path/init.lua b/lua/cmp_fuzzy_path/init.lua
-index af39038..56c6ee8 100644
+index 7c3a02f..70ae5e3 100644
 --- a/lua/cmp_fuzzy_path/init.lua
 +++ b/lua/cmp_fuzzy_path/init.lua
-@@ -131,6 +131,9 @@ source.complete = function(self, params, callback)
+@@ -135,7 +135,7 @@ source.complete = function(self, params, callback)
+     table.insert(new_cmd, '-d')
+     table.insert(new_cmd, '1')
+     cmd = new_cmd
+-    dump('skipping root', cmd)
++    -- dump('skipping root', cmd)
+   end
+ 
+   if #new_pattern > 0 then
+@@ -153,6 +153,9 @@ source.complete = function(self, params, callback)
    } }, isIncomplete = true })
    local job
    local job_start = vim.fn.reltime()
