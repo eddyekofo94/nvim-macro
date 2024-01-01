@@ -19,6 +19,12 @@ return {
       { '<Leader>*', mode = { 'n', 'x' } },
       { '<Leader>#', mode = { 'n', 'x' } },
     },
+    init = vim.schedule_wrap(function()
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.select = function(...)
+        require('fzf-lua.providers.ui_select').ui_select(...)
+      end
+    end),
     config = function()
       require('configs.fzf-lua')
     end,
