@@ -48,13 +48,12 @@ fzf.setup({
     ]],
     on_create = function()
       local buf = vim.api.nvim_get_current_buf()
-      -- Restore '<M-s>' and '<M-v>' in terminal mode mappings
-      -- They are originally mapped to split current window in core.keymaps,
-      -- which conflicts with fzf-lua's split keymaps
+      -- Restore '<M-s>', '<M-v>' and '<M-o>' in terminal mode mappings
+      -- They are originally mapped to window operations in core.keymaps,
+      -- which conflicts with fzf-lua's action keymaps
       vim.keymap.set('t', '<M-s>', '<M-s>', { buffer = buf })
       vim.keymap.set('t', '<M-v>', '<M-v>', { buffer = buf })
-      vim.keymap.set('t', '<M-l>', '<M-l>', { buffer = buf })
-      vim.keymap.set('t', '<M-o>', '<Nop>', { buffer = buf })
+      vim.keymap.set('t', '<M-o>', '<M-o>', { buffer = buf })
       vim.keymap.set(
         't',
         '<C-r>',
@@ -170,7 +169,7 @@ fzf.setup({
           vim.cmd.copen()
         end
       end,
-      ['alt-l'] = function(selected, opts)
+      ['alt-o'] = function(selected, opts)
         actions.file_sel_to_ll(selected, opts)
         if #selected > 1 then
           vim.cmd.lfirst()
