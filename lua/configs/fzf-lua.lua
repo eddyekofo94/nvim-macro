@@ -1,10 +1,12 @@
 local fzf = require('fzf-lua')
 local actions = require('fzf-lua.actions')
+local core = require('fzf-lua.core')
+local path = require('fzf-lua.path')
 local utils = require('utils')
 
 ---Switch provider while preserving the last query and cwd
 ---@return nil
-local function switch_provider()
+function actions.switch_provider()
   local opts = {
     query = fzf.config.__resume_data.last_query,
     cwd = fzf.config.__resume_data.opts.cwd,
@@ -20,6 +22,56 @@ local function switch_provider()
     },
   })
 end
+
+---Switch cwd while preserving the last query
+---@return nil
+function actions.switch_cwd()
+  local opts = fzf.config.__resume_data.opts or {}
+
+  -- Remove old fn_selected, else selected item will be opened
+  -- with previous cwd
+  opts.fn_selected = nil
+  opts.cwd = opts.cwd or vim.uv.cwd()
+  opts.query = fzf.config.__resume_data.last_query
+
+  vim.ui.input({
+    prompt = 'New cwd: ',
+    default = opts.cwd,
+    completion = 'dir',
+  }, function(input)
+    if not input then
+      return
+    end
+    local stat = vim.uv.fs_stat(input)
+    if not stat or not stat.type == 'directory' then
+      print('\n')
+      vim.notify(
+        '[Fzf-lua] invalid path: ' .. input .. '\n',
+        vim.log.levels.ERROR
+      )
+      return
+    end
+    opts.cwd = vim.fs.normalize(input)
+  end)
+
+  -- Adapted from fzf-lua `core.set_header()` function
+  if opts.cwd_prompt then
+    opts.prompt = vim.fn.fnamemodify(opts.cwd, ':.:~')
+    local shorten_len = tonumber(opts.cwd_prompt_shorten_len)
+    if shorten_len and #opts.prompt >= shorten_len then
+      opts.prompt =
+        path.shorten(opts.prompt, tonumber(opts.cwd_prompt_shorten_val) or 1)
+    end
+    if not path.ends_with_separator(opts.prompt) then
+      opts.prompt = opts.prompt .. path.separator()
+    end
+  end
+
+  fzf.resume(opts)
+end
+
+core.ACTION_DEFINITIONS[actions.switch_provider] = { 'switch backend' }
+core.ACTION_DEFINITIONS[actions.switch_cwd] = { 'change cwd' }
 
 fzf.setup({
   -- Use nbsp in tty to avoid showing box chars
@@ -57,12 +109,12 @@ fzf.setup({
     ]],
     on_create = function()
       local buf = vim.api.nvim_get_current_buf()
-      -- Restore '<M-s>', '<M-v>' and '<M-o>' in terminal mode mappings
-      -- They are originally mapped to window operations in core.keymaps,
-      -- which conflicts with fzf-lua's action keymaps
+      -- Restore some terminal mode mappings (mapped in core.keymaps)
+      -- to avoid conflicts with fzf-lua's action keymaps
       vim.keymap.set('t', '<M-s>', '<M-s>', { buffer = buf })
       vim.keymap.set('t', '<M-v>', '<M-v>', { buffer = buf })
       vim.keymap.set('t', '<M-o>', '<M-o>', { buffer = buf })
+      vim.keymap.set('t', '<M-c>', '<M-c>', { buffer = buf })
       vim.keymap.set(
         't',
         '<C-r>',
@@ -185,14 +237,15 @@ fzf.setup({
           vim.cmd.lopen()
         end
       end,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
+      ['alt-c'] = actions.switch_cwd,
     },
     buffers = {
       ['default'] = actions.buf_edit,
       ['alt-s'] = actions.buf_split,
       ['alt-v'] = actions.buf_vsplit,
       ['alt-t'] = actions.buf_tabedit,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   helptags = {
@@ -201,7 +254,7 @@ fzf.setup({
       ['alt-s'] = actions.help,
       ['alt-v'] = actions.help_vert,
       ['alt-t'] = actions.help_tab,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   manpages = {
@@ -210,7 +263,7 @@ fzf.setup({
       ['alt-s'] = actions.man,
       ['alt-v'] = actions.man_vert,
       ['alt-t'] = actions.man_tab,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   keymaps = {
@@ -219,127 +272,127 @@ fzf.setup({
       ['alt-s'] = actions.keymap_split,
       ['alt-v'] = actions.keymap_vsplit,
       ['alt-t'] = actions.keymap_tabedit,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   code_actions = {
     actions = {
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   quickfix_stack = {
     actions = {
       ['default'] = actions.set_qflist,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   loclist_stack = {
     actions = {
       ['default'] = actions.set_qflist,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   colorschemes = {
     actions = {
       ['default'] = actions.colorscheme,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   highlights = {
     actions = {
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   builtin = {
     actions = {
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   profiles = {
     actions = {
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   marks = {
     actions = {
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   jumps = {
     actions = {
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   commands = {
     actions = {
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   command_history = {
     actions = {
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   search_history = {
     actions = {
       ['default'] = actions.search_cr,
       ['ctrl-e'] = actions.search,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   registers = {
     actions = {
       ['default'] = actions.paste_register,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   spell_suggest = {
     actions = {
       ['default'] = actions.spell_apply,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   filetypes = {
     actions = {
       ['default'] = actions.set_filetype,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   packadd = {
     actions = {
       ['default'] = actions.packadd,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   menus = {
     actions = {
       ['default'] = actions.exec_menu,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   tmux = {
     buffers = {
       actions = {
         ['default'] = actions.tmux_buf_set_reg,
-        ['ctrl-_'] = switch_provider,
+        ['ctrl-]'] = actions.switch_provider,
       },
     },
   },
   dap = {
-    commands = { ['ctrl-_'] = switch_provider },
-    configurations = { ['ctrl-_'] = switch_provider },
-    variables = { ['ctrl-_'] = switch_provider },
-    frames = { ['ctrl-_'] = switch_provider },
+    commands = { ['ctrl-]'] = actions.switch_provider },
+    configurations = { ['ctrl-]'] = actions.switch_provider },
+    variables = { ['ctrl-]'] = actions.switch_provider },
+    frames = { ['ctrl-]'] = actions.switch_provider },
   },
   complete_path = {
     actions = {
       ['default'] = actions.complete,
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   complete_line = {
     actions = {
-      ['ctrl-_'] = switch_provider,
+      ['ctrl-]'] = actions.switch_provider,
     },
   },
   fzf_opts = {
