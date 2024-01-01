@@ -449,27 +449,26 @@ local function set_default_hlgroups()
   local hl = utils.hl
   local hl_norm = hl.get(0, { name = 'Normal', link = false })
   local hl_speical = hl.get(0, { name = 'Special', link = false })
-  local hl_tl_norm = hl.get(0, { name = 'TelescopeNormal', link = false })
-  if not hl_tl_norm.bg or hl_tl_norm.bg == hl_norm.bg then
-    hl.set(0, 'FzfLuaBufFlagAlt', { link = 'CursorLineNr' })
-    hl.set(0, 'FzfLuaBufFlagCur', { link = 'CursorLineNr' })
-    hl.set(0, 'FzfLuaBufLineNr', { link = 'LineNr' })
-    hl.set(0, 'FzfLuaBufName', { link = 'Directory' })
-    hl.set(0, 'FzfLuaBufNr', { link = 'LineNr' })
-    hl.set(0, 'FzfLuaCursor', { link = 'None' })
-    hl.set(0, 'FzfLuaHeaderBind', { link = 'Special' })
-    hl.set(0, 'FzfLuaHeaderText', { link = 'Special' })
-    hl.set(0, 'FzfLuaTabMarker', { link = 'Keyword' })
-    hl.set(0, 'FzfLuaTabTitle', { link = 'Title' })
-    hl.set(0, 'TelescopeBorder', { link = 'TelescopeNormal' })
-    hl.set(0, 'TelescopeSelection', { link = 'Visual' })
-    hl.set(0, 'TelescopePrefix', { link = 'Operator' })
-    hl.set(0, 'TelescopeTitle', {
-      fg = hl_norm.bg,
-      bg = hl_speical.fg,
-      bold = true,
-    })
-  end
+  hl.set(0, 'FzfLuaBufFlagAlt', { link = 'CursorLineNr' })
+  hl.set(0, 'FzfLuaBufFlagCur', { link = 'CursorLineNr' })
+  hl.set(0, 'FzfLuaBufLineNr', { link = 'LineNr' })
+  hl.set(0, 'FzfLuaBufName', { link = 'Directory' })
+  hl.set(0, 'FzfLuaBufNr', { link = 'LineNr' })
+  hl.set(0, 'FzfLuaCursor', { link = 'None' })
+  hl.set(0, 'FzfLuaHeaderBind', { link = 'Special' })
+  hl.set(0, 'FzfLuaHeaderText', { link = 'Special' })
+  hl.set(0, 'FzfLuaTabMarker', { link = 'Keyword' })
+  hl.set(0, 'FzfLuaTabTitle', { link = 'Title' })
+  hl.set(0, 'TelescopeNormal', { link = 'Normal' })
+  hl.set_default(0, 'TelescopeBorder', { link = 'TelescopeNormal' })
+  hl.set_default(0, 'TelescopeSelection', { link = 'Visual' })
+  hl.set_default(0, 'TelescopePrefix', { link = 'Operator' })
+  hl.set_default(0, 'TelescopeCounter', { link = 'LineNr' })
+  hl.set_default(0, 'TelescopeTitle', {
+    fg = hl_norm.bg,
+    bg = hl_speical.fg,
+    bold = true,
+  })
 end
 
 set_default_hlgroups()

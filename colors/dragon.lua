@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 30 Dec 2023 06:59:45 PM CST
+-- Last Updated: Mon 01 Jan 2024 01:14:00 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -533,8 +533,7 @@ local hlgroups = {
   TelescopeResultsMethod = { link = 'Function' },
   TelescopeResultsStruct = { link = 'Structure' },
   TelescopeResultsVariable = { link = '@variable' },
-  TelescopeSelection = { link = 'CursorLine' },
-  TelescopeSelectionCaret = { link = 'CursorLineNr' },
+  TelescopeSelection = { link = 'Visual' },
   TelescopeTitle = { fg = c_dragonGray2 },
 
   -- nvim-dap-ui
