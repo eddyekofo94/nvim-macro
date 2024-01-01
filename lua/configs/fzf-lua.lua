@@ -30,16 +30,25 @@ fzf.setup({
         \ let &splitkeep = "topline" |
         \ let g:_fzf_leave_win = win_getid(winnr()) |
         \ let g:_fzf_leave_win_view = winsaveview() |
-        \ let last_win = win_getid(winnr('$')) |
-        \ let last_win_type = win_gettype(last_win) |
-        \ if last_win_type =~# 'quickfix\|loclist'
-            \ && nvim_win_get_width(last_win) == &columns |
-          \ let g:_fzf_swallow_qf_type = last_win_type |
-          \ let g:_fzf_swallow_qf_height = nvim_win_get_height(last_win) |
-          \ let g:_fzf_qf_cursor = nvim_win_get_cursor(last_win) |
-          \ call nvim_win_close(last_win, v:false) |
-          \ unlet last_win last_win_type |
+        \ let wins = nvim_tabpage_list_wins(0) |
+        \ let bot_win = -1 |
+        \ let bot_win_type = '' |
+        \ for winnr in range(len(wins), 1, -1) |
+          \ let bot_win = win_getid(winnr) |
+          \ let bot_win_type = win_gettype(bot_win) |
+          \ if bot_win_type !=# 'popup' |
+            \ break |
+          \ endif |
+        \ endfor |
+        \ unlet wins |
+        \ if bot_win_type =~# 'quickfix\|loclist' && bot_win != -1
+            \ && nvim_win_get_width(bot_win) == &columns |
+          \ let g:_fzf_swallow_qf_type = bot_win_type |
+          \ let g:_fzf_swallow_qf_height = nvim_win_get_height(bot_win) |
+          \ let g:_fzf_qf_cursor = nvim_win_get_cursor(bot_win) |
+          \ call nvim_win_close(bot_win, v:false) |
         \ endif |
+        \ unlet bot_win bot_win_type |
         \ bo new |
         \ let w:winbar_no_attach = v:true |
         \ exe 'resize ' . (exists('g:_fzf_swallow_qf_height')
