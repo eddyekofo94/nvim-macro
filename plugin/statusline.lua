@@ -75,7 +75,7 @@ local modes = {
 ---@return string
 function statusline.mode()
   local hl = vim.bo.mod and 'StatusLineHeaderModified' or 'StatusLineHeader'
-  return utils.stl.hl(' ' .. modes[vim.fn.mode()] .. ' ', hl)
+  return utils.stl.hl(' ' .. modes[vim.fn.mode()] .. ' ', hl) .. ' '
 end
 
 ---Get diff stats for current buffer
@@ -337,14 +337,15 @@ end
 ---Statusline components
 ---@type table<string, string>
 local components = {
-  align        = '%=',
-  diag         = '%{%v:lua.statusline.diag()%}',
-  fname        = ' %{%&bt==#""?"%t":"%F"%} ',
-  info         = '%{%v:lua.statusline.info()%}',
-  lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
-  mode         = '%{%v:lua.statusline.mode()%}',
-  pos          = '%{%&ru?"%l:%c ":""%}',
-  truncate     = '%<',
+  align        = [[%=]],
+  diag         = [[%{%v:lua.statusline.diag()%}]],
+  fname        = [[%{%&bt==#''?'%t':(&bt==#'terminal'?'[Terminal] '.bufname()->substitute('^term://.\{-}//\d\+:\s*','',''):'%F')%} ]],
+  info         = [[%{%v:lua.statusline.info()%}]],
+  lsp_progress = [[%{%v:lua.statusline.lsp_progress()%}]],
+  mode         = [[%{%v:lua.statusline.mode()%}]],
+  padding      = [[ ]],
+  pos          = [[%{%&ru?"%l:%c ":""%}]],
+  truncate     = [[%<]],
 }
 -- stylua: ignore end
 
@@ -360,6 +361,7 @@ local stl = table.concat({
 })
 
 local stl_nc = table.concat({
+  components.padding,
   components.fname,
   components.align,
   components.truncate,
