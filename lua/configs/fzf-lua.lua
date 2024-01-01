@@ -14,6 +14,9 @@ local function switch_provider()
       ['default'] = function(selected)
         fzf[selected[1]](opts)
       end,
+      ['esc'] = function()
+        fzf.resume(opts)
+      end,
     },
   })
 end
