@@ -328,7 +328,6 @@ fzf.setup({
           vim.cmd.lopen()
         end
       end,
-      ['ctrl-]'] = actions.switch_provider,
       ['alt-c'] = actions.switch_cwd,
     },
     buffers = {
@@ -336,6 +335,11 @@ fzf.setup({
       ['alt-s'] = actions.buf_split,
       ['alt-v'] = actions.buf_vsplit,
       ['alt-t'] = actions.buf_tabedit,
+    },
+  },
+  defaults = {
+    headers = { 'actions' },
+    actions = {
       ['ctrl-]'] = actions.switch_provider,
     },
   },
@@ -373,7 +377,6 @@ fzf.setup({
       ['alt-s'] = actions.help,
       ['alt-v'] = actions.help_vert,
       ['alt-t'] = actions.help_tab,
-      ['ctrl-]'] = actions.switch_provider,
     },
   },
   manpages = {
@@ -382,7 +385,6 @@ fzf.setup({
       ['alt-s'] = actions.man,
       ['alt-v'] = actions.man_vert,
       ['alt-t'] = actions.man_tab,
-      ['ctrl-]'] = actions.switch_provider,
     },
   },
   keymaps = {
@@ -391,13 +393,11 @@ fzf.setup({
       ['alt-s'] = actions.keymap_split,
       ['alt-v'] = actions.keymap_vsplit,
       ['alt-t'] = actions.keymap_tabedit,
-      ['ctrl-]'] = actions.switch_provider,
     },
   },
   colorschemes = {
     actions = {
       ['default'] = actions.colorscheme,
-      ['ctrl-]'] = actions.switch_provider,
     },
   },
   highlights = {
@@ -407,28 +407,17 @@ fzf.setup({
           vim.cmd.hi(selected[1])
         end, 0)
       end,
-      ['ctrl-]'] = actions.switch_provider,
     },
   },
-  dap = {
-    commands = { ['ctrl-]'] = actions.switch_provider },
-    configurations = { ['ctrl-]'] = actions.switch_provider },
-    variables = { ['ctrl-]'] = actions.switch_provider },
-    frames = { ['ctrl-]'] = actions.switch_provider },
-  },
   command_history = {
-    headers = { 'actions' },
     actions = {
       ['alt-e'] = actions.ex_run,
-      ['ctrl-]'] = actions.switch_provider,
       ['ctrl-e'] = false,
     },
   },
   search_history = {
-    headers = { 'actions' },
     actions = {
       ['alt-e'] = actions.search,
-      ['ctrl-]'] = actions.switch_provider,
       ['ctrl-e'] = false,
     },
   },
@@ -477,20 +466,6 @@ fzf.setup({
       symbol_icons = vim.tbl_map(vim.trim, utils.static.icons.kinds),
     },
   },
-  builtin = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  code_actions = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  commands = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  filetypes = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  jumps = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  loclist_stack = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  marks = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  menus = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  packadd = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  profiles = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  quickfix_stack = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  registers = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  spell_suggest = { actions = { ['ctrl-]'] = actions.switch_provider } },
-  tmux = { buffers = { actions = { ['ctrl-]'] = actions.switch_provider } } },
 })
 
 vim.keymap.set('n', '<Leader>.', fzf.files)
