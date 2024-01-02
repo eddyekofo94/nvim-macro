@@ -2,7 +2,30 @@ local fzf = require('fzf-lua')
 local actions = require('fzf-lua.actions')
 local core = require('fzf-lua.core')
 local path = require('fzf-lua.path')
+local config = require('fzf-lua.config')
 local utils = require('utils')
+
+local _normalize_opts = config.normalize_opts
+
+---Override `config.normalize_opts()` to always apply headers option,
+---this eliminates the need to call `core.set_header()` in each provider
+---@param opts table
+---@return table: normalized opts
+---@diagnostic disable-next-line: duplicate-set-field
+function config.normalize_opts(opts, ...)
+  opts = _normalize_opts(opts, ...)
+  if opts.headers then
+    opts = core.set_header(opts, opts.headers)
+  end
+  return opts
+end
+
+local _arg_del = actions.arg_del
+
+---@diagnostic disable-next-line: duplicate-set-field
+function actions.arg_del(...)
+  pcall(_arg_del, ...)
+end
 
 ---Switch provider while preserving the last query and cwd
 ---@return nil
@@ -92,9 +115,53 @@ function actions.del_autocmd(selected)
   })
 end
 
-core.ACTION_DEFINITIONS[actions.switch_provider] = { 'switch backend' }
-core.ACTION_DEFINITIONS[actions.switch_cwd] = { 'change cwd' }
+---Search & select files then add them to arglist
+---@return nil
+function actions.arg_search_add()
+  local opts = fzf.config.__resume_data.opts or {}
+
+  -- Remove old fn_selected, else selected item will be opened
+  -- with previous cwd
+  opts.fn_selected = nil
+  opts.cwd = opts.cwd or vim.uv.cwd()
+  opts.query = fzf.config.__resume_data.last_query
+
+  fzf.files({
+    cwd_header = true,
+    cwd_prompt = false,
+    headers = { 'actions', 'cwd' },
+    prompt = 'Argadd> ',
+    actions = {
+      ['default'] = function(selected, _opts)
+        local cmd = 'argadd'
+        vim.ui.input({
+          prompt = 'Argadd cmd: ',
+          default = cmd,
+        }, function(input)
+          if input then
+            cmd = input
+          end
+        end)
+        actions.vimcmd_file(cmd, selected, _opts)
+        fzf.args(opts)
+      end,
+      ['esc'] = function()
+        fzf.args(opts)
+      end,
+    },
+    find_opts = [[-type f -type d -type l -not -path '*/\.git/*' -printf '%P\n']],
+    fd_opts = [[--color=never --type f --type d --type l --hidden --follow --exclude .git]],
+    rg_opts = [[--color=never --files --hidden --follow -g '!.git'"]],
+  })
+end
+
+-- core.ACTION_DEFINITIONS[actions.switch_provider] = { 'switch backend' }
+-- core.ACTION_DEFINITIONS[actions.switch_cwd] = { 'change cwd' }
+core.ACTION_DEFINITIONS[actions.arg_del] = { 'delete' }
 core.ACTION_DEFINITIONS[actions.del_autocmd] = { 'delete autocmd' }
+core.ACTION_DEFINITIONS[actions.arg_search_add] = { 'add new file' }
+core.ACTION_DEFINITIONS[actions.search] = { 'edit' }
+core.ACTION_DEFINITIONS[actions.ex_run] = { 'edit' }
 
 fzf.setup({
   -- Use nbsp in tty to avoid showing box chars
@@ -272,6 +339,16 @@ fzf.setup({
       ['ctrl-]'] = actions.switch_provider,
     },
   },
+  args = {
+    files_only = false,
+    actions = {
+      ['ctrl-s'] = actions.arg_search_add,
+      ['ctrl-x'] = {
+        fn = actions.arg_del,
+        reload = true,
+      }
+    },
+  },
   autocmds = {
     actions = {
       ['ctrl-x'] = {
@@ -317,23 +394,6 @@ fzf.setup({
       ['ctrl-]'] = actions.switch_provider,
     },
   },
-  code_actions = {
-    actions = {
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  quickfix_stack = {
-    actions = {
-      ['default'] = actions.set_qflist,
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  loclist_stack = {
-    actions = {
-      ['default'] = actions.set_qflist,
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
   colorschemes = {
     actions = {
       ['default'] = actions.colorscheme,
@@ -350,96 +410,31 @@ fzf.setup({
       ['ctrl-]'] = actions.switch_provider,
     },
   },
-  builtin = {
-    actions = {
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  profiles = {
-    actions = {
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  marks = {
-    actions = {
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  jumps = {
-    actions = {
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  commands = {
-    actions = {
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  command_history = {
-    actions = {
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  search_history = {
-    actions = {
-      ['default'] = actions.search_cr,
-      ['ctrl-e'] = actions.search,
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  registers = {
-    actions = {
-      ['default'] = actions.paste_register,
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  spell_suggest = {
-    actions = {
-      ['default'] = actions.spell_apply,
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  filetypes = {
-    actions = {
-      ['default'] = actions.set_filetype,
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  packadd = {
-    actions = {
-      ['default'] = actions.packadd,
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  menus = {
-    actions = {
-      ['default'] = actions.exec_menu,
-      ['ctrl-]'] = actions.switch_provider,
-    },
-  },
-  tmux = {
-    buffers = {
-      actions = {
-        ['default'] = actions.tmux_buf_set_reg,
-        ['ctrl-]'] = actions.switch_provider,
-      },
-    },
-  },
   dap = {
     commands = { ['ctrl-]'] = actions.switch_provider },
     configurations = { ['ctrl-]'] = actions.switch_provider },
     variables = { ['ctrl-]'] = actions.switch_provider },
     frames = { ['ctrl-]'] = actions.switch_provider },
   },
-  complete_path = {
+  command_history = {
+    headers = { 'actions' },
     actions = {
-      ['default'] = actions.complete,
+      ['alt-e'] = actions.ex_run,
       ['ctrl-]'] = actions.switch_provider,
+      ['ctrl-e'] = false,
     },
   },
-  complete_line = {
+  search_history = {
+    headers = { 'actions' },
     actions = {
+      ['alt-e'] = actions.search,
       ['ctrl-]'] = actions.switch_provider,
+      ['ctrl-e'] = false,
+    },
+  },
+  files = {
+    fzf_opts = {
+      ['--info'] = 'inline-right',
     },
   },
   fzf_opts = {
@@ -455,11 +450,6 @@ fzf.setup({
     ['--margin'] = '0',
     ['--no-preview'] = '',
     ['--preview-window'] = 'hidden',
-  },
-  files = {
-    fzf_opts = {
-      ['--info'] = 'inline-right',
-    },
   },
   grep = {
     rg_opts = table.concat({
@@ -487,6 +477,20 @@ fzf.setup({
       symbol_icons = vim.tbl_map(vim.trim, utils.static.icons.kinds),
     },
   },
+  builtin = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  code_actions = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  commands = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  filetypes = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  jumps = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  loclist_stack = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  marks = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  menus = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  packadd = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  profiles = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  quickfix_stack = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  registers = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  spell_suggest = { actions = { ['ctrl-]'] = actions.switch_provider } },
+  tmux = { buffers = { actions = { ['ctrl-]'] = actions.switch_provider } } },
 })
 
 vim.keymap.set('n', '<Leader>.', fzf.files)
@@ -697,6 +701,78 @@ local fzf_args_cmd = {
   },
 }
 
+local fzf_argadd_cmd = {
+  function(info)
+    if not vim.tbl_isempty(info.fargs) then
+      vim.cmd.argadd({
+        args = info.fargs,
+        bang = info.bang,
+        count = info.count,
+      })
+      return
+    end
+
+    local opts = fzf.config.__resume_data.opts or {}
+    -- Remove old fn_selected, else selected item will be opened
+    -- with previous cwd
+    opts.fn_selected = nil
+    opts.cwd = opts.cwd or vim.uv.cwd()
+    opts.query = fzf.config.__resume_data.last_query
+
+    fzf.files({
+      cwd_header = true,
+      cwd_prompt = false,
+      headers = { 'actions', 'cwd' },
+      prompt = 'Argadd> ',
+      actions = {
+        ['default'] = function(selected, _opts)
+          actions.vimcmd_file(
+            (info.line1 == info.line2 and info.line1 or '') .. 'argadd',
+            selected,
+            _opts
+          )
+        end,
+      },
+      find_opts = [[-type f -type d -type l -not -path '*/\.git/*' -printf '%P\n']],
+      fd_opts = [[--color=never --type f --type d --type l --hidden --follow --exclude .git]],
+      rg_opts = [[--color=never --files --hidden --follow -g '!.git'"]],
+    })
+  end,
+  {
+    count = true,
+    nargs = '*',
+    complete = 'file',
+  },
+}
+
+local fzf_argdel_cmd = {
+  function(info)
+    if not vim.tbl_isempty(info.fargs) then
+      vim.cmd.argdelete({
+        args = info.fargs,
+        bang = info.bang,
+        count = info.count,
+      })
+      return
+    end
+    fzf.args({
+      cwd_prompt = false,
+      headers = { 'actions' },
+      prompt = 'Argdelete> ',
+      actions = {
+        ['ctrl-s'] = false,
+        ['ctrl-x'] = false,
+        ['enter'] = actions.arg_del,
+      },
+    })
+  end,
+  {
+    count = true,
+    nargs = '*',
+    complete = 'arglist',
+  },
+}
+
 -- stylua: ignore start
 vim.api.nvim_create_user_command('Ls', unpack(fzf_ls_cmd))
 vim.api.nvim_create_user_command('Files', unpack(fzf_ls_cmd))
@@ -705,6 +781,8 @@ vim.api.nvim_create_user_command('Autocmd', unpack(fzf_au_cmd))
 vim.api.nvim_create_user_command('Buffers', unpack(fzf_ls_cmd))
 vim.api.nvim_create_user_command('Marks', unpack(fzf_marks_cmd))
 vim.api.nvim_create_user_command('Highlight', unpack(fzf_hi_cmd))
+vim.api.nvim_create_user_command('Argadd', unpack(fzf_argadd_cmd))
+vim.api.nvim_create_user_command('Argdelete', unpack(fzf_argdel_cmd))
 vim.api.nvim_create_user_command('Registers', unpack(fzf_reg_cmd))
 vim.api.nvim_create_user_command('Oldfiles', fzf.oldfiles, {})
 vim.api.nvim_create_user_command('Changes', fzf.changes, {})

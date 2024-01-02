@@ -152,6 +152,42 @@ index 4f2ec5f..81cef4e 100644
  
        if next(filtered) then
          local buffers = populate_buffer_entries(opts, filtered)
+diff --git a/lua/fzf-lua/providers/nvim.lua b/lua/fzf-lua/providers/nvim.lua
+index 67ab103..9996dcc 100644
+--- a/lua/fzf-lua/providers/nvim.lua
++++ b/lua/fzf-lua/providers/nvim.lua
+@@ -83,18 +83,11 @@ local history = function(opts, str)
+   core.fzf_exec(entries, opts)
+ end
+ 
+-local arg_header = function(sel_key, edit_key, text)
+-  sel_key = utils.ansi_codes.yellow(sel_key)
+-  edit_key = utils.ansi_codes.yellow(edit_key)
+-  return vim.fn.shellescape((":: %s to %s, %s to edit")
+-    :format(sel_key, text, edit_key))
+-end
+-
+ M.command_history = function(opts)
+   opts = config.normalize_opts(opts, "command_history")
+   if not opts then return end
+-  if opts.fzf_opts["--header"] == nil then
+-    opts.fzf_opts["--header"] = arg_header("<CR>", "<Ctrl-e>", "execute")
++  if opts.headers then
++    opts = core.set_header(opts, opts.headers)
+   end
+   history(opts, "cmd")
+ end
+@@ -102,8 +95,8 @@ end
+ M.search_history = function(opts)
+   opts = config.normalize_opts(opts, "search_history")
+   if not opts then return end
+-  if opts.fzf_opts["--header"] == nil then
+-    opts.fzf_opts["--header"] = arg_header("<CR>", "<Ctrl-e>", "search")
++  if opts.headers then
++    opts = core.set_header(opts, opts.headers)
+   end
+   history(opts, "search")
+ end
 diff --git a/lua/fzf-lua/utils.lua b/lua/fzf-lua/utils.lua
 index b9384ac..d6ef90a 100644
 --- a/lua/fzf-lua/utils.lua
