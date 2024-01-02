@@ -355,13 +355,11 @@ au('FixCmdLineIskeyword', {
   'CmdLineEnter',
   {
     desc = 'Have consistent &iskeyword and &lisp in Ex command-line mode.',
-    pattern = ':',
+    pattern = '[^/?]',
     callback = function(info)
-      -- Only use default &iskeyword and &lisp settings in
-      -- Ex mode command-line, since it should always be treated as vimscript;
-      -- for other types of command lines e.g. search command ('/', '?') or
-      -- i_CTRL-r_= ('=') command it is useful to keep the original value of
-      -- &iskeyword and &lisp
+      -- Don't set &iskeyword and &lisp settings in search command-line
+      -- ('/' and '?'), if we are searching in a lisp file, we want to
+      -- have the same behavior as in insert mode
       vim.g._isk_lisp_buf = info.buf
       vim.g._isk_save = vim.bo[info.buf].isk
       vim.g._lisp_save = vim.bo[info.buf].lisp
@@ -373,7 +371,7 @@ au('FixCmdLineIskeyword', {
   'CmdLineLeave',
   {
     desc = 'Restore &iskeyword after leaving command-line mode.',
-    pattern = ':',
+    pattern = '[^/?]',
     callback = function()
       if
         vim.g._isk_lisp_buf
