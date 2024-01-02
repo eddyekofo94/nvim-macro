@@ -155,6 +155,32 @@ function actions.arg_search_add()
   })
 end
 
+function actions._file_edit_or_qf(selected, opts)
+  if #selected > 1 then
+    actions.file_sel_to_qf(selected, opts)
+    vim.cmd.cfirst()
+    vim.cmd.copen()
+  else
+    actions.file_edit(selected, opts)
+  end
+end
+
+function actions._file_sel_to_qf(selected, opts)
+  actions.file_sel_to_qf(selected, opts)
+  if #selected > 1 then
+    vim.cmd.cfirst()
+    vim.cmd.copen()
+  end
+end
+
+function actions._file_set_to_ll(selected, opts)
+  actions.file_sel_to_ll(selected, opts)
+  if #selected > 1 then
+    vim.cmd.lfirst()
+    vim.cmd.lopen()
+  end
+end
+
 -- core.ACTION_DEFINITIONS[actions.switch_provider] = { 'switch backend' }
 -- core.ACTION_DEFINITIONS[actions.switch_cwd] = { 'change cwd' }
 core.ACTION_DEFINITIONS[actions.arg_del] = { 'delete' }
@@ -162,6 +188,17 @@ core.ACTION_DEFINITIONS[actions.del_autocmd] = { 'delete autocmd' }
 core.ACTION_DEFINITIONS[actions.arg_search_add] = { 'add new file' }
 core.ACTION_DEFINITIONS[actions.search] = { 'edit' }
 core.ACTION_DEFINITIONS[actions.ex_run] = { 'edit' }
+
+-- stylua: ignore start
+config._action_to_helpstr[actions.switch_provider] = 'switch-backend'
+config._action_to_helpstr[actions.switch_cwd] = 'change-cwd'
+config._action_to_helpstr[actions.arg_del] = 'delete'
+config._action_to_helpstr[actions.del_autocmd] = 'delete-autocmd'
+config._action_to_helpstr[actions.arg_search_add] = 'search-and-add-new-file'
+config._action_to_helpstr[actions._file_sel_to_qf] = 'file-selection-to-quickfix'
+config._action_to_helpstr[actions._file_set_to_ll] = 'file-selection-to-loclist'
+config._action_to_helpstr[actions._file_edit_or_qf] = 'file-edit-or-qf'
+-- stylua: ignore end
 
 fzf.setup({
   -- Use nbsp in tty to avoid showing box chars
@@ -302,33 +339,13 @@ fzf.setup({
   },
   actions = {
     files = {
-      ['default'] = function(selected, opts)
-        if #selected > 1 then
-          actions.file_sel_to_qf(selected, opts)
-          vim.cmd.cfirst()
-          vim.cmd.copen()
-        else
-          actions.file_edit(selected, opts)
-        end
-      end,
       ['alt-s'] = actions.file_split,
       ['alt-v'] = actions.file_vsplit,
       ['alt-t'] = actions.file_tabedit,
-      ['alt-q'] = function(selected, opts)
-        actions.file_sel_to_qf(selected, opts)
-        if #selected > 1 then
-          vim.cmd.cfirst()
-          vim.cmd.copen()
-        end
-      end,
-      ['alt-o'] = function(selected, opts)
-        actions.file_sel_to_ll(selected, opts)
-        if #selected > 1 then
-          vim.cmd.lfirst()
-          vim.cmd.lopen()
-        end
-      end,
       ['alt-c'] = actions.switch_cwd,
+      ['alt-q'] = actions._file_sel_to_qf,
+      ['alt-o'] = actions._file_set_to_ll,
+      ['default'] = actions._file_edit_or_qf,
     },
     buffers = {
       ['default'] = actions.buf_edit,
@@ -350,7 +367,7 @@ fzf.setup({
       ['ctrl-x'] = {
         fn = actions.arg_del,
         reload = true,
-      }
+      },
     },
   },
   autocmds = {
