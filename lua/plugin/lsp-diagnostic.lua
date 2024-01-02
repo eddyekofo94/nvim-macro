@@ -1,4 +1,4 @@
-local utils = require('utils')
+local utils = require("utils")
 
 ---Check if there exists an LS that supports the given method
 ---for the given buffer
@@ -22,7 +22,7 @@ local function setup_keymaps()
   ---@return function
   local function goto_diagnostic(direction, level)
     return function()
-      vim.diagnostic['goto_' .. direction]({
+      vim.diagnostic["goto_" .. direction]({
         severity = vim.diagnostic.severity[level],
       })
     end
@@ -69,17 +69,17 @@ local function setup_lsp_overrides()
   -- Show notification if no references, definition, declaration,
   -- implementation or type definition is found
   local handlers = {
-    ['textDocument/references'] = vim.lsp.handlers['textDocument/references'],
-    ['textDocument/definition'] = vim.lsp.handlers['textDocument/definition'],
-    ['textDocument/declaration'] = vim.lsp.handlers['textDocument/declaration'],
-    ['textDocument/implementation'] = vim.lsp.handlers['textDocument/implementation'],
-    ['textDocument/typeDefinition'] = vim.lsp.handlers['textDocument/typeDefinition'],
+    ["textDocument/references"] = vim.lsp.handlers["textDocument/references"],
+    ["textDocument/definition"] = vim.lsp.handlers["textDocument/definition"],
+    ["textDocument/declaration"] = vim.lsp.handlers["textDocument/declaration"],
+    ["textDocument/implementation"] = vim.lsp.handlers["textDocument/implementation"],
+    ["textDocument/typeDefinition"] = vim.lsp.handlers["textDocument/typeDefinition"],
   }
   for method, handler in pairs(handlers) do
     vim.lsp.handlers[method] = function(err, result, ctx, cfg)
-      if not result or type(result) == 'table' and vim.tbl_isempty(result) then
+      if not result or type(result) == "table" and vim.tbl_isempty(result) then
         vim.notify(
-          '[LSP] no ' .. method:match('/(%w*)$') .. ' found',
+          "[LSP] no " .. method:match("/(%w*)$") .. " found",
           vim.log.levels.WARN
         )
       end
@@ -89,18 +89,18 @@ local function setup_lsp_overrides()
 
   -- Configure hovering window style
   local opts_override_floating_preview = {
-    border = 'solid',
+    border = "solid",
     max_width = math.max(80, math.ceil(vim.go.columns * 0.75)),
     max_height = math.max(20, math.ceil(vim.go.lines * 0.4)),
     close_events = {
-      'CursorMoved',
-      'CursorMovedI',
-      'WinScrolled',
+      "CursorMoved",
+      "CursorMovedI",
+      "WinScrolled",
     },
   }
-  vim.api.nvim_create_autocmd('VimResized', {
-    desc = 'Update LSP floating window maximum size on VimResized.',
-    group = vim.api.nvim_create_augroup('LspUpdateFloatingWinMaxSize', {}),
+  vim.api.nvim_create_autocmd("VimResized", {
+    desc = "Update LSP floating window maximum size on VimResized.",
+    group = vim.api.nvim_create_augroup("LspUpdateFloatingWinMaxSize", {}),
     callback = function()
       opts_override_floating_preview.max_width =
         math.max(80, math.ceil(vim.go.columns * 0.75))
@@ -117,17 +117,17 @@ local function setup_lsp_overrides()
   ---@diagnostic disable-next-line: duplicate-set-field
   function vim.lsp.util.open_floating_preview(contents, syntax, opts)
     local source_ft = vim.bo[vim.api.nvim_get_current_buf()].ft
-    opts = vim.tbl_deep_extend('force', opts, opts_override_floating_preview)
+    opts = vim.tbl_deep_extend("force", opts, opts_override_floating_preview)
     -- If source filetype if markdown, use custom mkd syntax instead of
     -- markdown syntax to avoid using treesitter highlight and get math
     -- concealing provided by vimtex in the floating window
-    if source_ft == 'markdown' then
-      syntax = 'mkd'
+    if source_ft == "markdown" then
+      syntax = "mkd"
       opts.wrap = false
     end
     local floating_bufnr, floating_winnr =
       _open_floating_preview(contents, syntax, opts)
-    vim.wo[floating_winnr].concealcursor = 'nc'
+    vim.wo[floating_winnr].concealcursor = "nc"
     return floating_bufnr, floating_winnr
   end
 end
@@ -193,8 +193,8 @@ end
 local function arg_handler_range(args, tbl)
   args.range = args.range
     or tbl.range > 0 and {
-      ['start'] = { tbl.line1, 0 },
-      ['end'] = { tbl.line2, 999 },
+      ["start"] = { tbl.line1, 0 },
+      ["end"] = { tbl.line2, 999 },
     }
     or nil
   return args
@@ -205,14 +205,14 @@ end
 ---@return any
 local function arg_handler_item(args)
   for _, item in pairs(args) do
-    return type(item) == 'string' and vim.uv.fs_realpath(item) or item
+    return type(item) == "string" and vim.uv.fs_realpath(item) or item
   end
 end
 
 ---@type table<string, string[]|fun(): any[]>
 local optvals = {
-  bool = { 'v:true', 'v:false' },
-  severity = { 'WARN', 'INFO', 'ERROR', 'HINT' },
+  bool = { "v:true", "v:false" },
+  severity = { "WARN", "INFO", "ERROR", "HINT" },
   bufs = function()
     return vim.api.nvim_list_bufs()
   end,
@@ -235,7 +235,7 @@ local subcommands = {
         arg_handler = function(args)
           return args.context, args.options
         end,
-        opts = { 'context', 'options.on_list' },
+        opts = { "context", "options.on_list" },
       },
       rename = {
         ---@param args lsp_command_parsed_arg_t
@@ -243,9 +243,9 @@ local subcommands = {
           return args.new_name or args[1], args.options
         end,
         opts = {
-          'new_name',
-          'options.filter',
-          'options.name',
+          "new_name",
+          "options.filter",
+          "options.name",
         },
       },
       workspace_symbol = {
@@ -253,24 +253,24 @@ local subcommands = {
         arg_handler = function(args)
           return args.query, args.options
         end,
-        opts = { 'query', 'options.on_list' },
+        opts = { "query", "options.on_list" },
       },
       format = {
         arg_handler = arg_handler_range,
         opts = {
-          'formatting_options',
-          'formatting_options.tabSize',
-          ['formatting_options.insertSpaces'] = optvals.bool,
-          ['formatting_options.trimTrailingWhitespace'] = optvals.bool,
-          ['formatting_options.insertFinalNewline'] = optvals.bool,
-          ['formatting_options.trimFinalNewlines'] = optvals.bool,
-          'timeout_ms',
-          ['bufnr'] = optvals.bufs,
-          'filter',
-          ['async'] = optvals.bool,
-          'id',
-          'name',
-          'range',
+          "formatting_options",
+          "formatting_options.tabSize",
+          ["formatting_options.insertSpaces"] = optvals.bool,
+          ["formatting_options.trimTrailingWhitespace"] = optvals.bool,
+          ["formatting_options.insertFinalNewline"] = optvals.bool,
+          ["formatting_options.trimFinalNewlines"] = optvals.bool,
+          "timeout_ms",
+          ["bufnr"] = optvals.bufs,
+          "filter",
+          ["async"] = optvals.bool,
+          "id",
+          "name",
+          "range",
         },
       },
       auto_format = {
@@ -283,54 +283,54 @@ local subcommands = {
           return args, tbl
         end,
         params = {
-          'enable',
-          'disable',
-          'toggle',
-          'reset',
-          'status',
+          "enable",
+          "disable",
+          "toggle",
+          "reset",
+          "status",
         },
         opts = {
-          'format.formatting_options',
-          'format.formatting_options.tabSize',
-          ['format.formatting_options.insertSpaces'] = optvals.bool,
-          ['format.formatting_options.trimTrailingWhitespace'] = optvals.bool,
-          ['formatting_options.insertFinalNewline'] = optvals.bool,
-          ['format.formatting_options.trimFinalNewlines'] = optvals.bool,
-          'format.timeout_ms',
-          ['format.bufnr'] = optvals.bufs,
-          'format.filter',
-          'format.async',
-          'format.id',
-          'format.name',
-          'format.range',
-          ['local'] = optvals.bool,
-          ['global'] = optvals.bool,
+          "format.formatting_options",
+          "format.formatting_options.tabSize",
+          ["format.formatting_options.insertSpaces"] = optvals.bool,
+          ["format.formatting_options.trimTrailingWhitespace"] = optvals.bool,
+          ["formatting_options.insertFinalNewline"] = optvals.bool,
+          ["format.formatting_options.trimFinalNewlines"] = optvals.bool,
+          "format.timeout_ms",
+          ["format.bufnr"] = optvals.bufs,
+          "format.filter",
+          "format.async",
+          "format.id",
+          "format.name",
+          "format.range",
+          ["local"] = optvals.bool,
+          ["global"] = optvals.bool,
         },
         ---@param args lsp_command_parsed_arg_t
         ---@param tbl table information passed to the command
         fn_override = function(args, tbl)
-          local enabled = utils.classes.bufopt_t:new('lsp_autofmt_enabled') ---@type bufopt_t
-          local fmtopts = utils.classes.bufopt_t:new('lsp_autofmt_opts') ---@type bufopt_t
-          if tbl.bang or vim.tbl_contains(args, 'toggle') then
-            enabled:scope_action(args, 'toggle')
-          elseif tbl.fargs[1] == '&' or vim.tbl_contains(args, 'reset') then
-            enabled:scope_action(args, 'reset')
-            fmtopts:scope_action(args, 'reset')
-          elseif tbl.fargs[1] == '?' or vim.tbl_contains(args, 'status') then
-            enabled:scope_action(args, 'print')
-            fmtopts:scope_action(args, 'print')
-          elseif vim.tbl_contains(args, 'enable') then
-            enabled:scope_action(args, 'set', true)
-          elseif vim.tbl_contains(args, 'disable') then
-            enabled:scope_action(args, 'set', false)
+          local enabled = utils.classes.bufopt_t:new("lsp_autofmt_enabled") ---@type bufopt_t
+          local fmtopts = utils.classes.bufopt_t:new("lsp_autofmt_opts") ---@type bufopt_t
+          if tbl.bang or vim.tbl_contains(args, "toggle") then
+            enabled:scope_action(args, "toggle")
+          elseif tbl.fargs[1] == "&" or vim.tbl_contains(args, "reset") then
+            enabled:scope_action(args, "reset")
+            fmtopts:scope_action(args, "reset")
+          elseif tbl.fargs[1] == "?" or vim.tbl_contains(args, "status") then
+            enabled:scope_action(args, "print")
+            fmtopts:scope_action(args, "print")
+          elseif vim.tbl_contains(args, "enable") then
+            enabled:scope_action(args, "set", true)
+          elseif vim.tbl_contains(args, "disable") then
+            enabled:scope_action(args, "set", false)
           end
           if args.format then
             fmtopts:scope_action(
               args,
-              'set',
+              "set",
               vim.tbl_deep_extend(
-                'force',
-                fmtopts:scope_action(args, 'get'),
+                "force",
+                fmtopts:scope_action(args, "get"),
                 args.format
               )
             )
@@ -339,31 +339,31 @@ local subcommands = {
       },
       code_action = {
         opts = {
-          'context.diagnostics',
-          'context.only',
-          'context.triggerKind',
-          'filter',
-          ['apply'] = optvals.bool,
-          'range',
+          "context.diagnostics",
+          "context.only",
+          "context.triggerKind",
+          "filter",
+          ["apply"] = optvals.bool,
+          "range",
         },
       },
       add_workspace_folder = {
         arg_handler = arg_handler_item,
         completion = function(arglead, _, _)
-          local basedir = arglead == '' and vim.fn.getcwd() or arglead
+          local basedir = arglead == "" and vim.fn.getcwd() or arglead
           local incomplete = nil ---@type string|nil
           if not vim.uv.fs_stat(basedir) then
-            basedir = vim.fn.fnamemodify(basedir, ':h')
-            incomplete = vim.fn.fnamemodify(arglead, ':t')
+            basedir = vim.fn.fnamemodify(basedir, ":h")
+            incomplete = vim.fn.fnamemodify(arglead, ":t")
           end
           local subdirs = {}
           for name, type in vim.fs.dir(basedir) do
-            if type == 'directory' and name ~= '.' and name ~= '..' then
+            if type == "directory" and name ~= "." and name ~= ".." then
               table.insert(
                 subdirs,
                 vim.fn.fnamemodify(
                   vim.fn.resolve(vim.fs.joinpath(basedir, name)),
-                  ':p:~:.'
+                  ":p:~:."
                 )
               )
             end
@@ -380,38 +380,38 @@ local subcommands = {
         arg_handler = arg_handler_item,
         completion = function(_, _, _)
           return vim.tbl_map(function(path)
-            local short = vim.fn.fnamemodify(path, ':p:~:.')
-            return short ~= '' and short or './'
+            local short = vim.fn.fnamemodify(path, ":p:~:.")
+            return short ~= "" and short or "./"
           end, vim.lsp.buf.list_workspace_folders())
         end,
       },
       execute_command = { arg_handler = arg_handler_item },
       type_definition = {
         opts = {
-          'reuse_win',
-          ['on_list'] = optvals.bool,
+          "reuse_win",
+          ["on_list"] = optvals.bool,
         },
       },
       declaration = {
         opts = {
-          'reuse_win',
-          ['on_list'] = optvals.bool,
+          "reuse_win",
+          ["on_list"] = optvals.bool,
         },
       },
       definition = {
         opts = {
-          'reuse_win',
-          ['on_list'] = optvals.bool,
+          "reuse_win",
+          ["on_list"] = optvals.bool,
         },
       },
       document_symbol = {
         opts = {
-          ['on_list'] = optvals.bool,
+          ["on_list"] = optvals.bool,
         },
       },
       implementation = {
         opts = {
-          ['on_list'] = optvals.bool,
+          ["on_list"] = optvals.bool,
         },
       },
       hover = {},
@@ -437,34 +437,34 @@ local subcommands = {
         return args.opts, args.namespace
       end,
       opts = {
-        ['opts.underline'] = optvals.bool,
-        ['opts.underline.severity'] = optvals.severity,
-        ['opts.virtual_text'] = optvals.bool,
-        ['opts.virtual_text.severity'] = optvals.severity,
-        'opts.virtual_text.source',
-        'opts.virtual_text.spacing',
-        'opts.virtual_text.prefix',
-        'opts.virtual_text.suffix',
-        'opts.virtual_text.format',
-        ['opts.signs'] = optvals.bool,
-        ['opts.signs.severity'] = optvals.severity,
-        'opts.signs.priority',
-        'opts.float',
-        ['opts.float.bufnr'] = optvals.bufs,
-        'opts.float.namespace',
-        'opts.float.scope',
-        'opts.float.pos',
-        'opts.float.severity_sort',
-        ['opts.float.severity'] = optvals.severity,
-        'opts.float.header',
-        'opts.float.source',
-        'opts.float.format',
-        'opts.float.prefix',
-        'opts.float.suffix',
-        ['opts.update_in_insert'] = optvals.bool,
-        'opts.severity_sort',
-        ['opts.severity_sort.reverse'] = optvals.bool,
-        'namespace',
+        ["opts.underline"] = optvals.bool,
+        ["opts.underline.severity"] = optvals.severity,
+        ["opts.virtual_text"] = optvals.bool,
+        ["opts.virtual_text.severity"] = optvals.severity,
+        "opts.virtual_text.source",
+        "opts.virtual_text.spacing",
+        "opts.virtual_text.prefix",
+        "opts.virtual_text.suffix",
+        "opts.virtual_text.format",
+        ["opts.signs"] = optvals.bool,
+        ["opts.signs.severity"] = optvals.severity,
+        "opts.signs.priority",
+        "opts.float",
+        ["opts.float.bufnr"] = optvals.bufs,
+        "opts.float.namespace",
+        "opts.float.scope",
+        "opts.float.pos",
+        "opts.float.severity_sort",
+        ["opts.float.severity"] = optvals.severity,
+        "opts.float.header",
+        "opts.float.source",
+        "opts.float.format",
+        "opts.float.prefix",
+        "opts.float.suffix",
+        ["opts.update_in_insert"] = optvals.bool,
+        "opts.severity_sort",
+        ["opts.severity_sort.reverse"] = optvals.bool,
+        "namespace",
       },
     },
     disable = {
@@ -473,8 +473,8 @@ local subcommands = {
         return args.bufnr, args.namespace
       end,
       opts = {
-        ['bufnr'] = optvals.bufs,
-        'namespace',
+        ["bufnr"] = optvals.bufs,
+        "namespace",
       },
     },
     enable = {
@@ -483,13 +483,13 @@ local subcommands = {
         return args.bufnr, args.namespace
       end,
       opts = {
-        ['bufnr'] = optvals.bufs,
-        'namespace',
+        ["bufnr"] = optvals.bufs,
+        "namespace",
       },
     },
     fromqflist = {
       arg_handler = arg_handler_item,
-      opts = { 'list' },
+      opts = { "list" },
       fn_override = function(...)
         vim.diagnostic.show(nil, 0, vim.diagnostic.fromqflist(...))
       end,
@@ -500,10 +500,10 @@ local subcommands = {
         return args.bufnr, args.opts
       end,
       opts = {
-        ['bufnr'] = optvals.bufs,
-        'opts.namespace',
-        'opts.lnum',
-        ['opts.severity'] = optvals.severity,
+        ["bufnr"] = optvals.bufs,
+        "opts.namespace",
+        "opts.lnum",
+        ["opts.severity"] = optvals.severity,
       },
       fn_override = function(...)
         vim.notify(vim.inspect(vim.diagnostic.get(...)))
@@ -511,7 +511,7 @@ local subcommands = {
     },
     get_namespace = {
       arg_handler = arg_handler_item,
-      opts = { 'namespace' },
+      opts = { "namespace" },
       fn_override = function(...)
         vim.notify(vim.inspect(vim.diagnostic.get_namespace(...)))
       end,
@@ -523,23 +523,23 @@ local subcommands = {
     },
     get_next = {
       opts = {
-        'namespace',
-        'cursor_position',
-        'wrap',
-        ['severity'] = optvals.severity,
-        ['float'] = optvals.bool,
-        ['float.bufnr'] = optvals.bufs,
-        'float.namespace',
-        'float.scope',
-        'float.pos',
-        'float.severity_sort',
-        ['float.severity'] = optvals.severity,
-        'float.header',
-        'float.source',
-        'float.format',
-        'float.prefix',
-        'float.suffix',
-        'win_id',
+        "namespace",
+        "cursor_position",
+        "wrap",
+        ["severity"] = optvals.severity,
+        ["float"] = optvals.bool,
+        ["float.bufnr"] = optvals.bufs,
+        "float.namespace",
+        "float.scope",
+        "float.pos",
+        "float.severity_sort",
+        ["float.severity"] = optvals.severity,
+        "float.header",
+        "float.source",
+        "float.format",
+        "float.prefix",
+        "float.suffix",
+        "win_id",
       },
       fn_override = function(...)
         vim.notify(vim.inspect(vim.diagnostic.get_next(...)))
@@ -547,23 +547,23 @@ local subcommands = {
     },
     get_next_pos = {
       opts = {
-        'namespace',
-        'cursor_position',
-        'wrap',
-        ['severity'] = optvals.severity,
-        ['float'] = optvals.bool,
-        ['float.bufnr'] = optvals.bufs,
-        'float.namespace',
-        'float.scope',
-        'float.pos',
-        'float.severity_sort',
-        ['float.severity'] = optvals.severity,
-        'float.header',
-        'float.source',
-        'float.format',
-        'float.prefix',
-        'float.suffix',
-        'win_id',
+        "namespace",
+        "cursor_position",
+        "wrap",
+        ["severity"] = optvals.severity,
+        ["float"] = optvals.bool,
+        ["float.bufnr"] = optvals.bufs,
+        "float.namespace",
+        "float.scope",
+        "float.pos",
+        "float.severity_sort",
+        ["float.severity"] = optvals.severity,
+        "float.header",
+        "float.source",
+        "float.format",
+        "float.prefix",
+        "float.suffix",
+        "win_id",
       },
       fn_override = function(...)
         vim.notify(vim.inspect(vim.diagnostic.get_next_pos(...)))
@@ -571,23 +571,23 @@ local subcommands = {
     },
     get_prev = {
       opts = {
-        'namespace',
-        'cursor_position',
-        'wrap',
-        ['severity'] = optvals.severity,
-        ['float'] = optvals.bool,
-        ['float.bufnr'] = optvals.bufs,
-        'float.namespace',
-        'float.scope',
-        'float.pos',
-        'float.severity_sort',
-        ['float.severity'] = optvals.severity,
-        'float.header',
-        'float.source',
-        'float.format',
-        'float.prefix',
-        'float.suffix',
-        'win_id',
+        "namespace",
+        "cursor_position",
+        "wrap",
+        ["severity"] = optvals.severity,
+        ["float"] = optvals.bool,
+        ["float.bufnr"] = optvals.bufs,
+        "float.namespace",
+        "float.scope",
+        "float.pos",
+        "float.severity_sort",
+        ["float.severity"] = optvals.severity,
+        "float.header",
+        "float.source",
+        "float.format",
+        "float.prefix",
+        "float.suffix",
+        "win_id",
       },
       fn_override = function(...)
         vim.notify(vim.inspect(vim.diagnostic.get_prev(...)))
@@ -595,23 +595,23 @@ local subcommands = {
     },
     get_prev_pos = {
       opts = {
-        'namespace',
-        'cursor_position',
-        'wrap',
-        ['severity'] = optvals.severity,
-        ['float'] = optvals.bool,
-        ['float.bufnr'] = optvals.bufs,
-        'float.namespace',
-        'float.scope',
-        'float.pos',
-        'float.severity_sort',
-        ['float.severity'] = optvals.severity,
-        'float.header',
-        'float.source',
-        'float.format',
-        'float.prefix',
-        'float.suffix',
-        'win_id',
+        "namespace",
+        "cursor_position",
+        "wrap",
+        ["severity"] = optvals.severity,
+        ["float"] = optvals.bool,
+        ["float.bufnr"] = optvals.bufs,
+        "float.namespace",
+        "float.scope",
+        "float.pos",
+        "float.severity_sort",
+        ["float.severity"] = optvals.severity,
+        "float.header",
+        "float.source",
+        "float.format",
+        "float.prefix",
+        "float.suffix",
+        "win_id",
       },
       fn_override = function(...)
         vim.notify(vim.inspect(vim.diagnostic.get_prev_pos(...)))
@@ -619,44 +619,44 @@ local subcommands = {
     },
     goto_next = {
       opts = {
-        'namespace',
-        'cursor_position',
-        'wrap',
-        ['severity'] = optvals.severity,
-        ['float'] = optvals.bool,
-        ['float.bufnr'] = optvals.bufs,
-        'float.namespace',
-        'float.scope',
-        'float.pos',
-        'float.severity_sort',
-        ['float.severity'] = optvals.severity,
-        'float.header',
-        'float.source',
-        'float.format',
-        'float.prefix',
-        'float.suffix',
-        'win_id',
+        "namespace",
+        "cursor_position",
+        "wrap",
+        ["severity"] = optvals.severity,
+        ["float"] = optvals.bool,
+        ["float.bufnr"] = optvals.bufs,
+        "float.namespace",
+        "float.scope",
+        "float.pos",
+        "float.severity_sort",
+        ["float.severity"] = optvals.severity,
+        "float.header",
+        "float.source",
+        "float.format",
+        "float.prefix",
+        "float.suffix",
+        "win_id",
       },
     },
     goto_prev = {
       opts = {
-        'namespace',
-        'cursor_position',
-        'wrap',
-        ['severity'] = optvals.severity,
-        ['float'] = optvals.bool,
-        ['float.bufnr'] = optvals.bufs,
-        'float.namespace',
-        'float.scope',
-        'float.pos',
-        'float.severity_sort',
-        ['float.severity'] = optvals.severity,
-        'float.header',
-        'float.source',
-        'float.format',
-        'float.prefix',
-        'float.suffix',
-        'win_id',
+        "namespace",
+        "cursor_position",
+        "wrap",
+        ["severity"] = optvals.severity,
+        ["float"] = optvals.bool,
+        ["float.bufnr"] = optvals.bufs,
+        "float.namespace",
+        "float.scope",
+        "float.pos",
+        "float.severity_sort",
+        ["float.severity"] = optvals.severity,
+        "float.header",
+        "float.source",
+        "float.format",
+        "float.prefix",
+        "float.suffix",
+        "win_id",
       },
     },
     hide = {
@@ -665,8 +665,8 @@ local subcommands = {
         return args.namespace, args.bufnr
       end,
       opts = {
-        'namespace',
-        ['bufnr'] = optvals.bufs,
+        "namespace",
+        ["bufnr"] = optvals.bufs,
       },
     },
     is_disabled = {
@@ -675,8 +675,8 @@ local subcommands = {
         return args.bufnr, args.namespace
       end,
       opts = {
-        'namespace',
-        ['bufnr'] = optvals.bufs,
+        "namespace",
+        ["bufnr"] = optvals.bufs,
       },
       fn_override = function(...)
         vim.notify(vim.inspect(vim.diagnostic.is_disabled(...)))
@@ -692,11 +692,11 @@ local subcommands = {
           args.defaults
       end,
       opts = {
-        'str',
-        'pat',
-        'groups',
-        'severity_map',
-        'defaults',
+        "str",
+        "pat",
+        "groups",
+        "severity_map",
+        "defaults",
       },
       fn_override = function(...)
         vim.notify(vim.inspect(vim.diagnostic.match(...)))
@@ -704,17 +704,17 @@ local subcommands = {
     },
     open_float = {
       opts = {
-        ['bufnr'] = optvals.bufs,
-        'namespace',
-        'scope',
-        'pos',
-        ['severity_sort'] = optvals.bool,
-        ['severity'] = optvals.severity,
-        'header',
-        ['source'] = optvals.bool,
-        'format',
-        'prefix',
-        'suffix',
+        ["bufnr"] = optvals.bufs,
+        "namespace",
+        "scope",
+        "pos",
+        ["severity_sort"] = optvals.bool,
+        ["severity"] = optvals.severity,
+        "header",
+        ["source"] = optvals.bool,
+        "format",
+        "prefix",
+        "suffix",
       },
     },
     reset = {
@@ -723,8 +723,8 @@ local subcommands = {
         return args.namespace, args.bufnr
       end,
       opts = {
-        'namespace',
-        ['bufnr'] = optvals.bufs,
+        "namespace",
+        ["bufnr"] = optvals.bufs,
       },
     },
     set = {
@@ -733,53 +733,53 @@ local subcommands = {
         return args.namespace, args.bufnr, args.diagnostics, args.opts
       end,
       opts = {
-        'namespace',
-        ['bufnr'] = optvals.bufs,
-        'diagnostics',
-        ['opts.underline'] = optvals.bool,
-        ['opts.underline.severity'] = optvals.severity,
-        ['opts.virtual_text'] = optvals.bool,
-        ['opts.virtual_text.severity'] = optvals.severity,
-        'opts.virtual_text.source',
-        'opts.virtual_text.spacing',
-        'opts.virtual_text.prefix',
-        'opts.virtual_text.suffix',
-        'opts.virtual_text.format',
-        ['opts.signs'] = optvals.bool,
-        ['opts.signs.severity'] = optvals.severity,
-        'opts.signs.priority',
-        'opts.float',
-        ['opts.float.bufnr'] = optvals.bufs,
-        'opts.float.namespace',
-        'opts.float.scope',
-        'opts.float.pos',
-        'opts.float.severity_sort',
-        ['opts.float.severity'] = optvals.severity,
-        'opts.float.header',
-        'opts.float.source',
-        'opts.float.format',
-        'opts.float.prefix',
-        'opts.float.suffix',
-        ['opts.update_in_insert'] = optvals.bool,
-        'opts.severity_sort',
-        ['opts.severity_sort.reverse'] = optvals.bool,
+        "namespace",
+        ["bufnr"] = optvals.bufs,
+        "diagnostics",
+        ["opts.underline"] = optvals.bool,
+        ["opts.underline.severity"] = optvals.severity,
+        ["opts.virtual_text"] = optvals.bool,
+        ["opts.virtual_text.severity"] = optvals.severity,
+        "opts.virtual_text.source",
+        "opts.virtual_text.spacing",
+        "opts.virtual_text.prefix",
+        "opts.virtual_text.suffix",
+        "opts.virtual_text.format",
+        ["opts.signs"] = optvals.bool,
+        ["opts.signs.severity"] = optvals.severity,
+        "opts.signs.priority",
+        "opts.float",
+        ["opts.float.bufnr"] = optvals.bufs,
+        "opts.float.namespace",
+        "opts.float.scope",
+        "opts.float.pos",
+        "opts.float.severity_sort",
+        ["opts.float.severity"] = optvals.severity,
+        "opts.float.header",
+        "opts.float.source",
+        "opts.float.format",
+        "opts.float.prefix",
+        "opts.float.suffix",
+        ["opts.update_in_insert"] = optvals.bool,
+        "opts.severity_sort",
+        ["opts.severity_sort.reverse"] = optvals.bool,
       },
     },
     setloclist = {
       opts = {
-        'namespace',
-        'winnr',
-        'open',
-        'title',
-        ['severity'] = optvals.severity,
+        "namespace",
+        "winnr",
+        "open",
+        "title",
+        ["severity"] = optvals.severity,
       },
     },
     setqflist = {
       opts = {
-        'namespace',
-        'open',
-        'title',
-        ['severity'] = optvals.severity,
+        "namespace",
+        "open",
+        "title",
+        ["severity"] = optvals.severity,
       },
     },
     show = {
@@ -788,41 +788,41 @@ local subcommands = {
         return args.namespace, args.bufnr, args.diagnostics, args.opts
       end,
       opts = {
-        'namespace',
-        ['bufnr'] = optvals.bufs,
-        'diagnostics',
-        ['opts.underline'] = optvals.bool,
-        ['opts.underline.severity'] = optvals.severity,
-        ['opts.virtual_text'] = optvals.bool,
-        ['opts.virtual_text.severity'] = optvals.severity,
-        'opts.virtual_text.source',
-        'opts.virtual_text.spacing',
-        'opts.virtual_text.prefix',
-        'opts.virtual_text.suffix',
-        'opts.virtual_text.format',
-        ['opts.signs'] = optvals.bool,
-        ['opts.signs.severity'] = optvals.severity,
-        'opts.signs.priority',
-        'opts.float',
-        ['opts.float.bufnr'] = optvals.bufs,
-        'opts.float.namespace',
-        'opts.float.scope',
-        'opts.float.pos',
-        'opts.float.severity_sort',
-        ['opts.float.severity'] = optvals.severity,
-        'opts.float.header',
-        'opts.float.source',
-        'opts.float.format',
-        'opts.float.prefix',
-        'opts.float.suffix',
-        ['opts.update_in_insert'] = optvals.bool,
-        'opts.severity_sort',
-        ['opts.severity_sort.reverse'] = optvals.bool,
+        "namespace",
+        ["bufnr"] = optvals.bufs,
+        "diagnostics",
+        ["opts.underline"] = optvals.bool,
+        ["opts.underline.severity"] = optvals.severity,
+        ["opts.virtual_text"] = optvals.bool,
+        ["opts.virtual_text.severity"] = optvals.severity,
+        "opts.virtual_text.source",
+        "opts.virtual_text.spacing",
+        "opts.virtual_text.prefix",
+        "opts.virtual_text.suffix",
+        "opts.virtual_text.format",
+        ["opts.signs"] = optvals.bool,
+        ["opts.signs.severity"] = optvals.severity,
+        "opts.signs.priority",
+        "opts.float",
+        ["opts.float.bufnr"] = optvals.bufs,
+        "opts.float.namespace",
+        "opts.float.scope",
+        "opts.float.pos",
+        "opts.float.severity_sort",
+        ["opts.float.severity"] = optvals.severity,
+        "opts.float.header",
+        "opts.float.source",
+        "opts.float.format",
+        "opts.float.prefix",
+        "opts.float.suffix",
+        ["opts.update_in_insert"] = optvals.bool,
+        "opts.severity_sort",
+        ["opts.severity_sort.reverse"] = optvals.bool,
       },
     },
     toqflist = {
       arg_handler = arg_handler_item,
-      opts = { 'diagnostics' },
+      opts = { "diagnostics" },
       fn_override = function(...)
         vim.fn.setqflist(vim.diagnostic.toqflist(...))
       end,
@@ -869,15 +869,15 @@ local function command_complete(meta, subcommand_info_list)
   ---@return string[] completion completion results
   return function(arglead, cmdline, cursorpos)
     -- If subcommand is not specified, complete with subcommands
-    if cmdline:sub(1, cursorpos):match('^%A*' .. meta .. '%s+%S*$') then
+    if cmdline:sub(1, cursorpos):match("^%A*" .. meta .. "%s+%S*$") then
       return vim.tbl_filter(function(cmd)
         return cmd:find(arglead, 1, true) == 1
       end, vim.tbl_keys(subcommand_info_list))
     end
     -- If subcommand is specified, complete with its options or params
     local subcommand = utils.string.camel_to_snake(
-      cmdline:match('^%s*' .. meta .. '(%w+)')
-    ) or cmdline:match('^%s*' .. meta .. '%s+(%S+)')
+      cmdline:match("^%s*" .. meta .. "(%w+)")
+    ) or cmdline:match("^%s*" .. meta .. "%s+(%S+)")
     if not subcommand_info_list[subcommand] then
       return {}
     end
@@ -916,7 +916,7 @@ local function setup_commands(meta, subcommand_info_list, fn_scope)
     {
       bang = true,
       range = true,
-      nargs = '*',
+      nargs = "*",
       complete = command_complete(meta, subcommand_info_list),
     }
   )
@@ -928,7 +928,7 @@ local function setup_commands(meta, subcommand_info_list, fn_scope)
       {
         bang = true,
         range = true,
-        nargs = '*',
+        nargs = "*",
         complete = command_complete(meta, subcommand_info_list),
       }
     )
@@ -938,15 +938,15 @@ end
 ---@return nil
 local function setup_lsp_autoformat()
   ---@type bufopt_t
-  local enabled = utils.classes.bufopt_t:new('lsp_autofmt_enabled', false)
+  local enabled = utils.classes.bufopt_t:new("lsp_autofmt_enabled", false)
   ---@type bufopt_t
-  local fmtopts = utils.classes.bufopt_t:new('lsp_autofmt_opts', {
+  local fmtopts = utils.classes.bufopt_t:new("lsp_autofmt_opts", {
     async = true,
     timeout_ms = 500,
   })
-  vim.api.nvim_create_autocmd('BufWritePre', {
-    desc = 'LSP format on save.',
-    group = vim.api.nvim_create_augroup('LspAutoFmt', {}),
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    desc = "LSP format on save.",
+    group = vim.api.nvim_create_augroup("LspAutoFmt", {}),
     callback = function(info)
       if enabled:get(info.buf) then
         vim.lsp.buf.format(fmtopts:get(info.buf))
@@ -966,9 +966,9 @@ local lsp_autostop_pending
 ---
 ---@return nil
 local function setup_lsp_autostop()
-  vim.api.nvim_create_autocmd('BufDelete', {
-    group = vim.api.nvim_create_augroup('LspAutoStop', {}),
-    desc = 'Automatically stop idle language servers.',
+  vim.api.nvim_create_autocmd("BufDelete", {
+    group = vim.api.nvim_create_augroup("LspAutoStop", {}),
+    desc = "Automatically stop idle language servers.",
     callback = function()
       if lsp_autostop_pending then
         return
@@ -990,8 +990,8 @@ end
 ---@return nil
 local function setup_diagnostic()
   local icons = utils.static.icons
-  for _, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
-    local sign_name = 'DiagnosticSign' .. severity
+  for _, severity in ipairs({ "Error", "Warn", "Info", "Hint" }) do
+    local sign_name = "DiagnosticSign" .. severity
     vim.fn.sign_define(sign_name, {
       text = icons[sign_name],
       texthl = sign_name,
@@ -1018,8 +1018,8 @@ local function setup()
   setup_lsp_autoformat()
   setup_lsp_autostop()
   setup_diagnostic()
-  setup_commands('Lsp', subcommands.lsp.buf, vim.lsp.buf)
-  setup_commands('Diagnostic', subcommands.diagnostic, vim.diagnostic)
+  setup_commands("Lsp", subcommands.lsp.buf, vim.lsp.buf)
+  setup_commands("Diagnostic", subcommands.diagnostic, vim.diagnostic)
 end
 
 return {
