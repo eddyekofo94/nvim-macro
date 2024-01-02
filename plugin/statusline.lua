@@ -1,3 +1,9 @@
+-- .. ' '
+-- .. ' '
+-- .. ' '
+-- .. ' '
+-- .. ' '
+-- .. ' '
 _G.statusline = {}
 local utils = require('utils')
 local groupid = vim.api.nvim_create_augroup('StatusLine', {})
@@ -329,6 +335,24 @@ function statusline.lsp_progress()
   )
 end
 
+function statusline.search_count()
+  if vim.v.hlsearch == 0 then
+    return ''
+  end
+
+  local result = vim.fn.searchcount({ maxcount = 999, timeout = 250 })
+
+  if result.incomplete == 1 or next(result) == nil then
+    return ''
+  end
+
+  return string.format(
+    '[%d/%d]',
+    result.current,
+    math.min(result.total, result.maxcount)
+  )
+end
+
 -- local workspace_path = vim.lsp.buf.list_workspace_folders()[1]
 -- local rel_path = vim.lsp.buf.list_workspace_folders()[1]
 -- don't think it works as intended but I am happy with it
@@ -337,15 +361,11 @@ function statusline.filename()
   if vim.api.nvim_get_current_win() then
     -- get_file_icon()
     return get_file_icon()
-      .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
-      -- .. vim.loop.cwd(0)
-      .. '..'
+      -- .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+      -- .. '..'
       .. vim.fn.expand('%:.')
   else
-    -- return ' %{%&bt==#""?"%t":"%F"%} '
-    return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
-      .. ' '
-      .. vim.fn.expand('%:.')
+    return vim.fn.expand('%:.')
   end
 end
 
@@ -356,10 +376,11 @@ end
 local components = {
   align        = '%=',
   diag         = '%{%v:lua.statusline.diag()%}',
-  cwd         = '%{%v:lua.statusline.get_cwd()%}',
+  cwd          = '%{%v:lua.statusline.get_cwd()%}',
   fname        = '%{%v:lua.statusline.filename() %} ',
   info         = '%{%v:lua.statusline.info()%}',
   lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
+  searchcount  = '%{%v:lua.statusline.search_count()%}',
   mode         = '%{%v:lua.statusline.mode()%}',
   padding      = '%#None#  %*',
   pos          = '%{%&ru?"%l:%c ":""%}',
@@ -371,6 +392,7 @@ local stl = table.concat({
   components.mode,
   components.fname,
   components.diag,
+  components.searchcount,
   components.align,
   components.truncate,
   components.lsp_progress,
