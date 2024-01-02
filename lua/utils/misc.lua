@@ -32,12 +32,7 @@ function M.qftf(info)
   ---@param str_cache table
   ---@param width_cache table
   ---@return integer
-  local function _traverse(
-    trans,
-    max_width_allowed,
-    str_cache,
-    width_cache
-  )
+  local function _traverse(trans, max_width_allowed, str_cache, width_cache)
     max_width_allowed = max_width_allowed or math.huge
     local max_width_seen = 0
     for i, item in ipairs(qflist) do

@@ -49,10 +49,12 @@ require('flatten').setup({
       if should_block_file(bufname) then
         vim.bo[buf].bufhidden = 'wipe'
         local keymap_utils = require('utils.keymap')
+        -- stylua: ignore start
         keymap_utils.command_abbrev('q',  'b#', { buffer = buf })
         keymap_utils.command_abbrev('wq', 'b#', { buffer = buf })
         keymap_utils.command_abbrev('bw', 'b#', { buffer = buf })
         keymap_utils.command_abbrev('bd', 'b#', { buffer = buf })
+        -- stylua: ignore end
       end
     end,
   },

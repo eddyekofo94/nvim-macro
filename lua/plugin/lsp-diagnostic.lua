@@ -1047,7 +1047,7 @@ local function setup_diagnostic()
         [vim.diagnostic.severity.INFO] = 'DiagnosticSignInfo',
         [vim.diagnostic.severity.HINT] = 'DiagnosticSignHint',
       },
-    }
+    },
   })
 end
 
