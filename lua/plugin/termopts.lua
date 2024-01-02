@@ -14,6 +14,7 @@ local shells_list = {
   ipython = true,
   ipython3 = true,
   lua = true,
+  [''] = true,
 }
 
 ---Set local terminal keymaps and options, start insert immediately
@@ -27,14 +28,12 @@ local function term_set_local_keymaps_and_opts(buf)
   -- Use <Esc> to exit terminal mode when running a shell,
   -- use double <Esc> to send <Esc> to shell
   vim.keymap.set('t', '<Esc>', function()
-    return shells_list[utils.term.proc_name(0)]
-        and (function()
-          ---@diagnostic disable-next-line: undefined-field
-          vim.b.t_esc = vim.uv.now()
-          return true
-        end)()
-        and '<Cmd>stopinsert<CR>'
-      or '<Esc>'
+    local proc_name = utils.term.proc_name(0)
+    if shells_list[proc_name] or vim.v.shell_error > 0 then
+      vim.g.t_esc = vim.uv.now()
+      return '<Cmd>stopinsert<CR>'
+    end
+    return '<Esc>'
   end, { expr = true, buffer = buf })
   vim.keymap.set('n', '<Esc>', function()
     return vim.b.t_esc
