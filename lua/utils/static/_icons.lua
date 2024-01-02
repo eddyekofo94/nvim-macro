@@ -94,7 +94,7 @@ return {
     Assembly            = ' ',
     Bak                 = '󰁯 ',
     Config              = ' ',
-    Cuda                = '󱗼 ',
+    Cuda                = ' ',
     Data                = '󰆼 ',
     Desktop             = '󰟀 ',
     Elisp               = ' ',
