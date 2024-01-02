@@ -19,10 +19,12 @@ return {
   --     })
   --   end,
   -- },
-  { 'echasnovski/mini.nvim', version = '*' ,
+  {
+    "echasnovski/mini.nvim",
+    version = "*",
     config = function()
-      require('mini.sessions').setup()
-    end
+      require("mini.sessions").setup()
+    end,
   },
   {
     "echasnovski/mini.ai",
@@ -30,15 +32,27 @@ return {
     dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
     init = function()
       -- no need to load the plugin, since we only need its queries
-      require("lazy.core.loader").disable_rtp_plugin("nvim-treesitter-textobjects")
+      require("lazy.core.loader").disable_rtp_plugin(
+        "nvim-treesitter-textobjects"
+      )
     end,
     config = function()
       local ai = require("mini.ai")
       ai.setup({
         custom_textobjects = {
           b = ai.gen_spec.treesitter({
-            a = { "@block.outer", "@conditional.outer", "@loop.outer", "@function.outer" },
-            i = { "@block.inner", "@conditional.inner", "@loop.inner", "@function.inner" },
+            a = {
+              "@block.outer",
+              "@conditional.outer",
+              "@loop.outer",
+              "@function.outer",
+            },
+            i = {
+              "@block.inner",
+              "@conditional.inner",
+              "@loop.inner",
+              "@function.inner",
+            },
           }, {}),
           c = ai.gen_spec.treesitter({
             a = "@class.outer",
@@ -144,7 +158,7 @@ return {
     version = false,
     config = function()
       local animate = require("mini.animate")
-      local timing = animate.gen_timing.linear({ duration = 60, unit = "total" })
+      -- local timing = animate.gen_timing.linear({ duration = 60, unit = "total" })
       animate.setup({
         cursor = {
           timing = animate.gen_timing.linear({ duration = 10, unit = "total" }),
@@ -154,7 +168,8 @@ return {
           timing = animate.gen_timing.linear({ duration = 10, unit = "total" }),
         },
         scroll = {
-          timing = timing,
+          -- timing = timing,
+          enabled = true,
         },
         open = { enable = true },
         close = { enable = false },
