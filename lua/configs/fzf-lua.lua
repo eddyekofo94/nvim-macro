@@ -70,8 +70,31 @@ function actions.switch_cwd()
   fzf.resume(opts)
 end
 
+---Delete selected autocmd
+---@return nil
+function actions.del_autocmd(selected)
+  for _, line in ipairs(selected) do
+    local event, group, pattern =
+      line:match('^.+:%d+:(%w+)%s*│%s*(%S+)%s*│%s*(.-)%s*│')
+    if event and group and pattern then
+      vim.cmd.autocmd({
+        bang = true,
+        args = { group, event, pattern },
+        mods = { emsg_silent = true },
+      })
+    end
+  end
+  local last_query = fzf.config.__resume_data.last_query or ''
+  fzf.autocmds({
+    fzf_opts = {
+      ['--query'] = vim.fn.shellescape(last_query),
+    },
+  })
+end
+
 core.ACTION_DEFINITIONS[actions.switch_provider] = { 'switch backend' }
 core.ACTION_DEFINITIONS[actions.switch_cwd] = { 'change cwd' }
+core.ACTION_DEFINITIONS[actions.del_autocmd] = { 'delete autocmd' }
 
 fzf.setup({
   -- Use nbsp in tty to avoid showing box chars
@@ -102,6 +125,7 @@ fzf.setup({
         \ endif |
         \ unlet bot_win bot_win_type |
         \ bo new |
+        \ setlocal bt=nofile bh=wipe nobl noswf |
         \ let w:winbar_no_attach = v:true |
         \ exe 'resize ' . (exists('g:_fzf_swallow_qf_height')
           \ ? g:_fzf_swallow_qf_height : 10) |
@@ -248,6 +272,24 @@ fzf.setup({
       ['ctrl-]'] = actions.switch_provider,
     },
   },
+  autocmds = {
+    actions = {
+      ['ctrl-x'] = {
+        fn = actions.del_autocmd,
+        -- reload = true,
+      },
+    },
+  },
+  buffers = {
+    show_unlisted = true,
+    show_unloaded = true,
+    ignore_current_buffer = false,
+    no_action_set_cursor = true,
+    current_tab_only = false,
+    no_term_buffers = false,
+    cwd_only = false,
+    ls_cmd = 'ls',
+  },
   helptags = {
     actions = {
       ['default'] = actions.help,
@@ -300,6 +342,11 @@ fzf.setup({
   },
   highlights = {
     actions = {
+      ['default'] = function(selected)
+        vim.defer_fn(function()
+          vim.cmd.hi(selected[1])
+        end, 0)
+      end,
       ['ctrl-]'] = actions.switch_provider,
     },
   },
@@ -493,20 +540,178 @@ vim.keymap.set('n', '<Leader>fo', fzf.oldfiles)
 vim.keymap.set('n', '<Leader>fr', fzf.lsp_references)
 vim.keymap.set('n', '<Leader>fs', fzf.lsp_document_symbols)
 
--- Mimic fzf.vim's :FZF command
-local fzf_cmd_body = {
+vim.api.nvim_create_user_command('F', function(info)
+  fzf.files({ cwd = info.fargs[1] })
+end, {
+  nargs = '?',
+  complete = 'dir',
+  desc = 'Fuzzy find files.',
+})
+
+local fzf_ls_cmd = {
   function(info)
-    fzf.files({ cwd = info.fargs[1] })
+    return fzf.buffers({
+      ls_cmd = string.format('ls%s %s', info.bang and '!' or '', info.args),
+    })
   end,
   {
+    bang = true,
     nargs = '?',
-    complete = 'dir',
-    desc = 'Fuzzy find files.',
+    complete = function()
+      return {
+        '+',
+        '-',
+        '=',
+        'a',
+        'u',
+        'h',
+        'x',
+        '%',
+        '#',
+        'R',
+        'F',
+        't',
+      }
+    end,
   },
 }
-vim.api.nvim_create_user_command('F', unpack(fzf_cmd_body))
-vim.api.nvim_create_user_command('FZ', unpack(fzf_cmd_body))
-vim.api.nvim_create_user_command('FZF', unpack(fzf_cmd_body))
+
+local fzf_hi_cmd = {
+  function(info)
+    if vim.tbl_isempty(info.fargs) then
+      fzf.highlights()
+      return
+    end
+    if #info.fargs == 1 and info.fargs[1] ~= 'clear' then
+      local hlgroup = info.fargs[1]
+      if vim.fn.hlexists(hlgroup) == 1 then
+        vim.cmd.hi({
+          args = { hlgroup },
+          bang = info.bang,
+        })
+      else
+        fzf.highlights({
+          fzf_opts = {
+            ['--query'] = vim.fn.shellescape(hlgroup),
+          },
+        })
+      end
+      return
+    end
+    vim.cmd.hi({
+      args = info.fargs,
+      bang = info.bang,
+    })
+  end,
+  {
+    bang = true,
+    nargs = '*',
+  },
+}
+
+local fzf_reg_cmd = {
+  function(info)
+    fzf.registers({
+      fzf_opts = {
+        ['--query'] = vim.fn.shellescape(
+          table.concat(
+            vim.tbl_map(
+              function(reg)
+                return string.format('^[%s]', reg:upper())
+              end,
+              vim.split(info.args, '', {
+                trimempty = true,
+              })
+            ),
+            ' | '
+          )
+        ),
+      },
+    })
+  end,
+  {
+    nargs = '*',
+  },
+}
+
+local fzf_au_cmd = {
+  function(info)
+    if #info.fargs <= 1 and not info.bang then
+      fzf.autocmds({
+        fzf_opts = {
+          ['--query'] = vim.fn.shellescape(info.fargs[1] or ''),
+        },
+      })
+      return
+    end
+    vim.cmd.autocmd({
+      args = info.fargs,
+      bang = info.bang,
+    })
+  end,
+  {
+    bang = true,
+    nargs = '*',
+  },
+}
+
+local fzf_marks_cmd = {
+  function(info)
+    fzf.marks({
+      fzf_opts = {
+        ['--query'] = vim.fn.shellescape(
+          table.concat(
+            vim.tbl_map(
+              function(mark)
+                return '^' .. mark
+              end,
+              vim.split(info.args, '', {
+                trimempty = true,
+              })
+            ),
+            ' | '
+          )
+        ),
+      },
+    })
+  end,
+  {
+    nargs = '*',
+  },
+}
+
+local fzf_args_cmd = {
+  function(info)
+    if not info.bang and vim.tbl_isempty(info.fargs) then
+      fzf.args()
+      return
+    end
+    vim.cmd.args({
+      args = info.fargs,
+      bang = info.bang,
+    })
+  end,
+  {
+    bang = true,
+    nargs = '*',
+  },
+}
+
+-- stylua: ignore start
+vim.api.nvim_create_user_command('Ls', unpack(fzf_ls_cmd))
+vim.api.nvim_create_user_command('Files', unpack(fzf_ls_cmd))
+vim.api.nvim_create_user_command('Args', unpack(fzf_args_cmd))
+vim.api.nvim_create_user_command('Autocmd', unpack(fzf_au_cmd))
+vim.api.nvim_create_user_command('Buffers', unpack(fzf_ls_cmd))
+vim.api.nvim_create_user_command('Marks', unpack(fzf_marks_cmd))
+vim.api.nvim_create_user_command('Highlight', unpack(fzf_hi_cmd))
+vim.api.nvim_create_user_command('Registers', unpack(fzf_reg_cmd))
+vim.api.nvim_create_user_command('Oldfiles', fzf.oldfiles, {})
+vim.api.nvim_create_user_command('Changes', fzf.changes, {})
+vim.api.nvim_create_user_command('Tags', fzf.tagstack, {})
+vim.api.nvim_create_user_command('Jumps', fzf.jumps, {})
+vim.api.nvim_create_user_command('Tabs', fzf.tabs, {})
+-- stylua: ignore end
 
 ---Set telescope default hlgroups for a borderless view
 ---@return nil
@@ -514,11 +719,11 @@ local function set_default_hlgroups()
   local hl = utils.hl
   local hl_norm = hl.get(0, { name = 'Normal', link = false })
   local hl_speical = hl.get(0, { name = 'Special', link = false })
-  hl.set(0, 'FzfLuaBufFlagAlt', { link = 'CursorLineNr' })
-  hl.set(0, 'FzfLuaBufFlagCur', { link = 'CursorLineNr' })
+  hl.set(0, 'FzfLuaBufFlagAlt', {})
+  hl.set(0, 'FzfLuaBufFlagCur', {})
+  hl.set(0, 'FzfLuaBufName', {})
+  hl.set(0, 'FzfLuaBufNr', {})
   hl.set(0, 'FzfLuaBufLineNr', { link = 'LineNr' })
-  hl.set(0, 'FzfLuaBufName', { link = 'Directory' })
-  hl.set(0, 'FzfLuaBufNr', { link = 'LineNr' })
   hl.set(0, 'FzfLuaCursor', { link = 'None' })
   hl.set(0, 'FzfLuaHeaderBind', { link = 'Special' })
   hl.set(0, 'FzfLuaHeaderText', { link = 'Special' })

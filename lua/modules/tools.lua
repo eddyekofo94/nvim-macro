@@ -1,7 +1,23 @@
 return {
   {
     'ibhagwan/fzf-lua',
-    cmd = { 'FzfLua', 'F', 'FZ', 'FZF' },
+    cmd = {
+      'FzfLua',
+      'F',
+      'Ls',
+      'Args',
+      'Tabs',
+      'Tags',
+      'Files',
+      'Marks',
+      'Jumps',
+      'Autocmd',
+      'Buffers',
+      'Changes',
+      'Oldfiles',
+      'Registers',
+      'Highlight',
+    },
     keys = {
       '<Leader>.',
       '<Leader>,',
@@ -24,6 +40,28 @@ return {
       vim.ui.select = function(...)
         require('fzf-lua.providers.ui_select').ui_select(...)
       end
+      vim.api.nvim_create_autocmd('CmdlineEnter', {
+        group = vim.api.nvim_create_augroup('FzfLuaCreateCmdAbbr', {}),
+        once = true,
+        callback = function(info)
+          local keymap = require('utils.keymap')
+          keymap.command_abbrev('ls', 'Ls')
+          keymap.command_abbrev('tabs', 'Tabs')
+          keymap.command_abbrev('tags', 'Tags')
+          keymap.command_abbrev('files', 'Files')
+          keymap.command_abbrev('marks', 'Marks')
+          keymap.command_abbrev('buffers', 'Buffers')
+          keymap.command_abbrev('changes', 'Changes')
+          keymap.command_abbrev({ 'ar', 'args' }, 'Args')
+          keymap.command_abbrev({ 'ju', 'jumps' }, 'Jumps')
+          keymap.command_abbrev({ 'au', 'autocmd' }, 'Autocmd')
+          keymap.command_abbrev({ 'o', 'oldfiles' }, 'Oldfiles')
+          keymap.command_abbrev({ 'hi', 'highlight' }, 'Highlight')
+          keymap.command_abbrev({ 'reg', 'registers' }, 'Registers')
+          vim.api.nvim_del_augroup_by_id(info.group)
+          return true
+        end,
+      })
     end),
     config = function()
       require('configs.fzf-lua')
