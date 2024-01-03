@@ -31,6 +31,7 @@ are welcome.
   - [Formatter](#formatter)
   - [Other External Tools](#other-external-tools)
 - [Installation](#installation)
+- [Troubleshooting](#troubleshooting)
 - [Uninstallation](#uninstallation)
 - [Config Structure](#config-structure)
 - [Tweaking this Configuration](#tweaking-this-configuration)
@@ -231,15 +232,37 @@ Install the following debug adapters manually:
    issues.
 6. Enjoy!
 
+## Troubleshooting
+
+If you encounter any issue, please try the following steps:
+
+1. Run `:Lazy restore` once to ensure that all packages are properly
+   installed and **patched**
+
+2. Run `:checkhealth` to check potential dependency issues
+
+3. Check `:version` to make sure you are on the same (of above) version\* of
+   neovim as specified in [nvim-version.txt](https://github.com/Bekaboo/nvim/blob/master/nvim-version.txt)
+
+    - \* The commit SHA matters for nightly/dev builds of Neovim!
+
+4. Try removing the following paths then restart Neovim:
+
+    - `:echo stdpath('cache')`
+    - `:echo stdpath('state')`
+    - `:echo stdpath('data')`
+
+5. If still not working, please open an issue and I will be happy to help
+
 ## Uninstallation
 
 You can uninstall this config completely by simply removing the following
 paths:
 
-- `stdpath('config')`
-- `stdpath('cache')`
-- `stdpath('state')`
-- `stdpath('data')`
+- `:echo stdpath('config')`
+- `:echo stdpath('cache')`
+- `:echo stdpath('state')`
+- `:echo stdpath('data')`
 
 ## Config Structure
 
