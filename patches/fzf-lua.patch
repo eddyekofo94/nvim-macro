@@ -1,39 +1,8 @@
-diff --git a/lua/fzf-lua/core.lua b/lua/fzf-lua/core.lua
-index d570276..7eb850c 100644
---- a/lua/fzf-lua/core.lua
-+++ b/lua/fzf-lua/core.lua
-@@ -10,7 +10,7 @@ local make_entry = require "fzf-lua.make_entry"
- 
- local M = {}
- 
--local ACTION_DEFINITIONS = {
-+M.ACTION_DEFINITIONS = {
-   -- list of supported actions with labels to be displayed in the headers
-   -- no pos implies an append to header array
-   [actions.toggle_ignore]     = { "Disable .gitignore", fn_reload = "Respect .gitignore" },
-@@ -748,7 +748,7 @@ M.set_header = function(opts, hdr_tbl)
-       hdr_txt_str = "",
-       val = function()
-         if opts.no_header_i then return end
--        local defs = ACTION_DEFINITIONS
-+        local defs = M.ACTION_DEFINITIONS
-         local ret = {}
-         for k, v in pairs(opts.actions) do
-           local action = type(v) == "function" and v or type(v) == "table" and (v.fn or v[1])
-@@ -768,7 +768,7 @@ M.set_header = function(opts, hdr_tbl)
-             table.insert(t, i)
-           end
-           t[1] = (opts.header_prefix or ":: ") .. t[1]
--          return table.concat(t, opts.header_separator or "")
-+          return table.concat(t, opts.header_separator or "|")
-         end)() or nil
-       end,
-     },
 diff --git a/lua/fzf-lua/defaults.lua b/lua/fzf-lua/defaults.lua
-index c279959..454973f 100644
+index fb228a0..18178c7 100644
 --- a/lua/fzf-lua/defaults.lua
 +++ b/lua/fzf-lua/defaults.lua
-@@ -424,6 +424,7 @@ M.defaults.buffers = {
+@@ -425,6 +425,7 @@ M.defaults.buffers = {
    ignore_current_buffer = false,
    no_action_set_cursor  = true,
    cwd_only              = false,
@@ -42,7 +11,7 @@ index c279959..454973f 100644
    fzf_opts              = { ["--tiebreak"] = "index", },
    _actions              = function() return M.globals.actions.buffers end,
 diff --git a/lua/fzf-lua/providers/buffers.lua b/lua/fzf-lua/providers/buffers.lua
-index 4f2ec5f..81cef4e 100644
+index daa9d25..65b129c 100644
 --- a/lua/fzf-lua/providers/buffers.lua
 +++ b/lua/fzf-lua/providers/buffers.lua
 @@ -59,8 +59,10 @@ end
@@ -86,7 +55,7 @@ index 4f2ec5f..81cef4e 100644
    local leftbr = "["
    local rightbr = "]"
    local bufname = #buf.info.name > 0 and path.relative(buf.info.name, cwd or vim.loop.cwd())
-@@ -129,15 +130,13 @@ local function gen_buffer_entry(opts, buf, max_bufnr, cwd)
+@@ -129,12 +130,12 @@ local function gen_buffer_entry(opts, buf, max_bufnr, cwd)
    end
    -- add line number
    bufname = ("%s:%s"):format(bufname, buf.info.lnum > 0 and buf.info.lnum or "")
@@ -100,31 +69,9 @@ index 4f2ec5f..81cef4e 100644
 -    flags = utils.nbsp .. flags
 +    flags = buf.flag .. flags
    end
--  local bufnrstr = string.format("%s%s%s", leftbr,
--    utils.ansi_codes[opts.hls.buf_nr](tostring(buf.bufnr)), rightbr)
-   local buficon = ""
-   local hl = ""
-   if opts.file_icons then
-@@ -155,10 +154,15 @@ local function gen_buffer_entry(opts, buf, max_bufnr, cwd)
-       buficon = fn(buficon)
-     end
-   end
--  local max_bufnr_w = 26 + #tostring(max_bufnr)
--  local item_str = string.format("%s%s%s%s%s%s%s%s",
-+  local max_bufnr_w = #(leftbr .. max_bufnr .. rightbr)
-+  local bufnr_str = leftbr .. buf.bufnr .. rightbr
-+  local pad = math.max(0, max_bufnr_w - #bufnr_str)
-+  local bufnr_str_ansi = leftbr ..
-+      utils.ansi_codes[opts.hls.buf_nr](tostring(buf.bufnr)) .. rightbr .. string.rep(" ", pad)
-+  local item_str = string.format(
-+    "%s%s%s%s%s%s%s%s",
-     utils._if(opts._prefix, opts._prefix, ""),
--    string.format("%-" .. tostring(max_bufnr_w) .. "s", bufnrstr),
-+    bufnr_str_ansi,
-     utils.nbsp,
-     flags,
-     utils.nbsp,
-@@ -174,7 +178,26 @@ M.buffers = function(opts)
+   local bufnrstr = string.format("%s%s%s", leftbr,
+     utils.ansi_codes[opts.hls.buf_nr](tostring(buf.bufnr)), rightbr)
+@@ -174,7 +175,26 @@ M.buffers = function(opts)
  
    opts.__fn_reload = opts.__fn_reload or function(_)
      return function(cb)
@@ -189,7 +136,7 @@ index 67ab103..9996dcc 100644
    history(opts, "search")
  end
 diff --git a/lua/fzf-lua/utils.lua b/lua/fzf-lua/utils.lua
-index b9384ac..d6ef90a 100644
+index c9f53bb..ab536f9 100644
 --- a/lua/fzf-lua/utils.lua
 +++ b/lua/fzf-lua/utils.lua
 @@ -445,6 +445,10 @@ end
