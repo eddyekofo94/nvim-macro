@@ -122,15 +122,7 @@ end
 ---Search & select files then add them to arglist
 ---@return nil
 function actions.arg_search_add()
-  fzf.config.__resume_data.opts = fzf.config.__resume_data.opts or {}
   local opts = fzf.config.__resume_data.opts
-
-  -- Remove old fn_selected, else selected item will be opened
-  -- with previous cwd
-  opts.fn_selected = nil
-  opts.cwd = opts.cwd or vim.uv.cwd()
-  opts.query = fzf.config.__resume_data.last_query
-
   fzf.files({
     cwd_header = true,
     cwd_prompt = false,
@@ -717,15 +709,6 @@ local fzf_argadd_cmd = {
       })
       return
     end
-
-    fzf.config.__resume_data.opts = fzf.config.__resume_data.opts or {}
-    local opts = fzf.config.__resume_data.opts
-
-    -- Remove old fn_selected, else selected item will be opened
-    -- with previous cwd
-    opts.fn_selected = nil
-    opts.cwd = opts.cwd or vim.uv.cwd()
-    opts.query = fzf.config.__resume_data.last_query
 
     fzf.files({
       cwd_header = true,
