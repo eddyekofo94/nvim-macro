@@ -465,6 +465,9 @@ fzf.setup({
       ['--info'] = 'inline-right',
     },
   },
+  oldfiles = {
+    prompt = 'Oldfiles> ',
+  },
   fzf_opts = {
     ['--no-scrollbar'] = '',
     ['--no-separator'] = '',
