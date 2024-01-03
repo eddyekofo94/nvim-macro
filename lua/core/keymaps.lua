@@ -68,7 +68,7 @@ Keymap.new("n", "<C-u>", "zz<C-u>")
 
 -- Whatever you delete, make it go away
 map({ "n", "x" }, "c", '"_c')
-map(nxo, "%", "gg0vG$")
+
 map({ "n", "x" }, "C", '"_C')
 map({ "n", "x" }, "S", '"_S', "Don't save to register")
 

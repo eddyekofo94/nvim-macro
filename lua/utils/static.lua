@@ -10,9 +10,9 @@ function langs_mt:list(field)
   local result = {}
   -- deduplication
   for _, info in pairs(self) do
-    if type(info[field]) == 'string' then
+    if type(info[field]) == "string" then
       deduplist[info[field]] = true
-    elseif type(info[field]) == 'table' then
+    elseif type(info[field]) == "table" then
       for _, name in pairs(info[field]) do
         deduplist[name] = true
       end
@@ -36,119 +36,124 @@ end
 
 M.langs = setmetatable({
   sh = {
-    ft = 'sh',
-    lsp_server = { 'bashls', 'efm' },
-    dap = 'bashdb',
+    ft = "sh",
+    lsp_server = { "bashls", "efm" },
+    dap = "bashdb",
   },
   c = {
-    ts = 'c',
-    ft = 'c',
-    lsp_server = 'clangd',
-    dap = 'codelldb',
+    ts = "c",
+    ft = "c",
+    lsp_server = "clangd",
+    dap = "codelldb",
   },
   cpp = {
-    ts = 'cpp',
-    ft = 'cpp',
-    lsp_server = 'clangd',
-    dap = 'codelldb',
+    ts = "cpp",
+    ft = "cpp",
+    lsp_server = "clangd",
+    dap = "codelldb",
   },
   cuda = {
-    ts = 'cuda',
-    ft = 'cuda',
-    lsp_server = 'clangd',
+    ts = "cuda",
+    ft = "cuda",
+    lsp_server = "clangd",
   },
   fish = {
-    ts = 'fish',
-    ft = 'fish',
-    lsp_server = 'efm',
+    ts = "fish",
+    ft = "fish",
+    lsp_server = "efm",
   },
   help = {
-    ts = 'vimdoc',
-    ft = 'help',
+    ts = "vimdoc",
+    ft = "help",
   },
   lua = {
-    ts = 'lua',
-    ft = 'lua',
-    lsp_server = { 'lua_ls', 'efm' },
+    ts = "lua",
+    ft = "lua",
+    lsp_server = { "lua_ls", "efm" },
   },
   rust = {
-    ts = 'rust',
-    ft = 'rust',
-    lsp_server = 'rust_analyzer',
+    ts = "rust",
+    ft = "rust",
+    lsp_server = "rust_analyzer",
   },
   make = {
-    ts = 'make',
-    ft = 'make',
+    ts = "make",
+    ft = "make",
   },
   markdown = {
     ts = {
-      'markdown_inline',
-      'markdown',
+      "markdown_inline",
+      "markdown",
     },
-    lsp_server = 'marksman',
+    lsp_server = "marksman",
   },
   python = {
-    ts = 'python',
-    ft = 'python',
-    lsp_server = { 'jedi_language_server', 'efm' },
-    dap = 'debugpy',
+    ts = "python",
+    ft = "python",
+    lsp_server = { "jedi_language_server", "efm" },
+    dap = "debugpy",
+  },
+  go = {
+    ts = "go",
+    ft = { "go" },
+    lsp_server = { "gopls" },
   },
   vim = {
-    ts = 'vim',
-    ft = 'vim',
-    lsp_server = 'vimls',
+    ts = "vim",
+    ft = "vim",
+    lsp_server = "vimls",
   },
   tex = {
-    ft = 'tex',
-    ts = 'latex',
-    lsp_server = 'texlab',
+    ft = "tex",
+    ts = "latex",
+    lsp_server = "texlab",
   },
   query = { -- Fix error `no parser for 'query' language` on `:InspectTree`
-    ts = 'query',
+    ts = "query",
   },
 }, langs_mt)
 
 -- Box drawing characters
 M.box = {
   single = {
-    tl = '┌',
-    tr = '┐',
-    bl = '└',
-    br = '┘',
-    hr = '─',
-    vt = '│',
+    tl = "┌",
+    tr = "┐",
+    bl = "└",
+    br = "┘",
+    hr = "─",
+    vt = "│",
   },
   double = {
-    tl = '╔',
-    tr = '╗',
-    bl = '╚',
-    br = '╝',
-    hr = '═',
-    vt = '║',
+    tl = "╔",
+    tr = "╗",
+    bl = "╚",
+    br = "╝",
+    hr = "═",
+    vt = "║",
   },
   rounded = {
-    tl = '╭',
-    tr = '╮',
-    bl = '╰',
-    br = '╯',
-    hr = '─',
-    vt = '│',
+    tl = "╭",
+    tr = "╮",
+    bl = "╰",
+    br = "╯",
+    hr = "─",
+    vt = "│",
   },
   bold = {
-    tl = '┏',
-    tr = '┓',
-    bl = '┗',
-    br = '┛',
-    hr = '━',
-    vt = '┃',
+    tl = "┏",
+    tr = "┓",
+    bl = "┗",
+    br = "┛",
+    hr = "━",
+    vt = "┃",
   },
   vintage = {
-    tl = '+',
-    tr = '+',
-    bl = '+',
-    br = '+',
-    hr = '-',
-    vt = '|',
+    tl = "+",
+    tr = "+",
+    bl = "+",
+    br = "+",
+    hr = "-",
+    vt = "|",
   },
 }
 

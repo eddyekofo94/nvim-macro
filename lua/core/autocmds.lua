@@ -10,11 +10,12 @@ local function au(group, ...)
 end
 
 local fn = vim.fn
+local general_group = "General Settings"
 
-au('LargeFileSettings', {
-  'BufReadPre',
+au("LargeFileSettings", {
+  "BufReadPre",
   {
-    desc = 'Set settings for large files.',
+    desc = "Set settings for large files.",
     callback = function(info)
       if vim.b.large_file ~= nil then
         return
@@ -27,16 +28,16 @@ au('LargeFileSettings', {
         vim.opt_local.swapfile = false
         vim.opt_local.undofile = false
         vim.opt_local.breakindent = false
-        vim.opt_local.colorcolumn = ''
-        vim.opt_local.statuscolumn = ''
-        vim.opt_local.signcolumn = 'no'
-        vim.opt_local.foldcolumn = '0'
-        vim.opt_local.winbar = ''
-        vim.api.nvim_create_autocmd('BufReadPost', {
+        vim.opt_local.colorcolumn = ""
+        vim.opt_local.statuscolumn = ""
+        vim.opt_local.signcolumn = "no"
+        vim.opt_local.foldcolumn = "0"
+        vim.opt_local.winbar = ""
+        vim.api.nvim_create_autocmd("BufReadPost", {
           buffer = info.buf,
           once = true,
           callback = function()
-            vim.opt_local.syntax = ''
+            vim.opt_local.syntax = ""
             return true
           end,
         })
@@ -49,10 +50,10 @@ au('LargeFileSettings', {
 -- Ideally something like https://github.com/neovim/neovim/pull/14029
 -- will be merged to nvim, also see
 -- https://github.com/neovim/neovim/issues/13967
-au('CJKFileSettings', {
-  'BufEnter',
+au("CJKFileSettings", {
+  "BufEnter",
   {
-    desc = 'Settings for CJK files.',
+    desc = "Settings for CJK files.",
     callback = function(info)
       local lnum_nonblank = math.max(0, vim.fn.nextnonblank(1) - 1)
       local lines = vim.api.nvim_buf_get_lines(
@@ -62,7 +63,7 @@ au('CJKFileSettings', {
         false
       )
       for _, line in ipairs(lines) do
-        if line:match('[\128-\255]') then
+        if line:match("[\128-\255]") then
           vim.opt_local.linebreak = false
           return
         end
@@ -71,28 +72,28 @@ au('CJKFileSettings', {
   },
 })
 
-au('YankHighlight', {
-  'TextYankPost',
+au("YankHighlight", {
+  "TextYankPost",
   {
-    desc = 'Highlight the selection on yank.',
+    desc = "Highlight the selection on yank.",
     callback = function()
       vim.highlight.on_yank({
-        higroup = 'HighlightedyankRegion',
+        higroup = "HighlightedyankRegion",
         timeout = 500,
       })
     end,
   },
 })
 
-au('Autosave', {
-  { 'BufLeave', 'WinLeave', 'FocusLost' },
+au("Autosave", {
+  { "BufLeave", "WinLeave", "FocusLost" },
   {
     nested = true,
-    desc = 'Autosave on focus change.',
+    desc = "Autosave on focus change.",
     callback = function(info)
       if
-        vim.bo[info.buf].bt == ''
-        and (vim.uv.fs_stat(info.file) or {}).type == 'file'
+        vim.bo[info.buf].bt == ""
+        and (vim.uv.fs_stat(info.file) or {}).type == "file"
       then
         vim.cmd.update({
           mods = { emsg_silent = true },
@@ -102,23 +103,23 @@ au('Autosave', {
   },
 })
 
-au('WinCloseJmp', {
-  'WinClosed',
+au("WinCloseJmp", {
+  "WinClosed",
   {
     nested = true,
-    desc = 'Jump to last accessed window on closing the current one.',
+    desc = "Jump to last accessed window on closing the current one.",
     command = "if expand('<amatch>') == win_getid() | wincmd p | endif",
   },
 })
 
-au('LastPosJmp', {
-  'BufReadPost',
+au("LastPosJmp", {
+  "BufReadPost",
   {
-    desc = 'Last position jump.',
+    desc = "Last position jump.",
     callback = function(info)
       local ft = vim.bo[info.buf].ft
       -- don't apply to git messages
-      if ft ~= 'gitcommit' and ft ~= 'gitrebase' then
+      if ft ~= "gitcommit" and ft ~= "gitrebase" then
         vim.cmd.normal({
           'g`"zvzz',
           bang = true,
@@ -129,28 +130,38 @@ au('LastPosJmp', {
   },
 })
 
-au('AutoCwd', {
-  { 'BufWinEnter', 'FileChangedShellPost' },
+au(general_group, {
+  "CmdLineLeave",
   {
-    pattern = '*',
-    desc = 'Automatically change local current directory.',
+    desc = "Center the buffer after search in cmd mode",
+    callback = function()
+      vim.api.nvim_feedkeys("zz", "n", false)
+    end,
+  },
+})
+
+au("AutoCwd", {
+  { "BufWinEnter", "FileChangedShellPost" },
+  {
+    pattern = "*",
+    desc = "Automatically change local current directory.",
     callback = function(info)
       vim.schedule(function()
         if
-          info.file == ''
+          info.file == ""
           or not vim.api.nvim_buf_is_valid(info.buf)
-          or vim.bo[info.buf].bt ~= ''
-          or (vim.uv.fs_stat(info.file) or {}).type ~= 'file'
+          or vim.bo[info.buf].bt ~= ""
+          or (vim.uv.fs_stat(info.file) or {}).type ~= "file"
         then
           return
         end
         local current_dir = vim.fn.getcwd(0)
-        local target_dir = require('utils').fs.proj_dir(info.file)
+        local target_dir = require("utils").fs.proj_dir(info.file)
           or vim.fs.dirname(info.file)
         local stat = target_dir and vim.uv.fs_stat(target_dir)
         -- Prevent unnecessary directory change, which triggers
         -- DirChanged autocmds that may update winbar unexpectedly
-        if current_dir ~= target_dir and stat and stat.type == 'directory' then
+        if current_dir ~= target_dir and stat and stat.type == "directory" then
           vim.cmd.lcd(target_dir)
         end
       end)
@@ -158,36 +169,36 @@ au('AutoCwd', {
   },
 })
 
-au('PromptBufKeymaps', {
-  'BufEnter',
+au("PromptBufKeymaps", {
+  "BufEnter",
   {
-    desc = 'Undo automatic <C-w> remap in prompt buffers.',
+    desc = "Undo automatic <C-w> remap in prompt buffers.",
     callback = function(info)
-      if vim.bo[info.buf].buftype == 'prompt' then
-        vim.keymap.set('i', '<C-w>', '<C-S-W>', { buffer = info.buf })
+      if vim.bo[info.buf].buftype == "prompt" then
+        vim.keymap.set("i", "<C-w>", "<C-S-W>", { buffer = info.buf })
       end
     end,
   },
 })
 
-au('QuickFixAutoOpen', {
-  'QuickFixCmdPost',
+au("QuickFixAutoOpen", {
+  "QuickFixCmdPost",
   {
-    desc = 'Open quickfix window if there are results.',
+    desc = "Open quickfix window if there are results.",
     callback = function(info)
       if #vim.fn.getqflist() <= 1 then
         return
       end
-      if vim.startswith(info.match, 'l') then
+      if vim.startswith(info.match, "l") then
         vim.schedule(function()
           vim.cmd.lwindow({
-            mods = { split = 'belowright' },
+            mods = { split = "belowright" },
           })
         end)
       else
         vim.schedule(function()
           vim.cmd.cwindow({
-            mods = { split = 'botright' },
+            mods = { split = "botright" },
           })
         end)
       end
@@ -195,37 +206,53 @@ au('QuickFixAutoOpen', {
   },
 })
 
-au('EqualWinSize', {
-  'VimResized',
+au("EqualWinSize", {
+  "VimResized",
   {
-    desc = 'Make window equal size on VimResized.',
-    command = 'wincmd =',
+    desc = "Make window equal size on VimResized.",
+    command = "wincmd =",
   },
 })
 
-local general_group = 'General Settings'
-
 au(general_group, {
-  'BufEnter',
+  "BufEnter",
   {
     callback = function()
-      vim.opt.formatoptions:remove({ 'c', 'r', 'o' })
+      vim.opt.formatoptions:remove({ "c", "r", "o" })
     end,
-    desc = 'Disable New Line Comment',
+    desc = "Disable New Line Comment",
   },
 })
 
 au(general_group, {
-  'FileType',
+  "FileType",
   {
-    pattern = { 'c', 'go', 'cpp', 'py', 'java', 'cs' },
+    pattern = { "c", "go", "cpp", "py", "java", "cs" },
     callback = function()
       vim.bo.shiftwidth = 4
     end,
-    desc = 'Set shiftwidth to 4 in these filetypes',
+    desc = "Set shiftwidth to 4 in these filetypes",
   },
 })
 
+au(general_group, {
+  "BufHidden",
+  {
+    desc = "Delete [No Name] buffers",
+    pattern = "VeryLazy",
+    callback = function(data)
+      if
+        data.file == ""
+        and vim.bo[data.buf].buftype == ""
+        and not vim.bo[data.buf].modified
+      then
+        vim.schedule(function()
+          pcall(vim.api.nvim_buf_delete, data.buf, {})
+        end)
+      end
+    end,
+  },
+})
 -- au(general_group, {
 --   'ModeChanged',
 --   {
@@ -242,18 +269,18 @@ au(general_group, {
 -- })
 
 -- Show cursor line and cursor column only in current window
-au('AutoHlCursorLine', {
-  'WinEnter',
+au("AutoHlCursorLine", {
+  "WinEnter",
   {
     once = true,
-    desc = 'Initialize cursorline winhl.',
+    desc = "Initialize cursorline winhl.",
     callback = function()
       local winlist = vim.api.nvim_list_wins()
       for _, win in ipairs(winlist) do
         vim.api.nvim_win_call(win, function()
           vim.opt_local.winhl:append({
-            CursorLine = '',
-            CursorColumn = '',
+            CursorLine = "",
+            CursorColumn = "",
           })
         end)
       end
@@ -261,27 +288,27 @@ au('AutoHlCursorLine', {
     end,
   },
 }, {
-  { 'BufWinEnter', 'WinEnter' },
+  { "BufWinEnter", "WinEnter" },
   {
     callback = function()
       if
-        vim.fn.win_gettype() ~= ''
-        or vim.api.nvim_get_mode().mode:match('^[itRsS\x13]')
+        vim.fn.win_gettype() ~= ""
+        or vim.api.nvim_get_mode().mode:match("^[itRsS\x13]")
       then
         return
       end
       -- Restore CursorLine and CursorColumn in current window
       local winhl = vim.opt_local.winhl:get()
-      if winhl['CursorLine'] or winhl['CursorColumn'] then
+      if winhl["CursorLine"] or winhl["CursorColumn"] then
         vim.opt_local.winhl:remove({
-          'CursorLine',
-          'CursorColumn',
+          "CursorLine",
+          "CursorColumn",
         })
       end
       -- Conceal cursor line and cursor column in the previous window
       -- if current window is a normal window
       local current_win = vim.api.nvim_get_current_win()
-      local prev_win = vim.fn.win_getid(vim.fn.winnr('#'))
+      local prev_win = vim.fn.win_getid(vim.fn.winnr("#"))
       if
         prev_win ~= 0
         and prev_win ~= current_win
@@ -289,31 +316,31 @@ au('AutoHlCursorLine', {
       then
         vim.api.nvim_win_call(prev_win, function()
           vim.opt_local.winhl:append({
-            CursorLine = '',
-            CursorColumn = '',
+            CursorLine = "",
+            CursorColumn = "",
           })
         end)
       end
     end,
   },
 }, {
-  'ModeChanged',
+  "ModeChanged",
   {
-    pattern = { '[itRss\x13]*:*', '*:[itRss\x13]*' },
+    pattern = { "[itRss\x13]*:*", "*:[itRss\x13]*" },
     callback = function()
       local winhl = vim.opt_local.winhl:get()
-      if vim.v.event.new_mode:match('^[itRss\x13]') then
-        if not winhl['CursorLine'] or not winhl['CursorColumn'] then
+      if vim.v.event.new_mode:match("^[itRss\x13]") then
+        if not winhl["CursorLine"] or not winhl["CursorColumn"] then
           vim.opt_local.winhl:append({
-            CursorLine = '',
-            CursorColumn = '',
+            CursorLine = "",
+            CursorColumn = "",
           })
         end
       else
-        if winhl['CursorLine'] or winhl['CursorColumn'] then
+        if winhl["CursorLine"] or winhl["CursorColumn"] then
           vim.opt_local.winhl:remove({
-            'CursorLine',
-            'CursorColumn',
+            "CursorLine",
+            "CursorColumn",
           })
         end
       end
@@ -321,23 +348,23 @@ au('AutoHlCursorLine', {
   },
 })
 
-au('TextwidthRelativeColorcolumn', {
-  'OptionSet',
+au("TextwidthRelativeColorcolumn", {
+  "OptionSet",
   {
-    pattern = 'textwidth',
-    desc = 'Set colorcolumn according to textwidth.',
+    pattern = "textwidth",
+    desc = "Set colorcolumn according to textwidth.",
     callback = function()
       if vim.v.option_new ~= 0 then
-        vim.opt_local.colorcolumn = '+1'
+        vim.opt_local.colorcolumn = "+1"
       end
     end,
   },
 })
 
-au('UpdateTimestamp', {
-  'BufWritePre',
+au("UpdateTimestamp", {
+  "BufWritePre",
   {
-    desc = 'Update timestamp automatically.',
+    desc = "Update timestamp automatically.",
     callback = function(info)
       if not vim.bo[info.buf].ma or not vim.bo[info.buf].mod then
         return
@@ -346,8 +373,8 @@ au('UpdateTimestamp', {
       local updated = false
       for idx, line in ipairs(lines) do
         local new_str, pos = line:gsub(
-          'Last Updated:.*',
-          'Last Updated: ' .. os.date('%a %d %b %Y %I:%M:%S %p %Z')
+          "Last Updated:.*",
+          "Last Updated: " .. os.date("%a %d %b %Y %I:%M:%S %p %Z")
         )
         if pos > 0 then
           updated = true
@@ -368,13 +395,13 @@ au('UpdateTimestamp', {
   },
 })
 
-au('FixVirtualEditCursorPos', {
-  'ModeChanged',
+au("FixVirtualEditCursorPos", {
+  "ModeChanged",
   {
-    desc = 'Keep cursor position after entering normal mode from visual mode with virtual edit enabled.',
-    pattern = '[vV\x16]*:n',
+    desc = "Keep cursor position after entering normal mode from visual mode with virtual edit enabled.",
+    pattern = "[vV\x16]*:n",
     callback = function()
-      if vim.wo.ve:find('all') and vim.w.ve_cursor then
+      if vim.wo.ve:find("all") and vim.w.ve_cursor then
         vim.api.nvim_win_set_cursor(0, {
           vim.w.ve_cursor[2],
           vim.w.ve_cursor[3] + vim.w.ve_cursor[4] - 1,
@@ -383,31 +410,31 @@ au('FixVirtualEditCursorPos', {
     end,
   },
 }, {
-  'CursorMoved',
+  "CursorMoved",
   {
-    desc = 'Record cursor position in visual mode if virtualedit is set.',
+    desc = "Record cursor position in visual mode if virtualedit is set.",
     callback = function()
-      if vim.wo.ve:find('all') then
+      if vim.wo.ve:find("all") then
         vim.w.ve_cursor = vim.fn.getcurpos()
       end
     end,
   },
 })
 
-au('FixCmdLineIskeyword', {
-  'CmdLineEnter',
+au("FixCmdLineIskeyword", {
+  "CmdLineEnter",
   {
-    desc = 'Have consistent &iskeyword in command-line mode.',
+    desc = "Have consistent &iskeyword in command-line mode.",
     callback = function(info)
       vim.g._isk_buf = info.buf
       vim.g._isk_save = vim.bo[info.buf].isk
-      vim.cmd.setlocal('isk&')
+      vim.cmd.setlocal("isk&")
     end,
   },
 }, {
-  'CmdLineLeave',
+  "CmdLineLeave",
   {
-    desc = 'Restore &iskeyword after leaving command-line mode.',
+    desc = "Restore &iskeyword after leaving command-line mode.",
     callback = function()
       if
         vim.g._isk_buf
@@ -422,10 +449,10 @@ au('FixCmdLineIskeyword', {
   },
 })
 
-au('DeferSetSpell', {
-  { 'BufReadPre', 'BufModifiedSet' },
+au("DeferSetSpell", {
+  { "BufReadPre", "BufModifiedSet" },
   {
-    desc = 'Defer setting spell options to improve startup time.',
+    desc = "Defer setting spell options to improve startup time.",
     callback = function(info)
       local buf = info.buf
       local win = vim.api.nvim_get_current_win()
@@ -433,7 +460,7 @@ au('DeferSetSpell', {
         not vim.b[buf].spell_checked
         and not vim.b[buf].large_file
         and not vim.wo[win].spell
-        and vim.bo[buf].bt == ''
+        and vim.bo[buf].bt == ""
         and vim.bo[buf].ma
       then
         vim.opt_local.spell = true
