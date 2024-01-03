@@ -723,71 +723,6 @@ local fzf_args_cmd = {
   },
 }
 
-local fzf_argadd_cmd = {
-  function(info)
-    if not vim.tbl_isempty(info.fargs) then
-      vim.cmd.argadd({
-        args = info.fargs,
-        bang = info.bang,
-        count = info.count,
-      })
-      return
-    end
-
-    fzf.files({
-      cwd_header = true,
-      cwd_prompt = false,
-      headers = { 'actions', 'cwd' },
-      prompt = 'Argadd> ',
-      actions = {
-        ['default'] = function(selected, _opts)
-          actions.vimcmd_file(
-            (info.line1 == info.line2 and info.line1 or '') .. 'argadd',
-            selected,
-            _opts
-          )
-        end,
-      },
-      find_opts = [[-type f -type d -type l -not -path '*/\.git/*' -printf '%P\n']],
-      fd_opts = [[--color=never --type f --type d --type l --hidden --follow --exclude .git]],
-      rg_opts = [[--color=never --files --hidden --follow -g '!.git'"]],
-    })
-  end,
-  {
-    count = true,
-    nargs = '*',
-    complete = 'file',
-  },
-}
-
-local fzf_argdel_cmd = {
-  function(info)
-    if not vim.tbl_isempty(info.fargs) then
-      vim.cmd.argdelete({
-        args = info.fargs,
-        bang = info.bang,
-        count = info.count,
-      })
-      return
-    end
-    fzf.args({
-      cwd_prompt = false,
-      headers = { 'actions' },
-      prompt = 'Argdelete> ',
-      actions = {
-        ['ctrl-s'] = false,
-        ['ctrl-x'] = false,
-        ['enter'] = actions.arg_del,
-      },
-    })
-  end,
-  {
-    count = true,
-    nargs = '*',
-    complete = 'arglist',
-  },
-}
-
 -- stylua: ignore start
 vim.api.nvim_create_user_command('Ls', unpack(fzf_ls_cmd))
 vim.api.nvim_create_user_command('Files', unpack(fzf_ls_cmd))
@@ -796,8 +731,6 @@ vim.api.nvim_create_user_command('Autocmd', unpack(fzf_au_cmd))
 vim.api.nvim_create_user_command('Buffers', unpack(fzf_ls_cmd))
 vim.api.nvim_create_user_command('Marks', unpack(fzf_marks_cmd))
 vim.api.nvim_create_user_command('Highlight', unpack(fzf_hi_cmd))
-vim.api.nvim_create_user_command('Argadd', unpack(fzf_argadd_cmd))
-vim.api.nvim_create_user_command('Argdelete', unpack(fzf_argdel_cmd))
 vim.api.nvim_create_user_command('Registers', unpack(fzf_reg_cmd))
 vim.api.nvim_create_user_command('Oldfiles', fzf.oldfiles, {})
 vim.api.nvim_create_user_command('Changes', fzf.changes, {})

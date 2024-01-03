@@ -11,12 +11,10 @@ return {
       'Files',
       'Marks',
       'Jumps',
-      'Argadd',
       'Autocmd',
       'Buffers',
       'Changes',
       'Oldfiles',
-      'Argdelete',
       'Registers',
       'Highlight',
     },
@@ -57,11 +55,9 @@ return {
           keymap.command_abbrev({ 'ar', 'args' }, 'Args')
           keymap.command_abbrev({ 'ju', 'jumps' }, 'Jumps')
           keymap.command_abbrev({ 'au', 'autocmd' }, 'Autocmd')
-          keymap.command_abbrev({ 'arga', 'argadd' }, 'Argadd')
           keymap.command_abbrev({ 'o', 'oldfiles' }, 'Oldfiles')
           keymap.command_abbrev({ 'hi', 'highlight' }, 'Highlight')
           keymap.command_abbrev({ 'reg', 'registers' }, 'Registers')
-          keymap.command_abbrev({ 'argd', 'argdelete' }, 'Argdelete')
           vim.api.nvim_del_augroup_by_id(info.group)
           return true
         end,
