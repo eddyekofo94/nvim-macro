@@ -90,6 +90,10 @@ function actions.switch_cwd()
     end
   end
 
+  if opts.headers then
+    opts = core.set_header(opts, opts.headers)
+  end
+
   fzf.resume(opts)
 end
 
