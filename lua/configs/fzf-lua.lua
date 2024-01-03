@@ -65,6 +65,7 @@ function actions.switch_cwd()
     if not input then
       return
     end
+    input = vim.fs.normalize(input)
     local stat = vim.uv.fs_stat(input)
     if not stat or not stat.type == 'directory' then
       print('\n')
@@ -74,7 +75,7 @@ function actions.switch_cwd()
       )
       return
     end
-    opts.cwd = vim.fs.normalize(input)
+    opts.cwd = input
   end)
 
   -- Adapted from fzf-lua `core.set_header()` function
