@@ -203,3 +203,20 @@ index b9384ac..d6ef90a 100644
    if hexcol and not hexcol:match("^#") then
      -- try to acquire the color from the map
      -- some schemes don't capitalize first letter?
+diff --git a/lua/fzf-lua/win.lua b/lua/fzf-lua/win.lua
+index 43b0094..9ca2300 100644
+--- a/lua/fzf-lua/win.lua
++++ b/lua/fzf-lua/win.lua
+@@ -1391,10 +1391,10 @@ function FzfWin.toggle_help()
+     style = "minimal",
+     width = vim.o.columns,
+     height = height,
+-    row = vim.o.lines - height - vim.o.cmdheight - 2,
++    row = 0,
+     col = 1,
+     -- top border only
+-    border = { " ", "─", " ", " ", " ", " ", " ", " " },
++    border = "single",
+     -- topmost popup
+     zindex = 999,
+   }
