@@ -192,8 +192,10 @@ config._action_to_helpstr[actions.switch_cwd] = 'change-cwd'
 config._action_to_helpstr[actions.arg_del] = 'delete'
 config._action_to_helpstr[actions.del_autocmd] = 'delete-autocmd'
 config._action_to_helpstr[actions.arg_search_add] = 'search-and-add-new-file'
-config._action_to_helpstr[actions._file_sel_to_qf] = 'file-selection-to-quickfix'
-config._action_to_helpstr[actions._file_set_to_ll] = 'file-selection-to-loclist'
+config._action_to_helpstr[actions.buf_sel_to_qf] = 'buffer-select-to-quickfix'
+config._action_to_helpstr[actions.buf_sel_to_ll] = 'buffer-select-to-loclist'
+config._action_to_helpstr[actions._file_sel_to_qf] = 'file-select-to-quickfix'
+config._action_to_helpstr[actions._file_set_to_ll] = 'file-select-to-loclist'
 config._action_to_helpstr[actions._file_edit_or_qf] = 'file-edit-or-qf'
 -- stylua: ignore end
 
@@ -384,6 +386,20 @@ fzf.setup({
       },
     },
   },
+  blines = {
+    actions = {
+      ['alt-q'] = actions.buf_sel_to_qf,
+      ['alt-o'] = actions.buf_sel_to_ll,
+      ['alt-l'] = false,
+    },
+  },
+  lines = {
+    actions = {
+      ['alt-q'] = actions.buf_sel_to_qf,
+      ['alt-o'] = actions.buf_sel_to_ll,
+      ['alt-l'] = false,
+    },
+  },
   buffers = {
     show_unlisted = true,
     show_unloaded = true,
@@ -503,8 +519,8 @@ vim.keymap.set('x', '<Leader>#', fzf.grep_visual)
 vim.keymap.set('n', '<Leader>"', fzf.registers)
 vim.keymap.set('n', '<Leader>F', fzf.builtin)
 vim.keymap.set('n', '<Leader>o', fzf.oldfiles)
-vim.keymap.set('n', '<Leader>l', fzf.blines)
-vim.keymap.set('n', '<Leader>L', fzf.lines)
+vim.keymap.set('n', '<Leader>-', fzf.blines)
+vim.keymap.set('n', '<Leader>=', fzf.lines)
 vim.keymap.set('n', '<Leader>s', fzf.lsp_document_symbols)
 vim.keymap.set('n', '<Leader>S', fzf.lsp_live_workspace_symbols)
 vim.keymap.set('n', '<Leader>f', fzf.builtin)
@@ -520,12 +536,17 @@ vim.keymap.set('n', '<Leader>fE', fzf.diagnostics_workspace)
 vim.keymap.set('n', '<Leader>fH', fzf.highlights)
 vim.keymap.set('n', "<Leader>f'", fzf.resume)
 vim.keymap.set('n', '<Leader>fS', fzf.lsp_live_workspace_symbols)
-vim.keymap.set('n', '<Leader>fa', fzf.autocmds)
+vim.keymap.set('n', '<Leader>fA', fzf.autocmds)
 vim.keymap.set('n', '<Leader>fb', fzf.buffers)
 vim.keymap.set('n', '<Leader>fc', fzf.changes)
 vim.keymap.set('n', '<Leader>fd', fzf.lsp_definitions)
 vim.keymap.set('n', '<Leader>fe', fzf.diagnostics_document)
 vim.keymap.set('n', '<Leader>ff', fzf.files)
+vim.keymap.set('n', '<Leader>fa', fzf.args)
+vim.keymap.set('n', '<Leader>fl', fzf.loclist)
+vim.keymap.set('n', '<Leader>fq', fzf.quickfix)
+vim.keymap.set('n', '<Leader>fL', fzf.loclist_stack)
+vim.keymap.set('n', '<Leader>fQ', fzf.quickfix_stack)
 vim.keymap.set('n', '<Leader>fgt', fzf.git_tags)
 vim.keymap.set('n', '<Leader>fgs', fzf.git_stash)
 vim.keymap.set('n', '<Leader>fgg', fzf.git_status)
@@ -535,8 +556,8 @@ vim.keymap.set('n', '<Leader>fgb', fzf.git_branches)
 vim.keymap.set('n', '<Leader>fh', fzf.help_tags)
 vim.keymap.set('n', '<Leader>f?', fzf.help_tags)
 vim.keymap.set('n', '<Leader>fk', fzf.keymaps)
-vim.keymap.set('n', '<Leader>fl', fzf.blines)
-vim.keymap.set('n', '<Leader>fL', fzf.lines)
+vim.keymap.set('n', '<Leader>f-', fzf.blines)
+vim.keymap.set('n', '<Leader>f=', fzf.lines)
 vim.keymap.set('n', '<Leader>fm', fzf.marks)
 vim.keymap.set('n', '<Leader>fo', fzf.oldfiles)
 vim.keymap.set('n', '<Leader>fr', fzf.lsp_references)
