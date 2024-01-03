@@ -39,9 +39,7 @@ function actions.switch_provider()
       ['default'] = function(selected)
         fzf[selected[1]](opts)
       end,
-      ['esc'] = function()
-        fzf.resume(opts)
-      end,
+      ['esc'] = actions.resume,
     },
   })
 end
@@ -49,7 +47,8 @@ end
 ---Switch cwd while preserving the last query
 ---@return nil
 function actions.switch_cwd()
-  local opts = fzf.config.__resume_data.opts or {}
+  fzf.config.__resume_data.opts = fzf.config.__resume_data.opts or {}
+  local opts = fzf.config.__resume_data.opts
 
   -- Remove old fn_selected, else selected item will be opened
   -- with previous cwd
@@ -95,7 +94,7 @@ function actions.switch_cwd()
     opts = core.set_header(opts, opts.headers)
   end
 
-  fzf.resume(opts)
+  actions.resume()
 end
 
 ---Delete selected autocmd
@@ -123,7 +122,8 @@ end
 ---Search & select files then add them to arglist
 ---@return nil
 function actions.arg_search_add()
-  local opts = fzf.config.__resume_data.opts or {}
+  fzf.config.__resume_data.opts = fzf.config.__resume_data.opts or {}
+  local opts = fzf.config.__resume_data.opts
 
   -- Remove old fn_selected, else selected item will be opened
   -- with previous cwd
@@ -718,7 +718,9 @@ local fzf_argadd_cmd = {
       return
     end
 
-    local opts = fzf.config.__resume_data.opts or {}
+    fzf.config.__resume_data.opts = fzf.config.__resume_data.opts or {}
+    local opts = fzf.config.__resume_data.opts
+
     -- Remove old fn_selected, else selected item will be opened
     -- with previous cwd
     opts.fn_selected = nil
