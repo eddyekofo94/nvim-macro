@@ -205,10 +205,8 @@ fzf.setup({
   nbsp = not vim.g.modern_ui and '\xc2\xa0' or nil,
   winopts = {
     split = [[
-      let g:_fzf_splitkeep = &splitkeep |
-        \ let &splitkeep = "topline" |
+        call v:lua.require'utils.win'.tabpage_saveview() |
         \ let g:_fzf_leave_win = win_getid(winnr()) |
-        \ let g:_fzf_leave_win_view = winsaveview() |
         \ let wins = nvim_tabpage_list_wins(0) |
         \ let bot_win = -1 |
         \ let bot_win_type = '' |
@@ -219,7 +217,7 @@ fzf.setup({
             \ break |
           \ endif |
         \ endfor |
-        \ unlet wins |
+        \ let g:_fzf_splitkeep = &splitkeep | let &splitkeep = "topline" |
         \ if bot_win_type =~# 'quickfix\|loclist' && bot_win != -1
             \ && nvim_win_get_width(bot_win) == &columns |
           \ let g:_fzf_swallow_qf_type = bot_win_type |
@@ -227,13 +225,16 @@ fzf.setup({
           \ let g:_fzf_qf_cursor = nvim_win_get_cursor(bot_win) |
           \ call nvim_win_close(bot_win, v:false) |
         \ endif |
-        \ unlet bot_win bot_win_type |
-        \ bo new |
-        \ setlocal bt=nofile bh=wipe nobl noswf |
+        \ let g:_fzf_cmdheight = &cmdheight | let &cmdheight = 0 |
+        \ let g:_fzf_laststatus = &laststatus | let &laststatus = 0 |
+        \ let height_delta = (g:_fzf_cmdheight - &cmdheight) +
+          \ (g:_fzf_laststatus ? 1 : 0) |
+        \ let fzf_height = (exists('g:_fzf_swallow_qf_height')
+          \ ? g:_fzf_swallow_qf_height : 10) + height_delta |
+        \ exe 'botright ' . fzf_height . ' new' |
         \ let w:winbar_no_attach = v:true |
-        \ exe 'resize ' . (exists('g:_fzf_swallow_qf_height')
-          \ ? g:_fzf_swallow_qf_height : 10) |
-        \ setlocal winfixheight
+        \ setlocal bt=nofile bh=wipe nobl noswf wfh |
+        \ unlet wins bot_win bot_win_type height_delta fzf_height
     ]],
     on_create = function()
       local buf = vim.api.nvim_get_current_buf()
@@ -251,10 +252,18 @@ fzf.setup({
       )
     end,
     on_close = function()
-      if vim.g._fzf_splitkeep then
-        vim.go.splitkeep = vim.g._fzf_splitkeep
-        vim.g._fzf_splitkeep = nil
+      ---@param name string
+      ---@return nil
+      local function _restore_global_opt(name)
+        if vim.g['_fzf_' .. name] then
+          vim.go[name] = vim.g['_fzf_' .. name]
+          vim.g['_fzf_' .. name] = nil
+        end
       end
+
+      _restore_global_opt('splitkeep')
+      _restore_global_opt('cmdheight')
+      _restore_global_opt('laststatus')
 
       if vim.g._fzf_swallow_qf_type and vim.g._fzf_qf_cursor then
         local cur_win = vim.api.nvim_get_current_win()
@@ -275,16 +284,16 @@ fzf.setup({
       vim.g._fzf_swallow_qf_type = nil
       vim.g._fzf_qf_cursor = nil
 
+      utils.win.tabpage_restview(0, true)
+
       if
         vim.g._fzf_leave_win
-        and vim.g._fzf_leave_win_view
         and vim.api.nvim_win_is_valid(vim.g._fzf_leave_win)
+        and vim.api.nvim_get_current_win() ~= vim.g._fzf_leave_win
       then
         vim.api.nvim_set_current_win(vim.g._fzf_leave_win)
-        vim.fn.winrestview(vim.g._fzf_leave_win_view)
       end
       vim.g._fzf_leave_win = nil
-      vim.g._fzf_leave_win_view = nil
     end,
     preview = {
       hidden = 'hidden',
