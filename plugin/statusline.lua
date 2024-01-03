@@ -1,19 +1,13 @@
--- .. ' '
--- .. ' '
--- .. ' '
--- .. ' '
--- .. ' '
--- .. ' '
 _G.statusline = {}
-local utils = require('utils')
-local groupid = vim.api.nvim_create_augroup('StatusLine', {})
+local utils = require("utils")
+local groupid = vim.api.nvim_create_augroup("StatusLine", {})
 
 ---@type table<string, string>
 local signs_text_cache = setmetatable({}, {
   __index = function(self, key)
     local sign_def = vim.fn.sign_getdefined(key)[1]
     self[key] = sign_def and sign_def.text
-    return self[key] or ''
+    return self[key] or ""
   end,
 })
 
@@ -60,8 +54,8 @@ local modes = {
 ---Get string representation of the current mode
 ---@return string
 function statusline.mode()
-  local hl = vim.bo.mod and 'StatusLineHeaderModified' or 'StatusLineHeader'
-  return utils.stl.hl(' ' .. modes[vim.fn.mode()] .. ' ', hl)
+  local hl = vim.bo.mod and "StatusLineHeaderModified" or "StatusLineHeader"
+  return utils.stl.hl(" " .. modes[vim.fn.mode()] .. " ", hl)
 end
 
 ---Get diff stats for current buffer
@@ -74,13 +68,13 @@ function statusline.gitdiff()
   local changed = diff.changed or 0
   local removed = diff.removed or 0
   if added == 0 and removed == 0 and changed == 0 then
-    return ''
+    return ""
   end
   return string.format(
-    '+%s~%s-%s',
-    utils.stl.hl(tostring(added), 'StatusLineGitAdded'),
-    utils.stl.hl(tostring(changed), 'StatusLineGitChanged'),
-    utils.stl.hl(tostring(removed), 'StatusLineGitRemoved')
+    "+%s~%s-%s",
+    utils.stl.hl(tostring(added), "StatusLineGitAdded"),
+    utils.stl.hl(tostring(changed), "StatusLineGitChanged"),
+    utils.stl.hl(tostring(removed), "StatusLineGitRemoved")
   )
 end
 
@@ -90,13 +84,13 @@ function statusline.branch()
   ---@diagnostic disable-next-line: undefined-field
   local branch = vim.b.gitsigns_status_dict and vim.b.gitsigns_status_dict.head
     or utils.git.branch()
-  return branch == '' and '' or ' ' .. branch
+  return branch == "" and "" or " " .. branch
 end
 
 ---Get current filetype
 ---@return string
 function statusline.ft()
-  return vim.bo.ft == '' and '' or vim.bo.ft:gsub('^%l', string.upper)
+  return vim.bo.ft == "" and "" or vim.bo.ft:gsub("^%l", string.upper)
 end
 
 ---@return string
@@ -104,49 +98,49 @@ function statusline.word_count()
   local wordcount = vim.fn.wordcount()
   local num_words = wordcount.words
   local num_vis_words = wordcount.visual_words
-  return num_words == 0 and ''
-    or (num_vis_words and num_vis_words .. '/' or '')
+  return num_words == 0 and ""
+    or (num_vis_words and num_vis_words .. "/" or "")
       .. num_words
-      .. ' word'
-      .. (num_words > 1 and 's' or '')
+      .. " word"
+      .. (num_words > 1 and "s" or "")
 end
 
 ---Text filetypes
 ---@type table<string, true>
 local ft_text = {
-  [''] = true,
-  ['tex'] = true,
-  ['markdown'] = true,
-  ['text'] = true,
+  [""] = true,
+  ["tex"] = true,
+  ["markdown"] = true,
+  ["text"] = true,
 }
 
 local assets = {
-  dir = '󰉖 ',
-  file = '󰈙 ',
+  dir = "󰉖 ",
+  file = "󰈙 ",
 }
 
 local get_file_icon = function()
-  local filename = vim.fn.expand('%:t')
-  local extension = vim.fn.expand('%:e')
-  local present, icons = pcall(require, 'nvim-web-devicons')
+  local filename = vim.fn.expand("%:t")
+  local extension = vim.fn.expand("%:e")
+  local present, icons = pcall(require, "nvim-web-devicons")
   local icon = present and icons.get_icon(filename, extension) or assets.file
-  return ' ' .. icon .. ' '
+  return " " .. icon .. " "
 end
 
 function statusline.get_cwd()
-  return assets.dir .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+  return assets.dir .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
 end
 
 ---Additional info for the current buffer enclosed in parentheses
 ---@return string
 function statusline.info()
-  if vim.bo.bt ~= '' then
-    return ''
+  if vim.bo.bt ~= "" then
+    return ""
   end
   local info = {}
   ---@param section string
   local function add_section(section)
-    if section ~= '' then
+    if section ~= "" then
       table.insert(info, section)
     end
   end
@@ -157,13 +151,13 @@ function statusline.info()
   end
   add_section(statusline.branch())
   add_section(statusline.gitdiff())
-  return vim.tbl_isempty(info) and ''
-    or string.format('(%s) ', table.concat(info, ', '))
+  return vim.tbl_isempty(info) and ""
+    or string.format("(%s) ", table.concat(info, ", "))
 end
 
-vim.api.nvim_create_autocmd('DiagnosticChanged', {
+vim.api.nvim_create_autocmd("DiagnosticChanged", {
   group = groupid,
-  desc = 'Update diagnostics cache for the status line.',
+  desc = "Update diagnostics cache for the status line.",
   callback = function(info)
     local b = vim.b[info.buf]
     local diag_cnt_cache = { 0, 0, 0, 0 }
@@ -182,31 +176,31 @@ function statusline.diag()
   if vim.b.diag_str_cache then
     return vim.b.diag_str_cache
   end
-  local str = ''
+  local str = ""
   local buf_cnt = vim.b.diag_cnt_cache or {}
-  for serverity_nr, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
+  for serverity_nr, severity in ipairs({ "Error", "Warn", "Info", "Hint" }) do
     local cnt = buf_cnt[serverity_nr] or 0
     if cnt > 0 then
       -- local icon = signs_text_cache['DiagnosticSign' .. severity]
-      local icon = ' '
-      local icon_hl = 'StatusLineDiagnostic' .. severity
+      local icon = " "
+      local icon_hl = "StatusLineDiagnostic" .. severity
       str = str
-        .. (str == '' and '' or ' ')
+        .. (str == "" and "" or " ")
         .. utils.stl.hl(icon, icon_hl)
         .. cnt
     end
   end
-  if str:find('%S') then
-    str = str .. ' '
+  if str:find("%S") then
+    str = str .. " "
   end
   vim.b.diag_str_cache = str
   return str
 end
 
 local success_icon = {
-  '󰄳 ',
-  '󰄳 ',
-  '󰄳 ',
+  "󰄳 ",
+  "󰄳 ",
+  "󰄳 ",
 }
 
 local function get_succes_frame()
@@ -233,14 +227,14 @@ local spinner_timer = vim.uv.new_timer()
 --   { ' ', '󰪞 ', '󰪟 ', '󰪠 ', '󰪢 ', '󰪣 ', '󰪤 ', '󰪥 ' }
 -- local spinners = { "󰸶", "󰸸", "󰸷", "󰸴", "󰸵", "󰸳" }
 
-local spinner_icons = { ' ', ' ', ' ', '󰺕 ', ' ', ' ' }
+local spinner_icons = { " ", " ", " ", "󰺕 ", " ", " " }
 
 ---Id and additional info of language servers in progress
 ---@type table<integer, { name: string, timestamp: integer, type: 'begin'|'report'|'end' }>
 local server_info_in_progress = {}
 
-vim.api.nvim_create_autocmd('LspProgress', {
-  desc = 'Update LSP progress info for the status line.',
+vim.api.nvim_create_autocmd("LspProgress", {
+  desc = "Update LSP progress info for the status line.",
   group = groupid,
   callback = function(info)
     if spinner_timer then
@@ -273,10 +267,43 @@ vim.api.nvim_create_autocmd('LspProgress', {
   end,
 })
 
+function statusline.line_percentage()
+  local curr_line = vim.api.nvim_win_get_cursor(0)[1]
+  local lines = vim.api.nvim_buf_line_count(0)
+
+  if curr_line == 1 then
+    return "Top"
+  elseif curr_line == lines then
+    return "Bot"
+  else
+    return string.format("%2d%%%%", math.ceil(curr_line / lines * 99))
+  end
+end
+
+local scroll_bar_blocks =
+  { "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" }
+
+function statusline.scroll_bar(_, opts)
+  local curr_line = vim.api.nvim_win_get_cursor(0)[1]
+  local lines = vim.api.nvim_buf_line_count(0)
+
+  if opts.reverse then
+    return string.rep(
+      scroll_bar_blocks[8 - math.floor(curr_line / lines * 7)],
+      2
+    )
+  else
+    return string.rep(
+      scroll_bar_blocks[math.floor(curr_line / lines * 7) + 1],
+      2
+    )
+  end
+end
+
 ---@return string
 function statusline.lsp_progress()
   if vim.tbl_isempty(server_info_in_progress) then
-    return ''
+    return ""
   end
 
   local buf = vim.api.nvim_get_current_buf()
@@ -287,7 +314,7 @@ function statusline.lsp_progress()
     end
   end
   if vim.tbl_isempty(server_ids) then
-    return ''
+    return ""
   end
 
   local now = vim.uv.now()
@@ -299,11 +326,11 @@ function statusline.lsp_progress()
 
   if
     #server_ids == 1
-    and server_info_in_progress[server_ids[1]].type == 'end'
+    and server_info_in_progress[server_ids[1]].type == "end"
   then
     if vim.b.spinner_icon ~= spinner_icon_done and allow_changing_state() then
       vim.b.spinner_state_changed = now
-      vim.b.spinner_icon = spinner_icon_done .. ' ' -- INFO: keep the space there
+      vim.b.spinner_icon = spinner_icon_done .. " " -- INFO: keep the space there
     end
   else
     -- INFO: a way to edit this?
@@ -324,12 +351,12 @@ function statusline.lsp_progress()
   end
 
   return string.format(
-    '%s %s ',
+    "%s %s ",
     table.concat(
       vim.tbl_map(function(id)
         return server_info_in_progress[id].name
       end, server_ids),
-      ', '
+      ", "
     ),
     vim.b.spinner_icon
   )
@@ -337,17 +364,17 @@ end
 
 function statusline.search_count()
   if vim.v.hlsearch == 0 then
-    return ''
+    return ""
   end
 
   local result = vim.fn.searchcount({ maxcount = 999, timeout = 250 })
 
   if result.incomplete == 1 or next(result) == nil then
-    return ''
+    return ""
   end
 
   return string.format(
-    '[%d/%d]',
+    "[%d/%d]",
     result.current,
     math.min(result.total, result.maxcount)
   )
@@ -363,9 +390,9 @@ function statusline.filename()
     return get_file_icon()
       -- .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
       -- .. '..'
-      .. vim.fn.expand('%:.')
+      .. vim.fn.expand("%:.")
   else
-    return vim.fn.expand('%:.')
+    return vim.fn.expand("%:.")
   end
 end
 
@@ -382,6 +409,7 @@ local components = {
   lsp_progress = '%{%v:lua.statusline.lsp_progress()%}',
   searchcount  = '%{%v:lua.statusline.search_count()%}',
   mode         = '%{%v:lua.statusline.mode()%}',
+  line_percentage   = '%{%v:lua.statusline.line_percentage()%}',
   padding      = '%#None#  %*',
   pos          = '%{%&ru?"%l:%c ":""%}',
   truncate     = '%<',
@@ -398,6 +426,7 @@ local stl = table.concat({
   components.lsp_progress,
   components.info,
   components.pos,
+  components.line_percentage,
 })
 
 local stl_nc = table.concat({
@@ -415,36 +444,36 @@ function statusline.get()
 end
 
 vim.api.nvim_create_autocmd(
-  { 'FileChangedShellPost', 'DiagnosticChanged', 'LspProgress' },
+  { "FileChangedShellPost", "DiagnosticChanged", "LspProgress" },
   {
     group = groupid,
-    command = 'redrawstatus',
+    command = "redrawstatus",
   }
 )
 
-vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
+vim.api.nvim_create_autocmd({ "UIEnter", "ColorScheme" }, {
   group = groupid,
   callback = function()
-    local default_attr = utils.hl.get(0, { name = 'StatusLine' })
+    local default_attr = utils.hl.get(0, { name = "StatusLine" })
     ---@param hlgroup_name string
     ---@param attr table
     ---@return nil
     local function sethl(hlgroup_name, attr)
-      local merged_attr = vim.tbl_deep_extend('keep', attr, default_attr)
+      local merged_attr = vim.tbl_deep_extend("keep", attr, default_attr)
       utils.hl.set_default(0, hlgroup_name, merged_attr)
     end
-    if vim.env.COLORTERM or vim.fn.has('gui_running') == 1 then
-      sethl('StatusLineHeader', { bg = 'TabLine' })
+    if vim.env.COLORTERM or vim.fn.has("gui_running") == 1 then
+      sethl("StatusLineHeader", { bg = "TabLine" })
     end
-    sethl('StatusLineGitAdded', { fg = 'GitSignsAdd' })
-    sethl('StatusLineGitChanged', { fg = 'GitSignsChange' })
-    sethl('StatusLineGitRemoved', { fg = 'GitSignsDelete' })
-    sethl('StatusLineDiagnosticHint', { fg = 'DiagnosticSignHint' })
-    sethl('StatusLineDiagnosticInfo', { fg = 'DiagnosticSignInfo' })
-    sethl('StatusLineDiagnosticWarn', { fg = 'DiagnosticSignWarn' })
-    sethl('StatusLineDiagnosticError', { fg = 'DiagnosticSignError' })
-    sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'TabLine' })
+    sethl("StatusLineGitAdded", { fg = "GitSignsAdd" })
+    sethl("StatusLineGitChanged", { fg = "GitSignsChange" })
+    sethl("StatusLineGitRemoved", { fg = "GitSignsDelete" })
+    sethl("StatusLineDiagnosticHint", { fg = "DiagnosticSignHint" })
+    sethl("StatusLineDiagnosticInfo", { fg = "DiagnosticSignInfo" })
+    sethl("StatusLineDiagnosticWarn", { fg = "DiagnosticSignWarn" })
+    sethl("StatusLineDiagnosticError", { fg = "DiagnosticSignError" })
+    sethl("StatusLineHeaderModified", { fg = "Special", bg = "TabLine" })
   end,
 })
 
-vim.go.statusline = '%!v:lua.statusline.get()'
+vim.go.statusline = "%!v:lua.statusline.get()"
