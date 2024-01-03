@@ -1,4 +1,6 @@
 local utils = require("utils")
+local keymap_utils = require("utils.keymap")
+local keymap = keymap_utils.set_keymap
 
 ---Check if there exists an LS that supports the given method
 ---for the given buffer
@@ -42,24 +44,24 @@ local function setup_keymaps()
     end
   end
   -- stylua: ignore start
-  vim.keymap.set({ 'n' }, 'gq;', vim.lsp.buf.format)
-  vim.keymap.set({ 'n', 'x' }, '<Leader>ca', vim.lsp.buf.code_action)
-  vim.keymap.set({ 'n', 'x' }, '<Leader>r', vim.lsp.buf.rename)
-  vim.keymap.set({ 'n', 'x' }, '<Leader>e', vim.diagnostic.open_float)
-  vim.keymap.set({ 'n', 'x' }, '<leader>E', vim.diagnostic.setloclist)
-  vim.keymap.set({ 'n', 'x' }, '[e', utils.keymap.count_wrap(vim.diagnostic.goto_prev))
-  vim.keymap.set({ 'n', 'x' }, ']e', utils.keymap.count_wrap(vim.diagnostic.goto_next))
-  vim.keymap.set({ 'n', 'x' }, '[E', utils.keymap.count_wrap(goto_diagnostic('prev', 'ERROR')))
-  vim.keymap.set({ 'n', 'x' }, ']E', utils.keymap.count_wrap(goto_diagnostic('next', 'ERROR')))
-  vim.keymap.set({ 'n', 'x' }, '[W', utils.keymap.count_wrap(goto_diagnostic('prev', 'WARN')))
-  vim.keymap.set({ 'n', 'x' }, ']W', utils.keymap.count_wrap(goto_diagnostic('next', 'WARN')))
-  vim.keymap.set({ 'n', 'x' }, '[I', utils.keymap.count_wrap(goto_diagnostic('prev', 'INFO')))
-  vim.keymap.set({ 'n', 'x' }, ']I', utils.keymap.count_wrap(goto_diagnostic('next', 'INFO')))
-  vim.keymap.set({ 'n', 'x' }, '[H', utils.keymap.count_wrap(goto_diagnostic('prev', 'HINT')))
-  vim.keymap.set({ 'n', 'x' }, ']H', utils.keymap.count_wrap(goto_diagnostic('next', 'HINT')))
-  vim.keymap.set({ 'n', 'x' }, 'g.', vim.lsp.buf.references)
-  vim.keymap.set({ 'n', 'x' }, 'gd', if_supports_lsp_method('textDocument/definition', 'definition', 'gd'), { expr = true })
-  vim.keymap.set({ 'n', 'x' }, 'gD', if_supports_lsp_method('textDocument/typeDefinition', 'type_definition', 'gD'), { expr = true })
+  keymap({ 'n' }, 'gq;', vim.lsp.buf.format, "format")
+  keymap({ 'n', 'x' }, '<Leader>ca', vim.lsp.buf.code_action, "code action")
+  keymap({ 'n', 'x' }, '<Leader>r', vim.lsp.buf.rename, "rename")
+  keymap({ 'n', 'x' }, '<Leader>e', vim.diagnostic.open_float)
+  keymap({ 'n', 'x' }, '<leader>E', vim.diagnostic.setloclist)
+  keymap({ 'n', 'x' }, '[e', utils.keymap.count_wrap(vim.diagnostic.goto_prev))
+  keymap({ 'n', 'x' }, ']e', utils.keymap.count_wrap(vim.diagnostic.goto_next))
+  keymap({ 'n', 'x' }, '[E', utils.keymap.count_wrap(goto_diagnostic('prev', 'ERROR')))
+  keymap({ 'n', 'x' }, ']E', utils.keymap.count_wrap(goto_diagnostic('next', 'ERROR')))
+  keymap({ 'n', 'x' }, '[W', utils.keymap.count_wrap(goto_diagnostic('prev', 'WARN')))
+  keymap({ 'n', 'x' }, ']W', utils.keymap.count_wrap(goto_diagnostic('next', 'WARN')))
+  keymap({ 'n', 'x' }, '[I', utils.keymap.count_wrap(goto_diagnostic('prev', 'INFO')))
+  keymap({ 'n', 'x' }, ']I', utils.keymap.count_wrap(goto_diagnostic('next', 'INFO')))
+  keymap({ 'n', 'x' }, '[H', utils.keymap.count_wrap(goto_diagnostic('prev', 'HINT')))
+  keymap({ 'n', 'x' }, ']H', utils.keymap.count_wrap(goto_diagnostic('next', 'HINT')))
+  keymap({ 'n', 'x' }, 'g.', vim.lsp.buf.references, "references")
+  keymap({ 'n', 'x' }, 'gd', if_supports_lsp_method('textDocument/definition', 'definition', 'gd'), { expr = true })
+  keymap({ 'n', 'x' }, 'gD', if_supports_lsp_method('textDocument/typeDefinition', 'type_definition', 'gD'), { expr = true })
   -- stylua: ignore end
 end
 
