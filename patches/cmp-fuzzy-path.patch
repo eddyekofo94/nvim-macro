@@ -1,8 +1,17 @@
 diff --git a/lua/cmp_fuzzy_path/init.lua b/lua/cmp_fuzzy_path/init.lua
-index 7c3a02f..70ae5e3 100644
+index 7c3a02f..9589be2 100644
 --- a/lua/cmp_fuzzy_path/init.lua
 +++ b/lua/cmp_fuzzy_path/init.lua
-@@ -135,7 +135,7 @@ source.complete = function(self, params, callback)
+@@ -94,8 +94,6 @@ source.complete = function(self, params, callback)
+     local compltype = vim.fn.getcmdcompltype()
+     if compltype == 'file' or compltype == 'dir' then
+       pattern = params.context.cursor_before_line:sub(params.offset)
+-    else
+-      pattern = find_pattern(params.context.cursor_before_line)
+     end
+   else
+     pattern = find_pattern(params.context.cursor_before_line)
+@@ -135,7 +133,7 @@ source.complete = function(self, params, callback)
      table.insert(new_cmd, '-d')
      table.insert(new_cmd, '1')
      cmd = new_cmd
@@ -11,7 +20,7 @@ index 7c3a02f..70ae5e3 100644
    end
  
    if #new_pattern > 0 then
-@@ -153,6 +153,9 @@ source.complete = function(self, params, callback)
+@@ -153,6 +151,9 @@ source.complete = function(self, params, callback)
    } }, isIncomplete = true })
    local job
    local job_start = vim.fn.reltime()
