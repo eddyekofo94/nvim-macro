@@ -586,8 +586,10 @@ end, {
 
 local fzf_ls_cmd = {
   function(info)
+    local suffix = string.format('%s %s', info.bang and '!' or '', info.args)
     return fzf.buffers({
-      ls_cmd = string.format('ls%s %s', info.bang and '!' or '', info.args),
+      prompt = vim.trim(info.name .. suffix) .. '> ',
+      ls_cmd = 'ls' .. suffix,
     })
   end,
   {
