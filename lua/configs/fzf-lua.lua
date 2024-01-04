@@ -200,6 +200,27 @@ config._action_to_helpstr[actions._file_set_to_ll] = 'file-select-to-loclist'
 config._action_to_helpstr[actions._file_edit_or_qf] = 'file-edit-or-qf'
 -- stylua: ignore end
 
+-- Use different prompts for document and workspace diagnostics
+-- by overriding `fzf.diagnostics_workspace()` and `fzf.diagnostics_document()`
+-- because fzf-lua does not support setting different prompts for them via
+-- the `fzf.setup()` function, see `defaults.lua` & `providers/diagnostic.lua`
+local _diagnostics_workspace = fzf.diagnostics_workspace
+local _diagnostics_document = fzf.diagnostics_document
+
+---@param opts table?
+function fzf.diagnostics_document(opts)
+  return _diagnostics_document(vim.tbl_extend('force', opts or {}, {
+    prompt = 'Document Diagnostics> ',
+  }))
+end
+
+---@param opts table?
+function fzf.diagnostics_workspace(opts)
+  return _diagnostics_workspace(vim.tbl_extend('force', opts or {}, {
+    prompt = 'Workspace Diagnostics> ',
+  }))
+end
+
 fzf.setup({
   -- Use nbsp in tty to avoid showing box chars
   nbsp = not vim.g.modern_ui and '\xc2\xa0' or nil,
