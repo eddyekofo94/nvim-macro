@@ -35,6 +35,7 @@ return {
       { '<Leader>#', mode = { 'n', 'x' } },
     },
     event = 'LspAttach',
+    build = 'fzf --version',
     init = vim.schedule_wrap(function()
       ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.select = function(...)

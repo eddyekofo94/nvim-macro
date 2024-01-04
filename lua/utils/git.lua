@@ -85,7 +85,8 @@ function M.branch(buf)
   vim.b[buf].git_branch = ''
   local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(buf))
   if dir then
-    vim.system(
+    pcall(
+      vim.system,
       { 'git', '-C', dir, 'rev-parse', '--abbrev-ref', 'HEAD' },
       { stderr = false },
       function(err, _)
@@ -121,7 +122,7 @@ function M.diffstat(buf)
   local path = vim.fs.normalize(vim.api.nvim_buf_get_name(buf))
   local dir = vim.fs.dirname(path)
   if dir and M.branch(buf):find('%S') then
-    vim.system({
+    pcall(vim.system, {
       'git',
       '-C',
       dir,
