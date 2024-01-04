@@ -171,7 +171,7 @@ function actions._file_sel_to_qf(selected, opts)
   end
 end
 
-function actions._file_set_to_ll(selected, opts)
+function actions._file_sel_to_ll(selected, opts)
   actions.file_sel_to_ll(selected, opts)
   if #selected > 1 then
     vim.cmd.lfirst()
@@ -196,7 +196,7 @@ config._action_to_helpstr[actions.arg_search_add] = 'search-and-add-new-file'
 config._action_to_helpstr[actions.buf_sel_to_qf] = 'buffer-select-to-quickfix'
 config._action_to_helpstr[actions.buf_sel_to_ll] = 'buffer-select-to-loclist'
 config._action_to_helpstr[actions._file_sel_to_qf] = 'file-select-to-quickfix'
-config._action_to_helpstr[actions._file_set_to_ll] = 'file-select-to-loclist'
+config._action_to_helpstr[actions._file_sel_to_ll] = 'file-select-to-loclist'
 config._action_to_helpstr[actions._file_edit_or_qf] = 'file-edit-or-qf'
 -- stylua: ignore end
 
@@ -337,7 +337,7 @@ fzf.setup({
       ['alt-t'] = actions.file_tabedit,
       ['alt-c'] = actions.switch_cwd,
       ['alt-q'] = actions._file_sel_to_qf,
-      ['alt-o'] = actions._file_set_to_ll,
+      ['alt-o'] = actions._file_sel_to_ll,
       ['default'] = actions._file_edit_or_qf,
     },
     buffers = {
