@@ -575,6 +575,18 @@ end, {
   desc = 'Fuzzy find files.',
 })
 
+---Generate a completion function for user command that wraps a builtin command
+---@param user_cmd string user command pattern
+---@param builtin_cmd string builtin command
+---@return fun(_, cmdline: string, cursorpos: integer): string[]
+local function complfn(user_cmd, builtin_cmd)
+  return function(_, cmdline, cursorpos)
+    local cmdline_before =
+      cmdline:sub(1, cursorpos):gsub(user_cmd, builtin_cmd, 1)
+    return vim.fn.getcompletion(cmdline_before, 'cmdline')
+  end
+end
+
 local fzf_ls_cmd = {
   function(info)
     local suffix = string.format('%s %s', info.bang and '!' or '', info.args)
@@ -635,6 +647,7 @@ local fzf_hi_cmd = {
   {
     bang = true,
     nargs = '*',
+    complete = complfn('Highlight', 'hi'),
   },
 }
 
@@ -660,6 +673,7 @@ local fzf_reg_cmd = {
   end,
   {
     nargs = '*',
+    complete = complfn('Registers', 'registers'),
   },
 }
 
@@ -681,6 +695,7 @@ local fzf_au_cmd = {
   {
     bang = true,
     nargs = '*',
+    complete = complfn('Autocmd', 'autocmd'),
   },
 }
 
@@ -706,6 +721,7 @@ local fzf_marks_cmd = {
   end,
   {
     nargs = '*',
+    complete = complfn('Marks', 'marks'),
   },
 }
 
@@ -723,6 +739,7 @@ local fzf_args_cmd = {
   {
     bang = true,
     nargs = '*',
+    complete = complfn('Args', 'args'),
   },
 }
 
