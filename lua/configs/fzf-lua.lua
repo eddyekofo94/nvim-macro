@@ -207,37 +207,14 @@ fzf.setup({
         call v:lua.require'utils.win'.tabpage_saveheight() |
         \ call v:lua.require'utils.win'.tabpage_saveview() |
         \ let g:_fzf_leave_win = win_getid(winnr()) |
-        \ let wins = nvim_tabpage_list_wins(0) |
-        \ let bot_win = -1 |
-        \ let bot_win_type = '' |
-        \ for winnr in range(len(wins), 1, -1) |
-          \ let bot_win = win_getid(winnr) |
-          \ let bot_win_type = win_gettype(bot_win) |
-          \ if bot_win_type !=# 'popup' |
-            \ break |
-          \ endif |
-        \ endfor |
         \ let g:_fzf_splitkeep = &splitkeep | let &splitkeep = "topline" |
-        \ if bot_win_type =~# 'quickfix\|loclist' && bot_win != -1
-            \ && nvim_win_get_width(bot_win) == &columns |
-          \ let g:_fzf_swallow_qf_bufnr = nvim_win_get_buf(bot_win) |
-          \ let g:_fzf_swallow_qf_height = nvim_win_get_height(bot_win) |
-          \ let g:_fzf_qf_cursor = nvim_win_get_cursor(bot_win) |
-          \ call nvim_set_current_win(bot_win) |
-          \ noautocmd enew |
-        \ else |
-          \ botright 10 new |
-        \ endif |
         \ let g:_fzf_cmdheight = &cmdheight | let &cmdheight = 0 |
         \ let g:_fzf_laststatus = &laststatus | let &laststatus = 0 |
-        \ let fzf_target_height = get(g:, '_fzf_swallow_qf_height', 10)
-          \ + g:_fzf_cmdheight + (g:_fzf_laststatus ? 1 : 0) |
-        \ if nvim_win_get_height(0) != fzf_target_height |
-          \ call nvim_win_set_height(0, fzf_target_height) |
-        \ endif |
+        \ botright 10new |
+        \ exe 'resize' .
+          \ (10 + g:_fzf_cmdheight + (g:_fzf_laststatus ? 1 : 0)) |
         \ let w:winbar_no_attach = v:true |
-        \ setlocal bt=nofile bh=wipe nobl noswf wfh |
-        \ silent! unlet wins bot_win bot_win_type fzf_target_height
+        \ setlocal bt=nofile bh=wipe nobl noswf wfh
     ]],
     on_create = function()
       local buf = vim.api.nvim_get_current_buf()
@@ -267,30 +244,6 @@ fzf.setup({
       _restore_global_opt('splitkeep')
       _restore_global_opt('cmdheight')
       _restore_global_opt('laststatus')
-
-      if vim.g._fzf_swallow_qf_bufnr then
-        local cur_win = vim.api.nvim_get_current_win()
-        local cur_win_view = vim.fn.winsaveview()
-        vim.cmd.new({
-          mods = { split = 'botright' },
-          range = { vim.g._fzf_swallow_qf_height },
-        })
-        vim.bo.buftype = 'nofile'
-        vim.bo.bufhidden = 'wipe'
-        vim.bo.buflisted = false
-        vim.bo.swapfile = false
-        if vim.api.nvim_buf_is_valid(vim.g._fzf_swallow_qf_bufnr) then
-          vim.api.nvim_set_current_buf(vim.g._fzf_swallow_qf_bufnr)
-        end
-        vim.api.nvim_win_set_cursor(0, vim.g._fzf_qf_cursor)
-        vim.api.nvim_win_call(cur_win, function()
-          ---@diagnostic disable-next-line: param-type-mismatch
-          vim.fn.winrestview(cur_win_view)
-        end)
-      end
-      vim.g._fzf_swallow_qf_height = nil
-      vim.g._fzf_swallow_qf_bufnr = nil
-      vim.g._fzf_qf_cursor = nil
 
       if
         vim.g._fzf_leave_win
