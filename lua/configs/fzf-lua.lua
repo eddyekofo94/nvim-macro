@@ -468,6 +468,19 @@ fzf.setup({
         ['--info'] = 'inline-right',
       },
     },
+    definitions = {
+      sync = false,
+      jump_to_single_result = true,
+    },
+    references = {
+      sync = false,
+      ignore_current_line = true,
+      jump_to_single_result = true,
+    },
+    typedefs = {
+      sync = false,
+      jump_to_single_result = true,
+    },
     symbols = {
       symbol_icons = vim.tbl_map(vim.trim, utils.static.icons.kinds),
     },
@@ -488,8 +501,7 @@ vim.keymap.set('n', '<Leader>F', fzf.builtin)
 vim.keymap.set('n', '<Leader>o', fzf.oldfiles)
 vim.keymap.set('n', '<Leader>-', fzf.blines)
 vim.keymap.set('n', '<Leader>=', fzf.lines)
-vim.keymap.set('n', '<Leader>s', fzf.lsp_document_symbols)
-vim.keymap.set('n', '<Leader>S', fzf.lsp_live_workspace_symbols)
+vim.keymap.set('n', '<Leader>R', fzf.lsp_finder)
 vim.keymap.set('n', '<Leader>f', fzf.builtin)
 vim.keymap.set('n', '<Leader>f"', fzf.registers)
 vim.keymap.set('n', '<Leader>f*', fzf.grep_cword)
@@ -498,15 +510,12 @@ vim.keymap.set('n', '<Leader>f#', fzf.grep_cword)
 vim.keymap.set('x', '<Leader>f#', fzf.grep_visual)
 vim.keymap.set('n', '<Leader>f:', fzf.commands)
 vim.keymap.set('n', '<Leader>f/', fzf.live_grep)
-vim.keymap.set('n', '<Leader>fD', fzf.lsp_typedefs)
 vim.keymap.set('n', '<Leader>fE', fzf.diagnostics_workspace)
 vim.keymap.set('n', '<Leader>fH', fzf.highlights)
 vim.keymap.set('n', "<Leader>f'", fzf.resume)
-vim.keymap.set('n', '<Leader>fS', fzf.lsp_live_workspace_symbols)
 vim.keymap.set('n', '<Leader>fA', fzf.autocmds)
 vim.keymap.set('n', '<Leader>fb', fzf.buffers)
 vim.keymap.set('n', '<Leader>fc', fzf.changes)
-vim.keymap.set('n', '<Leader>fd', fzf.lsp_definitions)
 vim.keymap.set('n', '<Leader>fe', fzf.diagnostics_document)
 vim.keymap.set('n', '<Leader>ff', fzf.files)
 vim.keymap.set('n', '<Leader>fa', fzf.args)
@@ -527,8 +536,36 @@ vim.keymap.set('n', '<Leader>f-', fzf.blines)
 vim.keymap.set('n', '<Leader>f=', fzf.lines)
 vim.keymap.set('n', '<Leader>fm', fzf.marks)
 vim.keymap.set('n', '<Leader>fo', fzf.oldfiles)
-vim.keymap.set('n', '<Leader>fr', fzf.lsp_references)
+vim.keymap.set('n', '<Leader>fD', fzf.lsp_typedefs)
+vim.keymap.set('n', '<Leader>fd', fzf.lsp_definitions)
 vim.keymap.set('n', '<Leader>fs', fzf.lsp_document_symbols)
+vim.keymap.set('n', '<Leader>fS', fzf.lsp_live_workspace_symbols)
+vim.keymap.set('n', '<Leader>fi', fzf.lsp_implementations)
+vim.keymap.set('n', '<Leader>f<', fzf.lsp_incoming_calls)
+vim.keymap.set('n', '<Leader>f>', fzf.lsp_outgoing_calls)
+vim.keymap.set('n', '<Leader>fr', fzf.lsp_references)
+vim.keymap.set('n', '<Leader>fR', fzf.lsp_finder)
+
+local _lsp_workspace_symbol = vim.lsp.buf.workspace_symbol
+
+---Overriding `vim.lsp.buf.workspace_symbol()`, not only the handler here
+---to skip the 'Query:' input prompt -- with `fzf.lsp_live_workspace_symbols()`
+---as handler we can update the query in live
+---@diagnostic disable-next-line: duplicate-set-field
+function vim.lsp.buf.workspace_symbol(query, options)
+  _lsp_workspace_symbol(query or '', options)
+end
+
+vim.lsp.handlers['callHierarchy/incomingCalls'] = fzf.lsp_incoming_calls
+vim.lsp.handlers['callHierarchy/outgoingCalls'] = fzf.lsp_outgoing_calls
+vim.lsp.handlers['textDocument/codeAction'] = fzf.code_actions
+vim.lsp.handlers['textDocument/declaration'] = fzf.declarations
+vim.lsp.handlers['textDocument/definition'] = fzf.lsp_definitions
+vim.lsp.handlers['textDocument/documentSymbol'] = fzf.lsp_document_symbols
+vim.lsp.handlers['textDocument/implementation'] = fzf.lsp_implementations
+vim.lsp.handlers['textDocument/references'] = fzf.lsp_references
+vim.lsp.handlers['textDocument/typeDefinition'] = fzf.lsp_typedefs
+vim.lsp.handlers['workspace/symbol'] = fzf.lsp_live_workspace_symbols
 
 vim.api.nvim_create_user_command('F', function(info)
   fzf.files({ cwd = info.fargs[1] })

@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Mon 01 Jan 2024 01:14:00 PM CST
+-- Last Updated: Thu 04 Jan 2024 02:53:51 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -572,19 +572,6 @@ local hlgroups = {
   StatusLineHeader = { bg = c_dragonBg5, fg = c_dragonFg1 },
   StatusLineHeaderModified = { bg = c_dragonRed, fg = c_dragonBg1 },
 
-  -- glance.nvim
-  GlanceBorderTop = { fg = c_dragonBg3 },
-  GlanceIndent = { link = 'None' },
-  GlanceListBorderBottom = { link = 'GlanceBorderTop' },
-  GlanceListCount = { bg = c_dragonPink, fg = c_dragonBg1 },
-  GlanceListCursorLine = { bg = c_dragonBg4 },
-  GlanceListMatch = { bg = c_dragonBg5 },
-  GlanceListNormal = { bg = c_dragonBg3, fg = c_dragonFg0 },
-  GlancePreviewBorderBottom = { link = 'GlanceBorderTop' },
-  GlancePreviewNormal = { bg = c_dragonBg2, fg = c_dragonFg0 },
-  GlanceWinBarFilename = { bg = c_dragonBg3, fg = c_dragonFg1 },
-  GlanceWinBarFilepath = { bg = c_dragonBg3, fg = c_dragonAsh },
-  GlanceWinBarTitle = { bg = c_dragonBg3, fg = c_dragonFg1, bold = true },
   -- }}}
 }
 -- }}}1
@@ -597,13 +584,6 @@ if vim.go.bg == 'light' then
   hlgroups.DiagnosticVirtualTextWarn =
     { bg = c_winterYellow, fg = c_autumnYellow }
   hlgroups.DiagnosticWarn = { fg = c_autumnYellow }
-  hlgroups.GlanceListCursorLine = { bg = c_dragonBg1 }
-  hlgroups.GlanceListMatch = { bg = c_dragonBg3 }
-  hlgroups.GlanceListNormal = { bg = c_dragonBg0, fg = c_dragonFg0 }
-  hlgroups.GlanceWinBarFilename = { bg = c_dragonBg0, fg = c_dragonFg1 }
-  hlgroups.GlanceWinBarFilepath = { bg = c_dragonBg0, fg = c_dragonAsh }
-  hlgroups.GlanceWinBarTitle =
-    { bg = c_dragonBg0, fg = c_dragonFg1, bold = true }
   hlgroups.Keyword = { fg = c_dragonRed }
   hlgroups.ModeMsg = { fg = c_dragonRed, bold = true }
   hlgroups.Pmenu = { bg = c_dragonBg0, fg = c_dragonFg1 }

@@ -18,12 +18,4 @@ return {
       require('configs.clangd_extensions')
     end,
   },
-
-  {
-    'dnlhc/glance.nvim',
-    event = 'LspAttach',
-    config = function()
-      require('configs.glance')
-    end,
-  },
 }

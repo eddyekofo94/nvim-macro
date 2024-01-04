@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 30 Dec 2023 06:59:40 PM CST
+-- Last Updated: Thu 04 Jan 2024 02:53:42 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -684,20 +684,6 @@ local hlgroups = {
   WinBarMenuHoverEntry = { fg = c_foreground, bg = c_subtle },
   WinBarMenuCurrentContext = { fg = c_foreground, bg = c_subtle },
 
-  -- glance.nvim
-  GlanceBorderTop = { link = 'WinSeparator' },
-  GlancePreviewBorderBottom = { link = 'GlanceBorderTop' },
-  GlanceListBorderBottom = { link = 'GlanceBorderTop' },
-  GlanceFoldIcon = { link = 'Comment' },
-  GlanceListCount = { fg = c_background, bg = c_faint },
-  GlanceListCursorLine = { bg = c_shaded },
-  GlanceListNormal = { link = 'NormalFloat' },
-  GlanceListMatch = { bg = c_shaded, bold = true },
-  GlancePreviewNormal = { link = 'Pmenu' },
-  GlancePreviewMatch = { bg = c_shaded },
-  GlanceWinBarFilename = { fg = c_faded, bg = c_subtle, bold = true },
-  GlanceWinBarFilepath = { fg = c_faded, bg = c_subtle },
-  GlanceWinBarTitle = { fg = c_faded, bg = c_subtle, bold = true },
   -- }}}2
 }
 -- }}}1

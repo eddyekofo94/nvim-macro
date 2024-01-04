@@ -45,8 +45,13 @@ local function setup_keymaps()
   vim.keymap.set({ 'n' }, 'gq;', vim.lsp.buf.format)
   vim.keymap.set({ 'n', 'x' }, '<Leader>ca', vim.lsp.buf.code_action)
   vim.keymap.set({ 'n', 'x' }, '<Leader>r', vim.lsp.buf.rename)
+  vim.keymap.set({ 'n', 'x' }, '<Leader><', vim.lsp.buf.incoming_calls)
+  vim.keymap.set({ 'n', 'x' }, '<Leader>>', vim.lsp.buf.outgoing_calls)
+  vim.keymap.set({ 'n', 'x' }, '<Leader>s', vim.lsp.buf.document_symbol)
+  vim.keymap.set({ 'n', 'x' }, '<Leader>S', vim.lsp.buf.workspace_symbol)
   vim.keymap.set({ 'n', 'x' }, '<Leader>e', vim.diagnostic.open_float)
-  vim.keymap.set({ 'n', 'x' }, '<leader>E', vim.diagnostic.setloclist)
+  vim.keymap.set({ 'n', 'x' }, '<Leader>E', vim.diagnostic.setloclist)
+  vim.keymap.set({ 'n', 'x' }, '<Leader><C-e>', vim.diagnostic.setqflist)
   vim.keymap.set({ 'n', 'x' }, '[e', utils.keymap.count_wrap(vim.diagnostic.goto_prev))
   vim.keymap.set({ 'n', 'x' }, ']e', utils.keymap.count_wrap(vim.diagnostic.goto_next))
   vim.keymap.set({ 'n', 'x' }, '[E', utils.keymap.count_wrap(goto_diagnostic('prev', 'ERROR')))
@@ -57,7 +62,8 @@ local function setup_keymaps()
   vim.keymap.set({ 'n', 'x' }, ']I', utils.keymap.count_wrap(goto_diagnostic('next', 'INFO')))
   vim.keymap.set({ 'n', 'x' }, '[H', utils.keymap.count_wrap(goto_diagnostic('prev', 'HINT')))
   vim.keymap.set({ 'n', 'x' }, ']H', utils.keymap.count_wrap(goto_diagnostic('next', 'HINT')))
-  vim.keymap.set({ 'n', 'x' }, 'g.', vim.lsp.buf.references)
+  vim.keymap.set({ 'n', 'x' }, 'g/', vim.lsp.buf.references)
+  vim.keymap.set({ 'n', 'x' }, 'g.', vim.lsp.buf.implementation)
   vim.keymap.set({ 'n', 'x' }, 'gd', if_supports_lsp_method('textDocument/definition', 'definition', 'gd'), { expr = true })
   vim.keymap.set({ 'n', 'x' }, 'gD', if_supports_lsp_method('textDocument/typeDefinition', 'type_definition', 'gD'), { expr = true })
   -- stylua: ignore end
@@ -76,12 +82,17 @@ local function setup_lsp_overrides()
     ['textDocument/typeDefinition'] = vim.lsp.handlers['textDocument/typeDefinition'],
   }
   for method, handler in pairs(handlers) do
+    local obj_name = method:match('/(%w*)$'):gsub('s$', '')
     vim.lsp.handlers[method] = function(err, result, ctx, cfg)
-      if not result or type(result) == 'table' and vim.tbl_isempty(result) then
-        vim.notify(
-          '[LSP] no ' .. method:match('/(%w*)$') .. ' found',
-          vim.log.levels.WARN
-        )
+      if not result or vim.tbl_isempty(result) then
+        vim.notify('[LSP] no ' .. obj_name .. ' found')
+        return
+      end
+      if #result == 1 then
+        local enc = vim.lsp.get_client_by_id(ctx.client_id).offset_encoding
+        vim.lsp.util.jump_to_location(result[1], enc)
+        vim.notify('[LSP] found 1 ' .. obj_name)
+        return
       end
       handler(err, result, ctx, cfg)
     end

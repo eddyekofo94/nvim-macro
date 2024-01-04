@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat 30 Dec 2023 06:59:42 PM CST
+-- Last Updated: Thu 04 Jan 2024 02:53:42 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -735,19 +735,6 @@ local hlgroups = {
   StatusLineHeader = { fg = c_jeans, bg = c_pigeon },
   StatusLineHeaderModified = { fg = c_jeans, bg = c_ochre },
 
-  -- glance.nvim
-  GlanceBorderTop = { link = 'WinSeparator' },
-  GlancePreviewBorderBottom = { link = 'GlanceBorderTop' },
-  GlanceListBorderBottom = { link = 'GlanceBorderTop' },
-  GlanceFoldIcon = { link = 'Comment' },
-  GlanceListCount = { fg = c_jeans, bg = c_pigeon },
-  GlanceListCursorLine = { bg = c_deepsea },
-  GlanceListNormal = { bg = c_deepsea },
-  GlanceListMatch = { bg = c_thunder, bold = true },
-  GlancePreviewNormal = { link = 'Pmenu' },
-  GlanceWinBarFilename = { fg = c_pigeon, bg = c_deepsea, bold = true },
-  GlanceWinBarFilepath = { fg = c_pigeon, bg = c_deepsea },
-  GlanceWinBarTitle = { fg = c_pigeon, bg = c_deepsea, bold = true },
   -- }}}2
 
   -- Extra {{{2

@@ -28,13 +28,13 @@ return {
       "<Leader>'",
       '<Leader>-',
       '<Leader>=',
-      '<Leader>s',
-      '<Leader>S',
+      '<Leader>R',
       '<Leader>F',
       '<Leader>f',
       { '<Leader>*', mode = { 'n', 'x' } },
       { '<Leader>#', mode = { 'n', 'x' } },
     },
+    event = 'LspAttach',
     init = vim.schedule_wrap(function()
       ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.select = function(...)
