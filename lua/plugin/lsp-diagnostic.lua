@@ -88,6 +88,13 @@ local function setup_lsp_overrides()
         vim.notify('[LSP] no ' .. obj_name .. ' found')
         return
       end
+
+      -- textDocument/definition can return Location or Location[]
+      -- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocument_definition
+      if not vim.tbl_islist(result) then
+        result = { result }
+      end
+
       if #result == 1 then
         local enc = vim.lsp.get_client_by_id(ctx.client_id).offset_encoding
         vim.lsp.util.jump_to_location(result[1], enc)
