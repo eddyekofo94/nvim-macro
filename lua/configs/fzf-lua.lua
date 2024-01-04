@@ -72,6 +72,7 @@ function actions.switch_cwd()
         '[Fzf-lua] invalid path: ' .. input .. '\n',
         vim.log.levels.ERROR
       )
+      vim.cmd.redraw()
       return
     end
     opts.cwd = input
