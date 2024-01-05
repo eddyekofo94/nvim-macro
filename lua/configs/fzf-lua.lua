@@ -179,8 +179,7 @@ function actions._file_sel_to_ll(selected, opts)
   end
 end
 
--- core.ACTION_DEFINITIONS[actions.switch_provider] = { 'switch backend' }
--- core.ACTION_DEFINITIONS[actions.switch_cwd] = { 'change cwd' }
+core.ACTION_DEFINITIONS[actions.switch_cwd] = { 'Change Cwd', pos = 1 }
 core.ACTION_DEFINITIONS[actions.arg_del] = { 'delete' }
 core.ACTION_DEFINITIONS[actions.del_autocmd] = { 'delete autocmd' }
 core.ACTION_DEFINITIONS[actions.arg_search_add] = { 'add new file' }
@@ -188,7 +187,7 @@ core.ACTION_DEFINITIONS[actions.search] = { 'edit' }
 core.ACTION_DEFINITIONS[actions.ex_run] = { 'edit' }
 
 -- stylua: ignore start
-config._action_to_helpstr[actions.switch_provider] = 'switch-backend'
+config._action_to_helpstr[actions.switch_provider] = 'switch-provider'
 config._action_to_helpstr[actions.switch_cwd] = 'change-cwd'
 config._action_to_helpstr[actions.arg_del] = 'delete'
 config._action_to_helpstr[actions.del_autocmd] = 'delete-autocmd'
@@ -336,7 +335,6 @@ fzf.setup({
       ['alt-s'] = actions.file_split,
       ['alt-v'] = actions.file_vsplit,
       ['alt-t'] = actions.file_tabedit,
-      ['alt-c'] = actions.switch_cwd,
       ['alt-q'] = actions._file_sel_to_qf,
       ['alt-o'] = actions._file_sel_to_ll,
       ['default'] = actions._file_edit_or_qf,
@@ -448,6 +446,7 @@ fzf.setup({
   },
   files = {
     actions = {
+      ['alt-c'] = actions.switch_cwd,
       ['ctrl-g'] = actions.toggle_ignore,
     },
     fzf_opts = {
@@ -475,6 +474,9 @@ fzf.setup({
     ['--preview-window'] = 'hidden',
   },
   grep = {
+    actions = {
+      ['alt-c'] = actions.switch_cwd,
+    },
     rg_opts = table.concat({
       '--hidden',
       '--follow',
