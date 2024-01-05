@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri 05 Jan 2024 07:04:14 PM CST
+-- Last Updated: Fri 05 Jan 2024 10:20:39 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -527,7 +527,7 @@ local hlgroups = {
   -- telescope
   TelescopeBorder = { bg = c_dragonBg1, fg = c_sumiInk6 },
   TelescopeMatching = { fg = c_dragonRed, bold = true },
-  TelescopeNormal = { fg = c_dragonFg2 },
+  TelescopeNormal = { fg = c_dragonFg2, bg = c_dragonBg2 },
   TelescopeResultsClass = { link = 'Structure' },
   TelescopeResultsField = { link = '@field' },
   TelescopeResultsMethod = { link = 'Function' },
