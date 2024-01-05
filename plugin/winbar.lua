@@ -10,11 +10,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
     winbar.setup({
       general = {
         update_interval = 32,
-        attach_events = {
-          'LspAttach',
-          'BufWinEnter',
-          'BufWritePost',
-        },
         enable = function(buf, win)
           return not vim.w[win].winbar_no_attach
             and not vim.b[buf].winbar_no_attach
@@ -24,9 +19,6 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
             and (
               vim.bo[buf].ft == 'markdown'
               or utils.treesitter.is_active(buf)
-              or not vim.tbl_isempty(vim.tbl_filter(function(client)
-                return client.supports_method('textDocument/documentSymbol')
-              end, vim.lsp.get_clients({ bufnr = buf })))
             )
         end,
       },
