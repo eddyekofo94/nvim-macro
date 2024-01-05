@@ -26,7 +26,7 @@ return {
     ContinueStatement   = '→ ',
     Copilot             = 'C ',
     Declaration         = 'D ',
-    Delete              = 'D ',
+    Delete              = 'X ',
     DoStatement         = 'D ',
     Enum                = 'E ',
     EnumMember          = 'E ',
