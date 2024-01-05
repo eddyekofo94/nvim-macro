@@ -1,5 +1,5 @@
 diff --git a/lua/fzf-lua/defaults.lua b/lua/fzf-lua/defaults.lua
-index fb228a0..18178c7 100644
+index a98088b..b658d31 100644
 --- a/lua/fzf-lua/defaults.lua
 +++ b/lua/fzf-lua/defaults.lua
 @@ -425,6 +425,7 @@ M.defaults.buffers = {
@@ -135,21 +135,6 @@ index 67ab103..9996dcc 100644
    end
    history(opts, "search")
  end
-diff --git a/lua/fzf-lua/utils.lua b/lua/fzf-lua/utils.lua
-index c9f53bb..ab536f9 100644
---- a/lua/fzf-lua/utils.lua
-+++ b/lua/fzf-lua/utils.lua
-@@ -445,6 +445,10 @@ end
- function M.hexcol_from_hl(hlgroup, what)
-   if not hlgroup or not what then return end
-   local hexcol = synIDattr(hlgroup, what)
-+  -- some colorschemes set fg=fg/bg or bg=fg/bg
-+  if hexcol == "fg" or hexcol == "bg" then
-+    return ""
-+  end
-   if hexcol and not hexcol:match("^#") then
-     -- try to acquire the color from the map
-     -- some schemes don't capitalize first letter?
 diff --git a/lua/fzf-lua/win.lua b/lua/fzf-lua/win.lua
 index 43b0094..9ca2300 100644
 --- a/lua/fzf-lua/win.lua
