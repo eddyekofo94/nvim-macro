@@ -224,6 +224,7 @@ end
 fzf.setup({
   -- Use nbsp in tty to avoid showing box chars
   nbsp = not vim.g.modern_ui and '\xc2\xa0' or nil,
+  dir_icon = vim.trim(utils.static.icons.Folder),
   winopts = {
     split = [[
         call v:lua.require'utils.win'.tabpage_saveheight() |
@@ -452,6 +453,9 @@ fzf.setup({
     fzf_opts = {
       ['--info'] = 'inline-right',
     },
+    find_opts = [[-type f -type d -type l -not -path '*/\.git/*' -printf '%P\n']],
+    fd_opts = [[--color=never --type f --type d --type l --hidden --follow --exclude .git]],
+    rg_opts = [[--color=never --files --hidden --follow -g '!.git'"]],
   },
   oldfiles = {
     prompt = 'Oldfiles> ',
