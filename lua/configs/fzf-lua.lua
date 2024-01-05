@@ -4,6 +4,7 @@ local core = require('fzf-lua.core')
 local path = require('fzf-lua.path')
 local config = require('fzf-lua.config')
 local utils = require('utils')
+local fzf_utils = require('fzf-lua.utils')
 
 local _normalize_opts = config.normalize_opts
 
@@ -133,6 +134,24 @@ function actions.switch_cwd()
   actions.resume()
 end
 
+---Override `actions.toggle_ignore()` to respect `opts.cwd`
+---@diagnostic disable-next-line: duplicate-set-field
+function actions.toggle_ignore(_, opts)
+  local _opts = { resume = true, cwd = opts.cwd }
+  local flag = opts.toggle_ignore_flag or '--no-ignore'
+  if not flag:match('^%s') then
+    flag = ' ' .. flag
+  end
+  if opts.cmd:match(fzf_utils.lua_regex_escape(flag)) then
+    _opts._hdr_to = false
+    _opts.cmd = opts.cmd:gsub(fzf_utils.lua_regex_escape(flag), '')
+  else
+    _opts._hdr_to = true
+    _opts.cmd = opts.cmd .. flag
+  end
+  opts.__ACT_TO(_opts)
+end
+
 ---Delete selected autocmd
 ---@return nil
 function actions.del_autocmd(selected)
@@ -214,6 +233,8 @@ function actions._file_sel_to_ll(selected, opts)
   end
 end
 
+core.ACTION_DEFINITIONS[actions.toggle_ignore] =
+  { 'Disable .gitignore', fn_reload = 'Respect .gitignore' }
 core.ACTION_DEFINITIONS[actions.switch_cwd] = { 'Change Cwd', pos = 1 }
 core.ACTION_DEFINITIONS[actions.arg_del] = { 'delete' }
 core.ACTION_DEFINITIONS[actions.del_autocmd] = { 'delete autocmd' }
@@ -222,6 +243,7 @@ core.ACTION_DEFINITIONS[actions.search] = { 'edit' }
 core.ACTION_DEFINITIONS[actions.ex_run] = { 'edit' }
 
 -- stylua: ignore start
+config._action_to_helpstr[actions.toggle_ignore] = 'toggle-ignore'
 config._action_to_helpstr[actions.switch_provider] = 'switch-provider'
 config._action_to_helpstr[actions.switch_cwd] = 'change-cwd'
 config._action_to_helpstr[actions.arg_del] = 'delete'
