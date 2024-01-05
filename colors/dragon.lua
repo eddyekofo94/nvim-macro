@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu 04 Jan 2024 02:53:51 PM CST
+-- Last Updated: Fri 05 Jan 2024 07:04:14 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -232,7 +232,7 @@ local hlgroups = {
   FoldColumn = { fg = c_dragonBg5 },
   Folded = { bg = c_dragonBg2, fg = c_lotusGray },
   Ignore = { link = 'NonText' },
-  IncSearch = { reverse = true },
+  IncSearch = { bg = c_carpYellow, fg = c_waveBlue0 },
   LineNr = { fg = c_dragonBg5 },
   MatchParen = { bg = c_dragonBg4 },
   ModeMsg = { fg = c_dragonRed, bold = true },
@@ -584,6 +584,7 @@ if vim.go.bg == 'light' then
   hlgroups.DiagnosticVirtualTextWarn =
     { bg = c_winterYellow, fg = c_autumnYellow }
   hlgroups.DiagnosticWarn = { fg = c_autumnYellow }
+  hlgroups.IncSearch = { bg = c_autumnYellow, fg = c_dragonBg0, bold = true }
   hlgroups.Keyword = { fg = c_dragonRed }
   hlgroups.ModeMsg = { fg = c_dragonRed, bold = true }
   hlgroups.Pmenu = { bg = c_dragonBg0, fg = c_dragonFg1 }
