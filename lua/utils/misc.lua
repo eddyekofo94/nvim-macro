@@ -50,7 +50,12 @@ function M.qftf(info)
   ---@param item table
   ---@return string
   local function _fname_trans(item)
-    return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(item.bufnr), ':~:.')
+    local bufnr = item.bufnr
+    local module = item.module
+    local filename = item.filename
+    return module and module ~= '' and module
+      or filename and filename ~= '' and filename
+      or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':~:.')
   end
 
   ---@param item table
@@ -115,7 +120,7 @@ function M.qftf(info)
     local fname = fname_str_cache[idx]
     local fname_cur_width = fname_width_cache[idx]
 
-    if item.lnum == 0 and item.col == 0 then
+    if item.lnum == 0 and item.col == 0 and item.text == '' then
       table.insert(lines, fname)
       return
     end
