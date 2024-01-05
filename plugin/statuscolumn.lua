@@ -220,6 +220,7 @@ function _G.get_statuscolumn()
     local wo = vim.wo[win]
     local fcs = vim.opt_local.fillchars:get()
     local buf = vim.api.nvim_win_get_buf(win)
+    local wininfo = vim.fn.getwininfo(win)[1]
     data.display_tick = display_tick
     data.buf = buf
     data.cur = vim.api.nvim_win_get_cursor(win)
@@ -236,10 +237,16 @@ function _G.get_statuscolumn()
     data.foldopen = fcs.foldopen or '-'
     data.foldclose = fcs.foldclose or '+'
     data.foldsep = fcs.foldsep or '|'
-    data.extsigns = vim.api.nvim_buf_get_extmarks(buf, -1, 0, -1, {
-      type = 'sign',
-      details = true,
-    })
+    data.extsigns = vim.api.nvim_buf_get_extmarks(
+      buf,
+      -1,
+      { wininfo.topline - 1, 0 },
+      { wininfo.botline - 1, -1 },
+      {
+        type = 'sign',
+        details = true,
+      }
+    )
 
     -- lnum width is only needed when both &nu and &rnu are enabled
     if data.nu and data.rnu then
