@@ -22,10 +22,16 @@ function config.normalize_opts(opts, ...)
 end
 
 local _arg_del = actions.arg_del
+local _vimcmd_buf = actions.vimcmd_buf
 
 ---@diagnostic disable-next-line: duplicate-set-field
 function actions.arg_del(...)
   pcall(_arg_del, ...)
+end
+
+---@diagnostic disable-next-line: duplicate-set-field
+function actions.vimcmd_buf(...)
+  pcall(_vimcmd_buf, ...)
 end
 
 local _mt_cmd_wrapper = core.mt_cmd_wrapper
