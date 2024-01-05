@@ -446,6 +446,9 @@ fzf.setup({
     },
   },
   files = {
+    actions = {
+      ['ctrl-g'] = actions.toggle_ignore,
+    },
     fzf_opts = {
       ['--info'] = 'inline-right',
     },
