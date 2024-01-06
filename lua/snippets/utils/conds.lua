@@ -11,11 +11,14 @@ local utils = require('utils')
 
 ---@class snip_conds_t
 ---@field make_condition function
-local M = setmetatable({
-  _ = {},
-}, {
+local M = setmetatable({ _ = {} }, {
   __index = function(self, k)
-    return self._[k] and lsconds.make_condition(self._[k]) or lsconds[k]
+    if self._[k] then
+      local cond = lsconds.make_condition(self._[k])
+      rawset(self, k, cond)
+      return cond
+    end
+    return lsconds[k]
   end,
   __newindex = function(self, k, v)
     self._[k] = v
