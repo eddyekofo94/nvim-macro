@@ -103,10 +103,6 @@ return {
       sn(nil, { t('<'), r(1, 'header'), t('>') }),
       sn(nil, { t('"'), r(1, 'header'), t('"') }),
     }),
-  }, {
-    stored = {
-      header = i(1),
-    },
   }),
   us.ssn(
     {
@@ -536,11 +532,14 @@ return {
       un.fmtad('union <name>;', {
         name = r(1, 'name'),
       }),
-    }, {
-      stored = {
-        name = i(1, 'name'),
+    }),
+    {
+      common_opts = {
+        stored = {
+          name = i(1, 'name'),
+        },
       },
-    })
+    }
   ),
   us.msn(
     {
@@ -602,12 +601,15 @@ return {
         name = r(1, 'name'),
         alias = r(2, 'alias'),
       }),
-    }, {
-      stored = {
-        name = i(1, 'name'),
-        alias = i(2, 'alias'),
-      },
-    })
+    }),
+    {
+      common_opts = {
+        stored = {
+          name = i(1, 'name'),
+          alias = i(2, 'alias'),
+        },
+      }
+    }
   ),
   us.msn(
     {
@@ -652,12 +654,15 @@ return {
         name = r(1, 'name'),
         alias = r(2, 'alias'),
       }),
-    }, {
-      stored = {
-        name = i(1, 'name'),
-        alias = i(2, 'alias'),
-      },
-    })
+    }),
+    {
+      common_opts = {
+        stored = {
+          name = i(1, 'name'),
+          alias = i(2, 'alias'),
+        },
+      }
+    }
   ),
   us.msn(
     {

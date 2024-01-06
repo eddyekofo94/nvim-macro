@@ -61,10 +61,6 @@ M.syntax = {
     un.idnt(1),
     i(0),
     t({ '', 'end' }),
-  }, {
-    stored = {
-      params = i(1),
-    },
   }),
   us.msn({
     { trig = 'me' },

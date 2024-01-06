@@ -241,10 +241,6 @@ return {
         t('}'),
       }),
     }),
-  }, {
-    stored = {
-      expr = i(1),
-    },
   }),
 
   us.samW({ trig = 'abs' }, { t('\\left\\vert '), i(1), t(' \\right\\vert') }),
@@ -433,12 +429,7 @@ return {
         r(1, 'expr'),
         t('\\right)'),
       }),
-    }),
-    {
-      stored = {
-        expr = i(1),
-      },
-    }
+    })
   ),
   us.sam(
     { trig = 'max', priority = 999 },
@@ -457,12 +448,7 @@ return {
         r(1, 'expr'),
         t('\\right)'),
       }),
-    }),
-    {
-      stored = {
-        expr = i(1),
-      },
-    }
+    })
   ),
 
   us.sam({ trig = 'sin', priority = 999 }, {

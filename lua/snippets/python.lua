@@ -285,12 +285,14 @@ M.snippets = {
           idnt = un.idnt(1),
         }
       ),
-    }, {
-      stored = {
-        fn_name = i(nil, 'function_name'),
-        args = i(nil, 'args'),
+    }),
+    {
+      common_opts = {
+        stored = {
+          fn_name = i(nil, 'function_name'),
+        },
       },
-    })
+    }
   ),
   us.msn(
     {
@@ -326,12 +328,14 @@ M.snippets = {
           idnt = un.idnt(1),
         }
       ),
-    }, {
-      stored = {
-        method_name = i(nil, 'method_name'),
-        args = i(nil, 'args'),
+    }),
+    {
+      {
+        stored = {
+          method_name = i(nil, 'method_name'),
+        },
       },
-    })
+    }
   ),
   us.msn(
     {
@@ -371,12 +375,14 @@ M.snippets = {
           idnt2 = un.idnt(2),
         }
       ),
-    }, {
-      stored = {
-        class_name = i(nil, 'class_name'),
-        args = i(nil, 'args'),
+    }),
+    {
+      common_opts = {
+        stored = {
+          class_name = i(nil, 'class_name'),
+        },
       },
-    })
+    }
   ),
   us.sn(
     {
@@ -447,10 +453,6 @@ M.snippets = {
           idnt = un.idnt(1),
         }
       ),
-    }, {
-      stored = {
-        body = i(nil, 'body'),
-      },
     })
   ),
   us.msn(
@@ -495,11 +497,6 @@ M.snippets = {
           idnt = un.idnt(1),
         }
       ),
-    }, {
-      stored = {
-        body = i(nil, 'body'),
-        exc_body = i(nil, 'exc_body'),
-      },
     })
   ),
   us.msn(
