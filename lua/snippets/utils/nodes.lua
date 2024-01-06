@@ -7,19 +7,7 @@ local d = ls.dynamic_node
 local fmt = require('luasnip.extras.fmt').fmt
 local fmta = require('luasnip.extras.fmt').fmta
 
----Returns a string for indentation at the given depth
----@param depth number
----@return string
-local function get_indent_str(depth)
-  if depth <= 0 then
-    return ''
-  end
-
-  local sw = vim.fn.shiftwidth()
-  return vim.bo.expandtab and string.rep(' ', sw * depth)
-    or string.rep('\t', math.floor(sw * depth / vim.bo.ts))
-      .. string.rep(' ', sw * depth % vim.bo.ts)
-end
+local M = {}
 
 ---Returns a function node that returns a string for indentation at the given
 ---depth
@@ -27,10 +15,9 @@ end
 ---@param argnode_references number|table?
 ---@param node_opts table?
 ---@return table node
-local function function_indent_node(depth, argnode_references, node_opts)
+function M.idnt(depth, argnode_references, node_opts)
   return f(function(...)
-    ---@diagnostic disable-next-line: param-type-mismatch
-    return get_indent_str(type(depth) == 'function' and depth(...) or depth)
+    return require('snippets.utils.funcs').get_indent_str(depth, ...)
   end, argnode_references, node_opts)
 end
 
@@ -39,7 +26,7 @@ end
 ---@param argnode_references number|table?
 ---@param opts table?
 ---@return table node
-local function function_quotation_node(argnode_references, opts)
+function M.qt(argnode_references, opts)
   return f(function()
     return require('snippets.utils.funcs').get_quotation_type()
   end, argnode_references, opts)
@@ -50,7 +37,7 @@ end
 ---@param opening string
 ---@param closing string
 ---@return table node
-local function simple_suffix_dynamic_node(jump_index, opening, closing)
+function M.sdn(jump_index, opening, closing)
   return d(jump_index or 1, function(_, snip)
     local symbol = snip.captures[1]
     if symbol == nil or not symbol:match('%S') then
@@ -61,19 +48,13 @@ local function simple_suffix_dynamic_node(jump_index, opening, closing)
 end
 
 ---A format node with repeat_duplicates set to true
-local format_repeat_duplicates_node = ls.extend_decorator.apply(fmt, {
+M.fmtd = ls.extend_decorator.apply(fmt, {
   repeat_duplicates = true,
 })
 
 ---A format node with <> as placeholders and repeat_duplicates set to true
-local format_angle_repeat_duplicates_node = ls.extend_decorator.apply(fmta, {
+M.fmtad = ls.extend_decorator.apply(fmta, {
   repeat_duplicates = true,
 })
 
-return {
-  idnt = function_indent_node,
-  qt = function_quotation_node,
-  sdn = simple_suffix_dynamic_node,
-  fmtd = format_repeat_duplicates_node,
-  fmtad = format_angle_repeat_duplicates_node,
-}
+return M

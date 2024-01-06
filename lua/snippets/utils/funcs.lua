@@ -1,7 +1,9 @@
+local M = {}
+
 ---Set attributes for a single snippet
 ---@param snip table
 ---@param attr table
-local function snip_set_attr(snip, attr)
+function M.snip_set_attr(snip, attr)
   for attr_key, attr_val in pairs(attr) do
     if type(snip[attr_key]) == 'table' and type(attr_val) == 'table' then
       snip[attr_key] = vim.tbl_deep_extend('keep', snip[attr_key], attr_val)
@@ -15,7 +17,7 @@ end
 ---@param attr table
 ---@param snip_group table
 ---@return table
-local function add_attr(attr, snip_group)
+function M.add_attr(attr, snip_group)
   for _, snip in ipairs(snip_group) do
     -- ls.multi_snippet
     if snip.v_snips then
@@ -31,7 +33,7 @@ end
 
 ---Returns the depth of the current indent given the indent of the current line
 ---@param indent number|string
-local function get_indent_depth(indent)
+function M.get_indent_depth(indent)
   if type(indent) == 'string' then
     indent = #indent:match('^%s*'):gsub('\t', string.rep(' ', vim.bo.ts))
   end
@@ -49,9 +51,28 @@ local function get_indent_depth(indent)
   return math.floor(indent / sts)
 end
 
+---Returns a string for indentation at the given depth
+---@param depth number|fun(...): number
+---@vararg any same as arguments passed to function/dynamic node, e.g. argnode_texts, parent/snip, [old_state, user_args]
+---@return string
+function M.get_indent_str(depth, ...)
+  if type(depth) == 'function' then
+    depth = depth(...)
+  end
+
+  if depth <= 0 then
+    return ''
+  end
+
+  local sw = vim.fn.shiftwidth()
+  return vim.bo.expandtab and string.rep(' ', sw * depth)
+    or string.rep('\t', math.floor(sw * depth / vim.bo.ts))
+      .. string.rep(' ', sw * depth % vim.bo.ts)
+end
+
 ---Returns the character after the cursor
 ---@return string
-local function get_char_after()
+function M.get_char_after()
   local line = vim.api.nvim_get_current_line()
   local col = vim.api.nvim_win_get_cursor(0)[2]
   return line:sub(col, col)
@@ -68,7 +89,7 @@ vim.api.nvim_create_autocmd({ 'BufDelete', 'BufWipeOut', 'BufUnload' }, {
 ---Get which quotation mark (single or double) is preferred in current buffer
 ---@param buf integer?
 ---@return '"'|''"
-local function get_quotation_type(buf)
+function M.get_quotation_type(buf)
   buf = buf or vim.api.nvim_get_current_buf()
   if quotation_cache[buf] then
     return quotation_cache[buf]
@@ -84,10 +105,4 @@ local function get_quotation_type(buf)
   return quotation_cache[buf]
 end
 
-return {
-  snip_set_attr = snip_set_attr,
-  add_attr = add_attr,
-  get_char_after = get_char_after,
-  get_indent_depth = get_indent_depth,
-  get_quotation_type = get_quotation_type,
-}
+return M
