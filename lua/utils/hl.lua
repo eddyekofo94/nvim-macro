@@ -1,25 +1,25 @@
 local M = {}
 
----Wrapper of nvim_get_hl(), but does not create a cleared highlight group
----if it doesn't exist
----NOTE: vim.api.nvim_get_hl() has a side effect, it will create a cleared
----highlight group if it doesn't exist, see
----https://github.com/neovim/neovim/issues/24583
----This affects regions highlighted by non-existing highlight groups in a
----winbar, which should falls back to the default 'WinBar' or 'WinBarNC'
----highlight groups but instead falls back to 'Normal' highlight group
----because of this side effect
----So we need to check if the highlight group exists before calling
----vim.api.nvim_get_hl()
+---Wrapper of nvim_get_hl(), but does not create a highlight group
+---if it doesn't exist (default to opts.create = false), and add
+---new option opts.winhl_link to get highlight attributes without
+---being affected by winhl
 ---@param ns_id integer
 ---@param opts table{ name: string?, id: integer?, link: boolean? }
 ---@return vim.api.keyset.highlight: highlight attributes
 function M.get(ns_id, opts)
-  if not opts.name then
-    return vim.api.nvim_get_hl(ns_id, opts)
+  local no_winhl_link = opts.winhl_link == false
+  opts.winhl_link = nil
+  opts.create = opts.create or false
+  local attr = vim.api.nvim_get_hl(ns_id, opts)
+  -- We want to get true highlight attribute not affected by winhl
+  if no_winhl_link then
+    while attr.link do
+      opts.name = attr.link
+      attr = vim.api.nvim_get_hl(ns_id, opts)
+    end
   end
-  return vim.fn.hlexists(opts.name) == 1 and vim.api.nvim_get_hl(ns_id, opts)
-    or {}
+  return attr
 end
 
 ---Wrapper of nvim_buf_add_highlight(), but does not create a cleared
@@ -98,7 +98,7 @@ function M.merge(...)
   local hl_attr = vim.tbl_map(function(hl_name)
     return M.get(0, {
       name = hl_name,
-      link = false,
+      winhl_link = false,
     })
   end, hl_names)
   return vim.tbl_extend('force', unpack(hl_attr))
@@ -121,9 +121,9 @@ function M.normalize_fg_or_bg(attr_type, fbg, default)
   end
   if data_type == 'string' then
     if vim.fn.hlexists(fbg) == 1 then
-      return vim.api.nvim_get_hl(0, {
+      return M.get(0, {
         name = fbg,
-        link = false,
+        winhl_link = false,
       })[attr_type]
     end
     if fbg:match('^#%x%x%x%x%x%x$') then
@@ -153,11 +153,10 @@ function M.normalize(attr)
     end
     attr.fg = M.normalize_fg_or_bg('fg', attr.fg)
     attr.bg = M.normalize_fg_or_bg('bg', attr.bg)
-    attr = vim.tbl_extend(
-      'force',
-      M.get(0, { name = attr.link, link = false }) or {},
-      attr
-    )
+    attr = vim.tbl_extend('force', M.get(0, {
+      name = attr.link,
+      winhl_link = false,
+    }) or {}, attr)
     attr.link = nil
     return attr
   end
@@ -298,8 +297,8 @@ end
 ---@return table: merged color or highlight attributes
 function M.blend(h1, h2, alpha)
   -- stylua: ignore start
-  h1 = type(h1) == 'table' and h1 or M.get(0, { name = h1, link = false })
-  h2 = type(h2) == 'table' and h1 or M.get(0, { name = h2, link = false })
+  h1 = type(h1) == 'table' and h1 or M.get(0, { name = h1, winhl_link = false })
+  h2 = type(h2) == 'table' and h2 or M.get(0, { name = h2, winhl_link = false })
   local fg = h1.fg and h2.fg and M.cblend(h1.fg, h2.fg, alpha).dec or h1.fg or h2.fg
   local bg = h1.bg and h2.bg and M.cblend(h1.bg, h2.bg, alpha).dec or h1.bg or h2.bg
   return vim.tbl_deep_extend('force', h1, h2, { fg = fg, bg = bg })

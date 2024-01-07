@@ -17,7 +17,9 @@ local function get_hl_hex(hlgroup_name, field, fallback)
   -- e.g. when winhl=ColorColumn:FooBar, nvim will return the attributes of
   -- FooBar instead of ColorColumn with link = false, but return the
   -- attributes of ColorColumn with link = true
-  local attr_val = vim.api.nvim_get_hl(0, { name = hlgroup_name })[field]
+  -- EDIT: solved by manually traversing the hlgroup, see implementation
+  -- of `utils.hl.get()`
+  local attr_val = hl.get(0, { name = hlgroup_name, winhl_link = false })[field]
   return attr_val and hl.dec2hex(attr_val) or fallback
 end
 
