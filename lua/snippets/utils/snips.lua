@@ -7,7 +7,13 @@ local snip_attr_map = {
   W = { wordTrig = false },
   -- cmp_luasnip cannot handle snippets with regex triggers, see
   -- https://github.com/L3MON4D3/LuaSnip/issues/931
-  r = { regTrig = true, hidden = true },
+  r = {
+    regTrig = true,
+    hidden = true,
+    trigEngineOpts = {
+      max_len = 40,
+    },
+  },
   R = { regTrig = false },
   h = { hidden = true },
   H = { hidden = false },

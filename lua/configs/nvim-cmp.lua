@@ -459,6 +459,9 @@ cmp.setup({
       cmp.config.compare.score,
     },
   },
+  performance = {
+    async_budget = 1,
+  },
   -- cmp floating window config
   window = {
     documentation = {

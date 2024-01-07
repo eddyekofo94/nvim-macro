@@ -22,68 +22,7 @@ return {
       })
     end),
   }),
-  us.samWr({ trig = '(.*%))//' }, {
-    d(1, function(_, snip)
-      local captured = vim.trim(snip.captures[1])
-      if captured == nil or not captured:match('%S') then
-        return sn(nil, {
-          t('\\frac{'),
-          i(1),
-          t('}{'),
-          i(2),
-          t('}'),
-        })
-      end
-      local idx = #captured
-      local depth = 0
-      while idx > 0 do
-        local char = captured:sub(idx, idx)
-        if char == ')' then
-          depth = depth + 1
-        elseif char == '(' then
-          depth = depth - 1
-        end
-        if depth == 0 then
-          break
-        end
-        idx = idx - 1
-      end
-      if depth ~= 0 then
-        return sn(nil, {
-          t('\\frac{'),
-          i(1),
-          t('}{'),
-          i(2),
-          t('}'),
-        })
-      end
-      local numerator = captured:sub(idx + 1, -2)
-      local prefix = ''
-      if idx > 0 then
-        prefix = captured:sub(1, idx - 1)
-      end
-      return sn(nil, {
-        t(prefix),
-        t('\\frac{'),
-        t(numerator),
-        t('}{'),
-        i(1),
-        t('}'),
-      })
-    end),
-  }),
-  us.samWr({ trig = '(\\%w+{%S+})//' }, {
-    d(1, function(_, snip)
-      return sn(nil, {
-        t('\\frac{'),
-        t(snip.captures[1]),
-        t('}{'),
-        i(1),
-        t('}'),
-      })
-    end),
-  }),
-  us.samWr({ trig = '(\\?%w*_*%w*)//' }, {
+  us.samWr({ trig = '([%w_\\{}]*)//' }, {
     d(1, function(_, snip)
       local numerator = snip.captures[1]
       if numerator == nil or not numerator:match('%S') then

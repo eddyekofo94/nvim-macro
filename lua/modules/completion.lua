@@ -89,6 +89,7 @@ return {
 
   {
     'L3MON4D3/LuaSnip',
+    build = 'make install_jsregexp',
     event = 'ModeChanged *:[iRss\x13vV\x16]*',
     config = function()
       require('configs.LuaSnip')

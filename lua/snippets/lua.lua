@@ -110,13 +110,10 @@ M.syntax = {
     i(0),
     t({ '', 'end' }),
   }),
-  us.san({ trig = 'elif' }, {
-    t({ 'elseif ' }),
-    i(1, 'condition'),
-    t({ ' then', '' }),
-    un.body(2, 1),
-  }),
-  us.sanr({ trig = 'else%s*if' }, {
+  us.msn({
+    { trig = 'elif' },
+    { trig = 'elseif' },
+  }, {
     t('elseif '),
     i(1, 'condition'),
     t({ ' then', '' }),

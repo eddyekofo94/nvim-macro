@@ -11,6 +11,7 @@ local utils = require('utils')
 copilot.setup({
   suggestion = {
     auto_trigger = true,
+    debounce = 500,
     keymap = {
       accept = false,
     },
