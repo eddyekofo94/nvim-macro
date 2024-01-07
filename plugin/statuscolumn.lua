@@ -286,7 +286,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
       and vim.bo.bt == ''
       and vim.wo.stc == ''
       and vim.fn.win_gettype() == ''
-      and not vim.b.large_file
+      and not vim.b.bigfile
     then
       vim.opt_local.stc = '%!v:lua.get_statuscolumn()'
     end

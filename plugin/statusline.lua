@@ -154,7 +154,7 @@ function statusline.info()
     end
   end
   add_section(statusline.ft())
-  if ft_text[vim.bo.ft] and not vim.b.large_file then
+  if ft_text[vim.bo.ft] and not vim.b.bigfile then
     add_section(statusline.word_count())
   end
   add_section(statusline.branch())

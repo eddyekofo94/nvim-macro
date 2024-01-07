@@ -1,7 +1,30 @@
 local cmp = require('cmp')
+local cmp_core = require('cmp.core')
 local luasnip = require('luasnip')
 local tabout = require('plugin.tabout')
 local icons = require('utils.static').icons
+
+local last_changed = 0
+local _cmp_on_change = cmp_core.on_change
+
+---Improves performance when inserting in large files
+---@diagnostic disable-next-line: duplicate-set-field
+function cmp_core.on_change(self, trigger_event)
+  local now = vim.uv.now()
+  local fast_typing = now - last_changed < 48
+  last_changed = now
+
+  if not fast_typing or trigger_event ~= 'TextChanged' or cmp.visible() then
+    _cmp_on_change(self, trigger_event)
+    return
+  end
+
+  vim.defer_fn(function()
+    if last_changed == now then
+      _cmp_on_change(self, trigger_event)
+    end
+  end, 200)
+end
 
 ---Choose the closer destination between two destinations
 ---@param dest1 number[]?
@@ -213,13 +236,13 @@ local compltype_path = {
 
 ---@return integer[] buffer numbers
 local function source_buf_get_bufnrs()
-  return vim.b.large_file and {} or { vim.api.nvim_get_current_buf() }
+  return vim.b.bigfile and {} or { vim.api.nvim_get_current_buf() }
 end
 
 ---@diagnostic disable missing-fields
 cmp.setup({
   enabled = function()
-    return not vim.b.large_file
+    return not vim.b.bigfile
   end,
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },

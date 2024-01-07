@@ -39,7 +39,7 @@ local _buf_attach = copilot_client.buf_attach
 ---@return nil
 ---@diagnostic disable-next-line: duplicate-set-field
 function copilot_client.buf_attach(force)
-  if vim.b.large_file and not force then
+  if vim.b.bigfile and not force then
     return
   end
   return _buf_attach(force)

@@ -9,18 +9,32 @@ local function au(group, ...)
   end
 end
 
-au('LargeFileSettings', {
+au('BigFileSettings', {
   'BufReadPre',
   {
     desc = 'Set settings for large files.',
     callback = function(info)
-      if vim.b.large_file ~= nil then
+      vim.b.midfile = false
+      vim.b.bigfile = false
+      local stat = vim.uv.fs_stat(info.match)
+      if not stat then
         return
       end
-      vim.b.large_file = false
-      local stat = vim.uv.fs_stat(info.match)
-      if stat and stat.size > 1000000 then
-        vim.b.large_file = true
+      if stat.size > 48000 then
+        vim.b.midfile = true
+        vim.api.nvim_create_autocmd('BufReadPost', {
+          buffer = info.buf,
+          once = true,
+          callback = function()
+            vim.schedule(function()
+              pcall(vim.treesitter.stop, info.buf)
+            end)
+            return true
+          end,
+        })
+      end
+      if stat.size > 1024000 then
+        vim.b.bigfile = true
         vim.opt_local.spell = false
         vim.opt_local.swapfile = false
         vim.opt_local.undofile = false
@@ -380,7 +394,7 @@ au('DeferSetSpell', {
       local win = vim.api.nvim_get_current_win()
       if
         not vim.b[buf].spell_checked
-        and not vim.b[buf].large_file
+        and not vim.b[buf].bigfile
         and not vim.wo[win].spell
         and vim.bo[buf].bt == ''
         and vim.bo[buf].ma

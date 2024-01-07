@@ -9,13 +9,17 @@ vim.schedule(function()
   -- mess up the syntax highlighting of current buffer, seems like
   -- a bug of neovim
   vim.api.nvim_buf_call(buf, function()
-    if not vim.api.nvim_buf_is_valid(buf) or vim.b[buf].large_file then
+    if not vim.api.nvim_buf_is_valid(buf) then
       return
     end
     -- Get good embedded code block syntax highlighting from treesitter
     -- and good math conceal from vimtex at the same time
-    pcall(vim.treesitter.start, buf, 'markdown')
-    vim.cmd.runtime('syntax/mkd.vim')
-    vim.b[buf].current_syntax = 'mkd'
+    if not vim.b.midfile then
+      pcall(vim.treesitter.start, buf, 'markdown')
+    end
+    if not vim.b.bigfile then
+      vim.cmd.runtime('syntax/mkd.vim')
+      vim.b[buf].current_syntax = 'mkd'
+    end
   end)
 end)
