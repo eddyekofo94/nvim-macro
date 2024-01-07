@@ -651,6 +651,9 @@ function winbar_menu_t:close(restore_view)
   -- Move cursor to the previous window
   if self.prev_win and vim.api.nvim_win_is_valid(self.prev_win) then
     vim.api.nvim_set_current_win(self.prev_win)
+    vim.api.nvim_exec_autocmds('WinEnter', {
+      pattern = tostring(self.prev_win),
+    })
   end
   -- Close the menu window and dereference it in the lookup table
   if self.win then
@@ -659,6 +662,9 @@ function winbar_menu_t:close(restore_view)
     end
     _G.winbar.menus[self.win] = nil
     self.win = nil
+  end
+  if self.scrollbar then
+    self:close_scrollbar()
   end
   -- Finish preview
   if configs.opts.menu.preview then
@@ -670,9 +676,6 @@ function winbar_menu_t:close(restore_view)
     if configs.opts.menu.preview then
       self.prev_menu:preview_symbol_at(self.prev_menu.prev_cursor)
     end
-  end
-  if self.scrollbar then
-    self:close_scrollbar()
   end
 end
 
