@@ -200,78 +200,61 @@ au('EqualWinSize', {
 
 -- Show cursor line and cursor column only in current window
 au('AutoHlCursorLine', {
-  'WinEnter',
+  { 'BufWinEnter', 'WinEnter', 'UIEnter' },
   {
-    once = true,
-    desc = 'Initialize cursorline winhl.',
+    desc = 'Show cursorline and cursorcolumn in current window.',
     callback = function()
-      local winlist = vim.api.nvim_list_wins()
-      for _, win in ipairs(winlist) do
-        vim.api.nvim_win_call(win, function()
-          vim.opt_local.winhl:append({
-            CursorLine = '',
-            CursorColumn = '',
-          })
-        end)
+      if vim.fn.mode():match('^[itRsS\x13]') then
+        return
       end
-      return true
+      if vim.w._cul and not vim.wo.cul then
+        vim.wo.cul = true
+        vim.w._cul = nil
+      end
+      if vim.w._cuc and not vim.wo.cuc then
+        vim.wo.cuc = true
+        vim.w._cuc = nil
+      end
     end,
   },
 }, {
-  { 'BufWinEnter', 'WinEnter' },
+  'WinLeave',
   {
+    desc = 'Hide cursorline and cursorcolumn in other windows.',
     callback = function()
-      if
-        vim.fn.win_gettype() ~= ''
-        or vim.api.nvim_get_mode().mode:match('^[itRsS\x13]')
-      then
-        return
+      if vim.wo.cul then
+        vim.w._cul = true
+        vim.wo.cul = false
       end
-      -- Restore CursorLine and CursorColumn in current window
-      local winhl = vim.opt_local.winhl:get()
-      if winhl['CursorLine'] or winhl['CursorColumn'] then
-        vim.opt_local.winhl:remove({
-          'CursorLine',
-          'CursorColumn',
-        })
-      end
-      -- Conceal cursor line and cursor column in the previous window
-      -- if current window is a normal window
-      local current_win = vim.api.nvim_get_current_win()
-      local prev_win = vim.fn.win_getid(vim.fn.winnr('#'))
-      if
-        prev_win ~= 0
-        and prev_win ~= current_win
-        and vim.api.nvim_win_is_valid(prev_win)
-      then
-        vim.api.nvim_win_call(prev_win, function()
-          vim.opt_local.winhl:append({
-            CursorLine = '',
-            CursorColumn = '',
-          })
-        end)
+      if vim.wo.cuc then
+        vim.w._cuc = true
+        vim.wo.cuc = false
       end
     end,
   },
 }, {
   'ModeChanged',
   {
+    desc = 'Hide cursorline and cursorcolumn in insert mode.',
     pattern = { '[itRss\x13]*:*', '*:[itRss\x13]*' },
     callback = function()
-      local winhl = vim.opt_local.winhl:get()
       if vim.v.event.new_mode:match('^[itRss\x13]') then
-        if not winhl['CursorLine'] or not winhl['CursorColumn'] then
-          vim.opt_local.winhl:append({
-            CursorLine = '',
-            CursorColumn = '',
-          })
+        if vim.wo.cul then
+          vim.w._cul = true
+          vim.wo.cul = false
+        end
+        if vim.wo.cuc then
+          vim.w._cuc = true
+          vim.wo.cuc = false
         end
       else
-        if winhl['CursorLine'] or winhl['CursorColumn'] then
-          vim.opt_local.winhl:remove({
-            'CursorLine',
-            'CursorColumn',
-          })
+        if vim.w._cul and not vim.wo.cul then
+          vim.wo.cul = true
+          vim.w._cul = nil
+        end
+        if vim.w._cuc and not vim.wo.cuc then
+          vim.wo.cuc = true
+          vim.w._cuc = nil
         end
       end
     end,
