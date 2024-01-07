@@ -47,6 +47,40 @@ function M.sdn(jump_index, opening, closing)
   end)
 end
 
+---Returns a dynamic node to be used as a 'body' in a snippet,
+---e.g. body of a function/method, or contents in between latex
+---environment tags
+---
+---When there's previous visual selection, the selection will be
+---used as the default content of the body
+---@param jump_index number? jump index for the dynamic node
+---@param indent_depth number|fun(...): number indentation depth for the body, default 1
+---@param default_text string? default text for the body
+---@return table
+function M.body(jump_index, indent_depth, default_text)
+  return d(jump_index, function(argnode_texts, parent, ...)
+    -- The dynamicNode receives the parent of the dynamicNode, which is not
+    -- necessarily the snippet, and only the snippet has `env`
+    local selected = parent.snippet.env.LS_SELECT_DEDENT
+    for idx = 2, #selected do
+      if selected[idx]:match('%S') then
+        selected[idx] = require('snippets.utils.funcs').get_indent_str(
+          indent_depth,
+          argnode_texts,
+          parent,
+          ...
+        ) .. selected[idx]
+      end
+    end
+    local text = not vim.tbl_isempty(selected) and selected or default_text
+    return sn(nil, {
+      M.idnt(indent_depth),
+      i(1, text),
+      type(text) == 'table' and #text > 1 and i(2) or nil,
+    })
+  end)
+end
+
 ---A format node with repeat_duplicates set to true
 M.fmtd = ls.extend_decorator.apply(fmt, {
   repeat_duplicates = true,

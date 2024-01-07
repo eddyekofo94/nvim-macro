@@ -4,7 +4,6 @@ local ls = require('luasnip')
 local sn = ls.snippet_node
 local t = ls.text_node
 local i = ls.insert_node
-local f = ls.function_node
 local c = ls.choice_node
 local d = ls.dynamic_node
 local r = ls.restore_node
@@ -117,7 +116,7 @@ return {
       ]],
       {
         cond = i(1),
-        body = i(0),
+        body = un.body(2, 0),
       }
     )
   ),
@@ -134,7 +133,7 @@ return {
       ]],
       {
         var = i(1),
-        body = i(0),
+        body = un.body(2, 0),
       }
     )
   ),
@@ -151,7 +150,7 @@ return {
       ]],
       {
         var = i(1),
-        body = i(0),
+        body = un.body(2, 0),
       }
     )
   ),
@@ -190,7 +189,7 @@ return {
           end
           return sn(nil, i(1))
         end),
-        body = i(0),
+        body = un.body(2, 0),
       }
     )
   ),
@@ -203,13 +202,12 @@ return {
     un.fmtad(
       [[
         if (<cond>) {
-        <idnt><body>
+        <body>
         }
       ]],
       {
         cond = i(1),
-        body = i(1),
-        idnt = un.idnt(1),
+        body = un.body(2, 0),
       }
     )
   ),
@@ -223,14 +221,14 @@ return {
     un.fmtad(
       [[
         if (<cond>) {
-        <idnt><body>
+        <body>
         } else {
         <idnt><else_body>
         }
       ]],
       {
         cond = i(1),
-        body = i(2),
+        body = un.body(2, 0),
         else_body = i(3),
         idnt = un.idnt(1),
       }
@@ -249,14 +247,14 @@ return {
     un.fmtad(
       [[
         if (<cond>) {
-        <idnt><body>
+        <body>
         } else if {
         <idnt><else_body>
         }
       ]],
       {
         cond = i(1),
-        body = i(2),
+        body = un.body(2, 0),
         else_body = i(3),
         idnt = un.idnt(1),
       }
@@ -271,12 +269,11 @@ return {
     un.fmtad(
       [[
         else {
-        <idnt><body>
+        <body>
         }
       ]],
       {
-        body = i(1),
-        idnt = un.idnt(1),
+        body = un.body(1, 0),
       }
     )
   ),
@@ -291,13 +288,12 @@ return {
     un.fmtad(
       [[
         else if (<cond>) {
-        <idnt><body>
+        <body>
         }
       ]],
       {
         cond = i(1),
-        body = i(2),
-        idnt = un.idnt(1),
+        body = un.body(2, 0),
       }
     )
   ),
@@ -309,15 +305,14 @@ return {
     un.fmtad(
       [[
         for (<init>; <cond>; <inc>) {
-        <idnt><body>
+        <body>
         }
       ]],
       {
         init = i(1),
         cond = i(2),
         inc = i(3),
-        body = i(4),
-        idnt = un.idnt(1),
+        body = un.body(4, 0),
       }
     )
   ),
@@ -330,13 +325,12 @@ return {
     un.fmtad(
       [[
         while (<cond>) {
-        <idnt><body>
+        <body>
         }
       ]],
       {
         cond = i(1),
-        body = i(2),
-        idnt = un.idnt(1),
+        body = un.body(2, 0),
       }
     )
   ),
@@ -353,13 +347,12 @@ return {
     un.fmtad(
       [[
         do {
-        <idnt><body>
+        <body>
         } while (<cond>);
       ]],
       {
         cond = i(1),
-        body = i(2),
-        idnt = un.idnt(1),
+        body = un.body(2, 0),
       }
     )
   ),
@@ -372,42 +365,15 @@ return {
     un.fmtad(
       [[
         switch (<var>) {
-        <idnt><body>
-        }
-      ]],
-      {
-        var = i(1),
-        body = i(2),
-        idnt = un.idnt(1),
-      }
-    )
-  ),
-  us.msn(
-    {
-      { trig = 'swc' },
-      { trig = 'swca' },
-      { trig = 'swcs' },
-      { trig = 'swcase' },
-      { trig = 'switchc' },
-      { trig = 'switchca' },
-      { trig = 'switchcs' },
-      { trig = 'switchcase' },
-      common = { desc = 'switch case statement' },
-    },
-    un.fmtad(
-      [[
-        switch (<var>) {
         <idnt>case <val>:
-        <idnt2><body>
-        <idnt2>break;
+        <body>
         }
       ]],
       {
         var = i(1),
         val = i(2),
-        body = i(3),
         idnt = un.idnt(1),
-        idnt2 = un.idnt(2),
+        body = un.body(3, 2),
       }
     )
   ),
@@ -421,12 +387,11 @@ return {
     un.fmtad(
       [[
         case <val>:
-        <idnt><body>
+        <body>
       ]],
       {
         val = i(1),
-        body = i(2),
-        idnt = un.idnt(1),
+        body = un.body(2, 1),
       }
     )
   ),
@@ -442,23 +407,30 @@ return {
       un.fmtad(
         [[
           <type> <func>(<params>) {
-          <idnt><body>
+          <body>
           }
         ]],
         {
-          type = i(1, 'type'),
-          func = i(2, 'fn_name'),
+          type = r(1, 'type'),
+          func = r(2, 'func'),
           params = i(3),
-          body = i(4),
-          idnt = un.idnt(1),
+          body = un.body(4, 1),
         }
       ),
       un.fmtad('<type> <func>(<params>);', {
-        type = i(1, 'type'),
-        func = i(2, 'fn_name'),
+        type = r(1, 'type'),
+        func = r(2, 'func'),
         params = i(3),
       }),
-    })
+    }),
+    {
+      common_opts = {
+        stored = {
+          type = i(1, 'int'),
+          func = i(2, 'fn_name'),
+        },
+      },
+    }
   ),
   us.msn(
     {
@@ -485,19 +457,25 @@ return {
       un.fmtad(
         [[
           struct <name> {
-          <idnt><body>
+          <body>
           };
         ]],
         {
-          name = i(1, 'name'),
-          body = i(2),
-          idnt = un.idnt(1),
+          name = r(1, 'name'),
+          body = un.body(2, 1),
         }
       ),
       un.fmtad('struct <name>;', {
-        name = i(1, 'name'),
+        name = r(1, 'name'),
       }),
-    })
+    }),
+    {
+      common_opts = {
+        stored = {
+          name = i(nil, 'struct_name'),
+        },
+      },
+    }
   ),
   us.msn(
     {
@@ -507,7 +485,7 @@ return {
       common = { desc = 'Struct declaration' },
     },
     un.fmtad('struct <name>;', {
-      name = i(1, 'name'),
+      name = i(1, 'struct_name'),
     })
   ),
   us.msn(
@@ -520,13 +498,12 @@ return {
       un.fmtad(
         [[
           union <name> {
-          <idnt><body>
+          <body>
           };
         ]],
         {
           name = r(1, 'name'),
-          body = i(2),
-          idnt = un.idnt(1),
+          body = un.body(2, 1),
         }
       ),
       un.fmtad('union <name>;', {
@@ -536,7 +513,7 @@ return {
     {
       common_opts = {
         stored = {
-          name = i(1, 'name'),
+          name = i(1, 'union_name'),
         },
       },
     }
@@ -549,7 +526,7 @@ return {
       common = { desc = 'Union declaration' },
     },
     un.fmtad('union <name>;', {
-      name = i(1, 'name'),
+      name = i(1, 'union_name'),
     })
   ),
   us.msn(
@@ -563,15 +540,22 @@ return {
         t('typedef '),
         i(1, 'type'),
         t(' '),
-        i(2, 'alias'),
+        r(2, 'alias'),
         t(';'),
       }),
       sn(nil, {
         t('typedef '),
-        i(1),
+        r(1, 'alias'),
         t(';'),
       }),
-    })
+    }),
+    {
+      common_opts = {
+        stored = {
+          alias = i(nil, 'alias'),
+        },
+      },
+    }
   ),
   us.msn(
     {
@@ -587,14 +571,13 @@ return {
       un.fmtad(
         [[
           typedef struct <name> {
-          <idnt><body>
+          <body>
           } <alias>;
         ]],
         {
           name = r(1, 'name'),
-          body = i(3),
+          body = un.body(3, 1),
           alias = r(2, 'alias'),
-          idnt = un.idnt(1),
         }
       ),
       un.fmtad('typedef struct <name> <alias>;', {
@@ -608,7 +591,7 @@ return {
           name = i(1, 'name'),
           alias = i(2, 'alias'),
         },
-      }
+      },
     }
   ),
   us.msn(
@@ -640,14 +623,13 @@ return {
       un.fmtad(
         [[
           typedef union <name> {
-          <idnt><body>
+          <body>
           } <alias>;
         ]],
         {
           name = r(1, 'name'),
-          body = i(3),
+          body = un.body(3, 1),
           alias = r(2, 'alias'),
-          idnt = un.idnt(1),
         }
       ),
       un.fmtad('typedef union <name> <alias>;', {
@@ -661,7 +643,7 @@ return {
           name = i(1, 'name'),
           alias = i(2, 'alias'),
         },
-      }
+      },
     }
   ),
   us.msn(

@@ -532,13 +532,12 @@ return {
     un.fmtad(
       [[
         \begin{<env>}
-        <idnt><text>
+        <text>
         \end{<env>}
       ]],
       {
         env = i(1, 'align'),
-        idnt = un.idnt(1),
-        text = i(0),
+        text = un.body(2, 1),
       }
     )
   ),
@@ -547,20 +546,19 @@ return {
     un.fmtad(
       [[
         \begin{<env>}
-        <idnt><text>
+        <text>
         \end{<env>}
       ]],
       {
         env = i(1, 'equation'),
-        idnt = un.idnt(1),
-        text = i(0),
+        text = un.body(2, 1),
       }
     )
   ),
   us.sam({ trig = 'case' }, {
     t({ '\\begin{cases}', '' }),
     un.idnt(1),
-    i(0),
+    un.body(2, 1),
     t({ '', '\\end{cases}' }),
   }),
   us.sam({ trig = 'part' }, {
@@ -650,13 +648,12 @@ return {
     un.fmtad(
       [[
         \begin{<env>}
-        <idnt><text>
+        <text>
         \end{<env>}
       ]],
       {
-        idnt = un.idnt(1),
         env = i(1),
-        text = i(0),
+        text = un.body(2, 1),
       }
     )
   ),
@@ -745,6 +742,12 @@ return {
   ),
 
   -- Math env
+  -- Press double '$' -> $|$ -> press '$' again -> multi-line math env
+  -- Also support visual snippet:
+  -- -> select text
+  -- -> press snippet trigger (`<Tab>`)
+  -- -> press double '$'
+  -- -> inline or multi-line math env with selected text as content
   us.sa({
     trig = '$',
     condition = function()
@@ -762,12 +765,28 @@ return {
     i(0),
     t({ '', '$$' }),
   }),
-  us.sa({
-    trig = '$$',
-    priority = 999,
-  }, {
-    t('$'),
-    i(0),
-    t('$'),
-  }),
+
+  us.sa(
+    { trig = '$$', priority = 999 },
+    d(1, function(_, snip)
+      local sel_dedent = snip.env.LS_SELECT_DEDENT
+      local sel_raw = snip.env.LS_SELECT_RAW
+
+      if #sel_raw == 0 or #sel_raw == 1 and sel_raw[1]:match('^%S') then
+        return sn(nil, { t('$'), i(1, sel_raw), t('$') })
+      end
+
+      for idx = 2, #sel_dedent do
+        if sel_dedent[idx]:match('%S') then
+          sel_dedent[idx] = uf.get_indent_str(1) .. sel_dedent[idx]
+        end
+      end
+      return sn(nil, {
+        t({ '$$', '' }),
+        un.idnt(1),
+        i(i, sel_dedent),
+        t({ '', '$$' }),
+      })
+    end)
+  ),
 }

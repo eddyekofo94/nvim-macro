@@ -17,13 +17,12 @@ M.env = {
     un.fmtad(
       [[
         \begin{<env>}
-        <idnt><text>
+        <text>
         \end{<env>}
       ]],
       {
-        idnt = un.idnt(1),
         env = i(1),
-        text = i(0),
+        text = un.body(2, 1),
       }
     )
   ),
@@ -33,8 +32,7 @@ M.env = {
       '\\begin{cases}',
       '',
     }),
-    un.idnt(1),
-    i(1),
+    un.body(1, 1),
     t({
       '',
       '\\end{cases}',
@@ -46,7 +44,7 @@ M.env = {
     un.fmtad(
       [[
         \begin{<env>}
-        <idnt><text>
+        <text>
         \end{<env>}
       ]],
       {
@@ -54,8 +52,7 @@ M.env = {
           i(nil, 'align*'),
           i(nil, 'align'),
         }),
-        idnt = un.idnt(1),
-        text = i(0),
+        text = un.body(2, 1),
       }
     )
   ),
@@ -64,7 +61,7 @@ M.env = {
     un.fmtad(
       [[
         \begin{<env>}
-        <idnt><text>
+        <text>
         \end{<env>}
       ]],
       {
@@ -72,8 +69,7 @@ M.env = {
           i(nil, 'equation*'),
           i(nil, 'equation'),
         }),
-        idnt = un.idnt(1),
-        text = i(0),
+        text = un.body(2, 1),
       }
     )
   ),

@@ -89,7 +89,7 @@ return {
 
   {
     'L3MON4D3/LuaSnip',
-    event = 'InsertEnter',
+    event = 'ModeChanged *:[iRss\x13vV\x16]*',
     config = function()
       require('configs.LuaSnip')
     end,

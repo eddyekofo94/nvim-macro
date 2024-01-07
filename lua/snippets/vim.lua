@@ -53,14 +53,13 @@ M.snippets = {
     un.fmtad(
       [[
         function! <name>(<args>) abort
-        <idnt><body>
+        <body>
         endfunction
       ]],
       {
         name = i(1, 'FuncName'),
         args = i(2),
-        body = i(3),
-        idnt = un.idnt(1),
+        body = un.body(3, 0),
       }
     )
   ),
@@ -70,12 +69,12 @@ M.snippets = {
       [[
         augroup <name>
         <idnt>au!
-        <idnt><body>
+        <body>
         augroup END
       ]],
       {
         name = i(1, 'AugroupName'),
-        body = i(2),
+        body = un.body(2, 1),
         idnt = un.idnt(1),
       }
     )

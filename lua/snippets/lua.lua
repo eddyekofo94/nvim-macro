@@ -34,8 +34,7 @@ M.syntax = {
     t('('),
     i(2),
     t({ ')', '' }),
-    un.idnt(1),
-    i(0),
+    un.body(3, 1),
     t({ '', 'end' }),
   }),
   us.msn({
@@ -58,8 +57,7 @@ M.syntax = {
         t({ ')', '' }),
       }),
     }),
-    un.idnt(1),
-    i(0),
+    un.body(2, 1),
     t({ '', 'end' }),
   }),
   us.msn({
@@ -73,16 +71,14 @@ M.syntax = {
     t('('),
     i(3),
     t({ ')', '' }),
-    un.idnt(1),
-    i(0),
+    un.body(4, 1),
     t({ '', 'end' }),
   }),
   us.sn({ trig = 'if' }, {
     t('if '),
     i(1, 'condition'),
     t({ ' then', '' }),
-    un.idnt(1),
-    i(0),
+    un.body(2, 1),
     t({ '', 'end' }),
   }),
   us.msn({
@@ -93,8 +89,7 @@ M.syntax = {
     t('if '),
     i(1, 'condition'),
     t({ ' then', '' }),
-    un.idnt(1),
-    i(2),
+    un.body(2, 1),
     t({ '', 'else', '' }),
     un.idnt(1),
     i(0),
@@ -107,8 +102,7 @@ M.syntax = {
     t('if '),
     i(1, 'condition_1'),
     t({ ' then', '' }),
-    un.idnt(1),
-    i(2),
+    un.body(2, 1),
     t({ '', 'elseif ' }),
     i(3, 'condition_2'),
     t({ '', '' }),
@@ -116,22 +110,17 @@ M.syntax = {
     i(0),
     t({ '', 'end' }),
   }),
-  us.sanr({ trig = '^(%s*)elif' }, {
-    un.idnt(function(_, snip)
-      return uf.get_indent_depth(snip.captures[1]) - 1
-    end),
+  us.san({ trig = 'elif' }, {
     t({ 'elseif ' }),
     i(1, 'condition'),
     t({ ' then', '' }),
-    un.idnt(function(_, snip)
-      return uf.get_indent_depth(snip.captures[1])
-    end),
+    un.body(2, 1),
   }),
   us.sanr({ trig = 'else%s*if' }, {
     t('elseif '),
     i(1, 'condition'),
     t({ ' then', '' }),
-    un.idnt(1),
+    un.body(2, 1),
   }),
   us.sn({ trig = 'for' }, {
     t('for '),
@@ -175,8 +164,7 @@ M.syntax = {
       }),
     }),
     t({ ' do', '' }),
-    un.idnt(1),
-    i(0),
+    un.body(2, 1),
     t({ '', 'end' }),
   }),
   us.msn({
@@ -206,8 +194,7 @@ M.syntax = {
       }),
     }),
     t({ ' do', '' }),
-    un.idnt(1),
-    i(0),
+    un.body(2, 1),
     t({ '', 'end' }),
   }),
   us.msn({
@@ -225,8 +212,7 @@ M.syntax = {
     t(' in pairs('),
     i(3, 'tbl'),
     t({ ') do', '' }),
-    un.idnt(1),
-    i(0),
+    un.body(4, 1),
     t({ '', 'end' }),
   }),
   us.msn({
@@ -244,8 +230,7 @@ M.syntax = {
     t(' in ipairs('),
     i(3, 'tbl'),
     t({ ') do', '' }),
-    un.idnt(1),
-    i(0),
+    un.body(4, 1),
     t({ '', 'end' }),
   }),
   us.msn({
@@ -255,14 +240,12 @@ M.syntax = {
     t('while '),
     i(1, 'condition'),
     t({ ' do', '' }),
-    un.idnt(1),
-    i(0),
+    un.body(2, 1),
     t({ '', 'end' }),
   }),
   us.sn({ trig = 'do' }, {
     t({ 'do', '' }),
-    un.idnt(1),
-    i(0),
+    un.body(1, 1),
     t({ '', 'end' }),
   }),
   us.msn({

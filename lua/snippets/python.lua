@@ -81,11 +81,11 @@ M.snippets = {
     un.fmtad(
       [[
         if <cond>:
-        <idnt>
+        <body>
       ]],
       {
         cond = i(1),
-        idnt = un.idnt(1),
+        body = un.body(2, 1),
       }
     )
   ),
@@ -99,13 +99,13 @@ M.snippets = {
     un.fmtad(
       [[
         if <cond>:
-        <idnt><body>
+        <body>
         else:
         <idnt>
       ]],
       {
         cond = i(1),
-        body = i(2),
+        body = un.body(2, 1),
         idnt = un.idnt(1),
       }
     )
@@ -123,13 +123,13 @@ M.snippets = {
     un.fmtad(
       [[
         if <cond>:
-        <idnt><body>
+        <body>
         elif:
         <idnt>
       ]],
       {
         cond = i(1),
-        body = i(2),
+        body = un.body(2, 1),
         idnt = un.idnt(1),
       }
     )
@@ -143,10 +143,10 @@ M.snippets = {
     un.fmtad(
       [[
         else:
-        <idnt>
+        <body>
       ]],
       {
-        idnt = un.idnt(1),
+        body = un.body(1, 1),
       }
     )
   ),
@@ -161,11 +161,11 @@ M.snippets = {
     un.fmtad(
       [[
         elif <cond>:
-        <idnt>
+        <body>
       ]],
       {
         cond = i(1),
-        idnt = un.idnt(1),
+        body = un.body(2, 1),
       }
     )
   ),
@@ -177,12 +177,12 @@ M.snippets = {
     un.fmtad(
       [[
         for <var> in <iter>:
-        <idnt>
+        <body>
       ]],
       {
         var = i(1),
         iter = i(2),
-        idnt = un.idnt(1),
+        body = un.body(3, 1),
       }
     )
   ),
@@ -198,12 +198,12 @@ M.snippets = {
     un.fmtad(
       [[
         for <var> in range(<range>):
-        <idnt>
+        <body>
       ]],
       {
         var = i(1),
         range = i(2),
-        idnt = un.idnt(1),
+        body = un.body(3, 1),
       }
     )
   ),
@@ -221,13 +221,13 @@ M.snippets = {
     un.fmtad(
       [[
         for <idx>, <elem> in iter(<iterable>):
-        <idnt>
+        <body>
       ]],
       {
         idx = i(1, 'idx'),
         elem = i(2, 'elem'),
         iterable = i(3),
-        idnt = un.idnt(1),
+        body = un.body(4, 1),
       }
     )
   ),
@@ -240,11 +240,11 @@ M.snippets = {
     un.fmtad(
       [[
         while <cond>:
-        <idnt>
+        <body>
       ]],
       {
         cond = i(1),
-        idnt = un.idnt(1),
+        body = un.body(2, 1),
       }
     )
   ),
@@ -261,12 +261,12 @@ M.snippets = {
       un.fmtad(
         [[
           def <name>(<args>):
-          <idnt>
+          <body>
         ]],
         {
           name = r(1, 'fn_name'),
           args = r(2, 'args'),
-          idnt = un.idnt(1),
+          body = un.body(3, 1),
         }
       ),
       un.fmtad(
@@ -275,14 +275,14 @@ M.snippets = {
           <q><q><q>
           <docstring>
           <q><q><q>
-          <idnt>
+          <body>
         ]],
         {
           name = r(1, 'fn_name'),
           args = r(2, 'args'),
           q = un.qt(),
           docstring = i(3),
-          idnt = un.idnt(1),
+          body = un.body(4, 1),
         }
       ),
     }),
@@ -304,12 +304,12 @@ M.snippets = {
       un.fmtad(
         [[
         def <name>(self, <args>):
-        <idnt>
+        <body>
       ]],
         {
           name = r(1, 'method_name'),
           args = r(2, 'args'),
-          idnt = un.idnt(1),
+          body = un.body(3, 1),
         }
       ),
       un.fmtad(
@@ -318,14 +318,14 @@ M.snippets = {
           <q><q><q>
           <docstring>
           <q><q><q>
-          <idnt>
+          <body>
         ]],
         {
           name = r(1, 'method_name'),
           args = r(2, 'args'),
           q = un.qt(),
           docstring = i(3),
-          idnt = un.idnt(1),
+          body = un.body(4, 1),
         }
       ),
     }),
@@ -348,13 +348,13 @@ M.snippets = {
         [[
           class <name>:
           <idnt>def __init__(self, <args>):
-          <idnt2>
+          <body>
         ]],
         {
           name = r(1, 'class_name'),
           args = r(2, 'args'),
           idnt = un.idnt(1),
-          idnt2 = un.idnt(2),
+          body = un.body(3, 1),
         }
       ),
       un.fmtad(
@@ -364,7 +364,7 @@ M.snippets = {
           <idnt><docstring>
           <idnt><q><q><q>
           <idnt>def __init__(self, <args>):
-          <idnt2>
+          <body>
         ]],
         {
           name = r(1, 'class_name'),
@@ -372,7 +372,7 @@ M.snippets = {
           docstring = i(3),
           args = r(2, 'args'),
           idnt = un.idnt(1),
-          idnt2 = un.idnt(2),
+          body = un.body(4, 1),
         }
       ),
     }),
@@ -392,12 +392,12 @@ M.snippets = {
     un.fmtad(
       [[
         with <expr> as <var>:
-        <idnt>
+        <body>
       ]],
       {
         expr = i(1),
         var = i(2),
-        idnt = un.idnt(1),
+        body = un.body(3, 1),
       }
     )
   ),
@@ -410,10 +410,10 @@ M.snippets = {
     un.fmtad(
       [[
         try:
-        <idnt>
+        <body>
       ]],
       {
-        idnt = un.idnt(1),
+        body = un.body(1, 1),
       }
     )
   ),
@@ -427,33 +427,19 @@ M.snippets = {
       { trig = 'tryex' },
       common = { desc = 'try...except statement' },
     },
-    c(1, {
-      un.fmtad(
-        [[
-          try:
-          <idnt><body>
-          except <exc>:
-          <idnt>
-        ]],
-        {
-          body = r(1, 'body'),
-          exc = i(2),
-          idnt = un.idnt(1),
-        }
-      ),
-      un.fmtad(
-        [[
-          try:
-          <idnt><body>
-          except:
-          <idnt>
-        ]],
-        {
-          body = r(1, 'body'),
-          idnt = un.idnt(1),
-        }
-      ),
-    })
+    un.fmtad(
+      [[
+        try:
+        <body>
+        except<exc>:
+        <idnt>
+      ]],
+      {
+        body = un.body(1, 1),
+        exc = i(2),
+        idnt = un.idnt(1),
+      }
+    )
   ),
   us.msn(
     {
@@ -465,65 +451,38 @@ M.snippets = {
       { trig = 'tryexf' },
       common = { desc = 'try...except...finally statement' },
     },
-    c(1, {
-      un.fmtad(
-        [[
-          try:
-          <idnt><body>
-          except <exc>:
-          <idnt><exc_body>
-          finally:
-          <idnt>
-        ]],
-        {
-          body = r(1, 'body'),
-          exc = i(2),
-          exc_body = r(3, 'exc_body'),
-          idnt = un.idnt(1),
-        }
-      ),
-      un.fmtad(
-        [[
-          try:
-          <idnt><body>
-          except:
-          <idnt><exc_body>
-          finally:
-          <idnt>
-        ]],
-        {
-          body = r(1, 'body'),
-          exc_body = r(2, 'exc_body'),
-          idnt = un.idnt(1),
-        }
-      ),
-    })
+    un.fmtad(
+      [[
+        try:
+        <body>
+        except<exc>:
+        <idnt><exc_body>
+        finally:
+        <idnt>
+      ]],
+      {
+        body = un.body(1, 1),
+        exc = i(2),
+        exc_body = i(3),
+        idnt = un.idnt(1),
+      }
+    )
   ),
   us.msn(
     {
       { trig = 'exc' },
-      { trig = 'except' },
       common = { desc = 'except statement' },
     },
-    c(1, {
-      un.fmtad(
-        [[
-          except <exc>:
-          <idnt>
-        ]],
-        {
-          exc = i(1),
-          idnt = un.idnt(1),
-        }
-      ),
-      un.fmtad(
-        [[
-          except:
-          <idnt>
-        ]],
-        { idnt = un.idnt(1) }
-      ),
-    })
+    un.fmtad(
+      [[
+        except<exc>:
+        <body>
+      ]],
+      {
+        exc = i(1),
+        body = un.body(2, 1),
+      }
+    )
   ),
   us.msn(
     {
@@ -535,9 +494,11 @@ M.snippets = {
     un.fmtad(
       [[
         finally:
-        <idnt>
+        <body>
       ]],
-      { idnt = un.idnt(1) }
+      {
+        body = un.body(1, 1),
+      }
     )
   ),
   us.msn(
@@ -551,11 +512,11 @@ M.snippets = {
     un.fmtad(
       [[
         if __name__ == <q>__main__<q>:
-        <idnt>
+        <body>
       ]],
       {
         q = un.qt(),
-        idnt = un.idnt(1),
+        body = un.body(1, 1),
       }
     )
   ),
