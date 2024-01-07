@@ -437,6 +437,24 @@ vim.api.nvim_create_autocmd('DirChanged', {
   end,
 })
 
+vim.api.nvim_create_autocmd('BufEnter', {
+  desc = 'Set last cursor position in oil buffers when editing parent dir.',
+  group = vim.api.nvim_create_augroup('OilSetLastCursor', {}),
+  pattern = 'oil:///*',
+  callback = function()
+    -- Place cursor on the alternate buffer if we are opening
+    -- the parent directory of the alternate buffer
+    local buf_alt = vim.fn.bufnr('#')
+    if vim.api.nvim_buf_is_valid(buf_alt) then
+      local bufname_alt = vim.api.nvim_buf_get_name(buf_alt)
+      local parent_url, basename = oil.get_buffer_parent_url(bufname_alt, true)
+      if basename then
+        require('oil.view').set_last_cursor(parent_url, basename)
+      end
+    end
+  end,
+})
+
 ---Set some default hlgroups for oil
 ---@return nil
 local function oil_sethl()

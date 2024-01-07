@@ -1,47 +1,5 @@
-diff --git a/lua/oil/init.lua b/lua/oil/init.lua
-index daeb66c..6372432 100644
---- a/lua/oil/init.lua
-+++ b/lua/oil/init.lua
-@@ -364,6 +364,19 @@ end
- ---Open oil browser for a directory
- ---@param dir nil|string When nil, open the parent of the current buffer, or the cwd if current buffer is not a file
- M.open = function(dir)
-+  -- When `dir` is the parent dir of alternate buffer, switch back
-+  -- to alternate buffer and set `dir` to nil so that the cursor
-+  -- will be placed on the entry of the alternate buffer when entering
-+  -- the oil buffer
-+  local buf_alt = vim.fn.bufnr("#")
-+  if vim.api.nvim_buf_is_valid(buf_alt) then
-+    local bufname_alt = vim.api.nvim_buf_get_name(buf_alt)
-+    local stat = vim.uv.fs_stat(bufname_alt)
-+    if stat and stat.type == "file" and vim.fs.dirname(bufname_alt) == dir then
-+      vim.api.nvim_set_current_buf(buf_alt)
-+      dir = nil
-+    end
-+  end
-   local config = require("oil.config")
-   local util = require("oil.util")
-   local view = require("oil.view")
-@@ -815,6 +828,17 @@ local function load_oil_buffer(bufnr)
-     util.rename_buffer(bufnr, bufname)
-   end
- 
-+  -- Place cursor on the alternate buffer if we are opening
-+  -- the parent directory of the alternate buffer
-+  local buf_alt = vim.fn.bufnr("#")
-+  if vim.api.nvim_buf_is_valid(buf_alt) then
-+    local bufname_alt = vim.api.nvim_buf_get_name(buf_alt)
-+    local parent_url, basename = M.get_buffer_parent_url(bufname_alt, true)
-+    if basename then
-+      view.set_last_cursor(parent_url, basename)
-+    end
-+  end
-+
-   local adapter = assert(config.get_adapter_by_scheme(scheme))
- 
-   if vim.endswith(bufname, "/") then
 diff --git a/lua/oil/keymap_util.lua b/lua/oil/keymap_util.lua
-index 5f8f321..9175a03 100644
+index 5f8f321..172dc9d 100644
 --- a/lua/oil/keymap_util.lua
 +++ b/lua/oil/keymap_util.lua
 @@ -111,7 +111,7 @@ M.show_help = function(keymaps)
