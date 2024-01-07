@@ -1,4 +1,4 @@
-NVIM v0.10.0-dev-2026+gbdfea2a891
+NVIM v0.10.0-dev-2040+g52e6059415
 Build type: Release
 LuaJIT 2.1.1702233742
 Run "nvim -V1 -v" for more info
