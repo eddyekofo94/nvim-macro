@@ -391,3 +391,47 @@ au('DeferSetSpell', {
     end,
   },
 })
+
+au('SpecialBufHl', {
+  { 'FileType', 'TermOpen' },
+  {
+    desc = 'Set background color for special buffers.',
+    callback = function(info)
+      -- Floating windows use `hl-NormalFloat`
+      -- Map `hl-NormalFloat` to itself if it is not already
+      -- set to avoid special buffer background color
+      -- being applied in floating windows caused by
+      -- `hl-Normal` mapping to `hl-NormalSpecial`
+      local winhl = vim.opt_local.winhl
+      if vim.fn.win_gettype() == 'popup' then
+        local winhl_v = winhl:get()
+        if winhl_v.Normal == 'NormalSpecial' and not winhl_v.NormalFloat then
+          winhl:append({ NormalFloat = 'NormalFloat' })
+        end
+        return
+      end
+
+      local bt = vim.bo[info.buf].bt
+      if bt == '' then
+        winhl:remove('Normal')
+        winhl:remove('EndOfBuffer')
+        return
+      end
+
+      winhl:append({
+        Normal = 'NormalSpecial',
+        EndOfBuffer = 'NormalSpecial',
+      })
+    end,
+  },
+}, {
+  { 'UIEnter', 'ColorScheme' },
+  {
+    desc = 'Set special buffer normal hl.',
+    callback = function()
+      local hl = require('utils.hl')
+      local blended = hl.blend('Normal', 'CursorLine')
+      hl.set_default(0, 'NormalSpecial', blended)
+    end,
+  },
+})

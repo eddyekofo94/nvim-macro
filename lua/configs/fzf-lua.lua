@@ -3,8 +3,8 @@ local actions = require('fzf-lua.actions')
 local core = require('fzf-lua.core')
 local path = require('fzf-lua.path')
 local config = require('fzf-lua.config')
-local utils = require('utils')
 local fzf_utils = require('fzf-lua.utils')
+local utils = require('utils')
 
 local _normalize_opts = config.normalize_opts
 
@@ -353,13 +353,7 @@ fzf.setup({
     },
   },
   hls = {
-    normal = 'TelescopeNormal',
-    border = 'TelescopeBorder',
     title = 'TelescopeTitle',
-    help_normal = 'TelescopeNormal',
-    help_border = 'TelescopeBorder',
-    preview_normal = 'TelescopeNormal',
-    preview_border = 'TelescopeBorder',
     preview_title = 'TelescopeTitle',
     -- Builtin preview only
     cursor = 'Cursor',
@@ -368,15 +362,11 @@ fzf.setup({
     search = 'IncSearch',
   },
   fzf_colors = {
-    ['fg'] = { 'fg', 'TelescopeNormal' },
-    ['bg'] = { 'bg', 'TelescopeNormal' },
     ['hl'] = { 'fg', 'TelescopeMatching' },
     ['fg+'] = { 'fg', 'TelescopeSelection' },
     ['bg+'] = { 'bg', 'TelescopeSelection' },
     ['hl+'] = { 'fg', 'TelescopeMatching' },
     ['info'] = { 'fg', 'TelescopeCounter' },
-    ['border'] = { 'fg', 'TelescopeBorder' },
-    ['gutter'] = { 'bg', 'TelescopeNormal' },
     ['prompt'] = { 'fg', 'TelescopePrefix' },
     ['pointer'] = { 'fg', 'TelescopeSelectionCaret' },
     ['marker'] = { 'fg', 'TelescopeMultiIcon' },
@@ -874,8 +864,6 @@ local function set_default_hlgroups()
   hl.set(0, 'FzfLuaHeaderText', { link = 'Special' })
   hl.set(0, 'FzfLuaTabMarker', { link = 'Keyword' })
   hl.set(0, 'FzfLuaTabTitle', { link = 'Title' })
-  hl.set(0, 'TelescopeNormal', { link = 'Normal' })
-  hl.set_default(0, 'TelescopeBorder', { link = 'TelescopeNormal' })
   hl.set_default(0, 'TelescopeSelection', { link = 'Visual' })
   hl.set_default(0, 'TelescopePrefix', { link = 'Operator' })
   hl.set_default(0, 'TelescopeCounter', { link = 'LineNr' })
