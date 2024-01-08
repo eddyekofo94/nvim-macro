@@ -110,11 +110,11 @@ local function preview()
     preview_buf = vim.api.nvim_get_current_buf()
     preview_wins[oil_win] = preview_win
     preview_bufs[oil_win] = preview_buf
-    vim.bo[preview_buf].filetype = 'oil_preview'
-    vim.bo[preview_buf].buftype = 'nofile'
-    vim.bo[preview_buf].bufhidden = 'wipe'
     vim.bo[preview_buf].swapfile = false
     vim.bo[preview_buf].buflisted = false
+    vim.bo[preview_buf].buftype = 'nofile'
+    vim.bo[preview_buf].bufhidden = 'wipe'
+    vim.bo[preview_buf].filetype = 'oil_preview'
     vim.opt_local.spell = false
     vim.opt_local.number = false
     vim.opt_local.relativenumber = false
