@@ -11,7 +11,7 @@ local _cmp_on_change = cmp_core.on_change
 ---@diagnostic disable-next-line: duplicate-set-field
 function cmp_core.on_change(self, trigger_event)
   local now = vim.uv.now()
-  local fast_typing = now - last_changed < 48
+  local fast_typing = now - last_changed < 16
   last_changed = now
 
   if not fast_typing or trigger_event ~= 'TextChanged' or cmp.visible() then
