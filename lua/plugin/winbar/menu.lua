@@ -433,6 +433,7 @@ function winbar_menu_t:make_buf()
 
   -- Set buffer-local autocmds
   vim.api.nvim_create_autocmd('WinClosed', {
+    nested = true,
     group = groupid,
     buffer = self.buf,
     callback = function()
@@ -651,9 +652,6 @@ function winbar_menu_t:close(restore_view)
   -- Move cursor to the previous window
   if self.prev_win and vim.api.nvim_win_is_valid(self.prev_win) then
     vim.api.nvim_set_current_win(self.prev_win)
-    vim.api.nvim_exec_autocmds('WinEnter', {
-      pattern = tostring(self.prev_win),
-    })
   end
   -- Close the menu window and dereference it in the lookup table
   if self.win then
