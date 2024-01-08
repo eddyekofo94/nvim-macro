@@ -53,15 +53,6 @@ ts_configs.setup({
       node_decremental = 'in',
     },
   },
-  indent = {
-    enable = true,
-    disable = function(ft)
-      -- We will use treesitter indent expr in markdown
-      -- files in indent/markdown.vim to get better alignment
-      -- for math block and list items
-      return ft == 'markdown' or ft == 'tex'
-    end,
-  },
   textobjects = {
     select = {
       enable = true,
