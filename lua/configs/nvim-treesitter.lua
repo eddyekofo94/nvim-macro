@@ -22,12 +22,6 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
----@param buf integer buffer handler
----@return boolean
-local function buf_exceeds_limit(_, buf)
-  return vim.b[buf].midfile == true
-end
-
 ---@diagnostic disable-next-line: missing-fields
 ts_configs.setup({
   ensure_installed = require('utils.static').langs:list('ts'),
@@ -42,18 +36,16 @@ ts_configs.setup({
       -- by vimtex regex syntax rules
       return ft == 'markdown'
         or ft == 'tex'
-        or buf_exceeds_limit(ft, buf)
+        or vim.b[buf].midfile == true
         or vim.fn.win_gettype() == 'command'
     end,
     additional_vim_regex_highlighting = false,
   },
   endwise = {
     enable = true,
-    disable = buf_exceeds_limit,
   },
   incremental_selection = {
     enable = true,
-    disable = buf_exceeds_limit,
     keymaps = {
       init_selection = false,
       node_incremental = 'an',
@@ -63,18 +55,16 @@ ts_configs.setup({
   },
   indent = {
     enable = true,
-    disable = function(ft, buf)
+    disable = function(ft)
       -- We will use treesitter indent expr in markdown
       -- files in indent/markdown.vim to get better alignment
       -- for math block and list items
-      return vim.tbl_contains({ 'markdown', 'tex', 'latex' }, ft)
-        or buf_exceeds_limit(ft, buf)
+      return ft == 'markdown' or ft == 'tex'
     end,
   },
   textobjects = {
     select = {
       enable = true,
-      disable = buf_exceeds_limit,
       lookahead = true, -- Automatically jump forward to textobj
       keymaps = {
         -- You can use the capture groups defined in textobjects.scm
@@ -96,7 +86,6 @@ ts_configs.setup({
     },
     move = {
       enable = true,
-      disable = buf_exceeds_limit,
       set_jumps = true, -- whether to set jumps in the jumplist
       goto_next_start = {
         [']m'] = '@function.outer',
@@ -139,7 +128,6 @@ ts_configs.setup({
     },
     swap = {
       enable = true,
-      disable = buf_exceeds_limit,
       swap_next = {
         ['<M-C-L>'] = '@parameter.inner',
       },
@@ -149,7 +137,6 @@ ts_configs.setup({
     },
     lsp_interop = {
       enable = true,
-      disable = buf_exceeds_limit,
       border = 'solid',
       peek_definition_code = {
         ['<Leader>K'] = '@function.outer',
