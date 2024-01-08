@@ -471,7 +471,7 @@ fzf.setup({
   },
   keymaps = {
     actions = {
-      ['default'] = actions.keymap_apply,
+      ['default'] = actions.keymap_edit,
       ['alt-s'] = actions.keymap_split,
       ['alt-v'] = actions.keymap_vsplit,
       ['alt-t'] = actions.keymap_tabedit,
