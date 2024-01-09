@@ -325,6 +325,10 @@ cmp.setup({
   mapping = {
     ['<S-Tab>'] = {
       ['c'] = function()
+        if tabout.get_jump_pos('<S-Tab>') then
+          tabout.do_key('<S-Tab>')
+          return
+        end
         if cmp.visible() then
           cmp.select_prev_item()
         else
@@ -347,6 +351,10 @@ cmp.setup({
     },
     ['<Tab>'] = {
       ['c'] = function()
+        if tabout.get_jump_pos('<Tab>') then
+          tabout.do_key('<Tab>')
+          return
+        end
         if cmp.visible() then
           cmp.select_next_item()
         else
