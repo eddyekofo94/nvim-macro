@@ -149,7 +149,7 @@ local function jump_to_closer(snip_dest, tabout_dest, direction)
     return false
   end
   if vim.deep_equal(dest, tabout_dest) then
-    tabout.do_key(direction == 1 and '<Tab>' or '<S-Tab>')
+    tabout.jump(direction == 1 and '<Tab>' or '<S-Tab>')
   else
     luasnip.jump(direction)
   end
@@ -325,8 +325,8 @@ cmp.setup({
   mapping = {
     ['<S-Tab>'] = {
       ['c'] = function()
-        if tabout.get_jump_pos('<S-Tab>') then
-          tabout.do_key('<S-Tab>')
+        if tabout.get_jump_pos(-1) then
+          tabout.jump(-1)
           return
         end
         if cmp.visible() then
@@ -351,8 +351,8 @@ cmp.setup({
     },
     ['<Tab>'] = {
       ['c'] = function()
-        if tabout.get_jump_pos('<Tab>') then
-          tabout.do_key('<Tab>')
+        if tabout.get_jump_pos(1) then
+          tabout.jump(1)
           return
         end
         if cmp.visible() then
@@ -390,7 +390,7 @@ cmp.setup({
             local range = parent and { parent:get_buf_position() }
             local tabout_dest = tabout.get_jump_pos('<Tab>')
             if tabout_dest and range and in_range(range, tabout_dest) then
-              tabout.do_key('<Tab>')
+              tabout.jump('<Tab>')
             else
               luasnip.jump(1)
             end

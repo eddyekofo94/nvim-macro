@@ -198,43 +198,47 @@ local function get_line()
     or vim.api.nvim_get_current_line()
 end
 
-local get_jump_pos = {
-  ---Getting the jump position for Tab
-  ---@return number[]? cursor position after jump; false if no jump
-  ['<Tab>'] = function()
-    local cursor = get_cursor()
-    local current_line = get_line()
-    local trailing = current_line:sub(cursor[2] + 1, -1)
-    local leading = current_line:sub(1, cursor[2])
+---Getting the jump position for Tab
+---@return number[]? cursor position after jump; nil if no jump
+local function get_tabout_pos()
+  local cursor = get_cursor()
+  local current_line = get_line()
+  local trailing = current_line:sub(cursor[2] + 1, -1)
+  local leading = current_line:sub(1, cursor[2])
 
-    -- Do not jump if the cursor is at the beginning/end of the current line
-    if leading:match('^%s*$') or trailing == '' then
-      return
+  -- Do not jump if the cursor is at the beginning/end of the current line
+  if leading:match('^%s*$') or trailing == '' then
+    return
+  end
+
+  for _, pattern in ipairs(patterns[vim.bo.ft or '']) do
+    local _, jump_pos = trailing:find('^%s*' .. pattern)
+    if jump_pos then
+      return { cursor[1], cursor[2] + jump_pos }
     end
+  end
+end
 
-    for _, pattern in ipairs(patterns[vim.bo.ft or '']) do
-      local _, jump_pos = trailing:find('^%s*' .. pattern)
-      if jump_pos then
-        return { cursor[1], cursor[2] + jump_pos }
-      end
+---Getting the jump position for Shift-Tab
+---@return number[]? cursor position after jump; nil if no jump
+local function get_tabin_pos()
+  local cursor = get_cursor()
+  local current_line = get_line()
+  local leading = current_line:sub(1, cursor[2])
+
+  for _, pattern in ipairs(patterns[vim.bo.ft or '']) do
+    local _, closing_pattern_end = leading:find(pattern .. '%s*$')
+    if closing_pattern_end then
+      return jumpin_idx(leading:sub(1, closing_pattern_end), pattern, cursor)
     end
-  end,
+  end
+end
 
-  ---Getting the jump position for Shift-Tab
-  ---@return number[]? cursor position after jump; false if no jump
-  ['<S-Tab>'] = function()
-    local cursor = get_cursor()
-    local current_line = get_line()
-    local leading = current_line:sub(1, cursor[2])
-
-    for _, pattern in ipairs(patterns[vim.bo.ft or '']) do
-      local _, closing_pattern_end = leading:find(pattern .. '%s*$')
-      if closing_pattern_end then
-        return jumpin_idx(leading:sub(1, closing_pattern_end), pattern, cursor)
-      end
-    end
-  end,
-}
+---@param direction 1|-1 1 for tabout, -1 for tabin
+---@return number[]? cursor position after jump; nil if no jump
+local function get_jump_pos(direction)
+  return direction == 1 and get_tabout_pos() or get_tabin_pos()
+end
 
 local RIGHT = vim.api.nvim_replace_termcodes('<Right>', true, true, true)
 local LEFT = vim.api.nvim_replace_termcodes('<Left>', true, true, true)
@@ -253,22 +257,22 @@ local function set_cursor(pos)
   end
 end
 
+local TAB = vim.api.nvim_replace_termcodes('<Tab>', true, true, true)
+local S_TAB = vim.api.nvim_replace_termcodes('<S-Tab>', true, true, true)
+
 ---Get the position to jump for Tab or Shift-Tab, perform the jump if
 ---there is a position to jump to, otherwise fallback (feedkeys)
----@param key string key to be pressed
-local function do_key(key)
-  local pos = get_jump_pos[key]()
+---@param direction 1|-1 1 for tabout, -1 for tabin
+local function jump(direction)
+  local pos = get_jump_pos(direction)
   if pos then
     set_cursor(pos)
     return
   end
-  local termcode = vim.api.nvim_replace_termcodes(key, true, true, true)
-  vim.api.nvim_feedkeys(termcode, 'nt', false)
+  vim.api.nvim_feedkeys(direction == 1 and TAB or S_TAB, 'nt', false)
 end
 
 return {
-  do_key = do_key,
-  get_jump_pos = function(key)
-    return get_jump_pos[key]()
-  end,
+  jump = jump,
+  get_jump_pos = get_jump_pos,
 }
