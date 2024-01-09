@@ -178,12 +178,32 @@ local function jumpin_idx(leading, closing_pattern, cursor)
   return { cursor[1], cursor[2] - #closing_pattern_str }
 end
 
+---Check if the cursor is in cmdline
+---@return boolean
+local function in_cmdline()
+  return vim.fn.mode():match('^c') ~= nil
+end
+
+---Get the cursor position, whether in cmdline or normal buffer
+---@return number[] cursor: 1,0-indexed cursor position
+local function get_cursor()
+  return in_cmdline() and { 1, vim.fn.getcmdpos() - 1 }
+    or vim.api.nvim_win_get_cursor(0)
+end
+
+---Get current line, whether in cmdline or normal buffer
+---@return string current_line: current line
+local function get_line()
+  return in_cmdline() and vim.fn.getcmdline()
+    or vim.api.nvim_get_current_line()
+end
+
 local get_jump_pos = {
   ---Getting the jump position for Tab
   ---@return number[]? cursor position after jump; false if no jump
   ['<Tab>'] = function()
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    local current_line = vim.api.nvim_get_current_line()
+    local cursor = get_cursor()
+    local current_line = get_line()
     local trailing = current_line:sub(cursor[2] + 1, -1)
     local leading = current_line:sub(1, cursor[2])
 
@@ -203,8 +223,8 @@ local get_jump_pos = {
   ---Getting the jump position for Shift-Tab
   ---@return number[]? cursor position after jump; false if no jump
   ['<S-Tab>'] = function()
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    local current_line = vim.api.nvim_get_current_line()
+    local cursor = get_cursor()
+    local current_line = get_line()
     local leading = current_line:sub(1, cursor[2])
 
     for _, pattern in ipairs(patterns[vim.bo.ft or '']) do
@@ -216,17 +236,34 @@ local get_jump_pos = {
   end,
 }
 
+local RIGHT = vim.api.nvim_replace_termcodes('<Right>', true, true, true)
+local LEFT = vim.api.nvim_replace_termcodes('<Left>', true, true, true)
+
+---Set the cursor position, whether in cmdline or normal buffer
+---@param pos number[] cursor position
+---@return nil
+local function set_cursor(pos)
+  if in_cmdline() then
+    local cursor = get_cursor()
+    local diff = pos[2] - cursor[2]
+    local termcode = string.rep(diff > 0 and RIGHT or LEFT, math.abs(diff))
+    vim.api.nvim_feedkeys(termcode, 'nt', true)
+  else
+    vim.api.nvim_win_set_cursor(0, pos)
+  end
+end
+
 ---Get the position to jump for Tab or Shift-Tab, perform the jump if
 ---there is a position to jump to, otherwise fallback (feedkeys)
 ---@param key string key to be pressed
 local function do_key(key)
   local pos = get_jump_pos[key]()
   if pos then
-    vim.api.nvim_win_set_cursor(0, pos)
-  else
-    local termcode = vim.api.nvim_replace_termcodes(key, true, true, true)
-    vim.api.nvim_feedkeys(termcode, 'in', false)
+    set_cursor(pos)
+    return
   end
+  local termcode = vim.api.nvim_replace_termcodes(key, true, true, true)
+  vim.api.nvim_feedkeys(termcode, 'nt', false)
 end
 
 return {
