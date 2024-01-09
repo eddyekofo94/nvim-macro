@@ -61,7 +61,16 @@ M.tabpage_clearheights = M.tabpage_clear(tabpage_heights)
 M.tabpage_saveviews = M.tabpage_save(function(_) return vim.fn.winsaveview() end, tabpage_views)
 M.tabpage_restviews = M.tabpage_rest(function(_, view) vim.fn.winrestview(view) end, tabpage_views)
 M.tabpage_saveheights = M.tabpage_save(vim.api.nvim_win_get_height, tabpage_heights)
-M.tabpage_restheights = M.tabpage_rest(vim.api.nvim_win_set_height, tabpage_heights)
 -- stylua: ignore end
+
+---Reset window heights only if it has other windows above or below
+---to prevent changing cmdheight unexpectedly
+---@return nil
+M.tabpage_restheights = M.tabpage_rest(function(win, height)
+  local winnr = vim.fn.winnr()
+  if vim.fn.winn('j') ~= winnr or vim.fn.winnr('k') ~= winnr then
+    vim.api.nvim_win_set_height(win, height)
+  end
+end, tabpage_heights)
 
 return M
