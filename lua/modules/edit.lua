@@ -30,10 +30,10 @@ return {
   },
 
   {
-    'windwp/nvim-autopairs',
-    event = 'InsertEnter',
+    'altermo/ultimate-autopair.nvim',
+    event = { 'InsertEnter', 'CmdlineEnter' },
     config = function()
-      require('configs.nvim-autopairs')
+      require('configs.ultimate-autopair')
     end,
   },
 

@@ -499,7 +499,7 @@ Total # of plugins: 51 (package manager included).
     - [nvim-surround](https://github.com/kylechui/nvim-surround)
     - [Comment.nvim](https://github.com/numToStr/Comment.nvim)
     - [vim-sleuth](https://github.com/tpope/vim-sleuth)
-    - [nvim-autopairs](https://github.com/windwp/nvim-autopairs)
+    - [ultimate-autopairs.nvim](https://github.com/altermo/ultimate-autopair.nvim)
     - [vim-easy-align](https://github.com/junegunn/vim-easy-align)
 - **Tools**
     - [fzf-lua](https://github.com/ibhagwan/fzf-lua)
