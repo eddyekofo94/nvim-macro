@@ -55,7 +55,7 @@ end
 ---used as the default content of the body
 ---@param jump_index number? jump index for the dynamic node
 ---@param indent_depth number|fun(...): number indentation depth for the body, default 1
----@param default_text string? default text for the body
+---@param default_text false|string? default text for the body, set to false to disable trailing insert nodes
 ---@return table
 function M.body(jump_index, indent_depth, default_text)
   return d(jump_index, function(argnode_texts, parent, ...)
@@ -75,7 +75,7 @@ function M.body(jump_index, indent_depth, default_text)
     local text = not vim.tbl_isempty(selected) and selected or default_text
     return sn(nil, {
       M.idnt(indent_depth),
-      i(1, text),
+      text ~= false and i(1, text) or nil,
       type(text) == 'table' and #text > 1 and i(2) or nil,
     })
   end)

@@ -207,7 +207,7 @@ return {
       ]],
       {
         cond = i(1),
-        body = un.body(2, 0),
+        body = un.body(2, 1),
       }
     )
   ),
@@ -228,7 +228,7 @@ return {
       ]],
       {
         cond = i(1),
-        body = un.body(2, 0),
+        body = un.body(2, 1),
         else_body = i(3),
         idnt = un.idnt(1),
       }
@@ -254,7 +254,7 @@ return {
       ]],
       {
         cond = i(1),
-        body = un.body(2, 0),
+        body = un.body(2, 1),
         else_body = i(3),
         idnt = un.idnt(1),
       }
@@ -273,7 +273,7 @@ return {
         }
       ]],
       {
-        body = un.body(1, 0),
+        body = un.body(1, 1),
       }
     )
   ),
@@ -293,7 +293,7 @@ return {
       ]],
       {
         cond = i(1),
-        body = un.body(2, 0),
+        body = un.body(2, 1),
       }
     )
   ),
@@ -312,7 +312,7 @@ return {
         init = i(1),
         cond = i(2),
         inc = i(3),
-        body = un.body(4, 0),
+        body = un.body(4, 1),
       }
     )
   ),
@@ -330,7 +330,7 @@ return {
       ]],
       {
         cond = i(1),
-        body = un.body(2, 0),
+        body = un.body(2, 1),
       }
     )
   ),
@@ -352,7 +352,7 @@ return {
       ]],
       {
         cond = i(1),
-        body = un.body(2, 0),
+        body = un.body(2, 1),
       }
     )
   ),

@@ -110,10 +110,18 @@ M.syntax = {
     i(0),
     t({ '', 'end' }),
   }),
-  us.msn({
-    { trig = 'elif' },
-    { trig = 'elseif' },
-  }, {
+  us.snr({ trig = '^(%s*)elif' }, {
+    un.idnt(function(_, parent)
+      return uf.get_indent_depth(parent.captures[1]) - 1
+    end),
+    t({ 'elseif ' }),
+    i(1, 'condition'),
+    t({ ' then', '' }),
+    un.body(2, function(_, parent)
+      return uf.get_indent_depth(parent.snippet.captures[1])
+    end, false),
+  }),
+  us.sn({ trig = 'elseif' }, {
     t('elseif '),
     i(1, 'condition'),
     t({ ' then', '' }),
