@@ -69,7 +69,7 @@ local patterns = fallback_tbl_t:new({
     c = { '%*/' },
     cpp = { '%*/' },
     cuda = { '>>>' },
-    lua = { '%]%]' },
+    lua = { '%]=*%]' },
     python = { '"""', "'''" },
     markdown = {
       '\\right\\rfloor',
@@ -128,7 +128,7 @@ local opening_pattern_lookup_tbl = {
   ['-->']             = '<!--',
   ['\\%)']            = '\\%(',
   ['\\%]']            = '\\%[',
-  ['%]%]']            = '--%[%[',
+  ['%]=*%]']            = '--%[=*%[',
   ['\\right}']        = '\\left{',
   ['\\right>']        = '\\left<',
   ['\\right%)']       = '\\left%(',
