@@ -204,11 +204,27 @@ au('QuickFixAutoOpen', {
   },
 })
 
-au('EqualWinSize', {
+au('KeepWinRatio', {
   'VimResized',
   {
-    desc = 'Make window equal size on VimResized.',
-    command = 'wincmd =',
+    desc = 'Keep window ratio after resizing nvim.',
+    callback = function()
+      require('utils.win').tabpage_restratio()
+    end,
+  },
+}, {
+  { 'WinNew', 'WinResized' },
+  {
+    desc = 'Record window ratio.',
+    callback = function()
+      local now = vim.uv.now()
+      vim.g._wr_timestamp = now
+      vim.defer_fn(function()
+        if vim.g._wr_timestamp == now then
+          require('utils.win').tabpage_saveratio()
+        end
+      end, 200)
+    end,
   },
 })
 
