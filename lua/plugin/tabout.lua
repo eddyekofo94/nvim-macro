@@ -251,7 +251,11 @@ end
 ---@param direction 1|-1 1 for tabout, -1 for tabin
 ---@return number[]? cursor position after jump; nil if no jump
 local function get_jump_pos(direction)
-  return direction == 1 and get_tabout_pos() or get_tabin_pos()
+  if direction == 1 then
+    return get_tabout_pos()
+  else
+    return get_tabin_pos()
+  end
 end
 
 local RIGHT = vim.api.nvim_replace_termcodes('<Right>', true, true, true)
