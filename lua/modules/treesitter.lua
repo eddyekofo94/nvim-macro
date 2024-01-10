@@ -23,7 +23,9 @@ return {
       -- files, they are not compatible with nvim-treesitter's queries, see
       -- https://github.com/nvim-treesitter/nvim-treesitter/issues/3092
       ---@diagnostic disable-next-line: undefined-field
-      vim.opt.rtp:remove('/usr/lib/nvim')
+      if not vim.g.vscode then
+        vim.opt.rtp:remove('/usr/lib/nvim')
+      end
     end,
     config = function()
       vim.schedule(function()
