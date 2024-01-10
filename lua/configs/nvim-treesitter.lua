@@ -22,9 +22,31 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- Make sure that we install all parsers shipped with neovim so that we don't
+-- end with using nvim-treesitter's queries and neovim's shipped parsers, which
+-- are incompatible with each other,
+-- see https://github.com/nvim-treesitter/nvim-treesitter/issues/3092
+local ensured = {
+  c = true,
+  lua = true,
+  vim = true,
+  bash = true,
+  query = true,
+  python = true,
+  vimdoc = true,
+  markdown = true,
+  markdown_inline = true,
+}
+
+for _, info in ipairs(utils.static.langs) do
+  if info.ts then
+    ensured[info.ts] = true
+  end
+end
+
 ---@diagnostic disable-next-line: missing-fields
 ts_configs.setup({
-  ensure_installed = require('utils.static').langs:list('ts'),
+  ensure_installed = vim.tbl_keys(ensured),
   sync_install = false,
   ignore_install = {},
   highlight = {
