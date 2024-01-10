@@ -287,13 +287,9 @@ cmp.setup({
           cmp_item.kind = icon or icon_file
           cmp_item.kind_hl_group = icon_hl or 'CmpItemKindFile'
         end
-      else -- Use special icons for cmdline / calc completions
-        ---@type table<string, string> override icons with `entry.source.name`
-        local icon_override = {
-          cmdline = icon_dot,
-          calc = icon_calc,
-        }
-        cmp_item.kind = icon_override[entry.source.name]
+      else -- Use special icons for some completions
+        cmp_item.kind = entry.source.name == 'cmdline' and icon_dot
+          or entry.source.name == 'calc' and icon_calc
           or icons[cmp_item.kind]
           or ''
       end
