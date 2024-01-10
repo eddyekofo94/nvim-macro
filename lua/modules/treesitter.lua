@@ -18,14 +18,13 @@ return {
       'TSEditQueryUserAfter',
     },
     event = { 'FileType', 'BufReadPre' },
-    init = function()
-      -- Disable nvim bundled treesitter parsers to avoid errors in markdown
-      -- files, they are not compatible with nvim-treesitter's queries, see
+    init = function(plugin)
+      -- Ensure parsers and queries provided by treesitter precedes
+      -- nvim bundled ones in rtp to make sure that the version of
+      -- queries and parsers are in sync, see
       -- https://github.com/nvim-treesitter/nvim-treesitter/issues/3092
-      ---@diagnostic disable-next-line: undefined-field
-      if not vim.g.vscode then
-        vim.opt.rtp:remove('/usr/lib/nvim')
-      end
+      require('lazy.core.loader').add_to_rtp(plugin)
+      require('nvim-treesitter.query_predicates')
     end,
     config = function()
       vim.schedule(function()
