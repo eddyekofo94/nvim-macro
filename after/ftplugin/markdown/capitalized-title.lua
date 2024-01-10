@@ -35,7 +35,7 @@ local opt_captitle = utils.classes.bufopt_t:new('captitle', true)
 ---@param info table information given to event handler
 ---@return nil
 local function format_title(info)
-  if not vim.bo[info.buf].filetype == 'markdown' or not opt_captitle:get() then
+  if vim.bo[info.buf].filetype ~= 'markdown' or not opt_captitle:get() then
     return
   end
 
