@@ -149,7 +149,7 @@ local function jump_to_closer(snip_dest, tabout_dest, direction)
     return false
   end
   if vim.deep_equal(dest, tabout_dest) then
-    tabout.jump(direction == 1 and '<Tab>' or '<S-Tab>')
+    tabout.jump(direction)
   else
     luasnip.jump(direction)
   end
@@ -388,9 +388,9 @@ cmp.setup({
           else -- node has zero length
             local parent = node_find_parent(current)
             local range = parent and { parent:get_buf_position() }
-            local tabout_dest = tabout.get_jump_pos('<Tab>')
+            local tabout_dest = tabout.get_jump_pos(1)
             if tabout_dest and range and in_range(range, tabout_dest) then
-              tabout.jump('<Tab>')
+              tabout.jump(1)
             else
               luasnip.jump(1)
             end
