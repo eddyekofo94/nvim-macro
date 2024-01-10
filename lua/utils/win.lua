@@ -32,9 +32,13 @@ function M.tabpage_rest(callback, store)
       return
     end
     for win, data in pairs(store[tabpage]) do
-      pcall(vim.api.nvim_win_call, win, function()
-        callback(win, data)
-      end)
+      if not vim.api.nvim_win_is_valid(win) then
+        store[tabpage][win] = nil
+      else
+        pcall(vim.api.nvim_win_call, win, function()
+          callback(win, data)
+        end)
+      end
     end
   end
 end
