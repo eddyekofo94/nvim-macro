@@ -412,39 +412,45 @@ au('SpecialBufHl', {
     desc = 'Set background color for special buffers.',
     callback = function(info)
       -- Current window isn't necessarily the window of the buffer that
-      -- triggered the event, use `bufwinid()` to get the first window of the
-      -- triggering buffer. This fixes the bug where the LSP hovering window
-      -- is not highlighted correctly.
-      -- We can also use `win_findbuf()` to get all windows
-      -- that display the triggering buffer, but it is slower and using
+      -- triggered the event, use `bufwinid()` to get the first window of
+      -- the triggering buffer. We can also use `win_findbuf()` to get all
+      -- windows that display the triggering buffer, but it is slower and using
       -- `bufwinid()` is enough for our purpose.
-      vim.api.nvim_win_call(vim.fn.bufwinid(info.buf), function()
-        -- Floating windows use `hl-NormalFloat`
-        -- Map `hl-NormalFloat` to itself if it is not already
-        -- set to avoid special buffer background color
-        -- being applied in floating windows caused by
-        -- `hl-Normal` mapping to `hl-NormalSpecial`
-        local winhl = vim.opt_local.winhl
-        local wintype = vim.fn.win_gettype()
-        if wintype == 'popup' then
-          local val = winhl:get()
-          if val.Normal == 'NormalSpecial' and not val.NormalFloat then
-            winhl:append({ NormalFloat = 'NormalFloat' })
+      vim.schedule(function()
+        local winid = vim.fn.bufwinid(info.buf)
+        if winid == -1 then
+          return
+        end
+        vim.api.nvim_win_call(winid, function()
+          -- Unmap `hl-Normal` and `hl-EndOfBuffer` because they can affect
+          -- normal bg in floating windows
+          local winhl = vim.opt_local.winhl
+          local wintype = vim.fn.win_gettype()
+          if wintype == 'popup' or wintype == 'autocmd' then
+            local val = winhl:get()
+            if not val.NormalFloat then
+              if val.Normal == 'NormalSpecial' then
+                winhl:remove('Normal')
+              end
+              if val.EndOfBuffer == 'NormalSpecial' then
+                winhl:remove('EndOfBuffer')
+              end
+            end
+            return
           end
-          return
-        end
 
-        local bt = vim.bo[info.buf].bt
-        if bt == '' then
-          winhl:remove('Normal')
-          winhl:remove('EndOfBuffer')
-          return
-        end
+          local bt = vim.bo[info.buf].bt
+          if bt == '' then
+            winhl:remove('Normal')
+            winhl:remove('EndOfBuffer')
+            return
+          end
 
-        winhl:append({
-          Normal = 'NormalSpecial',
-          EndOfBuffer = 'NormalSpecial',
-        })
+          winhl:append({
+            Normal = 'NormalSpecial',
+            EndOfBuffer = 'NormalSpecial',
+          })
+        end)
       end)
     end,
   },
