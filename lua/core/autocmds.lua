@@ -542,21 +542,25 @@ au('SpecialBufHeight', {
       --  |        | (new)  |
       --  +--------+--------+
       do
-        local winid_left = vim.fn.win_getid(win_left)
-        local winid_right = vim.fn.win_getid(win_right)
-        -- stylua: ignore start
-        local win_lbel = vim.api.nvim_win_call(winid_left, function() return vim.fn.winnr('j') end)
-        local win_labv = vim.api.nvim_win_call(winid_left, function() return vim.fn.winnr('k') end)
-        local win_rbel = vim.api.nvim_win_call(winid_right, function() return vim.fn.winnr('j') end)
-        local win_rabv = vim.api.nvim_win_call(winid_right, function() return vim.fn.winnr('k') end)
-        -- stylua: ignore end
-        if
-          win_lbel == win_bel
-          or win_rbel == win_bel
-          or win_labv == win_abv
-          or win_rabv == win_abv
-        then
-          return
+        if win_left ~= win then
+          -- stylua: ignore start
+          local winid_left = vim.fn.win_getid(win_left)
+          local win_lbel = vim.api.nvim_win_call(winid_left, function() return vim.fn.winnr('j') end)
+          local win_labv = vim.api.nvim_win_call(winid_left, function() return vim.fn.winnr('k') end)
+          -- stylua: ignore end
+          if win_lbel == win_bel or win_labv == win_abv then
+            return
+          end
+        end
+        if win_right ~= win then
+          -- stylua: ignore start
+          local winid_right = vim.fn.win_getid(win_right)
+          local win_rbel = vim.api.nvim_win_call(winid_right, function() return vim.fn.winnr('j') end)
+          local win_rabv = vim.api.nvim_win_call(winid_right, function() return vim.fn.winnr('k') end)
+          -- stylua: ignore end
+          if win_rbel == win_bel or win_rabv == win_abv then
+            return
+          end
         end
       end
 
