@@ -17,7 +17,7 @@ return {
       'TSEditQuery',
       'TSEditQueryUserAfter',
     },
-    event = 'BufReadPre',
+    event = { 'FileType', 'BufReadPre' },
     init = function()
       -- Disable nvim bundled treesitter parsers to avoid errors in markdown
       -- files, they are not compatible with nvim-treesitter's queries, see
