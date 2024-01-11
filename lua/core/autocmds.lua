@@ -238,9 +238,18 @@ augroup('KeepWinRatio', {
 
       local now = vim.uv.now()
       vim.g._wr_winresized = now
+      if not _G._wr_windows then
+        _G._wr_windows = {}
+      end
+      if vim.v.event.windows then
+        for _, win in ipairs(vim.v.event.windows) do
+          _G._wr_windows[win] = true
+        end
+      end
       vim.defer_fn(function()
         if vim.g._wr_winresized == now then
-          require('utils.win').saveratio(vim.v.event.windows)
+          require('utils.win').saveratio(vim.tbl_keys(_G._wr_windows))
+          _G._wr_windows = nil
         end
       end, 200)
     end,
