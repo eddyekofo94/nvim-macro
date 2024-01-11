@@ -1,15 +1,18 @@
+local autocmd = vim.api.nvim_create_autocmd
+local groupid = vim.api.nvim_create_augroup
+
 ---@param group string
 ---@vararg { [1]: string|string[], [2]: vim.api.keyset.create_autocmd }
 ---@return nil
-local function au(group, ...)
-  local groupid = vim.api.nvim_create_augroup(group, {})
-  for _, autocmd in ipairs({ ... }) do
-    autocmd[2].group = groupid
-    vim.api.nvim_create_autocmd(unpack(autocmd))
+local function augroup(group, ...)
+  local id = groupid(group, {})
+  for _, a in ipairs({ ... }) do
+    a[2].group = id
+    autocmd(unpack(a))
   end
 end
 
-au('BigFileSettings', {
+augroup('BigFileSettings', {
   'BufReadPre',
   {
     desc = 'Set settings for large files.',
@@ -22,7 +25,7 @@ au('BigFileSettings', {
       end
       if stat.size > 48000 then
         vim.b.midfile = true
-        vim.api.nvim_create_autocmd('BufReadPost', {
+        autocmd('BufReadPost', {
           buffer = info.buf,
           once = true,
           callback = function()
@@ -44,7 +47,7 @@ au('BigFileSettings', {
         vim.opt_local.signcolumn = 'no'
         vim.opt_local.foldcolumn = '0'
         vim.opt_local.winbar = ''
-        vim.api.nvim_create_autocmd('BufReadPost', {
+        autocmd('BufReadPost', {
           buffer = info.buf,
           once = true,
           callback = function()
@@ -61,7 +64,7 @@ au('BigFileSettings', {
 -- Ideally something like https://github.com/neovim/neovim/pull/14029
 -- will be merged to nvim, also see
 -- https://github.com/neovim/neovim/issues/13967
-au('CJKFileSettings', {
+augroup('CJKFileSettings', {
   'BufEnter',
   {
     desc = 'Settings for CJK files.',
@@ -83,7 +86,7 @@ au('CJKFileSettings', {
   },
 })
 
-au('YankHighlight', {
+augroup('YankHighlight', {
   'TextYankPost',
   {
     desc = 'Highlight the selection on yank.',
@@ -93,7 +96,7 @@ au('YankHighlight', {
   },
 })
 
-au('Autosave', {
+augroup('Autosave', {
   { 'BufLeave', 'WinLeave', 'FocusLost' },
   {
     nested = true,
@@ -111,7 +114,7 @@ au('Autosave', {
   },
 })
 
-au('WinCloseJmp', {
+augroup('WinCloseJmp', {
   'WinClosed',
   {
     nested = true,
@@ -120,7 +123,7 @@ au('WinCloseJmp', {
   },
 })
 
-au('LastPosJmp', {
+augroup('LastPosJmp', {
   'BufReadPost',
   {
     desc = 'Last position jump.',
@@ -138,7 +141,7 @@ au('LastPosJmp', {
   },
 })
 
-au('AutoCwd', {
+augroup('AutoCwd', {
   { 'BufWinEnter', 'FileChangedShellPost' },
   {
     pattern = '*',
@@ -167,7 +170,7 @@ au('AutoCwd', {
   },
 })
 
-au('PromptBufKeymaps', {
+augroup('PromptBufKeymaps', {
   'BufEnter',
   {
     desc = 'Undo automatic <C-w> remap in prompt buffers.',
@@ -179,7 +182,7 @@ au('PromptBufKeymaps', {
   },
 })
 
-au('QuickFixAutoOpen', {
+augroup('QuickFixAutoOpen', {
   'QuickFixCmdPost',
   {
     desc = 'Open quickfix window if there are results.',
@@ -204,7 +207,7 @@ au('QuickFixAutoOpen', {
   },
 })
 
-au('KeepWinRatio', {
+augroup('KeepWinRatio', {
   { 'VimResized', 'TabEnter' },
   {
     desc = 'Keep window ratio after resizing nvim.',
@@ -245,7 +248,7 @@ au('KeepWinRatio', {
 })
 
 -- Show cursor line and cursor column only in current window
-au('AutoHlCursorLine', {
+augroup('AutoHlCursorLine', {
   { 'BufWinEnter', 'WinEnter', 'UIEnter' },
   {
     desc = 'Show cursorline and cursorcolumn in current window.',
@@ -307,7 +310,7 @@ au('AutoHlCursorLine', {
   },
 })
 
-au('TextwidthRelativeColorcolumn', {
+augroup('TextwidthRelativeColorcolumn', {
   'OptionSet',
   {
     pattern = 'textwidth',
@@ -320,7 +323,7 @@ au('TextwidthRelativeColorcolumn', {
   },
 })
 
-au('UpdateTimestamp', {
+augroup('UpdateTimestamp', {
   'BufWritePre',
   {
     desc = 'Update timestamp automatically.',
@@ -354,7 +357,7 @@ au('UpdateTimestamp', {
   },
 })
 
-au('FixVirtualEditCursorPos', {
+augroup('FixVirtualEditCursorPos', {
   'ModeChanged',
   {
     desc = 'Keep cursor position after entering normal mode from visual mode with virtual edit enabled.',
@@ -380,7 +383,7 @@ au('FixVirtualEditCursorPos', {
   },
 })
 
-au('FixCmdLineIskeyword', {
+augroup('FixCmdLineIskeyword', {
   'CmdLineEnter',
   {
     desc = 'Have consistent &iskeyword and &lisp in Ex command-line mode.',
@@ -417,7 +420,7 @@ au('FixCmdLineIskeyword', {
   },
 })
 
-au('DeferSetSpell', {
+augroup('DeferSetSpell', {
   { 'BufReadPre', 'BufModifiedSet' },
   {
     desc = 'Defer setting spell options to improve startup time.',
@@ -438,7 +441,7 @@ au('DeferSetSpell', {
   },
 })
 
-au('SpecialBufHl', {
+augroup('SpecialBufHl', {
   { 'BufWinEnter', 'FileType', 'TermOpen' },
   {
     desc = 'Set background color for special buffers.',
@@ -498,7 +501,7 @@ au('SpecialBufHl', {
   },
 })
 
-au('SpecialBufHeight', {
+augroup('SpecialBufHeight', {
   'WinNew',
   {
     desc = 'Record time when a new window is created',
