@@ -50,7 +50,7 @@ M.markers = {
         * conds.before_pattern('%*')
         * conds.after_pattern('%*'),
     },
-  }, { t('*'), un.body(1, 0), t('*') }),
+  }, { t('*'), i(0), t('*') }),
 }
 
 M.titles = {
