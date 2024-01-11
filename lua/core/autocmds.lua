@@ -221,15 +221,13 @@ augroup('KeepWinRatio', {
   {
     desc = 'Record window ratio.',
     callback = function()
-      local lines = vim.go.lines
-      local columns = vim.go.columns
-      local _lines = vim.g._lines
-      local _columns = vim.g._columns
-      vim.g._lines = lines
-      vim.g._columns = columns
       -- Don't record ratio if window resizing is caused by vim resizing
       -- (changes in &lines or &columns)
+      local lines, columns = vim.go.lines, vim.go.columns
+      local _lines, _columns = vim.g._lines, vim.g._columns
       if _lines and lines ~= _lines or _columns and columns ~= _columns then
+        vim.g._lines = lines
+        vim.g._columns = columns
         return
       end
 
