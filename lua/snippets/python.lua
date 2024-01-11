@@ -45,7 +45,7 @@ M.snippets = {
       trig = 'pl',
       desc = 'Print a line',
     },
-    un.fmtad('print(<q><line><q>);', {
+    un.fmtad('print(<q><line><q>)', {
       q = un.qt(),
       line = c(1, {
         -- stylua: ignore start
