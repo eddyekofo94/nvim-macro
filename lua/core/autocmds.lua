@@ -205,12 +205,15 @@ au('QuickFixAutoOpen', {
 })
 
 au('KeepWinRatio', {
-  'VimResized',
+  { 'VimResized', 'TabEnter' },
   {
     desc = 'Keep window ratio after resizing nvim.',
-    callback = function()
+    callback = function(info)
       vim.cmd.wincmd('=')
-      require('utils.win').tabpage_restratio()
+      require('utils.win').restratio(
+        info.event == 'TabEnter' and vim.api.nvim_tabpage_list_wins(0)
+          or vim.api.nvim_list_wins()
+      )
     end,
   },
 }, {
@@ -234,7 +237,7 @@ au('KeepWinRatio', {
       vim.g._wr_winresized = now
       vim.defer_fn(function()
         if vim.g._wr_winresized == now then
-          require('utils.win').tabpage_saveratio()
+          require('utils.win').saveratio(vim.v.event.windows)
         end
       end, 200)
     end,

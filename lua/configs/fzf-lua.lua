@@ -289,8 +289,10 @@ fzf.setup({
   dir_icon = vim.trim(utils.static.icons.Folder),
   winopts = {
     split = [[
-        call v:lua.require'utils.win'.tabpage_saveheights() |
-        \ call v:lua.require'utils.win'.tabpage_saveviews() |
+        let tabpage_win_list = nvim_tabpage_list_wins(0) |
+        \ call v:lua.require'utils.win'.saveheights(tabpage_win_list) |
+        \ call v:lua.require'utils.win'.saveviews(tabpage_win_list) |
+        \ unlet tabpage_win_list |
         \ let g:_fzf_vim_lines = &lines |
         \ let g:_fzf_leave_win = win_getid(winnr()) |
         \ let g:_fzf_splitkeep = &splitkeep | let &splitkeep = "topline" |
@@ -341,12 +343,12 @@ fzf.setup({
       vim.g._fzf_leave_win = nil
 
       if vim.go.lines == vim.g._fzf_vim_lines then
-        utils.win.tabpage_restheights(0)
+        utils.win.restheights()
       end
       vim.g._fzf_vim_lines = nil
-      utils.win.tabpage_clearheights(0)
-      utils.win.tabpage_restviews(0)
-      utils.win.tabpage_clearviews(0)
+      utils.win.clearheights()
+      utils.win.restviews()
+      utils.win.clearviews()
     end,
     preview = {
       hidden = 'hidden',
