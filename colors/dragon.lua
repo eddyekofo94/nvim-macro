@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri 05 Jan 2024 10:20:39 PM CST
+-- Last Updated: Thu 11 Jan 2024 07:09:36 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -326,7 +326,6 @@ local hlgroups = {
   ['@text.environment'] = { link = 'Keyword' },
   ['@text.environment.name'] = { link = 'String' },
   ['@text.literal'] = { link = 'String' },
-  ['@text.math'] = { link = 'Constant' },
   ['@text.note'] = { bg = c_waveAqua0, fg = c_waveBlue0, bold = true },
   ['@text.quote'] = { link = '@parameter' },
   ['@text.reference.markdown_inline'] = { link = 'htmlLink' },

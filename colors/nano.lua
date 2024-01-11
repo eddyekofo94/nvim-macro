@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Thu 04 Jan 2024 02:53:42 PM CST
+-- Last Updated: Thu 11 Jan 2024 07:11:10 PM CST
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -282,11 +282,9 @@ local hlgroups = {
   ['@constant.macro'] = { link = 'Macro' },
   ['@namespace'] = { link = 'Namespace' },
   ['@symbol'] = { link = 'Identifier' },
-  ['@text'] = { link = 'String' },
   ['@text.title'] = { link = 'Title' },
   ['@text.literal'] = { link = 'String' },
   ['@text.uri'] = { link = 'htmlLink' },
-  ['@text.math'] = { link = 'Special' },
   ['@text.environment'] = { link = 'Macro' },
   ['@text.environment.name'] = { link = 'Type' },
   ['@text.reference'] = { link = 'Constant' },
