@@ -211,12 +211,9 @@ augroup('KeepWinRatio', {
   { 'VimResized', 'TabEnter' },
   {
     desc = 'Keep window ratio after resizing nvim.',
-    callback = function(info)
+    callback = function()
       vim.cmd.wincmd('=')
-      require('utils.win').restratio(
-        info.event == 'TabEnter' and vim.api.nvim_tabpage_list_wins(0)
-          or vim.api.nvim_list_wins()
-      )
+      require('utils.win').restratio(vim.api.nvim_tabpage_list_wins(0))
     end,
   },
 }, {
