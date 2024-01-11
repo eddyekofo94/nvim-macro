@@ -97,21 +97,40 @@ M.restheights = M.rest(M.win_safe_set_height, heights)
 -- stylua: ignore end
 
 ---Save window ratios as { height_ratio, width_ratio } tuple
----@return nil
 M.saveratio = M.save(function(win)
+  local h = vim.api.nvim_win_get_height(win)
+  local w = vim.api.nvim_win_get_width(win)
   return {
-    vim.api.nvim_win_get_height(win) / M.effective_lines(),
-    vim.api.nvim_win_get_width(win) / vim.go.columns,
+    hr = h / M.effective_lines(),
+    wr = w / vim.go.columns,
+    h = h,
+    w = w,
   }
 end, ratios)
 
----Restore window ratios
----@return nil
+---Restore window ratios, respect &winfixheight and &winfixwidth and keep
+---command window height untouched
 M.restratio = M.rest(function(win, ratio)
-  local h = type(ratio[1]) == 'table' and ratio[1][vim.val_idx] or ratio[1]
-  local w = type(ratio[2]) == 'table' and ratio[2][vim.val_idx] or ratio[2]
-  M.win_safe_set_height(win, vim.fn.round(M.effective_lines() * h))
-  vim.api.nvim_win_set_width(win, vim.fn.round(vim.go.columns * w))
+  local hr = type(ratio.hr) == 'table' and ratio.hr[vim.val_idx] or ratio.hr
+  local wr = type(ratio.wr) == 'table' and ratio.wr[vim.val_idx] or ratio.wr
+  local h = ratio.h
+  local w = ratio.w
+  local cmdwin = vim.fn.win_gettype() == 'command'
+
+  if not vim.wo.wfh and not cmdwin then
+    M.win_safe_set_height(win, vim.fn.round(M.effective_lines() * hr))
+  else
+    vim.schedule(function()
+      M.win_safe_set_height(win, h)
+    end)
+  end
+  if not vim.wo.wfw and not cmdwin then
+    vim.api.nvim_win_set_width(win, vim.fn.round(vim.go.columns * wr))
+  else
+    vim.schedule(function()
+      vim.api.nvim_win_set_width(win, w)
+    end)
+  end
 end, ratios)
 
 return M
