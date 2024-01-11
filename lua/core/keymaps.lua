@@ -1,5 +1,3 @@
-local utils = require('utils')
-
 vim.keymap.set({ 'n', 'x' }, '<Space>', '<Ignore>')
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -209,17 +207,24 @@ vim.keymap.set('!a', 'sahre', 'share')
 vim.keymap.set('!a', 'saher', 'share')
 vim.keymap.set('!a', 'balme', 'blame')
 
-utils.keymap.command_map('S', '%s/')
-utils.keymap.command_map(':', 'lua ')
-utils.keymap.command_abbrev('man', 'Man')
-utils.keymap.command_abbrev('bt', 'bel te')
-utils.keymap.command_abbrev('ep', 'e%:p:h')
-utils.keymap.command_abbrev('vep', 'vs%:p:h')
-utils.keymap.command_abbrev('sep', 'sp%:p:h')
-utils.keymap.command_abbrev('tep', 'tabe%:p:h')
-utils.keymap.command_abbrev('rm', '!rm')
-utils.keymap.command_abbrev('mv', '!mv')
-utils.keymap.command_abbrev('git', '!git')
-utils.keymap.command_abbrev('mkd', '!mkdir')
-utils.keymap.command_abbrev('mkdir', '!mkdir')
-utils.keymap.command_abbrev('touch', '!touch')
+vim.api.nvim_create_autocmd('CmdlineEnter', {
+  once = true,
+  callback = function()
+    local utils = require('utils')
+    utils.keymap.command_map('S', '%s/')
+    utils.keymap.command_map(':', 'lua ')
+    utils.keymap.command_abbrev('man', 'Man')
+    utils.keymap.command_abbrev('bt', 'bel te')
+    utils.keymap.command_abbrev('ep', 'e%:p:h')
+    utils.keymap.command_abbrev('vep', 'vs%:p:h')
+    utils.keymap.command_abbrev('sep', 'sp%:p:h')
+    utils.keymap.command_abbrev('tep', 'tabe%:p:h')
+    utils.keymap.command_abbrev('rm', '!rm')
+    utils.keymap.command_abbrev('mv', '!mv')
+    utils.keymap.command_abbrev('git', '!git')
+    utils.keymap.command_abbrev('mkd', '!mkdir')
+    utils.keymap.command_abbrev('mkdir', '!mkdir')
+    utils.keymap.command_abbrev('touch', '!touch')
+    return true
+  end,
+})

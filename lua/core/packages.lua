@@ -181,6 +181,3 @@ else
     'colorschemes',
   })
 end
-
--- A handy abbreviation
-utils.keymap.command_abbrev('lz', 'Lazy')
