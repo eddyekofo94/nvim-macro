@@ -85,7 +85,7 @@ M.snippets = {
       ]],
       {
         cond = i(1),
-        body = un.body(2, 1),
+        body = un.body(2, 1, false),
       }
     )
   ),
@@ -146,7 +146,7 @@ M.snippets = {
         <body>
       ]],
       {
-        body = un.body(1, 1),
+        body = un.body(1, 1, false),
       }
     )
   ),
@@ -165,7 +165,7 @@ M.snippets = {
       ]],
       {
         cond = i(1),
-        body = un.body(2, 1),
+        body = un.body(2, 1, false),
       }
     )
   ),
@@ -182,7 +182,7 @@ M.snippets = {
       {
         var = i(1),
         iter = i(2),
-        body = un.body(3, 1),
+        body = un.body(3, 1, false),
       }
     )
   ),
@@ -203,7 +203,7 @@ M.snippets = {
       {
         var = i(1),
         range = i(2),
-        body = un.body(3, 1),
+        body = un.body(3, 1, false),
       }
     )
   ),
@@ -227,7 +227,7 @@ M.snippets = {
         idx = i(1, 'idx'),
         elem = i(2, 'elem'),
         iterable = i(3),
-        body = un.body(4, 1),
+        body = un.body(4, 1, false),
       }
     )
   ),
@@ -244,7 +244,7 @@ M.snippets = {
       ]],
       {
         cond = i(1),
-        body = un.body(2, 1),
+        body = un.body(2, 1, false),
       }
     )
   ),
@@ -266,7 +266,7 @@ M.snippets = {
         {
           name = r(1, 'fn_name'),
           args = r(2, 'args'),
-          body = un.body(3, 1),
+          body = un.body(3, 1, false),
         }
       ),
       un.fmtad(
@@ -282,7 +282,7 @@ M.snippets = {
           args = r(2, 'args'),
           q = un.qt(),
           docstring = i(3),
-          body = un.body(4, 1),
+          body = un.body(4, 1, false),
         }
       ),
     }),
@@ -309,7 +309,7 @@ M.snippets = {
         {
           name = r(1, 'method_name'),
           args = r(2, 'args'),
-          body = un.body(3, 1),
+          body = un.body(3, 1, false),
         }
       ),
       un.fmtad(
@@ -325,7 +325,7 @@ M.snippets = {
           args = r(2, 'args'),
           q = un.qt(),
           docstring = i(3),
-          body = un.body(4, 1),
+          body = un.body(4, 1, false),
         }
       ),
     }),
@@ -354,7 +354,7 @@ M.snippets = {
           name = r(1, 'class_name'),
           args = r(2, 'args'),
           idnt = un.idnt(1),
-          body = un.body(3, 1),
+          body = un.body(3, 1, false),
         }
       ),
       un.fmtad(
@@ -372,7 +372,7 @@ M.snippets = {
           docstring = i(3),
           args = r(2, 'args'),
           idnt = un.idnt(1),
-          body = un.body(4, 1),
+          body = un.body(4, 1, false),
         }
       ),
     }),
@@ -397,7 +397,7 @@ M.snippets = {
       {
         expr = i(1),
         var = i(2),
-        body = un.body(3, 1),
+        body = un.body(3, 1, false),
       }
     )
   ),
@@ -413,7 +413,7 @@ M.snippets = {
         <body>
       ]],
       {
-        body = un.body(1, 1),
+        body = un.body(1, 1, false),
       }
     )
   ),
@@ -480,7 +480,7 @@ M.snippets = {
       ]],
       {
         exc = i(1),
-        body = un.body(2, 1),
+        body = un.body(2, 1, false),
       }
     )
   ),
@@ -497,7 +497,7 @@ M.snippets = {
         <body>
       ]],
       {
-        body = un.body(1, 1),
+        body = un.body(1, 1, false),
       }
     )
   ),
@@ -516,7 +516,7 @@ M.snippets = {
       ]],
       {
         q = un.qt(),
-        body = un.body(1, 1),
+        body = un.body(1, 1, false),
       }
     )
   ),

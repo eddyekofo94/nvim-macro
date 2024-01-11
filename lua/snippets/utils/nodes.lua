@@ -72,11 +72,12 @@ function M.body(jump_index, indent_depth, default_text)
         ) .. selected[idx]
       end
     end
-    local text = not vim.tbl_isempty(selected) and selected or default_text
+    local selected_text = not vim.tbl_isempty(selected) and selected or nil
+    local insert_text = selected_text or default_text
     return sn(nil, {
       M.idnt(indent_depth),
-      text ~= false and i(1, text) or nil,
-      type(text) == 'table' and #text > 1 and i(2) or nil,
+      insert_text ~= false and i(1, insert_text) or nil,
+      default_text ~= false and insert_text and i(2) or nil,
     })
   end)
 end
