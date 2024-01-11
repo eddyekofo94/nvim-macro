@@ -156,31 +156,6 @@ local function jump_to_closer(snip_dest, tabout_dest, direction)
   return true
 end
 
----Filter out unwanted entries
----@param entry cmp.Entry
----@param _ cmp.Context ignored
----@return boolean
-local function entry_filter(entry, _)
-  return not vim.tbl_contains({
-    'No matches found',
-    'Searching...',
-    'Workspace loading',
-  }, entry.completion_item.label)
-end
-
----Filter out unwanted entries for fuzzy_path source
----@param entry cmp.Entry
----@param context cmp.Context
-local function entry_filter_fuzzy_path(entry, context)
-  return entry_filter(entry, context)
-    -- Don't show fuzzy-path entries in markdown/tex mathzone
-    and not (
-      vim.g.loaded_vimtex == 1
-      and (vim.bo.ft == 'markdown' or vim.bo.ft == 'tex')
-      and vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
-    )
-end
-
 ---Options for fuzzy_path source
 local fuzzy_path_option = {
   fd_cmd = {
@@ -466,12 +441,7 @@ cmp.setup({
     { name = 'luasnip', max_item_count = 3 },
     { name = 'nvim_lsp_signature_help' },
     { name = 'copilot' },
-    {
-      name = 'nvim_lsp',
-      max_item_count = 20,
-      -- Suppress LSP completion when workspace is not ready yet
-      entry_filter = entry_filter,
-    },
+    { name = 'nvim_lsp', max_item_count = 20 },
     {
       name = 'buffer',
       max_item_count = 8,
@@ -481,8 +451,13 @@ cmp.setup({
     },
     {
       name = 'fuzzy_path',
-      entry_filter = entry_filter_fuzzy_path,
       option = fuzzy_path_option,
+      -- Don't show fuzzy-path entries in markdown/tex mathzone
+      entry_filter = function()
+        return vim.g.loaded_vimtex ~= 1
+          or vim.bo.ft ~= 'markdown' and vim.bo.ft ~= 'tex'
+          or vim.api.nvim_eval('vimtex#syntax#in_mathzone()') ~= 1
+      end,
     },
     { name = 'calc' },
   },
@@ -543,7 +518,6 @@ cmp.setup.cmdline(':', {
     {
       name = 'fuzzy_path',
       group_index = 1,
-      entry_filter = entry_filter_fuzzy_path,
       option = fuzzy_path_option,
     },
     {

@@ -1,5 +1,5 @@
 diff --git a/lua/cmp_fuzzy_path/init.lua b/lua/cmp_fuzzy_path/init.lua
-index 7c3a02f..ddf1501 100644
+index 7c3a02f..950347b 100644
 --- a/lua/cmp_fuzzy_path/init.lua
 +++ b/lua/cmp_fuzzy_path/init.lua
 @@ -81,7 +81,15 @@ local function find_pattern(cursor_before_line)
@@ -36,7 +36,14 @@ index 7c3a02f..ddf1501 100644
    end
  
    if #new_pattern > 0 then
-@@ -153,6 +159,9 @@ source.complete = function(self, params, callback)
+@@ -147,12 +153,15 @@ source.complete = function(self, params, callback)
+ 
+   -- indicate that we are searching for files
+   callback({ items = { {
+-    label = 'Searching...',
++    label = '',
+     filterText = filterText,
+     data = { path = nil, stat = nil, score = -1000 },
    } }, isIncomplete = true })
    local job
    local job_start = vim.fn.reltime()
@@ -46,3 +53,12 @@ index 7c3a02f..ddf1501 100644
    job = fn.jobstart(cmd, {
      stdout_buffered = false,
      cwd = cwd,
+@@ -162,7 +171,7 @@ source.complete = function(self, params, callback)
+       end
+       if #items == 0 then
+         callback({ items = { {
+-          label = 'No matches found',
++          label = '',
+           filterText = filterText,
+           data = { path = nil, stat = nil, score = -1000 },
+         } }, isIncomplete = true })
