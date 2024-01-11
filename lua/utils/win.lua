@@ -39,9 +39,12 @@ function M.save(save_method, store)
   ---@param wins? integer[] list of wins to restore, default to all windows
   return function(wins)
     for _, win in ipairs(wins or vim.api.nvim_list_wins()) do
-      store[win] = vim.api.nvim_win_call(win, function()
+      local ok, result = pcall(vim.api.nvim_win_call, win, function()
         return save_method(win)
       end)
+      if ok then
+        store[win] = result
+      end
     end
   end
 end
