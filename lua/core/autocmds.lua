@@ -209,18 +209,31 @@ au('KeepWinRatio', {
   {
     desc = 'Keep window ratio after resizing nvim.',
     callback = function()
+      vim.cmd.wincmd('=')
       require('utils.win').tabpage_restratio()
     end,
   },
 }, {
-  { 'WinNew', 'WinResized' },
+  { 'TermOpen', 'WinResized' },
   {
     desc = 'Record window ratio.',
     callback = function()
+      local lines = vim.go.lines
+      local cols = vim.go.columns
+      local _lines = vim.g._lines
+      local _columns = vim.g._columns
+      vim.g._lines = lines
+      vim.g._columns = cols
+      -- Don't record ratio if window resizing is caused by vim resizing
+      -- (changes in &lines or &columns)
+      if _lines and lines ~= _lines or _columns and cols ~= _columns then
+        return
+      end
+
       local now = vim.uv.now()
-      vim.g._wr_timestamp = now
+      vim.g._wr_winresized = now
       vim.defer_fn(function()
-        if vim.g._wr_timestamp == now then
+        if vim.g._wr_winresized == now then
           require('utils.win').tabpage_saveratio()
         end
       end, 200)

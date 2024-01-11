@@ -14,6 +14,23 @@ function M.win_safe_set_height(win, height)
   end
 end
 
+---Get current 'effective' lines (lines can be used by normal windows)
+---@return integer
+function M.effective_lines()
+  local lines = vim.go.lines
+  local ch = vim.go.ch
+  local ls = vim.go.ls
+  return lines
+    - ch
+    - (
+      ls == 0 and 0
+      or (ls == 2 or ls == 3) and 1
+      or #vim.tbl_filter(function(win)
+        return vim.fn.win_gettype(win) ~= 'popup'
+      end, vim.api.nvim_tabpage_list_wins(0))
+    )
+end
+
 ---Generate a function to save some attributes of all windows
 ---in current tabpage
 ---@param callback fun(win: integer): any?
@@ -88,7 +105,7 @@ M.tabpage_restheights = M.tabpage_rest(M.win_safe_set_height, tabpage_heights)
 ---@return nil
 M.tabpage_saveratio = M.tabpage_save(function(win)
   return {
-    vim.api.nvim_win_get_height(win) / vim.go.lines,
+    vim.api.nvim_win_get_height(win) / M.effective_lines(),
     vim.api.nvim_win_get_width(win) / vim.go.columns,
   }
 end, tabpage_ratio)
@@ -98,7 +115,7 @@ end, tabpage_ratio)
 M.tabpage_restratio = M.tabpage_rest(function(win, ratio)
   local h = type(ratio[1]) == 'table' and ratio[1][vim.val_idx] or ratio[1]
   local w = type(ratio[2]) == 'table' and ratio[2][vim.val_idx] or ratio[2]
-  M.win_safe_set_height(win, vim.fn.round(vim.go.lines * h))
+  M.win_safe_set_height(win, vim.fn.round(M.effective_lines() * h))
   vim.api.nvim_win_set_width(win, vim.fn.round(vim.go.columns * w))
 end, tabpage_ratio)
 
