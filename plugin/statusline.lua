@@ -75,7 +75,10 @@ local modes = {
 ---@return string
 function statusline.mode()
   local hl = vim.bo.mod and 'StatusLineHeaderModified' or 'StatusLineHeader'
-  return utils.stl.hl(' ' .. modes[vim.fn.mode()] .. ' ', hl) .. ' '
+  local mode = vim.fn.mode()
+  local mode_str = (mode == 'n' and (vim.bo.ro or not vim.bo.ma)) and 'RO'
+    or modes[mode]
+  return utils.stl.hl(string.format(' %s ', mode_str), hl) .. ' '
 end
 
 ---Get diff stats for current buffer
