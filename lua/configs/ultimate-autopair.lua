@@ -17,9 +17,9 @@ vim.api.nvim_create_autocmd('CmdlineChanged', {
   end,
 })
 
----Get next character after cursor, whether in cmdline or normal buffer
+---Get next two characters after cursor, whether in cmdline or normal buffer
 ---@return string: next character
-local function get_after()
+local function get_two_char_after()
   local col, line
   if vim.fn.mode():match('^c') then
     col = vim.fn.getcmdpos()
@@ -28,7 +28,7 @@ local function get_after()
     col = vim.fn.col('.')
     line = vim.api.nvim_get_current_line()
   end
-  return line:sub(col)
+  return line:sub(col, col + 1)
 end
 
 -- Matches strings that start with:
@@ -42,7 +42,7 @@ require('ultimate-autopair').setup({
       cond = function(f)
         return not f.in_macro()
           -- Disable autopairs if followed by a keyword or an opening pair
-          and not IGNORE_REGEX:match_str(get_after())
+          and not IGNORE_REGEX:match_str(get_two_char_after())
           -- Disable autopairs when inserting a regex,
           -- e.g. `:s/{pattern}/{string}/[flags]` or
           -- `:g/{pattern}/[cmd]`, etc.
