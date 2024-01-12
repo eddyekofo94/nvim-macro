@@ -232,14 +232,6 @@ cmp.setup({
         cmp_item.abbr = path_escaped
         cmp_item.dup = 0
         entry.completion_item.label = path_escaped
-      elseif compltype == 'function' or compltype == 'expression' then
-        -- Remove trailing open parenthesis in func or expr completions,
-        -- we now have cmdline autopairs for that
-        local func_name_no_open_paren = cmp_item.word:gsub('%($', '', 1)
-        cmp_item.word = func_name_no_open_paren
-        cmp_item.abbr = func_name_no_open_paren
-        cmp_item.dup = 0
-        entry.completion_item.label = func_name_no_open_paren
       end
 
       -- Use special icons for file / directory completions
