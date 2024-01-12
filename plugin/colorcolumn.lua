@@ -102,7 +102,7 @@ vim.api.nvim_create_autocmd('ColorScheme', {
 
 local cc_bg = nil
 
-vim.api.nvim_create_autocmd({ 'CursorMovedI', 'InsertEnter' }, {
+vim.api.nvim_create_autocmd({ 'CursorMovedI', 'InsertEnter', 'ColorScheme' }, {
   desc = 'Change colorcolumn color in insert mode.',
   group = id,
   callback = function()
