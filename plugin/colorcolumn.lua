@@ -53,7 +53,7 @@ local function cc_resolve(cc)
 end
 
 ---Hide colorcolumn
----@param winid integer window handler
+---@param winid integer? window handler
 local function cc_conceal(winid)
   winid = winid or 0
   local new_winhl = (
@@ -65,7 +65,7 @@ local function cc_conceal(winid)
 end
 
 ---Show colorcolumn
----@param winid integer window handler
+---@param winid integer? window handler
 local function cc_show(winid)
   winid = winid or 0
   local new_winhl = (
