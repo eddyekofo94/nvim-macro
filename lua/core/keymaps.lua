@@ -169,6 +169,9 @@ vim.keymap.set({ 'n', 'x' }, 'q', function()
   require('utils.misc').q()
 end)
 
+-- Edit current file's directory
+vim.keymap.set({ 'n', 'x' }, '-', '<Cmd>e%:p:h<CR>')
+
 -- Text object: current buffer
 -- stylua: ignore start
 vim.keymap.set('x', 'af', ':<C-u>silent! keepjumps normal! ggVG<CR>', { silent = true, noremap = false })
