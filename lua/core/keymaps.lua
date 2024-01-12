@@ -130,20 +130,20 @@ local function tabswitch(tab_action, default_count)
     end
   end
 end
-vim.keymap.set('n', 'gt', tabswitch(vim.cmd.tabnext))
-vim.keymap.set('n', 'gT', tabswitch(vim.cmd.tabprev))
-vim.keymap.set('n', 'gy', tabswitch(vim.cmd.tabprev)) -- gT is too hard to press
+vim.keymap.set({ 'n', 'x' }, 'gt', tabswitch(vim.cmd.tabnext))
+vim.keymap.set({ 'n', 'x' }, 'gT', tabswitch(vim.cmd.tabprev))
+vim.keymap.set({ 'n', 'x' }, 'gy', tabswitch(vim.cmd.tabprev)) -- gT is too hard to press
 
-vim.keymap.set('n', '<Leader>0', '<Cmd>0tabnew<CR>')
-vim.keymap.set('n', '<Leader>1', tabswitch(vim.cmd.tabnext, 1))
-vim.keymap.set('n', '<Leader>2', tabswitch(vim.cmd.tabnext, 2))
-vim.keymap.set('n', '<Leader>3', tabswitch(vim.cmd.tabnext, 3))
-vim.keymap.set('n', '<Leader>4', tabswitch(vim.cmd.tabnext, 4))
-vim.keymap.set('n', '<Leader>5', tabswitch(vim.cmd.tabnext, 5))
-vim.keymap.set('n', '<Leader>6', tabswitch(vim.cmd.tabnext, 6))
-vim.keymap.set('n', '<Leader>7', tabswitch(vim.cmd.tabnext, 7))
-vim.keymap.set('n', '<Leader>8', tabswitch(vim.cmd.tabnext, 8))
-vim.keymap.set('n', '<Leader>9', tabswitch(vim.cmd.tabnext, 9))
+vim.keymap.set({ 'n', 'x' }, '<Leader>0', '<Cmd>0tabnew<CR>')
+vim.keymap.set({ 'n', 'x' }, '<Leader>1', tabswitch(vim.cmd.tabnext, 1))
+vim.keymap.set({ 'n', 'x' }, '<Leader>2', tabswitch(vim.cmd.tabnext, 2))
+vim.keymap.set({ 'n', 'x' }, '<Leader>3', tabswitch(vim.cmd.tabnext, 3))
+vim.keymap.set({ 'n', 'x' }, '<Leader>4', tabswitch(vim.cmd.tabnext, 4))
+vim.keymap.set({ 'n', 'x' }, '<Leader>5', tabswitch(vim.cmd.tabnext, 5))
+vim.keymap.set({ 'n', 'x' }, '<Leader>6', tabswitch(vim.cmd.tabnext, 6))
+vim.keymap.set({ 'n', 'x' }, '<Leader>7', tabswitch(vim.cmd.tabnext, 7))
+vim.keymap.set({ 'n', 'x' }, '<Leader>8', tabswitch(vim.cmd.tabnext, 8))
+vim.keymap.set({ 'n', 'x' }, '<Leader>9', tabswitch(vim.cmd.tabnext, 9))
 
 -- Complete line
 vim.keymap.set('i', '<C-l>', '<C-x><C-l>')
@@ -154,7 +154,7 @@ vim.keymap.set('i', '<C-g>=', '<C-g>u<Esc>[s1z=`]a<C-G>u')
 
 -- Only clear highlights and message area and don't redraw if search
 -- highlighting is on to avoid flickering
-vim.keymap.set({ 'n', 't' }, '<C-l>', function()
+vim.keymap.set({ 'n', 'x', 't' }, '<C-l>', function()
   return '<Cmd>nohlsearch|diffupdate|echo<CR>'
     .. (vim.v.hlsearch == 0 and '<C-l>' or '')
 end, { expr = true })
@@ -165,7 +165,7 @@ vim.keymap.set({ 'o', 'x' }, "a'", "2i'", { noremap = false })
 vim.keymap.set({ 'o', 'x' }, 'a`', '2i`', { noremap = false })
 
 -- Close all floating windows
-vim.keymap.set('n', 'q', function()
+vim.keymap.set({ 'n', 'x' }, 'q', function()
   require('utils.misc').q()
 end)
 
@@ -186,12 +186,11 @@ vim.keymap.set('o', 'az', '<Cmd>silent! normal Vaz<CR>', { silent = true, norema
 
 -- Use 'g{' and 'g}' to move to the first/last line of a paragraph
 -- stylua: ignore start
+vim.keymap.set({ 'o' }, 'g{', '<Cmd>silent! normal Vg{<CR>', { noremap = false })
+vim.keymap.set({ 'o' }, 'g}', '<Cmd>silent! normal Vg}<CR>', { noremap = false })
 vim.keymap.set({ 'n', 'x' }, 'g{', function() require('utils.misc').goto_paragraph_firstline() end, { noremap = false })
 vim.keymap.set({ 'n', 'x' }, 'g}', function() require('utils.misc').goto_paragraph_lastline() end, { noremap = false })
 -- stylua: ignore end
-
-vim.keymap.set('o', 'g{', '<Cmd>silent! normal Vg{<CR>', { noremap = false })
-vim.keymap.set('o', 'g}', '<Cmd>silent! normal Vg}<CR>', { noremap = false })
 
 -- Abbreviations
 vim.keymap.set('!a', 'ture', 'true')
