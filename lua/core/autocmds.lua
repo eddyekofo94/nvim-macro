@@ -102,10 +102,7 @@ augroup('Autosave', {
     nested = true,
     desc = 'Autosave on focus change.',
     callback = function(info)
-      if
-        vim.bo[info.buf].bt == ''
-        and (vim.uv.fs_stat(info.file) or {}).type == 'file'
-      then
+      if vim.bo[info.buf].bt == '' then
         vim.cmd.update({
           mods = { emsg_silent = true },
         })
@@ -147,25 +144,19 @@ augroup('AutoCwd', {
     pattern = '*',
     desc = 'Automatically change local current directory.',
     callback = function(info)
-      vim.schedule(function()
-        if
-          info.file == ''
-          or not vim.api.nvim_buf_is_valid(info.buf)
-          or vim.bo[info.buf].bt ~= ''
-          or (vim.uv.fs_stat(info.file) or {}).type ~= 'file'
-        then
-          return
-        end
-        local current_dir = vim.fn.getcwd(0)
-        local target_dir = require('utils').fs.proj_dir(info.file)
-          or vim.fs.dirname(info.file)
-        local stat = target_dir and vim.uv.fs_stat(target_dir)
-        -- Prevent unnecessary directory change, which triggers
-        -- DirChanged autocmds that may update winbar unexpectedly
-        if current_dir ~= target_dir and stat and stat.type == 'directory' then
-          vim.cmd.lcd(target_dir)
-        end
-      end)
+      if info.file == '' or vim.bo[info.buf].bt ~= '' then
+        return
+      end
+
+      local current_dir = vim.fn.getcwd(0)
+      local target_dir = require('utils').fs.proj_dir(info.file)
+        or vim.fs.dirname(info.file)
+      local stat = target_dir and vim.uv.fs_stat(target_dir)
+      -- Prevent unnecessary directory change, which triggers
+      -- DirChanged autocmds that may update winbar unexpectedly
+      if current_dir ~= target_dir and stat and stat.type == 'directory' then
+        vim.cmd.lcd(target_dir)
+      end
     end,
   },
 })
@@ -187,21 +178,8 @@ augroup('QuickFixAutoOpen', {
   {
     desc = 'Open quickfix window if there are results.',
     callback = function(info)
-      if #vim.fn.getqflist() <= 1 then
-        return
-      end
-      if vim.startswith(info.match, 'l') then
-        vim.schedule(function()
-          vim.cmd.lwindow({
-            mods = { split = 'belowright' },
-          })
-        end)
-      else
-        vim.schedule(function()
-          vim.cmd.cwindow({
-            mods = { split = 'botright' },
-          })
-        end)
+      if #vim.fn.getqflist() > 1 then
+        vim.schedule(vim.cmd[info.match:find('^l') and 'lwindow' or 'cwindow'])
       end
     end,
   },
@@ -311,79 +289,6 @@ augroup('AutoHlCursorLine', {
           vim.wo.cuc = true
           vim.w._cuc = nil
         end
-      end
-    end,
-  },
-})
-
-augroup('TextwidthRelativeColorcolumn', {
-  'OptionSet',
-  {
-    pattern = 'textwidth',
-    desc = 'Set colorcolumn according to textwidth.',
-    callback = function()
-      if vim.v.option_new ~= 0 then
-        vim.opt_local.colorcolumn = '+1'
-      end
-    end,
-  },
-})
-
-augroup('UpdateTimestamp', {
-  'BufWritePre',
-  {
-    desc = 'Update timestamp automatically.',
-    callback = function(info)
-      if not vim.bo[info.buf].ma or not vim.bo[info.buf].mod then
-        return
-      end
-      local lines = vim.api.nvim_buf_get_lines(info.buf, 0, 8, false)
-      local updated = false
-      for idx, line in ipairs(lines) do
-        local new_str, pos = line:gsub(
-          'Last Updated:.*',
-          'Last Updated: ' .. os.date('%a %d %b %Y %I:%M:%S %p %Z')
-        )
-        if pos > 0 then
-          updated = true
-          lines[idx] = new_str
-        end
-      end
-      if updated then
-        -- Only join further change with the previous undo block
-        -- when the current undo block is a leaf node (no further change),
-        -- see `:h undojoin` and `:h E790`
-        local undotree = vim.fn.undotree(info.buf)
-        if undotree.seq_cur == undotree.seq_last then
-          vim.cmd.undojoin()
-          vim.api.nvim_buf_set_lines(info.buf, 0, 8, false, lines)
-        end
-      end
-    end,
-  },
-})
-
-augroup('FixVirtualEditCursorPos', {
-  'ModeChanged',
-  {
-    desc = 'Keep cursor position after entering normal mode from visual mode with virtual edit enabled.',
-    pattern = '[vV\x16]*:n',
-    callback = function()
-      if vim.wo.ve:find('all') and vim.w.ve_cursor then
-        vim.api.nvim_win_set_cursor(0, {
-          vim.w.ve_cursor[2],
-          vim.w.ve_cursor[3] + vim.w.ve_cursor[4] - 1,
-        })
-      end
-    end,
-  },
-}, {
-  'CursorMoved',
-  {
-    desc = 'Record cursor position in visual mode if virtualedit is set.',
-    callback = function()
-      if vim.wo.ve:find('all') then
-        vim.w.ve_cursor = vim.fn.getcurpos()
       end
     end,
   },

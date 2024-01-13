@@ -9,7 +9,7 @@ g.has_ui = #vim.api.nvim_list_uis() > 0
 g.modern_ui = g.has_ui and vim.env.DISPLAY ~= nil
 
 -- stylua: ignore start
-opt.colorcolumn    = '80'
+opt.colorcolumn    = '+1'
 opt.cursorline     = true
 opt.foldlevelstart = 99
 opt.helpheight     = 10
