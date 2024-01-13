@@ -19,7 +19,7 @@ local function set_default_hlgroups()
   hl.set(0, 'markdownCode', { bg = 'CursorLine', fg = 'markdownCode' })
   hl.set(0, '@text.literal.markdown_inline', {
     bg = 'CursorLine',
-    fg = '@text.literal.markdown_inline',
+    fg = 'markdownCode',
   })
 end
 set_default_hlgroups()

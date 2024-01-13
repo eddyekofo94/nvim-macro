@@ -26,5 +26,10 @@ syn match  mkdCodeBlock /^\s*\n\(\(\s\{8,}[^ ]\|\t\t\+[^\t]\).*\n\)\+/
 syn match  mkdCodeBlock /\%^\(\(\s\{4,}[^ ]\|\t\+[^\t]\).*\n\)\+/
 syn match  mkdCodeBlock /^\s*\n\(\(\s\{4,}[^ ]\|\t\+[^\t]\).*\n\)\+/ contained
 
+hi link mkdCode          markdownCode
+hi link mkdCodeBlock     markdownCodeBlock
+hi link mkdCodeDelimiter Comment
+hi link mkdLineBreak     NonText
+
 let b:current_syntax = 'mkd'
 " vim: ts=8
