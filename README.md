@@ -552,7 +552,7 @@ Total # of plugins: 51 (package manager included).
     - Custom statusline inspired by [nano-emacs](https://github.com/rougier/nano-emacs)
 - [tabout](https://github.com/Bekaboo/nvim/tree/master/plugin/tabout.lua)
     - Tab out and in with `<Tab>` and `<S-Tab>`
-- [termopts](https://github.com/Bekaboo/nvim/tree/master/plugin/termopts.lua)
+- [term](https://github.com/Bekaboo/nvim/tree/master/plugin/term.lua)
     - Some nice setup for terminal buffers
 - [tmux](https://github.com/Bekaboo/nvim/tree/master/plugin/tmux.lua)
     - Integration with tmux, provides unified keymaps for navigation, resizing,
