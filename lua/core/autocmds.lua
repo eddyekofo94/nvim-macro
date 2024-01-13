@@ -353,7 +353,7 @@ augroup('DeferSetSpell', {
 })
 
 augroup('SpecialBufHl', {
-  { 'BufWinEnter', 'FileType', 'TermOpen' },
+  { 'BufWinEnter', 'BufNew', 'FileType', 'TermOpen' },
   {
     desc = 'Set background color for special buffers.',
     callback = function(info)
