@@ -23,8 +23,14 @@ return {
       -- nvim bundled ones in rtp to make sure that the version of
       -- queries and parsers are in sync, see
       -- https://github.com/nvim-treesitter/nvim-treesitter/issues/3092
-      require('lazy.core.loader').add_to_rtp(plugin)
-      require('nvim-treesitter.query_predicates')
+      vim.api.nvim_create_autocmd({ 'FileType', 'BufReadPre' }, {
+        once = true,
+        callback = function()
+          require('lazy.core.loader').add_to_rtp(plugin)
+          require('nvim-treesitter.query_predicates')
+          return true
+        end,
+      })
     end,
     config = function()
       vim.schedule(function()
@@ -36,18 +42,6 @@ return {
       'JoosepAlviste/nvim-ts-context-commentstring',
       'RRethy/nvim-treesitter-endwise',
     },
-  },
-
-  {
-    'nvim-treesitter/nvim-treesitter-textobjects',
-    lazy = true,
-    dependencies = 'nvim-treesitter/nvim-treesitter',
-  },
-
-  {
-    'JoosepAlviste/nvim-ts-context-commentstring',
-    lazy = true,
-    dependencies = 'nvim-treesitter/nvim-treesitter',
   },
 
   {
@@ -64,12 +58,6 @@ return {
     'Eandrju/cellular-automaton.nvim',
     event = 'FileType',
     cmd = 'CellularAutomaton',
-    dependencies = 'nvim-treesitter/nvim-treesitter',
-  },
-
-  {
-    'RRethy/nvim-treesitter-endwise',
-    event = 'FileType',
     dependencies = 'nvim-treesitter/nvim-treesitter',
   },
 }
