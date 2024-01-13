@@ -17,21 +17,7 @@ return {
       'TSEditQuery',
       'TSEditQueryUserAfter',
     },
-    event = { 'FileType', 'BufReadPre' },
-    init = function(plugin)
-      -- Ensure parsers and queries provided by treesitter precedes
-      -- nvim bundled ones in rtp to make sure that the version of
-      -- queries and parsers are in sync, see
-      -- https://github.com/nvim-treesitter/nvim-treesitter/issues/3092
-      vim.api.nvim_create_autocmd({ 'FileType', 'BufReadPre' }, {
-        once = true,
-        callback = function()
-          require('lazy.core.loader').add_to_rtp(plugin)
-          require('nvim-treesitter.query_predicates')
-          return true
-        end,
-      })
-    end,
+    event = 'FileType',
     config = function()
       vim.schedule(function()
         require('configs.nvim-treesitter')
