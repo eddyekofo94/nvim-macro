@@ -48,13 +48,19 @@ return {
           ---custom prompt
           ---@diagnostic disable-next-line: duplicate-set-field
           fzf_ui.ui_select = function(items, opts, on_choice)
-            if opts.prompt then
-              -- Hack: use nbsp after ':' here because currently fzf-lua does
-              -- not allow custom prompt and force substitute pattern ':%s?$'
-              -- in `opts.prompt` to '> ' as the fzf prompt. We WANT the column
-              -- in the prompt, so use nbsp to avoid this substitution
-              opts.prompt = opts.prompt:gsub(':?%s*$', ':\xc2\xa0')
-            end
+            -- Hack: use nbsp after ':' here because currently fzf-lua does
+            -- not allow custom prompt and force substitute pattern ':%s?$'
+            -- in `opts.prompt` to '> ' as the fzf prompt. We WANT the column
+            -- in the prompt, so use nbsp to avoid this substitution.
+            -- Also, don't use `opts.prompt:gsub(':?%s*$', ':\xc2\xa0')` here
+            -- because it does a non-greedy match and will not substitute
+            -- ':' at the end of the prompt, e.g. if `opts.prompt` is
+            -- 'foobar: ' then result will be 'foobar: : ', interestingly
+            -- this behavior changes in Lua 5.4, where the match becomes
+            -- greedy, i.e. given the same string and substitution above the
+            -- result becomes 'foobar> ' as expected.
+            opts.prompt = opts.prompt
+              and vim.fn.substitute(opts.prompt, ':\\?\\s*$', ':\xc2\xa0', '')
             _ui_select(items, opts, on_choice)
           end
 
