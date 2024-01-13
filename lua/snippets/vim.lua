@@ -59,7 +59,7 @@ M.snippets = {
       {
         name = i(1, 'FuncName'),
         args = i(2),
-        body = un.body(3, 0),
+        body = un.body(3, 1),
       }
     )
   ),
