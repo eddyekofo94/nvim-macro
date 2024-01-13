@@ -8,7 +8,9 @@ local is_tui = {
   nvim = true,
   sudo = true,
   nmtui = true,
+  emacs = true,
   lazygit = true,
+  emacsclient = true,
 }
 
 ---Set local terminal keymaps and options, start insert immediately
