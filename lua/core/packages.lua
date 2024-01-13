@@ -129,9 +129,25 @@ vim.api.nvim_create_autocmd('User', {
   pattern = {
     'LazyInstall*',
     'LazyUpdate*',
+    'LazySync*',
     'LazyRestore*',
   },
   callback = function(info)
+    -- In a lazy sync action:
+    -- -> LazySyncPre     <- restore packages
+    -- -> LazyInstallPre
+    -- -> LazyUpdatePre
+    -- -> LazyInstall
+    -- -> LazyUpdate
+    -- -> LazySync        <- apply patches
+    vim.g._lz_syncing = vim.g._lz_syncing or info.match == 'LazySyncPre'
+    if vim.g._lz_syncing and not info.match:find('^LazySync') then
+      return
+    end
+    if info.match == 'LazySync' then
+      vim.g._lz_syncing = nil
+    end
+
     local patches_path = vim.fs.joinpath(conf_path, 'patches')
     for patch in vim.fs.dir(patches_path) do
       local patch_path = vim.fs.joinpath(patches_path, patch)
