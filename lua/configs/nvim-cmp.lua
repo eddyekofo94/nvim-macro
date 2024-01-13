@@ -210,8 +210,15 @@ local compltype_path = {
 }
 
 ---@return integer[] buffer numbers
-local function source_buf_get_bufnrs()
+local function get_bufnrs()
   return vim.b.bigfile and {} or { vim.api.nvim_get_current_buf() }
+end
+
+local fuzzy_path_ok, fuzzy_path_comparator =
+  pcall(require, 'cmp_fuzzy_path.compare')
+
+if not fuzzy_path_ok then
+  fuzzy_path_comparator = function() end
 end
 
 ---@diagnostic disable missing-fields
@@ -437,7 +444,7 @@ cmp.setup({
       name = 'buffer',
       max_item_count = 8,
       option = {
-        get_bufnrs = source_buf_get_bufnrs,
+        get_bufnrs = get_bufnrs,
       },
     },
     {
@@ -455,7 +462,7 @@ cmp.setup({
   sorting = {
     ---@type table[]|function[]
     comparators = {
-      require('cmp_fuzzy_path.compare'),
+      fuzzy_path_comparator,
       cmp.config.compare.kind,
       cmp.config.compare.locality,
       cmp.config.compare.recently_used,
@@ -486,7 +493,7 @@ cmp.setup.cmdline('/', {
     {
       name = 'buffer',
       option = {
-        get_bufnrs = source_buf_get_bufnrs,
+        get_bufnrs = get_bufnrs,
       },
     },
   },
@@ -497,7 +504,7 @@ cmp.setup.cmdline('?', {
     {
       name = 'buffer',
       option = {
-        get_bufnrs = source_buf_get_bufnrs,
+        get_bufnrs = get_bufnrs,
       },
     },
   },

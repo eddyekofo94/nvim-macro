@@ -39,11 +39,6 @@ return {
   },
 
   {
-    'tzachar/fuzzy.nvim',
-    lazy = true,
-  },
-
-  {
     'tzachar/cmp-fuzzy-path',
     build =  'fd --version',
     event = { 'CmdlineEnter', 'InsertEnter' },
