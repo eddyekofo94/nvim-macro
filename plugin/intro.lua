@@ -122,15 +122,15 @@ for linenr, line in ipairs(lines) do
 end
 
 -- Open the window to show the intro message
-local win = vim.api.nvim_open_win(buf, true, win_config)
+local win = vim.api.nvim_open_win(buf, false, win_config)
 vim.wo[win].winhl = 'NormalFloat:Normal,Search:,Incsearch:'
 
 -- Clear the intro when the user does something
 vim.api.nvim_create_autocmd({
   'BufModifiedSet',
   'BufReadPre',
-  'StdinReadPre',
   'CursorMoved',
+  'StdinReadPre',
   'InsertEnter',
   'TermOpen',
   'TextChanged',
