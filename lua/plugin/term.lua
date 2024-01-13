@@ -3,7 +3,6 @@ local utils = require('utils')
 ---@type table<string, true>
 local tui = {
   fzf = true,
-  git = true,
   vim = true,
   nvim = true,
   sudo = true,
