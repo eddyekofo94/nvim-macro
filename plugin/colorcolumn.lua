@@ -101,6 +101,7 @@ vim.api.nvim_create_autocmd('ColorScheme', {
 })
 
 local cc_bg = nil
+local cc_link = nil
 
 vim.api.nvim_create_autocmd({ 'CursorMovedI', 'InsertEnter', 'ColorScheme' }, {
   desc = 'Change colorcolumn color in insert mode.',
@@ -123,17 +124,24 @@ vim.api.nvim_create_autocmd({ 'CursorMovedI', 'InsertEnter', 'ColorScheme' }, {
     end
 
     -- Show blended color when len < cc
-    if not C_CC or not C_NORMAL or not C_ERROR then
-      update_hl_hex()
-    end
-    local new_cc_color = length < cc
-        and hl.cblend(C_CC, C_NORMAL, (length - thresh) / (cc - thresh)).dec
-      or hl.cblend(C_ERROR, C_NORMAL, 0.4).dec
-    if new_cc_color ~= cc_bg then
-      cc_bg = new_cc_color
-      vim.api.nvim_set_hl(0, '_ColorColumn', {
-        bg = cc_bg,
-      })
+    local show_warning = length >= cc
+    if vim.go.termguicolors then
+      if not C_CC or not C_NORMAL or not C_ERROR then
+        update_hl_hex()
+      end
+      local new_cc_color = show_warning
+          and hl.cblend(C_ERROR, C_NORMAL, 0.4).dec
+        or hl.cblend(C_CC, C_NORMAL, (length - thresh) / (cc - thresh)).dec
+      if new_cc_color ~= cc_bg then
+        cc_bg = new_cc_color
+        vim.api.nvim_set_hl(0, '_ColorColumn', { bg = cc_bg })
+      end
+    else
+      local link = show_warning and 'Error' or 'ColorColumn'
+      if cc_link ~= link then
+        cc_link = link
+        vim.api.nvim_set_hl(0, '_ColorColumn', { link = cc_link })
+      end
     end
     cc_show(0)
   end,
