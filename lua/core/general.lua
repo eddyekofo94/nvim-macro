@@ -48,18 +48,6 @@ end
 opt.shada = ''
 vim.defer_fn(vim.cmd.rshada, 100)
 
-vim.defer_fn(function()
-  opt.spellsuggest = 'best,9'
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    vim.api.nvim_win_call(win, function()
-      opt.spell = true
-      opt.spelllang = 'en,cjk'
-      opt.spelloptions = 'camel'
-      opt.spellcapcheck = ''
-    end)
-  end
-end, 100)
-
 -- Recognize numbered lists when formatting text
 opt.formatoptions:append('n')
 
