@@ -5,19 +5,17 @@ local utils = require('utils')
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('TSFolds', {}),
   callback = function(info)
-    vim.schedule(function()
-      if
-        utils.treesitter.is_active(info.buf)
-        and vim.opt_local.foldmethod:get() ~= 'diff'
-        and not utils.opt.foldexpr:last_set_from('modeline')
-        and not utils.opt.foldmethod:last_set_from('modeline')
-      then
-        vim.opt_local.foldmethod = 'expr'
-        vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
-      end
-      if utils.treesitter.is_active(info.buf) then
-        vim.opt_local.foldtext = 'v:lua.vim.treesitter.foldtext()'
-      end
+    -- Treesitter folding is extremely slow in large markdown files,
+    -- making typing and undo lag as hell
+    if info.match == 'markdown' then
+      return
+    end
+    vim.api.nvim_buf_call(info.buf, function()
+      local o = vim.opt_local
+      o.fdm = o.fdm:get() == 'manual' and 'manual' or 'expr'
+      o.fde = o.fde:get() == '0' and '0' or 'nvim_treesitter#foldexpr()'
+      o.fdt = o.fdt:get() == 'foldtext()' and 'foldtext()'
+        or 'v:lua.vim.treesitter.foldtext()'
     end)
   end,
 })

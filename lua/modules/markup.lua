@@ -29,10 +29,7 @@ return {
   {
     '3rd/image.nvim',
     enabled = vim.g.modern_ui or false,
-    event = {
-      'FileType markdown,norg',
-      'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb',
-    },
+    event = { 'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb' },
     build = {
       'ueberzug version',
       'magick --version',
