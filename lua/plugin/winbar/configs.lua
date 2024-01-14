@@ -7,15 +7,12 @@ M.opts = {
   general = {
     ---@type boolean|fun(buf: integer, win: integer): boolean
     enable = function(buf, win)
-      local bufname = vim.api.nvim_buf_get_name(buf)
-      return bufname ~= ''
-        and vim.uv.fs_stat(bufname) ~= nil
-        and vim.bo[buf].buftype == ''
-        and vim.bo[buf].filetype ~= 'gitcommit'
-        and vim.bo[buf].filetype ~= 'gitrebase'
+      return not vim.w[win].winbar_no_attach
+        and not vim.b[buf].winbar_no_attach
         and vim.fn.win_gettype(win) == ''
-        and not vim.wo[win].diff
         and vim.wo[win].winbar == ''
+        and vim.bo[buf].bt == ''
+        and (vim.bo[buf].ft == 'markdown' or utils.treesitter.is_active(buf))
     end,
     attach_events = {
       'BufWinEnter',
@@ -24,8 +21,8 @@ M.opts = {
     -- Wait for a short time before updating the winbar, if another update
     -- request is received within this time, the previous request will be
     -- cancelled, this improves the performance when the user is holding
-    -- down a key (e.g. 'j') to scroll the window, default to 0 ms
-    update_interval = 0,
+    -- down a key (e.g. 'j') to scroll the window
+    update_interval = 32,
     update_events = {
       win = {
         'CursorMoved',
@@ -98,21 +95,15 @@ M.opts = {
   bar = {
     hover = true,
     ---@type winbar_source_t[]|fun(buf: integer, win: integer): winbar_source_t[]
-    sources = function(buf, _)
+    sources = function(buf)
       local sources = require('plugin.winbar.sources')
-      if vim.bo[buf].ft == 'markdown' then
-        return {
-          sources.path,
-          sources.markdown,
+      return vim.bo[buf].ft == 'markdown' and { sources.markdown }
+        or {
+          utils.source.fallback({
+            sources.lsp,
+            sources.treesitter,
+          }),
         }
-      end
-      return {
-        sources.path,
-        utils.source.fallback({
-          sources.lsp,
-          sources.treesitter,
-        }),
-      }
     end,
     padding = {
       left = 1,

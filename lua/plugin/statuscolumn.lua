@@ -276,33 +276,52 @@ function _G.get_statuscolumn()
     .. (data.show_fdc and ' ' or '')
 end
 
-local augroup = vim.api.nvim_create_augroup('StatusColumn', {})
-vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
-  group = augroup,
-  desc = 'Set statuscolumn for each window.',
-  callback = function(info)
+local function setup()
+  if vim.g.loaded_statuscolumn ~= nil then
+    return
+  end
+  vim.g.loaded_statuscolumn = true
+
+  ---Attach statuscolumn to current window
+  local function _attach()
     if
-      info.file
-      and vim.bo.bt == ''
+      vim.bo.bt == ''
       and vim.wo.stc == ''
       and vim.fn.win_gettype() == ''
       and not vim.b.bigfile
     then
       vim.opt_local.stc = '%!v:lua.get_statuscolumn()'
     end
-  end,
-})
-vim.api.nvim_create_autocmd('WinClosed', {
-  group = augroup,
-  desc = 'Clear per window shared data cache.',
-  callback = function(info)
-    shared[tonumber(info.match)] = nil
-  end,
-})
-vim.api.nvim_create_autocmd('BufDelete', {
-  group = augroup,
-  desc = 'Clear per buffer lnum width cache.',
-  callback = function(info)
-    lnumw_cache[info.buf] = nil
-  end,
-})
+  end
+
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    vim.api.nvim_win_call(win, _attach)
+  end
+
+  local augroup = vim.api.nvim_create_augroup('StatusColumn', {})
+  vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
+    group = augroup,
+    desc = 'Set statuscolumn for each window.',
+    callback = function()
+      _attach()
+    end,
+  })
+  vim.api.nvim_create_autocmd('WinClosed', {
+    group = augroup,
+    desc = 'Clear per window shared data cache.',
+    callback = function(info)
+      shared[tonumber(info.match)] = nil
+    end,
+  })
+  vim.api.nvim_create_autocmd('BufDelete', {
+    group = augroup,
+    desc = 'Clear per buffer lnum width cache.',
+    callback = function(info)
+      lnumw_cache[info.buf] = nil
+    end,
+  })
+end
+
+return {
+  setup = setup,
+}

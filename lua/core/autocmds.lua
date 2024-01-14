@@ -331,27 +331,6 @@ augroup('FixCmdLineIskeyword', {
   },
 })
 
-augroup('DeferSetSpell', {
-  { 'BufReadPre', 'BufModifiedSet' },
-  {
-    desc = 'Defer setting spell options to improve startup time.',
-    callback = function(info)
-      local buf = info.buf
-      local win = vim.api.nvim_get_current_win()
-      if
-        not vim.b[buf].spell_checked
-        and not vim.b[buf].bigfile
-        and not vim.wo[win].spell
-        and vim.bo[buf].bt == ''
-        and vim.bo[buf].ma
-      then
-        vim.opt_local.spell = true
-      end
-      vim.b[buf].spell_checked = true
-    end,
-  },
-})
-
 augroup('SpecialBufHl', {
   { 'BufWinEnter', 'BufNew', 'FileType', 'TermOpen' },
   {

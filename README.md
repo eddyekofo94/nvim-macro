@@ -62,8 +62,8 @@ are welcome.
       cases
 - Clean and uncluttered UI, including customized versions of:
     - [winbar](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/winbar)
-    - [statusline](https://github.com/Bekaboo/nvim/blob/master/plugin/statusline.lua)
-    - [statuscolumn](https://github.com/Bekaboo/nvim/blob/master/plugin/statuscolumn.lua)
+    - [statusline](https://github.com/Bekaboo/nvim/blob/master/lua/plugin/statusline.lua)
+    - [statuscolumn](https://github.com/Bekaboo/nvim/blob/master/lua/plugin/statuscolumn.lua)
     - [colorschemes](https://github.com/Bekaboo/nvim/tree/master/colors)
     - [intro message](https://github.com/Bekaboo/nvim/blob/master/plugin/intro.lua)
 - [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) integration, makes you feel at home in VSCode when you
@@ -535,31 +535,31 @@ Total # of plugins: 51 (package manager included).
     - Remembers and restores previous background and colorscheme settings
     - Syncs background and colorscheme settings among multiple Neovim instances
       if scripts [setbg](https://github.com/Bekaboo/dot/blob/master/.scripts/setbg) and [setcolor](https://github.com/Bekaboo/dot/blob/master/.scripts/setcolor) are in `$PATH`
-- [expandtab](https://github.com/Bekaboo/nvim/tree/master/plugin/expandtab.lua)
+- [expandtab](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/expandtab.lua)
     - Always use spaces for alignment, even if `&expandtab` is not set
-- [im](https://github.com/Bekaboo/nvim/tree/master/plugin/im.lua)
+- [im](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/im.lua)
     - Switches and restores fcitx state in each buffer asynchronouly
 - [intro](https://github.com/Bekaboo/nvim/tree/master/plugin/intro.lua)
     - Shows a custom intro message on startup
 - [lsp-diagnostic](https://github.com/Bekaboo/nvim/tree/master/plugin/lsp-diagnostic.lua)
     - Sets up LSP and diagnostic options and commands on `LspAttach` or
       `DiagnosticChanged`
-- [readline](https://github.com/Bekaboo/nvim/tree/master/plugin/readline.lua)
+- [readline](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/readline.lua)
     - Readline-like keybindings in insert and command mode
-- [statuscolumn](https://github.com/Bekaboo/nvim/tree/master/plugin/statuscolumn.lua)
+- [statuscolumn](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/statuscolumn.lua)
     - Custom statuscolumn, with git signs on the right of line numbers
-- [statusline](https://github.com/Bekaboo/nvim/tree/master/plugin/statusline.lua)
+- [statusline](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/statusline.lua)
     - Custom statusline inspired by [nano-emacs](https://github.com/rougier/nano-emacs)
-- [tabout](https://github.com/Bekaboo/nvim/tree/master/plugin/tabout.lua)
+- [tabout](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/tabout.lua)
     - Tab out and in with `<Tab>` and `<S-Tab>`
-- [term](https://github.com/Bekaboo/nvim/tree/master/plugin/term.lua)
+- [term](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/term.lua)
     - Some nice setup for terminal buffers
-- [tmux](https://github.com/Bekaboo/nvim/tree/master/plugin/tmux.lua)
+- [tmux](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/tmux.lua)
     - Integration with tmux, provides unified keymaps for navigation, resizing,
       and many other window operations
-- [vscode-neovim](https://github.com/Bekaboo/nvim/tree/master/plugin/vscode-neovim.vim)
+- [vscode](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/vscode.vim)
     - Integration with [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim)
-- [winbar](https://github.com/Bekaboo/nvim/blob/master/plugin/winbar.lua)
+- [winbar](https://github.com/Bekaboo/nvim/blob/master/lua/plugin/winbar.lua)
     - A winbar with drop-down menus and multiple backends
     - Released as [dropbar.nvim](https://github.com/Bekaboo/dropbar.nvim)
 - [markdown-capitalized-title](https://github.com/Bekaboo/nvim/blob/master/after/ftplugin/markdown/capitalized-title.lua)

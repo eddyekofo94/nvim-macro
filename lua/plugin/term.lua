@@ -67,7 +67,7 @@ end
 local function setup(buf)
   term_set_local_keymaps_and_opts(buf)
 
-  local groupid = vim.api.nvim_create_augroup('TermSetup', {})
+  local groupid = vim.api.nvim_create_augroup('Term', {})
   vim.api.nvim_create_autocmd('TermOpen', {
     group = groupid,
     desc = 'Set terminal keymaps and options, open term in split.',

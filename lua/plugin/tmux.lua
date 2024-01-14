@@ -220,7 +220,7 @@ end
 ---Setup keymaps and tmux variable `@is_vim`
 ---@return nil
 local function setup()
-  if vim.g.loaded_tmux then
+  if vim.g.loaded_tmux or not vim.env.TMUX or not vim.g.has_ui then
     return
   end
   vim.g.loaded_tmux = true

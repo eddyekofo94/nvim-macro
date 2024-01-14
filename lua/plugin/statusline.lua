@@ -1,4 +1,4 @@
-_G.statusline = {}
+local statusline = {}
 local utils = require('utils')
 local groupid = vim.api.nvim_create_augroup('StatusLine', {})
 
@@ -341,11 +341,11 @@ end
 ---@type table<string, string>
 local components = {
   align        = [[%=]],
-  diag         = [[%{%v:lua.statusline.diag()%}]],
+  diag         = [[%{%v:lua.require'plugin.statusline'.diag()%}]],
   fname        = [[%{%&bt==#''?'%t':(&bt==#'terminal'?'[Terminal] '.bufname()->substitute('^term://.\{-}//\d\+:\s*','',''):'%F')%} ]],
-  info         = [[%{%v:lua.statusline.info()%}]],
-  lsp_progress = [[%{%v:lua.statusline.lsp_progress()%}]],
-  mode         = [[%{%v:lua.statusline.mode()%}]],
+  info         = [[%{%v:lua.require'plugin.statusline'.info()%}]],
+  lsp_progress = [[%{%v:lua.require'plugin.statusline'.lsp_progress()%}]],
+  mode         = [[%{%v:lua.require'plugin.statusline'.mode()%}]],
   padding      = [[ ]],
   pos          = [[%{%&ru?"%l:%c ":""%}]],
   truncate     = [[%<]],
@@ -411,4 +411,4 @@ vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
   end,
 })
 
-vim.go.statusline = '%!v:lua.statusline.get()'
+return statusline
