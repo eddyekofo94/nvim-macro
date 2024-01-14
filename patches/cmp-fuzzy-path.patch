@@ -1,5 +1,5 @@
 diff --git a/lua/cmp_fuzzy_path/init.lua b/lua/cmp_fuzzy_path/init.lua
-index 7c3a02f..950347b 100644
+index 7c3a02f..042be1e 100644
 --- a/lua/cmp_fuzzy_path/init.lua
 +++ b/lua/cmp_fuzzy_path/init.lua
 @@ -81,7 +81,15 @@ local function find_pattern(cursor_before_line)
@@ -62,3 +62,13 @@ index 7c3a02f..950347b 100644
            filterText = filterText,
            data = { path = nil, stat = nil, score = -1000 },
          } }, isIncomplete = true })
+@@ -186,6 +195,9 @@ source.complete = function(self, params, callback)
+       for _, item in ipairs(lines) do
+         -- remove './' from beginning of line
+         item = item:gsub([[^%./]], '')
++        if is_cmd then
++          item = vim.fn.fnameescape(item)
++        end
+         if #item > 0 then
+           -- if new_pattern is empty, we will get no matches
+           local score = nil
