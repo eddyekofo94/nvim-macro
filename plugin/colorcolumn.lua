@@ -21,7 +21,7 @@ local function get_hl_hex(hlgroup_name, field, fallback)
   -- of `utils.hl.get()`
   local attr_val =
     hl.get(0, { name = hlgroup_name, winhl_link = false })[field]
-  return attr_val and hl.dec2hex(attr_val) or fallback
+  return attr_val and hl.dec2hex(attr_val, 6) or fallback
 end
 
 ---Update base colors: bg color of Normal & ColorColumn, and fg of Error
