@@ -2,10 +2,15 @@ local utils = require('utils')
 
 ---@type table<string, true>
 local tui = {
+  vi = true,
   fzf = true,
+  nvi = true,
+  kak = true,
   vim = true,
   nvim = true,
   sudo = true,
+  nano = true,
+  helix = true,
   nmtui = true,
   emacs = true,
   lazygit = true,
