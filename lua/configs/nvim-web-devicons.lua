@@ -52,6 +52,12 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Assembly),
       name = 'S',
     },
+    S = {
+      color = '#d65050',
+      cterm_color = '167',
+      icon = vim.trim(icons.Assembly),
+      name = 'S',
+    },
     o = {
       color = '#88a0a7',
       cterm_color = '66',
