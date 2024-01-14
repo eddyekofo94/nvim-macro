@@ -386,29 +386,34 @@ vim.api.nvim_create_autocmd(
   }
 )
 
-vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
+---Set default highlight groups for statusline components
+---@return  nil
+local function set_default_hlgroups()
+  local default_attr = utils.hl.get(0, { name = 'StatusLine' })
+  ---@param hlgroup_name string
+  ---@param attr table
+  ---@return nil
+  local function sethl(hlgroup_name, attr)
+    local merged_attr = vim.tbl_deep_extend('keep', attr, default_attr)
+    utils.hl.set_default(0, hlgroup_name, merged_attr)
+  end
+  if vim.g.modern_ui then
+    sethl('StatusLineHeader', { bg = 'TabLine' })
+  end
+  sethl('StatusLineGitAdded', { fg = 'GitSignsAdd' })
+  sethl('StatusLineGitChanged', { fg = 'GitSignsChange' })
+  sethl('StatusLineGitRemoved', { fg = 'GitSignsDelete' })
+  sethl('StatusLineDiagnosticHint', { fg = 'DiagnosticSignHint' })
+  sethl('StatusLineDiagnosticInfo', { fg = 'DiagnosticSignInfo' })
+  sethl('StatusLineDiagnosticWarn', { fg = 'DiagnosticSignWarn' })
+  sethl('StatusLineDiagnosticError', { fg = 'DiagnosticSignError' })
+  sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'TabLine' })
+end
+set_default_hlgroups()
+
+vim.api.nvim_create_autocmd('ColorScheme', {
   group = groupid,
-  callback = function()
-    local default_attr = utils.hl.get(0, { name = 'StatusLine' })
-    ---@param hlgroup_name string
-    ---@param attr table
-    ---@return nil
-    local function sethl(hlgroup_name, attr)
-      local merged_attr = vim.tbl_deep_extend('keep', attr, default_attr)
-      utils.hl.set_default(0, hlgroup_name, merged_attr)
-    end
-    if vim.g.modern_ui then
-      sethl('StatusLineHeader', { bg = 'TabLine' })
-    end
-    sethl('StatusLineGitAdded', { fg = 'GitSignsAdd' })
-    sethl('StatusLineGitChanged', { fg = 'GitSignsChange' })
-    sethl('StatusLineGitRemoved', { fg = 'GitSignsDelete' })
-    sethl('StatusLineDiagnosticHint', { fg = 'DiagnosticSignHint' })
-    sethl('StatusLineDiagnosticInfo', { fg = 'DiagnosticSignInfo' })
-    sethl('StatusLineDiagnosticWarn', { fg = 'DiagnosticSignWarn' })
-    sethl('StatusLineDiagnosticError', { fg = 'DiagnosticSignError' })
-    sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'TabLine' })
-  end,
+  callback = set_default_hlgroups,
 })
 
 return statusline
