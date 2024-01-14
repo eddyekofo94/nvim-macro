@@ -38,6 +38,12 @@ local IGNORE_REGEX = vim.regex([=[^\(\k\|\\\?[([{]\)]=])
 
 require('ultimate-autopair').setup({
   extensions = {
+    -- Improve performance when typing fast, see
+    -- https://github.com/altermo/ultimate-autopair.nvim/issues/74
+    alpha = false,
+    tsnode = false,
+    utf8 = false,
+    filetype = { tree = false },
     cond = {
       cond = function(f)
         return not f.in_macro()

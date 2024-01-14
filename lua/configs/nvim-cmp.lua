@@ -7,11 +7,20 @@ local icons = require('utils.static').icons
 local last_changed = 0
 local _cmp_on_change = cmp_core.on_change
 
+---Hack: `nvim_lsp` and `nvim_lsp_signature_help` source still use
+---deprecated `vim.lsp.buf_get_clients()`, which is slower due to
+---the deprecation and version check in that function. Overwrite
+---it using `vim.lsp.get_clients()` to improve performance.
+---@diagnostic disable-next-line: duplicate-set-field
+function vim.lsp.buf_get_clients(bufnr)
+  return vim.lsp.get_clients({ buffer = bufnr })
+end
+
 ---Improves performance when inserting in large files
 ---@diagnostic disable-next-line: duplicate-set-field
 function cmp_core.on_change(self, trigger_event)
   local now = vim.uv.now()
-  local fast_typing = now - last_changed < 16
+  local fast_typing = now - last_changed < 32
   last_changed = now
 
   if not fast_typing or trigger_event ~= 'TextChanged' or cmp.visible() then
@@ -224,7 +233,7 @@ end
 ---@diagnostic disable missing-fields
 cmp.setup({
   enabled = function()
-    return not vim.b.bigfile
+    return vim.bo.ft ~= '' and not vim.b.bigfile
   end,
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },
