@@ -19,7 +19,8 @@ local function get_hl_hex(hlgroup_name, field, fallback)
   -- attributes of ColorColumn with link = true
   -- EDIT: solved by manually traversing the hlgroup, see implementation
   -- of `utils.hl.get()`
-  local attr_val = hl.get(0, { name = hlgroup_name, winhl_link = false })[field]
+  local attr_val =
+    hl.get(0, { name = hlgroup_name, winhl_link = false })[field]
   return attr_val and hl.dec2hex(attr_val) or fallback
 end
 
