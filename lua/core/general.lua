@@ -46,7 +46,10 @@ if not vim.g.modern_ui then
 end
 
 opt.shada = ''
-vim.defer_fn(vim.cmd.rshada, 100)
+vim.defer_fn(function()
+  vim.cmd.set('shada&')
+  vim.cmd.rshada()
+end, 100)
 
 -- Recognize numbered lists when formatting text
 opt.formatoptions:append('n')
