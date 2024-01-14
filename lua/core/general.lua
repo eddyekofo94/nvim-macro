@@ -10,6 +10,7 @@ g.modern_ui = g.has_ui and vim.env.DISPLAY ~= nil
 
 -- stylua: ignore start
 opt.colorcolumn    = '+1'
+opt.cursorlineopt  = 'number'
 opt.cursorline     = true
 opt.foldlevelstart = 99
 opt.helpheight     = 10
@@ -42,7 +43,6 @@ if not vim.g.modern_ui then
   -- not set, termguicolors is automatically set. This is undesirable, so we
   -- need to explicitly disable it in this case
   opt.termguicolors = false
-  opt.cursorlineopt = 'number'
 end
 
 opt.shada = ''

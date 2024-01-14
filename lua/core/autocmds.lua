@@ -233,13 +233,10 @@ augroup('KeepWinRatio', {
 
 -- Show cursor line and cursor column only in current window
 augroup('AutoHlCursorLine', {
-  { 'BufWinEnter', 'WinEnter', 'UIEnter' },
+  { 'BufWinEnter', 'WinEnter' },
   {
     desc = 'Show cursorline and cursorcolumn in current window.',
     callback = function()
-      if vim.fn.mode():match('^[itRsS\x13]') then
-        return
-      end
       if vim.w._cul and not vim.wo.cul then
         vim.wo.cul = true
         vim.w._cul = nil
@@ -262,33 +259,6 @@ augroup('AutoHlCursorLine', {
       if vim.wo.cuc then
         vim.w._cuc = true
         vim.wo.cuc = false
-      end
-    end,
-  },
-}, {
-  'ModeChanged',
-  {
-    desc = 'Hide cursorline and cursorcolumn in insert mode.',
-    pattern = { '[itRss\x13]*:*', '*:[itRss\x13]*' },
-    callback = function()
-      if vim.v.event.new_mode:match('^[itRss\x13]') then
-        if vim.wo.cul then
-          vim.w._cul = true
-          vim.wo.cul = false
-        end
-        if vim.wo.cuc then
-          vim.w._cuc = true
-          vim.wo.cuc = false
-        end
-      else
-        if vim.w._cul and not vim.wo.cul then
-          vim.wo.cul = true
-          vim.w._cul = nil
-        end
-        if vim.w._cuc and not vim.wo.cuc then
-          vim.wo.cuc = true
-          vim.w._cuc = nil
-        end
       end
     end,
   },
