@@ -1,8 +1,8 @@
 diff --git a/lua/copilot/suggestion.lua b/lua/copilot/suggestion.lua
-index d5be7a8..60c08d3 100644
+index d5be7a8..808a00d 100644
 --- a/lua/copilot/suggestion.lua
 +++ b/lua/copilot/suggestion.lua
-@@ -567,11 +567,20 @@ local function on_buf_enter()
+@@ -567,11 +567,21 @@ local function on_buf_enter()
    end
  end
  
@@ -13,6 +13,7 @@ index d5be7a8..60c08d3 100644
 -  if copilot._copilot_timer or ctx.params or should_auto_trigger() then
 -    schedule(ctx)
 -  end
++  clear()
 +  local cursor_moved = vim.uv.now()
 +  last_cursor_moved = cursor_moved
 +  vim.defer_fn(function()
