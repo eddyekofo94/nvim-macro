@@ -235,6 +235,11 @@ cmp.setup({
   enabled = function()
     return vim.bo.ft ~= '' and not vim.b.bigfile
   end,
+  performance = {
+    debounce = 512,
+    throttle = 512,
+    fetching_timeout = 64,
+  },
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, cmp_item)
