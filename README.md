@@ -118,7 +118,7 @@ favorite package manager:
 - Markdown: install [Marksman](https://github.com/artempyanykh/marksman)
 - \*General-purpose LSP: install [EFM Language Server](https://github.com/mattn/efm-langserver)
     - Already configured for [Black](https://github.com/psf/black), [Shfmt](https://github.com/mvdan/sh), and [StyLua](https://github.com/JohnnyMorganz/StyLua)
-    - Find configuration in [lua/configs/lsp-server-configs/_servers/efm.lua](https://github.com/Bekaboo/nvim/tree/master/lua/configs/lsp-server-configs/_servers/efm.lua)
+    - Find configuration in [lua/configs/lsp-server-configs/\_servers/efm.lua](https://github.com/Bekaboo/nvim/tree/master/lua/configs/lsp-server-configs/_servers/efm.lua)
 
 To add support for other languages, install corresponding LS manually and
 append the language and its language server to `M.langs` in [lua/utils/static/init.lua](https://github.com/Bekaboo/nvim/blob/master/lua/utils/static/init.lua)
