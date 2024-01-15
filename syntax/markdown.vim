@@ -5,7 +5,7 @@
 " Remark:       Uses tex syntax file
 
 if exists('b:current_syntax')
-  unlet b:current_syntax
+  finish
 endif
 
 " Include tex math in markdown
@@ -14,7 +14,8 @@ syn region mkdMath start="\\\@<!\$" end="\$" skip="\\\$" contains=@tex keepend
 syn region mkdMath start="\\\@<!\$\$" end="\$\$" skip="\\\$" contains=@tex keepend
 
 " Define markdown groups
-syn match  mkdLineBreak /  \+$/
+syn clear  markdownCode
+syn clear  markdownCodeBlock
 syn region mkdCode      matchgroup=mkdCodeDelimiter start=/\(\([^\\]\|^\)\\\)\@<!`/                     end=/`/                          concealends
 syn region mkdCodeBlock matchgroup=mkdCodeDelimiter start=/\(\([^\\]\|^\)\\\)\@<!``/ skip=/[^`]`[^`]/   end=/``/                         concealends
 syn region mkdCodeBlock matchgroup=mkdCodeDelimiter start=/^\s*\z(`\{3,}\)[^`]*$/                       end=/^\s*\z1`*\s*$/              concealends
@@ -29,7 +30,17 @@ syn match  mkdCodeBlock /^\s*\n\(\(\s\{4,}[^ ]\|\t\+[^\t]\).*\n\)\+/ contained
 hi link mkdCode          markdownCode
 hi link mkdCodeBlock     markdownCodeBlock
 hi link mkdCodeDelimiter markdownCodeDelimiter
-hi link mkdLineBreak     NonText
 
-let b:current_syntax = 'mkd'
-" vim: ts=8
+lua << EOF
+local buf = vim.api.nvim_get_current_buf()
+vim.schedule(function()
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return
+  end
+  vim.api.nvim_buf_call(buf, function()
+    pcall(vim.treesitter.start, buf, 'markdown')
+  end)
+end)
+EOF
+
+let b:current_syntax = 'markdown'

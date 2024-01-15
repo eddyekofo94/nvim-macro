@@ -140,7 +140,7 @@ local function setup_lsp_overrides()
     -- markdown syntax to avoid using treesitter highlight and get math
     -- concealing provided by vimtex in the floating window
     if source_ft == 'markdown' then
-      syntax = 'mkd'
+      syntax = 'markdown'
       opts.wrap = false
     end
     local floating_bufnr, floating_winnr =
