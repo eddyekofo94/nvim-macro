@@ -48,11 +48,8 @@ end
 ---Restore 'shada' option and read from shada once
 ---@return true
 local function _rshada()
-  if not vim.g._shada_read then
-    vim.cmd.set('shada&')
-    vim.cmd.rshada()
-    vim.g._shada_read = true
-  end
+  vim.cmd.set('shada&')
+  vim.cmd.rshada()
   return true
 end
 
