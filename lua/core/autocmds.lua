@@ -311,41 +311,21 @@ augroup('SpecialBufHl', {
       -- the triggering buffer. We can also use `win_findbuf()` to get all
       -- windows that display the triggering buffer, but it is slower and using
       -- `bufwinid()` is enough for our purpose.
-      vim.schedule(function()
-        local winid = vim.fn.bufwinid(info.buf)
-        if winid == -1 then
+      local winid = vim.fn.bufwinid(info.buf)
+      if winid == -1 then
+        return
+      end
+      vim.api.nvim_win_call(winid, function()
+        local wintype = vim.fn.win_gettype()
+        if wintype == 'popup' or wintype == 'autocmd' then
           return
         end
-        vim.api.nvim_win_call(winid, function()
-          -- Unmap `hl-Normal` and `hl-EndOfBuffer` because they can affect
-          -- normal bg in floating windows
-          local winhl = vim.opt_local.winhl
-          local wintype = vim.fn.win_gettype()
-          if wintype == 'popup' or wintype == 'autocmd' then
-            local val = winhl:get()
-            if not val.NormalFloat then
-              if val.Normal == 'NormalSpecial' then
-                winhl:remove('Normal')
-              end
-              if val.EndOfBuffer == 'NormalSpecial' then
-                winhl:remove('EndOfBuffer')
-              end
-            end
-            return
-          end
-
-          local bt = vim.bo[info.buf].bt
-          if bt == '' then
-            winhl:remove('Normal')
-            winhl:remove('EndOfBuffer')
-            return
-          end
-
-          winhl:append({
+        if vim.bo[info.buf].bt ~= '' then
+          vim.opt_local.winhl:append({
             Normal = 'NormalSpecial',
             EndOfBuffer = 'NormalSpecial',
           })
-        end)
+        end
       end)
     end,
   },
