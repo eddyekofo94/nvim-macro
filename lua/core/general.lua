@@ -37,11 +37,11 @@ opt.virtualedit    = 'block'
 opt.completeopt    = 'menuone'
 -- stylua: ignore end
 
+-- nvim 0.10.0 automatically enables termguicolors. When using nvim inside
+-- tmux in Linux tty, where $TERM is set to 'tmux-256color' but $DISPLAY is
+-- not set, termguicolors is automatically set. This is undesirable, so we
+-- need to explicitly disable it in this case
 if not vim.g.modern_ui then
-  -- nvim 0.10.0 automatically enables termguicolors. When using nvim inside
-  -- tmux in Linux tty, where $TERM is set to 'tmux-256color' but $DISPLAY is
-  -- not set, termguicolors is automatically set. This is undesirable, so we
-  -- need to explicitly disable it in this case
   opt.termguicolors = false
 end
 
