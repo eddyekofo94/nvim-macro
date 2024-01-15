@@ -45,11 +45,20 @@ if not vim.g.modern_ui then
   opt.termguicolors = false
 end
 
+---Restore 'shada' option and read from shada once
+---@return true
+local function _rshada()
+  if not vim.g._shada_read then
+    vim.cmd.set('shada&')
+    vim.cmd.rshada()
+    vim.g._shada_read = true
+  end
+  return true
+end
+
 opt.shada = ''
-vim.defer_fn(function()
-  vim.cmd.set('shada&')
-  vim.cmd.rshada()
-end, 100)
+vim.defer_fn(_rshada, 100)
+vim.api.nvim_create_autocmd('BufReadPre', { once = true, callback = _rshada })
 
 -- Recognize numbered lists when formatting text
 opt.formatoptions:append('n')
