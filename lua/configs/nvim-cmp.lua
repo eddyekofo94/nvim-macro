@@ -371,11 +371,6 @@ cmp.setup({
           local line = vim.api.nvim_get_current_line()
           local cursor = vim.api.nvim_win_get_cursor(0)
           local current = luasnip.session.current_nodes[buf]
-          -- Insert literal tab/spaces if cursor is at the start of the line
-          if line:sub(1, cursor[2]):match('^%s*$') then
-            vim.api.nvim_feedkeys('\t', 'n', false)
-            return
-          end
           if node_has_length(current) then
             if
               current.next_choice
