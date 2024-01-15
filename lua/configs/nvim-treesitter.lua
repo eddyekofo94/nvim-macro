@@ -12,10 +12,13 @@ vim.api.nvim_create_autocmd('FileType', {
     end
     vim.api.nvim_buf_call(info.buf, function()
       local o = vim.opt_local
-      o.fdm = o.fdm:get() == 'manual' and 'manual' or 'expr'
-      o.fde = o.fde:get() == '0' and '0' or 'nvim_treesitter#foldexpr()'
-      o.fdt = o.fdt:get() == 'foldtext()' and 'foldtext()'
-        or 'v:lua.vim.treesitter.foldtext()'
+      local fdm = o.fdm:get() ---@diagnostic disable-line: undefined-field
+      local fde = o.fde:get() ---@diagnostic disable-line: undefined-field
+      local fdt = o.fdt:get() ---@diagnostic disable-line: undefined-field
+      o.fdm = o.fdm:get() == 'manual' and 'expr' or fdm
+      o.fde = o.fde:get() == '0' and 'nvim_treesitter#foldexpr()' or fde
+      o.fdt = o.fdt:get() == 'foldtext()' and 'v:lua.vim.treesitter.foldtext()'
+        or fdt
     end)
   end,
 })
