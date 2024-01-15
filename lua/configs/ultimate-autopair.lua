@@ -34,7 +34,7 @@ end
 -- Matches strings that start with:
 -- keywords: \k
 -- opening pairs: (, [, {, \(, \[, \{
-local IGNORE_REGEX = vim.regex([=[^\(\k\|\\\?[([{]\)]=])
+local IGNORE_REGEX = vim.regex([=[^\%(\k\|\\\?[([{]\)]=])
 
 require('ultimate-autopair').setup({
   extensions = {
