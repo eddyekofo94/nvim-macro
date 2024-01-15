@@ -122,7 +122,7 @@ return {
     ArrowLeft           = '← ',
     ArrowRight          = '→ ',
     ArrowUp             = '↑ ',
-    CircleFilled        = '◆ ',
+    CircleFilled        = '• ',
     CircleOutline       = '○ ',
     Cross               = 'x ',
     Ok                  = 'v ',
