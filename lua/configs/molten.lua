@@ -27,63 +27,29 @@ local deps = {
   'pyperclip',
 }
 
----Shows a notification from molten
+---Shows a warning message from molten
 ---@param msg string Content of the notification to show to the user.
 ---@param level integer|nil One of the values from |vim.log.levels|.
 ---@param opts table|nil Optional parameters. Unused by default.
 ---@return nil
-local function notify(msg, level, opts)
-  vim.schedule(function()
-    vim.notify('[Molten] ' .. msg, level, opts)
-  end)
+local function molten_warn(msg, level, opts)
+  vim.notify('[Molten] ' .. msg, level or vim.log.levels.WARN, opts)
 end
 
-local num_checked = 0
-local not_installed = {}
 vim.schedule(function()
+  if vim.fn.executable('pip') == 0 then
+    molten_warn('pip not found, skipping python dependency check')
+    return
+  end
   for _, pkg in ipairs(deps) do
-    vim.system(
-      { 'pip', 'show', pkg },
-      {},
-      vim.schedule_wrap(function(obj)
-        if obj.code ~= 0 then
-          table.insert(not_installed, pkg)
-          notify(
-            string.format('python dependency %s not found', pkg),
-            vim.log.levels.WARN
-          )
-        end
-        num_checked = num_checked + 1
-        if num_checked == #deps and not vim.tbl_isempty(not_installed) then
-          if not vim.env.VIRTUAL_ENV then
-            notify(
-              'start nvim in a venv to auto-install python dependencies',
-              vim.log.levels.WARN
-            )
-            return
-          end
-          notify('auto-install python dependencies...')
-          vim.system(
-            { 'pip', 'install', unpack(not_installed) },
-            {},
-            function(_obj)
-              if _obj.code == 0 then
-                notify('all python dependencies satisfied')
-                return
-              end
-              notify(
-                string.format(
-                  'dependency installation failed with code %d: %s',
-                  _obj.code,
-                  _obj.stderr
-                ),
-                vim.log.levels.WARN
-              )
-            end
-          )
-        end
+    vim.system({ 'pip', 'show', pkg }, {}, function(obj)
+      if obj.code == 0 then
+        return
+      end
+      vim.schedule(function()
+        molten_warn(string.format('python dependency %s not found', pkg))
       end)
-    )
+    end)
   end
 end)
 
@@ -202,16 +168,13 @@ local function run_cell(range)
   otk.sync_raft(buf)
   local otk_buf_info = otk._otters_attached[buf]
   if not otk_buf_info then
-    notify(
-      'code runner not initialized for buffer ' .. buf,
-      vim.log.levels.WARN
-    )
+    molten_warn('code runner not initialized for buffer ' .. buf)
     return
   end
 
   local filtered = extract_cells(lang, otk_buf_info.code_chunks, range)
   if #filtered == 0 then
-    notify('no code found for ' .. lang, vim.log.levels.WARN)
+    molten_warn('no code found for ' .. lang)
     return
   end
   for _, chunk in ipairs(filtered) do
@@ -279,16 +242,13 @@ local function run_range(range)
   otk.sync_raft(buf)
   local otk_buf_info = otk._otters_attached[buf]
   if not otk_buf_info then
-    notify(
-      'code runner not initialized for buffer ' .. buf,
-      vim.log.levels.WARN
-    )
+    molten_warn('code runner not initialized for buffer ' .. buf)
     return
   end
 
   local filtered = extract_cells(lang, otk_buf_info.code_chunks, range, true)
   if #filtered == 0 then
-    notify('no code found for ' .. lang, vim.log.levels.WARN)
+    molten_warn('no code found for ' .. lang)
     return
   end
 
