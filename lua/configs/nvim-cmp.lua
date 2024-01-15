@@ -4,9 +4,6 @@ local luasnip = require('luasnip')
 local tabout = require('plugin.tabout')
 local icons = require('utils.static').icons
 
-local last_changed = 0
-local _cmp_on_change = cmp_core.on_change
-
 ---Hack: `nvim_lsp` and `nvim_lsp_signature_help` source still use
 ---deprecated `vim.lsp.buf_get_clients()`, which is slower due to
 ---the deprecation and version check in that function. Overwrite
@@ -16,9 +13,29 @@ function vim.lsp.buf_get_clients(bufnr)
   return vim.lsp.get_clients({ buffer = bufnr })
 end
 
+---@type string?
+local last_key
+
+vim.on_key(function(k)
+  last_key = k
+end)
+
+---@type integer
+local last_changed = 0
+local _cmp_on_change = cmp_core.on_change
+
 ---Improves performance when inserting in large files
 ---@diagnostic disable-next-line: duplicate-set-field
 function cmp_core.on_change(self, trigger_event)
+  -- Don't know why but inserting spaces/tabs causes higher latency than other
+  -- keys, e.g. when holding down 's' the interval between keystrokes is less
+  -- than 32ms (80 repeats/s keyboard), but when holding spaces/tabs the
+  -- interval increases to 100ms, guess is is due ot some other plugins that
+  -- triggers on spaces/tabs
+  if last_key == ' ' or last_key == '\t' then
+    return
+  end
+
   local now = vim.uv.now()
   local fast_typing = now - last_changed < 32
   last_changed = now
