@@ -2,9 +2,6 @@ if !exists('g:vscode')
   finish
 endif
 
-" Use VSCode syntax highlighting
-syntax off
-
 " LSP keymap settings
 function! s:vscodeGoToDefinition(str)
     if exists('b:vscode_controlled') && b:vscode_controlled
@@ -52,6 +49,9 @@ function! s:manageEditorWidth(...)
 endfunction
 
 function! vscode#setup() abort
+    " Use VSCode syntax highlighting
+    syntax off
+
     nnoremap K     <Cmd>call VSCodeNotify('editor.action.showHover')<CR>
     nnoremap gD    <Cmd>call <SID>vscodeGoToDefinition('revealDeclaration')<CR>
     nnoremap gd    <Cmd>call <SID>vscodeGoToDefinition('revealDefinition')<CR>
