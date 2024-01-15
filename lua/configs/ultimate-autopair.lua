@@ -40,7 +40,6 @@ require('ultimate-autopair').setup({
   extensions = {
     -- Improve performance when typing fast, see
     -- https://github.com/altermo/ultimate-autopair.nvim/issues/74
-    alpha = false,
     tsnode = false,
     utf8 = false,
     filetype = { tree = false },
