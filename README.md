@@ -436,9 +436,11 @@ and it should work out of the box.
 
     <img src="https://github.com/Bekaboo/nvim/assets/76579810/f6c7e6ce-283b-43d7-8bc3-e8b24513a03b" width=75%>
 
-- Rendering images in markdown files with [image.nvim](https://github.com/3rd/image.nvim)
+- Rendering images in markdown files with [image.nvim](https://github.com/3rd/image.nvim) \*
 
     <img src="https://github.com/Bekaboo/nvim/assets/76579810/af2a3b2b-0601-482f-bf1e-b14e091ff179" width=75%>
+
+    <sub>\*Disabled by default for performance condsiderations</sub>
 
 - Jupyter Notebook integration using [jupytext.vim](https://github.com/goerz/jupytext) and [molten-nvim](https://github.com/benlubas/molten-nvim)
 
