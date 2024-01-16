@@ -227,6 +227,30 @@ local function arg_handler_item(args)
   end
 end
 
+---Get completion for LSP clients
+---@return string[]
+local function compl_lsp_clients()
+  return vim.tbl_map(function(client)
+    return string.format('%d (%s)', client.id, client.name)
+  end, vim.lsp.get_clients())
+end
+
+---Get completion for LSP client ids
+---@return integer[]
+local function compl_lsp_client_ids()
+  return vim.tbl_map(function(client)
+    return client.id
+  end, vim.lsp.get_clients())
+end
+
+---Get completion for LSP client names
+---@return integer[]
+local function compl_lsp_client_names()
+  return vim.tbl_map(function(client)
+    return client.name
+  end, vim.lsp.get_clients())
+end
+
 ---@type table<string, string[]|fun(): any[]>
 local optvals = {
   bool = { 'v:true', 'v:false' },
@@ -234,6 +258,42 @@ local optvals = {
   bufs = function()
     return vim.api.nvim_list_bufs()
   end,
+  lsp_clients = compl_lsp_clients,
+  lsp_client_ids = compl_lsp_client_ids,
+  lsp_client_names = compl_lsp_client_names,
+  lsp_methods = {
+    'callHierarchy/incomingCalls',
+    'callHierarchy/outgoingCalls',
+    'textDocument/codeAction',
+    'textDocument/completion',
+    'textDocument/declaration*',
+    'textDocument/definition',
+    'textDocument/diagnostic',
+    'textDocument/documentHighlight',
+    'textDocument/documentSymbol',
+    'textDocument/formatting',
+    'textDocument/hover',
+    'textDocument/implementation*',
+    'textDocument/inlayHint',
+    'textDocument/publishDiagnostics',
+    'textDocument/rangeFormatting',
+    'textDocument/references',
+    'textDocument/rename',
+    'textDocument/semanticTokens/full',
+    'textDocument/semanticTokens/full/delta',
+    'textDocument/signatureHelp',
+    'textDocument/typeDefinition*',
+    'window/logMessage',
+    'window/showMessage',
+    'window/showDocument',
+    'window/showMessageRequest',
+    'workspace/applyEdit',
+    'workspace/configuration',
+    'workspace/executeCommand',
+    'workspace/inlayHint/refresh',
+    'workspace/symbol',
+    'workspace/workspaceFolders',
+  },
 }
 
 ---@class subcommand_info_t : table
@@ -245,7 +305,50 @@ local optvals = {
 
 local subcommands = {
   lsp = {
-    ---LSP subcommands
+    ---@type subcommand_info_t
+    get_clients_by_id = {
+      completion = compl_lsp_clients,
+      arg_handler = function(args)
+        return tonumber(args[1]:match('^%d+'))
+      end,
+      fn_override = function(id)
+        vim.notify(vim.inspect(vim.lsp.get_client_by_id(id)))
+      end,
+    },
+    ---@type subcommand_info_t
+    get_clients = {
+      opts = {
+        'nameonly',
+        'filter',
+        ['filter.bufnr'] = optvals.bufs,
+        ['filter.id'] = optvals.lsp_client_ids,
+        ['filter.name'] = optvals.lsp_client_names,
+        ['filter.method'] = optvals.lsp_methods,
+      },
+      arg_handler = function(args)
+        return args.filter, args.nameonly
+      end,
+      fn_override = function(filter, nameonly)
+        local clients = vim.lsp.get_clients(filter)
+        if nameonly then
+          clients = vim.tbl_map(function(client)
+            return client.name
+          end, clients)
+        end
+        vim.notify(vim.inspect(clients))
+      end,
+    },
+    ---@type subcommand_info_t
+    stop_client = {
+      opts = {
+        ['client-id'] = optvals.lsp_clients,
+        ['force'] = optvals.bool,
+      },
+      arg_handler = function(args)
+        return args['client-id'], args['force']
+      end,
+    },
+    ---LSP buf subcommands
     ---@type table<string, subcommand_info_t>
     buf = {
       references = {
@@ -1081,7 +1184,8 @@ local function setup()
   setup_lsp_autoformat()
   setup_lsp_autostop()
   setup_diagnostic()
-  setup_commands('Lsp', subcommands.lsp.buf, vim.lsp.buf)
+  setup_commands('Lsp', subcommands.lsp, vim.lsp)
+  setup_commands('Lspbuf', subcommands.lsp.buf, vim.lsp.buf)
   setup_commands('Diagnostic', subcommands.diagnostic, vim.diagnostic)
 end
 
