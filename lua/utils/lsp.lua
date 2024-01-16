@@ -38,16 +38,14 @@ function M.start(cmd, root_patterns, config)
   end
 
   local fs_utils = require('utils.fs')
-  return vim.lsp.start(
-    vim.tbl_deep_extend('keep', config or {}, M.default_config, {
-      name = cmd[1],
-      cmd = cmd,
-      root_dir = fs_utils.proj_dir(
-        vim.api.nvim_buf_get_name(0),
-        vim.list_extend(root_patterns or {}, fs_utils.root_patterns)
-      ),
-    })
-  )
+  return vim.lsp.start(vim.tbl_deep_extend('keep', config or {}, {
+    name = cmd[1],
+    cmd = cmd,
+    root_dir = fs_utils.proj_dir(
+      vim.api.nvim_buf_get_name(0),
+      vim.list_extend(root_patterns or {}, fs_utils.root_patterns)
+    ),
+  }, M.default_config))
 end
 
 return M
