@@ -2,7 +2,7 @@
 
 -- vscode-neovim
 if vim.g.vscode then
-  vim.fn['vscode#setup']()
+  vim.fn['plugin#vscode#setup']()
   return
 end
 
