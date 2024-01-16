@@ -1,5 +1,11 @@
 -- Lazy-load rplugins and builtin plugins
 
+-- vscode-neovim
+if vim.g.vscode then
+  vim.fn['vscode#setup']()
+  return
+end
+
 -- expandtab
 vim.api.nvim_create_autocmd('InsertEnter', {
   once = true,
@@ -121,11 +127,6 @@ end)
 vim.keymap.set({ 'i', 'c' }, '<S-Tab>', function()
   require('plugin.tabout').jump(-1)
 end)
-
--- vscode-neovim
-if vim.g.vscode then
-  vim.fn['vscode#setup']()
-end
 
 -- load rplugins on FileType event
 
