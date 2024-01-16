@@ -32,7 +32,12 @@ function cmp_core.on_change(self, trigger_event)
   -- than 32ms (80 repeats/s keyboard), but when holding spaces/tabs the
   -- interval increases to 100ms, guess is is due ot some other plugins that
   -- triggers on spaces/tabs
-  if last_key == ' ' or last_key == '\t' then
+  -- Spaces/tabs are not useful in triggering completions in insert mode but can
+  -- be useful in command-line autocompletion, so ignore them only when not in
+  -- command-line mode
+  if
+    (last_key == ' ' or last_key == '\t') and vim.fn.mode():sub(1, 1) ~= 'c'
+  then
     return
   end
 
