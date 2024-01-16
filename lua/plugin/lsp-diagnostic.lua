@@ -304,8 +304,9 @@ local optvals = {
 ---@field completion function|nil
 
 local subcommands = {
+  ---LSP subcommands
+  ---@type table<string, subcommand_info_t>
   lsp = {
-    ---@type subcommand_info_t
     get_clients_by_id = {
       completion = compl_lsp_clients,
       arg_handler = function(args)
@@ -315,7 +316,6 @@ local subcommands = {
         vim.notify(vim.inspect(vim.lsp.get_client_by_id(id)))
       end,
     },
-    ---@type subcommand_info_t
     get_clients = {
       opts = {
         'nameonly',
@@ -338,7 +338,6 @@ local subcommands = {
         vim.notify(vim.inspect(clients))
       end,
     },
-    ---@type subcommand_info_t
     stop_client = {
       opts = {
         ['client-id'] = optvals.lsp_clients,
@@ -348,205 +347,201 @@ local subcommands = {
         return args['client-id'], args['force']
       end,
     },
-    ---LSP buf subcommands
-    ---@type table<string, subcommand_info_t>
-    buf = {
-      references = {
-        ---@param args lsp_command_parsed_arg_t
-        arg_handler = function(args)
-          return args.context, args.options
-        end,
-        opts = { 'context', 'options.on_list' },
+    references = {
+      ---@param args lsp_command_parsed_arg_t
+      arg_handler = function(args)
+        return args.context, args.options
+      end,
+      opts = { 'context', 'options.on_list' },
+    },
+    rename = {
+      ---@param args lsp_command_parsed_arg_t
+      arg_handler = function(args)
+        return args.new_name or args[1], args.options
+      end,
+      opts = {
+        'new_name',
+        'options.filter',
+        'options.name',
       },
-      rename = {
-        ---@param args lsp_command_parsed_arg_t
-        arg_handler = function(args)
-          return args.new_name or args[1], args.options
-        end,
-        opts = {
-          'new_name',
-          'options.filter',
-          'options.name',
-        },
+    },
+    workspace_symbol = {
+      ---@param args lsp_command_parsed_arg_t
+      arg_handler = function(args)
+        return args.query, args.options
+      end,
+      opts = { 'query', 'options.on_list' },
+    },
+    format = {
+      arg_handler = arg_handler_range,
+      opts = {
+        'formatting_options',
+        'formatting_options.tabSize',
+        ['formatting_options.insertSpaces'] = optvals.bool,
+        ['formatting_options.trimTrailingWhitespace'] = optvals.bool,
+        ['formatting_options.insertFinalNewline'] = optvals.bool,
+        ['formatting_options.trimFinalNewlines'] = optvals.bool,
+        'timeout_ms',
+        ['bufnr'] = optvals.bufs,
+        'filter',
+        ['async'] = optvals.bool,
+        'id',
+        'name',
+        'range',
       },
-      workspace_symbol = {
-        ---@param args lsp_command_parsed_arg_t
-        arg_handler = function(args)
-          return args.query, args.options
-        end,
-        opts = { 'query', 'options.on_list' },
+    },
+    auto_format = {
+      ---@param args lsp_command_parsed_arg_t
+      ---@param tbl table information passed to the command
+      ---@return lsp_command_parsed_arg_t args
+      ---@return table tbl
+      arg_handler = function(args, tbl)
+        args.format = arg_handler_range(args, tbl).format
+        return args, tbl
+      end,
+      params = {
+        'enable',
+        'disable',
+        'toggle',
+        'reset',
+        'status',
       },
-      format = {
-        arg_handler = arg_handler_range,
-        opts = {
-          'formatting_options',
-          'formatting_options.tabSize',
-          ['formatting_options.insertSpaces'] = optvals.bool,
-          ['formatting_options.trimTrailingWhitespace'] = optvals.bool,
-          ['formatting_options.insertFinalNewline'] = optvals.bool,
-          ['formatting_options.trimFinalNewlines'] = optvals.bool,
-          'timeout_ms',
-          ['bufnr'] = optvals.bufs,
-          'filter',
-          ['async'] = optvals.bool,
-          'id',
-          'name',
-          'range',
-        },
+      opts = {
+        'format.formatting_options',
+        'format.formatting_options.tabSize',
+        ['format.formatting_options.insertSpaces'] = optvals.bool,
+        ['format.formatting_options.trimTrailingWhitespace'] = optvals.bool,
+        ['formatting_options.insertFinalNewline'] = optvals.bool,
+        ['format.formatting_options.trimFinalNewlines'] = optvals.bool,
+        'format.timeout_ms',
+        ['format.bufnr'] = optvals.bufs,
+        'format.filter',
+        'format.async',
+        'format.id',
+        'format.name',
+        'format.range',
+        ['local'] = optvals.bool,
+        ['global'] = optvals.bool,
       },
-      auto_format = {
-        ---@param args lsp_command_parsed_arg_t
-        ---@param tbl table information passed to the command
-        ---@return lsp_command_parsed_arg_t args
-        ---@return table tbl
-        arg_handler = function(args, tbl)
-          args.format = arg_handler_range(args, tbl).format
-          return args, tbl
-        end,
-        params = {
-          'enable',
-          'disable',
-          'toggle',
-          'reset',
-          'status',
-        },
-        opts = {
-          'format.formatting_options',
-          'format.formatting_options.tabSize',
-          ['format.formatting_options.insertSpaces'] = optvals.bool,
-          ['format.formatting_options.trimTrailingWhitespace'] = optvals.bool,
-          ['formatting_options.insertFinalNewline'] = optvals.bool,
-          ['format.formatting_options.trimFinalNewlines'] = optvals.bool,
-          'format.timeout_ms',
-          ['format.bufnr'] = optvals.bufs,
-          'format.filter',
-          'format.async',
-          'format.id',
-          'format.name',
-          'format.range',
-          ['local'] = optvals.bool,
-          ['global'] = optvals.bool,
-        },
-        ---@param args lsp_command_parsed_arg_t
-        ---@param tbl table information passed to the command
-        fn_override = function(args, tbl)
-          local enabled = utils.classes.bufopt_t:new('lsp_autofmt_enabled') ---@type bufopt_t
-          local fmtopts = utils.classes.bufopt_t:new('lsp_autofmt_opts') ---@type bufopt_t
-          if tbl.bang or vim.tbl_contains(args, 'toggle') then
-            enabled:scope_action(args, 'toggle')
-          elseif tbl.fargs[1] == '&' or vim.tbl_contains(args, 'reset') then
-            enabled:scope_action(args, 'reset')
-            fmtopts:scope_action(args, 'reset')
-          elseif tbl.fargs[1] == '?' or vim.tbl_contains(args, 'status') then
-            enabled:scope_action(args, 'print')
-            fmtopts:scope_action(args, 'print')
-          elseif vim.tbl_contains(args, 'enable') then
-            enabled:scope_action(args, 'set', true)
-          elseif vim.tbl_contains(args, 'disable') then
-            enabled:scope_action(args, 'set', false)
-          end
-          if args.format then
-            fmtopts:scope_action(
-              args,
-              'set',
-              vim.tbl_deep_extend(
-                'force',
-                fmtopts:scope_action(args, 'get'),
-                args.format
+      ---@param args lsp_command_parsed_arg_t
+      ---@param tbl table information passed to the command
+      fn_override = function(args, tbl)
+        local enabled = utils.classes.bufopt_t:new('lsp_autofmt_enabled') ---@type bufopt_t
+        local fmtopts = utils.classes.bufopt_t:new('lsp_autofmt_opts') ---@type bufopt_t
+        if tbl.bang or vim.tbl_contains(args, 'toggle') then
+          enabled:scope_action(args, 'toggle')
+        elseif tbl.fargs[1] == '&' or vim.tbl_contains(args, 'reset') then
+          enabled:scope_action(args, 'reset')
+          fmtopts:scope_action(args, 'reset')
+        elseif tbl.fargs[1] == '?' or vim.tbl_contains(args, 'status') then
+          enabled:scope_action(args, 'print')
+          fmtopts:scope_action(args, 'print')
+        elseif vim.tbl_contains(args, 'enable') then
+          enabled:scope_action(args, 'set', true)
+        elseif vim.tbl_contains(args, 'disable') then
+          enabled:scope_action(args, 'set', false)
+        end
+        if args.format then
+          fmtopts:scope_action(
+            args,
+            'set',
+            vim.tbl_deep_extend(
+              'force',
+              fmtopts:scope_action(args, 'get'),
+              args.format
+            )
+          )
+        end
+      end,
+    },
+    code_action = {
+      opts = {
+        'context.diagnostics',
+        'context.only',
+        'context.triggerKind',
+        'filter',
+        ['apply'] = optvals.bool,
+        'range',
+      },
+    },
+    add_workspace_folder = {
+      arg_handler = arg_handler_item,
+      completion = function(arglead, _, _)
+        local basedir = arglead == '' and vim.fn.getcwd() or arglead
+        local incomplete = nil ---@type string|nil
+        if not vim.uv.fs_stat(basedir) then
+          basedir = vim.fn.fnamemodify(basedir, ':h')
+          incomplete = vim.fn.fnamemodify(arglead, ':t')
+        end
+        local subdirs = {}
+        for name, type in vim.fs.dir(basedir) do
+          if type == 'directory' and name ~= '.' and name ~= '..' then
+            table.insert(
+              subdirs,
+              vim.fn.fnamemodify(
+                vim.fn.resolve(vim.fs.joinpath(basedir, name)),
+                ':p:~:.'
               )
             )
           end
-        end,
-      },
-      code_action = {
-        opts = {
-          'context.diagnostics',
-          'context.only',
-          'context.triggerKind',
-          'filter',
-          ['apply'] = optvals.bool,
-          'range',
-        },
-      },
-      add_workspace_folder = {
-        arg_handler = arg_handler_item,
-        completion = function(arglead, _, _)
-          local basedir = arglead == '' and vim.fn.getcwd() or arglead
-          local incomplete = nil ---@type string|nil
-          if not vim.uv.fs_stat(basedir) then
-            basedir = vim.fn.fnamemodify(basedir, ':h')
-            incomplete = vim.fn.fnamemodify(arglead, ':t')
-          end
-          local subdirs = {}
-          for name, type in vim.fs.dir(basedir) do
-            if type == 'directory' and name ~= '.' and name ~= '..' then
-              table.insert(
-                subdirs,
-                vim.fn.fnamemodify(
-                  vim.fn.resolve(vim.fs.joinpath(basedir, name)),
-                  ':p:~:.'
-                )
-              )
-            end
-          end
-          if incomplete then
-            return vim.tbl_filter(function(s)
-              return s:find(incomplete, 1, true)
-            end, subdirs)
-          end
-          return subdirs
-        end,
-      },
-      remove_workspace_folder = {
-        arg_handler = arg_handler_item,
-        completion = function(_, _, _)
-          return vim.tbl_map(function(path)
-            local short = vim.fn.fnamemodify(path, ':p:~:.')
-            return short ~= '' and short or './'
-          end, vim.lsp.buf.list_workspace_folders())
-        end,
-      },
-      execute_command = { arg_handler = arg_handler_item },
-      type_definition = {
-        opts = {
-          'reuse_win',
-          ['on_list'] = optvals.bool,
-        },
-      },
-      declaration = {
-        opts = {
-          'reuse_win',
-          ['on_list'] = optvals.bool,
-        },
-      },
-      definition = {
-        opts = {
-          'reuse_win',
-          ['on_list'] = optvals.bool,
-        },
-      },
-      document_symbol = {
-        opts = {
-          ['on_list'] = optvals.bool,
-        },
-      },
-      implementation = {
-        opts = {
-          ['on_list'] = optvals.bool,
-        },
-      },
-      hover = {},
-      document_highlight = {},
-      clear_references = {},
-      list_workspace_folders = {
-        fn_override = function()
-          vim.notify(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-        end,
-      },
-      incoming_calls = {},
-      outgoing_calls = {},
-      signature_help = {},
+        end
+        if incomplete then
+          return vim.tbl_filter(function(s)
+            return s:find(incomplete, 1, true)
+          end, subdirs)
+        end
+        return subdirs
+      end,
     },
+    remove_workspace_folder = {
+      arg_handler = arg_handler_item,
+      completion = function(_, _, _)
+        return vim.tbl_map(function(path)
+          local short = vim.fn.fnamemodify(path, ':p:~:.')
+          return short ~= '' and short or './'
+        end, vim.lsp.buf.list_workspace_folders())
+      end,
+    },
+    execute_command = { arg_handler = arg_handler_item },
+    type_definition = {
+      opts = {
+        'reuse_win',
+        ['on_list'] = optvals.bool,
+      },
+    },
+    declaration = {
+      opts = {
+        'reuse_win',
+        ['on_list'] = optvals.bool,
+      },
+    },
+    definition = {
+      opts = {
+        'reuse_win',
+        ['on_list'] = optvals.bool,
+      },
+    },
+    document_symbol = {
+      opts = {
+        ['on_list'] = optvals.bool,
+      },
+    },
+    implementation = {
+      opts = {
+        ['on_list'] = optvals.bool,
+      },
+    },
+    hover = {},
+    document_highlight = {},
+    clear_references = {},
+    list_workspace_folders = {
+      fn_override = function()
+        vim.notify(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+      end,
+    },
+    incoming_calls = {},
+    outgoing_calls = {},
+    signature_help = {},
   },
 
   ---Diagnostic subcommands
@@ -968,7 +963,7 @@ local subcommands = {
 
 ---Get meta command function
 ---@param subcommand_info_list subcommand_info_t[] subcommands information
----@param fn_scope table scope of corresponding functions for subcommands
+---@param fn_scope table|fun(name: string): function scope of corresponding functions for subcommands
 ---@param fn_name_alt string|nil name of the function to call given no subcommand
 ---@return function meta_command_fn
 local function command_meta(subcommand_info_list, fn_scope, fn_name_alt)
@@ -981,8 +976,9 @@ local function command_meta(subcommand_info_list, fn_scope, fn_name_alt)
     end
     local fn = subcommand_info_list[fn_name]
         and subcommand_info_list[fn_name].fn_override
-      or fn_scope[fn_name]
-    if not fn then
+      or type(fn_scope) == 'table' and fn_scope[fn_name]
+      or type(fn_scope) == 'function' and fn_scope(fn_name)
+    if type(fn) ~= 'function' then
       return
     end
     local arg_handler = subcommand_info_list[fn_name].arg_handler
@@ -1006,9 +1002,18 @@ local function command_complete(meta, subcommand_info_list)
   return function(arglead, cmdline, cursorpos)
     -- If subcommand is not specified, complete with subcommands
     if cmdline:sub(1, cursorpos):match('^%A*' .. meta .. '%s+%S*$') then
-      return vim.tbl_filter(function(cmd)
-        return cmd:find(arglead, 1, true) == 1
-      end, vim.tbl_keys(subcommand_info_list))
+      return vim.tbl_filter(
+        function(cmd)
+          return cmd:find(arglead, 1, true) == 1
+        end,
+        vim.tbl_filter(function(key)
+          local info = subcommand_info_list[key] ---@type subcommand_info_t|table|nil
+          return info
+              and (info.arg_handler or info.params or info.opts or info.fn_override or info.completion)
+              and true
+            or false
+        end, vim.tbl_keys(subcommand_info_list))
+      )
     end
     -- If subcommand is specified, complete with its options or params
     local subcommand = utils.string.camel_to_snake(
@@ -1040,7 +1045,7 @@ end
 ---Setup commands
 ---@param meta string meta command name
 ---@param subcommand_info_list table<string, subcommand_info_t> subcommands information
----@param fn_scope table scope of corresponding functions for subcommands
+---@param fn_scope table|fun(name: string): function scope of corresponding functions for subcommands
 ---@return nil
 local function setup_commands(meta, subcommand_info_list, fn_scope)
   -- metacommand -> MetaCommand abbreviation
@@ -1184,8 +1189,9 @@ local function setup()
   setup_lsp_autoformat()
   setup_lsp_autostop()
   setup_diagnostic()
-  setup_commands('Lsp', subcommands.lsp, vim.lsp)
-  setup_commands('Lspbuf', subcommands.lsp.buf, vim.lsp.buf)
+  setup_commands('Lsp', subcommands.lsp, function(name)
+    return vim.lsp[name] or vim.lsp.buf[name]
+  end)
   setup_commands('Diagnostic', subcommands.diagnostic, vim.diagnostic)
 end
 
