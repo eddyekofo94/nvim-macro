@@ -118,20 +118,21 @@ end
 
 ---@return string
 function statusline.word_count()
-  if vim.b.wc_str and vim.b.wc_changedtick == vim.b.changedtick then
-    return vim.b.wc_str
+  local words, wordcount = 0, nil
+  if vim.b.wc_words and vim.b.wc_changedtick == vim.b.changedtick then
+    words = vim.b.wc_words
+  else
+    wordcount = vim.fn.wordcount()
+    words = wordcount.words
+    vim.b.wc_words = words
+    vim.b.wc_changedtick = vim.b.changedtick
   end
-  local wordcount = vim.fn.wordcount()
-  local num_words = wordcount.words
-  local num_vis_words = wordcount.visual_words
-  local wc_str = num_words == 0 and ''
-    or (num_vis_words and num_vis_words .. '/' or '')
-      .. num_words
-      .. ' word'
-      .. (num_words > 1 and 's' or '')
-  vim.b.wc_str = wc_str
-  vim.b.wc_changedtick = vim.b.changedtick
-  return wc_str
+  local vwords = vim.fn.mode():find('^[vsVS\x16\x13]')
+    and (wordcount or vim.fn.wordcount()).visual_words
+  return words == 0 and ''
+    or (vwords and vwords > 0 and vwords .. '/' or '')
+      .. words
+      .. (words > 1 and ' words' or ' word')
 end
 
 ---Text filetypes
