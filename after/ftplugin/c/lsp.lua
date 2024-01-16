@@ -1,4 +1,4 @@
-require('utils.lsp').launch(0, { 'clangd' }, {
+require('utils.lsp').start({ 'clangd' }, {
   '.clangd',
   '.clang-tidy',
   '.clang-format',

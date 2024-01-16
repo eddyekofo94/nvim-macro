@@ -27,36 +27,27 @@ M.default_config = {}
 ---@field flags? table
 ---@field root_dir? string
 
----Start and attach LSP client for buffer `buf`
----@param buf number
+---Start and attach LSP client for the current buffer
 ---@param cmd string[]
 ---@param root_patterns string[]?
 ---@param config lsp_client_config_t?
 ---@return integer? client_id id of attached client or nil if failed
-function M.launch(buf, cmd, root_patterns, config)
-  if
-    not cmd[1]
-    or vim.fn.executable(cmd[1]) == 0
-    or not vim.api.nvim_buf_is_valid(buf)
-  then
+function M.start(cmd, root_patterns, config)
+  if not cmd[1] or vim.fn.executable(cmd[1]) == 0 then
     return
   end
 
   local fs_utils = require('utils.fs')
-  local client_id =
-    vim.lsp.start(vim.tbl_deep_extend('keep', config or {}, M.default_config, {
+  return vim.lsp.start(
+    vim.tbl_deep_extend('keep', config or {}, M.default_config, {
       name = cmd[1],
       cmd = cmd,
       root_dir = fs_utils.proj_dir(
-        vim.api.nvim_buf_get_name(buf),
+        vim.api.nvim_buf_get_name(0),
         vim.list_extend(root_patterns or {}, fs_utils.root_patterns)
       ),
-    }))
-
-  if client_id then
-    vim.lsp.buf_attach_client(buf, client_id)
-    return client_id
-  end
+    })
+  )
 end
 
 return M

@@ -1,7 +1,7 @@
 local lsp = require('utils.lsp')
 
 local efm = vim.fn.executable('shfmt') == 1
-  and lsp.launch(0, { 'efm-langserver' }, {}, {
+  and lsp.start({ 'efm-langserver' }, {}, {
     name = 'efm-formatter-shfmt',
     init_options = { documentFormatting = true },
     settings = {
@@ -16,7 +16,7 @@ local efm = vim.fn.executable('shfmt') == 1
     },
   })
 
-lsp.launch(0, { 'bash-language-server', 'start' }, {}, {
+lsp.start({ 'bash-language-server', 'start' }, {}, {
   on_attach = efm and function(client)
     client.server_capabilities.documentFormattingProvider = false
   end or nil,

@@ -1,1 +1,1 @@
-require('utils.lsp').launch(0, { 'marksman' }, { '.marksman.toml' })
+require('utils.lsp').start({ 'marksman' }, { '.marksman.toml' })

@@ -10,7 +10,7 @@ local root_patterns = {
 
 -- Use efm to attach black formatter as a language server
 local efm = vim.fn.executable('black') == 1
-  and lsp.launch(0, { 'efm-langserver' }, root_patterns, {
+  and lsp.start({ 'efm-langserver' }, root_patterns, {
     name = 'efm-formatter-black',
     init_options = { documentFormatting = true },
     settings = {
@@ -64,7 +64,7 @@ local server_configs = {
 }
 
 for _, server_config in ipairs(server_configs) do
-  if lsp.launch(0, unpack(server_config)) then
+  if lsp.start(unpack(server_config)) then
     return
   end
 end

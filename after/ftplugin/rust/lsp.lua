@@ -1,4 +1,4 @@
-require('utils.lsp').launch(0, { 'rust-analyzer' }, { 'Cargo.toml' }, {
+require('utils.lsp').start({ 'rust-analyzer' }, { 'Cargo.toml' }, {
   settings = {
     ['rust-analyzer'] = {
       imports = {

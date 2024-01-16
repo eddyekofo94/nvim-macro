@@ -1,4 +1,4 @@
-require('utils.lsp').launch(0, { 'vim-language-server', '--stdio' }, {}, {
+require('utils.lsp').start({ 'vim-language-server', '--stdio' }, {}, {
   init_options = {
     isNeovim = true,
     iskeyword = vim.bo.iskeyword,
