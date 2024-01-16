@@ -117,7 +117,7 @@ function statusline.ft()
 end
 
 ---@return string
-function statusline.word_count()
+function statusline.wordcount()
   local words, wordcount = 0, nil
   if vim.b.wc_words and vim.b.wc_changedtick == vim.b.changedtick then
     words = vim.b.wc_words
@@ -159,7 +159,7 @@ function statusline.info()
   end
   add_section(statusline.ft())
   if ft_text[vim.bo.ft] and not vim.b.bigfile then
-    add_section(statusline.word_count())
+    add_section(statusline.wordcount())
   end
   add_section(statusline.branch())
   add_section(statusline.gitdiff())
