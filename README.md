@@ -111,7 +111,10 @@ favorite package manager:
 
 - C/C++: [Clang](https://clang.llvm.org/)
 - Lua: [LuaLS](https://github.com/LuaLS/lua-language-server)
-- Python: [Jedi Language Server](https://github.com/pappasam/jedi-language-server)
+- Python: one of
+    - [Jedi Language Server](https://github.com/pappasam/jedi-language-server)
+    - [Python LSP Server](https://github.com/python-lsp/python-lsp-server)
+    - [Pyright](https://github.com/microsoft/pyright)
 - Rust: [Rust Analyzer](https://rust-analyzer.github.io/)
 - LaTeX: [TexLab](https://github.com/latex-lsp/texlab)
 - VimL: [VimLS](https://github.com/iamcco/vim-language-server)
@@ -189,7 +192,7 @@ Install the following debug adapters manually:
 1. Make sure you have required dependencies installed.
 2. Clone this repo to your config directory
 
-    ```
+    ```sh
     git clone https://github.com/Bekaboo/nvim ~/.config/nvim-macro
     ```
 
@@ -422,7 +425,7 @@ are defined under [lua/snippets](https://github.com/Bekaboo/nvim/tree/master/lua
 
 VSCode integration takes advantages of the modular design, allowing to use
 a different set of modules when Neovim is launched by VSCode, relevant code is
-in [plugin/vscode-neovim.vim](https://github.com/Bekaboo/nvim/blob/master/autoload/plugin/vscode.vim) and [lua/core/packages.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/packages.lua).
+in [autoload/plugin/vscode.vim](https://github.com/Bekaboo/nvim/blob/master/autoload/plugin/vscode.vim) and [lua/core/packages.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/packages.lua).
 
 To make VSCode integration work, please install [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) in VSCode
 and configure it correctly.
