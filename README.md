@@ -422,7 +422,7 @@ are defined under [lua/snippets](https://github.com/Bekaboo/nvim/tree/master/lua
 
 VSCode integration takes advantages of the modular design, allowing to use
 a different set of modules when Neovim is launched by VSCode, relevant code is
-in [plugin/vscode-neovim.vim](https://github.com/Bekaboo/nvim/blob/master/plugin/vscode-neovim.vim) and [lua/core/packages.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/packages.lua).
+in [plugin/vscode-neovim.vim](https://github.com/Bekaboo/nvim/blob/master/autoload/plugin/vscode.vim) and [lua/core/packages.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/packages.lua).
 
 To make VSCode integration work, please install [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) in VSCode
 and configure it correctly.
@@ -564,7 +564,7 @@ Total # of plugins: 50 (package manager included).
 - [tmux](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/tmux.lua)
     - Integration with tmux, provides unified keymaps for navigation, resizing,
       and many other window operations
-- [vscode](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/vscode.vim)
+- [vscode](https://github.com/Bekaboo/nvim/tree/master/autoload/plugin/vscode.vim)
     - Integration with [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim)
 - [winbar](https://github.com/Bekaboo/nvim/blob/master/lua/plugin/winbar.lua)
     - A winbar with drop-down menus and multiple backends
