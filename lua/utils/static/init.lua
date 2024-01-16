@@ -35,77 +35,20 @@ function langs_mt:map(field)
 end
 
 M.langs = setmetatable({
-  sh = {
-    ft = 'sh',
-    lsp_server = { 'bashls', 'efm' },
-    dap = 'bashdb',
-  },
-  c = {
-    ts = 'c',
-    ft = 'c',
-    lsp_server = 'clangd',
-    dap = 'codelldb',
-  },
-  cpp = {
-    ts = 'cpp',
-    ft = 'cpp',
-    lsp_server = 'clangd',
-    dap = 'codelldb',
-  },
-  cuda = {
-    ts = 'cuda',
-    ft = 'cuda',
-    lsp_server = 'clangd',
-  },
-  fish = {
-    ts = 'fish',
-    ft = 'fish',
-    lsp_server = 'efm',
-  },
-  help = {
-    ts = 'vimdoc',
-    ft = 'help',
-  },
-  lua = {
-    ts = 'lua',
-    ft = 'lua',
-    lsp_server = { 'lua_ls', 'efm' },
-  },
-  rust = {
-    ts = 'rust',
-    ft = 'rust',
-    lsp_server = 'rust_analyzer',
-  },
-  make = {
-    ts = 'make',
-    ft = 'make',
-  },
-  markdown = {
-    ts = {
-      'markdown_inline',
-      'markdown',
-    },
-    lsp_server = 'marksman',
-  },
-  python = {
-    ts = 'python',
-    ft = 'python',
-    lsp_server = { 'jedi_language_server', 'efm' },
-    dap = 'debugpy',
-  },
-  vim = {
-    ts = 'vim',
-    ft = 'vim',
-    lsp_server = 'vimls',
-  },
-  tex = {
-    ft = 'tex',
-    ts = 'latex',
-    lsp_server = 'texlab',
-  },
-  query = { -- Fix error `no parser for 'query' language` on `:InspectTree`
-    ts = 'query',
-  },
+  c        = { ts = 'c', ft = 'c', dap = 'codelldb' },
+  cpp      = { ts = 'cpp', ft = 'cpp', dap = 'codelldb' },
+  cuda     = { ts = 'cuda', ft = 'cuda' },
+  fish     = { ts = 'fish', ft = 'fish' },
+  help     = { ts = 'vimdoc', ft = 'help' },
+  lua      = { ts = 'lua', ft = 'lua' },
+  make     = { ts = 'make', ft = 'make' },
+  markdown = { ts = { 'markdown_inline', 'markdown' } },
+  python   = { ts = 'python', ft = 'python', dap = 'debugpy' },
+  query    = { ts = 'query' },
+  rust     = { ts = 'rust', ft = 'rust' },
+  sh       = { ft = 'sh', dap = 'bashdb' },
+  tex      = { ft = 'tex', ts = 'latex' },
+  vim      = { ts = 'vim', ft = 'vim' },
 }, langs_mt)
 
 local icons_mt = {}

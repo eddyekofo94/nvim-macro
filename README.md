@@ -98,10 +98,10 @@ in [lua/utils/static/init.lua](https://github.com/Bekaboo/nvim/blob/master/lua/u
 
 ### LSP
 
-For LSP support, install the following language servers manually use your
+For LSP support, install the following language servers manually using your
 favorite package manager:
 
-- Bash: install [BashLS](https://github.com/bash-lsp/bash-language-server)
+- Bash: [BashLS](https://github.com/bash-lsp/bash-language-server)
 
     Example for ArchLinux users:
 
@@ -109,20 +109,26 @@ favorite package manager:
     sudo pacman -S bash-language-server
     ```
 
-- C/C++: install [Clang](https://clang.llvm.org/)
-- Lua: install [LuaLS](https://github.com/LuaLS/lua-language-server)
-- Python: install [Jedi Language Server](https://github.com/pappasam/jedi-language-server)
-- Rust: install [Rust Analyzer](https://rust-analyzer.github.io/)
-- LaTeX: install [TexLab](https://github.com/latex-lsp/texlab)
-- VimL: install [VimLS](https://github.com/iamcco/vim-language-server)
-- Markdown: install [Marksman](https://github.com/artempyanykh/marksman)
-- \*General-purpose LSP: install [EFM Language Server](https://github.com/mattn/efm-langserver)
-    - Already configured for [Black](https://github.com/psf/black), [Shfmt](https://github.com/mvdan/sh), and [StyLua](https://github.com/JohnnyMorganz/StyLua)
-    - Find configuration in [lua/configs/lsp-server-configs/\_servers/efm.lua](https://github.com/Bekaboo/nvim/tree/master/lua/configs/lsp-server-configs/_servers/efm.lua)
+- C/C++: [Clang](https://clang.llvm.org/)
+- Lua: [LuaLS](https://github.com/LuaLS/lua-language-server)
+- Python: [Jedi Language Server](https://github.com/pappasam/jedi-language-server)
+- Rust: [Rust Analyzer](https://rust-analyzer.github.io/)
+- LaTeX: [TexLab](https://github.com/latex-lsp/texlab)
+- VimL: [VimLS](https://github.com/iamcco/vim-language-server)
+- Markdown: [Marksman](https://github.com/artempyanykh/marksman)
+- General-purpose language server: [EFM Language Server](https://github.com/mattn/efm-langserver)
+    - Already configured for [Black](https://github.com/psf/black), [Shfmt](https://github.com/mvdan/sh), [Fish-indent](https://fishshell.com/docs/current/cmds/fish_indent.html), and [StyLua](https://github.com/JohnnyMorganz/StyLua)
 
-To add support for other languages, install corresponding LS manually and
-append the language and its language server to `M.langs` in [lua/utils/static/init.lua](https://github.com/Bekaboo/nvim/blob/master/lua/utils/static/init.lua)
-so that [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) will pick them up.
+To add support for other languages, install corresponding language server
+manually then add `lsp.lua` file under [after/ftplugin](https://github.com/Bekaboo/nvim/tree/master/after/ftplugin) to automatically lanuch
+corresponding language servers for differnt filetypes.
+
+Some examples for `lsp.lua` files:
+
+- [after/ftplugin/lua/lsp.lua](https://github.com/Bekaboo/nvim/blob/master/after/ftplugin/lua/lsp.lua)
+- [after/ftplugin/python/lsp.lua](https://github.com/Bekaboo/nvim/blob/master/after/ftplugin/python/lsp.lua)
+- [after/ftplugin/rust/lsp.lua](https://github.com/Bekaboo/nvim/blob/master/after/ftplugin/rust/lsp.lua)
+- [after/ftplugin/sh/lsp.lua](https://github.com/Bekaboo/nvim/blob/master/after/ftplugin/sh/lsp.lua)
 
 ### DAP
 
@@ -400,7 +406,7 @@ See [lua/core/autocmds.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core
 
 ### LSP Server Configurations
 
-See [lua/configs/lsp-server-configs](https://github.com/Bekaboo/nvim/tree/master/lua/configs/lsp-server-configs) and [lua/configs/nvim-lspconfig.lua](https://github.com/Bekaboo/nvim/tree/master/lua/configs/nvim-lspconfig.lua).
+See [lua/utils/lsp.lua](https://github.com/Bekaboo/nvim/tree/master/lua/utils/lsp.lua) and `lsp.lua` files under [after/ftplugin](https://github.com/Bekaboo/nvim/tree/master/after/ftplugin).
 
 ### DAP Configurations
 
@@ -466,7 +472,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 51 (package manager included).
+Total # of plugins: 50 (package manager included).
 
 - **Lib**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -486,7 +492,6 @@ Total # of plugins: 51 (package manager included).
     - [copilot.lua](https://github.com/zbirenbaum/copilot.lua)
     - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
 - **LSP**
-    - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
     - [clangd_extensions.nvim](https://github.com/p00f/clangd_extensions.nvim)
 - **Markup**
     - [vimtex](https://github.com/lervag/vimtex)
