@@ -35,20 +35,20 @@ function langs_mt:map(field)
 end
 
 M.langs = setmetatable({
-  c        = { ts = 'c', ft = 'c', dap = 'codelldb' },
-  cpp      = { ts = 'cpp', ft = 'cpp', dap = 'codelldb' },
-  cuda     = { ts = 'cuda', ft = 'cuda' },
-  fish     = { ts = 'fish', ft = 'fish' },
-  help     = { ts = 'vimdoc', ft = 'help' },
-  lua      = { ts = 'lua', ft = 'lua' },
-  make     = { ts = 'make', ft = 'make' },
+  c = { ts = 'c', ft = 'c', dap = 'codelldb' },
+  cpp = { ts = 'cpp', ft = 'cpp', dap = 'codelldb' },
+  cuda = { ts = 'cuda', ft = 'cuda' },
+  fish = { ts = 'fish', ft = 'fish' },
+  help = { ts = 'vimdoc', ft = 'help' },
+  lua = { ts = 'lua', ft = 'lua' },
+  make = { ts = 'make', ft = 'make' },
   markdown = { ts = { 'markdown_inline', 'markdown' } },
-  python   = { ts = 'python', ft = 'python', dap = 'debugpy' },
-  query    = { ts = 'query' },
-  rust     = { ts = 'rust', ft = 'rust' },
-  sh       = { ft = 'sh', dap = 'bashdb' },
-  tex      = { ft = 'tex', ts = 'latex' },
-  vim      = { ts = 'vim', ft = 'vim' },
+  python = { ts = 'python', ft = 'python', dap = 'debugpy' },
+  query = { ts = 'query' },
+  rust = { ts = 'rust', ft = 'rust' },
+  sh = { ft = 'sh', dap = 'bashdb' },
+  tex = { ft = 'tex', ts = 'latex' },
+  vim = { ts = 'vim', ft = 'vim' },
 }, langs_mt)
 
 local icons_mt = {}

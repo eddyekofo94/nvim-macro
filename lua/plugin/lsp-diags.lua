@@ -592,7 +592,9 @@ local subcommands = {
         end, vim.lsp.buf.list_workspace_folders())
       end,
     },
-    execute_command = { arg_handler = subcommand_arg_handler.item },
+    execute_command = {
+      arg_handler = subcommand_arg_handler.item,
+    },
     type_definition = {
       opts = {
         'reuse_win',
