@@ -222,8 +222,11 @@ function winbar_symbol_t:cat(plain)
     self.cache.plain_str = self.icon .. self.name
     return self.cache.plain_str
   end
-  local icon_highlighted = utils.stl.hl(self.icon, self.icon_hl)
-  local name_highlighted = utils.stl.hl(self.name, self.name_hl)
+  -- Escape `%` characters to prevent unintended statusline evaluation
+  local icon_escaped = self.icon:gsub('%%', '%%%%')
+  local name_escaped = self.name:gsub('%%', '%%%%')
+  local icon_highlighted = utils.stl.hl(icon_escaped, self.icon_hl)
+  local name_highlighted = utils.stl.hl(name_escaped, self.name_hl)
   self.cache.decorated_str = self.on_click
       and self.bar_idx
       and utils.stl.make_clickable(
