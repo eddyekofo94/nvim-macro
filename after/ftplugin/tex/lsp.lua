@@ -1,4 +1,6 @@
-require('utils.lsp').start({ 'texlab' }, { '.latexmkrc' }, {
+require('utils.lsp').start({
+  cmd = { 'texlab' },
+  root_patterns = { '.latexmkrc' },
   settings = {
     texlab = {
       rootDirectory = nil,

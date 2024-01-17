@@ -1,5 +1,6 @@
 if vim.fn.executable('fish_indent') == 1 then
-  require('utils.lsp').start({ 'efm-langserver' }, {}, {
+  require('utils.lsp').start({
+    cmd = { 'efm-langserver' },
     name = 'efm-formatter-fish_indent',
     init_options = { documentFormatting = true },
     settings = {

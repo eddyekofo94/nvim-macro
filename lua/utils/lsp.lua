@@ -1,10 +1,11 @@
 local M = {}
 
----@type lsp.ClientConfig
+---@type lsp_client_config_t
 ---@diagnostic disable-next-line: missing-fields
 M.default_config = {}
 
----@class lsp_client_config_t: lsp.ClientConfig
+---@class lsp.ClientConfig: lsp_client_config_t
+---@class lsp_client_config_t
 ---@field cmd? (string[]|fun(dispatchers: table):table)
 ---@field cmd_cwd? string
 ---@field cmd_env? (table)
@@ -26,26 +27,93 @@ M.default_config = {}
 ---@field trace? 'off'|'messages'|'verbose'|nil
 ---@field flags? table
 ---@field root_dir? string
+---@field root_patterns? string[]
 
----Start and attach LSP client for the current buffer
----@param cmd string[]
----@param root_patterns string[]?
----@param config lsp_client_config_t?
+---Wrapper of `vim.lsp.start()`, starts and attaches LSP client for
+---the current buffer
+---@param config lsp_client_config_t
+---@param opts lsp.StartOpts?
 ---@return integer? client_id id of attached client or nil if failed
-function M.start(cmd, root_patterns, config)
-  if not cmd[1] or vim.fn.executable(cmd[1]) == 0 then
+function M.start(config, opts)
+  local cmd_type = type(config.cmd)
+  if
+    cmd_type ~= 'table' and cmd_type ~= 'function'
+    or cmd_type == 'table'
+      and (not config.cmd[1] or vim.fn.executable(config.cmd[1]) == 0)
+  then
     return
   end
 
   local fs_utils = require('utils.fs')
-  return vim.lsp.start(vim.tbl_deep_extend('keep', config or {}, {
-    name = cmd[1],
-    cmd = cmd,
+  config = vim.tbl_deep_extend('keep', config or {}, {
+    name = cmd_type == 'table' and config.cmd[1] or nil,
     root_dir = fs_utils.proj_dir(
       vim.api.nvim_buf_get_name(0),
-      vim.list_extend(root_patterns or {}, fs_utils.root_patterns)
+      vim.list_extend(config.root_patterns or {}, fs_utils.root_patterns)
     ),
-  }, M.default_config))
+  }, M.default_config)
+
+  local id = vim.lsp.start(config, opts)
+  return id
+end
+
+---@class lsp_soft_stop_opts_t
+---@field retry integer?
+---@field interval integer?
+---@field on_close fun(client: lsp.Client)
+
+---Soft stop LSP client with retries
+---@param client_or_id integer|lsp.Client
+---@param opts lsp_soft_stop_opts_t?
+function M.soft_stop(client_or_id, opts)
+  local client = type(client_or_id) == 'number'
+      and vim.lsp.get_client_by_id(client_or_id)
+    or client_or_id --[[@as lsp.Client]]
+  if not client then
+    return
+  end
+  opts = opts or {}
+  opts.retry = opts.retry or 4
+  opts.interval = opts.interval or 500
+  opts.on_close = opts.on_close or function() end
+
+  if opts.retry <= 0 then
+    client.stop(true)
+    opts.on_close(client)
+    return
+  end
+  client.stop()
+  ---@diagnostic disable-next-line: invisible
+  if client.is_stopped() then
+    opts.on_close(client)
+    return
+  end
+  vim.defer_fn(function()
+    opts.retry = opts.retry - 1
+    M.soft_stop(client, opts)
+  end, opts.interval)
+end
+
+---Restart and reattach LSP client
+---@param client_or_id integer|lsp.Client
+function M.restart(client_or_id)
+  local client = type(client_or_id) == 'number'
+      and vim.lsp.get_client_by_id(client_or_id)
+    or client_or_id --[[@as lsp.Client]]
+  if not client then
+    return
+  end
+  local config = client.config
+  local attached_buffers = client.attached_buffers
+  M.soft_stop(client, {
+    on_close = function()
+      for buf, _ in pairs(attached_buffers) do
+        vim.api.nvim_buf_call(buf, function()
+          M.start(config)
+        end)
+      end
+    end,
+  })
 end
 
 return M

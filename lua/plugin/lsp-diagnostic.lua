@@ -227,6 +227,20 @@ local subcommand_arg_handler = {
       return type(item) == 'string' and vim.uv.fs_realpath(item) or item
     end
   end,
+  ---Convert the args of the form '<id_1> (<name_1>) <id_2> (<name_2) ...' to
+  ---list of client ids
+  ---@param args lsp_command_parsed_arg_t
+  ---@return integer[]
+  lsp_client_ids = function(args)
+    local ids = {}
+    for _, arg in ipairs(args) do
+      local id = tonumber(arg:match('^%d+'))
+      if id then
+        table.insert(ids, id)
+      end
+    end
+    return ids
+  end,
 }
 
 ---@type table<string, subcommand_completion_t>
@@ -236,21 +250,30 @@ local subcommand_completion = {
   end,
   ---Get completion for LSP clients
   ---@return string[]
-  lsp_clients = function()
+  lsp_clients = function(arglead)
+    if arglead ~= '' then
+      return {}
+    end
     return vim.tbl_map(function(client)
       return string.format('%d (%s)', client.id, client.name)
     end, vim.lsp.get_clients())
   end,
   ---Get completion for LSP client ids
   ---@return integer[]
-  lsp_client_ids = function()
+  lsp_client_ids = function(arglead)
+    if arglead ~= '' then
+      return {}
+    end
     return vim.tbl_map(function(client)
       return client.id
     end, vim.lsp.get_clients())
   end,
   ---Get completion for LSP client names
   ---@return integer[]
-  lsp_client_names = function()
+  lsp_client_names = function(arglead)
+    if arglead ~= '' then
+      return {}
+    end
     return vim.tbl_map(function(client)
       return client.name
     end, vim.lsp.get_clients())
@@ -317,6 +340,51 @@ local subcommands = {
   ---LSP subcommands
   ---@type table<string, subcommand_info_t>
   lsp = {
+    info = {
+      opts = {
+        'filter',
+        ['filter.bufnr'] = subcommand_opt_vals.bufs,
+        ['filter.id'] = subcommand_opt_vals.lsp_client_ids,
+        ['filter.name'] = subcommand_opt_vals.lsp_client_names,
+        ['filter.method'] = subcommand_opt_vals.lsp_methods,
+      },
+      arg_handler = function(args)
+        return args.filter
+      end,
+      fn_override = function(filter)
+        local clients = vim.lsp.get_clients(filter)
+        for _, client in ipairs(clients) do
+          vim.print({
+            id = client.id,
+            name = client.name,
+            root_dir = client.config.root_dir,
+            attached_buffers = vim.tbl_keys(client.attached_buffers),
+          })
+        end
+      end,
+    },
+    restart = {
+      completion = subcommand_completion.lsp_clients,
+      arg_handler = subcommand_arg_handler.lsp_client_ids,
+      fn_override = function(ids)
+        -- Restart all clients attached to current buffer if no ids are given
+        local clients = not vim.tbl_isempty(ids)
+            and vim.tbl_map(function(id)
+              return vim.lsp.get_client_by_id(id)
+            end, ids)
+          or vim.lsp.get_clients({ bufnr = 0 })
+        for _, client in ipairs(clients) do
+          utils.lsp.restart(client)
+          vim.notify(
+            string.format(
+              '[LSP] restarted client %d (%s)',
+              client.id,
+              client.name
+            )
+          )
+        end
+      end,
+    },
     get_clients_by_id = {
       completion = subcommand_completion.lsp_clients,
       arg_handler = function(args)
@@ -344,36 +412,29 @@ local subcommands = {
         end
       end,
     },
-    info = {
-      opts = {
-        'filter',
-        ['filter.bufnr'] = subcommand_opt_vals.bufs,
-        ['filter.id'] = subcommand_opt_vals.lsp_client_ids,
-        ['filter.name'] = subcommand_opt_vals.lsp_client_names,
-        ['filter.method'] = subcommand_opt_vals.lsp_methods,
-      },
-      arg_handler = function(args)
-        return args.filter
-      end,
-      fn_override = function(filter)
-        local clients = vim.lsp.get_clients(filter)
+    stop = {
+      completion = subcommand_completion.lsp_clients,
+      arg_handler = subcommand_arg_handler.lsp_client_ids,
+      fn_override = function(ids)
+        -- Stop all clients attached to current buffer if no ids are given
+        local clients = not vim.tbl_isempty(ids)
+            and vim.tbl_map(function(id)
+              return vim.lsp.get_client_by_id(id)
+            end, ids)
+          or vim.lsp.get_clients({ bufnr = 0 })
         for _, client in ipairs(clients) do
-          vim.print({
-            id = client.id,
-            name = client.name,
-            root_dir = client.config.root_dir,
-            attached_to = vim.lsp.get_buffers_by_client_id(client.id),
+          utils.lsp.soft_stop(client, {
+            on_close = function()
+              vim.notify(
+                string.format(
+                  '[LSP] stopped client %d (%s)',
+                  client.id,
+                  client.name
+                )
+              )
+            end,
           })
         end
-      end,
-    },
-    stop_client = {
-      opts = {
-        ['client-id'] = subcommand_opt_vals.lsp_clients,
-        ['force'] = subcommand_opt_vals.bool,
-      },
-      arg_handler = function(args)
-        return args['client-id'], args['force']
       end,
     },
     references = {
@@ -1125,30 +1186,6 @@ local function setup_lsp_autoformat()
   })
 end
 
----Stop a client 'softly'
----@param client lsp.Client
----@param force boolean?
----@param num_trials integer? default: 4
-local function soft_stop_client(client, force, num_trials)
-  -- Abort if client is already stopped or reconnects to some buffers
-  if
-    client.is_stopped() ---@diagnostic disable-line: invisible
-    or not vim.tbl_isempty(vim.lsp.get_buffers_by_client_id(client.id))
-  then
-    return
-  end
-  num_trials = num_trials or 4
-  if force or num_trials <= 0 then
-    vim.notify('[LSP] force stopping detached client ' .. client.name)
-    client.stop(true)
-    return
-  end
-  client.stop()
-  vim.defer_fn(function()
-    soft_stop_client(client, force, num_trials - 1)
-  end, 500)
-end
-
 local lsp_autostop_pending
 ---Automatically stop LSP servers that no longer attaches to any buffers
 ---
@@ -1159,7 +1196,7 @@ local lsp_autostop_pending
 ---  clients on every `BufDelete` events
 ---
 ---@return nil
-local function setup_lsp_autostop()
+local function setup_lsp_stopidle()
   vim.api.nvim_create_autocmd('BufDelete', {
     group = vim.api.nvim_create_augroup('LspAutoStop', {}),
     desc = 'Automatically stop idle language servers.',
@@ -1171,8 +1208,8 @@ local function setup_lsp_autostop()
       vim.defer_fn(function()
         lsp_autostop_pending = nil
         for _, client in ipairs(vim.lsp.get_clients()) do
-          if vim.tbl_isempty(vim.lsp.get_buffers_by_client_id(client.id)) then
-            soft_stop_client(client)
+          if vim.tbl_isempty(client.attached_buffers) then
+            utils.lsp.soft_stop(client)
           end
         end
       end, 60000)
@@ -1216,7 +1253,7 @@ local function setup()
   setup_keymaps()
   setup_lsp_overrides()
   setup_lsp_autoformat()
-  setup_lsp_autostop()
+  setup_lsp_stopidle()
   setup_diagnostic()
   setup_commands('Lsp', subcommands.lsp, function(name)
     return vim.lsp[name] or vim.lsp.buf[name]

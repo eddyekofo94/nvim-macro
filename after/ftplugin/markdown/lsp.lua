@@ -1,1 +1,4 @@
-require('utils.lsp').start({ 'marksman' }, { '.marksman.toml' })
+require('utils.lsp').start({
+  cmd = { 'marksman' },
+  root_patterns = { '.marksman.toml' },
+})

@@ -3,8 +3,10 @@ local lsp = require('utils.lsp')
 -- Use efm to attach stylua formatter as a language server
 local stylua_root_patterns = { 'stylua.toml', '.stylua.toml' }
 local efm = vim.fn.executable('stylua') == 1
-  and lsp.start({ 'efm-langserver' }, stylua_root_patterns, {
+  and lsp.start({
+    cmd = { 'efm-langserver' },
     name = 'efm-formatter-stylua',
+    root_pattern = stylua_root_patterns,
     init_options = {
       documentFormatting = true,
       documentRangeFormatting = true,
@@ -25,7 +27,9 @@ local efm = vim.fn.executable('stylua') == 1
 
 -- Luanch lua-language-server, disable its formatting capabilities
 -- if efm launched successfully
-lsp.start({ 'lua-language-server' }, { '.luarc.json', '.luarc.jsonc' }, {
+lsp.start({
+  cmd = { 'lua-language-server' },
+  root_patterns = { '.luarc.json', '.luarc.jsonc' },
   on_attach = efm and function(client)
     client.server_capabilities.documentFormattingProvider = false
     client.server_capabilities.documentRangeFormattingProvider = false

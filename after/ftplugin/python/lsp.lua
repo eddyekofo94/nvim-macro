@@ -10,7 +10,9 @@ local root_patterns = {
 
 -- Use efm to attach black formatter as a language server
 local efm = vim.fn.executable('black') == 1
-  and lsp.start({ 'efm-langserver' }, root_patterns, {
+  and lsp.start({
+    cmd = { 'efm-langserver' },
+    root_patterns = root_patterns,
     name = 'efm-formatter-black',
     init_options = { documentFormatting = true },
     settings = {
@@ -36,35 +38,33 @@ end
 
 local server_configs = {
   {
-    { 'pyright-langserver', '--stdio' },
-    vim.list_extend({ 'pyrightconfig.json' }, root_patterns),
-    {
-      on_attach = on_attach,
-      settings = {
-        python = {
-          analysis = {
-            autoSearchPaths = true,
-            useLibraryCodeForTypes = true,
-            diagnosticMode = 'openFilesOnly',
-          },
+    cmd = { 'pyright-langserver', '--stdio' },
+    root_patterns = vim.list_extend({ 'pyrightconfig.json' }, root_patterns),
+    on_attach = on_attach,
+    settings = {
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          useLibraryCodeForTypes = true,
+          diagnosticMode = 'openFilesOnly',
         },
       },
     },
   },
   {
-    { 'pylsp' },
-    root_patterns,
-    { on_attach = on_attach },
+    cmd = { 'pylsp' },
+    root_patterns = root_patterns,
+    on_attach = on_attach,
   },
   {
-    { 'jedi-language-server' },
-    root_patterns,
-    { on_attach = on_attach },
+    cmd = { 'jedi-language-server' },
+    root_patterns = root_patterns,
+    on_attach = on_attach,
   },
 }
 
 for _, server_config in ipairs(server_configs) do
-  if lsp.start(unpack(server_config)) then
+  if lsp.start(server_config) then
     return
   end
 end
