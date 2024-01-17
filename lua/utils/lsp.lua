@@ -35,6 +35,10 @@ M.default_config = {}
 ---@param opts lsp.StartOpts?
 ---@return integer? client_id id of attached client or nil if failed
 function M.start(config, opts)
+  if vim.bo.bt == 'nofile' then
+    return
+  end
+
   local cmd_type = type(config.cmd)
   if
     cmd_type ~= 'table' and cmd_type ~= 'function'
