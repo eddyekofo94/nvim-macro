@@ -171,12 +171,14 @@ Install the following debug adapters manually:
 
 ### Formatter
 
-- Bash: install [Shfmt](https://github.com/mvdan/sh)
+- Bash: install [Shfmt](https://github.com/mvdan/sh)\*
 - C/C++: install [Clang](https://clang.llvm.org/) to use `clang-format`
-- Lua: install [StyLua](https://github.com/JohnnyMorganz/StyLua)
+- Lua: install [StyLua](https://github.com/JohnnyMorganz/StyLua)\*
 - Rust: install [Rust](https://www.rust-lang.org/tools/install) to use `rustfmt`
-- Python: install [Black](https://github.com/psf/black)
+- Python: install [Black](https://github.com/psf/black)\*
 - LaTeX: install [texlive-core](http://tug.org/texlive/) to use `latexindent`
+
+<sub>\*Need [EFM Language Server](https://github.com/mattn/efm-langserver) to work with `vim.lsp.buf.format()`</sub>
 
 ### Other External Tools
 
