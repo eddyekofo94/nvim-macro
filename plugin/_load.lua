@@ -27,13 +27,13 @@ vim.api.nvim_create_autocmd('ModeChanged', {
   end,
 })
 
--- lsp-diagnostic
+-- lsp-diags
 vim.api.nvim_create_autocmd({ 'LspAttach', 'DiagnosticChanged' }, {
   once = true,
   desc = 'Apply lsp and diagnostic settings.',
   group = vim.api.nvim_create_augroup('LspDiagnosticSetup', {}),
   callback = function()
-    require('plugin.lsp-diagnostic').setup()
+    require('plugin.lsp-diags').setup()
     return true
   end,
 })

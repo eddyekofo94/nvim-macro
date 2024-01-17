@@ -1246,10 +1246,10 @@ end
 ---Set up LSP and diagnostic
 ---@return nil
 local function setup()
-  if vim.g.loaded_lsp_diagnostics ~= nil then
+  if vim.g.loaded_lsp_diags ~= nil then
     return
   end
-  vim.g.loaded_lsp_diagnostics = true
+  vim.g.loaded_lsp_diags = true
   setup_keymaps()
   setup_lsp_overrides()
   setup_lsp_autoformat()
