@@ -18,8 +18,8 @@ vim.api.nvim_create_autocmd('CmdlineChanged', {
 })
 
 ---Get next two characters after cursor, whether in cmdline or normal buffer
----@return string: next character
-local function get_two_char_after()
+---@return string: next two characters
+local function get_next_two_chars()
   local col, line
   if vim.fn.mode():match('^c') then
     col = vim.fn.getcmdpos()
@@ -47,7 +47,7 @@ require('ultimate-autopair').setup({
       cond = function(f)
         return not f.in_macro()
           -- Disable autopairs if followed by a keyword or an opening pair
-          and not IGNORE_REGEX:match_str(get_two_char_after())
+          and not IGNORE_REGEX:match_str(get_next_two_chars())
           -- Disable autopairs when inserting a regex,
           -- e.g. `:s/{pattern}/{string}/[flags]` or
           -- `:g/{pattern}/[cmd]`, etc.
