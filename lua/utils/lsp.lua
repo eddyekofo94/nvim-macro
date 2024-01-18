@@ -54,7 +54,7 @@ function M.start(config, opts)
         vim.api.nvim_buf_get_name(0),
         vim.list_extend(
           config.root_patterns or {},
-          M.default_config.root_patterns
+          M.default_config.root_patterns or {}
         )
       ),
     }, M.default_config),
