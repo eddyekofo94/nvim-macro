@@ -41,9 +41,8 @@ function M.start(config, opts)
 
   local cmd_type = type(config.cmd)
   if
-    cmd_type ~= 'table' and cmd_type ~= 'function'
-    or cmd_type == 'table'
-      and (not config.cmd[1] or vim.fn.executable(config.cmd[1]) == 0)
+    cmd_type == 'table'
+    and (not config.cmd[1] or vim.fn.executable(config.cmd[1]) == 0)
   then
     return
   end
