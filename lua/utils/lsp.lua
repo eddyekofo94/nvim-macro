@@ -2,7 +2,7 @@ local M = {}
 
 ---@type lsp_client_config_t
 ---@diagnostic disable-next-line: missing-fields
-M.default_config = {}
+M.default_config = { root_patterns = require('utils.fs').root_patterns }
 
 ---@class lsp.ClientConfig: lsp_client_config_t
 ---@class lsp_client_config_t
@@ -48,17 +48,19 @@ function M.start(config, opts)
     return
   end
 
-  local fs_utils = require('utils.fs')
-  config = vim.tbl_deep_extend('keep', config or {}, {
-    name = cmd_type == 'table' and config.cmd[1] or nil,
-    root_dir = fs_utils.proj_dir(
-      vim.api.nvim_buf_get_name(0),
-      vim.list_extend(config.root_patterns or {}, fs_utils.root_patterns)
-    ),
-  }, M.default_config)
-
-  local id = vim.lsp.start(config, opts)
-  return id
+  return vim.lsp.start(
+    vim.tbl_deep_extend('keep', config or {}, {
+      name = cmd_type == 'table' and config.cmd[1] or nil,
+      root_dir = require('utils.fs').proj_dir(
+        vim.api.nvim_buf_get_name(0),
+        vim.list_extend(
+          config.root_patterns or {},
+          M.default_config.root_patterns
+        )
+      ),
+    }, M.default_config),
+    opts
+  )
 end
 
 ---@class lsp_soft_stop_opts_t
