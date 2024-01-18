@@ -395,7 +395,7 @@ corresponding plugin keymaps.
 
 ### Colorschemes
 
-`cockatoo`, `nano`, and `dragon` are three builtin custom colorschemes, with
+`cockatoo`, `nano`, and `macro` are three builtin custom colorschemes, with
 separate palettes for dark and light background.
 
 Neovim is configured to restore the previous background and colorscheme

@@ -17,7 +17,7 @@ local colors_file =
 --    and system color consistent with the current nvim instance.
 
 local saved = utils.json.read(colors_file)
-saved.colors_name = saved.colors_name or 'dragon'
+saved.colors_name = saved.colors_name or 'macro'
 
 if saved.bg and saved.bg ~= vim.go.bg then
   vim.go.bg = saved.bg

@@ -112,7 +112,7 @@ local function enable_modules(module_names)
     },
     checker = { enabled = false },
     change_detection = { notify = false },
-    install = { colorscheme = { 'dragon', 'nano', 'cockatoo' } },
+    install = { colorscheme = { 'macro', 'nano', 'cockatoo' } },
   }
   local modules = {}
   for _, module_name in ipairs(module_names) do
