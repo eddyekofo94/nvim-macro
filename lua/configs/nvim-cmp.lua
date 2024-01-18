@@ -256,7 +256,6 @@ end
 
 local string_byte_fs_separator = string.byte('/')
 
----@diagnostic disable missing-fields
 cmp.setup({
   enabled = function()
     return vim.bo.ft ~= '' and not vim.b.bigfile
@@ -353,7 +352,7 @@ cmp.setup({
           local prev = luasnip.jump_destination(-1)
           local _, snip_dest_end = prev:get_buf_position()
           snip_dest_end[1] = snip_dest_end[1] + 1 -- (1, 0) indexed
-          local tabout_dest = tabout.get_jump_pos('<S-Tab>')
+          local tabout_dest = tabout.get_jump_pos(-1)
           if not jump_to_closer(snip_dest_end, tabout_dest, -1) then
             fallback()
           end
@@ -379,7 +378,6 @@ cmp.setup({
           luasnip.expand()
         elseif luasnip.locally_jumpable(1) then
           local buf = vim.api.nvim_get_current_buf()
-          local line = vim.api.nvim_get_current_line()
           local cursor = vim.api.nvim_win_get_cursor(0)
           local current = luasnip.session.current_nodes[buf]
           if node_has_length(current) then
