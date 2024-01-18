@@ -262,9 +262,8 @@ cmp.setup({
     return vim.bo.ft ~= '' and not vim.b.bigfile
   end,
   performance = {
-    debounce = 512,
-    throttle = 512,
-    fetching_timeout = 64,
+    async_budget = 64,
+    max_view_entries = 64,
   },
   formatting = {
     fields = { 'kind', 'abbr', 'menu' },
@@ -498,9 +497,6 @@ cmp.setup({
       cmp.config.compare.score,
     },
   },
-  performance = {
-    async_budget = 1,
-  },
   -- cmp floating window config
   window = {
     documentation = {
@@ -508,9 +504,6 @@ cmp.setup({
       max_height = 20,
       border = 'solid',
     },
-  },
-  performance = {
-    max_view_entries = 64,
   },
 })
 
