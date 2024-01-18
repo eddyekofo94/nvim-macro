@@ -93,8 +93,9 @@ Tree-sitter installation and configuration is handled by [nvim-treesitter](https
 To add or remove support for a language, install or uninstall the corresponding
 parser using `:TSInstall` or `:TSUninstall`.
 
-To make the change permanent, add or remove corresponding entries in `M.langs`
-in [lua/utils/static/init.lua](https://github.com/Bekaboo/nvim/blob/master/lua/utils/static/init.lua).
+To make the change permanent, add or remove corresponding parsers in the
+`ensure_installed` field in the call to nvim-treesitter's `setup()` function,
+see [lua/configs/nvim-treesitter.lua](https://github.com/Bekaboo/nvim/blob/master/lua/configs/nvim-treesitter.lua).
 
 ### LSP
 
