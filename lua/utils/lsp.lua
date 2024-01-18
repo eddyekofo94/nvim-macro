@@ -112,6 +112,9 @@ function M.restart(client_or_id)
   M.soft_stop(client, {
     on_close = function()
       for buf, _ in pairs(attached_buffers) do
+        if not vim.api.nvim_buf_is_valid(buf) then
+          return
+        end
         vim.api.nvim_buf_call(buf, function()
           M.start(config)
         end)
