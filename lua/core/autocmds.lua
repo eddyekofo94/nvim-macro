@@ -208,25 +208,7 @@ augroup('KeepWinRatio', {
         vim.g._columns = columns
         return
       end
-
-      local now = vim.uv.now()
-      vim.g._wr_winresized = now
-      if vim.v.event.windows then
-        _G._wr_windows = _G._wr_windows or {}
-        for _, win in ipairs(vim.v.event.windows) do
-          _G._wr_windows[win] = true
-        end
-      end
-      vim.defer_fn(function()
-        if vim.g._wr_winresized == now then
-          local wins = _G._wr_windows
-              and not vim.tbl_isempty(_G._wr_windows)
-              and vim.tbl_keys(_G._wr_windows)
-            or vim.api.nvim_list_wins()
-          require('utils.win').saveratio(wins)
-          _G._wr_windows = nil
-        end
-      end, 200)
+      require('utils.win').saveratio(vim.v.event.windows)
     end,
   },
 })
