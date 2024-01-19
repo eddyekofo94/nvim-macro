@@ -232,7 +232,7 @@ function winbar_symbol_t:cat(plain)
       and utils.stl.make_clickable(
         icon_highlighted .. name_highlighted,
         string.format(
-          'v:lua.winbar.callbacks.buf%s.win%s.fn%s',
+          'v:lua._winbar.callbacks.buf%s.win%s.fn%s',
           self.bar.buf,
           self.bar.win,
           self.callback_idx
@@ -395,8 +395,8 @@ end
 ---Delete a winbar instance
 ---@return nil
 function winbar_t:del()
-  _G.winbar.bars[self.buf][self.win] = nil
-  _G.winbar.callbacks['buf' .. self.buf]['win' .. self.win] = nil
+  _G._winbar.bars[self.buf][self.win] = nil
+  _G._winbar.callbacks['buf' .. self.buf]['win' .. self.win] = nil
   for _, component in ipairs(self.components) do
     component:del()
   end
@@ -547,7 +547,7 @@ function winbar_t:update()
       component:del()
     end
     self.components = {}
-    _G.winbar.callbacks['buf' .. self.buf]['win' .. self.win] = {}
+    _G._winbar.callbacks['buf' .. self.buf]['win' .. self.win] = {}
     for _, source in ipairs(self.sources) do
       local symbols = source.get_symbols(self.buf, self.win, cursor)
       for _, symbol in ipairs(symbols) do
@@ -562,7 +562,7 @@ function winbar_t:update()
           ---@param button string mouse button used
           ---@param modifiers string modifiers used
           ---@return nil
-          _G.winbar.callbacks['buf' .. self.buf]['win' .. self.win]['fn' .. symbol.callback_idx] = function(
+          _G._winbar.callbacks['buf' .. self.buf]['win' .. self.win]['fn' .. symbol.callback_idx] = function(
             min_width,
             n_clicks,
             button,

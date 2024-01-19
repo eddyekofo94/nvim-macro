@@ -5,7 +5,7 @@ local configs = require('plugin.winbar.configs')
 
 ---Lookup table for winbar menus
 ---@type table<integer, winbar_menu_t>
-_G.winbar.menus = {}
+_G._winbar.menus = {}
 
 ---@class winbar_menu_hl_info_t
 ---@field start integer byte-indexed, 0-indexed, start inclusive
@@ -237,7 +237,7 @@ function winbar_menu_t:del()
     self.buf = nil
   end
   if self.win then
-    _G.winbar.menus[self.win] = nil
+    _G._winbar.menus[self.win] = nil
   end
 end
 
@@ -611,7 +611,7 @@ function winbar_menu_t:open(opts)
   end
   self:override(opts)
 
-  self.prev_menu = _G.winbar.menus[self.prev_win]
+  self.prev_menu = _G._winbar.menus[self.prev_win]
   if self.prev_menu then
     -- if the prev menu has an existing sub-menu, close the sub-menu first
     if self.prev_menu.sub_menu then
@@ -623,7 +623,7 @@ function winbar_menu_t:open(opts)
   self:eval_win_configs()
   self:make_buf()
   self:open_win()
-  _G.winbar.menus[self.win] = self
+  _G._winbar.menus[self.win] = self
   -- Initialize cursor position
   if self._win_configs.focusable ~= false then
     if self.prev_cursor then
@@ -658,7 +658,7 @@ function winbar_menu_t:close(restore_view)
     if vim.api.nvim_win_is_valid(self.win) then
       vim.api.nvim_win_close(self.win, true)
     end
-    _G.winbar.menus[self.win] = nil
+    _G._winbar.menus[self.win] = nil
     self.win = nil
   end
   if self.scrollbar then

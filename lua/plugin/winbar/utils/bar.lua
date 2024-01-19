@@ -13,20 +13,20 @@ function M.get(opts)
   opts = opts or {}
   if opts.buf then
     if opts.win then
-      return rawget(_G.winbar.bars, opts.buf)
-        and rawget(_G.winbar.bars[opts.buf], opts.win)
+      return rawget(_G._winbar.bars, opts.buf)
+        and rawget(_G._winbar.bars[opts.buf], opts.win)
     end
-    return rawget(_G.winbar.bars, opts.buf) or {}
+    return rawget(_G._winbar.bars, opts.buf) or {}
   end
   if opts.win then
     if not vim.api.nvim_win_is_valid(opts.win) then
       return
     end
     local buf = vim.api.nvim_win_get_buf(opts.win)
-    return rawget(_G.winbar.bars, buf)
-      and rawget(_G.winbar.bars[buf], opts.win)
+    return rawget(_G._winbar.bars, buf)
+      and rawget(_G._winbar.bars[buf], opts.win)
   end
-  return _G.winbar.bars
+  return _G._winbar.bars
 end
 
 ---Get current winbar
@@ -50,7 +50,7 @@ function M.exec(method, opts)
   opts = opts or {}
   opts.params = opts.params or {}
   local winbars = M.get(opts)
-  if not winbars or vim.tbl_isempty(winbar) then
+  if not winbars or vim.tbl_isempty(_winbar) then
     return
   end
   if opts.win then
@@ -105,7 +105,7 @@ end
 function M.attach(buf, win)
   local configs = require('plugin.winbar.configs')
   if configs.eval(configs.opts.general.enable, buf, win) then
-    vim.wo.winbar = '%{%v:lua.winbar.get_winbar()%}'
+    vim.wo.winbar = '%{%v:lua._winbar.get_winbar()%}'
   end
 end
 

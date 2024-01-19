@@ -323,7 +323,7 @@ local function detach(buf)
     vim.api.nvim_del_autocmd(vim.b[buf].winbar_lsp_attached)
     vim.b[buf].winbar_lsp_attached = nil
     lsp_buf_symbols[buf] = nil
-    for _, winbar in pairs(_G.winbar.bars[buf]) do
+    for _, winbar in pairs(_G._winbar.bars[buf]) do
       winbar:update()
     end
   end

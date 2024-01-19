@@ -1,4 +1,4 @@
-_G.winbar = {}
+_G._winbar = {}
 local hlgroups = require('plugin.winbar.hlgroups')
 local bar = require('plugin.winbar.bar')
 local configs = require('plugin.winbar.configs')
@@ -9,7 +9,7 @@ local utils = require('plugin.winbar.utils')
 ---(v:lua) only support calling global lua functions
 ---@type table<string, table<string, function>>
 ---@see winbar_t:update
-_G.winbar.callbacks = setmetatable({}, {
+_G._winbar.callbacks = setmetatable({}, {
   __index = function(self, buf)
     self[buf] = setmetatable({}, {
       __index = function(this, win)
@@ -22,7 +22,7 @@ _G.winbar.callbacks = setmetatable({}, {
 })
 
 ---@type table<integer, table<integer, winbar_t>>
-_G.winbar.bars = setmetatable({}, {
+_G._winbar.bars = setmetatable({}, {
   __index = function(self, buf)
     self[buf] = setmetatable({}, {
       __index = function(this, win)
@@ -38,10 +38,10 @@ _G.winbar.bars = setmetatable({}, {
 
 ---Get winbar string for current window
 ---@return string
-function _G.winbar.get_winbar()
+function _G._winbar.get_winbar()
   local buf = vim.api.nvim_get_current_buf()
   local win = vim.api.nvim_get_current_win()
-  return tostring(_G.winbar.bars[buf][win])
+  return tostring(_G._winbar.bars[buf][win])
 end
 
 ---Setup winbar
@@ -66,8 +66,8 @@ local function setup(opts)
     group = groupid,
     callback = function(info)
       utils.bar.exec('del', { buf = info.buf })
-      _G.winbar.bars[info.buf] = nil
-      _G.winbar.callbacks['buf' .. info.buf] = nil
+      _G._winbar.bars[info.buf] = nil
+      _G._winbar.callbacks['buf' .. info.buf] = nil
     end,
     desc = 'Remove winbar from cache on buffer wipeout.',
   })

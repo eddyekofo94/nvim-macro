@@ -8,9 +8,9 @@ local M = {}
 function M.get(opts)
   opts = opts or {}
   if opts.win then
-    return _G.winbar.menus[opts.win]
+    return _G._winbar.menus[opts.win]
   end
-  return _G.winbar.menus
+  return _G._winbar.menus
 end
 
 ---Get current menu
