@@ -81,10 +81,7 @@ end
 
 -- Decide the row and col offset of the floating window,
 -- return if no enough space
-win_config.row = math.floor(
-  (vim.go.lines - vim.go.ch - (vim.go.ls < 2 and 0 or 1) - win_config.height)
-    / 2
-)
+win_config.row = math.floor((vim.go.lines - vim.go.ch - win_config.height) / 2)
 win_config.col = math.floor((vim.go.columns - win_config.width) / 2)
 if win_config.row < 4 or win_config.col < 8 then
   -- Restore &eventignore before exit
