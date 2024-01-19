@@ -121,7 +121,6 @@ function M.setup()
   vim.g.loaded_readline = true
 
   map('!', '<C-a>', '<Home>')
-  map('!', '<C-e>', '<End>')
   map('!', '<C-d>', '<Del>')
   map('c', '<C-b>', '<Left>')
   map('c', '<C-f>', '<Right>')
@@ -131,7 +130,8 @@ function M.setup()
   map('!', '<M-BS>', '<C-w>')
   map('!', '<M-Del>', '<C-w>')
 
-  map('!', '<C-y>', 'pumvisible() ? "<C-y>" : "<C-r>-"', { expr = true })
+  map('!', '<C-e>', 'pumvisible() ? "<C-e>" : "<End>"', { expr = true, replace_keycodes = false })
+  map('!', '<C-y>', 'pumvisible() ? "<C-y>" : "<C-r>-"', { expr = true, replace_keycodes = false })
   map('c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>')
 
   map('i', '<C-b>', function()
