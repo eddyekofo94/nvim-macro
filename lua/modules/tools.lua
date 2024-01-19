@@ -200,7 +200,7 @@ return {
       vim.g.loaded_fzf_file_explorer = 1
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
-      vim.api.nvim_create_autocmd('BufEnter', {
+      vim.api.nvim_create_autocmd('BufWinEnter', {
         nested = true,
         group = vim.api.nvim_create_augroup('OilInit', {}),
         callback = function(info)
@@ -217,9 +217,8 @@ return {
           end
           local stat = vim.uv.fs_stat(path)
           if stat and stat.type == 'directory' then
-            vim.api.nvim_exec_autocmds('UIEnter', {})
             require('oil')
-            vim.cmd.edit()
+            vim.cmd.edit({ bang = true })
             return true
           end
         end,
