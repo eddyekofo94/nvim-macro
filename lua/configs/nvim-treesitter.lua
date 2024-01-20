@@ -153,7 +153,7 @@ ts_configs.setup({
       enable = true,
       border = 'solid',
       peek_definition_code = {
-        ['<Leader>K'] = '@function.outer',
+        ['<C-k>'] = '@function.outer',
       },
     },
   },
