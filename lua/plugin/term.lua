@@ -13,6 +13,7 @@ local tui = {
   helix = true,
   nmtui = true,
   emacs = true,
+  vimdiff = true,
   lazygit = true,
   emacsclient = true,
 }
