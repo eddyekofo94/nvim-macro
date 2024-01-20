@@ -123,7 +123,7 @@ g.netrw_list_hide       = [[\(^\|\s\s\)\zs\.\S\+]]
 g.netrw_liststyle       = 1
 g.netrw_localcopydircmd = 'cp -r'
 
--- disable plugins shipped with neovim
+-- Disable plugins shipped with neovim
 g.loaded_2html_plugin      = 1
 g.loaded_gzip              = 1
 g.loaded_matchit           = 1
@@ -136,3 +136,14 @@ g.loaded_zip               = 1
 g.loaded_zipPlugin         = 1
 g.loaded_python3_provider  = 0
 -- stylua: ignore end
+
+-- Load rplugins on FileType event
+g.loaded_remote_plugins = 1
+vim.api.nvim_create_autocmd('FileType', {
+  once = true,
+  callback = function()
+    g.loaded_remote_plugins = nil
+    vim.cmd.runtime('plugin/rplugin.vim')
+    return true
+  end,
+})

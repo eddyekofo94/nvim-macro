@@ -1,4 +1,4 @@
--- Lazy-load rplugins and builtin plugins
+-- Lazy-load builtin plugins
 
 -- vscode-neovim
 if vim.g.vscode then
@@ -127,19 +127,3 @@ end)
 vim.keymap.set({ 'i', 'c' }, '<S-Tab>', function()
   require('plugin.tabout').jump(-1)
 end)
-
--- Load rplugins on FileType event
-vim.g.loaded_remote_plugins = 1
-
-vim.api.nvim_create_autocmd('FileType', {
-  once = true,
-  group = vim.api.nvim_create_augroup('RpluginSetup', {}),
-  callback = function()
-    vim.g.loaded_remote_plugins = nil
-    vim.cmd.runtime({
-      args = { 'plugin/rplugin.vim' },
-      bang = true,
-    })
-    return true
-  end,
-})
