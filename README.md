@@ -127,7 +127,7 @@ To add support for other languages, install corresponding language servers
 manually then add `lsp.lua` files under [after/ftplugin](https://github.com/Bekaboo/nvim/tree/master/after/ftplugin) to automatically lanuch
 them for differnt filetypes.
 
-Some examples for `lsp.lua` files:
+Some examples of `lsp.lua` files:
 
 - [after/ftplugin/lua/lsp.lua](https://github.com/Bekaboo/nvim/blob/master/after/ftplugin/lua/lsp.lua)
 - [after/ftplugin/python/lsp.lua](https://github.com/Bekaboo/nvim/blob/master/after/ftplugin/python/lsp.lua)
