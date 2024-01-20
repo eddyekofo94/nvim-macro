@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat Jan 20 03:12:25 PM CST 2024
+-- Last Updated: Sat Jan 20 11:57:52 PM CST 2024
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -305,6 +305,7 @@ local hlgroups = {
   ['@constructor'] = { fg = c_macroTeal },
   ['@constructor.lua'] = { fg = c_macroViolet },
   ['@keyword.exception'] = { bold = true, fg = c_macroRed },
+  ['@keyword.import'] = { link = 'PreProc' },
   ['@keyword.luap'] = { link = '@string.regexp' },
   ['@keyword.operator'] = { bold = true, fg = c_macroRed },
   ['@keyword.return'] = { fg = c_macroRed, italic = true },
