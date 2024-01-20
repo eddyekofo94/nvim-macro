@@ -339,6 +339,7 @@ local function setup_buf_keymaps_and_commands(buf)
     vim.keymap.set('x', '<CR>', ':<C-u>MoltenNotebookRunVisual<CR>', { buffer = buf })
   else -- ft == 'python' or otter.keeper not found
     vim.keymap.set('n', '<LocalLeader><LocalLeader>', vim.cmd.MoltenEvaluateOperator, { buffer = buf })
+    vim.keymap.set('n', '<LocalLeader><CR>', vim.cmd.MoltenReevaluateAll, { buffer = buf })
     vim.keymap.set('n', '<CR>', '<Cmd>MoltenReevaluateCell<CR>', { buffer = buf })
     vim.keymap.set('x', '<CR>', ':<C-u>MoltenEvaluateVisual<CR>', { buffer = buf })
   end
