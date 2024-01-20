@@ -73,7 +73,10 @@ opt.gcr = {
 
 -- Use histogram algorithm for diffing, generates more readable diffs in
 -- situations where two lines are swapped
-opt.diffopt:append('algorithm:histogram')
+opt.diffopt:append({
+  'algorithm:histogram',
+  'indent-heuristic',
+})
 
 -- Use system clipboard
 opt.clipboard:append('unnamedplus')
