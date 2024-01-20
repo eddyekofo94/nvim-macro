@@ -128,41 +128,18 @@ vim.keymap.set({ 'i', 'c' }, '<S-Tab>', function()
   require('plugin.tabout').jump(-1)
 end)
 
--- load rplugins on FileType event
+-- Load rplugins on FileType event
+vim.g.loaded_remote_plugins = 1
 
----Rename rplugin manifest so that we can load it on demand
----Side effect: sets `vim.g.rplugin` to the renamed manifest path
----@return nil
-local function _disable_rplugin()
-  if vim.g.rplugin then
-    return
-  end
-
-  local rplugin = vim.env.NVIM_RPLUGIN_MANIFEST
-    or vim.fs.joinpath(vim.fn.stdpath('data') --[[@as string]], 'rplugin.vim')
-  local rplugin_ = rplugin .. '_'
-
-  if vim.uv.fs_stat(rplugin) then
-    vim.uv.fs_rename(rplugin, rplugin_)
-  end
-  if vim.uv.fs_stat(rplugin_) then
-    vim.g.rplugin = rplugin_
-  end
-end
-
-vim.defer_fn(_disable_rplugin, 200)
 vim.api.nvim_create_autocmd('FileType', {
   once = true,
   group = vim.api.nvim_create_augroup('RpluginSetup', {}),
   callback = function()
-    if not vim.g.rplugin then
-      _disable_rplugin()
-    end
-    if vim.g.rplugin then
-      vim.cmd.source({
-        args = { vim.g.rplugin },
-        mods = { emsg_silent = true },
-      })
-    end
+    vim.g.loaded_remote_plugins = nil
+    vim.cmd.runtime({
+      args = { 'plugin/rplugin.vim' },
+      bang = true,
+    })
+    return true
   end,
 })
