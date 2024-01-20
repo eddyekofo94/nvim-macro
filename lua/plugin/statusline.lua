@@ -398,9 +398,6 @@ local function set_default_hlgroups()
     local merged_attr = vim.tbl_deep_extend('keep', attr, default_attr)
     utils.hl.set_default(0, hlgroup_name, merged_attr)
   end
-  if vim.g.modern_ui then
-    sethl('StatusLineHeader', { bg = 'TabLine' })
-  end
   sethl('StatusLineGitAdded', { fg = 'GitSignsAdd' })
   sethl('StatusLineGitChanged', { fg = 'GitSignsChange' })
   sethl('StatusLineGitRemoved', { fg = 'GitSignsDelete' })
@@ -408,6 +405,7 @@ local function set_default_hlgroups()
   sethl('StatusLineDiagnosticInfo', { fg = 'DiagnosticSignInfo' })
   sethl('StatusLineDiagnosticWarn', { fg = 'DiagnosticSignWarn' })
   sethl('StatusLineDiagnosticError', { fg = 'DiagnosticSignError' })
+  sethl('StatusLineHeader', { fg = 'Normal', bg = 'TabLine' })
   sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'TabLine' })
 end
 set_default_hlgroups()
