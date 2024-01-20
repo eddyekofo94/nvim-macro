@@ -135,6 +135,9 @@ function M.select(items, opts, on_choice)
       -- other ui-select plugins do
       if opts.format_item then
         text, virt_text = opts.format_item(item)
+        if type(virt_text) ~= 'table' then
+          virt_text = nil
+        end
       end
 
       return menu.winbar_menu_entry_t:new({
