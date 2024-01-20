@@ -1,5 +1,5 @@
 diff --git a/lua/cmp_fuzzy_path/init.lua b/lua/cmp_fuzzy_path/init.lua
-index 7c3a02f..042be1e 100644
+index 5455320..042be1e 100644
 --- a/lua/cmp_fuzzy_path/init.lua
 +++ b/lua/cmp_fuzzy_path/init.lua
 @@ -81,7 +81,15 @@ local function find_pattern(cursor_before_line)
@@ -27,15 +27,6 @@ index 7c3a02f..042be1e 100644
      end
    else
      pattern = find_pattern(params.context.cursor_before_line)
-@@ -135,7 +141,7 @@ source.complete = function(self, params, callback)
-     table.insert(new_cmd, '-d')
-     table.insert(new_cmd, '1')
-     cmd = new_cmd
--    dump('skipping root', cmd)
-+    -- dump('skipping root', cmd)
-   end
- 
-   if #new_pattern > 0 then
 @@ -147,12 +153,15 @@ source.complete = function(self, params, callback)
  
    -- indicate that we are searching for files
