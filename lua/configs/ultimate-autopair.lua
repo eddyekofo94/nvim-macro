@@ -71,6 +71,12 @@ require('ultimate-autopair').setup({
     newline = true,
     space = true,
   },
+  {
+    '<',
+    '>',
+    disable_start = true,
+    disable_end = true,
+  },
   -- Paring '$' and '*' are handled by snippets,
   -- only use autopair to delete matched pairs here
   {
