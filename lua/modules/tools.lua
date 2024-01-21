@@ -218,7 +218,10 @@ return {
           if stat and stat.type == 'directory' then
             vim.api.nvim_del_autocmd(info.id)
             require('oil')
-            vim.cmd.edit({ bang = true })
+            vim.cmd.edit({
+              bang = true,
+              mods = { keepjumps = true },
+            })
             return true
           end
         end,
