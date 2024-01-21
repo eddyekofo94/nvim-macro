@@ -28,14 +28,8 @@ local logo = vim.g.modern_ui and 'M Λ C R O' or 'M A C R O'
 local lines = {
   {
     chunks = {
-      {
-        text = string.format('Neovim :: %s', logo),
-        hl = 'Normal',
-      },
-      {
-        text = ' - Editing made simple',
-        hl = 'NonText',
-      },
+      { text = string.format('Neovim :: %s', logo), hl = 'Normal' },
+      { text = ' - Editing made simple', hl = 'NonText' },
     },
   },
   {

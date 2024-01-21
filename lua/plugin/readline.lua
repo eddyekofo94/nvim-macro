@@ -130,9 +130,11 @@ function M.setup()
   map('!', '<M-BS>', '<C-w>')
   map('!', '<M-Del>', '<C-w>')
 
+  -- stylua: ignore start
   map('!', '<C-e>', 'pumvisible() ? "<C-e>" : "<End>"', { expr = true, replace_keycodes = false })
   map('!', '<C-y>', 'pumvisible() ? "<C-y>" : "<C-r>-"', { expr = true, replace_keycodes = false })
   map('c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>')
+  -- stylua: ignore end
 
   map('i', '<C-b>', function()
     if first_line() and start_of_line() then
