@@ -23,7 +23,6 @@ end)
 ---@type integer
 local last_changed = 0
 local _cmp_on_change = cmp_core.on_change
-local string_byte_c = string.byte('c')
 
 ---Improves performance when inserting in large files
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -38,7 +37,7 @@ function cmp_core.on_change(self, trigger_event)
   -- command-line mode
   if
     (last_key == ' ' or last_key == '\t')
-    and string.byte(vim.fn.mode(), 1) ~= string_byte_c
+    and string.sub(vim.fn.mode(), 1, 1) ~= 'c'
   then
     return
   end
@@ -254,8 +253,6 @@ if not fuzzy_path_ok then
   fuzzy_path_comparator = function() end
 end
 
-local string_byte_fs_separator = string.byte('/')
-
 cmp.setup({
   enabled = function()
     return vim.bo.ft ~= '' and not vim.b.bigfile
@@ -271,10 +268,7 @@ cmp.setup({
       local complpath = compltype_path[compltype]
       -- Use special icons for file / directory completions
       if cmp_item.kind == 'File' or cmp_item.kind == 'Folder' or complpath then
-        if
-          string.byte(cmp_item.word, #cmp_item.word)
-          == string_byte_fs_separator
-        then -- Directories
+        if string.sub(cmp_item.word, #cmp_item.word) == '/' then -- Directories
           cmp_item.kind = icon_folder
           cmp_item.kind_hl_group = 'CmpItemKindFolder'
         else -- Files
