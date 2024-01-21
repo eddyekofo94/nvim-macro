@@ -60,9 +60,6 @@ vim.api.nvim_create_autocmd('BufReadPre', { once = true, callback = _rshada })
 -- Recognize numbered lists when formatting text
 opt.formatoptions:append('n')
 
--- Font for GUI
-opt.guifont = 'JetbrainsMono NF ExtraLight:h13'
-
 -- Cursor shape
 opt.gcr = {
   'i-c-ci-ve:blinkoff500-blinkon500-block-TermCursor',
