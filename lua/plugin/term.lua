@@ -1,35 +1,3 @@
-local utils = require('utils')
-
----@type table<string, true>
-local tui = {
-  vi = true,
-  fzf = true,
-  nvi = true,
-  kak = true,
-  vim = true,
-  nvim = true,
-  sudo = true,
-  nano = true,
-  helix = true,
-  nmtui = true,
-  emacs = true,
-  vimdiff = true,
-  lazygit = true,
-  emacsclient = true,
-}
-
----Check if any of the processes in terminal buffer `buf` is a TUI app
----@param buf integer? buffer handler
----@return boolean?
-local function running_tui(buf)
-  local proc_names = utils.term.proc_names(buf)
-  for _, proc_name in ipairs(proc_names) do
-    if tui[proc_name] then
-      return true
-    end
-  end
-end
-
 ---Set local terminal keymaps and options, start insert immediately
 ---@param buf integer terminal buffer handler
 ---@return nil
@@ -38,24 +6,6 @@ local function term_set_local_keymaps_and_opts(buf)
     return
   end
 
-  -- Use <Esc> to exit terminal mode when running a shell,
-  -- use double <Esc> to send <Esc> to shell
-  vim.keymap.set('t', '<Esc>', function()
-    if not running_tui(buf) or vim.v.shell_error > 0 then
-      vim.g.t_esc = vim.uv.now()
-      return '<Cmd>stopinsert<CR>'
-    end
-    return '<Esc>'
-  end, { expr = true, buffer = buf })
-  vim.keymap.set('n', '<Esc>', function()
-    return vim.b.t_esc
-        ---@diagnostic disable-next-line: undefined-field
-        and vim.uv.now() - vim.b.t_esc <= vim.go.tm
-        and not running_tui(buf)
-        and '<Cmd>startinsert<CR><Esc>'
-      or '<Esc>'
-  end, { expr = true, buffer = buf })
-  vim.keymap.set('n', 'o', '<Cmd>startinsert<CR>', { buffer = buf })
   vim.opt_local.nu = false
   vim.opt_local.rnu = false
   vim.opt_local.spell = false

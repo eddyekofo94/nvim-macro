@@ -201,19 +201,36 @@ local function tmux_mapkey_resize_pane_vert_condition()
     )
 end
 
+---@return fun(): boolean
+local function tmux_mapkey_navigate_condition(direction)
+  return function()
+    return (nvim_at_border(direction) or nvim_in_floating_win())
+      and tmux_should_move(direction)
+  end
+end
+
 ---Map a key in normal and visual mode to a tmux command with fallback
 ---@param key string
----@param command string
+---@param action string|function
 ---@param condition? fun(): boolean
 ---@return nil
-local function tmux_mapkey_fallback(key, command, condition)
+local function tmux_mapkey_fallback(key, action, condition)
   condition = condition or tmux_mapkey_default_condition
-  require('utils').keymap.amend({ 'n', 'x', 't' }, key, function(fallback)
-    if condition() then
-      tmux_exec(command)
+  require('utils.keymap').amend({ 'n', 'x', 't' }, key, function(fallback)
+    if
+      not condition()
+      or vim.env.NVIM
+      or vim.fn.mode():sub(1, 1) == 't'
+        and require('utils.term').running_tui()
+    then
+      fallback()
       return
     end
-    fallback()
+    if type(action) == 'string' then
+      tmux_exec(action)
+      return
+    end
+    action()
   end)
 end
 
@@ -225,18 +242,19 @@ local function setup()
   end
   vim.g.loaded_tmux = true
 
-  vim.keymap.set({ 'n', 'x', 't' }, '<M-h>', navigate_wrap('h'))
-  vim.keymap.set({ 'n', 'x', 't' }, '<M-j>', navigate_wrap('j'))
-  vim.keymap.set({ 'n', 'x', 't' }, '<M-k>', navigate_wrap('k'))
-  vim.keymap.set({ 'n', 'x', 't' }, '<M-l>', navigate_wrap('l'))
-
   -- stylua: ignore start
+  tmux_mapkey_fallback('<M-h>', navigate_wrap('h'), tmux_mapkey_navigate_condition('h'))
+  tmux_mapkey_fallback('<M-j>', navigate_wrap('j'), tmux_mapkey_navigate_condition('j'))
+  tmux_mapkey_fallback('<M-k>', navigate_wrap('k'), tmux_mapkey_navigate_condition('k'))
+  tmux_mapkey_fallback('<M-l>', navigate_wrap('l'), tmux_mapkey_navigate_condition('l'))
+
   tmux_mapkey_fallback('<M-p>', 'last-pane')
   tmux_mapkey_fallback('<M-R>', 'swap-pane -U')
   tmux_mapkey_fallback('<M-r>', 'swap-pane -D')
   tmux_mapkey_fallback('<M-o>', "confirm 'kill-pane -a'")
   tmux_mapkey_fallback('<M-=>', "confirm 'select-layout tiled'")
   tmux_mapkey_fallback('<M-c>', 'confirm kill-pane', tmux_mapkey_close_win_condition)
+  tmux_mapkey_fallback('<M-q>', 'confirm kill-pane', tmux_mapkey_close_win_condition)
   tmux_mapkey_fallback('<M-<>', 'resize-pane -L 4', tmux_mapkey_resize_pane_horiz_condition)
   tmux_mapkey_fallback('<M->>', 'resize-pane -R 4', tmux_mapkey_resize_pane_horiz_condition)
   tmux_mapkey_fallback('<M-,>', 'resize-pane -L 4', tmux_mapkey_resize_pane_horiz_condition)

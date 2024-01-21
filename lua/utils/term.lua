@@ -1,5 +1,35 @@
 local M = {}
 
+---List of programs considered as TUI apps
+M.tui = {
+  vi = true,
+  fzf = true,
+  nvi = true,
+  kak = true,
+  vim = true,
+  nvim = true,
+  sudo = true,
+  nano = true,
+  helix = true,
+  nmtui = true,
+  emacs = true,
+  vimdiff = true,
+  lazygit = true,
+  emacsclient = true,
+}
+
+---Check if any of the processes in terminal buffer `buf` is a TUI app
+---@param buf integer? buffer handler
+---@return boolean?
+function M.running_tui(buf)
+  local proc_names = M.proc_names(buf)
+  for _, proc_name in ipairs(proc_names) do
+    if M.tui[proc_name] then
+      return true
+    end
+  end
+end
+
 ---Get list of names of the processes running in the terminal
 ---@param buf integer? terminal buffer handler, default to 0 (current)
 ---@return string[]: process names

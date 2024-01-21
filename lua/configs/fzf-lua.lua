@@ -305,18 +305,11 @@ fzf.setup({
         \ setlocal bt=nofile bh=wipe nobl noswf wfh
     ]],
     on_create = function()
-      local buf = vim.api.nvim_get_current_buf()
-      -- Restore some terminal mode mappings (mapped in core.keymaps)
-      -- to avoid conflicts with fzf-lua's action keymaps
-      vim.keymap.set('t', '<M-s>', '<M-s>', { buffer = buf })
-      vim.keymap.set('t', '<M-v>', '<M-v>', { buffer = buf })
-      vim.keymap.set('t', '<M-o>', '<M-o>', { buffer = buf })
-      vim.keymap.set('t', '<M-c>', '<M-c>', { buffer = buf })
       vim.keymap.set(
         't',
         '<C-r>',
         [['<C-\><C-N>"' . nr2char(getchar()) . 'pi']],
-        { expr = true, buffer = buf }
+        { expr = true, buffer = true }
       )
     end,
     on_close = function()
