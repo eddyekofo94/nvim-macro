@@ -22,10 +22,10 @@ function M.add_attr(attr, snip_group)
     -- ls.multi_snippet
     if snip.v_snips then
       for _, s in ipairs(snip.v_snips) do
-        snip_set_attr(s, attr)
+        M.snip_set_attr(s, attr)
       end
     else -- ls.snippet
-      snip_set_attr(snip, attr)
+      M.snip_set_attr(snip, attr)
     end
   end
   return snip_group
