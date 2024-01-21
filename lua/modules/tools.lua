@@ -202,7 +202,6 @@ return {
       vim.g.loaded_netrwPlugin = 1
       vim.api.nvim_create_autocmd('BufWinEnter', {
         nested = true,
-        group = vim.api.nvim_create_augroup('OilInit', {}),
         callback = function(info)
           local path = info.file
           if path == '' then
@@ -217,6 +216,7 @@ return {
           end
           local stat = vim.uv.fs_stat(path)
           if stat and stat.type == 'directory' then
+            vim.api.nvim_del_autocmd(info.id)
             require('oil')
             vim.cmd.edit({ bang = true })
             return true
