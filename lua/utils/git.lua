@@ -89,7 +89,7 @@ function M.branch(buf)
       vim.system,
       { 'git', '-C', dir, 'rev-parse', '--abbrev-ref', 'HEAD' },
       { stderr = false },
-      function(err, _)
+      function(err)
         local buf_branch = err.stdout:gsub('\n.*', '')
         pcall(vim.api.nvim_buf_set_var, buf, 'git_branch', buf_branch)
       end
@@ -133,7 +133,7 @@ function M.diffstat(buf)
       '--no-ext-diff',
       '--',
       path,
-    }, { stderr = false }, function(err, _)
+    }, { stderr = false }, function(err)
       local stat = { added = 0, removed = 0, changed = 0 }
       for _, line in ipairs(vim.split(err.stdout, '\n')) do
         if line:find('^@@ ') then
