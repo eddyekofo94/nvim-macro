@@ -142,16 +142,19 @@ function M.setup()
     end
     return start_of_line() and '<Up><End>' or '<Left>'
   end, { expr = true })
+
   map('i', '<C-f>', function()
     if last_line() and end_of_line() then
       return '<Ignore>'
     end
     return end_of_line() and '<Down><Home>' or '<Right>'
   end, { expr = true })
+
   map('i', '<C-k>', function()
     return '<C-g>u'
       .. (end_of_line() and '<Del>' or '<Cmd>normal! D<CR><Right>')
   end, { expr = true })
+
   map('!', '<C-t>', function()
     if fn.getcmdtype():match('[?/]') then
       return '<C-t>'
@@ -182,12 +185,14 @@ function M.setup()
       return '<BS><Right>' .. get_char(-1)
     end
   end, { expr = true })
+
   map('!', '<C-u>', function()
     if not start_of_line() then
       fn.setreg('-', get_current_line():sub(1, get_current_col() - 1))
     end
     return fn.mode() == 'c' and '<C-u>' or '<C-g>u<C-u>'
   end, { expr = true })
+
   map('!', '<M-b>', function()
     local word_before = get_word_before()
     if not str_isempty(word_before) or fn.mode() == 'c' then
@@ -202,6 +207,7 @@ function M.setup()
       .. string.rep('<Up>', current_linenr - target_linenr)
       .. string.rep('<Left>', #get_word_before(line_str, #line_str))
   end, { expr = true })
+
   map('!', '<M-f>', function()
     local word_after = get_word_after()
     if not str_isempty(word_after) or fn.mode() == 'c' then
@@ -216,6 +222,7 @@ function M.setup()
       .. string.rep('<Down>', target_linenr - current_linenr)
       .. string.rep('<Right>', #get_word_after(line_str, 1))
   end, { expr = true })
+
   map('!', '<M-d>', function()
     return (fn.mode() == 'c' and '' or '<C-g>u')
       .. string.rep('<Del>', #get_word_after())
