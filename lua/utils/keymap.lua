@@ -155,7 +155,7 @@ end
 ---@return fun(): T[]
 function M.count_wrap(fn, count)
   return function()
-    if count == 0 and vim.v.count0 == 0 then
+    if count == 0 and vim.v.count == 0 then
       return {}
     end
     local result = {}
