@@ -141,12 +141,14 @@ g.loaded_python3_provider  = 0
 -- stylua: ignore end
 
 -- Load rplugins on FileType event
-g.loaded_remote_plugins = 1
-vim.api.nvim_create_autocmd('FileType', {
-  once = true,
-  callback = function()
-    g.loaded_remote_plugins = nil
-    vim.cmd.runtime('plugin/rplugin.vim')
-    return true
-  end,
-})
+if not g.loaded_remote_plugins then
+  g.loaded_remote_plugins = 1
+  vim.api.nvim_create_autocmd('FileType', {
+    once = true,
+    callback = function()
+      g.loaded_remote_plugins = nil
+      vim.cmd.runtime('plugin/rplugin.vim')
+      return true
+    end,
+  })
+end
