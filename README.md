@@ -454,7 +454,7 @@ and it should work out of the box.
 
     <sub>\*Disabled by default for performance condsiderations</sub>
 
-- Jupyter Notebook integration using [jupytext.vim](https://github.com/goerz/jupytext) and [molten-nvim](https://github.com/benlubas/molten-nvim)
+- Jupyter Notebook integration using [jupytext](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/jupytext.lua) and [molten-nvim](https://github.com/benlubas/molten-nvim)
 
     <img src="https://github.com/Bekaboo/nvim/assets/76579810/ce212348-8b89-4a03-a222-ab74f0338a7d" width=75%>
 
@@ -478,7 +478,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 50 (package manager included).
+Total # of plugins: 49 (package manager included).
 
 - **Lib**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -506,7 +506,6 @@ Total # of plugins: 50 (package manager included).
     - [image.nvim](https://github.com/3rd/image.nvim)
     - [otter.nvim](https://github.com/jmbuhr/otter.nvim)
     - [molten-nvim](https://github.com/benlubas/molten-nvim)
-    - [jupytext.vim](https://github.com/goerz/jupytext.vim)
     - [headlines.nvim](https://github.com/lukas-reineke/headlines.nvim)
 - **Edit**
     - [nvim-surround](https://github.com/kylechui/nvim-surround)
@@ -552,6 +551,10 @@ Total # of plugins: 50 (package manager included).
     - Always use spaces for alignment, even if `&expandtab` is not set
 - [im](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/im.lua)
     - Switches and restores fcitx state in each buffer asynchronouly
+- [jupytext](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/jupytext.lua)
+    - Edits jupyter notebook like markown files
+    - Writes into jupyter notebook asynchronouly, which gives a smoother
+      experience than [jupytext.vim](https://github.com/goerz/jupytext)
 - [intro](https://github.com/Bekaboo/nvim/tree/master/plugin/intro.lua)
     - Shows a custom intro message on startup
 - [lsp-diags](https://github.com/Bekaboo/nvim/tree/master/plugin/lsp-diags.lua)

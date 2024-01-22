@@ -63,32 +63,6 @@ return {
   },
 
   {
-    'goerz/jupytext.vim',
-    build = 'jupytext --version',
-    lazy = true,
-    init = function()
-      vim.api.nvim_create_autocmd('BufReadCmd', {
-        desc = 'Lazy load jupytext.vim.',
-        once = true,
-        pattern = '*.ipynb',
-        group = vim.api.nvim_create_augroup('JupyTextLoad', {}),
-        callback = function(info)
-          vim.g.jupytext_command =
-            'jupytext --opt notebook_metadata_filter=-all'
-          vim.opt.rtp:prepend(
-            vim.fs.joinpath(vim.g.package_path, 'jupytext.vim')
-          )
-          vim.schedule(function()
-            vim.cmd.runtime({ 'plugin/jupytext.vim', bang = true })
-            vim.cmd.edit(info.match)
-          end)
-          return true
-        end,
-      })
-    end,
-  },
-
-  {
     'lukas-reineke/headlines.nvim',
     ft = { 'markdown', 'norg', 'org', 'qml' },
     dependencies = 'nvim-treesitter/nvim-treesitter',

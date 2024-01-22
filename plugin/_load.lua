@@ -27,6 +27,17 @@ vim.api.nvim_create_autocmd('ModeChanged', {
   end,
 })
 
+-- jupytext
+vim.api.nvim_create_autocmd('BufReadCmd', {
+  once = true,
+  pattern = '*.ipynb',
+  group = vim.api.nvim_create_augroup('JupyTextInit', {}),
+  callback = function(info)
+    require('plugin.jupytext').setup(info.buf)
+    return true
+  end,
+})
+
 -- lsp-diags
 vim.api.nvim_create_autocmd({ 'LspAttach', 'DiagnosticChanged' }, {
   once = true,
