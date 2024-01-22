@@ -212,7 +212,7 @@ augroup('KeepWinRatio', {
     end,
   },
 }, {
-  { 'TermOpen', 'WinResized' },
+  { 'TermOpen', 'WinResized', 'WinNew' },
   {
     desc = 'Record window ratio.',
     callback = function()
