@@ -57,9 +57,6 @@ return {
     ft = 'python',
     event = 'BufEnter *.ipynb',
     build = ':UpdateRemotePlugins',
-    init = function()
-      vim.g.loaded_python3_provider = nil
-    end,
     config = function()
       require('configs.molten')
     end,

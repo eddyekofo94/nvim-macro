@@ -134,18 +134,25 @@ g.loaded_vimball           = 1
 g.loaded_vimballPlugin     = 1
 g.loaded_zip               = 1
 g.loaded_zipPlugin         = 1
-g.loaded_python3_provider  = 0
 -- stylua: ignore end
 
--- Load rplugins on FileType event
-if not g.loaded_remote_plugins then
-  g.loaded_remote_plugins = 1
-  vim.api.nvim_create_autocmd('FileType', {
-    once = true,
-    callback = function()
-      g.loaded_remote_plugins = nil
-      vim.cmd.runtime('plugin/rplugin.vim')
-      return true
-    end,
-  })
+---Lazy-load runtime files
+---@param runtime string
+---@param flag string
+---@param event string|string[]
+local function _load(runtime, flag, event)
+  if not g[flag] then
+    g[flag] = 0
+    vim.api.nvim_create_autocmd(event, {
+      once = true,
+      callback = function()
+        g[flag] = nil
+        vim.cmd.runtime(runtime)
+        return true
+      end,
+    })
+  end
 end
+
+_load('plugin/rplugin.vim', 'loaded_remote_plugins', 'FileType')
+_load('provider/python3.vim', 'loaded_python3_provider', 'FileType')
