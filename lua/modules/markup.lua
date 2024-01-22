@@ -67,13 +67,14 @@ return {
     build = 'jupytext --version',
     lazy = true,
     init = function()
-      vim.g.jupytext_command = 'jupytext --opt notebook_metadata_filter=-all'
       vim.api.nvim_create_autocmd('BufReadCmd', {
         desc = 'Lazy load jupytext.vim.',
         once = true,
         pattern = '*.ipynb',
         group = vim.api.nvim_create_augroup('JupyTextLoad', {}),
         callback = function(info)
+          vim.g.jupytext_command =
+            'jupytext --opt notebook_metadata_filter=-all'
           vim.opt.rtp:prepend(
             vim.fs.joinpath(vim.g.package_path, 'jupytext.vim')
           )
