@@ -105,6 +105,8 @@ vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
     ---Set WinBar & WinBarNC background to Normal background
     ---@return nil
     local function clear_winbar_bg()
+      ---@param name string
+      ---@return nil
       local function _clear_bg(name)
         local hl = utils.hl.get(0, {
           name = name,

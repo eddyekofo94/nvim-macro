@@ -276,6 +276,7 @@ function _G.get_statuscolumn()
     .. (data.show_fdc and ' ' or '')
 end
 
+---@return nil
 local function setup()
   if vim.g.loaded_statuscolumn ~= nil then
     return
