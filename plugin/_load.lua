@@ -20,7 +20,7 @@ vim.api.nvim_create_autocmd('InsertEnter', {
 vim.api.nvim_create_autocmd('ModeChanged', {
   once = true,
   pattern = '*:[ictRss\x13]*',
-  group = vim.api.nvim_create_augroup('IMInit', {}),
+  group = vim.api.nvim_create_augroup('IMSetup', {}),
   callback = function()
     require('plugin.im').setup()
     return true
@@ -31,7 +31,7 @@ vim.api.nvim_create_autocmd('ModeChanged', {
 vim.api.nvim_create_autocmd('BufReadCmd', {
   once = true,
   pattern = '*.ipynb',
-  group = vim.api.nvim_create_augroup('JupyTextInit', {}),
+  group = vim.api.nvim_create_augroup('JupyTextSetup', {}),
   callback = function(info)
     require('plugin.jupytext').setup(info.buf)
     return true
