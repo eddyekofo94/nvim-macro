@@ -377,7 +377,7 @@ augroup('SpecialBufHeight', {
 
       -- Don't resize if the window will be larger after resizing
       local height = math.ceil((vim.go.lines - vim.go.ch) * 0.38)
-      if height < vim.go.hh or height >= vim.api.nvim_win_get_height(0) then
+      if height < vim.go.pvh or height >= vim.api.nvim_win_get_height(0) then
         return
       end
 
