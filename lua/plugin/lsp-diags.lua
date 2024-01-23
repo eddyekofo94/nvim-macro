@@ -43,8 +43,8 @@ local function setup_keymaps()
   end
   -- stylua: ignore start
   vim.keymap.set({ 'n' }, 'gq;', vim.lsp.buf.format)
-  vim.keymap.set({ 'n', 'x' }, '<Leader>ca', vim.lsp.buf.code_action)
   vim.keymap.set({ 'n', 'x' }, '<Leader>r', vim.lsp.buf.rename)
+  vim.keymap.set({ 'n', 'x' }, '<Leader>a', vim.lsp.buf.code_action)
   vim.keymap.set({ 'n', 'x' }, '<Leader><', vim.lsp.buf.incoming_calls)
   vim.keymap.set({ 'n', 'x' }, '<Leader>>', vim.lsp.buf.outgoing_calls)
   vim.keymap.set({ 'n', 'x' }, '<Leader>s', vim.lsp.buf.document_symbol)
