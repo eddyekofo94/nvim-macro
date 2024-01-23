@@ -557,7 +557,7 @@ Total # of plugins: 49 (package manager included).
       experience than [jupytext.vim](https://github.com/goerz/jupytext)
 - [intro](https://github.com/Bekaboo/nvim/tree/master/plugin/intro.lua)
     - Shows a custom intro message on startup
-- [lsp-diags](https://github.com/Bekaboo/nvim/tree/master/plugin/lsp-diags.lua)
+- [lsp-diags](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/lsp-diags.lua)
     - Sets up LSP and diagnostic options and commands on `LspAttach` or
       `DiagnosticChanged`
 - [readline](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/readline.lua)
