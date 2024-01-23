@@ -205,7 +205,7 @@ local function numdigits(number)
 end
 
 ---@return string
-function _G.get_statuscolumn()
+function _G._stc()
   local win = vim.g.statusline_winid
   local display_tick = ffi.C.display_tick --[[@as uinteger]]
   if not shared[win] then -- Initialize shared data
@@ -291,7 +291,7 @@ local function setup()
       and vim.fn.win_gettype() == ''
       and not vim.b.bigfile
     then
-      vim.opt_local.stc = '%!v:lua.get_statuscolumn()'
+      vim.opt_local.stc = '%!v:lua._stc()'
     end
   end
 
