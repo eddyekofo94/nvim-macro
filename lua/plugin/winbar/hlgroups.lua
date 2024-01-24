@@ -71,7 +71,7 @@ local hlgroups = {
   WinBarIconUISeparatorMenu       = { link = 'WinBarIconUISeparator' },
   WinBarMenuCurrentContext        = { link = 'PmenuSel' },
   WinBarMenuFloatBorder           = { link = 'FloatBorder' },
-  WinBarMenuHoverEntry            = { link = 'PmenuSel' },
+  WinBarMenuHoverEntry            = { link = 'IncSearch' },
   WinBarMenuHoverIcon             = { reverse = true },
   WinBarMenuHoverSymbol           = { bold = true },
   WinBarMenuNormalFloat           = { link = 'NormalFloat' },
