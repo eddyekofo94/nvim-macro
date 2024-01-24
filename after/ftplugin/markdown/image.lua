@@ -60,9 +60,10 @@ local function insert_image()
     'cp',
     vim.fs.joinpath(
       fn.stdpath('config') --[[@as string]],
+      'after',
       'ftplugin',
       'markdown',
-      'reousrces',
+      'resources',
       'blank.drawio.png'
     ),
     vim.fs.joinpath(path, fname),
