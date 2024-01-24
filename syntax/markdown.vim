@@ -29,16 +29,4 @@ hi link mkdCode          markdownCode
 hi link mkdCodeBlock     markdownCodeBlock
 hi link mkdCodeDelimiter markdownCodeDelimiter
 
-lua << EOF
-local buf = vim.api.nvim_get_current_buf()
-vim.schedule(function()
-  if not vim.api.nvim_buf_is_valid(buf) then
-    return
-  end
-  vim.api.nvim_buf_call(buf, function()
-    pcall(vim.treesitter.start, buf, 'markdown')
-  end)
-end)
-EOF
-
 let b:current_syntax = 'markdown'
