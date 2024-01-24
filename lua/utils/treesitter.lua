@@ -1,6 +1,6 @@
 local M = {}
 
----Returns whether the current buffer has treesitter enabled
+---Returns whether treesitter is active in `buf`
 ---@param buf integer? default: current buffer
 ---@return boolean
 function M.is_active(buf)
