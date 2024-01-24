@@ -13,8 +13,4 @@ require('image').setup({
   max_height = 12,
   max_width_window_percentage = math.huge,
   max_height_window_percentage = math.huge,
-  integrations = {
-    markdown = { enabled = false },
-    neorg = { enabled = false },
-  },
 })

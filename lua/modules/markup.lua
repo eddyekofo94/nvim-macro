@@ -29,6 +29,7 @@ return {
   {
     '3rd/image.nvim',
     enabled = vim.g.modern_ui or false,
+    ft = { 'markdown', 'norg' },
     event = { 'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb' },
     build = {
       'ueberzug version',
