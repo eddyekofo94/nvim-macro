@@ -136,7 +136,7 @@ local function setup_lsp_overrides()
   function vim.lsp.util.open_floating_preview(contents, syntax, opts)
     local source_ft = vim.bo[vim.api.nvim_get_current_buf()].ft
     opts = vim.tbl_deep_extend('force', opts, opts_override_floating_preview)
-    -- If source filetype if markdown, use custom mkd syntax instead of
+    -- If source filetype is markdown, use custom mkd syntax instead of
     -- markdown syntax to avoid using treesitter highlight and get math
     -- concealing provided by vimtex in the floating window
     if source_ft == 'markdown' then
