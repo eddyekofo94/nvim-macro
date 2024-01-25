@@ -1,1 +1,1 @@
-/home/zeng/.config/nvim/after/ftplugin/c/lsp.lua
+../c/lsp.lua
