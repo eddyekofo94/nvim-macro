@@ -761,6 +761,10 @@ local fzf_reg_cmd = {
   },
 }
 
+local fzf_display_cmd = vim.tbl_deep_extend('force', fzf_reg_cmd, {
+  [2] = { complete = complfn('Display', 'display') },
+})
+
 local fzf_au_cmd = {
   function(info)
     if #info.fargs <= 1 and not info.bang then
@@ -836,6 +840,7 @@ vim.api.nvim_create_user_command('Buffers', unpack(fzf_ls_cmd))
 vim.api.nvim_create_user_command('Marks', unpack(fzf_marks_cmd))
 vim.api.nvim_create_user_command('Highlight', unpack(fzf_hi_cmd))
 vim.api.nvim_create_user_command('Registers', unpack(fzf_reg_cmd))
+vim.api.nvim_create_user_command('Display', unpack(fzf_display_cmd))
 vim.api.nvim_create_user_command('Oldfiles', fzf.oldfiles, {})
 vim.api.nvim_create_user_command('Changes', fzf.changes, {})
 vim.api.nvim_create_user_command('Tags', fzf.tagstack, {})
