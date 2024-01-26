@@ -351,101 +351,129 @@ augroup('SpecialBufHeight', {
     end,
   },
 }, {
-  { 'BufWinEnter', 'TermOpen' },
+  'WinClosed',
+  {
+    desc = 'Record time when a split is closed.',
+    group = groupid,
+    callback = function()
+      local wtype = vim.fn.win_gettype()
+      if wtype ~= 'autocmd' and wtype ~= 'popup' and wtype ~= 'unknown' then
+        vim.g._wclosed = true
+      end
+    end,
+  },
+}, {
+  { 'BufWinEnter', 'TermOpen', 'WinResized' },
   {
     desc = 'Set a smaller window height for some special buffers.',
-    callback = function(info)
-      local bo = vim.bo[info.buf]
-      local bt = bo.bt
-      local ft = bo.ft
-      if
-        ft == 'netrw'
-        or ft == 'oil'
-        or bt == ''
-        or bt == 'quickfix'
-        or bt == 'prompt'
-        or vim.wo.wfh
-        or vim.fn.win_gettype() ~= ''
-      then
-        return
-      end
+    callback = function()
+      ---@return nil
+      local function _resize()
+        local bo = vim.bo
+        local bt = bo.bt
+        local ft = bo.ft
+        if
+          bt == ''
+          or bt == 'quickfix'
+          or bt == 'prompt'
+          or ft == 'netrw'
+          or ft == 'oil'
+          or vim.wo.wfh
+          or vim.fn.win_gettype() ~= ''
+        then
+          return
+        end
 
-      -- Don't resize when the window is created manually
-      if vim.w._created and vim.uv.now() - vim.w._created > 100 then
-        return
-      end
+        -- Don't resize the window if it is not a new window
+        -- and the resize is triggerd by a window closing
+        if
+          not vim.g._wclosed
+          and vim.w._created
+          and vim.uv.now() - vim.w._created > 100
+        then
+          return
+        end
 
-      -- Don't resize if the window will be larger after resizing
-      local height = math.ceil((vim.go.lines - vim.go.ch) * 0.38)
-      if height < vim.go.pvh or height >= vim.api.nvim_win_get_height(0) then
-        return
-      end
+        -- Don't resize if the window will be larger after resizing
+        local height = math.ceil((vim.go.lines - vim.go.ch) * 0.38)
+        if height < vim.go.pvh or height >= vim.api.nvim_win_get_height(0) then
+          return
+        end
 
-      -- Don't resize if it will affect other windows in an undesirable way
+        -- Don't resize if it will affect other windows in an undesirable way
 
-      -- If the window has no other windows above or below it,
-      -- resizing it will cause cmdheight to change
-      local win = vim.fn.winnr()
-      local win_bel = vim.fn.winnr('j')
-      local win_abv = vim.fn.winnr('k')
-      if win_bel == win and win_abv == win then
-        return
-      end
+        -- If the window has no other windows above or below it,
+        -- resizing it will cause cmdheight to change
+        local win = vim.fn.winnr()
+        local win_bel = vim.fn.winnr('j')
+        local win_abv = vim.fn.winnr('k')
+        if win_bel == win and win_abv == win then
+          return
+        end
 
-      -- If the window has other windows above or below and has no
-      -- window on the left or right, resizing it will be safe
-      local win_left = vim.fn.winnr('h')
-      local win_right = vim.fn.winnr('l')
-      if win_left == win and win_right == win then
-        goto resize
-        return
-      end
+        -- If the window has other windows above or below and has no
+        -- window on the left or right, resizing it will be safe
+        local win_left = vim.fn.winnr('h')
+        local win_right = vim.fn.winnr('l')
+        if win_left == win and win_right == win then
+          goto resize
+        end
 
-      -- If the window has left/right windows that has the same above/below
-      -- window with it, they are sharing the same 'grid', so resizing the
-      -- window will also resize its left/right windows in the same direction,
-      -- which is undesirable:
-      --
-      --  +-----------------+
-      --  |  win A          |
-      --  |                 |
-      --  +--------+--------+  ==> resizing C will also resize B in the same
-      --  | win B  | win C  |      direction, don't resize
-      --  |        | (new)  |
-      --  +--------+--------+
-      --
-      --  +--------+--------+
-      --  |  win A | win B  |
-      --  |        |        |
-      --  |        +--------+  ==> resizing C will not affect other windows
-      --  |        | win C  |      in an undesirable way, can resize
-      --  |        | (new)  |
-      --  +--------+--------+
-      do
-        if win_left ~= win then
-          -- stylua: ignore start
-          local winid_left = vim.fn.win_getid(win_left)
-          local win_lbel = vim.api.nvim_win_call(winid_left, function() return vim.fn.winnr('j') end)
-          local win_labv = vim.api.nvim_win_call(winid_left, function() return vim.fn.winnr('k') end)
-          -- stylua: ignore end
-          if win_lbel == win_bel or win_labv == win_abv then
-            return
+        -- If the window has left/right windows that has the same above/below
+        -- window with it, they are sharing the same 'grid', so resizing the
+        -- window will also resize its left/right windows in the same direction,
+        -- which is undesirable:
+        --
+        --  +-----------------+
+        --  |  win A          |
+        --  |                 |
+        --  +--------+--------+  ==> resizing C will also resize B in the same
+        --  | win B  | win C  |      direction, don't resize
+        --  |        | (new)  |
+        --  +--------+--------+
+        --
+        --  +--------+--------+
+        --  |  win A | win B  |
+        --  |        |        |
+        --  |        +--------+  ==> resizing C will not affect other windows
+        --  |        | win C  |      in an undesirable way, can resize
+        --  |        | (new)  |
+        --  +--------+--------+
+        do
+          if win_left ~= win then
+            -- stylua: ignore start
+            local winid_left = vim.fn.win_getid(win_left)
+            local win_lbel = vim.api.nvim_win_call(winid_left, function() return vim.fn.winnr('j') end)
+            local win_labv = vim.api.nvim_win_call(winid_left, function() return vim.fn.winnr('k') end)
+            -- stylua: ignore end
+            if win_lbel == win_bel or win_labv == win_abv then
+              return
+            end
+          end
+          if win_right ~= win then
+            -- stylua: ignore start
+            local winid_right = vim.fn.win_getid(win_right)
+            local win_rbel = vim.api.nvim_win_call(winid_right, function() return vim.fn.winnr('j') end)
+            local win_rabv = vim.api.nvim_win_call(winid_right, function() return vim.fn.winnr('k') end)
+            -- stylua: ignore end
+            if win_rbel == win_bel or win_rabv == win_abv then
+              return
+            end
           end
         end
-        if win_right ~= win then
-          -- stylua: ignore start
-          local winid_right = vim.fn.win_getid(win_right)
-          local win_rbel = vim.api.nvim_win_call(winid_right, function() return vim.fn.winnr('j') end)
-          local win_rabv = vim.api.nvim_win_call(winid_right, function() return vim.fn.winnr('k') end)
-          -- stylua: ignore end
-          if win_rbel == win_bel or win_rabv == win_abv then
-            return
-          end
-        end
+
+        ::resize::
+        vim.api.nvim_win_set_height(0, height)
       end
 
-      ::resize::
-      vim.api.nvim_win_set_height(0, height)
+      if vim.v.event.windows and vim.g._wclosed then
+        for _, win in ipairs(vim.v.event.windows) do
+          vim.api.nvim_win_call(win, _resize)
+        end
+        vim.g._wclosed = nil
+      else
+        _resize()
+      end
     end,
   },
 })
