@@ -3,10 +3,14 @@
 " Author:       Bekaboo <kankefengjing@gmail.com>
 " Maintainer:   Bekaboo <kankefengjing@gmail.com>
 " Remark:       Uses tex syntax file
+" Last Updated: Sun Feb  4 01:04:05 AM CST 2024
 
 if exists('b:current_syntax')
   finish
 endif
+
+exe 'source ' . $VIMRUNTIME . '/syntax/markdown.vim'
+unlet! b:current_syntax
 
 " Include tex math in markdown
 syn include @tex syntax/tex.vim
