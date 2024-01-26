@@ -1,6 +1,6 @@
 ---Record previous cmdline completion types,
----cmdcompltype[1] is the current completion type,
----cmdcompltype[2] is the previous completion type
+---`cmdcompltype[1]` is the current completion type,
+---`cmdcompltype[2]` is the previous completion type
 ---@type string[]
 local compltype = {}
 
