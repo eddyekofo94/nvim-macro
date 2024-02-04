@@ -40,7 +40,6 @@ ts_configs.setup({
     'markdown',
     'markdown_inline',
     -- Additional parsers
-    'latex',
     'cpp',
     'cuda',
     'rust',
@@ -57,8 +56,9 @@ ts_configs.setup({
       -- files in syntax/markdown.vim to get better inline code
       -- highlighting while still preserving math conceal provided
       -- by vimtex regex syntax rules
-      return ft == 'markdown'
-        or ft == 'tex'
+      return ft == 'tex'
+        or ft == 'latex'
+        or ft == 'markdown'
         or vim.b[buf].midfile == true
         or vim.fn.win_gettype() == 'command'
     end,
