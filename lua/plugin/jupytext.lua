@@ -57,54 +57,52 @@ local function jupytext_convert(buf)
     handler:close()
   end
 
-  -- Use jupytext to generate markdown file only when necessary
-  -- (sha differs or file not found) to increase loading speed
-  if
-    not prev_sha
-    or not cur_sha
-    or prev_sha ~= cur_sha
-    or not vim.uv.fs_stat(fpath_md)
-  then
-    vim
-      .system({
-        'jupytext',
-        '--to=md',
-        '--format-options',
-        'notebook_metadata_filter=-all',
-        '--output',
-        fpath_md,
-        fpath_ipynb,
-      }, {}, function(obj)
-        if obj.code ~= 0 then
-          vim.notify(
-            '[jupytext] error reading from notebook: ' .. obj.stderr,
-            vim.log.levels.ERROR
-          )
-        end
-      end)
-      :wait()
-    if cur_sha then
-      _write_sha(cur_sha)
+  -- Convert ipynb file to markdown file using jupytext
+  if vim.uv.fs_stat(fpath_ipynb) then
+    -- Use jupytext to generate markdown file only when necessary
+    -- (sha differs or file not found) to increase loading speed
+    if
+      prev_sha ~= cur_sha
+      or not prev_sha
+      or not cur_sha
+      or not vim.uv.fs_stat(fpath_md)
+    then
+      vim
+        .system({
+          'jupytext',
+          '--to=md',
+          '--format-options',
+          'notebook_metadata_filter=-all',
+          '--output',
+          fpath_md,
+          fpath_ipynb,
+        }, {}, function(obj)
+          if obj.code ~= 0 then
+            vim.schedule(function()
+              vim.notify(
+                '[jupytext] error reading from notebook: ' .. obj.stderr,
+                vim.log.levels.ERROR
+              )
+            end)
+          end
+        end)
+        :wait()
+      if cur_sha then
+        _write_sha(cur_sha)
+      end
     end
+
+    local undolevels = vim.bo[buf].undolevels
+    vim.bo[buf].undolevels = -1
+    vim.cmd.read({
+      args = { vim.fn.fnameescape(fpath_md) },
+      mods = { silent = true, keepalt = true },
+    })
+    vim.cmd.delete({ range = { 1 }, mods = { emsg_silent = true } })
+    vim.bo[buf].undolevels = undolevels
   end
 
-  local bo = vim.bo[buf]
-  local undolevels = bo.undolevels
-  bo.undolevels = -1
-  vim.cmd.read({
-    args = { vim.fn.fnameescape(fpath_md) },
-    mods = {
-      silent = true,
-      keepalt = true,
-    },
-  })
-  vim.cmd.delete({
-    range = { 1 },
-    mods = { emsg_silent = true },
-  })
-  bo.undolevels = undolevels
-  bo.ft = 'markdown'
-
+  vim.bo[buf].ft = 'markdown'
   vim.api.nvim_create_autocmd({ 'BufWriteCmd', 'FileWriteCmd' }, {
     group = vim.api.nvim_create_augroup('JupyText' .. buf, {}),
     buffer = buf,
