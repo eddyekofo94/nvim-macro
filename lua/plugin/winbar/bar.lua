@@ -27,6 +27,7 @@ local utils = require('plugin.winbar.utils')
 ---@field swapped table<string, true>? swapped fields of the symbol
 ---@field cache table caches string representation, length, etc. for the symbol
 ---@field opts winbar_symbol_opts_t? options passed to `winbar_symbol_t:new()` when the symbols is created
+---@field data table? any other relavent data
 local winbar_symbol_t = {}
 
 function winbar_symbol_t:__index(k)
