@@ -6,6 +6,7 @@ local g = vim.g
 local opt = vim.opt
 
 g.has_ui = #vim.api.nvim_list_uis() > 0
+g.has_gui = vim.fn.has('gui_running') == 1
 g.modern_ui = g.has_ui and vim.env.DISPLAY ~= nil
 
 -- stylua: ignore start

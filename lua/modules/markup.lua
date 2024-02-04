@@ -28,7 +28,7 @@ return {
 
   {
     '3rd/image.nvim',
-    enabled = vim.g.modern_ui or false,
+    enabled = vim.g.modern_ui and not vim.g.has_gui or false,
     ft = { 'markdown', 'norg' },
     event = { 'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb' },
     build = {
