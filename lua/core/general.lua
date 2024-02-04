@@ -125,14 +125,14 @@ g.netrw_liststyle       = 1
 g.netrw_localcopydircmd = 'cp -r'
 
 -- Disable plugins shipped with neovim
-g.loaded_2html_plugin      = 1
-g.loaded_gzip              = 1
-g.loaded_matchit           = 1
-g.loaded_tar               = 1
-g.loaded_tarPlugin         = 1
-g.loaded_tutor_mode_plugin = 1
-g.loaded_zip               = 1
-g.loaded_zipPlugin         = 1
+g.loaded_2html_plugin      = 0
+g.loaded_gzip              = 0
+g.loaded_matchit           = 0
+g.loaded_tar               = 0
+g.loaded_tarPlugin         = 0
+g.loaded_tutor_mode_plugin = 0
+g.loaded_zip               = 0
+g.loaded_zipPlugin         = 0
 -- stylua: ignore end
 
 ---Lazy-load runtime files
