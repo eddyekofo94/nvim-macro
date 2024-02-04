@@ -93,6 +93,19 @@ local views = {}
 local ratios = {}
 local heights = {}
 
+vim.api.nvim_create_autocmd('WinClosed', {
+  desc = 'Clear window data when window is closed.',
+  group = vim.api.nvim_create_augroup('WinUtilsClearData', {}),
+  callback = function(info)
+    local win = tonumber(info.match)
+    if win then
+      views[win] = nil
+      ratios[win] = nil
+      heights[win] = nil
+    end
+  end,
+})
+
 M.clearviews = M.clear(views)
 M.clearratio = M.clear(ratios)
 M.clearheights = M.clear(heights)
