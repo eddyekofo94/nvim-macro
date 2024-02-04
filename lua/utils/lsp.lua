@@ -35,21 +35,19 @@ M.default_config = { root_patterns = require('utils.fs').root_patterns }
 ---@param opts lsp.StartOpts?
 ---@return integer? client_id id of attached client or nil if failed
 function M.start(config, opts)
-  if vim.bo.bt == 'nofile' then
+  if vim.b.bigfile or vim.bo.bt == 'nofile' then
     return
   end
 
   local cmd_type = type(config.cmd)
-  if
-    cmd_type == 'table'
-    and (not config.cmd[1] or vim.fn.executable(config.cmd[1]) == 0)
-  then
+  local cmd_exec = cmd_type == 'table' and config.cmd[1]
+  if cmd_type == 'table' and vim.fn.executable(cmd_exec or '') == 0 then
     return
   end
 
   return vim.lsp.start(
     vim.tbl_deep_extend('keep', config or {}, {
-      name = cmd_type == 'table' and config.cmd[1] or nil,
+      name = cmd_exec,
       root_dir = require('utils.fs').proj_dir(
         vim.api.nvim_buf_get_name(0),
         vim.list_extend(
