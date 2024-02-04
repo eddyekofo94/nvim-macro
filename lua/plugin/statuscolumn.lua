@@ -147,7 +147,7 @@ function builders.lnum(data)
 
   ::lnum_ret_default::
   return string.format(
-    '%%=%' .. math.max(data.nuw - 1, data.lnumw or 0) .. 'd ',
+    '%%=%' .. math.max(data.nuw - 1, data.lnumw or 0) .. 's ',
     result
   )
 end
