@@ -138,15 +138,18 @@ function builders.lnum(data)
     goto lnum_ret_default
   end
   if data.relnum == 0 then
-    result = string.format(
-      '%-' .. math.max(data.nuw - 1, data.lnumw) .. 'd',
+    return string.format(
+      '%%=%-' .. math.max(data.nuw - 1, data.lnumw or 0) .. 'd ',
       data.lnum
     )
-    goto lnum_ret_default
   end
   result = data.relnum
+
   ::lnum_ret_default::
-  return '%=' .. result .. ' '
+  return string.format(
+    '%%=%' .. math.max(data.nuw - 1, data.lnumw or 0) .. 'd ',
+    result
+  )
 end
 
 ---@param data stc_shared_data_t
