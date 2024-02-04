@@ -6,21 +6,6 @@ local config = require('fzf-lua.config')
 local fzf_utils = require('fzf-lua.utils')
 local utils = require('utils')
 
-local _normalize_opts = config.normalize_opts
-
----Override `config.normalize_opts()` to always apply headers option,
----this eliminates the need to call `core.set_header()` in each provider
----@param opts table
----@return table: normalized opts
----@diagnostic disable-next-line: duplicate-set-field
-function config.normalize_opts(opts, ...)
-  opts = _normalize_opts(opts, ...)
-  if opts.headers then
-    opts = core.set_header(opts, opts.headers)
-  end
-  return opts
-end
-
 local _arg_del = actions.arg_del
 local _vimcmd_buf = actions.vimcmd_buf
 
@@ -138,24 +123,6 @@ function actions.switch_cwd()
   end
 
   actions.resume()
-end
-
----Override `actions.toggle_ignore()` to respect `opts.cwd`
----@diagnostic disable-next-line: duplicate-set-field
-function actions.toggle_ignore(_, opts)
-  local _opts = { resume = true, cwd = opts.cwd }
-  local flag = opts.toggle_ignore_flag or '--no-ignore'
-  if not flag:match('^%s') then
-    flag = ' ' .. flag
-  end
-  if opts.cmd:match(fzf_utils.lua_regex_escape(flag)) then
-    _opts._hdr_to = false
-    _opts.cmd = opts.cmd:gsub(fzf_utils.lua_regex_escape(flag), '')
-  else
-    _opts._hdr_to = true
-    _opts.cmd = opts.cmd .. flag
-  end
-  opts.__ACT_TO(_opts)
 end
 
 ---Delete selected autocmd
