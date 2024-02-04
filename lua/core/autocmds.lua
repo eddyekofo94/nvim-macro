@@ -25,16 +25,6 @@ augroup('BigFileSettings', {
       end
       if stat.size > 48000 then
         vim.b.midfile = true
-        autocmd('BufReadPost', {
-          buffer = info.buf,
-          once = true,
-          callback = function()
-            vim.schedule(function()
-              pcall(vim.treesitter.stop, info.buf)
-            end)
-            return true
-          end,
-        })
       end
       if stat.size > 1024000 then
         vim.b.bigfile = true
@@ -47,14 +37,7 @@ augroup('BigFileSettings', {
         vim.opt_local.signcolumn = 'no'
         vim.opt_local.foldcolumn = '0'
         vim.opt_local.winbar = ''
-        autocmd('BufReadPost', {
-          buffer = info.buf,
-          once = true,
-          callback = function()
-            vim.opt_local.syntax = ''
-            return true
-          end,
-        })
+        vim.cmd.syntax('off')
       end
     end,
   },
