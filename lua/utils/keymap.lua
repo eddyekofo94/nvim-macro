@@ -2,7 +2,7 @@ local M = {}
 
 ---Set abbreviation that only expand when the trigger is at the position of
 ---a command
----@param trig string|table{[1]: string, [2]: string}
+---@param trig string|{ [1]: string, [2]: string }
 ---@param command string
 ---@param opts table?
 function M.command_abbrev(trig, command, opts)
