@@ -14,6 +14,7 @@ opt.colorcolumn    = '+1'
 opt.cursorlineopt  = 'number'
 opt.cursorline     = true
 opt.foldlevelstart = 99
+opt.foldtext       = ''
 opt.helpheight     = 10
 opt.showmode       = false
 opt.mousemoveevent = true

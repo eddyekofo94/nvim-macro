@@ -12,10 +12,8 @@ local function enable_ts_folding(buf)
     local o = vim.opt_local
     local fdm = o.fdm:get() ---@diagnostic disable-line: undefined-field
     local fde = o.fde:get() ---@diagnostic disable-line: undefined-field
-    local fdt = o.fdt:get() ---@diagnostic disable-line: undefined-field
     o.fdm = fdm == 'manual' and 'expr' or fdm
     o.fde = fde == '0' and 'nvim_treesitter#foldexpr()' or fde
-    o.fdt = fdt == 'foldtext()' and 'v:lua.vim.treesitter.foldtext()' or fdt
   end)
 end
 
