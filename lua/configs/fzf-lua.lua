@@ -3,7 +3,6 @@ local actions = require('fzf-lua.actions')
 local core = require('fzf-lua.core')
 local path = require('fzf-lua.path')
 local config = require('fzf-lua.config')
-local fzf_utils = require('fzf-lua.utils')
 local utils = require('utils')
 
 local _arg_del = actions.arg_del
