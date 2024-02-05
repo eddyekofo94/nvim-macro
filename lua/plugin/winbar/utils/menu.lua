@@ -183,9 +183,11 @@ function M.select(items, opts, on_choice)
       if #border == 1 and border[1] == '' then
         win_configs.border = border_none_with_prompt
       elseif #border > 1 and border[2] == '' then
-        local border_cp = vim.deepcopy(border)
-        border_cp[2] = ' '
-        win_configs.border = border_cp
+        win_configs.border = vim.deepcopy(border)
+        if #win_configs.border == 4 then
+          vim.list_extend(win_configs.border, win_configs.border)
+        end
+        win_configs.border[2] = ' '
       end
     end
   end
