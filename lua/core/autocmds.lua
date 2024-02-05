@@ -338,8 +338,8 @@ augroup('SpecialBufHeight', {
   {
     desc = 'Record time when a split is closed.',
     group = groupid,
-    callback = function()
-      local wtype = vim.fn.win_gettype()
+    callback = function(info)
+      local wtype = vim.fn.win_gettype(info.match)
       if wtype ~= 'autocmd' and wtype ~= 'popup' and wtype ~= 'unknown' then
         vim.g._wclosed = true
       end
