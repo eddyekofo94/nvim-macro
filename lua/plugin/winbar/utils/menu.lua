@@ -97,6 +97,8 @@ end
 ---The second return value is a list of virtual text chunks to be displayed below the item. If
 ---nothing is returned for the second value, no virtual text will be displayed.
 ---@field format_item? fun(item: any): string, string[][]?
+---@field preview? fun(self: winbar_symbol_t, item: any, idx: integer)
+---@field preview_close? fun(self: winbar_symbol_t, item: any, idx: integer)
 
 ---`vim.ui.select()` replacement
 ---@generic T string|table
@@ -156,6 +158,16 @@ function M.select(items, opts, on_choice)
               self.entry.menu:close()
               if on_choice then
                 on_choice(item, idx)
+              end
+            end,
+            preview = function(self)
+              if opts.preview then
+                opts.preview(self, item, idx)
+              end
+            end,
+            preview_restore_view = function(self)
+              if opts.preview_close then
+                opts.preview_close(self, item, idx)
               end
             end,
           }),
