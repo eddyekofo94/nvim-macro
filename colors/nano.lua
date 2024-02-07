@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat Jan 20 03:12:37 PM CST 2024
+-- Last Updated: Thu Feb  8 12:34:36 AM CST 2024
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -217,7 +217,7 @@ local hlgroups = {
   StorageClass = { link = 'Keyword' },
   Structure = { link = 'Type' },
   Typedef = { fg = c_salient },
-  Special = { fg = c_critical },
+  Special = { fg = c_salient },
   SpecialChar = { link = 'Special' },
   Tag = { fg = c_subtle, underline = true },
   Delimiter = { fg = c_foreground },
