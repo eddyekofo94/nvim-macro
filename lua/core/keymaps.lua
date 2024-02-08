@@ -158,10 +158,15 @@ vim.keymap.set('i', '<C-g>=', '<C-g>u<Esc>[s1z=`]a<C-G>u')
 
 -- Only clear highlights and message area and don't redraw if search
 -- highlighting is on to avoid flickering
-vim.keymap.set({ 'n', 'x', 't' }, '<C-l>', function()
-  return '<Cmd>nohlsearch|diffupdate|echo<CR>'
-    .. (vim.v.hlsearch == 0 and '<C-l>' or '')
-end, { expr = true })
+-- Use `:sil! dif` to suppress error
+-- 'E11: Invalid in command-line window; <CR> executes, CTRL-C quits'
+-- in command window
+vim.keymap.set(
+  { 'n', 'x' },
+  '<C-l>',
+  [['<Cmd>ec|noh|sil! dif<CR>' . (v:hlsearch ? '' : '<C-l>')]],
+  { expr = true, replace_keycodes = false }
+)
 
 -- Don't include extra spaces around quotes
 vim.keymap.set({ 'o', 'x' }, 'a"', '2i"', { noremap = false })
