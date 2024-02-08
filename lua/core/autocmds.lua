@@ -17,16 +17,9 @@ augroup('BigFileSettings', {
   {
     desc = 'Set settings for large files.',
     callback = function(info)
-      vim.b.midfile = false
       vim.b.bigfile = false
       local stat = vim.uv.fs_stat(info.match)
-      if not stat then
-        return
-      end
-      if stat.size > 48000 then
-        vim.b.midfile = true
-      end
-      if stat.size > 1024000 then
+      if stat and stat.size > 524288 then
         vim.b.bigfile = true
         vim.opt_local.spell = false
         vim.opt_local.swapfile = false

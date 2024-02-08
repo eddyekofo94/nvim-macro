@@ -3,9 +3,9 @@ local ts_configs = require('nvim-treesitter.configs')
 ---@param buf integer
 ---@return nil
 local function enable_ts_folding(buf)
-  -- Treesitter folding is extremely slow in large markdown files,
+  -- Treesitter folding is extremely slow in large files,
   -- making typing and undo lag as hell
-  if not vim.api.nvim_buf_is_valid(buf) or vim.bo[buf].ft == 'markdown' then
+  if not vim.api.nvim_buf_is_valid(buf) or vim.b[buf].bigfile then
     return
   end
   vim.api.nvim_buf_call(buf, function()
@@ -57,17 +57,13 @@ ts_configs.setup({
   highlight = {
     enable = not vim.g.vscode,
     disable = function(ft, buf)
-      -- We will manually apply treesitter highlighting in markdown
-      -- files in syntax/markdown.vim to get better inline code
-      -- highlighting while still preserving math conceal provided
-      -- by vimtex regex syntax rules
-      return ft == 'tex'
-        or ft == 'latex'
-        or ft == 'markdown'
-        or vim.b[buf].midfile == true
+      return ft == 'latex'
+        or vim.b[buf].bigfile == true
         or vim.fn.win_gettype() == 'command'
     end,
-    additional_vim_regex_highlighting = false,
+    -- Enable additional vim regex highlighting
+    -- in markdown files to get vimtex math conceal
+    additional_vim_regex_highlighting = { 'markdown' },
   },
   endwise = {
     enable = true,
