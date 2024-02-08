@@ -476,7 +476,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 49 (package manager included).
+Total # of plugins: 48 (package manager included).
 
 - **Lib**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -495,8 +495,6 @@ Total # of plugins: 49 (package manager included).
     - [cmp-dap](https://github.com/rcarriga/cmp-dap)
     - [copilot.lua](https://github.com/zbirenbaum/copilot.lua)
     - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
-- **LSP**
-    - [clangd_extensions.nvim](https://github.com/p00f/clangd_extensions.nvim)
 - **Markup**
     - [vimtex](https://github.com/lervag/vimtex)
     - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
