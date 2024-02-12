@@ -306,10 +306,13 @@ augroup('SpecialBufHl', {
     end,
   },
 }, {
-  { 'UIEnter', 'ColorScheme' },
+  { 'UIEnter', 'ColorScheme', 'OptionSet' },
   {
     desc = 'Set special buffer normal hl.',
-    callback = function()
+    callback = function(info)
+      if info.event == 'OptionSet' and info.match ~= 'background' then
+        return
+      end
       local hl = require('utils.hl')
       local blended = hl.blend('Normal', 'CursorLine')
       hl.set_default(0, 'NormalSpecial', blended)
