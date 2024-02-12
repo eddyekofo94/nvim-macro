@@ -281,6 +281,9 @@ augroup('SpecialBufHl', {
   {
     desc = 'Set background color for special buffers.',
     callback = function(info)
+      if vim.bo[info.buf].bt == '' then
+        return
+      end
       -- Current window isn't necessarily the window of the buffer that
       -- triggered the event, use `bufwinid()` to get the first window of
       -- the triggering buffer. We can also use `win_findbuf()` to get all
@@ -295,12 +298,10 @@ augroup('SpecialBufHl', {
         if wintype == 'popup' or wintype == 'autocmd' then
           return
         end
-        if vim.bo[info.buf].bt ~= '' then
-          vim.opt_local.winhl:append({
-            Normal = 'NormalSpecial',
-            EndOfBuffer = 'NormalSpecial',
-          })
-        end
+        vim.opt_local.winhl:append({
+          Normal = 'NormalSpecial',
+          EndOfBuffer = 'NormalSpecial',
+        })
       end)
     end,
   },
