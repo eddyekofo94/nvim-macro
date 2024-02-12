@@ -1,18 +1,6 @@
 return {
-  {
-    'rebelot/kanagawa.nvim',
-  },
-
-  {
-    'rose-pine/neovim',
-    name = 'rose-pine',
-  },
-
-  {
-    'sainnhe/everforest',
-  },
-
-  {
-    'sainnhe/gruvbox-material',
-  },
+  { 'sainnhe/everforest' },
+  { 'rebelot/kanagawa.nvim' },
+  { 'sainnhe/gruvbox-material' },
+  { 'rose-pine/neovim', name = 'rose-pine' },
 }
