@@ -15,6 +15,7 @@ M.tui = {
   emacs = true,
   vimdiff = true,
   lazygit = true,
+  sudoedit = true,
   emacsclient = true,
 }
 
