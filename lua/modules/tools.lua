@@ -209,13 +209,6 @@ return {
           if path == '' then
             return
           end
-          -- Workaround for path with trailing `..`
-          if path:match('%.%.$') then
-            path = vim.fs.dirname(vim.fs.dirname(path) or '')
-            if not path or path == '' then
-              return
-            end
-          end
           local stat = vim.uv.fs_stat(path)
           if stat and stat.type == 'directory' then
             vim.api.nvim_del_autocmd(info.id)
