@@ -402,7 +402,7 @@ Neovim is configured to restore the previous background and colorscheme
 settings on startup, so there is no need to set them up in the config file
 explicitly.
 
-To disable the auto-restore feature, remove the plugin [plugin/colorswitch.lua](https://github.com/Bekaboo/nvim/tree/master/plugin/colorswitch.lua).
+To disable the auto-restore feature, remove the plugin [plugin/colorscheme.lua](https://github.com/Bekaboo/nvim/tree/master/plugin/colorscheme.lua).
 
 To tweak this colorscheme, edit corresponding colorscheme files under [colors](https://github.com/Bekaboo/nvim/tree/master/colors).
 
@@ -539,7 +539,7 @@ Total # of plugins: 48 (package manager included).
 - [colorcolumn](https://github.com/Bekaboo/nvim/tree/master/plugin/colorcolumn.lua)
     - Shows color column dynamically based on current line width
     - Released as [deadcolumn.nvim](https://github.com/Bekaboo/deadcolumn.nvim)
-- [colorswitch](https://github.com/Bekaboo/nvim/tree/master/plugin/colorswitch.lua)
+- [colorscheme](https://github.com/Bekaboo/nvim/tree/master/plugin/colorscheme.lua)
     - Remembers and restores previous background and colorscheme settings
     - Syncs background and colorscheme settings among multiple Neovim instances
       if scripts [setbg](https://github.com/Bekaboo/dot/blob/master/.scripts/setbg) and [setcolor](https://github.com/Bekaboo/dot/blob/master/.scripts/setcolor) are in `$PATH`

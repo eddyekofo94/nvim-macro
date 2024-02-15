@@ -31,7 +31,7 @@ if saved.colors_name and saved.colors_name ~= vim.g.colors_name then
 end
 
 vim.api.nvim_create_autocmd('Colorscheme', {
-  group = vim.api.nvim_create_augroup('ColorSwitch', {}),
+  group = vim.api.nvim_create_augroup('Colorscheme', {}),
   desc = 'Spawn setbg/setcolors on colorscheme change.',
   callback = function()
     if vim.g.script_set_bg or vim.g.script_set_colors then
