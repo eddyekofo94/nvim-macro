@@ -124,7 +124,7 @@ return {
     t('} '),
   }),
 
-  us.samWr({ trig = '%s*_' }, {
+  us.samWr({ trig = '_' }, {
     d(1, function()
       local char_after = uf.get_char_after()
       if char_after == '_' or char_after == '{' then
@@ -134,7 +134,7 @@ return {
       end
     end),
   }),
-  us.samWr({ trig = '%s*^' }, {
+  us.samWr({ trig = '^' }, {
     d(1, function()
       local char_after = uf.get_char_after()
       if char_after == '^' or char_after == '{' then
