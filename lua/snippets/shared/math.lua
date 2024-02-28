@@ -494,19 +494,19 @@ return {
       }
     )
   ),
-  us.sam({ trig = 'case' }, {
+  us.sam({ trig = 'cas' }, {
     t({ '\\begin{cases}', '' }),
     un.body(1, 1),
     t({ '', '\\end{cases}' }),
   }),
-  us.sam({ trig = 'part' }, {
+  us.sam({ trig = 'par' }, {
     t('\\frac{\\partial '),
     i(1),
     t('}{\\partial '),
     i(2),
     t('}'),
   }),
-  us.sam({ trig = 'diff' }, {
+  us.sam({ trig = 'dif' }, {
     t('\\frac{\\mathrm{d}'),
     i(1),
     t('}{\\mathrm{d}'),
