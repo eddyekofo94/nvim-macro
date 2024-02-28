@@ -496,8 +496,7 @@ return {
   ),
   us.sam({ trig = 'case' }, {
     t({ '\\begin{cases}', '' }),
-    un.idnt(1),
-    un.body(2, 1),
+    un.body(1, 1),
     t({ '', '\\end{cases}' }),
   }),
   us.sam({ trig = 'part' }, {
