@@ -1,20 +1,8 @@
-diff --git a/lua/fzf-lua/defaults.lua b/lua/fzf-lua/defaults.lua
-index a98088b..b658d31 100644
---- a/lua/fzf-lua/defaults.lua
-+++ b/lua/fzf-lua/defaults.lua
-@@ -425,6 +425,7 @@ M.defaults.buffers = {
-   ignore_current_buffer = false,
-   no_action_set_cursor  = true,
-   cwd_only              = false,
-+  ls_cmd                = nil,
-   cwd                   = nil,
-   fzf_opts              = { ["--tiebreak"] = "index", },
-   _actions              = function() return M.globals.actions.buffers end,
 diff --git a/lua/fzf-lua/providers/buffers.lua b/lua/fzf-lua/providers/buffers.lua
-index daa9d25..65b129c 100644
+index 7dddacc..126edf3 100644
 --- a/lua/fzf-lua/providers/buffers.lua
 +++ b/lua/fzf-lua/providers/buffers.lua
-@@ -59,8 +59,10 @@ end
+@@ -60,8 +60,10 @@ end
  local populate_buffer_entries = function(opts, bufnrs, tabh)
    local buffers = {}
    for _, bufnr in ipairs(bufnrs) do
@@ -27,7 +15,7 @@ index daa9d25..65b129c 100644
  
      local element = {
        bufnr = bufnr,
-@@ -94,9 +96,9 @@ local populate_buffer_entries = function(opts, bufnrs, tabh)
+@@ -95,9 +97,9 @@ local populate_buffer_entries = function(opts, bufnrs, tabh)
      -- DON'T FORCE ME TO UPDATE THIS HACK NEOVIM LOL
      local future = os.time({ year = 2100, month = 1, day = 1, hour = 0, minute = 00 })
      local get_unixtime = function(buf)
@@ -39,7 +27,7 @@ index daa9d25..65b129c 100644
          return future - 1
        else
          return buf.info.lastused
-@@ -111,11 +113,10 @@ end
+@@ -112,11 +114,10 @@ end
  
  
  local function gen_buffer_entry(opts, buf, max_bufnr, cwd)
@@ -54,8 +42,8 @@ index daa9d25..65b129c 100644
 +      or ((buf.readonly and "=" or " ") .. (buf.info.changed == 1 and "+" or " "))
    local leftbr = "["
    local rightbr = "]"
-   local bufname = #buf.info.name > 0 and path.relative(buf.info.name, cwd or vim.loop.cwd())
-@@ -129,12 +130,12 @@ local function gen_buffer_entry(opts, buf, max_bufnr, cwd)
+   local bufname = #buf.info.name > 0 and path.relative_to(buf.info.name, cwd or vim.loop.cwd())
+@@ -130,12 +131,12 @@ local function gen_buffer_entry(opts, buf, max_bufnr, cwd)
    end
    -- add line number
    bufname = ("%s:%s"):format(bufname, buf.info.lnum > 0 and buf.info.lnum or "")
@@ -71,7 +59,7 @@ index daa9d25..65b129c 100644
    end
    local bufnrstr = string.format("%s%s%s", leftbr,
      utils.ansi_codes[opts.hls.buf_nr](tostring(buf.bufnr)), rightbr)
-@@ -174,7 +175,26 @@ M.buffers = function(opts)
+@@ -175,7 +176,26 @@ M.buffers = function(opts)
  
    opts.__fn_reload = opts.__fn_reload or function(_)
      return function(cb)
@@ -100,31 +88,10 @@ index daa9d25..65b129c 100644
        if next(filtered) then
          local buffers = populate_buffer_entries(opts, filtered)
 diff --git a/lua/fzf-lua/providers/nvim.lua b/lua/fzf-lua/providers/nvim.lua
-index 67ab103..9996dcc 100644
+index 5e951ba..bd40fa5 100644
 --- a/lua/fzf-lua/providers/nvim.lua
 +++ b/lua/fzf-lua/providers/nvim.lua
-@@ -83,18 +83,11 @@ local history = function(opts, str)
-   core.fzf_exec(entries, opts)
- end
- 
--local arg_header = function(sel_key, edit_key, text)
--  sel_key = utils.ansi_codes.yellow(sel_key)
--  edit_key = utils.ansi_codes.yellow(edit_key)
--  return vim.fn.shellescape((":: %s to %s, %s to edit")
--    :format(sel_key, text, edit_key))
--end
--
- M.command_history = function(opts)
-   opts = config.normalize_opts(opts, "command_history")
-   if not opts then return end
--  if opts.fzf_opts["--header"] == nil then
--    opts.fzf_opts["--header"] = arg_header("<CR>", "<Ctrl-e>", "execute")
-+  if opts.headers then
-+    opts = core.set_header(opts, opts.headers)
-   end
-   history(opts, "cmd")
- end
-@@ -102,8 +95,8 @@ end
+@@ -97,8 +97,8 @@ end
  M.search_history = function(opts)
    opts = config.normalize_opts(opts, "search_history")
    if not opts then return end
@@ -136,10 +103,10 @@ index 67ab103..9996dcc 100644
    history(opts, "search")
  end
 diff --git a/lua/fzf-lua/win.lua b/lua/fzf-lua/win.lua
-index 43b0094..9ca2300 100644
+index 4d0003e..b303c3c 100644
 --- a/lua/fzf-lua/win.lua
 +++ b/lua/fzf-lua/win.lua
-@@ -1391,10 +1391,10 @@ function FzfWin.toggle_help()
+@@ -1415,10 +1415,10 @@ function FzfWin.toggle_help()
      style = "minimal",
      width = vim.o.columns,
      height = height,

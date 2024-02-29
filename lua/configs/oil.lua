@@ -274,6 +274,8 @@ local type_hlgroups = setmetatable({
   end,
 })
 
+local border = vim.g.modern_ui and 'solid' or 'single'
+
 oil.setup({
   columns = {
     {
@@ -386,20 +388,23 @@ oil.setup({
       end,
     },
   },
+  keymaps_help = {
+    border = border,
+  },
   float = {
-    border = vim.g.modern_ui and 'solid' or 'single',
+    border = border,
     win_options = {
       winblend = 0,
     },
   },
   preview = {
-    border = vim.g.modern_ui and 'solid' or 'single',
+    border = border,
     win_options = {
       winblend = 0,
     },
   },
   progress = {
-    border = vim.g.modern_ui and 'solid' or 'single',
+    border = border,
     win_options = {
       winblend = 0,
     },

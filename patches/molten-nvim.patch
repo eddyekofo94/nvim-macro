@@ -1,41 +1,8 @@
-diff --git a/lua/output_window.lua b/lua/output_window.lua
-index 27eb679..86f82bd 100644
---- a/lua/output_window.lua
-+++ b/lua/output_window.lua
-@@ -9,7 +9,7 @@ M.calculate_window_position = function(buf_line)
-   local pos = vim.fn.screenpos(win, buf_line, 0)
-   local win_off = vim.fn.getwininfo(win)[1].winrow
- 
--  return pos.row - (win_off - 1)
-+  return pos.row - (win_off - 1) + (vim.wo[win].winbar == '' and 1 or 0)
- end
- 
- return M
-diff --git a/rplugin/python3/molten/__init__.py b/rplugin/python3/molten/__init__.py
-index def1b6f..707263e 100644
---- a/rplugin/python3/molten/__init__.py
-+++ b/rplugin/python3/molten/__init__.py
-@@ -163,6 +163,7 @@ class Molten:
-             molten = self.molten_kernels.get(kernel_name)
-             if molten is not None:
-                 molten.add_nvim_buffer(self.nvim.current.buffer)
-+                molten._doautocmd("MoltenInitPost")
-                 self.buffers[self.nvim.current.buffer.number] = [molten]
-                 return molten
- 
 diff --git a/rplugin/python3/molten/outputbuffer.py b/rplugin/python3/molten/outputbuffer.py
-index 17a1be6..f589c4a 100644
+index be6bf76..0b0efaa 100644
 --- a/rplugin/python3/molten/outputbuffer.py
 +++ b/rplugin/python3/molten/outputbuffer.py
-@@ -44,6 +44,7 @@ class OutputBuffer:
-         self.options = options
-         self.nvim.exec_lua("_ow = require('output_window')")
-         self.lua = self.nvim.lua._ow
-+        self.source_ft = self.nvim.api.get_option_value("filetype", {})
- 
-     def _buffer_to_window_lineno(self, lineno: int) -> int:
-         return self.lua.calculate_window_position(lineno)
-@@ -81,7 +82,10 @@ class OutputBuffer:
+@@ -79,7 +79,10 @@ class OutputBuffer:
              elif self.options.enter_output_behavior == "open_and_enter":
                  self.show_floating_win(anchor)
                  entered = True
@@ -47,27 +14,7 @@ index 17a1be6..f589c4a 100644
          elif self.options.enter_output_behavior != "no_open":
              entered = True
              self.nvim.funcs.nvim_set_current_win(self.display_win)
-@@ -187,7 +191,7 @@ class OutputBuffer:
-         win_width = win_info["width"] - win_info["textoff"]
-         win_height = win_info["height"]
- 
--        if self.options.virt_lines_off_by_1:
-+        if self.options.virt_lines_off_by_1 and self.source_ft == "markdown":
-             win_row += 1
- 
-         if win_row > (last := self.nvim.funcs.line("$")):
-@@ -218,7 +222,9 @@ class OutputBuffer:
-     def show_floating_win(self, anchor: Position) -> None:
-         win = self.nvim.current.window
-         win_col = win.col
--        win_row = self._buffer_to_window_lineno(anchor.lineno + 1)
-+        win_row = self._buffer_to_window_lineno(anchor.lineno)
-+        if self.options.virt_lines_off_by_1 and self.source_ft == "markdown":
-+            win_row += 1
-         if win_row == 0:  # anchor position is off screen
-             return
-         win_width = win.width
-@@ -312,7 +318,10 @@ class OutputBuffer:
+@@ -342,7 +345,10 @@ class OutputBuffer:
                      win_opts,
                  )
                  hl = self.options.hl
