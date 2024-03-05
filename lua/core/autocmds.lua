@@ -208,7 +208,7 @@ augroup('KeepWinRatio', {
 
 -- Show cursor line and cursor column only in current window
 augroup('AutoHlCursorLine', {
-  { 'WinEnter', 'TermClose' },
+  'WinEnter',
   {
     desc = 'Show cursorline and cursorcolumn in current window.',
     callback = function()
