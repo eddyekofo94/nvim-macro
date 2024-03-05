@@ -204,6 +204,10 @@ vim.keymap.set({ 'n', 'x' }, 'g{', function() require('utils.misc').goto_paragra
 vim.keymap.set({ 'n', 'x' }, 'g}', function() require('utils.misc').goto_paragraph_lastline() end, { noremap = false })
 -- stylua: ignore end
 
+-- Fzf keymaps
+vim.keymap.set('n', '<Leader>.', '<Cmd>FZF<CR>')
+vim.keymap.set('n', '<Leader>ff', '<Cmd>FZF<CR>')
+
 -- Abbreviations
 vim.keymap.set('!a', 'ture', 'true')
 vim.keymap.set('!a', 'Ture', 'True')

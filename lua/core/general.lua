@@ -4,10 +4,11 @@ vim.loader.enable()
 
 local g = vim.g
 local opt = vim.opt
+local env = vim.env
 
 g.has_ui = #vim.api.nvim_list_uis() > 0
 g.has_gui = vim.fn.has('gui_running') == 1
-g.modern_ui = g.has_ui and vim.env.DISPLAY ~= nil
+g.modern_ui = g.has_ui and env.DISPLAY ~= nil
 
 -- stylua: ignore start
 opt.colorcolumn    = '+1'
@@ -116,7 +117,7 @@ opt.autoindent  = true
 opt.ignorecase  = true
 opt.smartcase   = true
 
--- netrw settings
+-- Netrw settings
 g.netrw_banner          = 0
 g.netrw_cursor          = 5
 g.netrw_keepdir         = 0
@@ -124,6 +125,17 @@ g.netrw_keepj           = ''
 g.netrw_list_hide       = [[\(^\|\s\s\)\zs\.\S\+]]
 g.netrw_liststyle       = 1
 g.netrw_localcopydircmd = 'cp -r'
+
+-- Fzf settings
+g.fzf_layout = {
+  window = {
+    width = 0.7,
+    height = 0.7,
+    pos = 'center',
+  },
+}
+env.FZF_DEFAULT_OPTS = (env.FZF_DEFAULT_OPTS or '')
+  .. ' --border=sharp --margin=0 --padding=0'
 
 -- Disable plugins shipped with neovim
 g.loaded_2html_plugin      = 0
