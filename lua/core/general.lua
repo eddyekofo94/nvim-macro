@@ -43,7 +43,7 @@ opt.completeopt    = 'menuone'
 -- tmux in Linux tty, where $TERM is set to 'tmux-256color' but $DISPLAY is
 -- not set, termguicolors is automatically set. This is undesirable, so we
 -- need to explicitly disable it in this case
-if not vim.g.modern_ui then
+if not g.modern_ui then
   opt.termguicolors = false
 end
 
