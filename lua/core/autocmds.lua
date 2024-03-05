@@ -208,7 +208,7 @@ augroup('KeepWinRatio', {
 
 -- Show cursor line and cursor column only in current window
 augroup('AutoHlCursorLine', {
-  { 'BufWinEnter', 'WinEnter' },
+  'WinEnter',
   {
     desc = 'Show cursorline and cursorcolumn in current window.',
     callback = function()
@@ -220,20 +220,15 @@ augroup('AutoHlCursorLine', {
         vim.wo.cuc = true
         vim.w._cuc = nil
       end
-    end,
-  },
-}, {
-  'WinLeave',
-  {
-    desc = 'Hide cursorline and cursorcolumn in other windows.',
-    callback = function()
-      if vim.wo.cul then
-        vim.w._cul = true
-        vim.wo.cul = false
-      end
-      if vim.wo.cuc then
-        vim.w._cuc = true
-        vim.wo.cuc = false
+
+      local prev_win = vim.fn.win_getid(vim.fn.winnr('#'))
+      if prev_win ~= 0 then
+        local w = vim.w[prev_win]
+        local wo = vim.wo[prev_win]
+        w._cul = wo.cul
+        w._cuc = wo.cuc
+        wo.cul = false
+        wo.cuc = false
       end
     end,
   },
