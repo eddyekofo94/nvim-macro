@@ -6,7 +6,7 @@ local efm = vim.fn.executable('stylua') == 1
   and lsp.start({
     cmd = { 'efm-langserver' },
     name = 'efm-formatter-stylua',
-    root_pattern = stylua_root_patterns,
+    root_patterns = stylua_root_patterns,
     init_options = {
       documentFormatting = true,
       documentRangeFormatting = true,
