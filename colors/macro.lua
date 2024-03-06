@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Sat Feb 17 06:33:58 PM CST 2024
+-- Last Updated: Wed Mar  6 11:08:58 PM CST 2024
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -82,7 +82,7 @@ if vim.go.bg == 'dark' then
   c_macroBg5     = '#625e5a'
   c_macroBlue0   = '#658594'
   c_macroBlue1   = '#8ba4b0'
-  c_macroFg0     = '#b4b8b4'
+  c_macroFg0     = '#c5c9c5'
   c_macroFg1     = '#b4b3a7'
   c_macroFg2     = '#a09f95'
   c_macroGray0   = '#a6a69c'
