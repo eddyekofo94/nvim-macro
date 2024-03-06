@@ -25,7 +25,7 @@ local fterm_list_by_buf = {} ---@type table<integer, fterm_t>
 ---@field stdin string|nil
 
 ---@see nvim_open_win()
----@class fterm_winopts_t : vim.api.keyset.float_config
+---@class fterm_winopts_t : vim.api.keyset.win_config
 ---@field col number?
 ---@field row number?
 ---@field width number?

@@ -4,7 +4,7 @@ local M = {}
 ---@diagnostic disable-next-line: missing-fields
 M.default_config = { root_patterns = require('utils.fs').root_patterns }
 
----@class lsp.ClientConfig: lsp_client_config_t
+---@class vim.lsp.ClientConfig: lsp_client_config_t
 ---@class lsp_client_config_t
 ---@field cmd? (string[]|fun(dispatchers: table):table)
 ---@field cmd_cwd? string
@@ -23,7 +23,7 @@ M.default_config = { root_patterns = require('utils.fs').root_patterns }
 ---@field before_init? function
 ---@field on_init? function
 ---@field on_exit? fun(code: integer, signal: integer, client_id: integer)
----@field on_attach? fun(client: lsp.Client, bufnr: integer)
+---@field on_attach? fun(client: vim.lsp.Client, bufnr: integer)
 ---@field trace? 'off'|'messages'|'verbose'|nil
 ---@field flags? table
 ---@field root_dir? string
@@ -32,7 +32,7 @@ M.default_config = { root_patterns = require('utils.fs').root_patterns }
 ---Wrapper of `vim.lsp.start()`, starts and attaches LSP client for
 ---the current buffer
 ---@param config lsp_client_config_t
----@param opts lsp.StartOpts?
+---@param opts table?
 ---@return integer? client_id id of attached client or nil if failed
 function M.start(config, opts)
   if vim.b.bigfile or vim.bo.bt == 'nofile' then
@@ -63,15 +63,15 @@ end
 ---@class lsp_soft_stop_opts_t
 ---@field retry integer?
 ---@field interval integer?
----@field on_close fun(client: lsp.Client)
+---@field on_close fun(client: vim.lsp.Client)
 
 ---Soft stop LSP client with retries
----@param client_or_id integer|lsp.Client
+---@param client_or_id integer|vim.lsp.Client
 ---@param opts lsp_soft_stop_opts_t?
 function M.soft_stop(client_or_id, opts)
   local client = type(client_or_id) == 'number'
       and vim.lsp.get_client_by_id(client_or_id)
-    or client_or_id --[[@as lsp.Client]]
+    or client_or_id --[[@as vim.lsp.Client]]
   if not client then
     return
   end
@@ -98,11 +98,11 @@ function M.soft_stop(client_or_id, opts)
 end
 
 ---Restart and reattach LSP client
----@param client_or_id integer|lsp.Client
+---@param client_or_id integer|vim.lsp.Client
 function M.restart(client_or_id)
   local client = type(client_or_id) == 'number'
       and vim.lsp.get_client_by_id(client_or_id)
-    or client_or_id --[[@as lsp.Client]]
+    or client_or_id --[[@as vim.lsp.Client]]
   if not client then
     return
   end

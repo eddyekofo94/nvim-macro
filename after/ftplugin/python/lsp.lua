@@ -28,7 +28,7 @@ local efm = vim.fn.executable('black') == 1
   })
 
 ---Disable lsp formatting capabilities if efm launched successfully
----@type fun(client: lsp.Client, bufnr: integer)?
+---@type fun(client: vim.lsp.Client, bufnr: integer)?
 local on_attach
 if efm then
   function on_attach(client)
