@@ -125,7 +125,7 @@ favorite package manager:
 
 To add support for other languages, install corresponding language servers
 manually then add `lsp.lua` files under [after/ftplugin](https://github.com/Bekaboo/nvim/tree/master/after/ftplugin) to automatically lanuch
-them for differnt filetypes.
+them for different filetypes.
 
 Some examples of `lsp.lua` files:
 
