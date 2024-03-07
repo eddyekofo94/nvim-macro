@@ -390,7 +390,12 @@ vim.api.nvim_create_autocmd(
 ---Set default highlight groups for statusline components
 ---@return  nil
 local function set_default_hlgroups()
-  local default_attr = utils.hl.get(0, { name = 'StatusLine' })
+  local default_attr = utils.hl.get(0, {
+    name = 'StatusLine',
+    link = false,
+    winhl_link = false,
+  })
+
   ---@param hlgroup_name string
   ---@param attr table
   ---@return nil
@@ -405,8 +410,8 @@ local function set_default_hlgroups()
   sethl('StatusLineDiagnosticInfo', { fg = 'DiagnosticSignInfo' })
   sethl('StatusLineDiagnosticWarn', { fg = 'DiagnosticSignWarn' })
   sethl('StatusLineDiagnosticError', { fg = 'DiagnosticSignError' })
-  sethl('StatusLineHeader', { fg = 'Normal', bg = 'TabLine' })
-  sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'TabLine' })
+  sethl('StatusLineHeader', { fg = 'TabLine', bg = 'fg', reverse = true })
+  sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'fg', reverse = true })
 end
 set_default_hlgroups()
 
