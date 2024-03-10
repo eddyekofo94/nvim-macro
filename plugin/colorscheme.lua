@@ -19,7 +19,7 @@ local colors_file =
 local saved = utils.json.read(colors_file)
 saved.colors_name = saved.colors_name or 'macro'
 
-if saved.bg and saved.bg ~= vim.go.bg then
+if saved.bg then
   vim.go.bg = saved.bg
 end
 
