@@ -8,7 +8,7 @@ local env = vim.env
 
 g.has_ui = #vim.api.nvim_list_uis() > 0
 g.has_gui = vim.fn.has('gui_running') == 1
-g.modern_ui = g.has_ui and env.DISPLAY ~= nil
+g.modern_ui = g.has_ui and (env.DISPLAY or env.WAYLAND_DISPLAY) ~= nil
 
 -- stylua: ignore start
 opt.colorcolumn    = '+1'

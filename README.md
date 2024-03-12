@@ -14,6 +14,8 @@ experiment, and adapt it to your liking. Feel free to use it as a starting
 point for your configuration or borrow elements you find useful. Issues and PRs
 are welcome.
 
+Currently only supports Linux (X11/Wayland/TTY).
+
 <center>
     <img src="https://github.com/Bekaboo/nvim/assets/76579810/299137e7-9438-489b-b98b-7211a62678ae" width=46%>  
     <img src="https://github.com/Bekaboo/nvim/assets/76579810/9e546e33-7678-47e2-8a80-368d7c59534a" width=46%>
