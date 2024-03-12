@@ -448,10 +448,6 @@ and it should work out of the box.
 
     <img src="https://github.com/Bekaboo/nvim/assets/76579810/f6c7e6ce-283b-43d7-8bc3-e8b24513a03b" width=75%>
 
-- Rendering images in markdown files with [image.nvim](https://github.com/3rd/image.nvim) \*
-
-    <img src="https://github.com/Bekaboo/nvim/assets/76579810/af2a3b2b-0601-482f-bf1e-b14e091ff179" width=75%>
-
 - Jupyter Notebook integration using [jupytext](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/jupytext.lua) and [molten-nvim](https://github.com/benlubas/molten-nvim)
 
     <img src="https://github.com/Bekaboo/nvim/assets/76579810/ce212348-8b89-4a03-a222-ab74f0338a7d" width=75%>
@@ -476,7 +472,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 48 (package manager included).
+Total # of plugins: 47 (package manager included).
 
 - **Lib**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -499,7 +495,6 @@ Total # of plugins: 48 (package manager included).
     - [vimtex](https://github.com/lervag/vimtex)
     - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
     - [vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
-    - [image.nvim](https://github.com/3rd/image.nvim)
     - [otter.nvim](https://github.com/jmbuhr/otter.nvim)
     - [molten-nvim](https://github.com/benlubas/molten-nvim)
     - [headlines.nvim](https://github.com/lukas-reineke/headlines.nvim)

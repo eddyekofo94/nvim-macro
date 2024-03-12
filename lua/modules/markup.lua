@@ -27,21 +27,6 @@ return {
   },
 
   {
-    '3rd/image.nvim',
-    enabled = vim.g.modern_ui and not vim.g.has_gui or false,
-    ft = { 'markdown', 'norg' },
-    event = { 'BufRead *.png,*.jpg,*.gif,*.webp,*.ipynb' },
-    build = {
-      'ueberzug version',
-      'magick --version',
-      'luarocks --lua-version 5.1 --local install magick',
-    },
-    config = function()
-      require('configs.image')
-    end,
-  },
-
-  {
     'jmbuhr/otter.nvim',
     ft = { 'markdown' },
     dependencies = {
