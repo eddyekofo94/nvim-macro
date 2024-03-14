@@ -146,7 +146,7 @@ augroup('AutoCwd', {
             and stat.type == 'directory'
             and current_dir ~= target_dir
           then
-            vim.cmd.lcd(target_dir)
+            pcall(vim.cmd.lcd, target_dir)
           end
         end)
       end)
