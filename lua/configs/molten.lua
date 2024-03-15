@@ -6,14 +6,50 @@ vim.g.molten_auto_init_behavior = 'init'
 vim.g.molten_enter_output_behavior = 'open_and_enter'
 vim.g.molten_output_win_max_height = 16
 vim.g.molten_output_win_cover_gutter = false
-vim.g.molten_output_win_border = { '', '', '', '' }
+vim.g.molten_output_win_border = 'single'
 vim.g.molten_output_win_style = 'minimal'
 vim.g.molten_auto_open_output = false
 vim.g.molten_output_show_more = true
-vim.g.molten_virt_text_output = true
-vim.g.molten_virt_lines_off_by_1 = true
 vim.g.molten_virt_text_max_lines = 16
 vim.g.molten_wrap_output = true
+
+-- Change the configuration when editing a python file
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = '*.py',
+  callback = function(info)
+    if info.buf ~= vim.api.nvim_get_current_buf() then
+      return
+    end
+    if require('molten.status').initialized() == 'Molten' then -- this is kinda a hack...
+      vim.fn.MoltenUpdateOption('output_win_border', 'single')
+      vim.fn.MoltenUpdateOption('virt_lines_off_by_1', nil)
+      vim.fn.MoltenUpdateOption('virt_text_output', nil)
+    else
+      vim.g.molten_output_win_border = 'single'
+      vim.g.molten_virt_lines_off_by_1 = nil
+      vim.g.molten_virt_text_output = nil
+    end
+  end,
+})
+
+-- Undo those config changes when we go back to a markdown or quarto file
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = { '*.qmd', '*.md', '*.ipynb' },
+  callback = function(info)
+    if info.buf ~= vim.api.nvim_get_current_buf() then
+      return
+    end
+    if require('molten.status').initialized() == 'Molten' then
+      vim.fn.MoltenUpdateOption('output_win_border', { '', '', '', '' })
+      vim.fn.MoltenUpdateOption('virt_lines_off_by_1', true)
+      vim.fn.MoltenUpdateOption('virt_text_output', true)
+    else
+      vim.g.molten_output_win_border = { '', '', '', '' }
+      vim.g.molten_virt_lines_off_by_1 = true
+      vim.g.molten_virt_text_output = true
+    end
+  end,
+})
 
 local deps = {
   'cairosvg',
