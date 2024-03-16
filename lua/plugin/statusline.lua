@@ -411,7 +411,11 @@ local function set_default_hlgroups()
   sethl('StatusLineDiagnosticWarn', { fg = 'DiagnosticSignWarn' })
   sethl('StatusLineDiagnosticError', { fg = 'DiagnosticSignError' })
   sethl('StatusLineHeader', { fg = 'TabLine', bg = 'fg', reverse = true })
-  sethl('StatusLineHeaderModified', { fg = 'Special', bg = 'fg', reverse = true })
+  sethl('StatusLineHeaderModified', {
+    fg = 'Special',
+    bg = 'fg',
+    reverse = true,
+  })
 end
 set_default_hlgroups()
 
