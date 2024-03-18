@@ -48,6 +48,8 @@ vim.api.nvim_create_autocmd('BufEnter', {
       vim.g.molten_virt_lines_off_by_1 = true
       vim.g.molten_virt_text_output = true
     end
+    -- Do not show molten cell background in markdown/quarto files
+    vim.opt_local.winhl:append('MoltenCell:')
   end,
 })
 
@@ -336,17 +338,6 @@ local function setup_buf_keymaps_and_commands(buf)
     return
   end
 
-  vim.api.nvim_create_user_command(
-    'MoltenHideCellHl',
-    'hi! clear MoltenCell',
-    { desc = 'Hide the current code cell highlight in molten.' }
-  )
-  vim.api.nvim_create_user_command(
-    'MoltenShowCellHl',
-    'hi! link MoltenCell CursorLine',
-    { desc = 'Show the current code cell highlight in molten.' }
-  )
-
   vim.keymap.set('n', '<C-c>', vim.cmd.MoltenInterrupt, { buffer = buf })
   vim.keymap.set('n', '<C-j>', function()
     vim.cmd.MoltenEnterOutput({ mods = { noautocmd = true } })
@@ -401,7 +392,7 @@ vim.api.nvim_create_autocmd('FileType', {
 ---@return nil
 local function set_default_hlgroups()
   local hl = require('utils.hl')
-  hl.set(0, 'MoltenCell', {}) -- Hide cell highlight by default
+  hl.set(0, 'MoltenCell', { link = 'CursorLine' })
   hl.set(0, 'MoltenOutputWin', { link = 'Comment' })
   hl.set(0, 'MoltenOutputWinNC', { link = 'Comment' })
 end
