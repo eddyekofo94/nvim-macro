@@ -94,9 +94,6 @@ vim.keymap.set('t', '<M-.>', [[v:lua.require'utils.term'.running_tui() ? "<M-.>"
 vim.keymap.set('t', '<M-,>', [[v:lua.require'utils.term'.running_tui() ? "<M-,>" : "<Cmd>wincmd 4" . (winnr() == winnr("l") ? ">" : "<") . "<CR>"]], { expr = true })
 -- stylua: ignore end
 
--- Use <C-Space>[ (same as tmux) to exit terminal mode
-vim.keymap.set('t', '<C-Space>[', '<C-\\><C-n>')
-
 -- Use <C-\><C-r> to insert contents of a register in terminal mode
 vim.keymap.set(
   't',

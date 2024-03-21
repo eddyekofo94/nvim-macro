@@ -263,12 +263,6 @@ local function setup()
   tmux_mapkey_fallback('<M-+>', [[run "tmux resize-pane -y $(($(tmux display -p '#{pane_height}') + 2))"]], tmux_mapkey_resize_pane_vert_condition)
   -- stylua: ignore end
 
-  -- Use <C-Space>[ and (same keybindings as in tmux) to exit terminal mode
-  vim.keymap.set('t', '<C-Space>[', '<C-\\><C-n>')
-  vim.keymap.set({ 'n', 'v', 'o', 'i', 'c', 'l' }, '<C-Space>[', function()
-    tmux_exec('copy-mode')
-  end)
-
   -- Set @is_vim and register relevant autocmds callbacks if not already
   -- in a vim/nvim session
   if tmux_get_pane_opt('@is_vim') == '' then
