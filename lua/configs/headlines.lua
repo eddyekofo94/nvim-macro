@@ -1,6 +1,7 @@
 local opts = {
   headline_highlights = {},
   codeblock_highlight = 'CodeBlock',
+  quote_string = vim.g.modern_ui and '┃' or '│',
   fat_headlines = false,
 }
 

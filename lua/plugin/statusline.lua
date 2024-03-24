@@ -216,7 +216,18 @@ local spinner_timer = vim.uv.new_timer()
 local spinner_icons ---@type string[]
 local spinner_icon_done ---@type string
 
-if vim.g.modern_ui then
+if vim.g.retro_sym then
+  spinner_icon_done = '[done]'
+  spinner_icons = {
+    '[    ]',
+    '[=   ]',
+    '[==  ]',
+    '[=== ]',
+    '[ ===]',
+    '[  ==]',
+    '[   =]',
+  }
+else
   spinner_icon_done = vim.trim(utils.static.icons.Ok)
   spinner_icons = {
     '⠋',
@@ -229,17 +240,6 @@ if vim.g.modern_ui then
     '⠧',
     '⠇',
     '⠏',
-  }
-else
-  spinner_icon_done = '[done]'
-  spinner_icons = {
-    '[    ]',
-    '[=   ]',
-    '[==  ]',
-    '[=== ]',
-    '[ ===]',
-    '[  ==]',
-    '[   =]',
   }
 end
 

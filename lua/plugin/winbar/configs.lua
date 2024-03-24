@@ -48,7 +48,7 @@ M.opts = {
     },
     ui = {
       bar = {
-        separator = icons.ui.AngleRight,
+        separator = vim.g.retro_sym and ' > ' or icons.ui.AngleRight,
         extends = vim.opt.listchars:get().extends
           or vim.trim(icons.ui.Ellipsis),
       },

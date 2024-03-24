@@ -1,2 +1,2 @@
-return vim.g.modern_ui and require('utils.static._borders')
-  or require('utils.static._borders_ascii')
+return vim.g.retro_sym and require('utils.static._borders_retro')
+  or require('utils.static._borders')

@@ -7,7 +7,7 @@ return {
   {
     'kyazdani42/nvim-web-devicons',
     lazy = true,
-    enabled = vim.g.modern_ui or false,
+    enabled = not vim.g.retro_sym,
     config = function()
       require('configs.nvim-web-devicons')
     end,
