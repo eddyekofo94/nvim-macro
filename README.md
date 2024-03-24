@@ -41,6 +41,7 @@ Currently only supports Linux (X11/Wayland/TTY).
   - [Installing Packages to an Existing Module](#installing-packages-to-an-existing-module)
   - [Installing Packages to a New Module](#installing-packages-to-a-new-module)
   - [General Settings and Options](#general-settings-and-options)
+  - [Environment Variables](#environment-variables)
   - [Keymaps](#keymaps)
   - [Colorschemes](#colorschemes)
   - [Auto Commands](#auto-commands)
@@ -389,6 +390,11 @@ enable_modules({
 ### General Settings and Options
 
 See [lua/core/general.lua](https://github.com/Bekaboo/nvim/blob/master/lua/core/general.lua).
+
+### Environment Variables
+
+- `$NVIM_NO3RD`: disable third-party plugins if set
+- `$NVIM_RETROSYM`: disable nerd icons and use retro symbols if set
 
 ### Keymaps
 
