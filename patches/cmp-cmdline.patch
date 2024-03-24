@@ -1,8 +1,8 @@
 diff --git a/lua/cmp_cmdline/init.lua b/lua/cmp_cmdline/init.lua
-index 78bd80d..00dbc2e 100644
+index 53e7593..3c9f4f4 100644
 --- a/lua/cmp_cmdline/init.lua
 +++ b/lua/cmp_cmdline/init.lua
-@@ -125,17 +125,29 @@ local definitions = {
+@@ -130,18 +130,30 @@ local definitions = {
        -- cmp-cmdline corrects `no` prefix for option name.
        local is_option_name_completion = OPTION_NAME_COMPLETION_REGEX:match_str(cmdline) ~= nil
  
@@ -12,6 +12,7 @@ index 78bd80d..00dbc2e 100644
 +          or compltype == 'file_in_path'
 +          or compltype == 'runtime'
 +
+       --- create items.
        local items = {}
        local escaped = cmdline:gsub([[\\]], [[\\\\]]);
 -      for _, word_or_item in ipairs(vim.fn.getcompletion(escaped, 'cmdline')) do
@@ -40,4 +41,4 @@ index 78bd80d..00dbc2e 100644
 +          end
          end
        end
-       for _, item in ipairs(items) do
+ 
