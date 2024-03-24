@@ -1,4 +1,4 @@
-if vim.env.NVIM_NOTHIRDPARTY then
+if vim.env.NVIM_NO3RD then
   return
 end
 
