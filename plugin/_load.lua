@@ -89,7 +89,12 @@ if vim.g.has_ui then
 end
 
 -- winbar
-vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost', 'BufNewFile' }, {
+vim.api.nvim_create_autocmd({
+  'BufReadPost',
+  'BufWritePost',
+  'BufNewFile',
+  'BufEnter',
+}, {
   once = true,
   group = vim.api.nvim_create_augroup('WinBarSetup', {}),
   callback = function()

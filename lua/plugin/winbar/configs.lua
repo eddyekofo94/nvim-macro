@@ -15,6 +15,7 @@ M.opts = {
         and (vim.bo[buf].ft == 'markdown' or utils.treesitter.is_active(buf))
     end,
     attach_events = {
+      'BufEnter',
       'BufWinEnter',
       'BufWritePost',
     },
