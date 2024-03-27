@@ -128,18 +128,18 @@ local function jupytext_convert(buf)
           if not vim.api.nvim_buf_is_valid(info.buf) then
             return
           end
-          if obj.code == 0 then
-            if vim.fn.executable('sha256sum') == 1 then
-              vim.system({ 'sha256sum', fpath_ipynb }, {}, function(_obj)
-                _write_sha(_obj.stdout)
-              end)
-            end
+          if obj.code ~= 0 then
+            vim.notify(
+              '[jupytext] error writing into notebook: ' .. obj.stderr,
+              vim.log.levels.ERROR
+            )
             return
           end
-          vim.notify(
-            '[jupytext] error writing into notebook: ' .. obj.stderr,
-            vim.log.levels.ERROR
-          )
+          if vim.fn.executable('sha256sum') == 1 then
+            vim.system({ 'sha256sum', fpath_ipynb }, {}, function(_obj)
+              _write_sha(_obj.stdout)
+            end)
+          end
         end)
       )
     end,
