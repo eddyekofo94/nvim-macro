@@ -13,9 +13,11 @@ vim.g.molten_output_show_more = true
 vim.g.molten_virt_text_max_lines = 16
 vim.g.molten_wrap_output = true
 
--- Change the configuration when editing a python file
+local groupid = vim.api.nvim_create_augroup('MoltenSetup', {})
 vim.api.nvim_create_autocmd('BufEnter', {
+  desc = 'Change the configuration when editing a python file.',
   pattern = '*.py',
+  group = groupid,
   callback = function(info)
     if info.buf ~= vim.api.nvim_get_current_buf() then
       return
@@ -32,9 +34,10 @@ vim.api.nvim_create_autocmd('BufEnter', {
   end,
 })
 
--- Undo those config changes when we go back to a markdown or quarto file
 vim.api.nvim_create_autocmd('BufEnter', {
+  desc = 'Undo config changes when we go back to a markdown or quarto file.',
   pattern = { '*.qmd', '*.md', '*.ipynb' },
+  group = groupid,
   callback = function(info)
     if info.buf ~= vim.api.nvim_get_current_buf() then
       return
@@ -378,7 +381,6 @@ for _, buf in ipairs(vim.api.nvim_list_bufs()) do
   setup_buf_keymaps_and_commands(buf)
 end
 
-local groupid = vim.api.nvim_create_augroup('MoltenSetup', {})
 vim.api.nvim_create_autocmd('FileType', {
   desc = 'Set buffer-local keymaps and commands for molten.',
   pattern = { 'python', 'markdown' },
