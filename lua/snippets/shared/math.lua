@@ -195,12 +195,12 @@ return {
     { t('\\left\\lVert '), i(1), t(' \\right\\rVert') }
   ),
 
-  us.sambWr({ trig = '%s*ks' }, t('^{*}')),
-  us.sambWr({ trig = '%s*sq' }, t('^{2}')),
-  us.sambWr({ trig = '%s*cb' }, t('^{3}')),
-  us.sambWr({ trig = '%s*inv' }, t('^{-1}')),
-  us.sambWr({ trig = '%s*cm' }, t('^{C}')),
-  us.sambWr({ trig = '%s*tr' }, t('^{\\intercal}')),
+  us.sambW({ trig = 'ks' }, t('^{*}')),
+  us.sambW({ trig = 'sq' }, t('^{2}')),
+  us.sambW({ trig = 'cb' }, t('^{3}')),
+  us.sambW({ trig = 'inv' }, t('^{-1}')),
+  us.sambW({ trig = 'cm' }, t('^{C}')),
+  us.sambW({ trig = 'tr' }, t('^{\\intercal}')),
 
   us.samWr({ trig = '(\\?%w*_*%w*)vv' }, un.sdn(1, '\\vec{', '}')),
   us.samWr({ trig = '(\\?%w*_*%w*)hat' }, un.sdn(1, '\\hat{', '}')),
