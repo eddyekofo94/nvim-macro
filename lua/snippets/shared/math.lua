@@ -206,6 +206,12 @@ return {
   us.samWr({ trig = '(\\?%w*_*%w*)hat' }, un.sdn(1, '\\hat{', '}')),
   us.samWr({ trig = '(\\?%w*_*%w*)bar' }, un.sdn(1, '\\bar{', '}')),
   us.samWr({ trig = '(\\?%w*_*%w*)td' }, un.sdn(1, '\\tilde{', '}')),
+  us.samWr(
+    { trig = '(\\?%w*_*%w*)dot', priority = 999 },
+    un.sdn(1, '\\dot{', '}')
+  ),
+  us.samWr({ trig = '(\\?%w*_*%w*)ddot' }, un.sdn(1, '\\ddot{', '}')),
+  us.samWr({ trig = '(\\?%w*_*%w*)\\mathrm{d}ot' }, un.sdn(1, '\\ddot{', '}')),
   us.samWr({ trig = '(\\?%w*_*%w*)ovl' }, un.sdn(1, '\\overline{', '}')),
   us.samWr({ trig = '(\\?%w*_*%w*)ovs' }, {
     d(1, function(_, snip)
