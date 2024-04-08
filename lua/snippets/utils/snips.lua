@@ -10,9 +10,6 @@ local snip_attr_map = {
   r = {
     regTrig = true,
     hidden = true,
-    trigEngineOpts = {
-      max_len = 40,
-    },
   },
   R = { regTrig = false },
   h = { hidden = true },
