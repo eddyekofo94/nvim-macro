@@ -52,7 +52,7 @@ local function insert_image()
   local fname = title:gsub('%s+', '_'):lower() .. '.drawio.png'
   local path = vim.fs.joinpath(
     fn.expand('%:p:h') --[[@as string]],
-    'pic',
+    'img',
     fn.expand('%:t:r')
   )
   make_image_dir(path)
@@ -70,7 +70,7 @@ local function insert_image()
   })
 
   -- insert link
-  insert_link(fname, path)
+  insert_link(path, fname)
 
   -- copy file path to system clipboard
   os.execute('echo "' .. path .. '" | xclip -sel clip')
