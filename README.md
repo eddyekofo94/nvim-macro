@@ -31,7 +31,6 @@ Currently only supports Linux (X11/Wayland/TTY).
   - [LSP](#lsp)
   - [DAP](#dap)
   - [Formatter](#formatter)
-  - [Other External Tools](#other-external-tools)
 - [Installation](#installation)
 - [Troubleshooting](#troubleshooting)
 - [Uninstallation](#uninstallation)
@@ -86,12 +85,23 @@ Currently only supports Linux (X11/Wayland/TTY).
 
 - [Neovim](https://github.com/neovim/neovim) ***nightly***, for exact version see [nvim-version.txt](https://github.com/Bekaboo/nvim/blob/master/nvim-version.txt)
 - [Git](https://git-scm.com/)
+- [GCC](https://gcc.gnu.org/) or [Clang](https://clang.llvm.org/) for building treesitter parsers and some libs
+- [Fd](https://github.com/sharkdp/fd), [Ripgrep](https://github.com/BurntSushi/ripgrep), and [Fzf](https://github.com/junegunn/fzf) for fuzzy search
+- [Pandoc](https://pandoc.org/), [custom scripts](https://github.com/Bekaboo/dot/tree/master/.scripts) and [TexLive](https://www.tug.org/texlive/) (for ArchLinux users, it is `texlive-core` and `texlive-extra`) for markdown → PDF conversion (`:MarkdownToPDF`)
+- [Draw.io desktop](https://www.drawio.com/blog/diagrams-offline) for creating and inserting simple PNG diagrams in markdown files (`:MarkdownInsertImage`)
+- [Node.js](https://nodejs.org/en) for installing dependencies for [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim) and launching [copilot.lua](https://github.com/zbirenbaum/copilot.lua)
+- [Magick LuaRocks](https://github.com/leafo/magick), [ImageMagick](https://github.com/ImageMagick/ImageMagick) executable, and [ueberzug](https://github.com/ueber-devel/ueberzug) for in-place image preview in markdown files
+- [Jupytext](https://github.com/mwouts/jupytext) and [Pynvim](https://github.com/neovim/pynvim) for editing Jupyter notebooks
 - A decent terminal emulator
 - A nerd font, e.g. [JetbrainsMono Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono)
+  (one can set the environment variable `$NVIM_RETROSYM` to disable nerd icons
+  if nerd font is not available, see [environment variables](#environment-variables))
 
 ### Tree-sitter
 
 Tree-sitter installation and configuration is handled by [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
+
+Requires a C compiler, e.g. [GCC](https://gcc.gnu.org/) or [Clang](https://clang.llvm.org/), for building parsers.
 
 To add or remove support for a language, install or uninstall the corresponding
 parser using `:TSInstall` or `:TSUninstall`.
@@ -183,15 +193,6 @@ Install the following debug adapters manually:
 - LaTeX: install [texlive-core](http://tug.org/texlive/) to use `latexindent`
 
 <sub>\*Need [EFM Language Server](https://github.com/mattn/efm-langserver) to work with `vim.lsp.buf.format()`</sub>
-
-### Other External Tools
-
-- [Fd](https://github.com/sharkdp/fd), [Ripgrep](https://github.com/BurntSushi/ripgrep), and [Fzf](https://github.com/junegunn/fzf) for fuzzy search
-- [Pandoc](https://pandoc.org/), [custom scripts](https://github.com/Bekaboo/dot/tree/master/.scripts) and [TexLive](https://www.tug.org/texlive/) (for ArchLinux users, it is `texlive-core` and `texlive-extra`) for markdown → PDF conversion (`:MarkdownToPDF`)
-- [Draw.io desktop](https://www.drawio.com/blog/diagrams-offline) for creating and inserting simple PNG diagrams in markdown files (`:MarkdownInsertImage`)
-- [Node.js](https://nodejs.org/en) for installing dependencies for [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
-- [Magick LuaRocks](https://github.com/leafo/magick), [ImageMagick](https://github.com/ImageMagick/ImageMagick) executable, and [ueberzug](https://github.com/ueber-devel/ueberzug) for in-place image preview in markdown files
-- [Jupytext](https://github.com/mwouts/jupytext) and [Pynvim](https://github.com/neovim/pynvim) for editing Jupyter notebooks
 
 ## Installation
 
