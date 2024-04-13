@@ -71,7 +71,6 @@ Currently only supports Linux (X11/Wayland/TTY).
 - [VSCode-Neovim](https://github.com/vscode-neovim/vscode-neovim) integration, makes you feel at home in VSCode when you
   occasionally need it
 - Massive [TeX math snippets](https://github.com/Bekaboo/nvim/blob/master/lua/snippets/shared/math.lua)
-- Image rendering in markdown files (requires [ueberzug](https://github.com/ueber-devel/ueberzug))
 - Jupyter Notebook integration: edit notebooks like markdown files, run code in
   cells with simple commands and shortcuts
 - [Fine-tuned plugins](https://github.com/Bekaboo/nvim/tree/master/lua/configs) with [custom patches](https://github.com/Bekaboo/nvim/tree/master/patches)
@@ -90,7 +89,6 @@ Currently only supports Linux (X11/Wayland/TTY).
 - [Pandoc](https://pandoc.org/), [custom scripts](https://github.com/Bekaboo/dot/tree/master/.scripts) and [TexLive](https://www.tug.org/texlive/) (for ArchLinux users, it is `texlive-core` and `texlive-extra`) for markdown → PDF conversion (`:MarkdownToPDF`)
 - [Draw.io desktop](https://www.drawio.com/blog/diagrams-offline) for creating and inserting simple PNG diagrams in markdown files (`:MarkdownInsertImage`)
 - [Node.js](https://nodejs.org/en) for installing dependencies for [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim) and launching [copilot.lua](https://github.com/zbirenbaum/copilot.lua)
-- [Magick LuaRocks](https://github.com/leafo/magick), [ImageMagick](https://github.com/ImageMagick/ImageMagick) executable, and [ueberzug](https://github.com/ueber-devel/ueberzug) for in-place image preview in markdown files
 - [Jupytext](https://github.com/mwouts/jupytext) and [Pynvim](https://github.com/neovim/pynvim) for editing Jupyter notebooks
 - A decent terminal emulator
 - A nerd font, e.g. [JetbrainsMono Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono)
