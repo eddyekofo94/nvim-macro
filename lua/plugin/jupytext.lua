@@ -2,7 +2,7 @@
 ---@param buf integer?
 ---@return nil
 local function jupytext_convert(buf)
-  buf = buf and buf ~= 0 and buf or vim.api.nvim_get_current_buf()
+  buf = buf ~= 0 and buf or vim.api.nvim_get_current_buf()
   if not vim.api.nvim_buf_is_valid(buf) then
     return
   end
