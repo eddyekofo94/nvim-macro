@@ -135,7 +135,7 @@ favorite package manager:
     - Already configured for [Black](https://github.com/psf/black), [Shfmt](https://github.com/mvdan/sh), [Fish-indent](https://fishshell.com/docs/current/cmds/fish_indent.html), and [StyLua](https://github.com/JohnnyMorganz/StyLua)
 
 To add support for other languages, install corresponding language servers
-manually then add `lsp.lua` files under [after/ftplugin](https://github.com/Bekaboo/nvim/tree/master/after/ftplugin) to automatically lanuch
+manually then add `lsp.lua` files under [after/ftplugin](https://github.com/Bekaboo/nvim/tree/master/after/ftplugin) to automatically launch
 them for different filetypes.
 
 Some examples of `lsp.lua` files:
@@ -548,10 +548,10 @@ Total # of plugins: 47 (package manager included).
 - [expandtab](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/expandtab.lua)
     - Always use spaces for alignment, even if `&expandtab` is not set
 - [im](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/im.lua)
-    - Switches and restores fcitx state in each buffer asynchronouly
+    - Switches and restores fcitx state in each buffer asynchronously
 - [jupytext](https://github.com/Bekaboo/nvim/tree/master/lua/plugin/jupytext.lua)
-    - Edits jupyter notebook like markown files
-    - Writes into jupyter notebook asynchronouly, which gives a smoother
+    - Edits jupyter notebook like markdown files
+    - Writes into jupyter notebook asynchronously, which gives a smoother
       experience than [jupytext.vim](https://github.com/goerz/jupytext)
 - [intro](https://github.com/Bekaboo/nvim/tree/master/plugin/intro.lua)
     - Shows a custom intro message on startup
