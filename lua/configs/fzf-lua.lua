@@ -138,10 +138,10 @@ function actions.del_autocmd(selected)
       })
     end
   end
-  local last_query = fzf.config.__resume_data.last_query or ''
+  local query = fzf.config.__resume_data.last_query
   fzf.autocmds({
     fzf_opts = {
-      ['--query'] = vim.fn.shellescape(last_query),
+      ['--query'] = query ~= '' and query or nil,
     },
   })
 end
@@ -683,7 +683,7 @@ local fzf_hi_cmd = {
       else
         fzf.highlights({
           fzf_opts = {
-            ['--query'] = vim.fn.shellescape(hlgroup),
+            ['--query'] = hlgroup,
           },
         })
       end
@@ -703,21 +703,20 @@ local fzf_hi_cmd = {
 
 local fzf_reg_cmd = {
   function(info)
+    local query = table.concat(
+      vim.tbl_map(
+        function(reg)
+          return string.format('^[%s]', reg:upper())
+        end,
+        vim.split(info.args, '', {
+          trimempty = true,
+        })
+      ),
+      ' | '
+    )
     fzf.registers({
       fzf_opts = {
-        ['--query'] = vim.fn.shellescape(
-          table.concat(
-            vim.tbl_map(
-              function(reg)
-                return string.format('^[%s]', reg:upper())
-              end,
-              vim.split(info.args, '', {
-                trimempty = true,
-              })
-            ),
-            ' | '
-          )
-        ),
+        ['--query'] = query ~= '' and query or nil,
       },
     })
   end,
@@ -736,7 +735,7 @@ local fzf_au_cmd = {
     if #info.fargs <= 1 and not info.bang then
       fzf.autocmds({
         fzf_opts = {
-          ['--query'] = vim.fn.shellescape(info.fargs[1] or ''),
+          ['--query'] = info.fargs[1] ~= '' and info.fargs[1] or nil,
         },
       })
       return
@@ -755,21 +754,20 @@ local fzf_au_cmd = {
 
 local fzf_marks_cmd = {
   function(info)
+    local query = table.concat(
+      vim.tbl_map(
+        function(mark)
+          return '^' .. mark
+        end,
+        vim.split(info.args, '', {
+          trimempty = true,
+        })
+      ),
+      ' | '
+    )
     fzf.marks({
       fzf_opts = {
-        ['--query'] = vim.fn.shellescape(
-          table.concat(
-            vim.tbl_map(
-              function(mark)
-                return '^' .. mark
-              end,
-              vim.split(info.args, '', {
-                trimempty = true,
-              })
-            ),
-            ' | '
-          )
-        ),
+        ['--query'] = query ~= '' and query or nil,
       },
     })
   end,
