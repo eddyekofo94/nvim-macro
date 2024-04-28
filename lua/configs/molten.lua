@@ -13,6 +13,20 @@ vim.g.molten_output_show_more = true
 vim.g.molten_virt_text_max_lines = 16
 vim.g.molten_wrap_output = true
 
+-- Since rplugin is lazy-loaded on filetype (see lua/core/general.lua),
+-- we generate and source rplugin.vim if `MoltenStatusLineInit` is not
+-- registered as a function (should be registered in rplugin.vim)
+if not pcall(vim.fn.MoltenStatusLineInit) then
+  if not pcall(vim.cmd.UpdateRemotePlugins) then
+    vim.cmd.runtime('plugin/rplugin.vim')
+  end
+  vim.cmd.UpdateRemotePlugins()
+  local manifest = vim.g.loaded_remote_plugins
+  if manifest and (vim.uv.fs_stat(manifest) or {}).type == 'file' then
+    vim.cmd.source(manifest)
+  end
+end
+
 local groupid = vim.api.nvim_create_augroup('MoltenSetup', {})
 vim.api.nvim_create_autocmd('BufEnter', {
   desc = 'Change the configuration when editing a python file.',
