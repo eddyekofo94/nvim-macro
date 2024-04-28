@@ -229,7 +229,7 @@ vim.api.nvim_create_autocmd('CmdlineEnter', {
     utils.keymap.command_map('S', '%s/')
     utils.keymap.command_map(':', 'lua ')
     utils.keymap.command_abbrev('man', 'Man')
-    utils.keymap.command_abbrev('bt', 'bel te')
+    utils.keymap.command_abbrev('ht', 'hor te')
     utils.keymap.command_abbrev('vt', 'vert te')
     utils.keymap.command_abbrev('ep', 'e%:p:h')
     utils.keymap.command_abbrev('vep', 'vs%:p:h')
