@@ -1,5 +1,5 @@
 diff --git a/lua/fzf-lua/providers/buffers.lua b/lua/fzf-lua/providers/buffers.lua
-index 7dddacc..126edf3 100644
+index 2fdd8e2..d741425 100644
 --- a/lua/fzf-lua/providers/buffers.lua
 +++ b/lua/fzf-lua/providers/buffers.lua
 @@ -60,8 +60,10 @@ end
@@ -43,10 +43,10 @@ index 7dddacc..126edf3 100644
    local leftbr = "["
    local rightbr = "]"
    local bufname = #buf.info.name > 0 and path.relative_to(buf.info.name, cwd or vim.loop.cwd())
-@@ -130,12 +131,12 @@ local function gen_buffer_entry(opts, buf, max_bufnr, cwd)
+@@ -132,12 +133,12 @@ local function gen_buffer_entry(opts, buf, max_bufnr, cwd)
+   if buf.info.lnum > 0 and not opts.no_lnum then
+     bufname = bufname .. ":" .. utils.ansi_codes[opts.hls.path_linenr](tostring(buf.info.lnum))
    end
-   -- add line number
-   bufname = ("%s:%s"):format(bufname, buf.info.lnum > 0 and buf.info.lnum or "")
 -  if buf.flag == "%" then
 +  if buf.flag:match("%%") then
      flags = utils.ansi_codes[opts.hls.buf_flag_cur](buf.flag) .. flags
@@ -59,7 +59,7 @@ index 7dddacc..126edf3 100644
    end
    local bufnrstr = string.format("%s%s%s", leftbr,
      utils.ansi_codes[opts.hls.buf_nr](tostring(buf.bufnr)), rightbr)
-@@ -175,7 +176,26 @@ M.buffers = function(opts)
+@@ -170,7 +171,26 @@ M.buffers = function(opts)
  
    opts.__fn_reload = opts.__fn_reload or function(_)
      return function(cb)
@@ -88,10 +88,10 @@ index 7dddacc..126edf3 100644
        if next(filtered) then
          local buffers = populate_buffer_entries(opts, filtered)
 diff --git a/lua/fzf-lua/providers/nvim.lua b/lua/fzf-lua/providers/nvim.lua
-index 5e951ba..bd40fa5 100644
+index 53cfc84..44af147 100644
 --- a/lua/fzf-lua/providers/nvim.lua
 +++ b/lua/fzf-lua/providers/nvim.lua
-@@ -97,8 +97,8 @@ end
+@@ -98,8 +98,8 @@ end
  M.search_history = function(opts)
    opts = config.normalize_opts(opts, "search_history")
    if not opts then return end
@@ -103,10 +103,10 @@ index 5e951ba..bd40fa5 100644
    history(opts, "search")
  end
 diff --git a/lua/fzf-lua/win.lua b/lua/fzf-lua/win.lua
-index 4d0003e..b303c3c 100644
+index 4619291..2fd7055 100644
 --- a/lua/fzf-lua/win.lua
 +++ b/lua/fzf-lua/win.lua
-@@ -1415,10 +1415,10 @@ function FzfWin.toggle_help()
+@@ -1431,10 +1431,10 @@ function FzfWin.toggle_help()
      style = "minimal",
      width = vim.o.columns,
      height = height,
