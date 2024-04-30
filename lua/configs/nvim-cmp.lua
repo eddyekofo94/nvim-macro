@@ -191,7 +191,7 @@ end
 ---Options for fuzzy_path source
 local fuzzy_path_option = {
   fd_cmd = {
-    'fd',
+    vim.fn.executable('fd') == 1 and 'fd' or 'fdfind',
     '-p',
     '-H',
     '-L',
