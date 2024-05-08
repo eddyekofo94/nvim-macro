@@ -4,6 +4,7 @@ local M = {}
 M.tui = {
   vi = true,
   fzf = true,
+  ssh = true,
   nvi = true,
   kak = true,
   vim = true,
