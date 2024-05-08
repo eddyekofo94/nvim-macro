@@ -101,10 +101,12 @@ opt.fillchars = {
 }
 if g.modern_ui then
   opt.listchars:append({ nbsp = '␣' })
+  opt.fillchars:append({ diff = '╱' })
+end
+if not g.retro_sym then
   opt.fillchars:append({
     foldopen  = '',
     foldclose = '',
-    diff      = '╱',
   })
 end
 
