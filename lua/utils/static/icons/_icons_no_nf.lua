@@ -123,7 +123,7 @@ return {
     ArrowRight          = '→ ',
     ArrowUp             = '↑ ',
     CircleFilled        = '• ',
-    CircleOutline       = '○ ',
+    CircleOutline       = 'o ',
     Cross               = 'x ',
     Ok                  = 'v ',
     Diamond             = '◆ ',
