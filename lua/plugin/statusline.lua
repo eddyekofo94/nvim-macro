@@ -264,7 +264,7 @@ vim.api.nvim_create_autocmd('LspProgress', {
     server_info_in_progress[id] = {
       name = vim.lsp.get_client_by_id(id).name,
       timestamp = now,
-      type = info.data.result.value.kind,
+      type = info.data.result and info.data.result.value.kind,
     } -- Update LSP progress data
     -- Clear client message after a short time if no new message is received
     vim.defer_fn(function()
