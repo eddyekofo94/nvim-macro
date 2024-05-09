@@ -216,7 +216,7 @@ local spinner_timer = vim.uv.new_timer()
 local spinner_icons ---@type string[]
 local spinner_icon_done ---@type string
 
-if vim.g.retro_sym then
+if vim.g.no_nf then
   spinner_icon_done = '[done]'
   spinner_icons = {
     '[    ]',

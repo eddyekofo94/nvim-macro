@@ -9,7 +9,7 @@ local env = vim.env
 g.has_ui = #vim.api.nvim_list_uis() > 0
 g.has_gui = vim.fn.has('gui_running') == 1
 g.modern_ui = g.has_ui and env.DISPLAY ~= nil
-g.retro_sym = not g.modern_ui or env.NVIM_RETROSYM or false
+g.no_nf = not g.modern_ui or env.NVIM_NONF or false
 
 -- stylua: ignore start
 opt.colorcolumn    = '+1'
@@ -103,7 +103,7 @@ if g.modern_ui then
   opt.listchars:append({ nbsp = '␣' })
   opt.fillchars:append({ diff = '╱' })
 end
-if not g.retro_sym then
+if not g.no_nf then
   opt.fillchars:append({
     foldopen  = '',
     foldclose = '',

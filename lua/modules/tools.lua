@@ -189,7 +189,7 @@ return {
 
   {
     'NvChad/nvim-colorizer.lua',
-    enabled = not vim.g.retro_sym,
+    enabled = not vim.g.no_nf,
     event = { 'BufNew', 'BufRead' },
     config = function()
       require('configs.nvim-colorizer')

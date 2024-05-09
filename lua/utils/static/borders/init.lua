@@ -1,2 +1,2 @@
-return vim.g.retro_sym and require('utils.static._borders_retro')
+return vim.g.no_nf and require('utils.static._borders_no_nf')
   or require('utils.static._borders')
