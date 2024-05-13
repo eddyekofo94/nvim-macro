@@ -49,6 +49,30 @@ return {
   ),
   us.msn(
     {
+      { trig = 'ck' },
+      { trig = 'check' },
+      common = { desc = 'Inspect through formatted string' },
+    },
+    un.fmtad('"<expr_escaped>: <placeholder>\\n", <expr>', {
+      expr = i(1),
+      expr_escaped = d(2, function(texts)
+        local str = vim.fn.escape(texts[1][1], '\\"')
+        return sn(nil, i(1, str))
+      end, { 1 }),
+      placeholder = c(3, {
+        i(nil, '%s'),
+        i(nil, '%d'),
+        i(nil, '%f'),
+        i(nil, '%x'),
+        i(nil, '%ld'),
+        i(nil, '%lf'),
+        i(nil, '%g'),
+        i(nil, '%c'),
+      }),
+    })
+  ),
+  us.msn(
+    {
       { trig = 'pck' },
       { trig = 'pcheck' },
       common = { desc = 'Inspect through printf()' },

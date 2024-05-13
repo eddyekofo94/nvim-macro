@@ -26,6 +26,21 @@ M.snippets = {
   ),
   us.msn(
     {
+      { trig = 'ck' },
+      { trig = 'check' },
+      common = { desc = 'Inspect through f-string' },
+    },
+    un.fmtad('f<q><expr_escaped>: {<expr>}<q>', {
+      q = un.qt(),
+      expr = i(1),
+      expr_escaped = d(2, function(texts)
+        local str = vim.fn.escape(texts[1][1], '\\' .. uf.get_quotation_type())
+        return sn(nil, i(1, str))
+      end, { 1 }),
+    })
+  ),
+  us.msn(
+    {
       { trig = 'pck' },
       { trig = 'pcheck' },
       common = { desc = 'Inspect through print()' },
