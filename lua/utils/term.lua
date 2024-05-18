@@ -1,41 +1,26 @@
 local M = {}
 
----List of programs considered as TUI apps
-M.tui = {
-  vi = true,
-  fzf = true,
-  ssh = true,
-  nvi = true,
-  kak = true,
-  vim = true,
-  nvim = true,
-  sudo = true,
-  nano = true,
-  helix = true,
-  nmtui = true,
-  emacs = true,
-  vimdiff = true,
-  lazygit = true,
-  sudoedit = true,
-  emacsclient = true,
-}
-
 ---Check if any of the processes in terminal buffer `buf` is a TUI app
 ---@param buf integer? buffer handler
 ---@return boolean?
 function M.running_tui(buf)
-  local proc_names = M.proc_names(buf)
-  for _, proc_name in ipairs(proc_names) do
-    if M.tui[proc_name] then
+  local proc_cmds = M.proc_cmds(buf)
+  for _, cmd in ipairs(proc_cmds) do
+    if
+      vim.fn.match(
+        cmd,
+        '\\v^(sudo(\\s+--?(\\w|-)+((\\s+|\\=)\\S+)?)*\\s+)?(/usr/bin/)?(n?vim?|vimdiff|emacs(client)?|nano|helix|kak|lazygit|fzf|nmtui|sudoedit|ssh)'
+      ) >= 0
+    then
       return true
     end
   end
 end
 
----Get list of names of the processes running in the terminal
+---Get list of commands of the processes running in the terminal
 ---@param buf integer? terminal buffer handler, default to 0 (current)
 ---@return string[]: process names
-function M.proc_names(buf)
+function M.proc_cmds(buf)
   buf = buf or 0
   if not vim.api.nvim_buf_is_valid(buf) or vim.bo[buf].bt ~= 'terminal' then
     return {}
@@ -45,7 +30,7 @@ function M.proc_names(buf)
   if not chan_valid then
     return {}
   end
-  return vim.split(vim.fn.system('ps h -o comm -g ' .. pid), '\n', {
+  return vim.split(vim.fn.system('ps h -o args -g ' .. pid), '\n', {
     trimempty = true,
   })
 end
