@@ -94,6 +94,7 @@ local function enable_modules(module_names)
         config = icons.Config,
         event = icons.Event,
         debug = '',
+        favorite = icons.star,
         ft = icons.File,
         init = icons.Config,
         import = icons.ArrowLeft,

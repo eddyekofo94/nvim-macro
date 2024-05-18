@@ -1,20 +1,20 @@
 diff --git a/lua/lazy/core/config.lua b/lua/lazy/core/config.lua
-index 1fbf3ef..0522226 100644
+index 5aa61cb..b1187e6 100644
 --- a/lua/lazy/core/config.lua
 +++ b/lua/lazy/core/config.lua
-@@ -55,6 +55,7 @@ M.defaults = {
+@@ -58,6 +58,7 @@ M.defaults = {
      icons = {
        cmd = " ",
        config = "",
 +      debug = "●",
        event = " ",
+       favorite = " ",
        ft = " ",
-       init = " ",
 diff --git a/lua/lazy/manage/task/git.lua b/lua/lazy/manage/task/git.lua
-index a1bfcf6..12382ab 100644
+index 8dd2536..c6a7650 100644
 --- a/lua/lazy/manage/task/git.lua
 +++ b/lua/lazy/manage/task/git.lua
-@@ -184,12 +184,17 @@ M.status = {
+@@ -190,12 +190,17 @@ M.status = {
              return line ~= ""
            end, lines)
            if #lines > 0 then
@@ -38,7 +38,7 @@ index a1bfcf6..12382ab 100644
          end
        end,
 diff --git a/lua/lazy/view/render.lua b/lua/lazy/view/render.lua
-index 7487056..029be63 100644
+index 5d7e197..2a021eb 100644
 --- a/lua/lazy/view/render.lua
 +++ b/lua/lazy/view/render.lua
 @@ -686,7 +686,7 @@ function M:debug()

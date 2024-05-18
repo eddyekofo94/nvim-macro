@@ -138,6 +138,7 @@ return {
     GitSignUntracked    = '▍ ',
     Pin                 = '󰐃 ',
     Play                = ' ',
+    Star                = '󰓎 ',
     TriangleDown        = '▼ ',
     TriangleLeft        = '◀ ',
     TriangleRight       = '▶ ',
