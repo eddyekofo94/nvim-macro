@@ -22,7 +22,7 @@ function fallback_tbl_t:fallback(k)
   local dest = self.__content[k]
   local default = self.__default
   if dest and default then
-    if vim.tbl_islist(dest) and vim.tbl_islist(default) then
+    if vim.islist(dest) and vim.islist(default) then
       return vim.list_extend(dest, default)
     else
       dest = vim.tbl_deep_extend('keep', dest, default)

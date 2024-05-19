@@ -91,7 +91,7 @@ local function setup_lsp_overrides()
 
       -- textDocument/definition can return Location or Location[]
       -- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocument_definition
-      if not vim.tbl_islist(result) then
+      if not vim.islist(result) then
         result = { result }
       end
 
@@ -892,7 +892,7 @@ local subcommands = {
         ['bufnr'] = subcommand_opt_vals.bufs,
       },
     },
-    is_disabled = {
+    is_enabled = {
       ---@param args lsp_command_parsed_arg_t
       arg_handler = function(args)
         return args.bufnr, args.namespace
@@ -902,7 +902,7 @@ local subcommands = {
         ['bufnr'] = subcommand_opt_vals.bufs,
       },
       fn_override = function(...)
-        vim.notify(vim.inspect(vim.diagnostic.is_disabled(...)))
+        vim.notify(vim.inspect(vim.diagnostic.is_enabled(...)))
       end,
     },
     match = {
