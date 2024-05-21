@@ -124,7 +124,7 @@ return {
     t('} '),
   }),
 
-  us.samWr({ trig = '_' }, {
+  us.samW({ trig = '_' }, {
     d(1, function()
       local char_after = uf.get_char_after()
       if char_after == '_' or char_after == '{' then
