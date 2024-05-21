@@ -134,7 +134,7 @@ return {
       end
     end),
   }),
-  us.samWr({ trig = '^' }, {
+  us.samW({ trig = '^' }, {
     d(1, function()
       local char_after = uf.get_char_after()
       if char_after == '^' or char_after == '{' then
