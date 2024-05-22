@@ -198,8 +198,9 @@ return {
   us.sambW({ trig = 'ks' }, t('^{*}')),
   us.sambW({ trig = 'sq' }, t('^{2}')),
   us.sambW({ trig = 'cb' }, t('^{3}')),
-  us.sambW({ trig = 'inv' }, t('^{-1}')),
   us.sambW({ trig = 'cm' }, t('^{C}')),
+  us.sambW({ trig = 'inv' }, t('^{-1}')),
+  us.sambW({ trig = '\\in v' }, t('^{-1}')),
   us.sambW({ trig = 'tr' }, t('^{\\intercal}')),
 
   us.samWr({ trig = '(\\?%w*_*%w*)vv' }, un.sdn(1, '\\vec{', '}')),
