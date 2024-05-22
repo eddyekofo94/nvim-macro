@@ -82,7 +82,7 @@ Currently only supports Linux (X11/Wayland/TTY).
 
 ### Basic
 
-- [Neovim](https://github.com/neovim/neovim) ***nightly***, for exact version see [nvim-version.txt](https://github.com/Bekaboo/nvim/blob/master/nvim-version.txt)
+- [Neovim](https://github.com/neovim/neovim) 0.10, for exact version see [nvim-version.txt](https://github.com/Bekaboo/nvim/blob/master/nvim-version.txt)
 - [Git](https://git-scm.com/)
 - [GCC](https://gcc.gnu.org/) or [Clang](https://clang.llvm.org/) for building treesitter parsers and some libs
 - [Fd](https://github.com/sharkdp/fd), [Ripgrep](https://github.com/BurntSushi/ripgrep), and [Fzf](https://github.com/junegunn/fzf) for fuzzy search
@@ -256,10 +256,8 @@ If you encounter any issue, please try the following steps:
 
 2. Run `:checkhealth` to check potential dependency issues
 
-3. Check `:version` to make sure you are on the same (of above) version\* of
+3. Check `:version` to make sure you are on the same (of above) version of
    neovim as specified in [nvim-version.txt](https://github.com/Bekaboo/nvim/blob/master/nvim-version.txt)
-
-    - \* The commit SHA matters for nightly/dev builds of Neovim!
 
 4. Try removing the following paths then restart Neovim:
 
