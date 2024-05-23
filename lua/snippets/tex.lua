@@ -73,6 +73,22 @@ M.env = {
       }
     )
   ),
+  us.sM({ trig = 'img' }, un.fmtad(
+    [[
+      \begin{figure}[<placement>]
+      <idnt>\centering
+      <idnt>\includegraphics[<size>]{<img_path>}
+      <idnt>\caption{<caption>}
+      \end{figure}
+    ]],
+    {
+      placement = i(1, 'H'),
+      size = i(2, 'width=1.0\\textwidth'),
+      img_path = i(3, 'img/img.png'),
+      caption = i(4),
+      idnt = un.idnt(1),
+    }
+  )),
 }
 
 M.style = {
