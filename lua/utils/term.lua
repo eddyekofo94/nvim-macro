@@ -9,7 +9,7 @@ function M.running_tui(buf)
     if
       vim.fn.match(
         cmd,
-        '\\v^(sudo(\\s+--?(\\w|-)+((\\s+|\\=)\\S+)?)*\\s+)?(/usr/bin/)?(n?vim?|vimdiff|emacs(client)?|nano|helix|kak|lazygit|fzf|nmtui|sudoedit|ssh)'
+        '\\v^(sudo(\\s+--?(\\w|-)+((\\s+|\\=)\\S+)?)*\\s+)?(/usr/bin/)?(n?vim?|vimdiff|emacs(client)?|lem|nano|helix|kak|lazygit|fzf|nmtui|sudoedit|ssh)'
       ) >= 0
     then
       return true
