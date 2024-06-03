@@ -51,6 +51,13 @@ M.markers = {
         * conds.after_pattern('%*'),
     },
   }, { t('*'), i(0), t('*') }),
+  us.sn({ trig = 'cb' }, {
+    t('```'),
+    i(1, 'python'),
+    t({ '', '' }),
+    i(0),
+    t({ '', '```' }),
+  }),
 }
 
 M.titles = {
