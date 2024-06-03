@@ -11,10 +11,6 @@ vim.g.vimtex_quickfix_ignore_filters = {
   [[Font shape `.*' undefined]],
 }
 
--- Use lualatex as default engine
-vim.g.vimtex_compiler_latexmk_engines = { _ = 'lualatex' }
-vim.g.vimtex_compiler_latexrun_engines = { _ = 'lualatex' }
-
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'tex', 'markdown' },
   group = vim.api.nvim_create_augroup('VimTexFileTypeInit', {}),
