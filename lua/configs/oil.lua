@@ -340,6 +340,7 @@ oil.setup({
     ['gh'] = 'actions.toggle_hidden',
     ['gs'] = 'actions.change_sort',
     ['gx'] = 'actions.open_external',
+    ['gY'] = 'actions.copy_entry_filename',
     ['go'] = {
       mode = 'n',
       buffer = true,
