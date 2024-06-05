@@ -124,6 +124,12 @@ require('nvim-web-devicons').setup({
       icon = vim.trim(icons.Markdown),
       name = 'Markdown',
     },
+    tar = {
+      color = '#e84d31',
+      cterm_color = '166',
+      icon = vim.trim(icons.Zip),
+      name = 'Tar',
+    },
     zip = {
       color = '#e84d31',
       cterm_color = '166',
