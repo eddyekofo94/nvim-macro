@@ -51,7 +51,11 @@ M.markers = {
         * conds.after_pattern('%*'),
     },
   }, { t('*'), i(0), t('*') }),
-  us.sn({ trig = 'cb' }, {
+  us.msn({
+    common = { desc = 'Code block' },
+    { trig = 'cb' },
+    { trig = 'cdb' },
+  }, {
     t('```'),
     i(1, 'python'),
     t({ '', '' }),
