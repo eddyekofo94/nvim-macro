@@ -436,6 +436,11 @@ local hlgroups = {
   DiagnosticSignWarn = { link = 'DiagnosticWarn' },
   DiagnosticSignInfo = { link = 'DiagnosticInfo' },
   DiagnosticSignHint = { link = 'DiagnosticHint' },
+  DiagnosticUnnecessary = {
+    fg = c_steel,
+    sp = c_pigeon,
+    undercurl = true,
+  },
   -- }}}2
 
   -- Filetype {{{2

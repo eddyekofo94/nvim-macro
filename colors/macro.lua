@@ -405,6 +405,11 @@ local hlgroups = {
   DiagnosticVirtualTextHint = { bg = c_winterGreen, fg = c_macroAqua },
   DiagnosticVirtualTextInfo = { bg = c_winterBlue, fg = c_macroBlue1 },
   DiagnosticVirtualTextWarn = { bg = c_winterYellow, fg = c_carpYellow },
+  DiagnosticUnnecessary = {
+    fg = c_macroAsh,
+    sp = c_macroAqua,
+    undercurl = true,
+  },
   -- }}}
 
   -- Filetype {{{2
