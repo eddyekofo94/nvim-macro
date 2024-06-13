@@ -58,6 +58,14 @@ M.markers = {
     i(0),
     t({ '', '```' }),
   }),
+  us.sn({
+    trig = 'cd',
+    desc = 'Inline code',
+  }, {
+    t('`'),
+    i(1),
+    t('`'),
+  }),
 }
 
 M.titles = {
