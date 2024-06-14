@@ -1,8 +1,8 @@
 diff --git a/lua/copilot/suggestion.lua b/lua/copilot/suggestion.lua
-index d5be7a8..808a00d 100644
+index cad0c0b..3d03e4f 100644
 --- a/lua/copilot/suggestion.lua
 +++ b/lua/copilot/suggestion.lua
-@@ -567,11 +567,21 @@ local function on_buf_enter()
+@@ -568,11 +568,21 @@ local function on_buf_enter()
    end
  end
  
@@ -27,4 +27,4 @@ index d5be7a8..808a00d 100644
 +  end, 16)
  end
  
- local function on_complete_changed()
+ local function on_text_changed_p()

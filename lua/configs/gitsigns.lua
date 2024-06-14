@@ -14,6 +14,7 @@ gs.setup({
     topdelete = { text = vim.trim(icons.GitSignTopdelete) },
     changedelete = { text = vim.trim(icons.GitSignChangedelete) },
   },
+  signs_staged_enable = false,
   current_line_blame = false,
   current_line_blame_opts = {
     virt_text = true,
