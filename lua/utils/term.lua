@@ -1,17 +1,20 @@
 local M = {}
 
+---Compiled vim regex that decides if a command is a TUI app
+M.TUI_REGEX = vim.regex(
+  [[\v^(sudo(\s+--?(\w|-)+((\s+|\=)\S+)?)*\s+)?]]
+    .. [[(/usr/bin/)?]]
+    .. [[(n?vim?|vimdiff|emacs(client)?|lem|nano]]
+    .. [[|helix|kak|lazygit|fzf|nmtui|sudoedit|ssh)]]
+)
+
 ---Check if any of the processes in terminal buffer `buf` is a TUI app
 ---@param buf integer? buffer handler
 ---@return boolean?
 function M.running_tui(buf)
   local proc_cmds = M.proc_cmds(buf)
   for _, cmd in ipairs(proc_cmds) do
-    if
-      vim.fn.match(
-        cmd,
-        '\\v^(sudo(\\s+--?(\\w|-)+((\\s+|\\=)\\S+)?)*\\s+)?(/usr/bin/)?(n?vim?|vimdiff|emacs(client)?|lem|nano|helix|kak|lazygit|fzf|nmtui|sudoedit|ssh)'
-      ) >= 0
-    then
+    if M.TUI_REGEX:match_str(cmd) then
       return true
     end
   end
