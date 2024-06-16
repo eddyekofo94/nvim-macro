@@ -4,7 +4,6 @@ if vim.fn.win_gettype() == 'quickfix' then
 end
 
 vim.bo.buflisted = false
-vim.opt_local.wrap = true
 vim.opt_local.list = false
 vim.opt_local.spell = false
 vim.opt_local.rnu = false
