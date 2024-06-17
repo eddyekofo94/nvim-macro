@@ -238,6 +238,12 @@ require('nvim-web-devicons').setup({
       cterm_color = '160',
       name = 'Pptx',
     },
+    xcu = {
+      icon = '󰗀',
+      color = '#975122',
+      cterm_color = '130',
+      name = 'Xcu',
+    },
   },
   override_by_filename = {
     run_datasets = {
