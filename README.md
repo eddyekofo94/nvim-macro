@@ -182,6 +182,8 @@ Install the following debug adapters manually:
     pip install --local debugpy # Install to user's home directory
     ```
 
+For more information on DAP installation, see [Debug Adapter Installation](https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation).
+
 ### Formatter
 
 - Bash: install [Shfmt](https://github.com/mvdan/sh)\*
