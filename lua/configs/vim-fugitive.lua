@@ -50,3 +50,32 @@ vim.api.nvim_create_autocmd('User', {
     end, { buffer = true })
   end,
 })
+
+vim.api.nvim_create_autocmd('FileType', {
+  desc = 'Set buffer-local options for fugitive buffers.',
+  group = groupid,
+  pattern = 'fugitive',
+  callback = function()
+    vim.opt_local.winbar = nil
+    vim.opt_local.signcolumn = 'no'
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  desc = 'Set buffer-local options for fugitive blame buffers.',
+  group = groupid,
+  pattern = 'fugitive blame',
+  callback = function()
+    local win_alt = vim.fn.win_getid(vim.fn.winnr('#'))
+    vim.opt_local.winbar = vim.api.nvim_win_is_valid(win_alt)
+        and vim.wo[win_alt].winbar ~= ''
+        and ' '
+      or ''
+
+    vim.opt_local.number = false
+    vim.opt_local.signcolumn = 'no'
+    vim.opt_local.relativenumber = false
+  end,
+})
