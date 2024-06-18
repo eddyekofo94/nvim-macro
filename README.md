@@ -480,7 +480,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 45 (package manager included).
+Total # of plugins: 46 (package manager included).
 
 - **Lib**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -530,6 +530,7 @@ Total # of plugins: 45 (package manager included).
 - **Debug**
     - [nvim-dap](https://github.com/mfussenegger/nvim-dap)
     - [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
+        - [nvim-nio](https://github.com/nvim-neotest/nvim-nio) (dependency)
     - [one-small-step-for-vimkind](https://github.com/jbyuki/one-small-step-for-vimkind)
 - **Colorschemes**
     - [everforest](https://github.com/sainnhe/everforest)

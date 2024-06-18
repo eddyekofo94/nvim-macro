@@ -33,6 +33,7 @@ return {
     lazy = true,
     dependencies = {
       'mfussenegger/nvim-dap',
+      'nvim-neotest/nvim-nio',
       'kyazdani42/nvim-web-devicons',
     },
     config = function()
