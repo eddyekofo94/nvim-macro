@@ -66,7 +66,7 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd('FileType', {
   desc = 'Set buffer-local options for fugitive blame buffers.',
   group = groupid,
-  pattern = 'fugitive blame',
+  pattern = 'fugitiveblame',
   callback = function()
     local win_alt = vim.fn.win_getid(vim.fn.winnr('#'))
     vim.opt_local.winbar = vim.api.nvim_win_is_valid(win_alt)
