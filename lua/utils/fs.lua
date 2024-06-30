@@ -21,9 +21,7 @@ M.root_patterns = {
 ---@param patterns string[]? root patterns
 ---@return string? nil if not found
 function M.proj_dir(path, patterns)
-  if not path or path == '' then
-    return nil
-  end
+  path = path or vim.fn.getcwd(0)
   patterns = patterns or M.root_patterns
   ---@diagnostic disable-next-line: undefined-field
   local stat = vim.uv.fs_stat(path)

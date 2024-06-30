@@ -1,0 +1,13 @@
+diff --git a/lua/otter/config.lua b/lua/otter/config.lua
+index 83a02a3..8cfcbb9 100644
+--- a/lua/otter/config.lua
++++ b/lua/otter/config.lua
+@@ -3,7 +3,7 @@ local M = {}
+ local default_config = {
+   lsp = {
+     diagnostic_update_events = { "BufWritePost" },
+-    root_dir = require("lspconfig").util.root_pattern({ ".git", "_quarto.yml", "package.json" }),
++    root_dir = vim.fn.getcwd,
+   },
+   buffers = {
+     -- if set to true, the filetype of the otterbuffers will be set.
