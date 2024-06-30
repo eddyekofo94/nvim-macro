@@ -47,4 +47,12 @@ return {
       require('configs.vim-easy-align')
     end,
   },
+
+  {
+    'andymass/vim-matchup',
+    events = { 'BufReadPre', 'StdinReadPre', 'TextChanged' },
+    config = function()
+      require('configs.vim-matchup')
+    end,
+  },
 }
