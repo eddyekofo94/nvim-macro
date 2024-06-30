@@ -50,7 +50,7 @@ return {
 
   {
     'andymass/vim-matchup',
-    events = { 'BufReadPre', 'StdinReadPre', 'TextChanged' },
+    event = { 'BufReadPre', 'StdinReadPre', 'TextChanged' },
     config = function()
       require('configs.vim-matchup')
     end,
