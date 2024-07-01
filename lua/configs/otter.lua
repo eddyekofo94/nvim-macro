@@ -8,7 +8,9 @@ ot.setup({
   lsp = {
     -- Use custom project root dir finder instead of nvim-lspconfig's
     -- this removes hard requirement of nvim-lspconfig for otter
-    root_dir = utils.fs.proj_dir,
+    root_dir = function()
+      return vim.fs.root(0, utils.fs.root_patterns) or vim.fn.getcwd(0)
+    end,
   },
 })
 

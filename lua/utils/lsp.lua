@@ -47,7 +47,7 @@ function M.start(config, opts)
 
   local name = cmd_exec
   local bufname = vim.api.nvim_buf_get_name(0)
-  local root_dir = require('utils.fs').proj_dir(
+  local root_dir = vim.fs.root(
     bufname,
     vim.list_extend(
       config.root_patterns or {},
