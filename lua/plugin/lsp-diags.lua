@@ -243,14 +243,16 @@ local subcommand_arg_handler = {
 }
 
 ---@type table<string, subcommand_completion_t>
-local subcommand_completion = {
+local subcommand_completions = {
   bufs = function()
-    return vim.api.nvim_list_bufs()
+    return vim.tbl_map(tostring, vim.api.nvim_list_bufs())
   end,
   ---Get completion for LSP clients
   ---@return string[]
   lsp_clients = function(arglead)
-    if arglead ~= '' then
+    -- Only return candidate list if the argument is empty or ends with '='
+    -- to avoid giving wrong completion when argument is incomplete
+    if arglead ~= '' and not vim.endswith(arglead, '=') then
       return {}
     end
     return vim.tbl_map(function(client)
@@ -260,7 +262,7 @@ local subcommand_completion = {
   ---Get completion for LSP client ids
   ---@return integer[]
   lsp_client_ids = function(arglead)
-    if arglead ~= '' then
+    if arglead ~= '' and not vim.endswith(arglead, '=') then
       return {}
     end
     return vim.tbl_map(function(client)
@@ -270,7 +272,7 @@ local subcommand_completion = {
   ---Get completion for LSP client names
   ---@return integer[]
   lsp_client_names = function(arglead)
-    if arglead ~= '' then
+    if arglead ~= '' and not vim.endswith(arglead, '=') then
       return {}
     end
     return vim.tbl_map(function(client)
@@ -283,10 +285,10 @@ local subcommand_completion = {
 local subcommand_opt_vals = {
   bool = { 'v:true', 'v:false' },
   severity = { 'WARN', 'INFO', 'ERROR', 'HINT' },
-  bufs = subcommand_completion.bufs,
-  lsp_clients = subcommand_completion.lsp_clients,
-  lsp_client_ids = subcommand_completion.lsp_client_ids,
-  lsp_client_names = subcommand_completion.lsp_client_names,
+  bufs = subcommand_completions.bufs,
+  lsp_clients = subcommand_completions.lsp_clients,
+  lsp_client_ids = subcommand_completions.lsp_client_ids,
+  lsp_client_names = subcommand_completions.lsp_client_names,
   lsp_methods = {
     'callHierarchy/incomingCalls',
     'callHierarchy/outgoingCalls',
@@ -363,7 +365,7 @@ local subcommands = {
       end,
     },
     restart = {
-      completion = subcommand_completion.lsp_clients,
+      completion = subcommand_completions.lsp_clients,
       arg_handler = subcommand_arg_handler.lsp_client_ids,
       fn_override = function(ids)
         -- Restart all clients attached to current buffer if no ids are given
@@ -385,12 +387,12 @@ local subcommands = {
       end,
     },
     get_clients_by_id = {
-      completion = subcommand_completion.lsp_clients,
+      completion = subcommand_completions.lsp_clients,
       arg_handler = function(args)
         return tonumber(args[1]:match('^%d+'))
       end,
       fn_override = function(id)
-        vim.notify(vim.inspect(vim.lsp.get_client_by_id(id)))
+        vim.print(vim.lsp.get_client_by_id(id))
       end,
     },
     get_clients = {
@@ -412,7 +414,7 @@ local subcommands = {
       end,
     },
     stop = {
-      completion = subcommand_completion.lsp_clients,
+      completion = subcommand_completions.lsp_clients,
       arg_handler = subcommand_arg_handler.lsp_client_ids,
       fn_override = function(ids)
         -- Stop all clients attached to current buffer if no ids are given
@@ -627,12 +629,173 @@ local subcommands = {
     clear_references = {},
     list_workspace_folders = {
       fn_override = function()
-        vim.notify(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        vim.print(vim.lsp.buf.list_workspace_folders())
       end,
     },
     incoming_calls = {},
     outgoing_calls = {},
     signature_help = {},
+    codelens_clear = {
+      fn_override = function(args)
+        vim.lsp.codelens.clear(args.client_id, args.bufnr)
+      end,
+      opts = {
+        ['client_id'] = subcommand_opt_vals.lsp_clients,
+        ['bufnr'] = subcommand_opt_vals.bufs,
+      },
+    },
+    codelens_display = {
+      fn_override = function(args)
+        vim.lsp.codelens.display(args.lenses, args.bufnr, args.client_id)
+      end,
+      opts = {
+        ['client_id'] = subcommand_opt_vals.lsp_clients,
+        ['bufnr'] = subcommand_opt_vals.bufs,
+        'lenses',
+      },
+    },
+    codelens_get = {
+      fn_override = function(args)
+        vim.lsp.codelens.get(args[1])
+      end,
+      completion = subcommand_completions.bufs,
+    },
+    codelens_on_codelens = {
+      fn_override = function(args)
+        vim.lsp.codelens.on_codelens(args.err, args.result, args.ctx)
+      end,
+      opts = { 'err', 'result', 'ctx' },
+    },
+    codelens_refresh = {
+      fn_override = function(args)
+        vim.lsp.codelens.refresh(args.opts)
+      end,
+      opts = {
+        'opts',
+        ['opts.bufnr'] = subcommand_opt_vals.bufs,
+      },
+    },
+    codelens_run = {
+      fn_override = vim.lsp.codelens.run,
+    },
+    codelens_save = {
+      fn_override = function(args)
+        vim.lsp.codelens.save(args.lenses, args.bufnr, args.client_id)
+      end,
+      opts = {
+        'lenses',
+        ['bufnr'] = subcommand_opt_vals.bufs,
+        ['client_id'] = subcommand_opt_vals.lsp_clients,
+      },
+    },
+    inlay_hint_enable = {
+      fn_override = function(args)
+        vim.lsp.inlay_hint.enable(true, args.filter)
+      end,
+      opts = {
+        'filter',
+        ['filter.bufnr'] = subcommand_opt_vals.bufs,
+      },
+    },
+    inlay_hint_disable = {
+      fn_override = function(args)
+        vim.lsp.inlay_hint.enable(false, args.filter)
+      end,
+      opts = {
+        'filter',
+        ['filter.bufnr'] = subcommand_opt_vals.bufs,
+      },
+    },
+    inlay_hint_toggle = {
+      fn_override = function(args)
+        vim.lsp.inlay_hint.enable(
+          not vim.lsp.inlay_hint.is_enabled(),
+          args.filter
+        )
+      end,
+      opts = {
+        'filter',
+        ['filter.bufnr'] = subcommand_opt_vals.bufs,
+      },
+    },
+    inlay_hint_get = {
+      fn_override = function(args)
+        vim.print(vim.lsp.inlay_hint.get(args.filter))
+      end,
+      opts = {
+        'filter',
+        'filter.range',
+        ['filter.bufnr'] = subcommand_opt_vals.bufs,
+      },
+    },
+    inlay_hint_is_enabled = {
+      fn_override = function(args)
+        vim.print(vim.lsp.inlay_hint.is_enabled(args.filter))
+      end,
+      opts = {
+        'filter',
+        ['filter.bufnr'] = subcommand_opt_vals.bufs,
+      },
+    },
+    semantic_tokens_force_refresh = {
+      fn_override = function(args)
+        vim.lsp.semantic_tokens.force_refresh(args[1])
+      end,
+      completion = subcommand_completions.bufs,
+    },
+    semantic_tokens_get_at_pos = {
+      fn_override = function(args)
+        vim.print(
+          vim.lsp.semantic_tokens.get_at_pos(args.bufnr or 0, args.row, args.col)
+        )
+      end,
+      opts = {
+        ['bufnr'] = subcommand_opt_vals.bufs,
+        'row',
+        'col',
+      },
+    },
+    semantic_tokens_highlight_token = {
+      fn_override = function(args)
+        vim.lsp.semantic_tokens.highlight_token(
+          args.token,
+          args.bufnr or 0,
+          args.client_id,
+          args.hl_group,
+          args.opts
+        )
+      end,
+      opts = {
+        'token',
+        ['bufnr'] = subcommand_opt_vals.bufs,
+        ['client_id'] = subcommand_opt_vals.lsp_clients,
+        ['hl_group'] = function()
+          return vim.fn.getcompletion(':hi ', 'cmdline')
+        end,
+        'opts',
+        'opts.priority',
+      },
+    },
+    semantic_tokens_start = {
+      fn_override = function(args)
+        vim.lsp.semantic_tokens.start(args.bufnr or 0, args.client_id, args.opts)
+      end,
+      opts = {
+        ['bufnr'] = subcommand_opt_vals.bufs,
+        ['client_id'] = subcommand_opt_vals.lsp_clients,
+        'opts',
+        'opts.debounce',
+      },
+    },
+    semantic_tokens_stop = {
+      fn_override = function(args)
+        vim.lsp.semantic_tokens.stop(args.bufnr or 0, args.client_id)
+      end,
+      opts = {
+        ['bufnr'] = subcommand_opt_vals.bufs,
+        ['client_id'] = subcommand_opt_vals.lsp_clients,
+      },
+    },
   },
 
   ---Diagnostic subcommands
@@ -728,19 +891,19 @@ local subcommands = {
         ['opts.severity'] = subcommand_opt_vals.severity,
       },
       fn_override = function(...)
-        vim.notify(vim.inspect(vim.diagnostic.get(...)))
+        vim.print(vim.diagnostic.get(...))
       end,
     },
     get_namespace = {
       arg_handler = subcommand_arg_handler.item,
       opts = { 'namespace' },
       fn_override = function(...)
-        vim.notify(vim.inspect(vim.diagnostic.get_namespace(...)))
+        vim.print(vim.diagnostic.get_namespace(...))
       end,
     },
     get_namespaces = {
       fn_override = function()
-        vim.notify(vim.inspect(vim.diagnostic.get_namespaces()))
+        vim.print(vim.diagnostic.get_namespaces())
       end,
     },
     get_next = {
@@ -764,7 +927,7 @@ local subcommands = {
         ['float.severity'] = subcommand_opt_vals.severity,
       },
       fn_override = function(...)
-        vim.notify(vim.inspect(vim.diagnostic.get_next(...)))
+        vim.print(vim.diagnostic.get_next(...))
       end,
     },
     get_next_pos = {
@@ -788,7 +951,7 @@ local subcommands = {
         ['float.severity'] = subcommand_opt_vals.severity,
       },
       fn_override = function(...)
-        vim.notify(vim.inspect(vim.diagnostic.get_next_pos(...)))
+        vim.print(vim.diagnostic.get_next_pos(...))
       end,
     },
     get_prev = {
@@ -812,7 +975,7 @@ local subcommands = {
         ['float.severity'] = subcommand_opt_vals.severity,
       },
       fn_override = function(...)
-        vim.notify(vim.inspect(vim.diagnostic.get_prev(...)))
+        vim.print(vim.diagnostic.get_prev(...))
       end,
     },
     get_prev_pos = {
@@ -836,7 +999,7 @@ local subcommands = {
         ['float.severity'] = subcommand_opt_vals.severity,
       },
       fn_override = function(...)
-        vim.notify(vim.inspect(vim.diagnostic.get_prev_pos(...)))
+        vim.print(vim.diagnostic.get_prev_pos(...))
       end,
     },
     goto_next = {
@@ -901,7 +1064,7 @@ local subcommands = {
         ['bufnr'] = subcommand_opt_vals.bufs,
       },
       fn_override = function(...)
-        vim.notify(vim.inspect(vim.diagnostic.is_enabled(...)))
+        vim.print(vim.diagnostic.is_enabled(...))
       end,
     },
     match = {
@@ -921,7 +1084,7 @@ local subcommands = {
         'defaults',
       },
       fn_override = function(...)
-        vim.notify(vim.inspect(vim.diagnostic.match(...)))
+        vim.print(vim.diagnostic.match(...))
       end,
     },
     open_float = {
@@ -1113,7 +1276,7 @@ local function command_complete(meta, subcommand_info_list)
     if not subcommand_info_list[subcommand] then
       return {}
     end
-    -- Use subcommand's completion function if it exists
+    -- Use subcommand's custom completion function if it exists
     if subcommand_info_list[subcommand].completion then
       return subcommand_info_list[subcommand].completion(
         arglead,
