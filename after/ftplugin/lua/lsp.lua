@@ -30,8 +30,9 @@ local efm = vim.fn.executable('stylua') == 1
 lsp.start({
   cmd = { 'lua-language-server' },
   root_patterns = { '.luarc.json', '.luarc.jsonc' },
-  on_attach = efm and function(client)
-    client.server_capabilities.documentFormattingProvider = false
-    client.server_capabilities.documentRangeFormattingProvider = false
-  end or nil,
+  settings = {
+    Lua = {
+      format = { enable = not efm },
+    },
+  },
 })
