@@ -32,6 +32,7 @@ lsp.start({
   root_patterns = { '.luarc.json', '.luarc.jsonc' },
   settings = {
     Lua = {
+      hint = { enable = true },
       format = { enable = not efm },
     },
   },
