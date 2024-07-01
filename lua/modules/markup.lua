@@ -30,9 +30,6 @@ return {
     'jmbuhr/otter.nvim',
     ft = { 'markdown' },
     dependencies = {
-      -- -- otter uses nvim-lspconfig to detect root dirs,
-      -- -- but we use our own root dir finder
-      -- 'neovim/nvim-lspconfig',
       'nvim-treesitter/nvim-treesitter',
     },
     config = function()
