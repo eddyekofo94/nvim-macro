@@ -746,7 +746,11 @@ local subcommands = {
     semantic_tokens_get_at_pos = {
       fn_override = function(args)
         vim.print(
-          vim.lsp.semantic_tokens.get_at_pos(args.bufnr or 0, args.row, args.col)
+          vim.lsp.semantic_tokens.get_at_pos(
+            args.bufnr or 0,
+            args.row,
+            args.col
+          )
         )
       end,
       opts = {
@@ -778,7 +782,11 @@ local subcommands = {
     },
     semantic_tokens_start = {
       fn_override = function(args)
-        vim.lsp.semantic_tokens.start(args.bufnr or 0, args.client_id, args.opts)
+        vim.lsp.semantic_tokens.start(
+          args.bufnr or 0,
+          args.client_id,
+          args.opts
+        )
       end,
       opts = {
         ['bufnr'] = subcommand_opt_vals.bufs,
