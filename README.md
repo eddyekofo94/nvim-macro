@@ -480,7 +480,7 @@ and it should work out of the box.
 
 #### Third Party Plugins
 
-Total # of plugins: 47 (package manager included).
+Total # of plugins: 46 (package manager included).
 
 - **Lib**
     - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
@@ -508,7 +508,6 @@ Total # of plugins: 47 (package manager included).
     - [headlines.nvim](https://github.com/lukas-reineke/headlines.nvim)
 - **Edit**
     - [nvim-surround](https://github.com/kylechui/nvim-surround)
-    - [Comment.nvim](https://github.com/numToStr/Comment.nvim)
     - [vim-sleuth](https://github.com/tpope/vim-sleuth)
     - [ultimate-autopairs.nvim](https://github.com/altermo/ultimate-autopair.nvim)
     - [vim-easy-align](https://github.com/junegunn/vim-easy-align)
