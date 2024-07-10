@@ -47,6 +47,10 @@ function M.start(config, opts)
 
   local name = cmd_exec
   local bufname = vim.api.nvim_buf_get_name(0)
+  if not vim.uv.fs_stat(bufname) then
+    return
+  end
+
   local root_dir = vim.fs.root(
     bufname,
     vim.list_extend(
