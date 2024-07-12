@@ -17,7 +17,7 @@ local M = {}
 ---@return table node
 function M.idnt(depth, argnode_references, node_opts)
   return f(function(...)
-    return require('snippets.utils.funcs').get_indent_str(depth, ...)
+    return require('utils.snippets.funcs').get_indent_str(depth, ...)
   end, argnode_references, node_opts)
 end
 
@@ -28,7 +28,7 @@ end
 ---@return table node
 function M.qt(argnode_references, opts)
   return f(function()
-    return require('snippets.utils.funcs').get_quotation_type()
+    return require('utils.snippets.funcs').get_quotation_type()
   end, argnode_references, opts)
 end
 
@@ -64,7 +64,7 @@ function M.body(jump_index, indent_depth, default_text)
     local selected = parent.snippet.env.LS_SELECT_DEDENT
     for idx = 2, #selected do
       if selected[idx]:match('%S') then
-        selected[idx] = require('snippets.utils.funcs').get_indent_str(
+        selected[idx] = require('utils.snippets.funcs').get_indent_str(
           indent_depth,
           argnode_texts,
           parent,

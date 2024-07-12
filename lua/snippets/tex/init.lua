@@ -1,6 +1,6 @@
 local M = {}
-local un = require('snippets.utils.nodes')
-local us = require('snippets.utils.snips')
+local un = require('utils.snippets.nodes')
+local us = require('utils.snippets.snips')
 local ls = require('luasnip')
 local sn = ls.snippet_node
 local t = ls.text_node
@@ -9,7 +9,7 @@ local f = ls.function_node
 local c = ls.choice_node
 local d = ls.dynamic_node
 
-M.math = require('snippets.shared.math')
+M.math = require('snippets.tex.math')
 
 M.env = {
   us.sM(

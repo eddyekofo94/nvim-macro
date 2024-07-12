@@ -1,5 +1,5 @@
 local ls = require('luasnip')
-local conds = require('snippets.utils.conds')
+local conds = require('utils.snippets.conds')
 
 -- Map snippet attribute string to snippet attribute options
 local snip_attr_map = {
