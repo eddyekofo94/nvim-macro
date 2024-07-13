@@ -2,9 +2,8 @@ local ot = require('otter')
 local utils = require('utils')
 
 ot.setup({
-  buffers = {
-    set_filetype = true,
-  },
+  verbose = { no_code_found = false },
+  buffers = { set_filetype = true },
   lsp = {
     root_dir = function()
       return vim.fs.root(0, utils.fs.root_patterns) or vim.fn.getcwd(0)
