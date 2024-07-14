@@ -175,6 +175,9 @@ local function preview()
     if not vim.fn.getcwd(0) ~= target_dir then
       lcd(target_dir)
     end
+    -- Move cursor to the first line of the preview buffer, so that we always
+    -- see the beginning of the file when we start previewing a new file
+    vim.cmd('0')
   end)
   vim.api.nvim_buf_call(preview_buf, function()
     vim.treesitter.stop(preview_buf)
