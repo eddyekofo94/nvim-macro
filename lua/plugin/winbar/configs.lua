@@ -298,7 +298,6 @@ M.opts = {
         'if_statement',
         'interface',
         'keyword',
-        'list',
         'macro',
         'method',
         'module',
@@ -326,8 +325,9 @@ M.opts = {
         'field',
         'identifier',
         'object',
-        'statement',
         'text',
+        -- 'list',
+        -- 'statement',
       },
     },
     lsp = {
