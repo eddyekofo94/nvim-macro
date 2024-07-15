@@ -40,6 +40,11 @@ return {
   {
     'andymass/vim-matchup',
     event = { 'BufReadPre', 'StdinReadPre', 'TextChanged' },
+    init = function()
+      -- Disable matchit and matchparen
+      vim.g.loaded_matchparen = 0
+      vim.g.loaded_matchit = 0
+    end,
     config = function()
       require('configs.vim-matchup')
     end,

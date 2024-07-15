@@ -1,7 +1,3 @@
--- Disable matchit and matchparen
-vim.g.loaded_matchparen = 0
-vim.g.loaded_matchit = 0
-
 vim.g.matchup_matchparen_deferred = 1 -- improve scrolling performance
 vim.g.matchup_matchparen_deferred_show_delay = 16
 vim.g.matchup_matchparen_deferred_hide_delay = 16
