@@ -617,6 +617,9 @@ vim.lsp.handlers['textDocument/references'] = fzf.lsp_references
 vim.lsp.handlers['textDocument/typeDefinition'] = fzf.lsp_typedefs
 vim.lsp.handlers['workspace/symbol'] = fzf.lsp_live_workspace_symbols
 
+vim.diagnostic.setqflist = fzf.diagnostics_workspace
+vim.diagnostic.setloclist = fzf.diagnostics_document
+
 vim.api.nvim_create_user_command('F', function(info)
   fzf.files({ cwd = info.fargs[1] })
 end, {
