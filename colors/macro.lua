@@ -3,7 +3,7 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Wed Mar  6 11:08:58 PM CST 2024
+-- Last Updated: Mon Jul 15 11:32:39 PM CST 2024
 
 -- Clear hlgroups and set colors_name {{{
 vim.cmd.hi('clear')
@@ -311,7 +311,6 @@ local hlgroups = {
   ['@keyword.return'] = { fg = c_macroRed, italic = true },
   ['@module'] = { fg = c_macroOrange0 },
   ['@operator'] = { link = 'Operator' },
-  ['@variable.parameter'] = { fg = c_macroGray0 },
   ['@punctuation.bracket'] = { fg = c_macroGray1 },
   ['@punctuation.delimiter'] = { fg = c_macroGray1 },
   ['@markup.list'] = { fg = c_macroTeal },
