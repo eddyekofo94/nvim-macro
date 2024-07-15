@@ -15,7 +15,7 @@ return {
 
   {
     'tpope/vim-sleuth',
-    event = 'BufReadPre',
+    event = { 'BufReadPre', 'StdinReadPre' },
   },
 
   {
