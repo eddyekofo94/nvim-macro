@@ -22,7 +22,7 @@ return {
     Cmd                 = ' ',
     Color               = '󰏘 ',
     Constant            = '󰏿 ',
-    Constructor         = ' ',
+    Constructor         = '  ',
     ContinueStatement   = '→ ',
     Copilot             = ' ',
     Declaration         = '󰙠 ',
