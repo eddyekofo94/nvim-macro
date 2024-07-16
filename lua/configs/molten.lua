@@ -221,7 +221,7 @@ local function run_cell(range)
   local lang = get_valid_repl_lang() or 'python'
 
   otk.sync_raft(buf)
-  local otk_buf_info = otk._otters_attached[buf]
+  local otk_buf_info = otk.rafts[buf]
   if not otk_buf_info then
     molten_warn('code runner not initialized for buffer ' .. buf)
     return
@@ -295,7 +295,7 @@ local function run_range(range)
   local lang = get_valid_repl_lang() or 'python'
 
   otk.sync_raft(buf)
-  local otk_buf_info = otk._otters_attached[buf]
+  local otk_buf_info = otk.rafts[buf]
   if not otk_buf_info then
     molten_warn('code runner not initialized for buffer ' .. buf)
     return
