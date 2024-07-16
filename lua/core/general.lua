@@ -35,7 +35,13 @@ opt.wrap           = false
 opt.linebreak      = true
 opt.breakindent    = true
 opt.smoothscroll   = true
+opt.ignorecase     = true
+opt.smartcase      = true
 opt.conceallevel   = 2
+opt.softtabstop    = 2
+opt.shiftwidth     = 2
+opt.expandtab      = true
+opt.autoindent     = true
 opt.autowriteall   = true
 opt.virtualedit    = 'block'
 opt.completeopt    = 'menuone'
@@ -109,15 +115,6 @@ if not g.no_nf then
     foldclose = '',
   })
 end
-
-opt.ts          = 4
-opt.softtabstop = 4
-opt.shiftwidth  = 4
-opt.expandtab   = true
-opt.autoindent  = true
-
-opt.ignorecase  = true
-opt.smartcase   = true
 
 -- Netrw settings
 g.netrw_banner          = 0
