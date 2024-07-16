@@ -187,20 +187,10 @@ M.syntax = {
       }
     )
   ),
-  us.mssn(
+  us.ssn(
     {
-      {
-        trig = 'ifndd',
-        desc = '#ifndef...define preproc',
-      },
-      {
-        trig = 'gd',
-        desc = '#ifndef...define preproc / include guard',
-      },
-      {
-        trig = 'guard',
-        desc = '#ifndef...define preproc / include guard',
-      },
+      trig = 'ifndd',
+      desc = '#ifndef...define preproc',
     },
     un.fmtad(
       [[
