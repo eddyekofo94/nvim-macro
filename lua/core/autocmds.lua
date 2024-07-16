@@ -44,32 +44,6 @@ augroup('BigFileSettings', {
   },
 })
 
--- Workaround for nvim treating whole Chinese sentence as a single word
--- Ideally something like https://github.com/neovim/neovim/pull/14029
--- will be merged to nvim, also see
--- https://github.com/neovim/neovim/issues/13967
-augroup('CJKFileSettings', {
-  'BufEnter',
-  {
-    desc = 'Settings for CJK files.',
-    callback = function(info)
-      local lnum_nonblank = math.max(0, vim.fn.nextnonblank(1) - 1)
-      local lines = vim.api.nvim_buf_get_lines(
-        info.buf,
-        lnum_nonblank,
-        lnum_nonblank + 64,
-        false
-      )
-      for _, line in ipairs(lines) do
-        if line:match('[\128-\255]') then
-          vim.opt_local.linebreak = false
-          return
-        end
-      end
-    end,
-  },
-})
-
 augroup('YankHighlight', {
   'TextYankPost',
   {
