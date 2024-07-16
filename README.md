@@ -98,7 +98,7 @@ Currently only supports Linux (X11/Wayland/TTY).
 
 ### Tree-sitter
 
-Tree-sitter installation and configuration is handled by [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
+Tree-sitter installation and configuration are handled by [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
 
 Requires a C compiler, e.g. [GCC](https://gcc.gnu.org/) or [Clang](https://clang.llvm.org/), for building parsers.
 
