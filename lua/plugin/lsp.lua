@@ -107,26 +107,6 @@ local function setup_lsp_overrides()
   end
 
   -- Configure hovering window style
-  local opts_override_floating_preview = {
-    border = 'solid',
-    max_width = math.max(80, math.ceil(vim.go.columns * 0.75)),
-    max_height = math.max(20, math.ceil(vim.go.lines * 0.4)),
-    close_events = {
-      'CursorMoved',
-      'CursorMovedI',
-      'WinScrolled',
-    },
-  }
-  vim.api.nvim_create_autocmd('VimResized', {
-    desc = 'Update LSP floating window maximum size on VimResized.',
-    group = vim.api.nvim_create_augroup('LspUpdateFloatingWinMaxSize', {}),
-    callback = function()
-      opts_override_floating_preview.max_width =
-        math.max(80, math.ceil(vim.go.columns * 0.75))
-      opts_override_floating_preview.max_height =
-        math.max(20, math.ceil(vim.go.lines * 0.4))
-    end,
-  })
   -- Hijack LSP floating window function to use custom options
   local _open_floating_preview = vim.lsp.util.open_floating_preview
   ---@param contents table of lines to show in window
@@ -136,7 +116,19 @@ local function setup_lsp_overrides()
   ---@diagnostic disable-next-line: duplicate-set-field
   function vim.lsp.util.open_floating_preview(contents, syntax, opts)
     local source_ft = vim.bo[vim.api.nvim_get_current_buf()].ft
-    opts = vim.tbl_deep_extend('force', opts, opts_override_floating_preview)
+    opts = vim.tbl_deep_extend('force', opts, {
+      border = 'solid',
+      max_width = math.max(80, math.ceil(vim.go.columns * 0.75)),
+      max_height = math.max(20, math.ceil(vim.go.lines * 0.4)),
+      close_events = {
+        'CursorMovedI',
+        'CursorMoved',
+        'InsertEnter',
+        'WinScrolled',
+        'WinResized',
+        'VimResized',
+      },
+    })
     -- If source filetype is markdown, use custom mkd syntax instead of
     -- markdown syntax to avoid using treesitter highlight and get math
     -- concealing provided by vimtex in the floating window
