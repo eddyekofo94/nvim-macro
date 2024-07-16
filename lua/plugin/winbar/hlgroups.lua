@@ -81,6 +81,27 @@ local hlgroups = {
 }
 --stylua: ignore end
 
+---Set WinBar & WinBarNC background to Normal background
+---@return nil
+local function clear_winbar_bg()
+  ---@param name string
+  ---@return nil
+  local function _clear_bg(name)
+    local hl = require('utils.hl').get(0, {
+      name = name,
+      winhl_link = false,
+    })
+    if hl.bg or hl.ctermbg then
+      hl.bg = nil
+      hl.ctermbg = nil
+      vim.api.nvim_set_hl(0, name, hl)
+    end
+  end
+
+  _clear_bg('WinBar')
+  _clear_bg('WinBarNC')
+end
+
 ---Set winbar highlight groups
 ---@return nil
 local function set_hlgroups()
@@ -96,6 +117,17 @@ local function init()
   vim.api.nvim_create_autocmd('ColorScheme', {
     group = vim.api.nvim_create_augroup('WinBarHlGroups', {}),
     callback = set_hlgroups,
+  })
+
+  clear_winbar_bg()
+  vim.api.nvim_create_autocmd('ColorScheme', {
+    group = vim.api.nvim_create_augroup('WinBarHlClearBg', {}),
+    callback = clear_winbar_bg,
+  })
+  vim.api.nvim_create_autocmd('OptionSet', {
+    group = vim.api.nvim_create_augroup('WinBarHlClearBg', {}),
+    pattern = 'background',
+    callback = clear_winbar_bg,
   })
 end
 
