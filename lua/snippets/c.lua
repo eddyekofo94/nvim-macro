@@ -31,7 +31,11 @@ M.syntax = {
   us.sn({
     trig = 'ret',
     desc = 'return statement',
-  }, t('return ')),
+  }, {
+    t('return '),
+    i(1),
+    t(';'),
+  }),
   us.sn(
     {
       trig = 'p',
