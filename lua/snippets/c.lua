@@ -132,6 +132,10 @@ M.syntax = {
       sn(nil, { t('"'), r(1, 'header'), t('"') }),
     }),
   }),
+  us.ssn({
+    trig = 'def',
+    desc = '#define preproc',
+  }, t('#define ')),
   us.ssn(
     {
       trig = 'if',
