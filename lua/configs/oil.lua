@@ -1,7 +1,3 @@
-vim.g.loaded_fzf_file_explorer = 1
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
 local oil = require('oil')
 local icons = require('utils.static').icons
 local icon_file = vim.trim(icons.File)
