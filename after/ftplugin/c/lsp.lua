@@ -8,9 +8,4 @@ require('utils.lsp').start({
     'compile_flags.txt',
     'configure.ac',
   },
-  capabilities = {
-    offsetEncoding = {
-      'utf-16',
-    },
-  },
 })
