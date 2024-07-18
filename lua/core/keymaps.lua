@@ -181,6 +181,12 @@ end)
 -- Edit current file's directory
 vim.keymap.set({ 'n', 'x' }, '-', '<Cmd>e%:p:h<CR>')
 
+-- Enter insert mode, add a space after the cursor
+vim.keymap.set({ 'n', 'x' }, '<M-i>', 'i<Space><Left>')
+vim.keymap.set({ 'n', 'x' }, '<M-I>', 'I<Space><Left>')
+vim.keymap.set({ 'n', 'x' }, '<M-a>', 'a<Space><Left>')
+vim.keymap.set({ 'n', 'x' }, '<M-A>', 'A<Space><Left>')
+
 -- Text object: current buffer
 -- stylua: ignore start
 vim.keymap.set('x', 'af', ':<C-u>silent! keepjumps normal! ggVG<CR>', { silent = true, noremap = false })
