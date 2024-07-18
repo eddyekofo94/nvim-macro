@@ -52,6 +52,52 @@ M.syntax = {
       }),
     })
   ),
+  us.sn(
+    {
+      trig = 'as',
+      desc = 'assert()',
+    },
+    c(1, {
+      un.fmtad('assert(<expr>);', {
+        expr = i(1),
+      }),
+      un.fmtad('assert((<expr>) && "<msg>\\n");', {
+        expr = i(1),
+        msg = i(2, 'Error'),
+      }),
+    })
+  ),
+  us.sn(
+    {
+      trig = 'da',
+      desc = 'dbg_assert()',
+    },
+    c(1, {
+      un.fmtad('dbg_assert(<expr>);', {
+        expr = i(1),
+      }),
+      un.fmtad('dbg_assert((<expr>) && "<msg>\\n");', {
+        expr = i(1),
+        msg = i(2, 'Error'),
+      }),
+    })
+  ),
+  us.sn(
+    {
+      trig = 'dp',
+      desc = 'dbg_printf()',
+    },
+    c(1, {
+      un.fmtad('dbg_printf("<str>\\n"<args>);', {
+        str = i(1),
+        args = i(2),
+      }),
+      un.fmtad('dbg_printf("<str>"<args>);', {
+        str = i(1),
+        args = i(2),
+      }),
+    })
+  ),
   us.msn(
     {
       { trig = 'ck' },
@@ -101,6 +147,54 @@ M.syntax = {
         i(nil, '%x'),
         i(nil, '%g'),
         i(nil, '%c'),
+      }),
+    })
+  ),
+  us.msn(
+    {
+      { trig = 'dpck' },
+      { trig = 'dpcheck' },
+      common = { desc = 'Inspect through dbg_printf()' },
+    },
+    un.fmtad('dbg_printf("<expr_escaped>: <placeholder>\\n", <expr>);', {
+      expr = i(1),
+      expr_escaped = d(2, function(texts)
+        local str = vim.fn.escape(texts[1][1], '\\"')
+        return sn(nil, i(1, str))
+      end, { 1 }),
+      placeholder = c(3, {
+        i(nil, '%d'),
+        i(nil, '%p'),
+        i(nil, '%lu'),
+        i(nil, '%ld'),
+        i(nil, '%lf'),
+        i(nil, '%s'),
+        i(nil, '%f'),
+        i(nil, '%x'),
+        i(nil, '%g'),
+        i(nil, '%c'),
+      }),
+    })
+  ),
+  us.sn(
+    {
+      trig = 'dpl',
+      desc = 'Print a line using dbg_printf()',
+    },
+    un.fmtad('dbg_printf("<line>\\n");', {
+      line = c(1, {
+        -- stylua: ignore start
+        i(nil, '----------------------------------------'),
+        i(nil, '========================================'),
+        i(nil, '........................................'),
+        i(nil, '++++++++++++++++++++++++++++++++++++++++'),
+        i(nil, '****************************************'),
+        i(nil, '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'),
+        i(nil, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'),
+        i(nil, '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'),
+        i(nil, '########################################'),
+        i(nil, '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'),
+        -- stylua: ignore end
       }),
     })
   ),
