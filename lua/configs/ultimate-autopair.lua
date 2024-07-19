@@ -42,6 +42,7 @@ require('ultimate-autopair').setup({
     -- https://github.com/altermo/ultimate-autopair.nvim/issues/74
     tsnode = false,
     utf8 = false,
+    suround = false,
     filetype = { tree = false },
     cond = {
       cond = function(f)
