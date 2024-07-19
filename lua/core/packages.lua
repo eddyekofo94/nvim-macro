@@ -185,6 +185,7 @@ if vim.g.vscode then
 else
   enable_modules({
     'lib',
+    'lsp',
     'edit',
     'debug',
     'tools',
