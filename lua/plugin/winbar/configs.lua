@@ -9,10 +9,9 @@ M.opts = {
     enable = function(buf, win)
       return not vim.w[win].winbar_no_attach
         and not vim.b[buf].winbar_no_attach
-        and vim.fn.win_gettype(win) == ''
         and vim.wo[win].winbar == ''
-        and vim.bo[buf].bt == ''
-        and (vim.bo[buf].ft == 'markdown' or utils.treesitter.is_active(buf))
+        and vim.fn.win_gettype(win) == ''
+        and utils.treesitter.is_active(buf)
     end,
     attach_events = {
       'BufEnter',
