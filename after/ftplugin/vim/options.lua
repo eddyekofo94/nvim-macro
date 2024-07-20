@@ -1,6 +1,3 @@
-if vim.fn.win_gettype() ~= 'command' then
-  return
-end
 
 vim.bo.buflisted = false
 vim.opt_local.wrap = true
