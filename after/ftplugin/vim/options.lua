@@ -1,3 +1,4 @@
+vim.bo.commentstring = '" %s'
 
 vim.bo.buflisted = false
 vim.opt_local.wrap = true
