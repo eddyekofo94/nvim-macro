@@ -125,6 +125,7 @@ function M.setup()
   map('c', '<C-b>', '<Left>')
   map('c', '<C-f>', '<Right>')
   map('c', '<C-_>', '<C-f>')
+  map('c', '<C-g>', '<C-\\><C-n>')
   map('c', '<M-e>', '<C-f>')
   map('!', '<C-BS>', '<C-w>')
   map('!', '<M-BS>', '<C-w>')
@@ -156,9 +157,6 @@ function M.setup()
   end, { expr = true })
 
   map('!', '<C-t>', function()
-    if fn.getcmdtype():match('[?/]') then
-      return '<C-t>'
-    end
     if start_of_line() and not first_line() then
       local char_under_cur = get_char(0)
       if char_under_cur ~= '' then
