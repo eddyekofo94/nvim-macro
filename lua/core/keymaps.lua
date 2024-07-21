@@ -102,6 +102,9 @@ vim.keymap.set(
   { expr = true }
 )
 
+-- Past with correct indentation in insert mode
+vim.keymap.set('i', '<C-r>', '<C-r><C-p>')
+
 -- More consistent behavior when &wrap is set
 -- stylua: ignore start
 vim.keymap.set({ 'n', 'x' }, 'j', 'v:count ? "j" : "gj"', { expr = true })
