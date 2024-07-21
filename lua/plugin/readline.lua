@@ -46,14 +46,6 @@ local function get_current_col()
   return fn.mode() == 'c' and fn.getcmdpos() or col('.')
 end
 
----Get character relative to cursor
----@param offset number from cursor
----@return string character
-local function get_char(offset)
-  local idx = get_current_col() + offset
-  return get_current_line():sub(idx, idx)
-end
-
 ---Get word after cursor
 ---@param str string? content of the line, default to current line
 ---@param colnr integer? column number, default to current column
@@ -106,13 +98,6 @@ local function start_of_line()
   return get_current_col() == 1
 end
 
----Check if cursor is at the middle of the line
----@return boolean
-local function mid_of_line()
-  local current_col = get_current_col()
-  return current_col > 1 and current_col <= #get_current_line()
-end
-
 ---Set up key mappings
 function M.setup()
   if vim.g.loaded_readline then
@@ -125,7 +110,6 @@ function M.setup()
   map('c', '<C-b>', '<Left>')
   map('c', '<C-f>', '<Right>')
   map('c', '<C-_>', '<C-f>')
-  map('c', '<C-g>', '<C-\\><C-n>')
   map('c', '<M-e>', '<C-f>')
   map('!', '<C-BS>', '<C-w>')
   map('!', '<M-BS>', '<C-w>')
@@ -154,34 +138,6 @@ function M.setup()
   map('i', '<C-k>', function()
     return '<C-g>u'
       .. (end_of_line() and '<Del>' or '<Cmd>normal! D<CR><Right>')
-  end, { expr = true })
-
-  map('!', '<C-t>', function()
-    if start_of_line() and not first_line() then
-      local char_under_cur = get_char(0)
-      if char_under_cur ~= '' then
-        return '<Del><Up><End>' .. char_under_cur .. '<Down><Home>'
-      else
-        local lnum = line('.')
-        local prev_line = fn.getline(lnum - 1) --[[@as string]]
-        local char_end_of_prev_line = prev_line:sub(-1)
-        if char_end_of_prev_line ~= '' then
-          return '<Up><End><BS><Down><Home>' .. char_end_of_prev_line
-        end
-        return ''
-      end
-    end
-    if end_of_line() then
-      local char_before = get_char(-1)
-      if get_char(-2) ~= '' or fn.mode() == 'c' then
-        return '<BS><Left>' .. char_before .. '<End>'
-      else
-        return '<BS><Up><End>' .. char_before .. '<Down><End>'
-      end
-    end
-    if mid_of_line() then
-      return '<BS><Right>' .. get_char(-1)
-    end
   end, { expr = true })
 
   map('!', '<C-u>', function()
