@@ -198,7 +198,6 @@ local fuzzy_path_option = {
     '-td',
     '-tf',
     '-tl',
-    '--max-results=1024',
     '--mount',
     '-c=never',
     '-E=*.git/',
