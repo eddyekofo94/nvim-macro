@@ -254,6 +254,7 @@ fzf.setup({
   nbsp = not vim.g.modern_ui and '\xc2\xa0' or nil,
   dir_icon = vim.trim(utils.static.icons.Folder),
   winopts = {
+    backdrop = 100,
     split = [[
         let tabpage_win_list = nvim_tabpage_list_wins(0) |
         \ call v:lua.require'utils.win'.saveheights(tabpage_win_list) |
