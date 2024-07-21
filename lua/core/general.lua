@@ -45,6 +45,7 @@ opt.autoindent     = true
 opt.autowriteall   = true
 opt.virtualedit    = 'block'
 opt.completeopt    = 'menuone'
+opt.jumpoptions    = 'stack,view'
 -- stylua: ignore end
 
 -- nvim 0.10.0 automatically enables termguicolors. When using nvim inside
