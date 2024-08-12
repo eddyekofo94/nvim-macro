@@ -5,12 +5,12 @@
 -- License:      GPL-3.0
 -- Last Updated: Sat Jan 20 03:12:58 PM CST 2024
 
--- Clear hlgroups and set colors_name {{{
-vim.cmd.hi('clear')
-vim.g.colors_name = 'cockatoo'
--- }}}
+-- Clear hlgroups and set colors_name
+vim.cmd.hi "clear"
+vim.g.colors_name = "cockatoo"
 
--- Palette {{{
+
+-- Palette 
 -- stylua: ignore start
 local c_yellow
 local c_earth
@@ -131,9 +131,9 @@ else
   c_smoke_blend    = '#e4e4e2'
 end
 -- stylua: ignore end
--- }}}
 
--- Set terminal colors {{{
+
+-- Set terminal colors 
 -- stylua: ignore start
 if vim.go.bg == 'dark' then
   vim.g.terminal_color_0  = c_ocean
@@ -170,11 +170,11 @@ else
   vim.g.terminal_color_14 = c_aqua
   vim.g.terminal_color_15 = c_pigeon
 end
--- }}}
 
--- Highlight groups {{{1
+
+-- Highlight groups 
 local hlgroups = {
-  -- Common {{{2
+  -- Common 
   Normal = { fg = c_smoke, bg = c_jeans },
   NormalFloat = { fg = c_smoke, bg = c_ocean },
   NormalNC = { link = 'Normal' },
@@ -241,9 +241,9 @@ local hlgroups = {
   WinSeparator = { link = 'VertSplit' },
   WinBar = { fg = c_smoke },
   WinBarNC = { fg = c_pigeon },
-  -- }}}2
+  
 
-  -- Syntax {{{2
+  -- Syntax 
   Comment = { fg = c_steel },
   Constant = { fg = c_ochre },
   String = { fg = c_turquoise },
@@ -288,9 +288,9 @@ local hlgroups = {
   Ignore = { fg = c_iron },
   Error = { fg = c_scarlet },
   Todo = { fg = c_black, bg = c_beige, bold = true },
-  -- }}}2
+  
 
-  -- Treesitter syntax {{{2
+  -- Treesitter syntax 
   ['@variable.member'] = { link = 'Field' },
   ['@property'] = { link = 'Field' },
   ['@annotation'] = { link = 'Operator' },
@@ -377,9 +377,9 @@ local hlgroups = {
   ['@markup.emphasis'] = { fg = c_beige, bold = true, italic = true, },
   ['@markup.underline'] = { underline = true },
   ['@keyword.operator'] = { link = 'Operator' },
-  -- }}}2
+  
 
-  -- LSP semantic {{{2
+  -- LSP semantic 
   ['@lsp.type.enum'] = { link = 'Type' },
   ['@lsp.type.type'] = { link = 'Type' },
   ['@lsp.type.class'] = { link = 'Structure' },
@@ -400,17 +400,17 @@ local hlgroups = {
   ['@lsp.typemod.function.defaultLibrary'] = { link = 'Special' },
   ['@lsp.typemod.variable.defaultLibrary'] = { link = 'Builtin' },
   ['@lsp.typemod.variable.global'] = { link = 'Identifier' },
-  -- }}}2
+  
 
-  -- LSP {{{2
+  -- LSP 
   LspReferenceText = { link = 'Identifier' },
   LspReferenceRead = { link = 'LspReferenceText' },
   LspReferenceWrite = { link = 'LspReferenceText' },
   LspSignatureActiveParameter = { link = 'IncSearch' },
   LspInfoBorder = { link = 'FloatBorder' },
-  -- }}}2
+  
 
-  -- Diagnostic {{{2
+  -- Diagnostic 
   DiagnosticOk = { fg = c_tea },
   DiagnosticError = { fg = c_wine },
   DiagnosticWarn = { fg = c_earth },
@@ -441,9 +441,9 @@ local hlgroups = {
     sp = c_pigeon,
     undercurl = true,
   },
-  -- }}}2
+  
 
-  -- Filetype {{{2
+  -- Filetype 
   -- HTML
   htmlArg = { fg = c_pigeon },
   htmlBold = { bold = true },
@@ -501,9 +501,9 @@ local hlgroups = {
   manReference = { link = 'htmlLink' },
   manSectionHeading = { link = 'manBold' },
   manUnderline = { fg = c_cerulean },
-  -- }}}2
+  
 
-  -- Plugins {{{2
+  -- Plugins 
   -- netrw
   netrwClassify = { link = 'Directory' },
 
@@ -740,9 +740,9 @@ local hlgroups = {
   StatusLineHeader = { fg = c_jeans, bg = c_pigeon },
   StatusLineHeaderModified = { fg = c_jeans, bg = c_ochre },
 
-  -- }}}2
+  
 
-  -- Extra {{{2
+  -- Extra 
   Yellow = { fg = c_yellow },
   Earth = { fg = c_earth },
   Orange = { fg = c_orange },
@@ -770,14 +770,13 @@ local hlgroups = {
   Ocean = { fg = c_ocean },
   Space = { fg = c_space },
   Black = { fg = c_black },
-  -- }}}2
+  
 }
--- }}}1
 
--- Set highlight groups {{{1
+
+-- Set highlight groups 
 for hlgroup_name, hlgroup_attr in pairs(hlgroups) do
   vim.api.nvim_set_hl(0, hlgroup_name, hlgroup_attr)
 end
--- }}}1
 
 -- vim:ts=2:sw=2:sts=2:fdm=marker:fdl=0

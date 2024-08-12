@@ -1,9 +1,9 @@
-local fzf = require('fzf-lua')
-local actions = require('fzf-lua.actions')
-local core = require('fzf-lua.core')
-local path = require('fzf-lua.path')
-local config = require('fzf-lua.config')
-local utils = require('utils')
+local fzf = require "fzf-lua"
+local actions = require "fzf-lua.actions"
+local core = require "fzf-lua.core"
+local path = require "fzf-lua.path"
+local config = require "fzf-lua.config"
+local utils = require "utils"
 
 local _arg_del = actions.arg_del
 local _vimcmd_buf = actions.vimcmd_buf
@@ -60,14 +60,14 @@ function actions.switch_provider()
     query = fzf.config.__resume_data.last_query,
     cwd = fzf.config.__resume_data.opts.cwd,
   }
-  fzf.builtin({
+  fzf.builtin {
     actions = {
-      ['default'] = function(selected)
+      ["default"] = function(selected)
         fzf[selected[1]](opts)
       end,
-      ['esc'] = actions.resume,
+      ["esc"] = actions.resume,
     },
-  })
+  }
 end
 
 ---Switch cwd while preserving the last query
@@ -83,21 +83,18 @@ function actions.switch_cwd()
   opts.query = fzf.config.__resume_data.last_query
 
   vim.ui.input({
-    prompt = 'New cwd: ',
+    prompt = "New cwd: ",
     default = opts.cwd,
-    completion = 'dir',
+    completion = "dir",
   }, function(input)
     if not input then
       return
     end
     input = vim.fs.normalize(input)
     local stat = vim.uv.fs_stat(input)
-    if not stat or not stat.type == 'directory' then
-      print('\n')
-      vim.notify(
-        '[Fzf-lua] invalid path: ' .. input .. '\n',
-        vim.log.levels.ERROR
-      )
+    if not stat or not stat.type == "directory" then
+      print "\n"
+      vim.notify("[Fzf-lua] invalid path: " .. input .. "\n", vim.log.levels.ERROR)
       vim.cmd.redraw()
       return
     end
@@ -106,11 +103,10 @@ function actions.switch_cwd()
 
   -- Adapted from fzf-lua `core.set_header()` function
   if opts.cwd_prompt then
-    opts.prompt = vim.fn.fnamemodify(opts.cwd, ':.:~')
+    opts.prompt = vim.fn.fnamemodify(opts.cwd, ":.:~")
     local shorten_len = tonumber(opts.cwd_prompt_shorten_len)
     if shorten_len and #opts.prompt >= shorten_len then
-      opts.prompt =
-        path.shorten(opts.prompt, tonumber(opts.cwd_prompt_shorten_val) or 1)
+      opts.prompt = path.shorten(opts.prompt, tonumber(opts.cwd_prompt_shorten_val) or 1)
     end
     if not path.ends_with_separator(opts.prompt) then
       opts.prompt = opts.prompt .. path.separator()
@@ -128,38 +124,37 @@ end
 ---@return nil
 function actions.del_autocmd(selected)
   for _, line in ipairs(selected) do
-    local event, group, pattern =
-      line:match('^.+:%d+:(%w+)%s*│%s*(%S+)%s*│%s*(.-)%s*│')
+    local event, group, pattern = line:match "^.+:%d+:(%w+)%s*│%s*(%S+)%s*│%s*(.-)%s*│"
     if event and group and pattern then
-      vim.cmd.autocmd({
+      vim.cmd.autocmd {
         bang = true,
         args = { group, event, pattern },
         mods = { emsg_silent = true },
-      })
+      }
     end
   end
   local query = fzf.config.__resume_data.last_query
-  fzf.autocmds({
+  fzf.autocmds {
     fzf_opts = {
-      ['--query'] = query ~= '' and query or nil,
+      ["--query"] = query ~= "" and query or nil,
     },
-  })
+  }
 end
 
 ---Search & select files then add them to arglist
 ---@return nil
 function actions.arg_search_add()
   local opts = fzf.config.__resume_data.opts
-  fzf.files({
+  fzf.files {
     cwd_header = true,
     cwd_prompt = false,
-    headers = { 'actions', 'cwd' },
-    prompt = 'Argadd> ',
+    headers = { "actions", "cwd" },
+    prompt = "Argadd> ",
     actions = {
-      ['default'] = function(selected, _opts)
-        local cmd = 'argadd'
+      ["default"] = function(selected, _opts)
+        local cmd = "argadd"
         vim.ui.input({
-          prompt = 'Argadd cmd: ',
+          prompt = "Argadd cmd: ",
           default = cmd,
         }, function(input)
           if input then
@@ -169,14 +164,14 @@ function actions.arg_search_add()
         actions.vimcmd_file(cmd, selected, _opts)
         fzf.args(opts)
       end,
-      ['esc'] = function()
+      ["esc"] = function()
         fzf.args(opts)
       end,
     },
     find_opts = [[-type f -type d -type l -not -path '*/\.git/*' -printf '%P\n']],
     fd_opts = [[--color=never --type f --type d --type l --hidden --follow --exclude .git]],
     rg_opts = [[--color=never --files --hidden --follow -g '!.git'"]],
-  })
+  }
 end
 
 function actions._file_edit_or_qf(selected, opts)
@@ -205,14 +200,13 @@ function actions._file_sel_to_ll(selected, opts)
   end
 end
 
-core.ACTION_DEFINITIONS[actions.toggle_ignore] =
-  { 'Disable .gitignore', fn_reload = 'Respect .gitignore' }
-core.ACTION_DEFINITIONS[actions.switch_cwd] = { 'Change Cwd', pos = 1 }
-core.ACTION_DEFINITIONS[actions.arg_del] = { 'delete' }
-core.ACTION_DEFINITIONS[actions.del_autocmd] = { 'delete autocmd' }
-core.ACTION_DEFINITIONS[actions.arg_search_add] = { 'add new file' }
-core.ACTION_DEFINITIONS[actions.search] = { 'edit' }
-core.ACTION_DEFINITIONS[actions.ex_run] = { 'edit' }
+core.ACTION_DEFINITIONS[actions.toggle_ignore] = { "Disable .gitignore", fn_reload = "Respect .gitignore" }
+core.ACTION_DEFINITIONS[actions.switch_cwd] = { "Change Cwd", pos = 1 }
+core.ACTION_DEFINITIONS[actions.arg_del] = { "delete" }
+core.ACTION_DEFINITIONS[actions.del_autocmd] = { "delete autocmd" }
+core.ACTION_DEFINITIONS[actions.arg_search_add] = { "add new file" }
+core.ACTION_DEFINITIONS[actions.search] = { "edit" }
+core.ACTION_DEFINITIONS[actions.ex_run] = { "edit" }
 
 -- stylua: ignore start
 config._action_to_helpstr[actions.toggle_ignore] = 'toggle-ignore'
@@ -237,21 +231,21 @@ local _diagnostics_document = fzf.diagnostics_document
 
 ---@param opts table?
 function fzf.diagnostics_document(opts)
-  return _diagnostics_document(vim.tbl_extend('force', opts or {}, {
-    prompt = 'Document Diagnostics> ',
+  return _diagnostics_document(vim.tbl_extend("force", opts or {}, {
+    prompt = "Document Diagnostics> ",
   }))
 end
 
 ---@param opts table?
 function fzf.diagnostics_workspace(opts)
-  return _diagnostics_workspace(vim.tbl_extend('force', opts or {}, {
-    prompt = 'Workspace Diagnostics> ',
+  return _diagnostics_workspace(vim.tbl_extend("force", opts or {}, {
+    prompt = "Workspace Diagnostics> ",
   }))
 end
 
-fzf.setup({
+fzf.setup {
   -- Use nbsp in tty to avoid showing box chars
-  nbsp = not vim.g.modern_ui and '\xc2\xa0' or nil,
+  nbsp = not true and "\xc2\xa0" or nil,
   dir_icon = vim.trim(utils.static.icons.Folder),
   winopts = {
     backdrop = 100,
@@ -272,26 +266,21 @@ fzf.setup({
         \ setlocal bt=nofile bh=wipe nobl noswf wfh
     ]],
     on_create = function()
-      vim.keymap.set(
-        't',
-        '<C-r>',
-        [['<C-\><C-N>"' . nr2char(getchar()) . 'pi']],
-        { expr = true, buffer = true }
-      )
+      vim.keymap.set("t", "<C-r>", [['<C-\><C-N>"' . nr2char(getchar()) . 'pi']], { expr = true, buffer = true })
     end,
     on_close = function()
       ---@param name string
       ---@return nil
       local function _restore_global_opt(name)
-        if vim.g['_fzf_' .. name] then
-          vim.go[name] = vim.g['_fzf_' .. name]
-          vim.g['_fzf_' .. name] = nil
+        if vim.g["_fzf_" .. name] then
+          vim.go[name] = vim.g["_fzf_" .. name]
+          vim.g["_fzf_" .. name] = nil
         end
       end
 
-      _restore_global_opt('splitkeep')
-      _restore_global_opt('cmdheight')
-      _restore_global_opt('laststatus')
+      _restore_global_opt "splitkeep"
+      _restore_global_opt "cmdheight"
+      _restore_global_opt "laststatus"
 
       if
         vim.g._fzf_leave_win
@@ -311,73 +300,73 @@ fzf.setup({
       utils.win.clearviews()
     end,
     preview = {
-      hidden = 'hidden',
+      hidden = "hidden",
     },
   },
   hls = {
-    title = 'TelescopeTitle',
-    preview_title = 'TelescopeTitle',
+    title = "TelescopeTitle",
+    preview_title = "TelescopeTitle",
     -- Builtin preview only
-    cursor = 'Cursor',
-    cursorline = 'TelescopePreviewLine',
-    cursorlinenr = 'TelescopePreviewLine',
-    search = 'IncSearch',
+    cursor = "Cursor",
+    cursorline = "TelescopePreviewLine",
+    cursorlinenr = "TelescopePreviewLine",
+    search = "IncSearch",
   },
   fzf_colors = {
-    ['hl'] = { 'fg', 'TelescopeMatching' },
-    ['fg+'] = { 'fg', 'TelescopeSelection' },
-    ['bg+'] = { 'bg', 'TelescopeSelection' },
-    ['hl+'] = { 'fg', 'TelescopeMatching' },
-    ['info'] = { 'fg', 'TelescopeCounter' },
-    ['prompt'] = { 'fg', 'TelescopePrefix' },
-    ['pointer'] = { 'fg', 'TelescopeSelectionCaret' },
-    ['marker'] = { 'fg', 'TelescopeMultiIcon' },
+    ["hl"] = { "fg", "TelescopeMatching" },
+    ["fg+"] = { "fg", "TelescopeSelection" },
+    ["bg+"] = { "bg", "TelescopeSelection" },
+    ["hl+"] = { "fg", "TelescopeMatching" },
+    ["info"] = { "fg", "TelescopeCounter" },
+    ["prompt"] = { "fg", "TelescopePrefix" },
+    ["pointer"] = { "fg", "TelescopeSelectionCaret" },
+    ["marker"] = { "fg", "TelescopeMultiIcon" },
   },
   keymap = {
     -- Overrides default completion completely
     builtin = {
-      ['<F1>'] = 'toggle-help',
-      ['<F2>'] = 'toggle-fullscreen',
+      ["<F1>"] = "toggle-help",
+      ["<F2>"] = "toggle-fullscreen",
     },
     fzf = {
       -- fzf '--bind=' options
-      ['ctrl-z'] = 'abort',
-      ['ctrl-k'] = 'kill-line',
-      ['ctrl-u'] = 'unix-line-discard',
-      ['ctrl-a'] = 'beginning-of-line',
-      ['ctrl-e'] = 'end-of-line',
-      ['alt-a'] = 'toggle-all',
-      ['alt-}'] = 'last',
-      ['alt-{'] = 'first',
+      ["ctrl-z"] = "abort",
+      ["ctrl-k"] = "kill-line",
+      ["ctrl-u"] = "unix-line-discard",
+      ["ctrl-a"] = "beginning-of-line",
+      ["ctrl-e"] = "end-of-line",
+      ["alt-a"] = "toggle-all",
+      ["alt-}"] = "last",
+      ["alt-{"] = "first",
     },
   },
   actions = {
     files = {
-      ['alt-s'] = actions.file_split,
-      ['alt-v'] = actions.file_vsplit,
-      ['alt-t'] = actions.file_tabedit,
-      ['alt-q'] = actions._file_sel_to_qf,
-      ['alt-o'] = actions._file_sel_to_ll,
-      ['default'] = actions._file_edit_or_qf,
+      ["alt-s"] = actions.file_split,
+      ["alt-v"] = actions.file_vsplit,
+      ["alt-t"] = actions.file_tabedit,
+      ["alt-q"] = actions._file_sel_to_qf,
+      ["alt-o"] = actions._file_sel_to_ll,
+      ["default"] = actions._file_edit_or_qf,
     },
     buffers = {
-      ['default'] = actions.buf_edit,
-      ['alt-s'] = actions.buf_split,
-      ['alt-v'] = actions.buf_vsplit,
-      ['alt-t'] = actions.buf_tabedit,
+      ["default"] = actions.buf_edit,
+      ["alt-s"] = actions.buf_split,
+      ["alt-v"] = actions.buf_vsplit,
+      ["alt-t"] = actions.buf_tabedit,
     },
   },
   defaults = {
-    headers = { 'actions' },
+    headers = { "actions" },
     actions = {
-      ['ctrl-]'] = actions.switch_provider,
+      ["ctrl-]"] = actions.switch_provider,
     },
   },
   args = {
     files_only = false,
     actions = {
-      ['ctrl-s'] = actions.arg_search_add,
-      ['ctrl-x'] = {
+      ["ctrl-s"] = actions.arg_search_add,
+      ["ctrl-x"] = {
         fn = actions.arg_del,
         reload = true,
       },
@@ -385,7 +374,7 @@ fzf.setup({
   },
   autocmds = {
     actions = {
-      ['ctrl-x'] = {
+      ["ctrl-x"] = {
         fn = actions.del_autocmd,
         -- reload = true,
       },
@@ -393,16 +382,16 @@ fzf.setup({
   },
   blines = {
     actions = {
-      ['alt-q'] = actions.buf_sel_to_qf,
-      ['alt-o'] = actions.buf_sel_to_ll,
-      ['alt-l'] = false,
+      ["alt-q"] = actions.buf_sel_to_qf,
+      ["alt-o"] = actions.buf_sel_to_ll,
+      ["alt-l"] = false,
     },
   },
   lines = {
     actions = {
-      ['alt-q'] = actions.buf_sel_to_qf,
-      ['alt-o'] = actions.buf_sel_to_ll,
-      ['alt-l'] = false,
+      ["alt-q"] = actions.buf_sel_to_qf,
+      ["alt-o"] = actions.buf_sel_to_ll,
+      ["alt-l"] = false,
     },
   },
   buffers = {
@@ -413,40 +402,40 @@ fzf.setup({
     current_tab_only = false,
     no_term_buffers = false,
     cwd_only = false,
-    ls_cmd = 'ls',
+    ls_cmd = "ls",
   },
   helptags = {
     actions = {
-      ['default'] = actions.help,
-      ['alt-s'] = actions.help,
-      ['alt-v'] = actions.help_vert,
-      ['alt-t'] = actions.help_tab,
+      ["default"] = actions.help,
+      ["alt-s"] = actions.help,
+      ["alt-v"] = actions.help_vert,
+      ["alt-t"] = actions.help_tab,
     },
   },
   manpages = {
     actions = {
-      ['default'] = actions.man,
-      ['alt-s'] = actions.man,
-      ['alt-v'] = actions.man_vert,
-      ['alt-t'] = actions.man_tab,
+      ["default"] = actions.man,
+      ["alt-s"] = actions.man,
+      ["alt-v"] = actions.man_vert,
+      ["alt-t"] = actions.man_tab,
     },
   },
   keymaps = {
     actions = {
-      ['default'] = actions.keymap_edit,
-      ['alt-s'] = actions.keymap_split,
-      ['alt-v'] = actions.keymap_vsplit,
-      ['alt-t'] = actions.keymap_tabedit,
+      ["default"] = actions.keymap_edit,
+      ["alt-s"] = actions.keymap_split,
+      ["alt-v"] = actions.keymap_vsplit,
+      ["alt-t"] = actions.keymap_tabedit,
     },
   },
   colorschemes = {
     actions = {
-      ['default'] = actions.colorscheme,
+      ["default"] = actions.colorscheme,
     },
   },
   highlights = {
     actions = {
-      ['default'] = function(selected)
+      ["default"] = function(selected)
         vim.defer_fn(function()
           vim.cmd.hi(selected[1])
         end, 0)
@@ -455,68 +444,68 @@ fzf.setup({
   },
   command_history = {
     actions = {
-      ['alt-e'] = actions.ex_run,
-      ['ctrl-e'] = false,
+      ["alt-e"] = actions.ex_run,
+      ["ctrl-e"] = false,
     },
   },
   search_history = {
     actions = {
-      ['alt-e'] = actions.search,
-      ['ctrl-e'] = false,
+      ["alt-e"] = actions.search,
+      ["ctrl-e"] = false,
     },
   },
   files = {
     actions = {
-      ['alt-c'] = actions.switch_cwd,
-      ['ctrl-g'] = actions.toggle_ignore,
+      ["alt-c"] = actions.switch_cwd,
+      ["ctrl-g"] = actions.toggle_ignore,
     },
     fzf_opts = {
-      ['--info'] = 'inline-right',
+      ["--info"] = "inline-right",
     },
     find_opts = [[-type f -type d -type l -not -path '*/\.git/*' -printf '%P\n']],
     fd_opts = [[--color=never --type f --type d --type l --hidden --follow --exclude .git]],
     rg_opts = [[--color=never --files --hidden --follow -g '!.git'"]],
   },
   oldfiles = {
-    prompt = 'Oldfiles> ',
+    prompt = "Oldfiles> ",
   },
   fzf_opts = {
-    ['--no-scrollbar'] = '',
-    ['--no-separator'] = '',
-    ['--info'] = 'inline-right',
-    ['--layout'] = 'reverse',
-    ['--marker'] = '+',
-    ['--pointer'] = '→',
-    ['--prompt'] = '/ ',
-    ['--border'] = 'none',
-    ['--padding'] = '0,1',
-    ['--margin'] = '0',
-    ['--no-preview'] = '',
-    ['--preview-window'] = 'hidden',
+    ["--no-scrollbar"] = "",
+    ["--no-separator"] = "",
+    ["--info"] = "inline-right",
+    ["--layout"] = "reverse",
+    ["--marker"] = "+",
+    ["--pointer"] = "→",
+    ["--prompt"] = "/ ",
+    ["--border"] = "none",
+    ["--padding"] = "0,1",
+    ["--margin"] = "0",
+    ["--no-preview"] = "",
+    ["--preview-window"] = "hidden",
   },
   grep = {
     actions = {
-      ['alt-c'] = actions.switch_cwd,
+      ["alt-c"] = actions.switch_cwd,
     },
     rg_opts = table.concat({
-      '--hidden',
-      '--follow',
-      '--smart-case',
-      '--column',
-      '--line-number',
-      '--no-heading',
-      '--color=always',
-      '-g=!.git/',
-      '-e',
-    }, ' '),
+      "--hidden",
+      "--follow",
+      "--smart-case",
+      "--column",
+      "--line-number",
+      "--no-heading",
+      "--color=always",
+      "-g=!.git/",
+      "-e",
+    }, " "),
     fzf_opts = {
-      ['--info'] = 'inline-right',
+      ["--info"] = "inline-right",
     },
   },
   lsp = {
     finder = {
       fzf_opts = {
-        ['--info'] = 'inline-right',
+        ["--info"] = "inline-right",
       },
     },
     definitions = {
@@ -536,66 +525,68 @@ fzf.setup({
       symbol_icons = vim.tbl_map(vim.trim, utils.static.icons.kinds),
     },
   },
-})
+}
 
-vim.keymap.set('n', '<Leader>.', fzf.files)
-vim.keymap.set('n', "<Leader>'", fzf.resume)
-vim.keymap.set('n', '<Leader>,', fzf.buffers)
-vim.keymap.set('n', '<Leader>/', fzf.live_grep)
-vim.keymap.set('n', '<Leader>?', fzf.help_tags)
-vim.keymap.set('n', '<Leader>*', fzf.grep_cword)
-vim.keymap.set('x', '<Leader>*', fzf.grep_visual)
-vim.keymap.set('n', '<Leader>#', fzf.grep_cword)
-vim.keymap.set('x', '<Leader>#', fzf.grep_visual)
-vim.keymap.set('n', '<Leader>"', fzf.registers)
-vim.keymap.set('n', '<Leader>F', fzf.builtin)
-vim.keymap.set('n', '<Leader>o', fzf.oldfiles)
-vim.keymap.set('n', '<Leader>-', fzf.blines)
-vim.keymap.set('n', '<Leader>=', fzf.lines)
-vim.keymap.set('n', '<Leader>R', fzf.lsp_finder)
-vim.keymap.set('n', '<Leader>f', fzf.builtin)
-vim.keymap.set('n', '<Leader>f"', fzf.registers)
-vim.keymap.set('n', '<Leader>f*', fzf.grep_cword)
-vim.keymap.set('x', '<Leader>f*', fzf.grep_visual)
-vim.keymap.set('n', '<Leader>f#', fzf.grep_cword)
-vim.keymap.set('x', '<Leader>f#', fzf.grep_visual)
-vim.keymap.set('n', '<Leader>f:', fzf.commands)
-vim.keymap.set('n', '<Leader>f/', fzf.live_grep)
-vim.keymap.set('n', '<Leader>fE', fzf.diagnostics_workspace)
-vim.keymap.set('n', '<Leader>fH', fzf.highlights)
-vim.keymap.set('n', "<Leader>f'", fzf.resume)
-vim.keymap.set('n', '<Leader>fA', fzf.autocmds)
-vim.keymap.set('n', '<Leader>fb', fzf.buffers)
-vim.keymap.set('n', '<Leader>fc', fzf.changes)
-vim.keymap.set('n', '<Leader>fe', fzf.diagnostics_document)
-vim.keymap.set('n', '<Leader>ff', fzf.files)
-vim.keymap.set('n', '<Leader>fa', fzf.args)
-vim.keymap.set('n', '<Leader>fl', fzf.loclist)
-vim.keymap.set('n', '<Leader>fq', fzf.quickfix)
-vim.keymap.set('n', '<Leader>fL', fzf.loclist_stack)
-vim.keymap.set('n', '<Leader>fQ', fzf.quickfix_stack)
-vim.keymap.set('n', '<Leader>fgt', fzf.git_tags)
-vim.keymap.set('n', '<Leader>fgs', fzf.git_stash)
-vim.keymap.set('n', '<Leader>fgg', fzf.git_status)
-vim.keymap.set('n', '<Leader>fgc', fzf.git_commits)
-vim.keymap.set('n', '<Leader>fgl', fzf.git_bcommits)
-vim.keymap.set('n', '<Leader>fgb', fzf.git_branches)
-vim.keymap.set('n', '<Leader>fh', fzf.help_tags)
-vim.keymap.set('n', '<Leader>f?', fzf.help_tags)
-vim.keymap.set('n', '<Leader>fk', fzf.keymaps)
-vim.keymap.set('n', '<Leader>f-', fzf.blines)
-vim.keymap.set('n', '<Leader>f=', fzf.lines)
-vim.keymap.set('n', '<Leader>fm', fzf.marks)
-vim.keymap.set('n', '<Leader>fo', fzf.oldfiles)
-vim.keymap.set('n', '<Leader>fD', fzf.lsp_typedefs)
-vim.keymap.set('n', '<Leader>fd', fzf.lsp_definitions)
-vim.keymap.set('n', '<Leader>fs', fzf.lsp_document_symbols)
-vim.keymap.set('n', '<Leader>fS', fzf.lsp_live_workspace_symbols)
-vim.keymap.set('n', '<Leader>fi', fzf.lsp_implementations)
-vim.keymap.set('n', '<Leader>f<', fzf.lsp_incoming_calls)
-vim.keymap.set('n', '<Leader>f>', fzf.lsp_outgoing_calls)
-vim.keymap.set('n', '<Leader>fr', fzf.lsp_references)
-vim.keymap.set('n', '<Leader>fR', fzf.lsp_finder)
+vim.keymap.set("n", "<Leader>.", fzf.files)
+vim.keymap.set("n", "<Leader><space>", fzf.files)
+vim.keymap.set("n", "<Leader>'", fzf.resume)
+vim.keymap.set("n", "<Leader>,", fzf.buffers)
+vim.keymap.set("n", "<Leader>/", fzf.live_grep)
+vim.keymap.set("n", "<Leader>?", fzf.help_tags)
+vim.keymap.set("n", "<Leader>*", fzf.grep_cword)
+vim.keymap.set("x", "<Leader>*", fzf.grep_visual)
+vim.keymap.set("n", "<Leader>#", fzf.grep_cword)
+vim.keymap.set("x", "<Leader>#", fzf.grep_visual)
+vim.keymap.set("n", '<Leader>"', fzf.registers)
+vim.keymap.set("n", "<Leader>F", fzf.builtin)
+vim.keymap.set("n", "<Leader>o", fzf.oldfiles)
+vim.keymap.set("n", "<Leader>-", fzf.blines)
+vim.keymap.set("n", "<Leader>=", fzf.lines)
+vim.keymap.set("n", "<Leader>R", fzf.lsp_finder)
+vim.keymap.set("n", "<Leader>f", fzf.builtin)
+vim.keymap.set("n", '<Leader>f"', fzf.registers)
+vim.keymap.set("n", "<Leader>f*", fzf.grep_cword)
+vim.keymap.set("x", "<Leader>f*", fzf.grep_visual)
+vim.keymap.set("n", "<Leader>f#", fzf.grep_cword)
+vim.keymap.set("x", "<Leader>f#", fzf.grep_visual)
+vim.keymap.set("n", "<Leader>f:", fzf.commands)
+vim.keymap.set("n", "<Leader>f/", fzf.live_grep)
+vim.keymap.set("n", "<Leader>fE", fzf.diagnostics_workspace)
+vim.keymap.set("n", "<Leader>fH", fzf.highlights)
+vim.keymap.set("n", "<Leader>f'", fzf.resume)
+vim.keymap.set("n", "<Leader>fA", fzf.autocmds)
+vim.keymap.set("n", "<Leader>fb", fzf.buffers)
+vim.keymap.set("n", "<Leader>fC", fzf.changes)
+vim.keymap.set("n", "<Leader>fc", fzf.colorschemes)
+vim.keymap.set("n", "<Leader>fe", fzf.diagnostics_document)
+vim.keymap.set("n", "<Leader>ff", fzf.files)
+vim.keymap.set("n", "<Leader>fa", fzf.args)
+vim.keymap.set("n", "<Leader>fl", fzf.loclist)
+vim.keymap.set("n", "<Leader>fq", fzf.quickfix)
+vim.keymap.set("n", "<Leader>fL", fzf.loclist_stack)
+vim.keymap.set("n", "<Leader>fQ", fzf.quickfix_stack)
+vim.keymap.set("n", "<Leader>fgt", fzf.git_tags)
+vim.keymap.set("n", "<Leader>fgs", fzf.git_stash)
+vim.keymap.set("n", "<Leader>fgg", fzf.git_status)
+vim.keymap.set("n", "<Leader>fgc", fzf.git_commits)
+vim.keymap.set("n", "<Leader>fgl", fzf.git_bcommits)
+vim.keymap.set("n", "<Leader>fgb", fzf.git_branches)
+vim.keymap.set("n", "<Leader>fh", fzf.help_tags)
+vim.keymap.set("n", "<Leader>f?", fzf.help_tags)
+vim.keymap.set("n", "<Leader>fk", fzf.keymaps)
+vim.keymap.set("n", "<Leader>f-", fzf.blines)
+vim.keymap.set("n", "<Leader>f=", fzf.lines)
+vim.keymap.set("n", "<Leader>fm", fzf.marks)
+vim.keymap.set("n", "<Leader>fo", fzf.oldfiles)
+vim.keymap.set("n", "<Leader>fD", fzf.lsp_typedefs)
+vim.keymap.set("n", "<Leader>fd", fzf.lsp_definitions)
+vim.keymap.set("n", "<Leader>fs", fzf.lsp_document_symbols)
+vim.keymap.set("n", "<Leader>fS", fzf.lsp_live_workspace_symbols)
+vim.keymap.set("n", "<Leader>fi", fzf.lsp_implementations)
+vim.keymap.set("n", "<Leader>f<", fzf.lsp_incoming_calls)
+vim.keymap.set("n", "<Leader>f>", fzf.lsp_outgoing_calls)
+vim.keymap.set("n", "<Leader>fr", fzf.lsp_references)
+vim.keymap.set("n", "<Leader>fR", fzf.lsp_finder)
 
 local _lsp_workspace_symbol = vim.lsp.buf.workspace_symbol
 
@@ -604,29 +595,29 @@ local _lsp_workspace_symbol = vim.lsp.buf.workspace_symbol
 ---as handler we can update the query in live
 ---@diagnostic disable-next-line: duplicate-set-field
 function vim.lsp.buf.workspace_symbol(query, options)
-  _lsp_workspace_symbol(query or '', options)
+  _lsp_workspace_symbol(query or "", options)
 end
 
-vim.lsp.handlers['callHierarchy/incomingCalls'] = fzf.lsp_incoming_calls
-vim.lsp.handlers['callHierarchy/outgoingCalls'] = fzf.lsp_outgoing_calls
-vim.lsp.handlers['textDocument/codeAction'] = fzf.code_actions
-vim.lsp.handlers['textDocument/declaration'] = fzf.declarations
-vim.lsp.handlers['textDocument/definition'] = fzf.lsp_definitions
-vim.lsp.handlers['textDocument/documentSymbol'] = fzf.lsp_document_symbols
-vim.lsp.handlers['textDocument/implementation'] = fzf.lsp_implementations
-vim.lsp.handlers['textDocument/references'] = fzf.lsp_references
-vim.lsp.handlers['textDocument/typeDefinition'] = fzf.lsp_typedefs
-vim.lsp.handlers['workspace/symbol'] = fzf.lsp_live_workspace_symbols
+vim.lsp.handlers["callHierarchy/incomingCalls"] = fzf.lsp_incoming_calls
+vim.lsp.handlers["callHierarchy/outgoingCalls"] = fzf.lsp_outgoing_calls
+vim.lsp.handlers["textDocument/codeAction"] = fzf.code_actions
+vim.lsp.handlers["textDocument/declaration"] = fzf.declarations
+vim.lsp.handlers["textDocument/definition"] = fzf.lsp_definitions
+vim.lsp.handlers["textDocument/documentSymbol"] = fzf.lsp_document_symbols
+vim.lsp.handlers["textDocument/implementation"] = fzf.lsp_implementations
+vim.lsp.handlers["textDocument/references"] = fzf.lsp_references
+vim.lsp.handlers["textDocument/typeDefinition"] = fzf.lsp_typedefs
+vim.lsp.handlers["workspace/symbol"] = fzf.lsp_live_workspace_symbols
 
 vim.diagnostic.setqflist = fzf.diagnostics_workspace
 vim.diagnostic.setloclist = fzf.diagnostics_document
 
-vim.api.nvim_create_user_command('F', function(info)
-  fzf.files({ cwd = info.fargs[1] })
+vim.api.nvim_create_user_command("F", function(info)
+  fzf.files { cwd = info.fargs[1] }
 end, {
-  nargs = '?',
-  complete = 'dir',
-  desc = 'Fuzzy find files.',
+  nargs = "?",
+  complete = "dir",
+  desc = "Fuzzy find files.",
 })
 
 ---Generate a completion function for user command that wraps a builtin command
@@ -635,37 +626,36 @@ end, {
 ---@return fun(_, cmdline: string, cursorpos: integer): string[]
 local function complfn(user_cmd, builtin_cmd)
   return function(_, cmdline, cursorpos)
-    local cmdline_before =
-      cmdline:sub(1, cursorpos):gsub(user_cmd, builtin_cmd, 1)
-    return vim.fn.getcompletion(cmdline_before, 'cmdline')
+    local cmdline_before = cmdline:sub(1, cursorpos):gsub(user_cmd, builtin_cmd, 1)
+    return vim.fn.getcompletion(cmdline_before, "cmdline")
   end
 end
 
 local fzf_ls_cmd = {
   function(info)
-    local suffix = string.format('%s %s', info.bang and '!' or '', info.args)
-    return fzf.buffers({
-      prompt = vim.trim(info.name .. suffix) .. '> ',
-      ls_cmd = 'ls' .. suffix,
-    })
+    local suffix = string.format("%s %s", info.bang and "!" or "", info.args)
+    return fzf.buffers {
+      prompt = vim.trim(info.name .. suffix) .. "> ",
+      ls_cmd = "ls" .. suffix,
+    }
   end,
   {
     bang = true,
-    nargs = '?',
+    nargs = "?",
     complete = function()
       return {
-        '+',
-        '-',
-        '=',
-        'a',
-        'u',
-        'h',
-        'x',
-        '%',
-        '#',
-        'R',
-        'F',
-        't',
+        "+",
+        "-",
+        "=",
+        "a",
+        "u",
+        "h",
+        "x",
+        "%",
+        "#",
+        "R",
+        "F",
+        "t",
       }
     end,
   },
@@ -677,31 +667,31 @@ local fzf_hi_cmd = {
       fzf.highlights()
       return
     end
-    if #info.fargs == 1 and info.fargs[1] ~= 'clear' then
+    if #info.fargs == 1 and info.fargs[1] ~= "clear" then
       local hlgroup = info.fargs[1]
       if vim.fn.hlexists(hlgroup) == 1 then
-        vim.cmd.hi({
+        vim.cmd.hi {
           args = { hlgroup },
           bang = info.bang,
-        })
+        }
       else
-        fzf.highlights({
+        fzf.highlights {
           fzf_opts = {
-            ['--query'] = hlgroup,
+            ["--query"] = hlgroup,
           },
-        })
+        }
       end
       return
     end
-    vim.cmd.hi({
+    vim.cmd.hi {
       args = info.fargs,
       bang = info.bang,
-    })
+    }
   end,
   {
     bang = true,
-    nargs = '*',
-    complete = complfn('Highlight', 'hi'),
+    nargs = "*",
+    complete = complfn("Highlight", "hi"),
   },
 }
 
@@ -710,49 +700,49 @@ local fzf_reg_cmd = {
     local query = table.concat(
       vim.tbl_map(
         function(reg)
-          return string.format('^[%s]', reg:upper())
+          return string.format("^[%s]", reg:upper())
         end,
-        vim.split(info.args, '', {
+        vim.split(info.args, "", {
           trimempty = true,
         })
       ),
-      ' | '
+      " | "
     )
-    fzf.registers({
+    fzf.registers {
       fzf_opts = {
-        ['--query'] = query ~= '' and query or nil,
+        ["--query"] = query ~= "" and query or nil,
       },
-    })
+    }
   end,
   {
-    nargs = '*',
-    complete = complfn('Registers', 'registers'),
+    nargs = "*",
+    complete = complfn("Registers", "registers"),
   },
 }
 
-local fzf_display_cmd = vim.tbl_deep_extend('force', fzf_reg_cmd, {
-  [2] = { complete = complfn('Display', 'display') },
+local fzf_display_cmd = vim.tbl_deep_extend("force", fzf_reg_cmd, {
+  [2] = { complete = complfn("Display", "display") },
 })
 
 local fzf_au_cmd = {
   function(info)
     if #info.fargs <= 1 and not info.bang then
-      fzf.autocmds({
+      fzf.autocmds {
         fzf_opts = {
-          ['--query'] = info.fargs[1] ~= '' and info.fargs[1] or nil,
+          ["--query"] = info.fargs[1] ~= "" and info.fargs[1] or nil,
         },
-      })
+      }
       return
     end
-    vim.cmd.autocmd({
+    vim.cmd.autocmd {
       args = info.fargs,
       bang = info.bang,
-    })
+    }
   end,
   {
     bang = true,
-    nargs = '*',
-    complete = complfn('Autocmd', 'autocmd'),
+    nargs = "*",
+    complete = complfn("Autocmd", "autocmd"),
   },
 }
 
@@ -761,23 +751,23 @@ local fzf_marks_cmd = {
     local query = table.concat(
       vim.tbl_map(
         function(mark)
-          return '^' .. mark
+          return "^" .. mark
         end,
-        vim.split(info.args, '', {
+        vim.split(info.args, "", {
           trimempty = true,
         })
       ),
-      ' | '
+      " | "
     )
-    fzf.marks({
+    fzf.marks {
       fzf_opts = {
-        ['--query'] = query ~= '' and query or nil,
+        ["--query"] = query ~= "" and query or nil,
       },
-    })
+    }
   end,
   {
-    nargs = '*',
-    complete = complfn('Marks', 'marks'),
+    nargs = "*",
+    complete = complfn("Marks", "marks"),
   },
 }
 
@@ -787,15 +777,15 @@ local fzf_args_cmd = {
       fzf.args()
       return
     end
-    vim.cmd.args({
+    vim.cmd.args {
       args = info.fargs,
       bang = info.bang,
-    })
+    }
   end,
   {
     bang = true,
-    nargs = '*',
-    complete = complfn('Args', 'args'),
+    nargs = "*",
+    complete = complfn("Args", "args"),
   },
 }
 
@@ -820,22 +810,22 @@ vim.api.nvim_create_user_command('Tabs', fzf.tabs, {})
 ---@return nil
 local function set_default_hlgroups()
   local hl = utils.hl
-  local hl_norm = hl.get(0, { name = 'Normal', link = false })
-  local hl_speical = hl.get(0, { name = 'Special', link = false })
-  hl.set(0, 'FzfLuaBufFlagAlt', {})
-  hl.set(0, 'FzfLuaBufFlagCur', {})
-  hl.set(0, 'FzfLuaBufName', {})
-  hl.set(0, 'FzfLuaBufNr', {})
-  hl.set(0, 'FzfLuaBufLineNr', { link = 'LineNr' })
-  hl.set(0, 'FzfLuaCursor', { link = 'None' })
-  hl.set(0, 'FzfLuaHeaderBind', { link = 'Special' })
-  hl.set(0, 'FzfLuaHeaderText', { link = 'Special' })
-  hl.set(0, 'FzfLuaTabMarker', { link = 'Keyword' })
-  hl.set(0, 'FzfLuaTabTitle', { link = 'Title' })
-  hl.set_default(0, 'TelescopeSelection', { link = 'Visual' })
-  hl.set_default(0, 'TelescopePrefix', { link = 'Operator' })
-  hl.set_default(0, 'TelescopeCounter', { link = 'LineNr' })
-  hl.set_default(0, 'TelescopeTitle', {
+  local hl_norm = hl.get(0, { name = "Normal", link = false })
+  local hl_speical = hl.get(0, { name = "Special", link = false })
+  hl.set(0, "FzfLuaBufFlagAlt", {})
+  hl.set(0, "FzfLuaBufFlagCur", {})
+  hl.set(0, "FzfLuaBufName", {})
+  hl.set(0, "FzfLuaBufNr", {})
+  hl.set(0, "FzfLuaBufLineNr", { link = "LineNr" })
+  hl.set(0, "FzfLuaCursor", { link = "None" })
+  hl.set(0, "FzfLuaHeaderBind", { link = "Special" })
+  hl.set(0, "FzfLuaHeaderText", { link = "Special" })
+  hl.set(0, "FzfLuaTabMarker", { link = "Keyword" })
+  hl.set(0, "FzfLuaTabTitle", { link = "Title" })
+  hl.set_default(0, "TelescopeSelection", { link = "Visual" })
+  hl.set_default(0, "TelescopePrefix", { link = "Operator" })
+  hl.set_default(0, "TelescopeCounter", { link = "LineNr" })
+  hl.set_default(0, "TelescopeTitle", {
     fg = hl_norm.bg,
     bg = hl_speical.fg,
     bold = true,
@@ -844,8 +834,8 @@ end
 
 set_default_hlgroups()
 
-vim.api.nvim_create_autocmd('ColorScheme', {
-  group = vim.api.nvim_create_augroup('FzfLuaSetDefaultHlgroups', {}),
-  desc = 'Set default hlgroups for fzf-lua.',
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("FzfLuaSetDefaultHlgroups", {}),
+  desc = "Set default hlgroups for fzf-lua.",
   callback = set_default_hlgroups,
 })

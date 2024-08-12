@@ -5,12 +5,12 @@
 -- License:      GPL-3.0
 -- Last Updated: Mon Jul 15 11:32:39 PM CST 2024
 
--- Clear hlgroups and set colors_name {{{
-vim.cmd.hi('clear')
-vim.g.colors_name = 'macro'
--- }}}
+-- Clear hlgroups and set colors_name
+vim.cmd.hi "clear"
+vim.g.colors_name = "macro"
 
--- Palette {{{
+
+-- Palette 
 -- stylua: ignore start
 local c_autumnGreen
 local c_autumnRed
@@ -161,9 +161,9 @@ else
   c_winterYellow = '#e2dcd4'
 end
 -- stylua: ignore end
--- }}}
 
--- Terminal colors {{{
+
+-- Terminal colors 
 -- stylua: ignore start
 if vim.go.bg == 'dark' then
   vim.g.terminal_color_0  = c_macroBg0
@@ -205,17 +205,16 @@ else
   vim.g.terminal_color_17 = c_macroOrange1
 end
 -- stylua: ignore end
---- }}}
 
--- Highlight groups {{{1
+-- Highlight groups
 local hlgroups = {
-  -- UI {{{2
+  -- UI
   ColorColumn = { bg = c_macroBg2 },
   Conceal = { bold = true, fg = c_macroGray2 },
-  CurSearch = { link = 'IncSearch' },
+  CurSearch = { link = "IncSearch" },
   Cursor = { bg = c_macroFg0, fg = c_macroBg1 },
-  CursorColumn = { link = 'CursorLine' },
-  CursorIM = { link = 'Cursor' },
+  CursorColumn = { link = "CursorLine" },
+  CursorIM = { link = "Cursor" },
   CursorLine = { bg = c_macroBg2 },
   CursorLineNr = { fg = c_macroGray0, bold = true },
   DebugPC = { bg = c_winterRed },
@@ -231,7 +230,7 @@ local hlgroups = {
   FloatTitle = { bg = c_macroBg0, fg = c_macroGray2, bold = true },
   FoldColumn = { fg = c_macroBg5 },
   Folded = { bg = c_macroBg2, fg = c_lotusGray },
-  Ignore = { link = 'NonText' },
+  Ignore = { link = "NonText" },
   IncSearch = { bg = c_carpYellow, fg = c_waveBlue0 },
   LineNr = { fg = c_macroBg5 },
   MatchParen = { bg = c_macroBg4 },
@@ -242,12 +241,12 @@ local hlgroups = {
   NonText = { fg = c_macroBg5 },
   Normal = { bg = c_macroBg1, fg = c_macroFg0 },
   NormalFloat = { bg = c_macroBg0, fg = c_macroFg1 },
-  NormalNC = { link = 'Normal' },
+  NormalNC = { link = "Normal" },
   Pmenu = { bg = c_macroBg3, fg = c_macroFg1 },
   PmenuSbar = { bg = c_macroBg4 },
-  PmenuSel = { bg = c_macroBg4, fg = 'NONE' },
+  PmenuSel = { bg = c_macroBg4, fg = "NONE" },
   PmenuThumb = { bg = c_macroBg5 },
-  Question = { link = 'MoreMsg' },
+  Question = { link = "MoreMsg" },
   QuickFixLine = { bg = c_macroBg3 },
   Search = { bg = c_macroBg4 },
   SignColumn = { fg = c_macroGray2 },
@@ -258,34 +257,33 @@ local hlgroups = {
   StatusLine = { bg = c_macroBg3, fg = c_macroFg1 },
   StatusLineNC = { bg = c_macroBg2, fg = c_macroBg5 },
   Substitute = { bg = c_autumnRed, fg = c_macroFg0 },
-  TabLine = { link = 'StatusLineNC' },
-  TabLineFill = { link = 'Normal' },
-  TabLineSel = { link = 'StatusLine' },
+  TabLine = { link = "StatusLineNC" },
+  TabLineFill = { link = "Normal" },
+  TabLineSel = { link = "StatusLine" },
   TermCursor = { fg = c_macroBg1, bg = c_macroRed },
   TermCursorNC = { fg = c_macroBg1, bg = c_macroAsh },
   Title = { bold = true, fg = c_macroBlue1 },
   Underlined = { fg = c_macroTeal, underline = true },
-  VertSplit = { link = 'WinSeparator' },
+  VertSplit = { link = "WinSeparator" },
   Visual = { bg = c_macroBg4 },
-  VisualNOS = { link = 'Visual' },
+  VisualNOS = { link = "Visual" },
   WarningMsg = { fg = c_roninYellow },
   Whitespace = { fg = c_macroBg4 },
-  WildMenu = { link = 'Pmenu' },
-  WinBar = { bg = 'NONE', fg = c_macroFg1 },
-  WinBarNC = { link = 'WinBar' },
+  WildMenu = { link = "Pmenu" },
+  WinBar = { bg = "NONE", fg = c_macroFg1 },
+  WinBarNC = { link = "WinBar" },
   WinSeparator = { fg = c_macroBg4 },
-  lCursor = { link = 'Cursor' },
-  -- }}}2
+  lCursor = { link = "Cursor" },
 
-  -- Syntax {{{2
+  -- Syntax
   Boolean = { fg = c_macroOrange0, bold = true },
-  Character = { link = 'String' },
+  Character = { link = "String" },
   Comment = { fg = c_macroAsh },
   Constant = { fg = c_macroOrange0 },
   Delimiter = { fg = c_macroGray1 },
   Error = { fg = c_lotusRed1 },
   Exception = { fg = c_macroRed },
-  Float = { link = 'Number' },
+  Float = { link = "Number" },
   Function = { fg = c_macroBlue1 },
   Identifier = { fg = c_macroFg0 },
   Keyword = { fg = c_macroViolet },
@@ -298,95 +296,91 @@ local hlgroups = {
   String = { fg = c_macroGreen1 },
   Todo = { fg = c_macroBg0, bg = c_macroBlue0, bold = true },
   Type = { fg = c_macroAqua },
-  -- }}}2
 
-  -- Treesitter syntax {{{2
-  ['@attribute'] = { link = 'Constant' },
-  ['@constructor'] = { fg = c_macroTeal },
-  ['@constructor.lua'] = { fg = c_macroViolet },
-  ['@keyword.exception'] = { bold = true, fg = c_macroRed },
-  ['@keyword.import'] = { link = 'PreProc' },
-  ['@keyword.luap'] = { link = '@string.regexp' },
-  ['@keyword.operator'] = { bold = true, fg = c_macroRed },
-  ['@keyword.return'] = { fg = c_macroRed, italic = true },
-  ['@module'] = { fg = c_macroOrange0 },
-  ['@operator'] = { link = 'Operator' },
-  ['@punctuation.bracket'] = { fg = c_macroGray1 },
-  ['@punctuation.delimiter'] = { fg = c_macroGray1 },
-  ['@markup.list'] = { fg = c_macroTeal },
-  ['@string.escape'] = { fg = c_macroOrange0 },
-  ['@string.regexp'] = { fg = c_macroOrange0 },
-  ['@markup.link.label.symbol'] = { fg = c_macroFg0 },
-  ['@tag.attribute'] = { fg = c_macroFg0 },
-  ['@tag.delimiter'] = { fg = c_macroGray1 },
-  ['@comment.error'] = { bg = c_lotusRed1, fg = c_macroFg0, bold = true },
-  ['@diff.plug'] = { fg = c_autumnGreen },
-  ['@diff.minus'] = { fg = c_autumnRed },
-  ['@markup.emphasis'] = { italic = true },
-  ['@markup.environment'] = { link = 'Keyword' },
-  ['@markup.environment.name'] = { link = 'String' },
-  ['@markup.raw'] = { link = 'String' },
-  ['@comment.info'] = { bg = c_waveAqua0, fg = c_waveBlue0, bold = true },
-  ['@markup.quote'] = { link = '@variable.parameter' },
-  ['@markup.strong'] = { bold = true },
-  ['@markup.heading'] = { link = 'Function' },
-  ['@markup.heading.1.markdown'] = { fg = c_macroRed },
-  ['@markup.heading.2.markdown'] = { fg = c_macroRed },
-  ['@markup.heading.3.markdown'] = { fg = c_macroRed },
-  ['@markup.heading.4.markdown'] = { fg = c_macroRed },
-  ['@markup.heading.5.markdown'] = { fg = c_macroRed },
-  ['@markup.heading.6.markdown'] = { fg = c_macroRed },
-  ['@markup.heading.1.marker.markdown'] = { link = 'Delimiter' },
-  ['@markup.heading.2.marker.markdown'] = { link = 'Delimiter' },
-  ['@markup.heading.3.marker.markdown'] = { link = 'Delimiter' },
-  ['@markup.heading.4.marker.markdown'] = { link = 'Delimiter' },
-  ['@markup.heading.5.marker.markdown'] = { link = 'Delimiter' },
-  ['@markup.heading.6.marker.markdown'] = { link = 'Delimiter' },
-  ['@comment.todo.checked'] = { fg = c_macroAsh },
-  ['@comment.todo.unchecked'] = { fg = c_macroRed },
-  ['@markup.link.label.markdown_inline'] = { link = 'htmlLink' },
-  ['@markup.link.url.markdown_inline'] = { link = 'htmlString' },
-  ['@comment.warning'] = { bg = c_roninYellow, fg = c_waveBlue0, bold = true },
-  ['@variable'] = { fg = c_macroFg0 },
-  ['@variable.builtin'] = { fg = c_macroRed, italic = true },
-  -- }}}
+  -- Treesitter syntax
+  ["@attribute"] = { link = "Constant" },
+  ["@constructor"] = { fg = c_macroTeal },
+  ["@constructor.lua"] = { fg = c_macroViolet },
+  ["@keyword.exception"] = { bold = true, fg = c_macroRed },
+  ["@keyword.import"] = { link = "PreProc" },
+  ["@keyword.luap"] = { link = "@string.regexp" },
+  ["@keyword.operator"] = { bold = true, fg = c_macroRed },
+  ["@keyword.return"] = { fg = c_macroRed, italic = true },
+  ["@module"] = { fg = c_macroOrange0 },
+  ["@operator"] = { link = "Operator" },
+  ["@punctuation.bracket"] = { fg = c_macroGray1 },
+  ["@punctuation.delimiter"] = { fg = c_macroGray1 },
+  ["@markup.list"] = { fg = c_macroTeal },
+  ["@string.escape"] = { fg = c_macroOrange0 },
+  ["@string.regexp"] = { fg = c_macroOrange0 },
+  ["@markup.link.label.symbol"] = { fg = c_macroFg0 },
+  ["@tag.attribute"] = { fg = c_macroFg0 },
+  ["@tag.delimiter"] = { fg = c_macroGray1 },
+  ["@comment.error"] = { bg = c_lotusRed1, fg = c_macroFg0, bold = true },
+  ["@diff.plug"] = { fg = c_autumnGreen },
+  ["@diff.minus"] = { fg = c_autumnRed },
+  ["@markup.emphasis"] = { italic = true },
+  ["@markup.environment"] = { link = "Keyword" },
+  ["@markup.environment.name"] = { link = "String" },
+  ["@markup.raw"] = { link = "String" },
+  ["@comment.info"] = { bg = c_waveAqua0, fg = c_waveBlue0, bold = true },
+  ["@markup.quote"] = { link = "@variable.parameter" },
+  ["@markup.strong"] = { bold = true },
+  ["@markup.heading"] = { link = "Function" },
+  ["@markup.heading.1.markdown"] = { fg = c_macroRed },
+  ["@markup.heading.2.markdown"] = { fg = c_macroRed },
+  ["@markup.heading.3.markdown"] = { fg = c_macroRed },
+  ["@markup.heading.4.markdown"] = { fg = c_macroRed },
+  ["@markup.heading.5.markdown"] = { fg = c_macroRed },
+  ["@markup.heading.6.markdown"] = { fg = c_macroRed },
+  ["@markup.heading.1.marker.markdown"] = { link = "Delimiter" },
+  ["@markup.heading.2.marker.markdown"] = { link = "Delimiter" },
+  ["@markup.heading.3.marker.markdown"] = { link = "Delimiter" },
+  ["@markup.heading.4.marker.markdown"] = { link = "Delimiter" },
+  ["@markup.heading.5.marker.markdown"] = { link = "Delimiter" },
+  ["@markup.heading.6.marker.markdown"] = { link = "Delimiter" },
+  ["@comment.todo.checked"] = { fg = c_macroAsh },
+  ["@comment.todo.unchecked"] = { fg = c_macroRed },
+  ["@markup.link.label.markdown_inline"] = { link = "htmlLink" },
+  ["@markup.link.url.markdown_inline"] = { link = "htmlString" },
+  ["@comment.warning"] = { bg = c_roninYellow, fg = c_waveBlue0, bold = true },
+  ["@variable"] = { fg = c_macroFg0 },
+  ["@variable.builtin"] = { fg = c_macroRed, italic = true },
 
-  -- LSP semantic {{{2
-  ['@lsp.mod.readonly'] = { link = 'Constant' },
-  ['@lsp.mod.typeHint'] = { link = 'Type' },
-  ['@lsp.type.builtinConstant'] = { link = '@constant.builtin' },
-  ['@lsp.type.comment'] = { fg = 'NONE' },
-  ['@lsp.type.macro'] = { fg = c_macroPink },
-  ['@lsp.type.magicFunction'] = { link = '@function.builtin' },
-  ['@lsp.type.method'] = { link = '@function.method' },
-  ['@lsp.type.namespace'] = { link = '@module' },
-  ['@lsp.type.parameter'] = { link = '@variable.parameter' },
-  ['@lsp.type.selfParameter'] = { link = '@variable.builtin' },
-  ['@lsp.type.variable'] = { fg = 'NONE' },
-  ['@lsp.typemod.function.builtin'] = { link = '@function.builtin' },
-  ['@lsp.typemod.function.defaultLibrary'] = { link = '@function.builtin' },
-  ['@lsp.typemod.function.readonly'] = { bold = true, fg = c_macroBlue1 },
-  ['@lsp.typemod.keyword.documentation'] = { link = 'Special' },
-  ['@lsp.typemod.method.defaultLibrary'] = { link = '@function.builtin' },
-  ['@lsp.typemod.operator.controlFlow'] = { link = '@keyword.exception' },
-  ['@lsp.typemod.operator.injected'] = { link = 'Operator' },
-  ['@lsp.typemod.string.injected'] = { link = 'String' },
-  ['@lsp.typemod.variable.defaultLibrary'] = { link = 'Special' },
-  ['@lsp.typemod.variable.global'] = { link = 'Constant' },
-  ['@lsp.typemod.variable.injected'] = { link = '@variable' },
-  ['@lsp.typemod.variable.static'] = { link = 'Constant' },
-  -- }}}
+  -- LSP semantic
+  ["@lsp.mod.readonly"] = { link = "Constant" },
+  ["@lsp.mod.typeHint"] = { link = "Type" },
+  ["@lsp.type.builtinConstant"] = { link = "@constant.builtin" },
+  ["@lsp.type.comment"] = { fg = "NONE" },
+  ["@lsp.type.macro"] = { fg = c_macroPink },
+  ["@lsp.type.magicFunction"] = { link = "@function.builtin" },
+  ["@lsp.type.method"] = { link = "@function.method" },
+  ["@lsp.type.namespace"] = { link = "@module" },
+  ["@lsp.type.parameter"] = { link = "@variable.parameter" },
+  ["@lsp.type.selfParameter"] = { link = "@variable.builtin" },
+  ["@lsp.type.variable"] = { fg = "NONE" },
+  ["@lsp.typemod.function.builtin"] = { link = "@function.builtin" },
+  ["@lsp.typemod.function.defaultLibrary"] = { link = "@function.builtin" },
+  ["@lsp.typemod.function.readonly"] = { bold = true, fg = c_macroBlue1 },
+  ["@lsp.typemod.keyword.documentation"] = { link = "Special" },
+  ["@lsp.typemod.method.defaultLibrary"] = { link = "@function.builtin" },
+  ["@lsp.typemod.operator.controlFlow"] = { link = "@keyword.exception" },
+  ["@lsp.typemod.operator.injected"] = { link = "Operator" },
+  ["@lsp.typemod.string.injected"] = { link = "String" },
+  ["@lsp.typemod.variable.defaultLibrary"] = { link = "Special" },
+  ["@lsp.typemod.variable.global"] = { link = "Constant" },
+  ["@lsp.typemod.variable.injected"] = { link = "@variable" },
+  ["@lsp.typemod.variable.static"] = { link = "Constant" },
 
-  -- LSP {{{2
+  -- LSP
   LspCodeLens = { fg = c_macroAsh },
-  LspInfoBorder = { link = 'FloatBorder' },
-  LspReferenceRead = { link = 'LspReferenceText' },
+  LspInfoBorder = { link = "FloatBorder" },
+  LspReferenceRead = { link = "LspReferenceText" },
   LspReferenceText = { bg = c_winterYellow },
   LspReferenceWrite = { bg = c_winterYellow, underline = true },
   LspSignatureActiveParameter = { fg = c_roninYellow },
-  -- }}}
 
-  -- Diagnostic {{{2
+  -- Diagnostic
   DiagnosticError = { fg = c_macroRed },
   DiagnosticHint = { fg = c_macroAqua },
   DiagnosticInfo = { fg = c_macroBlue1 },
@@ -409,22 +403,21 @@ local hlgroups = {
     sp = c_macroAqua,
     undercurl = true,
   },
-  -- }}}
 
-  -- Filetype {{{2
+  -- Filetype
   -- Git
   gitHash = { fg = c_macroAsh },
 
   -- Sh/Bash
-  bashSpecialVariables = { link = 'Constant' },
-  shAstQuote = { link = 'Constant' },
-  shCaseEsac = { link = 'Operator' },
-  shDeref = { link = 'Special' },
-  shDerefSimple = { link = 'shDerefVar' },
-  shDerefVar = { link = 'Constant' },
-  shNoQuote = { link = 'shAstQuote' },
-  shQuote = { link = 'String' },
-  shTestOpr = { link = 'Operator' },
+  bashSpecialVariables = { link = "Constant" },
+  shAstQuote = { link = "Constant" },
+  shCaseEsac = { link = "Operator" },
+  shDeref = { link = "Special" },
+  shDerefSimple = { link = "shDerefVar" },
+  shDerefVar = { link = "Constant" },
+  shNoQuote = { link = "shAstQuote" },
+  shQuote = { link = "String" },
+  shTestOpr = { link = "Operator" },
 
   -- HTML
   htmlBold = { bold = true },
@@ -437,75 +430,74 @@ local hlgroups = {
   htmlH6 = { fg = c_macroRed, bold = true },
   htmlItalic = { italic = true },
   htmlLink = { fg = c_lotusBlue, underline = true },
-  htmlSpecialChar = { link = 'SpecialChar' },
+  htmlSpecialChar = { link = "SpecialChar" },
   htmlSpecialTagName = { fg = c_macroViolet },
   htmlString = { fg = c_macroAsh },
-  htmlTagName = { link = 'Tag' },
-  htmlTitle = { link = 'Title' },
+  htmlTagName = { link = "Tag" },
+  htmlTitle = { link = "Title" },
 
   -- Markdown
   markdownBold = { bold = true },
   markdownBoldItalic = { bold = true, italic = true },
   markdownCode = { fg = c_macroGreen1 },
   markdownCodeBlock = { fg = c_macroGreen1 },
-  markdownError = { link = 'NONE' },
-  markdownEscape = { fg = 'NONE' },
-  markdownH1 = { link = 'htmlH1' },
-  markdownH2 = { link = 'htmlH2' },
-  markdownH3 = { link = 'htmlH3' },
-  markdownH4 = { link = 'htmlH4' },
-  markdownH5 = { link = 'htmlH5' },
-  markdownH6 = { link = 'htmlH6' },
+  markdownError = { link = "NONE" },
+  markdownEscape = { fg = "NONE" },
+  markdownH1 = { link = "htmlH1" },
+  markdownH2 = { link = "htmlH2" },
+  markdownH3 = { link = "htmlH3" },
+  markdownH4 = { link = "htmlH4" },
+  markdownH5 = { link = "htmlH5" },
+  markdownH6 = { link = "htmlH6" },
   markdownListMarker = { fg = c_autumnYellow },
 
   -- Checkhealth
   healthError = { fg = c_lotusRed0 },
   healthSuccess = { fg = c_springGreen },
   healthWarning = { fg = c_roninYellow },
-  helpHeader = { link = 'Title' },
-  helpSectionDelim = { link = 'Title' },
+  helpHeader = { link = "Title" },
+  helpSectionDelim = { link = "Title" },
 
   -- Qf
-  qfFileName = { link = 'Directory' },
-  qfLineNr = { link = 'lineNr' },
-  -- }}}
+  qfFileName = { link = "Directory" },
+  qfLineNr = { link = "lineNr" },
 
-  -- Plugins {{{2
+  -- Plugins
   -- nvim-cmp
-  CmpCompletion = { link = 'Pmenu' },
+  CmpCompletion = { link = "Pmenu" },
   CmpCompletionBorder = { bg = c_waveBlue0, fg = c_waveBlue1 },
-  CmpCompletionSbar = { link = 'PmenuSbar' },
-  CmpCompletionSel = { bg = c_waveBlue1, fg = 'NONE' },
-  CmpCompletionThumb = { link = 'PmenuThumb' },
-  CmpDocumentation = { link = 'NormalFloat' },
-  CmpDocumentationBorder = { link = 'FloatBorder' },
+  CmpCompletionSbar = { link = "PmenuSbar" },
+  CmpCompletionSel = { bg = c_waveBlue1, fg = "NONE" },
+  CmpCompletionThumb = { link = "PmenuThumb" },
+  CmpDocumentation = { link = "NormalFloat" },
+  CmpDocumentationBorder = { link = "FloatBorder" },
   CmpItemAbbr = { fg = c_macroFg2 },
   CmpItemAbbrDeprecated = { fg = c_macroAsh, strikethrough = true },
   CmpItemAbbrMatch = { fg = c_macroRed },
-  CmpItemAbbrMatchFuzzy = { link = 'CmpItemAbbrMatch' },
-  CmpItemKindClass = { link = 'Type' },
-  CmpItemKindConstant = { link = 'Constant' },
-  CmpItemKindConstructor = { link = '@constructor' },
-  CmpItemKindCopilot = { link = 'String' },
+  CmpItemAbbrMatchFuzzy = { link = "CmpItemAbbrMatch" },
+  CmpItemKindClass = { link = "Type" },
+  CmpItemKindConstant = { link = "Constant" },
+  CmpItemKindConstructor = { link = "@constructor" },
+  CmpItemKindCopilot = { link = "String" },
   CmpItemKindDefault = { fg = c_katanaGray },
-  CmpItemKindEnum = { link = 'Type' },
-  CmpItemKindEnumMember = { link = 'Constant' },
-  CmpItemKindField = { link = '@variable.member' },
-  CmpItemKindFile = { link = 'Directory' },
-  CmpItemKindFolder = { link = 'Directory' },
-  CmpItemKindFunction = { link = 'Function' },
-  CmpItemKindInterface = { link = 'Type' },
-  CmpItemKindKeyword = { link = '@keyword' },
-  CmpItemKindMethod = { link = 'Function' },
-  CmpItemKindModule = { link = '@keyword.import' },
-  CmpItemKindOperator = { link = 'Operator' },
-  CmpItemKindProperty = { link = '@property' },
-  CmpItemKindReference = { link = 'Type' },
+  CmpItemKindEnum = { link = "Type" },
+  CmpItemKindEnumMember = { link = "Constant" },
+  CmpItemKindField = { link = "@variable.member" },
+  CmpItemKindFile = { link = "Directory" },
+  CmpItemKindFolder = { link = "Directory" },
+  CmpItemKindFunction = { link = "Function" },
+  CmpItemKindInterface = { link = "Type" },
+  CmpItemKindKeyword = { link = "@keyword" },
+  CmpItemKindMethod = { link = "Function" },
+  CmpItemKindModule = { link = "@keyword.import" },
+  CmpItemKindOperator = { link = "Operator" },
+  CmpItemKindProperty = { link = "@property" },
+  CmpItemKindReference = { link = "Type" },
   CmpItemKindSnippet = { fg = c_macroTeal },
-  CmpItemKindStruct = { link = 'Type' },
+  CmpItemKindStruct = { link = "Type" },
   CmpItemKindText = { fg = c_macroFg2 },
-  CmpItemKindTypeParameter = { link = 'Type' },
-  CmpItemKindValue = { link = 'String' },
+  CmpItemKindTypeParameter = { link = "Type" },
+  CmpItemKindValue = { link = "String" },
   CmpItemKindVariable = { fg = c_lotusRed2 },
   CmpItemMenu = { fg = c_macroAsh },
 
@@ -522,8 +514,8 @@ local hlgroups = {
   DiffNewFile = { fg = c_autumnGreen },
   DiffOldFile = { fg = c_autumnRed },
   DiffRemoved = { fg = c_autumnRed },
-  fugitiveHash = { link = 'gitHash' },
-  fugitiveHeader = { link = 'Title' },
+  fugitiveHash = { link = "gitHash" },
+  fugitiveHeader = { link = "Title" },
   fugitiveStagedModifier = { fg = c_autumnGreen },
   fugitiveUnstagedModifier = { fg = c_autumnYellow },
   fugitiveUntrackedModifier = { fg = c_macroAqua },
@@ -532,26 +524,26 @@ local hlgroups = {
   TelescopeBorder = { bg = c_macroBg1, fg = c_sumiInk6 },
   TelescopeMatching = { fg = c_macroRed, bold = true },
   TelescopeNormal = { fg = c_macroFg2, bg = c_macroBg2 },
-  TelescopeResultsClass = { link = 'Structure' },
-  TelescopeResultsField = { link = '@variable.member' },
-  TelescopeResultsMethod = { link = 'Function' },
-  TelescopeResultsStruct = { link = 'Structure' },
-  TelescopeResultsVariable = { link = '@variable' },
-  TelescopeSelection = { link = 'Visual' },
+  TelescopeResultsClass = { link = "Structure" },
+  TelescopeResultsField = { link = "@variable.member" },
+  TelescopeResultsMethod = { link = "Function" },
+  TelescopeResultsStruct = { link = "Structure" },
+  TelescopeResultsVariable = { link = "@variable" },
+  TelescopeSelection = { link = "Visual" },
   TelescopeTitle = { fg = c_macroGray2 },
 
   -- nvim-dap-ui
   DapUIBreakpointsCurrentLine = { bold = true, fg = c_macroFg0 },
-  DapUIBreakpointsDisabledLine = { link = 'Comment' },
+  DapUIBreakpointsDisabledLine = { link = "Comment" },
   DapUIBreakpointsInfo = { fg = c_macroBlue0 },
-  DapUIBreakpointsPath = { link = 'Directory' },
+  DapUIBreakpointsPath = { link = "Directory" },
   DapUIDecoration = { fg = c_sumiInk6 },
   DapUIFloatBorder = { fg = c_sumiInk6 },
   DapUILineNumber = { fg = c_macroTeal },
   DapUIModifiedValue = { bold = true, fg = c_macroTeal },
   DapUIPlayPause = { fg = c_macroGreen1 },
   DapUIRestart = { fg = c_macroGreen1 },
-  DapUIScope = { link = 'Special' },
+  DapUIScope = { link = "Special" },
   DapUISource = { fg = c_macroRed },
   DapUIStepBack = { fg = c_macroTeal },
   DapUIStepInto = { fg = c_macroTeal },
@@ -560,7 +552,7 @@ local hlgroups = {
   DapUIStop = { fg = c_lotusRed0 },
   DapUIStoppedThread = { fg = c_macroTeal },
   DapUIThread = { fg = c_macroFg0 },
-  DapUIType = { link = 'Type' },
+  DapUIType = { link = "Type" },
   DapUIUnavailable = { fg = c_macroAsh },
   DapUIWatchesEmpty = { fg = c_lotusRed0 },
   DapUIWatchesError = { fg = c_lotusRed0 },
@@ -575,18 +567,14 @@ local hlgroups = {
   StatusLineGitRemoved = { bg = c_macroBg3, fg = c_macroRed },
   StatusLineHeader = { bg = c_macroBg5, fg = c_macroFg1 },
   StatusLineHeaderModified = { bg = c_macroRed, fg = c_macroBg1 },
-
-  -- }}}
 }
--- }}}1
 
--- Highlight group overrides {{{1
-if vim.go.bg == 'light' then
+-- Highlight group overrides
+if vim.go.bg == "light" then
   hlgroups.CursorLine = { bg = c_macroBg2 }
   hlgroups.DiagnosticSignWarn = { fg = c_autumnYellow }
   hlgroups.DiagnosticUnderlineWarn = { sp = c_autumnYellow, undercurl = true }
-  hlgroups.DiagnosticVirtualTextWarn =
-    { bg = c_winterYellow, fg = c_autumnYellow }
+  hlgroups.DiagnosticVirtualTextWarn = { bg = c_winterYellow, fg = c_autumnYellow }
   hlgroups.DiagnosticWarn = { fg = c_autumnYellow }
   hlgroups.IncSearch = { bg = c_autumnYellow, fg = c_macroBg0, bold = true }
   hlgroups.Keyword = { fg = c_macroRed }
@@ -603,14 +591,12 @@ if vim.go.bg == 'light' then
   hlgroups.StatusLineHeader = { bg = c_macroFg0, fg = c_macroBg0 }
   hlgroups.StatusLineHeaderModified = { bg = c_macroRed, fg = c_macroBg0 }
   hlgroups.Visual = { bg = c_macroBg3 }
-  hlgroups['@variable.parameter'] = { link = 'Identifier' }
+  hlgroups["@variable.parameter"] = { link = "Identifier" }
 end
--- }}}1
 
--- Set highlight groups {{{1
+-- Set highlight groups
 for hlgroup_name, hlgroup_attr in pairs(hlgroups) do
   vim.api.nvim_set_hl(0, hlgroup_name, hlgroup_attr)
 end
--- }}}1
 
 -- vim:ts=2:sw=2:sts=2:fdm=marker:fdl=0

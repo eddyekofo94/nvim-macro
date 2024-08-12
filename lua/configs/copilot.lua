@@ -3,12 +3,12 @@ if vim.g.loaded_coplilot then
 end
 vim.g.loaded_coplilot = true
 
-local copilot = require('copilot')
-local copilot_client = require('copilot.client')
-local suggestion = require('copilot.suggestion')
-local utils = require('utils')
+local copilot = require "copilot"
+local copilot_client = require "copilot.client"
+local suggestion = require "copilot.suggestion"
+local utils = require "utils"
 
-copilot.setup({
+copilot.setup {
   suggestion = {
     auto_trigger = true,
     debounce = 500,
@@ -20,10 +20,10 @@ copilot.setup({
     markdown = true,
     help = true,
   },
-})
+}
 
 vim.defer_fn(function()
-  utils.keymap.amend('i', '<C-f>', function(fallback)
+  utils.keymap.keymaps.amend("i", "<C-f>", function(fallback)
     if suggestion.is_visible() then
       suggestion.accept()
     else

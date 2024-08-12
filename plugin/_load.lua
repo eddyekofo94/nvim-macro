@@ -2,107 +2,109 @@
 
 -- vscode-neovim
 if vim.g.vscode then
-  vim.fn['plugin#vscode#setup']()
+  vim.fn["plugin#vscode#setup"]()
   return
 end
 
 -- im
-vim.api.nvim_create_autocmd('ModeChanged', {
+vim.api.nvim_create_autocmd("ModeChanged", {
   once = true,
-  pattern = '*:[ictRss\x13]*',
-  group = vim.api.nvim_create_augroup('IMSetup', {}),
+  pattern = "*:[ictRss\x13]*",
+  group = vim.api.nvim_create_augroup("IMSetup", {}),
   callback = function()
-    require('plugin.im').setup()
+    require("plugin.im").setup()
     return true
   end,
 })
 
 -- jupytext
-vim.api.nvim_create_autocmd('BufReadCmd', {
+vim.api.nvim_create_autocmd("BufReadCmd", {
   once = true,
-  pattern = '*.ipynb',
-  group = vim.api.nvim_create_augroup('JupyTextSetup', {}),
+  pattern = "*.ipynb",
+  group = vim.api.nvim_create_augroup("JupyTextSetup", {}),
   callback = function(info)
-    require('plugin.jupytext').setup(info.buf)
+    require("plugin.jupytext").setup(info.buf)
     return true
   end,
 })
 
 -- lsp & diagnostic settings
-vim.api.nvim_create_autocmd({ 'LspAttach', 'DiagnosticChanged' }, {
-  once = true,
-  desc = 'Apply lsp and diagnostic settings.',
-  group = vim.api.nvim_create_augroup('LspDiagnosticSetup', {}),
-  callback = function()
-    require('plugin.lsp').setup()
-    return true
-  end,
-})
+-- vim.api.nvim_create_autocmd({ "LspAttach", "DiagnosticChanged" }, {
+--   once = true,
+--   desc = "Apply lsp and diagnostic settings.",
+--   group = vim.api.nvim_create_augroup("LspDiagnosticSetup", {}),
+--   callback = function()
+--     require("plugin.lsp").setup()
+--     return true
+--   end,
+-- })
 
 -- readline
-vim.api.nvim_create_autocmd({ 'CmdlineEnter', 'InsertEnter' }, {
-  group = vim.api.nvim_create_augroup('ReadlineSetup', {}),
+vim.api.nvim_create_autocmd({ "CmdlineEnter", "InsertEnter" }, {
+  group = vim.api.nvim_create_augroup("ReadlineSetup", {}),
   once = true,
   callback = function()
-    require('plugin.readline').setup()
+    require("plugin.readline").setup()
     return true
   end,
 })
 
 -- statuscolumn
-vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufWinEnter' }, {
-  group = vim.api.nvim_create_augroup('StatusColumn', {}),
-  desc = 'Init statuscolumn plugin.',
-  once = true,
-  callback = function()
-    require('plugin.statuscolumn').setup()
-    return true
-  end,
-})
+-- vim.api.nvim_create_autocmd({ "BufWritePost", "BufWinEnter" }, {
+--   group = vim.api.nvim_create_augroup("StatusColumn", {}),
+--   desc = "Init statuscolumn plugin.",
+--   once = true,
+--   callback = function()
+--     require("plugin.statuscolumn").setup()
+--     return true
+--   end,
+-- })
+
+vim.opt.statuscolumn = [[%!v:lua.require'ui.statuscolumn'.statuscolumn()]]
 
 -- statusline
-vim.go.statusline = [[%!v:lua.require'plugin.statusline'.get()]]
+-- vim.go.statusline = [[%!v:lua.require'plugin.statusline'.get()]]
 
 -- term
-vim.api.nvim_create_autocmd('TermOpen', {
-  group = vim.api.nvim_create_augroup('TermSetup', {}),
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = vim.api.nvim_create_augroup("TermSetup", {}),
   callback = function(info)
-    require('plugin.term').setup(info.buf)
+    require("plugin.term").setup(info.buf)
   end,
 })
 
 -- tmux
 if vim.g.has_ui then
   vim.schedule(function()
-    require('plugin.tmux').setup()
+    require("plugin.tmux").setup()
   end)
 end
 
 -- winbar
-vim.api.nvim_create_autocmd({
-  'BufReadPost',
-  'BufWritePost',
-  'BufNewFile',
-  'BufEnter',
-}, {
-  once = true,
-  group = vim.api.nvim_create_augroup('WinBarSetup', {}),
-  callback = function()
-    local winbar = require('plugin.winbar')
-    local api = require('plugin.winbar.api')
-    winbar.setup()
-
-    vim.keymap.set('n', '<Leader>;', api.pick)
-    vim.keymap.set('n', '[C', api.goto_context_start)
-    vim.keymap.set('n', ']C', api.select_next_context)
-    return true
-  end,
-})
+-- vim.api.nvim_create_autocmd({
+--   'BufReadPost',
+--   'BufWritePost',
+--   'BufNewFile',
+--   'BufEnter',
+-- }, {
+--   once = true,
+--   group = vim.api.nvim_create_augroup('WinBarSetup', {}),
+--   callback = function()
+--     local winbar = require('plugin.winbar')
+--     local api = require('plugin.winbar.api')
+--     winbar.setup()
+--
+--     vim.keymap.set('n', '<Leader>;', api.pick)
+--     vim.keymap.set('n', '[C', api.goto_context_start)
+--     vim.keymap.set('n', ']C', api.select_next_context)
+--     return true
+--   end,
+-- })
 
 -- tabout
-vim.keymap.set({ 'i', 'c' }, '<Tab>', function()
-  require('plugin.tabout').jump(1)
+vim.keymap.set({ "i", "c" }, "<Tab>", function()
+  require("plugin.tabout").jump(1)
 end)
-vim.keymap.set({ 'i', 'c' }, '<S-Tab>', function()
-  require('plugin.tabout').jump(-1)
+vim.keymap.set({ "i", "c" }, "<S-Tab>", function()
+  require("plugin.tabout").jump(-1)
 end)

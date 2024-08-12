@@ -26,7 +26,7 @@ end
 ---@return string[]: command running in the foreground
 function M.fg_cmds(buf)
   buf = buf or 0
-  if not vim.api.nvim_buf_is_valid(buf) or vim.bo[buf].bt ~= 'terminal' then
+  if not vim.api.nvim_buf_is_valid(buf) or vim.bo[buf].bt ~= "terminal" then
     return {}
   end
   local channel = vim.bo[buf].channel
@@ -37,19 +37,30 @@ function M.fg_cmds(buf)
 
   local cmds = {}
   for _, stat_cmd_str in
-    ipairs(vim.split(vim.fn.system('ps h -o stat,args -g ' .. pid), '\n', {
+    ipairs(vim.split(vim.fn.system("ps h -o stat,args -g " .. pid), "\n", {
       trimempty = true,
     }))
   do
-    local stat, cmd = unpack(vim.split(stat_cmd_str, '%s+', {
+    local stat, cmd = unpack(vim.split(stat_cmd_str, "%s+", {
       trimempty = true,
     }))
-    if stat:find('^%w+%+') then
+    if stat:find "^%w+%+" then
       table.insert(cmds, cmd)
     end
   end
 
   return cmds
+end
+
+function M.LazyGit()
+  local status_ok, _ = pcall(require, "toggleterm")
+  if not status_ok then
+    return vim.notify "toggleterm.nvim isn't installed!!!"
+  end
+
+  local Terminal = require("toggleterm.terminal").Terminal
+  local lazygit = Terminal:new { cmd = "lazygit", hidden = true }
+  lazygit:toggle()
 end
 
 return M

@@ -3,34 +3,26 @@
 ---@return boolean
 local function should_block_file(fpath)
   fpath = vim.fs.normalize(fpath)
-  return (
-    fpath:find('.git/rebase-merge', 1, true)
-    or fpath:find('.git/COMMIT_EDITMSG', 1, true)
-    or fpath:find('^/tmp')
-  )
+  return (fpath:find(".git/rebase-merge", 1, true) or fpath:find(".git/COMMIT_EDITMSG", 1, true) or fpath:find "^/tmp")
       and true
     or false
 end
 
-if tonumber(vim.fn.system({ 'id', '-u' })) == 0 then
-  vim.env['NVIM_ROOT_' .. vim.fn.getpid()] = '1'
+if tonumber(vim.fn.system { "id", "-u" }) == 0 then
+  vim.env["NVIM_ROOT_" .. vim.fn.getpid()] = "1"
 end
 
-require('flatten').setup({
+require("flatten").setup {
   window = {
-    open = 'current',
+    open = "current",
   },
   callbacks = {
     -- Nest when child nvim is root but parent nvim (current session) is not
     -- to avoid opening files in current session without write permission
     should_nest = function()
       local pid = vim.fn.getpid()
-      local parent_pid = vim.env.NVIM and vim.env.NVIM:match('nvim%.(%d+)')
-      if
-        vim.env['NVIM_ROOT_' .. pid]
-        and parent_pid
-        and not vim.env['NVIM_ROOT_' .. parent_pid]
-      then
+      local parent_pid = vim.env.NVIM and vim.env.NVIM:match "nvim%.(%d+)"
+      if vim.env["NVIM_ROOT_" .. pid] and parent_pid and not vim.env["NVIM_ROOT_" .. parent_pid] then
         return true
       end
     end,
@@ -47,8 +39,8 @@ require('flatten').setup({
       vim.api.nvim_set_current_win(win)
       local bufname = vim.api.nvim_buf_get_name(buf)
       if should_block_file(bufname) then
-        vim.bo[buf].bufhidden = 'wipe'
-        local keymap_utils = require('utils.keymap')
+        vim.bo[buf].bufhidden = "wipe"
+        local keymap_utils = require "lua.utils.keymap.keymap"
         -- stylua: ignore start
         keymap_utils.command_abbrev('q',  'b#', { buffer = buf })
         keymap_utils.command_abbrev('wq', 'b#', { buffer = buf })
@@ -62,4 +54,4 @@ require('flatten').setup({
     kitty = false,
     wezterm = false,
   },
-})
+}

@@ -1,21 +1,22 @@
 local autocmd = vim.api.nvim_create_autocmd
 local groupid = vim.api.nvim_create_augroup
+local opt = vim.opt
 
 ---@param group string
 ---@vararg { [1]: string|string[], [2]: vim.api.keyset.create_autocmd }
 ---@return nil
 local function augroup(group, ...)
   local id = groupid(group, {})
-  for _, a in ipairs({ ... }) do
+  for _, a in ipairs { ... } do
     a[2].group = id
     autocmd(unpack(a))
   end
 end
 
-augroup('BigFileSettings', {
-  'BufReadPre',
+augroup("BigFileSettings", {
+  "BufReadPre",
   {
-    desc = 'Set settings for large files.',
+    desc = "Set settings for large files.",
     callback = function(info)
       vim.b.bigfile = false
       local stat = vim.uv.fs_stat(info.match)
@@ -25,17 +26,17 @@ augroup('BigFileSettings', {
         vim.opt_local.swapfile = false
         vim.opt_local.undofile = false
         vim.opt_local.breakindent = false
-        vim.opt_local.colorcolumn = ''
-        vim.opt_local.statuscolumn = ''
-        vim.opt_local.signcolumn = 'no'
-        vim.opt_local.foldcolumn = '0'
-        vim.opt_local.winbar = ''
-        vim.opt_local.syntax = ''
-        autocmd('BufReadPost', {
+        vim.opt_local.colorcolumn = ""
+        vim.opt_local.statuscolumn = ""
+        vim.opt_local.signcolumn = "no"
+        vim.opt_local.foldcolumn = "0"
+        vim.opt_local.winbar = ""
+        vim.opt_local.syntax = ""
+        autocmd("BufReadPost", {
           once = true,
           buffer = info.buf,
           callback = function()
-            vim.opt_local.syntax = ''
+            vim.opt_local.syntax = ""
             return true
           end,
         })
@@ -44,68 +45,68 @@ augroup('BigFileSettings', {
   },
 })
 
-augroup('YankHighlight', {
-  'TextYankPost',
+augroup("YankHighlight", {
+  "TextYankPost",
   {
-    desc = 'Highlight the selection on yank.',
+    desc = "Highlight the selection on yank.",
     callback = function()
       pcall(vim.highlight.on_yank, {
-        higroup = 'Visual',
-        timeout = 200,
+        higroup = "HighlightedYankRegion",
+        timeout = 300,
       })
     end,
   },
 })
 
-augroup('Autosave', {
-  { 'BufLeave', 'WinLeave', 'FocusLost' },
+augroup("Autosave", {
+  { "BufLeave", "WinLeave", "FocusLost" },
   {
     nested = true,
-    desc = 'Autosave on focus change.',
+    desc = "Autosave on focus change.",
     callback = function(info)
-      if vim.bo[info.buf].bt == '' then
-        vim.cmd.update({
+      if vim.bo[info.buf].bt == "" then
+        vim.cmd.update {
           mods = { emsg_silent = true },
-        })
+        }
       end
     end,
   },
 })
 
-augroup('WinCloseJmp', {
-  'WinClosed',
+augroup("WinCloseJmp", {
+  "WinClosed",
   {
     nested = true,
-    desc = 'Jump to last accessed window on closing the current one.',
+    desc = "Jump to last accessed window on closing the current one.",
     command = "if expand('<amatch>') == win_getid() | wincmd p | endif",
   },
 })
 
-augroup('LastPosJmp', {
-  'BufReadPost',
+augroup("LastPosJmp", {
+  "BufReadPost",
   {
-    desc = 'Last position jump.',
+    desc = "Last position jump.",
     callback = function(info)
       local ft = vim.bo[info.buf].ft
       -- don't apply to git messages
-      if ft ~= 'gitcommit' and ft ~= 'gitrebase' then
-        vim.cmd.normal({
+      if ft ~= "gitcommit" and ft ~= "gitrebase" then
+        vim.cmd.normal {
           'g`"zvzz',
           bang = true,
           mods = { emsg_silent = true },
-        })
+        }
       end
     end,
   },
 })
 
-augroup('AutoCwd', {
-  { 'BufWinEnter', 'FileChangedShellPost' },
+augroup("AutoCwd", {
+  { "BufWinEnter", "FileChangedShellPost" },
   {
-    pattern = '*',
-    desc = 'Automatically change local current directory.',
+    pattern = "*",
+    desc = "Automatically change local current directory.",
     callback = function(info)
-      if info.file == '' or vim.bo[info.buf].bt ~= '' then
+      if info.file == "" or vim.bo[info.buf].bt ~= "" then
         return
       end
       local buf = info.buf
@@ -121,18 +122,11 @@ augroup('AutoCwd', {
         end
         vim.api.nvim_win_call(win, function()
           local current_dir = vim.fn.getcwd(0)
-          local target_dir = vim.fs.root(
-            info.file,
-            require('utils.fs').root_patterns
-          ) or vim.fs.dirname(info.file)
+          local target_dir = vim.fs.root(info.file, require("utils.fs").root_patterns) or vim.fs.dirname(info.file)
           local stat = target_dir and vim.uv.fs_stat(target_dir)
           -- Prevent unnecessary directory change, which triggers
           -- DirChanged autocmds that may update winbar unexpectedly
-          if
-            stat
-            and stat.type == 'directory'
-            and current_dir ~= target_dir
-          then
+          if stat and stat.type == "directory" and current_dir ~= target_dir then
             pcall(vim.cmd.lcd, target_dir)
           end
         end)
@@ -141,43 +135,43 @@ augroup('AutoCwd', {
   },
 })
 
-augroup('PromptBufKeymaps', {
-  'BufEnter',
+augroup("PromptBufKeymaps", {
+  "BufEnter",
   {
-    desc = 'Undo automatic <C-w> remap in prompt buffers.',
+    desc = "Undo automatic <C-w> remap in prompt buffers.",
     callback = function(info)
-      if vim.bo[info.buf].buftype == 'prompt' then
-        vim.keymap.set('i', '<C-w>', '<C-S-W>', { buffer = info.buf })
+      if vim.bo[info.buf].buftype == "prompt" then
+        vim.keymap.set("i", "<C-w>", "<C-S-W>", { buffer = info.buf })
       end
     end,
   },
 })
 
-augroup('QuickFixAutoOpen', {
-  'QuickFixCmdPost',
+augroup("QuickFixAutoOpen", {
+  "QuickFixCmdPost",
   {
-    desc = 'Open quickfix window if there are results.',
+    desc = "Open quickfix window if there are results.",
     callback = function(info)
       if #vim.fn.getqflist() > 1 then
-        vim.schedule(vim.cmd[info.match:find('^l') and 'lwindow' or 'cwindow'])
+        vim.schedule(vim.cmd[info.match:find "^l" and "lwindow" or "cwindow"])
       end
     end,
   },
 })
 
-augroup('KeepWinRatio', {
-  { 'VimResized', 'TabEnter' },
+augroup("KeepWinRatio", {
+  { "VimResized", "TabEnter" },
   {
-    desc = 'Keep window ratio after resizing nvim.',
+    desc = "Keep window ratio after resizing nvim.",
     callback = function()
-      vim.cmd.wincmd('=')
-      require('utils.win').restratio(vim.api.nvim_tabpage_list_wins(0))
+      vim.cmd.wincmd "="
+      require("utils.win").restratio(vim.api.nvim_tabpage_list_wins(0))
     end,
   },
 }, {
-  { 'TermOpen', 'WinResized', 'WinNew' },
+  { "TermOpen", "WinResized", "WinNew" },
   {
-    desc = 'Record window ratio.',
+    desc = "Record window ratio.",
     callback = function()
       -- Don't record ratio if window resizing is caused by vim resizing
       -- (changes in &lines or &columns)
@@ -188,16 +182,16 @@ augroup('KeepWinRatio', {
         vim.g._columns = columns
         return
       end
-      require('utils.win').saveratio(vim.v.event.windows)
+      require("utils.win").saveratio(vim.v.event.windows)
     end,
   },
 })
 
 -- Show cursor line and cursor column only in current window
-augroup('AutoHlCursorLine', {
-  'WinEnter',
+augroup("AutoHlCursorLine", {
+  "WinEnter",
   {
-    desc = 'Show cursorline and cursorcolumn in current window.',
+    desc = "Show cursorline and cursorcolumn in current window.",
     callback = function()
       if vim.w._cul and not vim.wo.cul then
         vim.wo.cul = true
@@ -208,7 +202,7 @@ augroup('AutoHlCursorLine', {
         vim.w._cuc = nil
       end
 
-      local prev_win = vim.fn.win_getid(vim.fn.winnr('#'))
+      local prev_win = vim.fn.win_getid(vim.fn.winnr "#")
       if prev_win ~= 0 then
         local w = vim.w[prev_win]
         local wo = vim.wo[prev_win]
@@ -221,11 +215,11 @@ augroup('AutoHlCursorLine', {
   },
 })
 
-augroup('FixCmdLineIskeyword', {
-  'CmdLineEnter',
+augroup("FixCmdLineIskeyword", {
+  "CmdLineEnter",
   {
-    desc = 'Have consistent &iskeyword and &lisp in Ex command-line mode.',
-    pattern = '[:>/?=@]',
+    desc = "Have consistent &iskeyword and &lisp in Ex command-line mode.",
+    pattern = "[:>/?=@]",
     callback = function(info)
       -- Don't set &iskeyword and &lisp settings in insert/append command-line
       -- ('-'), if we are inserting into a lisp file, we want to have the same
@@ -236,15 +230,15 @@ augroup('FixCmdLineIskeyword', {
       vim.g._isk_lisp_buf = info.buf
       vim.g._isk_save = vim.bo[info.buf].isk
       vim.g._lisp_save = vim.bo[info.buf].lisp
-      vim.cmd.setlocal('isk&')
-      vim.cmd.setlocal('lisp&')
+      vim.cmd.setlocal "isk&"
+      vim.cmd.setlocal "lisp&"
     end,
   },
 }, {
-  'CmdLineLeave',
+  "CmdLineLeave",
   {
-    desc = 'Restore &iskeyword after leaving command-line mode.',
-    pattern = '[:>/?=@]',
+    desc = "Restore &iskeyword after leaving command-line mode.",
+    pattern = "[:>/?=@]",
     callback = function()
       if
         vim.g._isk_lisp_buf
@@ -261,12 +255,13 @@ augroup('FixCmdLineIskeyword', {
   },
 })
 
-augroup('SpecialBufHl', {
-  { 'BufWinEnter', 'BufNew', 'FileType', 'TermOpen' },
+-- INFO: This is where background (bg) of special buffers are set
+augroup("SpecialBufHl", {
+  { "BufWinEnter", "BufNew", "FileType", "TermOpen" },
   {
-    desc = 'Set background color for special buffers.',
+    desc = "Set background color for special buffers.",
     callback = function(info)
-      if vim.bo[info.buf].bt == '' then
+      if vim.bo[info.buf].bt == "" then
         return
       end
       -- Current window isn't necessarily the window of the buffer that
@@ -280,27 +275,219 @@ augroup('SpecialBufHl', {
       end
       vim.api.nvim_win_call(winid, function()
         local wintype = vim.fn.win_gettype()
-        if wintype == 'popup' or wintype == 'autocmd' then
+        if wintype == "popup" or wintype == "autocmd" then
           return
         end
-        vim.opt_local.winhl:append({
-          Normal = 'NormalSpecial',
-          EndOfBuffer = 'NormalSpecial',
-        })
+        vim.opt_local.winhl:append {
+          Normal = "NormalSpecial",
+          FloatBorder = "NormalSpecial",
+          EndOfBuffer = "NormalSpecial",
+        }
       end)
     end,
   },
 }, {
-  { 'UIEnter', 'ColorScheme', 'OptionSet' },
+  { "UIEnter", "ColorScheme", "OptionSet" },
   {
-    desc = 'Set special buffer normal hl.',
+    desc = "Set special buffer normal hl.",
     callback = function(info)
-      if info.event == 'OptionSet' and info.match ~= 'background' then
+      if info.event == "OptionSet" and info.match ~= "background" then
         return
       end
-      local hl = require('utils.hl')
-      local blended = hl.blend('Normal', 'CursorLine')
-      hl.set_default(0, 'NormalSpecial', blended)
+      local hl = require "utils.hl"
+      -- local blended = hl.blend("Normal", "CursorLine")
+      local blended = hl.blend("Normal", "NormalFloat")
+      hl.set_default(0, "NormalSpecial", blended)
+      -- hl.set_efault(0, "EndOfBuffer", blended)
     end,
   },
+})
+
+-- if last command was line-jump, remove it from history to reduce noise
+vim.api.nvim_create_autocmd("CmdlineLeave", {
+  callback = function(ctx)
+    if not ctx.match == ":" then
+      return
+    end
+    vim.defer_fn(function()
+      local lineJump = vim.fn.histget(":", -1):match "^%d+$"
+      if lineJump then
+        vim.fn.histdel(":", -1)
+      end
+    end, 100)
+  end,
+})
+
+-- INFO: personal autocommands
+
+-- automatically cleanup dirs to prevent bloating.
+-- once a week, on first FocusLost, delete files older than 30/60 days.
+vim.api.nvim_create_autocmd("FocusLost", {
+  once = true,
+  callback = function()
+    if os.date "%a" == "Mon" then
+      vim.fn.system { "find", opt.viewdir:get(), "-mtime", "+60d", "-delete" }
+      vim.fn.system { "find", opt.undodir:get()[1], "-mtime", "+30d", "-delete" }
+    end
+  end,
+})
+
+-- if last command was line-jump, remove it from history to reduce noise
+vim.api.nvim_create_autocmd("CmdlineLeave", {
+  callback = function(ctx)
+    if not ctx.match == ":" then
+      return
+    end
+    vim.defer_fn(function()
+      local lineJump = vim.fn.histget(":", -1):match "^%d+$"
+      if lineJump then
+        vim.fn.histdel(":", -1)
+      end
+    end, 100)
+  end,
+})
+
+-- make `:substitute` also notify how many changes were made
+-- works, as `CmdlineLeave` is triggered before the execution of the command
+vim.api.nvim_create_autocmd("CmdlineLeave", {
+  callback = function(ctx)
+    if not ctx.match == ":" then
+      return
+    end
+    local cmdline = vim.fn.getcmdline()
+    local isSubstitution = cmdline:find "s ?/.+/.-/%a*$"
+    if isSubstitution then
+      vim.cmd(cmdline .. "ne")
+    end
+  end,
+})
+
+-- if last command was line-jump, remove it from history to reduce noise
+vim.api.nvim_create_autocmd("CmdlineLeave", {
+  callback = function(ctx)
+    if not ctx.match == ":" then
+      return
+    end
+    vim.defer_fn(function()
+      local lineJump = vim.fn.histget(":", -1):match "^%d+$"
+      if lineJump then
+        vim.fn.histdel(":", -1)
+      end
+    end, 100)
+  end,
+})
+
+---Change window-local directory to `dir`
+---@param dir string
+---@return nil
+-- local function lcd(dir)
+--   local ok = pcall(vim.cmd.lcd, dir)
+--   if not ok then
+--     vim.notify_once("failed to cd to " .. dir, vim.log.levels.WARN)
+--   end
+-- end
+
+local fs_change = augroup "ChangeToCurDir"
+autocmd({ "BufEnter", "WinEnter", "BufWinEnter" }, {
+  group = fs_change,
+  pattern = "*",
+  desc = "Automatically change local current directory.",
+  callback = function(info)
+    if info.file == "" or vim.bo[info.buf].bt ~= "" then
+      return
+    end
+    local buf = info.buf
+    local win = vim.api.nvim_get_current_win()
+
+    vim.schedule(function()
+      if
+        not vim.api.nvim_buf_is_valid(buf)
+        or not vim.api.nvim_win_is_valid(win)
+        or not vim.api.nvim_win_get_buf(win) == buf
+      then
+        return
+      end
+      vim.api.nvim_win_call(win, function()
+        local current_dir = vim.fn.getcwd(0)
+        local target_dir = require("utils").fs.cwd_dir(info.file) or vim.fs.dirname(info.file)
+        local stat = target_dir and vim.uv.fs_stat(target_dir)
+        -- Prevent unnecessary directory change, which triggers
+        -- DirChanged autocmds that may update winbar unexpectedly
+        if stat and stat.type == "directory" and current_dir ~= target_dir then
+          print("cd to " .. target_dir)
+          pcall(vim.cmd.lcd, target_dir)
+        end
+      end)
+    end)
+  end,
+})
+
+-- Center the buffer after search in cmd mode
+autocmd("CmdLineLeave", {
+  callback = function()
+    if vim.api.nvim_get_mode().mode == "i" then
+      return
+    end
+
+    vim.cmd.normal {
+      "zz",
+      bang = true,
+      mods = { emsg_silent = true },
+    }
+  end,
+})
+
+local disable_codespell = augroup "DisableCodespell"
+autocmd({ "BufEnter" }, {
+  group = disable_codespell,
+  pattern = { "*.log", "" },
+  callback = function()
+    vim.diagnostic.enable(false)
+  end,
+})
+
+autocmd("BufEnter", {
+  callback = function()
+    vim.opt.formatoptions:remove { "c", "r", "o" }
+  end,
+  desc = "Disable New Line Comment",
+})
+
+-- always open quickfix window automatically.
+-- this uses cwindows which will open it only if there are entries.
+vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+  group = vim.api.nvim_create_augroup("AutoOpenQuickfix", { clear = true }),
+  pattern = { "[^l]*" },
+  command = "cwindow",
+})
+
+autocmd("BufHidden", {
+  desc = "Delete [No Name] buffers",
+  pattern = {},
+  callback = function(data)
+    if data.file == "" and vim.bo[data.buf].buftype == "" and not vim.bo[data.buf].modified then
+      vim.schedule(function()
+        pcall(vim.api.nvim_buf_delete, data.buf, {})
+      end)
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "FileChangedShellPost", "DiagnosticChanged", "LspProgress" }, {
+  group = vim.api.nvim_create_augroup("StatusLine", {}),
+  command = "redrawstatus",
+})
+
+vim.api.nvim_create_autocmd("DiagnosticChanged", {
+  group = vim.api.nvim_create_augroup("StatusLine", {}),
+  desc = "Update diagnostics cache for the status line.",
+  callback = function(info)
+    local b = vim.b[info.buf]
+    local diag_cnt_cache = { 0, 0, 0, 0 }
+    for _, diagnostic in ipairs(info.data.diagnostics) do
+      diag_cnt_cache[diagnostic.severity] = diag_cnt_cache[diagnostic.severity] + 1
+    end
+    b.diag_str_cache = nil
+    b.diag_cnt_cache = diag_cnt_cache
+  end,
 })

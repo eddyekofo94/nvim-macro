@@ -1,14 +1,16 @@
 local statusline = {}
-local utils = require('utils')
-local groupid = vim.api.nvim_create_augroup('StatusLine', {})
+local utils = require "utils"
+local stl_util = require "ui.statusline"
 
-local diag_signs_default_text = { 'E', 'W', 'I', 'H' }
+local groupid = vim.api.nvim_create_augroup("StatusLine", {})
+
+local diag_signs_default_text = { "E", "W", "I", "H" }
 
 local diag_severity_map = {
-  [1] = 'ERROR',
-  [2] = 'WARN',
-  [3] = 'INFO',
-  [4] = 'HINT',
+  [1] = "ERROR",
+  [2] = "WARN",
+  [3] = "INFO",
+  [4] = "HINT",
   ERROR = 1,
   WARN = 2,
   INFO = 3,
@@ -19,16 +21,9 @@ local diag_severity_map = {
 ---@return string
 local function get_diag_sign_text(severity)
   local diag_config = vim.diagnostic.config()
-  local signs_text = diag_config
-    and diag_config.signs
-    and type(diag_config.signs) == 'table'
-    and diag_config.signs.text
-  return signs_text
-      and (signs_text[severity] or signs_text[diag_severity_map[severity]])
-    or (
-      diag_signs_default_text[severity]
-      or diag_signs_default_text[diag_severity_map[severity]]
-    )
+  local signs_text = diag_config and diag_config.signs and type(diag_config.signs) == "table" and diag_config.signs.text
+  return signs_text and (signs_text[severity] or signs_text[diag_severity_map[severity]])
+    or (diag_signs_default_text[severity] or diag_signs_default_text[diag_severity_map[severity]])
 end
 
 -- stylua: ignore start
@@ -74,11 +69,10 @@ local modes = {
 ---Get string representation of the current mode
 ---@return string
 function statusline.mode()
-  local hl = vim.bo.mod and 'StatusLineHeaderModified' or 'StatusLineHeader'
+  local hl = vim.bo.mod and "StatusLineHeaderModified" or "StatusLineHeader"
   local mode = vim.fn.mode()
-  local mode_str = (mode == 'n' and (vim.bo.ro or not vim.bo.ma)) and 'RO'
-    or modes[mode]
-  return utils.stl.hl(string.format(' %s ', mode_str), hl) .. ' '
+  local mode_str = (mode == "n" and (vim.bo.ro or not vim.bo.ma)) and "RO" or modes[mode]
+  return utils.stl.hl(string.format(" %s ", mode_str), hl) .. " "
 end
 
 ---Get diff stats for current buffer
@@ -91,13 +85,13 @@ function statusline.gitdiff()
   local changed = diff.changed or 0
   local removed = diff.removed or 0
   if added == 0 and removed == 0 and changed == 0 then
-    return ''
+    return ""
   end
   return string.format(
-    '+%s~%s-%s',
-    utils.stl.hl(tostring(added), 'StatusLineGitAdded'),
-    utils.stl.hl(tostring(changed), 'StatusLineGitChanged'),
-    utils.stl.hl(tostring(removed), 'StatusLineGitRemoved')
+    "+%s~%s-%s",
+    utils.stl.hl(tostring(added), "StatusLineGitAdded"),
+    utils.stl.hl(tostring(changed), "StatusLineGitChanged"),
+    utils.stl.hl(tostring(removed), "StatusLineGitRemoved")
   )
 end
 
@@ -105,15 +99,14 @@ end
 ---@return string
 function statusline.branch()
   ---@diagnostic disable-next-line: undefined-field
-  local branch = vim.b.gitsigns_status_dict and vim.b.gitsigns_status_dict.head
-    or utils.git.branch()
-  return branch == '' and '' or '#' .. branch
+  local branch = vim.b.gitsigns_status_dict and vim.b.gitsigns_status_dict.head or utils.git.branch()
+  return branch == "" and "" or "#" .. branch
 end
 
 ---Get current filetype
 ---@return string
 function statusline.ft()
-  return vim.bo.ft == '' and '' or vim.bo.ft:gsub('^%l', string.upper)
+  return vim.bo.ft == "" and "" or vim.bo.ft:gsub("^%l", string.upper)
 end
 
 ---@return string
@@ -127,33 +120,30 @@ function statusline.wordcount()
     vim.b.wc_words = words
     vim.b.wc_changedtick = vim.b.changedtick
   end
-  local vwords = vim.fn.mode():find('^[vsVS\x16\x13]')
-    and (wordcount or vim.fn.wordcount()).visual_words
-  return words == 0 and ''
-    or (vwords and vwords > 0 and vwords .. '/' or '')
-      .. words
-      .. (words > 1 and ' words' or ' word')
+  local vwords = vim.fn.mode():find "^[vsVS\x16\x13]" and (wordcount or vim.fn.wordcount()).visual_words
+  return words == 0 and ""
+    or (vwords and vwords > 0 and vwords .. "/" or "") .. words .. (words > 1 and " words" or " word")
 end
 
 ---Text filetypes
 ---@type table<string, true>
 local ft_text = {
-  [''] = true,
-  ['tex'] = true,
-  ['markdown'] = true,
-  ['text'] = true,
+  [""] = true,
+  ["tex"] = true,
+  ["markdown"] = true,
+  ["text"] = true,
 }
 
 ---Additional info for the current buffer enclosed in parentheses
 ---@return string
 function statusline.info()
-  if vim.bo.bt ~= '' then
-    return ''
+  if vim.bo.bt ~= "" then
+    return ""
   end
   local info = {}
   ---@param section string
   local function add_section(section)
-    if section ~= '' then
+    if section ~= "" then
       table.insert(info, section)
     end
   end
@@ -163,19 +153,17 @@ function statusline.info()
   end
   add_section(statusline.branch())
   add_section(statusline.gitdiff())
-  return vim.tbl_isempty(info) and ''
-    or string.format('(%s) ', table.concat(info, ', '))
+  return vim.tbl_isempty(info) and "" or string.format("(%s) ", table.concat(info, ", "))
 end
 
-vim.api.nvim_create_autocmd('DiagnosticChanged', {
+vim.api.nvim_create_autocmd("DiagnosticChanged", {
   group = groupid,
-  desc = 'Update diagnostics cache for the status line.',
+  desc = "Update diagnostics cache for the status line.",
   callback = function(info)
     local b = vim.b[info.buf]
     local diag_cnt_cache = { 0, 0, 0, 0 }
     for _, diagnostic in ipairs(info.data.diagnostics) do
-      diag_cnt_cache[diagnostic.severity] = diag_cnt_cache[diagnostic.severity]
-        + 1
+      diag_cnt_cache[diagnostic.severity] = diag_cnt_cache[diagnostic.severity] + 1
     end
     b.diag_str_cache = nil
     b.diag_cnt_cache = diag_cnt_cache
@@ -188,21 +176,18 @@ function statusline.diag()
   if vim.b.diag_str_cache then
     return vim.b.diag_str_cache
   end
-  local str = ''
+  local str = ""
   local buf_cnt = vim.b.diag_cnt_cache or {}
-  for serverity_nr, severity in ipairs({ 'Error', 'Warn', 'Info', 'Hint' }) do
+  for serverity_nr, severity in ipairs { "Error", "Warn", "Info", "Hint" } do
     local cnt = buf_cnt[serverity_nr] or 0
     if cnt > 0 then
       local icon_text = get_diag_sign_text(serverity_nr)
-      local icon_hl = 'StatusLineDiagnostic' .. severity
-      str = str
-        .. (str == '' and '' or ' ')
-        .. utils.stl.hl(icon_text, icon_hl)
-        .. cnt
+      local icon_hl = "StatusLineDiagnostic" .. severity
+      str = str .. (str == "" and "" or " ") .. utils.stl.hl(icon_text, icon_hl) .. cnt
     end
   end
-  if str:find('%S') then
-    str = str .. ' '
+  if str:find "%S" then
+    str = str .. " "
   end
   vim.b.diag_str_cache = str
   return str
@@ -217,29 +202,29 @@ local spinner_icons ---@type string[]
 local spinner_icon_done ---@type string
 
 if vim.g.no_nf then
-  spinner_icon_done = '[done]'
+  spinner_icon_done = "[done]"
   spinner_icons = {
-    '[    ]',
-    '[=   ]',
-    '[==  ]',
-    '[=== ]',
-    '[ ===]',
-    '[  ==]',
-    '[   =]',
+    "[    ]",
+    "[=   ]",
+    "[==  ]",
+    "[=== ]",
+    "[ ===]",
+    "[  ==]",
+    "[   =]",
   }
 else
   spinner_icon_done = vim.trim(utils.static.icons.Ok)
   spinner_icons = {
-    '⠋',
-    '⠙',
-    '⠹',
-    '⠸',
-    '⠼',
-    '⠴',
-    '⠦',
-    '⠧',
-    '⠇',
-    '⠏',
+    "⠋",
+    "⠙",
+    "⠹",
+    "⠸",
+    "⠼",
+    "⠴",
+    "⠦",
+    "⠧",
+    "⠇",
+    "⠏",
   }
 end
 
@@ -247,16 +232,12 @@ end
 ---@type table<integer, { name: string, timestamp: integer, type: 'begin'|'report'|'end' }>
 local server_info_in_progress = {}
 
-vim.api.nvim_create_autocmd('LspProgress', {
-  desc = 'Update LSP progress info for the status line.',
+vim.api.nvim_create_autocmd("LspProgress", {
+  desc = "Update LSP progress info for the status line.",
   group = groupid,
   callback = function(info)
     if spinner_timer then
-      spinner_timer:start(
-        spinner_progress_keep,
-        spinner_progress_keep,
-        vim.schedule_wrap(vim.cmd.redrawstatus)
-      )
+      spinner_timer:start(spinner_progress_keep, spinner_progress_keep, vim.schedule_wrap(vim.cmd.redrawstatus))
     end
 
     local id = info.data.client_id
@@ -284,7 +265,7 @@ vim.api.nvim_create_autocmd('LspProgress', {
 ---@return string
 function statusline.lsp_progress()
   if vim.tbl_isempty(server_info_in_progress) then
-    return ''
+    return ""
   end
 
   local buf = vim.api.nvim_get_current_buf()
@@ -295,28 +276,22 @@ function statusline.lsp_progress()
     end
   end
   if vim.tbl_isempty(server_ids) then
-    return ''
+    return ""
   end
 
   local now = vim.uv.now()
   ---@return boolean
   local function allow_changing_state()
-    return not vim.b.spinner_state_changed
-      or now - vim.b.spinner_state_changed > spinner_status_keep
+    return not vim.b.spinner_state_changed or now - vim.b.spinner_state_changed > spinner_status_keep
   end
 
-  if
-    #server_ids == 1
-    and server_info_in_progress[server_ids[1]].type == 'end'
-  then
+  if #server_ids == 1 and server_info_in_progress[server_ids[1]].type == "end" then
     if vim.b.spinner_icon ~= spinner_icon_done and allow_changing_state() then
       vim.b.spinner_state_changed = now
       vim.b.spinner_icon = spinner_icon_done
     end
   else
-    local spinner_icon_progress = spinner_icons[math.ceil(
-      now / spinner_progress_keep
-    ) % #spinner_icons + 1]
+    local spinner_icon_progress = spinner_icons[math.ceil(now / spinner_progress_keep) % #spinner_icons + 1]
     if vim.b.spinner_icon ~= spinner_icon_done then
       vim.b.spinner_icon = spinner_icon_progress
     elseif allow_changing_state() then
@@ -326,12 +301,12 @@ function statusline.lsp_progress()
   end
 
   return string.format(
-    '%s %s ',
+    "%s %s ",
     table.concat(
       vim.tbl_map(function(id)
         return server_info_in_progress[id].name
       end, server_ids),
-      ', '
+      ", "
     ),
     vim.b.spinner_icon
   )
@@ -353,45 +328,50 @@ local components = {
 }
 -- stylua: ignore end
 
-local stl = table.concat({
+local stl = table.concat {
   components.mode,
-  components.fname,
-  components.info,
+  -- stl_util.cwd(),
+  stl_util.cwd(),
+  -- components.padding,
+  stl_util.file_info(),
+  stl_util.search_count(),
+  components.padding,
+  components.diag,
   components.align,
   components.truncate,
   components.lsp_progress,
-  components.diag,
-  components.pos,
-})
+  -- components.info,
+  stl_util.gitdiff(),
+  stl_util.info(),
+  stl_util.line_info(),
+}
 
-local stl_nc = table.concat({
+local stl_nc = table.concat {
+  components.padding,
+  -- stl_util.get_win_cwd(),
   components.padding,
   components.fname,
   components.align,
   components.truncate,
   components.pos,
-})
+}
 
 ---Get statusline string
 ---@return string
 function statusline.get()
-  return vim.g.statusline_winid == vim.api.nvim_get_current_win() and stl
-    or stl_nc
+  return vim.g.statusline_winid == vim.api.nvim_get_current_win() and stl or stl_nc
 end
 
-vim.api.nvim_create_autocmd(
-  { 'FileChangedShellPost', 'DiagnosticChanged', 'LspProgress' },
-  {
-    group = groupid,
-    command = 'redrawstatus',
-  }
-)
+vim.api.nvim_create_autocmd({ "FileChangedShellPost", "DiagnosticChanged", "LspProgress" }, {
+  group = groupid,
+  command = "redrawstatus",
+})
 
 ---Set default highlight groups for statusline components
 ---@return  nil
 local function set_default_hlgroups()
   local default_attr = utils.hl.get(0, {
-    name = 'StatusLine',
+    name = "StatusLine",
     link = false,
     winhl_link = false,
   })
@@ -400,26 +380,26 @@ local function set_default_hlgroups()
   ---@param attr table
   ---@return nil
   local function sethl(hlgroup_name, attr)
-    local merged_attr = vim.tbl_deep_extend('keep', attr, default_attr)
+    local merged_attr = vim.tbl_deep_extend("keep", attr, default_attr)
     utils.hl.set_default(0, hlgroup_name, merged_attr)
   end
-  sethl('StatusLineGitAdded', { fg = 'GitSignsAdd' })
-  sethl('StatusLineGitChanged', { fg = 'GitSignsChange' })
-  sethl('StatusLineGitRemoved', { fg = 'GitSignsDelete' })
-  sethl('StatusLineDiagnosticHint', { fg = 'DiagnosticSignHint' })
-  sethl('StatusLineDiagnosticInfo', { fg = 'DiagnosticSignInfo' })
-  sethl('StatusLineDiagnosticWarn', { fg = 'DiagnosticSignWarn' })
-  sethl('StatusLineDiagnosticError', { fg = 'DiagnosticSignError' })
-  sethl('StatusLineHeader', { fg = 'TabLine', bg = 'fg', reverse = true })
-  sethl('StatusLineHeaderModified', {
-    fg = 'Special',
-    bg = 'fg',
+  sethl("StatusLineGitAdded", { fg = "GitSignsAdd" })
+  sethl("StatusLineGitChanged", { fg = "GitSignsChange" })
+  sethl("StatusLineGitRemoved", { fg = "GitSignsDelete" })
+  sethl("StatusLineDiagnosticHint", { fg = "DiagnosticSignHint" })
+  sethl("StatusLineDiagnosticInfo", { fg = "DiagnosticSignInfo" })
+  sethl("StatusLineDiagnosticWarn", { fg = "DiagnosticSignWarn" })
+  sethl("StatusLineDiagnosticError", { fg = "DiagnosticSignError" })
+  sethl("StatusLineHeader", { fg = "TabLine", bg = "fg", reverse = true })
+  sethl("StatusLineHeaderModified", {
+    fg = "Special",
+    bg = "fg",
     reverse = true,
   })
 end
 set_default_hlgroups()
 
-vim.api.nvim_create_autocmd('ColorScheme', {
+vim.api.nvim_create_autocmd("ColorScheme", {
   group = groupid,
   callback = set_default_hlgroups,
 })
