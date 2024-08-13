@@ -298,24 +298,9 @@ augroup("SpecialBufHl", {
       -- local blended = hl.blend("Normal", "CursorLine")
       local blended = hl.blend("Normal", "NormalFloat")
       hl.set_default(0, "NormalSpecial", blended)
-      -- hl.set_efault(0, "EndOfBuffer", blended)
+      hl.set_default(0, "EndOfBuffer", blended)
     end,
   },
-})
-
--- if last command was line-jump, remove it from history to reduce noise
-vim.api.nvim_create_autocmd("CmdlineLeave", {
-  callback = function(ctx)
-    if not ctx.match == ":" then
-      return
-    end
-    vim.defer_fn(function()
-      local lineJump = vim.fn.histget(":", -1):match "^%d+$"
-      if lineJump then
-        vim.fn.histdel(":", -1)
-      end
-    end, 100)
-  end,
 })
 
 -- INFO: personal autocommands
@@ -362,23 +347,7 @@ vim.api.nvim_create_autocmd("CmdlineLeave", {
   end,
 })
 
--- if last command was line-jump, remove it from history to reduce noise
-vim.api.nvim_create_autocmd("CmdlineLeave", {
-  callback = function(ctx)
-    if not ctx.match == ":" then
-      return
-    end
-    vim.defer_fn(function()
-      local lineJump = vim.fn.histget(":", -1):match "^%d+$"
-      if lineJump then
-        vim.fn.histdel(":", -1)
-      end
-    end, 100)
-  end,
-})
-
 ---Change window-local directory to `dir`
----@param dir string
 ---@return nil
 -- local function lcd(dir)
 --   local ok = pcall(vim.cmd.lcd, dir)
@@ -423,7 +392,7 @@ autocmd({ "BufEnter", "WinEnter", "BufWinEnter" }, {
 })
 
 -- Center the buffer after search in cmd mode
-autocmd("CmdLineLeave", {
+autocmd({ "CmdLineLeave", "WinEnter" }, {
   callback = function()
     if vim.api.nvim_get_mode().mode == "i" then
       return
@@ -476,18 +445,4 @@ autocmd("BufHidden", {
 vim.api.nvim_create_autocmd({ "FileChangedShellPost", "DiagnosticChanged", "LspProgress" }, {
   group = vim.api.nvim_create_augroup("StatusLine", {}),
   command = "redrawstatus",
-})
-
-vim.api.nvim_create_autocmd("DiagnosticChanged", {
-  group = vim.api.nvim_create_augroup("StatusLine", {}),
-  desc = "Update diagnostics cache for the status line.",
-  callback = function(info)
-    local b = vim.b[info.buf]
-    local diag_cnt_cache = { 0, 0, 0, 0 }
-    for _, diagnostic in ipairs(info.data.diagnostics) do
-      diag_cnt_cache[diagnostic.severity] = diag_cnt_cache[diagnostic.severity] + 1
-    end
-    b.diag_str_cache = nil
-    b.diag_cnt_cache = diag_cnt_cache
-  end,
 })

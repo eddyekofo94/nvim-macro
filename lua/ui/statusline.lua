@@ -2,6 +2,9 @@ local statusline = {}
 
 local fs = require "utils.fs"
 local utils = require "utils"
+local General = require("utils").general
+local icon_provider = General.icon_provider
+
 local groupid = vim.api.nvim_create_augroup("StatusLine", {})
 
 local options = {
@@ -32,65 +35,9 @@ local assets = {
   file = "󰈙 ",
 }
 
-local diag_signs_default_text = { "E", "W", "I", "H" }
-
-local diag_severity_map = {
-  [1] = "ERROR",
-  [2] = "WARN",
-  [3] = "INFO",
-  [4] = "HINT",
-  ERROR = 1,
-  WARN = 2,
-  INFO = 3,
-  HINT = 4,
-}
-
----@param severity integer|string
----@return string
-local function get_diag_sign_text(severity)
-  local diag_config = vim.diagnostic.config()
-  local signs_text = diag_config and diag_config.signs and type(diag_config.signs) == "table" and diag_config.signs.text
-  return signs_text and (signs_text[severity] or signs_text[diag_severity_map[severity]])
-    or (diag_signs_default_text[severity] or diag_signs_default_text[diag_severity_map[severity]])
-end
-
 function statusline.lsp_progress()
-  -- local progress = require("utils.lsp.progress").lsp_progress()
   local progress = require("utils.lsp.lsp_progress").lsp_progress()
-
-  -- require("lsp-progress").progress {
-  --   max_size = 80,
-  --   format = function(messages)
-  --     if #messages > 0 then
-  --       return #messages > 0 and table.concat(messages, " ") or ""
-  --     end
-  --     return ""
-  --   end,
-  -- }
   return utils.stl.hl(string.format("%s", progress), "StatuslineInactive")
-end
-
----Get string representation of diagnostics for current buffer
----@return string
-function statusline.diag()
-  if vim.b.diag_str_cache then
-    return vim.b.diag_str_cache
-  end
-  local str = ""
-  local buf_cnt = vim.b.diag_cnt_cache or {}
-  for serverity_nr, severity in ipairs { "Error", "Warn", "Info", "Hint" } do
-    local cnt = buf_cnt[serverity_nr] or 0
-    if cnt > 0 then
-      local icon_text = get_diag_sign_text(serverity_nr)
-      local icon_hl = "StatusLineDiagnostic" .. severity
-      str = str .. (str == "" and "" or " ") .. utils.stl.hl(icon_text, icon_hl) .. cnt
-    end
-  end
-  if str:find "%S" then
-    str = str .. " "
-  end
-  vim.b.diag_str_cache = str
-  return str
 end
 
 function statusline.diagnostics()
@@ -125,9 +72,8 @@ function statusline.diagnostics()
   return utils.stl.hl(tostring(diagnostic_icons), "StatusLine")
 end
 
-function statusline.get_lsp_name()
+function statusline.get_lsp_names()
   local buf_clients = vim.lsp.get_clients(0)
-  -- local buf_ft = vim.bo.filetype
   if next(buf_clients) == nil then
     return "  No servers"
   end
@@ -218,8 +164,8 @@ function statusline.file_info()
   local file_symbol = (#symbols > 0 and " " .. table.concat(symbols, "") or "")
   return string.format(
     "%s%s%s",
-    "%#StatuslineInactive#" .. icon .. fpath,
-    "%#" .. fname_hl .. "#" .. filename,
+    "%#StatuslineInactive#" .. fpath,
+    "%#" .. fname_hl .. "#" .. icon .. " " .. filename,
     file_symbol
   )
 end
@@ -249,9 +195,10 @@ function statusline.lazy_updates()
 end
 
 statusline.project_name = function()
+  local icon = "󰉋 "
   local fnamemodify = vim.fn.fnamemodify
   local cwd = fnamemodify(vim.fn.getcwd(), ":t")
-  return cwd
+  return string.format("%s%s", icon, cwd)
 end
 
 --  BUG: 2024-06-03 - keep throwing some error about table concat
@@ -326,21 +273,20 @@ function statusline.filepath()
     return " "
   end
 
-  return string.format(" %%<%s/", fpath)
+  return string.format("%%<%s/", fpath)
 end
 
 function statusline.get_win_cwd()
   local winid = vim.fn.bufwinid(0)
   local current_dir = vim.fn.getcwd(winid)
 
-  -- local current_dir = vim.fn.getcwd(0)
   return current_dir
 end
 
 function statusline.cwd()
   local icon = "󰉋 "
   local name = fs.shorten_path(fs.get_root(), "/", 0)
-  name = (name:match "([^/\\]+)[/\\]*$" or name) .. " "
+  name = (name:match "([^/\\]+)[/\\]*$" or name)
 
   return (vim.o.columns > 85 and ("%#StatuslineInactive#" .. icon .. name)) or ""
 end
@@ -357,7 +303,7 @@ function statusline.lsp()
   end
 
   if next(buf_clients) == nil then
-    return "  No servers"
+    return ""
   end
 
   if rawget(vim, "lsp") then
@@ -368,15 +314,13 @@ function statusline.lsp()
     end
   end
 
-  -- return (vim.o.columns > 100 and "   " .. buf_client_names .. " ") or ""
-  -- return ""
-  return vim.tbl_isempty(buf_client_names) and "  No servers"
-    or (vim.o.columns > 80 and string.format("[ %s ] ", table.concat(buf_client_names, ", ")))
+  return vim.tbl_isempty(buf_client_names) and ""
+    or (vim.o.columns > 80 and string.format("[  %s ] ", table.concat(buf_client_names, ", ")))
 end
 
 ---Get diff stats for current buffer
 ---@return string
-function statusline.gitdiff()
+function statusline.git_diff()
   -- Integration with gitsigns.nvim
   ---@diagnostic disable-next-line: undefined-field
   local git_info = vim.b.gitsigns_status_dict or utils.git.diffstat()
@@ -394,13 +338,14 @@ function statusline.gitdiff()
     return branch
   end
 
-  return string.format(
-    "%s +%s ~%s -%s ",
-    utils.stl.hl(tostring(branch), "StatusLine"),
-    utils.stl.hl(tostring(added), "StatusLineGitAdd"),
-    utils.stl.hl(tostring(changed), "StatusLineGitChange"),
-    utils.stl.hl(tostring(removed), "StatusLineGitDelete")
-  )
+  return vim.o.columns > 80
+    and string.format(
+      "%s +%s~%s-%s",
+      utils.stl.hl(tostring(branch), "StatusLine"),
+      utils.stl.hl(tostring(added), "StatusLineGitAdd"),
+      utils.stl.hl(tostring(changed), "StatusLineGitChange"),
+      utils.stl.hl(tostring(removed), "StatusLineGitDelete")
+    )
 end
 
 --- A provider function for showing if treesitter is connected
@@ -418,7 +363,6 @@ function statusline.treesitter_status()
       local has_parser = require("nvim-treesitter.parsers").has_parser()
       if has_parser then
         return tostring(res)
-        -- return utils.stl.hl(tostring(res), "StatuslineInactive")
       end
     end
   end
@@ -429,7 +373,7 @@ end
 ---Get current filetype
 ---@return string
 function statusline.ft()
-  return vim.bo.ft == "" and "" or " " .. vim.bo.ft:gsub("^%l", string.upper) .. " "
+  return vim.bo.ft == "" and "" or " " .. icon_provider(0) .. " " .. vim.bo.ft:gsub("^%l", string.upper) .. " "
 end
 
 function statusline.line_percentage()
@@ -453,7 +397,8 @@ function statusline.line_info()
   if vim.bo.filetype == "alpha" then
     return ""
   end
-  return " %l:%c %P "
+
+  return string.format("%s %s", statusline.section_location(), statusline.line_percentage())
 end
 
 ---@return string
@@ -505,7 +450,6 @@ function statusline.info()
   -- add_section(statusline.lazy_plug_count())
   -- add_section(statusline.lazy_startup())
   -- add_section(statusline.gitdiff())
-  -- add_section(statusline.lsp()) -- INFO: this is disabled for now
   add_section(statusline.lint_progress())
   -- add_section(statusline.formatter())
   -- add_section(get_lsp_name())
@@ -526,7 +470,6 @@ statusline.navic = function()
   return nvim_navic.get_location()
 end
 
---  BUG: 2024-06-29 - not sure if this is working
 statusline.lint_progress = function()
   if not pcall(require, "lint") then
     return ""
@@ -535,7 +478,7 @@ statusline.lint_progress = function()
   local linters = require("lint").get_running()
 
   if #linters < 1 then
-    return "󰦕"
+    return "lint: 󰦕"
   end
   return "󱉶 " .. table.concat(linters, ", ")
 end

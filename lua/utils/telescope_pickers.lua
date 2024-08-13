@@ -74,18 +74,18 @@ function telescope_pickers.pretty_files_picker(builtin, opts)
   require("telescope.builtin")[builtin](opts)
 end
 
-function telescope_pickers.pretty_buffers_picker(localOptions)
-  if localOptions ~= nil and type(localOptions) ~= "table" then
+function telescope_pickers.pretty_buffers_picker(local_options)
+  if local_options ~= nil and type(local_options) ~= "table" then
     print "Options must be a table."
     return
   end
 
-  local options = localOptions or {}
+  local options = local_options or {}
 
-  local originalEntryMaker = telescope_make_entry_module.gen_from_buffer(options)
+  local original_entry_maker = telescope_make_entry_module.gen_from_buffer(options)
 
   options.entry_maker = function(line)
-    local originalEntryTable = originalEntryMaker(line)
+    local originalEntryTable = original_entry_maker(line)
 
     local displayer = telescope_entry_display_module.create {
       separator = " ",

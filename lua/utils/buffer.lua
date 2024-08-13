@@ -390,6 +390,13 @@ function M.close_window(winid, force)
   if M.is_win_valid(winid) then
     utils.notify_once("Close window: " .. filename)
     vim.cmd "FocusAutoresize"
+
+    vim.cmd.normal {
+      "zz",
+      bang = true,
+      mods = { emsg_silent = true },
+    }
+
     vim.api.nvim_win_close(winid, force)
   end
 end

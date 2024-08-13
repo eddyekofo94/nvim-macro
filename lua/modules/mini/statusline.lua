@@ -14,7 +14,6 @@ return { -- Collection of various small independent plugins/modules
           local mode, mode_hl = statusline.section_mode { trunc_width = 120 }
           local spell = vim.wo.spell and (statusline.is_truncated(120) and "S" or "SPELL") or ""
           local wrap = vim.wo.wrap and (statusline.is_truncated(120) and "W" or "WRAP") or ""
-          local diagnostics = statusline.section_diagnostics { trunc_width = 75 }
 
           return statusline.combine_groups {
             { hl = mode_hl, strings = { mode, spell, wrap } },
@@ -26,8 +25,7 @@ return { -- Collection of various small independent plugins/modules
             "%<", -- Mark general truncate point
             {
               hl = "StatuslineFilename",
-              -- strings = { stl_util.diag() },
-              strings = { diagnostics },
+              strings = { stl_util.diagnostics() },
             },
             { hl = "StatuslineGitAdd", strings = { stl_util.macro() } },
             { hl = "StatusLine" },
@@ -41,7 +39,7 @@ return { -- Collection of various small independent plugins/modules
               strings = { stl_util.lsp_progress() },
             },
             "%=",
-            { hl = "StatusLine", strings = { stl_util.gitdiff() } },
+            { hl = "StatusLine", strings = { stl_util.git_diff() } },
 
             { hl = "MiniStatuslineInactive", strings = { stl_util.formatter() } },
             { hl = "StatuslineInactive", strings = { stl_util.info() } },
@@ -53,6 +51,7 @@ return { -- Collection of various small independent plugins/modules
         end,
       },
     }
-    vim.opt.laststatus = 3
+
+    -- vim.opt.laststatus = 3
   end,
 }
