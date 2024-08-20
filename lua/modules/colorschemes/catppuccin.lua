@@ -1,13 +1,13 @@
 return {
-  'catppuccin/nvim',
+  "catppuccin/nvim",
   enabled = true,
-  name = 'catppuccin',
+  name = "catppuccin",
   config = function()
-    require('catppuccin').setup({
-      flavour = 'mocha', -- mocha, macchiato, frappe, latte
+    require("catppuccin").setup {
+      flavour = "mocha", -- mocha, macchiato, frappe, latte
       compile = {
         enabled = true,
-        path = vim.fn.stdpath('cache') .. '/catppuccin',
+        path = vim.fn.stdpath "cache" .. "/catppuccin",
       },
       color_overrides = {
         -- mocha = {
@@ -43,8 +43,8 @@ return {
         return {
 
           -- General
-          MatchParen = { fg = colors.yellow, style = { 'bold' } },
-          FloatBorder = { fg = colors.surface0, bg = 'NONE' }, -- TODO: this seems to not be working
+          MatchParen = { fg = colors.yellow, style = { "bold" } },
+          FloatBorder = { fg = colors.surface0, bg = "NONE" }, -- TODO: this seems to not be working
           WinSeparator = { fg = colors.surface2 },
           OverLength = { fg = colors.red, bg = colors.base },
           HighlightedyankRegion = {
@@ -54,22 +54,22 @@ return {
           -- TScontext
           TreesitterContextBottom = {
             sp = colors.surface0, -- INFO: don't know about this
-            style = { 'bold', 'italic' },
+            style = { "bold", "italic" },
           },
 
           -- Neotree
           NeoTreeDirectoryIcon = { fg = colors.overlay1 },
 
           -- noice
-          NoiceCmdlinePopupBorder = { fg = colors.overlay2, bg = 'NONE' },
+          NoiceCmdlinePopupBorder = { fg = colors.overlay2, bg = "NONE" },
           NoiceCmdlinePopupTitle = { fg = colors.subtext0 },
           -- navic
           NavicText = { fg = colors.subtext1 },
           NavicSeparator = { fg = colors.overlay0 },
           -- cmp
           CmpSel = { fg = colors.base, bg = colors.green },
-          CmpItemMenu = { fg = colors.mauve, bg = 'NONE' },
-          CmpBorder = { fg = colors.surface1, bg = 'NONE' },
+          CmpItemMenu = { fg = colors.mauve, bg = "NONE" },
+          CmpBorder = { fg = colors.surface1, bg = "NONE" },
           CmpItemKindSnippet = { fg = colors.base, bg = colors.mauve },
           CmpItemKindKeyword = { fg = colors.base, bg = colors.red },
           CmpItemKindText = { fg = colors.base, bg = colors.teal },
@@ -114,8 +114,8 @@ return {
       end,
       term_colors = true,
       styles = {
-        comments = { 'italic' },
-        strings = { 'italic' },
+        comments = { "italic" },
+        strings = { "italic" },
       },
       integrations = {
         gitsigns = true,
@@ -125,7 +125,7 @@ return {
         dashboard = true,
         diffview = true,
         ufo = true,
-        telescope = { enabled = true, style = 'nvchad' },
+        telescope = { enabled = true, style = "nvchad" },
         which_key = true,
         colorful_winsep = true,
         treesitter = true,
@@ -138,7 +138,7 @@ return {
         lsp_trouble = true,
         navic = {
           enabled = true,
-          custom_bg = 'NONE',
+          custom_bg = "NONE",
         },
         dap = {
           enabled = true,
@@ -150,27 +150,27 @@ return {
             background = false,
           },
           virtual_text = {
-            errors = { 'italic' },
-            hints = { 'italic' },
-            warnings = { 'italic' },
-            information = { 'italic' },
+            errors = { "italic" },
+            hints = { "italic" },
+            warnings = { "italic" },
+            information = { "italic" },
           },
           mini = {
             enabled = true,
           },
           underlines = {
-            errors = { 'undercurl' },
-            hints = { 'underline' },
-            warnings = { 'underline' },
-            information = { 'underline' },
+            errors = { "undercurl" },
+            hints = { "underline" },
+            warnings = { "underline" },
+            information = { "underline" },
           },
         },
       },
-    })
+    }
 
-    vim.cmd([[colorscheme catppuccin]])
-    vim.cmd.highlight('DiagnosticUnderlineError gui=undercurl') -- use undercurl for error, if supported by terminal
+    vim.cmd [[colorscheme catppuccin]]
+    vim.cmd.highlight "DiagnosticUnderlineError gui=undercurl" -- use undercurl for error, if supported by terminal
   end,
-  build = ':CatppuccinCompile',
+  build = ":CatppuccinCompile",
   priority = 1000,
 }
