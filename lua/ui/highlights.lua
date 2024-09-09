@@ -2,9 +2,18 @@ local hl = require "utils.hl"
 local general = require "utils.general"
 local extend_tbl = general.extend_tbl
 local sethl_groups = hl.sethl_groups
-local gethl = hl.gethl
+local get_hl = hl.get_hl
+local get_hl_group = hl.get_hlgroup
+local blend = hl.blend
 
 local highlights = {}
+
+local color = get_hl("Normal", "bg")
+if type(color) == "number" then
+  color = string.format("#%06x", color)
+end
+local blended = blend("LineNr", "#000")
+local float = { fg = blended, bg = "NONE" }
 
 local hl_groups = {
   -- UI
@@ -16,26 +25,25 @@ local hl_groups = {
     reverse = true,
   },
 
-  StatusLineLspWarning = { fg = gethl("LspDiagnosticsWarning", "fg"), bg = gethl("StatusLine", "bg") },
-  StatusLineLspInfo = { fg = gethl("LspDiagnosticsInfo", "fg"), bg = gethl("StatusLine", "bg") },
-  StatusLineLspError = { fg = gethl("LspDiagnosticsError", "fg"), bg = gethl("StatusLine", "bg") },
-  StatusLineLspHint = { fg = gethl("LspDiagnosticsHint", "fg"), bg = gethl("StatusLine", "bg") },
+  StatusLineLspWarning = { fg = get_hl("LspDiagnosticsWarning", "fg"), bg = get_hl("StatusLine", "bg") },
+  StatusLineLspInfo = { fg = get_hl("LspDiagnosticsInfo", "fg"), bg = get_hl("StatusLine", "bg") },
+  StatusLineLspError = { fg = get_hl("LspDiagnosticsError", "fg"), bg = get_hl("StatusLine", "bg") },
+  StatusLineLspHint = { fg = get_hl("LspDiagnosticsHint", "fg"), bg = get_hl("StatusLine", "bg") },
 
-  StatusLineGitAdd = { fg = gethl("GitSignsAdd", "fg"), bg = gethl("StatusLine", "bg") },
-  StatusLineGitChange = { fg = gethl("GitSignsChange", "fg"), bg = gethl("StatusLine", "bg") },
-  StatusLineGitDelete = { fg = gethl("GitSignsDelete", "fg"), bg = gethl("StatusLine", "bg") },
+  StatusLineGitAdd = { fg = get_hl("GitSignsAdd", "fg"), bg = get_hl("StatusLine", "bg") },
+  StatusLineGitChange = { fg = get_hl("GitSignsChange", "fg"), bg = get_hl("StatusLine", "bg") },
+  StatusLineGitDelete = { fg = get_hl("GitSignsDelete", "fg"), bg = get_hl("StatusLine", "bg") },
 
-  StatusLineFilename = { fg = gethl("StatusLine", "fg"), bg = gethl("StatusLine", "bg") },
-  StatusLineInactive = { fg = gethl("Whitespace", "fg"), bg = gethl("StatusLine", "bg") },
-  -- StatuslineFileinfo = { fg = gethl(hlgroup_name, attr) }
+  StatusLineFilename = { fg = get_hl("StatusLine", "fg"), bg = get_hl("StatusLine", "bg") },
+  -- StatusLineDimmed = { fg = get_hl("StatusLineNC", "fg"), bg = get_hl("StatusLine", "bg") },
 
-  StatuslineError = { fg = gethl("ErrorMsg", "fg"), bg = gethl("StatusLine", "bg") },
-  StatuslineModified = { fg = gethl("Changed", "fg"), bg = gethl("StatusLine", "bg") },
-  StatuslineGitAdd = { fg = gethl("GitSignsAdd", "fg"), bg = gethl("StatusLine", "bg") },
-  StatuslineGitChange = { fg = gethl("GitSignsChange", "fg"), bg = gethl("StatusLine", "bg") },
-  StatuslineGitDelete = { fg = gethl("GitSignsDelete", "fg"), bg = gethl("StatusLine", "bg") },
+  StatuslineError = { fg = get_hl("ErrorMsg", "fg"), bg = get_hl("StatusLine", "bg") },
+  -- StatuslineModified = { fg = gethl("Changed", "fg"), bg = gethl("StatusLine", "bg") },
 
   CmpSel = { link = "Visual" },
+
+  -- Mini
+  -- MiniFilesBorder = {},
 
   -- Navbuddy
   -- NavbuddyFile = { link = "Directory" },
@@ -118,7 +126,7 @@ local hl_groups = {
   --   FloatTitle = { bg = c_macroBg0, fg = c_macroGray2, bold = true },
   --   FoldColumn = { fg = c_macroBg5 },
   --   Folded = { bg = c_macroBg2, fg = c_lotusGray },
-  Ignore = { link = "NonText" },
+  -- Ignore = { link = "NonText" },
   --   IncSearch = { bg = c_carpYellow, fg = c_waveBlue0 },
   --   LineNr = { fg = c_macroBg5 },
   --   MatchParen = { bg = c_macroBg4 },
@@ -129,7 +137,7 @@ local hl_groups = {
   --   NonText = { fg = c_macroBg5 },
   --   Normal = { bg = c_macroBg1, fg = c_macroFg0 },
   --   NormalFloat = { bg = c_macroBg0, fg = c_macroFg1 },
-  NormalNC = { link = "Normal" },
+  -- NormalNC = { link = "Normal" },
   --   Pmenu = { bg = c_macroBg3, fg = c_macroFg1 },
   --   PmenuSbar = { bg = c_macroBg4 },
   --   PmenuSel = { bg = c_macroBg4, fg = "NONE" },
@@ -398,14 +406,14 @@ local hl_groups = {
   --   StatusLineHeaderModified = { bg = "Red", fg = c_macroBg1 },
 }
 
-local fg, bg = gethl("Normal", "fg"), gethl("NormalFloat", "bg")
+local fg, bg = get_hl("Normal", "fg"), get_hl("NormalFloat", "bg")
 
 -- local bg_alt = get_hlgroup("Visual").bg
-local bg_alt = gethl("CursorLine", "bg")
+local bg_alt = get_hl("CursorLine", "bg")
 -- local green = gethl("String", "fg")
-local green = gethl("String", "fg")
+local green = get_hl("String", "fg")
 -- local red = get_hlgroup("Error").fg
-local red = gethl("Error", "fg")
+local red = get_hl("Error", "fg")
 
 local nv_chad_hl = {
   TelescopeBorder = { fg = bg_alt, bg = bg },
@@ -422,18 +430,27 @@ local nv_chad_hl = {
   TelescopeResultsTitle = { fg = bg, bg = bg },
 }
 
-highlights = extend_tbl(highlights, hl_groups)
+local set_all_hl = function()
+  highlights = extend_tbl(highlights, hl_groups)
+  local colorscheme = vim.g.colors_name
 
-local colorscheme = vim.g.colors_name
-if not string.find(colorscheme, "catppuccin") then
-  highlights = extend_tbl(hl_groups, nv_chad_hl)
+  if not string.find(colorscheme, "catppuccin") then
+    highlights = extend_tbl(hl_groups, nv_chad_hl)
+  end
+
+  if string.find(colorscheme, "zen") then
+    highlights = extend_tbl(highlights, {
+      String = { fg = "#819B69", bg = "NONE" },
+      Constant = { link = "String" },
+    })
+  end
+
+  sethl_groups(highlights)
 end
 
-if string.find(colorscheme, "zen") then
-  highlights = extend_tbl(highlights, {
-    String = { fg = "#819B69", bg = "NONE" },
-    Constant = { link = "String" },
-  })
-end
+set_all_hl()
 
-sethl_groups(highlights)
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("Highlights", {}),
+  callback = set_all_hl,
+})

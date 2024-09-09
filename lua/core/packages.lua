@@ -181,7 +181,7 @@ else
   enable_modules {
     "lib",
     "lsp",
-    "edit",
+    -- "edit",
     "debug",
     "tools",
     "markup",

@@ -2,21 +2,47 @@
 
 return {
   "echasnovski/mini.files",
-  enabled = false,
+  enabled = true,
   lazy = false,
+  -- event = "VeryLazy",
   init = function()
     vim.api.nvim_create_autocmd("User", {
       pattern = "MiniFilesBufferCreate",
       callback = function(args)
         local buf = args.data.buf_id
-        local map = require("utils.keymap.keymaps").set_n_keymap
+        local nmap = require("utils.keymap.keymaps").set_n_keymap
+        local lmap = require("utils.keymap.keymaps").set_leader_keymap
+
+        local map = require("utils.keymap.keymaps").set_keymap
         local minifiles = require "mini.files"
 
-        map("<ESC>", function()
+        -- nmap("-", function()
+        --   if vim.bo.ft == "minifiles" then
+        --     minifiles.close()
+        --   else
+        --     local file = vim.api.nvim_buf_get_name(0)
+        --     local file_exists = vim.fn.filereadable(file) ~= 0
+        --     minifiles.open(file_exists and file or nil)
+        --     minifiles.reveal_cwd()
+        --   end
+        -- end, "[Files] Miles Files explorer")
+
+        lmap(".", function()
+          if vim.bo.ft == "minifiles" then
+            minifiles.close()
+          else
+            local file = vim.api.nvim_buf_get_name(0)
+            local file_exists = vim.fn.filereadable(file) ~= 0
+            minifiles.open(file_exists and file or nil)
+            minifiles.reveal_cwd()
+          end
+        end, "[Files] Miles Files explorer")
+
+        nmap("<ESC>", function()
           minifiles.close()
         end, { buffer = buf, desc = "close with <ESC> as well as q" })
 
-        map("<leader>.", function()
+        map({ "n", "x" }, "<leader>.", function()
           if vim.bo.ft == "minifiles" then
             minifiles.close()
           else

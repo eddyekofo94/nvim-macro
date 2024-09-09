@@ -37,7 +37,7 @@ local assets = {
 
 function statusline.lsp_progress()
   local progress = require("utils.lsp.lsp_progress").lsp_progress()
-  return utils.stl.hl(string.format("%s", progress), "StatuslineInactive")
+  return utils.stl.hl(string.format("%s", progress), "StatusLineDimmed")
 end
 
 function statusline.diagnostics()
@@ -57,10 +57,10 @@ function statusline.diagnostics()
 
   local icons = string.format(
     "%s%s%s%s",
-    utils.stl.hl(tostring(errors), "StatusLineLspError"),
-    utils.stl.hl(tostring(warnings), "StatusLineLspWarning"),
-    utils.stl.hl(tostring(hints), "StatusLineLspHint"),
-    utils.stl.hl(tostring(info), "StatusLineLspInfo")
+    utils.stl.hl(tostring(errors), "StatusLineDiagnosticHint"),
+    utils.stl.hl(tostring(warnings), "StatusLineDiagnosticWarn"),
+    utils.stl.hl(tostring(hints), "StatusLineDiagnosticHint"),
+    utils.stl.hl(tostring(info), "StatusLineDiagnosticInfo")
   )
 
   if errors == "" and warnings == "" and hints == "" and info == "" then
@@ -125,7 +125,7 @@ end
 
 function statusline.file_info()
   local symbols = {}
-  local fname_hl = "StatusLineFilename"
+  local fname_hl = "StatusLine"
   local fpath = statusline.filepath()
   local filename = statusline.filename()
   local devicons_present, devicons = pcall(require, "nvim-web-devicons")
@@ -142,7 +142,7 @@ function statusline.file_info()
     if options.file_status then
       if vim.bo.modified then
         table.insert(symbols, options.symbols.modified)
-        fname_hl = "StatuslineModified"
+        fname_hl = "StatusLineFileModified"
       end
       if vim.bo.modifiable == false or vim.bo.readonly == true then
         table.insert(symbols, options.symbols.readonly)
@@ -158,13 +158,13 @@ function statusline.file_info()
   end
 
   if errors > 0 then
-    fname_hl = "StatuslineError"
+    fname_hl = "StatusLineFileError"
   end
 
   local file_symbol = (#symbols > 0 and " " .. table.concat(symbols, "") or "")
   return string.format(
     "%s%s%s",
-    "%#StatuslineInactive#" .. fpath,
+    "%#StatusLineDimmed#" .. fpath,
     "%#" .. fname_hl .. "#" .. icon .. " " .. filename,
     file_symbol
   )
@@ -273,6 +273,13 @@ function statusline.filepath()
     return " "
   end
 
+  if options.shorting_target ~= 0 then
+    local windwidth = options.globalstatus and vim.go.columns or vim.fn.winwidth(0)
+    local estimated_space_available = windwidth - options.shorting_target
+    local path_separator = "/"
+
+    fpath = fs.shorten_path(fpath, path_separator, estimated_space_available)
+  end
   return string.format("%%<%s/", fpath)
 end
 
@@ -288,7 +295,7 @@ function statusline.cwd()
   local name = fs.shorten_path(fs.get_root(), "/", 0)
   name = (name:match "([^/\\]+)[/\\]*$" or name)
 
-  return (vim.o.columns > 85 and ("%#StatuslineInactive#" .. icon .. name)) or ""
+  return (vim.o.columns > 85 and ("%#StatusLineDimmed#" .. icon .. name)) or ""
 end
 
 function statusline.lsp()
@@ -456,7 +463,7 @@ function statusline.info()
   add_section(statusline.treesitter_status())
   -- (vim.o.columns > 140 and " - " .. icons or "")
 
-  return vim.tbl_isempty(info) and "" or (vim.o.columns > 80 and string.format("(%s) ", table.concat(info, ", ")))
+  return vim.tbl_isempty(info) and "" or (vim.o.columns > 80 and string.format("%s ", table.concat(info, ", ")))
 end
 
 statusline.navic = function()
@@ -506,6 +513,9 @@ local function set_default_hlgroups()
   sethl("StatusLineDiagnosticInfo", { fg = "DiagnosticSignInfo" })
   sethl("StatusLineDiagnosticWarn", { fg = "DiagnosticSignWarn" })
   sethl("StatusLineDiagnosticError", { fg = "DiagnosticSignError" })
+  sethl("StatusLineDimmed", { fg = "StatusLineNC" })
+  sethl("StatusLineFileModified", { fg = "Added" }) -- Changed
+  sethl("StatusLineFileError", { fg = "ErrorMsg" })
   sethl("StatusLineHeader", { fg = "TabLine", bg = "fg", reverse = true })
   sethl("StatusLineHeaderModified", {
     fg = "Special",

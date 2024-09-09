@@ -527,7 +527,7 @@ fzf.setup {
   },
 }
 
-vim.keymap.set("n", "<Leader>.", fzf.files)
+-- vim.keymap.set("n", "<Leader>.", fzf.files)
 vim.keymap.set("n", "<Leader><space>", fzf.files)
 vim.keymap.set("n", "<Leader>'", fzf.resume)
 vim.keymap.set("n", "<Leader>,", fzf.buffers)

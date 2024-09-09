@@ -2,7 +2,7 @@ local stl_util = require "ui.statusline"
 
 return { -- Collection of various small independent plugins/modules
   "echasnovski/mini.statusline",
-  lazy = false,
+  event = "UIEnter",
   enabled = true,
   config = function()
     local statusline = require "mini.statusline"
@@ -18,31 +18,31 @@ return { -- Collection of various small independent plugins/modules
           return statusline.combine_groups {
             { hl = mode_hl, strings = { mode, spell, wrap } },
             {
-              hl = "StatuslineInactive",
+              hl = "StatusLineDimmed",
               strings = { stl_util.project_name() },
             },
-            { hl = "StatuslineFilename", strings = { stl_util.file_info() } },
+            { hl = "StatusLine", strings = { stl_util.file_info() } },
             "%<", -- Mark general truncate point
             {
-              hl = "StatuslineFilename",
+              hl = "StatusLine",
               strings = { stl_util.diagnostics() },
             },
             { hl = "StatuslineGitAdd", strings = { stl_util.macro() } },
             { hl = "StatusLine" },
             "%=", -- End left alignment
             {
-              hl = "StatuslineInactive",
+              hl = "StatusLineDimmed",
               strings = { stl_util.lsp() },
             },
             {
-              hl = "StatuslineInactive",
+              hl = "StatusLineDimmed",
               strings = { stl_util.lsp_progress() },
             },
             "%=",
             { hl = "StatusLine", strings = { stl_util.git_diff() } },
 
             { hl = "MiniStatuslineInactive", strings = { stl_util.formatter() } },
-            { hl = "StatuslineInactive", strings = { stl_util.info() } },
+            { hl = "StatusLineDimmed", strings = { stl_util.info() } },
             {
               hl = mode_hl,
               strings = { stl_util.search_count(), stl_util.line_info() },
@@ -52,6 +52,6 @@ return { -- Collection of various small independent plugins/modules
       },
     }
 
-    -- vim.opt.laststatus = 3
+    vim.opt.laststatus = 3
   end,
 }

@@ -68,7 +68,7 @@ return {
           for _ = 1, vim.v.count1 do
             gs.next_hunk()
           end
-        end)
+        end, "Next Hunk")
 
         map({ "n", "x" }, "[x", function()
           if vim.wo.diff then
@@ -78,7 +78,7 @@ return {
           for _ = 1, vim.v.count1 do
             gs.prev_hunk()
           end
-        end)
+        end, "Prev Hunk")
 
         map("x", "<leader>gg", function()
           gs.stage_hunk {

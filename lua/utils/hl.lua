@@ -181,8 +181,8 @@ function M.set_default(ns_id, name, attr)
   return vim.api.nvim_set_hl(ns_id, name, M.normalize(attr))
 end
 
-function M.sethl(hlgroup_name, attr)
-  M.set(0, hlgroup_name, attr)
+function M.set_hl(hlgroup_name, attr)
+  M.set(0, hlgroup_name, M.normalize(attr))
 end
 
 -- Set highlight groups
@@ -190,13 +190,13 @@ end
 function M.sethl_groups(hlgroups)
   -- Set highlight groups
   for hlgroup_name, hlgroup_attr in pairs(hlgroups) do
-    M.sethl(hlgroup_name, hlgroup_attr)
+    M.set_hl(hlgroup_name, hlgroup_attr)
   end
 end
 
 -- INFO: Get highlight
 
-function M.gethl(hlgroup_name, attr)
+function M.get_hl(hlgroup_name, attr)
   return M.get(0, { name = hlgroup_name })[attr]
 end
 

@@ -31,7 +31,7 @@ return {
     "<Leader>R",
     "<Leader>F",
     "<Leader>f",
-    "<Leader>ff",
+    -- "<Leader>ff",
     -- { "<Leader>*", mode = { "n", "x" } },
     { "<Leader>#", mode = { "n", "x" } },
   },

@@ -215,6 +215,7 @@ end
 
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
   once = true,
+  group = vim.api.nvim_create_augroup("Highlights", {}),
   callback = function()
     require "ui.highlights"
   end,

@@ -16,12 +16,12 @@ function M.set_keymap(modes, input, output, opts)
     options = vim.tbl_deep_extend("force", options, opts or {})
   end
 
-  vim.keymap.set(modes, input, output, options)
   vim.cmd.normal {
     "zz",
     bang = true,
     mods = { emsg_silent = true },
   }
+  vim.keymap.set(modes, input, output, options)
 
   check_duplicates(modes, input, description)
 end

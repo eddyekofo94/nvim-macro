@@ -1,5 +1,10 @@
 local autocmd = vim.api.nvim_create_autocmd
 local groupid = vim.api.nvim_create_augroup
+local contains = vim.tbl_contains
+
+local utils = require "utils.general"
+local special_filetypes = require("utils.fs").special_filetypes
+-- local augroup = utils.create_augroup
 local opt = vim.opt
 
 ---@param group string
@@ -303,6 +308,31 @@ augroup("SpecialBufHl", {
   },
 })
 
+-- Close certain filetypes by pressing q.
+-- autocmd({ "UIEnter", "ColorScheme", "OptionSet" }, {
+--   pattern = { "*" },
+--   callback = function(event)
+--     local is_eligible = vim.wo.previewwindow
+--       or contains(special_filetypes, vim.bo.buftype)
+--       or contains(special_filetypes, vim.bo.filetype)
+--     if is_eligible then
+--       vim.bo[event.buf].buflisted = false
+--       local bufnr = event.buf
+--
+--       vim.opt_local.winhl:append {
+--         Normal = "NormalSpecial",
+--         FloatBorder = "NormalSpecial",
+--         EndOfBuffer = "NormalSpecial",
+--       }
+--
+--       local hl = require "utils.hl"
+--       local blended = hl.blend("Normal", "NormalFloat")
+--
+--       hl.set_default(bufnr, "NormalSpecial", blended)
+--       hl.set_default(bufnr, "EndOfBuffer", blended)
+--     end
+--   end,
+-- })
 -- INFO: personal autocommands
 
 -- automatically cleanup dirs to prevent bloating.
@@ -439,6 +469,67 @@ autocmd("BufHidden", {
         pcall(vim.api.nvim_buf_delete, data.buf, {})
       end)
     end
+  end,
+})
+
+local fix_virtual_edit_pos = augroup "FixVirtualEditCursorPos"
+autocmd("CursorMoved", {
+  desc = "Record cursor position in visual mode if virtualedit is set.",
+  group = fix_virtual_edit_pos,
+  callback = function()
+    if vim.wo.ve:find "all" then
+      vim.w.ve_cursor = vim.fn.getcurpos()
+    end
+  end,
+})
+
+autocmd("FileType", {
+  desc = "Unlist quickfist buffers",
+  -- group = augroup("unlist_quickfist", { clear = true }),
+  pattern = "qf",
+  callback = function()
+    vim.opt_local.buflisted = false
+  end,
+})
+
+-- AUTO-CLOSE BUFFERS whose files do not exist anymore
+vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "QuickFixCmdPost" }, {
+  -- INFO also trigger on `QuickFixCmdPost`, in case a make command deletes file
+  callback = function(ctx)
+    local bufnr = ctx.buf
+    vim.defer_fn(function()
+      if not vim.api.nvim_buf_is_valid(bufnr) then
+        return
+      end
+
+      local function fileExists(bufpath)
+        return vim.loop.fs_stat(bufpath) ~= nil
+      end
+
+      -- check if buffer was deleted
+      local bufname = vim.api.nvim_buf_get_name(bufnr)
+      local isSpecialBuffer = vim.bo[bufnr].buftype ~= ""
+      local isNewBuffer = bufname == ""
+      -- prevent the temporary buffers from conform.nvim's "injected"
+      -- formatter to be closed by this (filename is like "README.md.5.lua")
+      local conformTempBuf = bufname:find "%.md%.%d+%.%l+$"
+      if fileExists(bufname) or isSpecialBuffer or isNewBuffer or conformTempBuf then
+        return
+      end
+
+      -- open last existing oldfile
+      vim.notify(("%q does not exist anymore."):format(vim.fs.basename(bufname)))
+      for _, oldfile in pairs(vim.v.oldfiles) do
+        if fileExists(oldfile) then
+          -- vim.cmd.edit can still fail, as the fileExistence check
+          -- apparently sometimes uses a cache, where the file still exists
+          local success = pcall(vim.cmd.edit, oldfile)
+          if success then
+            return
+          end
+        end
+      end
+    end, 300)
   end,
 })
 

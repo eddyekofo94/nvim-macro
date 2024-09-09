@@ -1,6 +1,7 @@
 return {
   {
     "kylechui/nvim-surround",
+    enabled = false,
     keys = {
       "ys",
       "ds",
@@ -51,6 +52,7 @@ return {
 
   {
     "andymass/vim-matchup",
+    enabled = false,
     event = { "BufReadPre", "StdinReadPre", "TextChanged" },
     init = function()
       -- Disable matchit and matchparen

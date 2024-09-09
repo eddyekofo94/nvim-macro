@@ -114,23 +114,23 @@ return {
     },
   },
 
-  {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    enabled = false,
-    event = "InsertEnter",
-    config = function()
-      require "configs.copilot"
-    end,
-  },
+  -- {
+  --   "zbirenbaum/copilot.lua",
+  --   cmd = "Copilot",
+  --   enabled = false,
+  --   event = "InsertEnter",
+  --   config = function()
+  --     require "configs.copilot"
+  --   end,
+  -- },
 
-  {
-    "L3MON4D3/LuaSnip",
-    enabled = false,
-    build = "make install_jsregexp",
-    event = "ModeChanged *:[iRss\x13vV\x16]*",
-    config = function()
-      require "configs.LuaSnip"
-    end,
-  },
+  -- {
+  --   "L3MON4D3/LuaSnip",
+  --   enabled = false,
+  --   build = "make install_jsregexp",
+  --   event = "ModeChanged *:[iRss\x13vV\x16]*",
+  --   config = function()
+  --     require "configs.LuaSnip"
+  --   end,
+  -- },
 }

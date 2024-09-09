@@ -276,12 +276,6 @@ return {
     end,
   },
   {
-    "ashfinal/qfview.nvim",
-    enabled = false,
-    event = "UIEnter",
-    opts = {},
-  },
-  {
     "gabrielpoca/replacer.nvim",
     event = "VeryLazy",
     enabled = false,

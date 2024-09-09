@@ -404,8 +404,8 @@ map({ 'n', 'x' }, 'g}', function() require('utils.misc').goto_paragraph_lastline
 -- stylua: ignore end
 
 -- Fzf keymaps
-map("n", "<Leader>.", "<Cmd>FZF<CR>")
-map("n", "<Leader>ff", "<Cmd>FZF<CR>")
+-- map("n", "<Leader>.", "<Cmd>FZF<CR>")
+-- map("n", "<Leader>ff", "<Cmd>FZF<CR>")
 
 -- Abbreviations
 map("!a", "ture", "true")

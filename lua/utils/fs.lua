@@ -16,6 +16,44 @@ M.root_patterns = {
   ".editorconfig",
 }
 
+M.special_filetypes = {
+  -- "prompt",
+  "qf",
+  "checkhealth",
+  "nofile",
+  "quickfix",
+  "git-conflict",
+  "term",
+  "lazygit",
+  "dap-repl",
+  "dapui_scopes",
+  "dapui_stacks",
+  "dapui_breakpoints",
+  "dapui_console",
+  "dapui_watches",
+  "dapui_repl",
+  "undotree",
+  "noice",
+  "man",
+  "Mininotify*", --  NOTE: 2024-05-14 - Not closing
+  "Mini*",
+  "messages",
+  "undotree",
+  "help",
+  "NeogitStatus",
+  "notify",
+  "Trouble",
+  "diffview",
+  "telescope",
+  "lazy",
+  "Outline",
+  -- "TelescopePrompt",
+  -- "TelescopeResults",
+  -- "TelescopePreview",
+  "viminfo",
+  "vimdoc",
+}
+
 ---Read file contents
 ---@param path string
 ---@return string?

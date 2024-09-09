@@ -383,12 +383,13 @@ local function set_default_hlgroups()
     local merged_attr = vim.tbl_deep_extend("keep", attr, default_attr)
     utils.hl.set_default(0, hlgroup_name, merged_attr)
   end
-  sethl("StatusLineGitAdded", { fg = "GitSignsAdd" })
-  sethl("StatusLineGitChanged", { fg = "GitSignsChange" })
-  sethl("StatusLineGitRemoved", { fg = "GitSignsDelete" })
+  sethl("StatusLineGitAdd", { fg = "GitSignsAdd" })
+  sethl("StatusLineGitChange", { fg = "GitSignsChange" })
+  sethl("StatusLineGitDelete", { fg = "GitSignsDelete" })
   sethl("StatusLineDiagnosticHint", { fg = "DiagnosticSignHint" })
   sethl("StatusLineDiagnosticInfo", { fg = "DiagnosticSignInfo" })
   sethl("StatusLineDiagnosticWarn", { fg = "DiagnosticSignWarn" })
+  sethl("StatusLineDimmed", { fg = "StatusLineNC" })
   sethl("StatusLineDiagnosticError", { fg = "DiagnosticSignError" })
   sethl("StatusLineHeader", { fg = "TabLine", bg = "fg", reverse = true })
   sethl("StatusLineHeaderModified", {
@@ -399,7 +400,7 @@ local function set_default_hlgroups()
 end
 set_default_hlgroups()
 
-vim.api.nvim_create_autocmd("ColorScheme", {
+vim.api.nvim_create_autocmd({ "UIEnter", "ColorScheme" }, {
   group = groupid,
   callback = set_default_hlgroups,
 })

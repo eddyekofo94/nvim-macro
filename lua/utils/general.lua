@@ -279,4 +279,20 @@ function M.icon_provider(bufnr)
   cached_icon_provider = false
 end
 
+M.create_augroup = function(group, opts)
+  opts = opts or { clear = true }
+  return vim.api.nvim_create_augroup(group, opts)
+end
+
+---@param group string
+---@vararg { [1]: string|string[], [2]: vim.api.keyset.create_autocmd }
+---@return nil
+function M.augroup_autocmd(group, ...)
+  local id = vim.api.nvim_create_augroup(group, {})
+  for _, a in ipairs { ... } do
+    a[2].group = id
+    vim.api.nvim_create_autocmd(unpack(a))
+  end
+end
+
 return M
