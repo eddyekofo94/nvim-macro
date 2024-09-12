@@ -528,4 +528,44 @@ function M.comparator.modified(bufnr_a, bufnr_b)
   return bufinfo(bufnr_a).lastused > bufinfo(bufnr_b).lastused
 end
 
+--- Create a centered floating window of a given width and height, relative to the size of the screen.
+--- @param width number width of the window where 1 is 100% of the screen
+--- @param height number height of the window - between 0 and 1
+--- @param buf number The buffer number
+--- @return number The window number
+function M.open_centered_float(width, height, buf)
+  buf = buf or vim.api.nvim_create_buf(false, true)
+  local win_width = math.floor(vim.o.columns * width)
+  local win_height = math.floor(vim.o.lines * height)
+  local offset_y = math.floor((vim.o.lines - win_height) / 2)
+  local offset_x = math.floor((vim.o.columns - win_width) / 2)
+
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = "editor",
+    width = win_width,
+    height = win_height,
+    row = offset_y,
+    col = offset_x,
+    style = "minimal",
+    border = "single",
+  })
+
+  return win
+end
+
+--- Open the help window in a floating window
+--- @param buf number The buffer number
+function M.open_help(buf)
+  if buf ~= nil and vim.bo[buf].filetype == "help" and not vim.bo[buf].modifiable then
+    local help_win = vim.api.nvim_get_current_win()
+    local new_win = M.open_centered_float(0.6, 0.7, buf)
+
+    -- set scroll position
+    vim.wo[help_win].scroll = vim.wo[new_win].scroll
+
+    -- close the help window
+    vim.api.nvim_win_close(help_win, true)
+  end
+end
+
 return M

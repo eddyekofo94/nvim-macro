@@ -65,7 +65,7 @@ local function config()
 
   map("<leader>ww", "<cmd>FocusMaxOrEqual<cr>", "Maximise window")
 
-  map("<leader>tn", "<cmd>FocusSplitNicely cmd term<cr>", "Create Term Nicely")
+  -- map("<leader>tn", "<cmd>FocusSplitNicely cmd term<cr>", "Create Term Nicely")
 
   --  TODO: 2024-07-25 - THis
   map("<leader>vd", "<cmd>FocusSplitDown<CR>", "[Focus] Split horizontally")

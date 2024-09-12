@@ -3,6 +3,7 @@ local groupid = vim.api.nvim_create_augroup
 local contains = vim.tbl_contains
 
 local utils = require "utils.general"
+local Buffer = require "utils.buffer"
 local special_filetypes = require("utils.fs").special_filetypes
 -- local augroup = utils.create_augroup
 local opt = vim.opt
@@ -17,6 +18,15 @@ local function augroup(group, ...)
     autocmd(unpack(a))
   end
 end
+
+-- Disabled
+-- autocmd("BufWinEnter", {
+--   callback = function(data)
+--     Buffer.open_help(data.buf)
+--   end,
+--   -- group = general,
+--   desc = "Redirect help to floating window",
+-- })
 
 augroup("BigFileSettings", {
   "BufReadPre",
@@ -285,7 +295,7 @@ augroup("SpecialBufHl", {
         end
         vim.opt_local.winhl:append {
           Normal = "NormalSpecial",
-          FloatBorder = "NormalSpecial",
+          -- FloatBorder = "NormalSpecial",
           EndOfBuffer = "NormalSpecial",
         }
       end)

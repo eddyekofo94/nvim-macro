@@ -103,7 +103,7 @@ return {
             NormalFloat = { fg = cp.marble._500, bg = cp.gray._1000 },
             -- NoicePopupmenu = { link = "FloatBorder" },
             CmpBorder = { link = "FloatBorder" },
-            -- Pmenu = { link = "FloatBorder" },
+            Pmenu = { link = "FloatBorder" },
             StatusLine = { fg = cp.marble._500, bg = cp.gray._1000 },
 
             TreesitterContext = { link = "NormalFloat" },

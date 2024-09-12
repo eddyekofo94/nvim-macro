@@ -57,9 +57,6 @@ return {
             style = { "bold", "italic" },
           },
 
-          -- Neotree
-          NeoTreeDirectoryIcon = { fg = colors.overlay1 },
-
           -- noice
           NoiceCmdlinePopupBorder = { fg = colors.overlay2, bg = "NONE" },
           NoiceCmdlinePopupTitle = { fg = colors.subtext0 },
@@ -69,7 +66,7 @@ return {
           -- cmp
           CmpSel = { fg = colors.base, bg = colors.green },
           CmpItemMenu = { fg = colors.mauve, bg = "NONE" },
-          CmpBorder = { fg = colors.surface1, bg = "NONE" },
+          -- CmpBorder = { fg = colors.surface1, bg = "NONE" },
           CmpItemKindSnippet = { fg = colors.base, bg = colors.mauve },
           CmpItemKindKeyword = { fg = colors.base, bg = colors.red },
           CmpItemKindText = { fg = colors.base, bg = colors.teal },
