@@ -21,6 +21,10 @@ nmap("<leader>th", function()
   return require("nvterm.terminal").new "horizontal"
 end, "Terminal new hor term")
 
+nmap("<leader>tn", function()
+  return require("nvterm.terminal").new "horizontal"
+end, "Terminal new hor term")
+
 nmap("<leader>tv", function()
   return require("nvterm.terminal").new "vertical"
 end, "Terminal new ver term")
