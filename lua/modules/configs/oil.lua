@@ -384,8 +384,8 @@ oil.setup {
     padding = 2,
     max_width = 90,
     max_height = 0,
-    -- border = "rounded",
-    border = border,
+    border = "rounded",
+    -- border = border,
     win_options = {
       winblend = 0,
     },

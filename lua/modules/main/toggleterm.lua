@@ -1,6 +1,7 @@
 return {
   {
     "akinsho/toggleterm.nvim",
+    enabled = false,
     version = "*",
     config = function()
       local Utils = require "utils.keymap.keymaps"

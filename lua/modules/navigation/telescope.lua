@@ -36,6 +36,16 @@ return {
         },
       },
       {
+        "LukasPietzschmann/telescope-tabs",
+        config = function()
+          require("telescope").load_extension "telescope-tabs"
+          require("telescope-tabs").setup {
+            -- Your custom config :^)
+          }
+        end,
+        dependencies = { "nvim-telescope/telescope.nvim" },
+      },
+      {
         "nvim-telescope/telescope-file-browser.nvim",
         dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
       },
@@ -213,10 +223,14 @@ return {
               ignore_current_buffer = true,
               theme = "dropdown",
               mappings = {
-                n = {
-                  ["<C-e>"] = "delete_buffer",
-                  ["l"] = "select_default",
+                i = {
+                  ["<C-e>"] = actions.delete_buffer,
+                  -- ["<C-e>"] = builtin.buffers(),
                 },
+                -- n = {
+                --   ["<C-e>"] = actions.delete_buffer(),
+                --   ["l"] = "select_default",
+                -- },
               },
             },
           },
@@ -431,6 +445,9 @@ return {
 
       lmap("sd", Telescope.find("diagnostics", { bufnr = 0 }), "Find diagnostics buffer")
       lmap("sD", Telescope.find "diagnostics", "Find diagnostics [Root]")
+
+      -- INFO: LukasPietzschmann/telescope-tabs
+      lmap("st", "<cmd>Telescope telescope-tabs list_tabs<CR>", "[T]elescope[T]abs List")
 
       -- maps.n["<leader>lO"] = {
       --   TelescopePickers.lsp_outgoing_calls(),

@@ -2,7 +2,7 @@
 
 return {
   "echasnovski/mini.files",
-  enabled = true,
+  enabled = false,
   lazy = false,
   -- event = "VeryLazy",
   init = function()
