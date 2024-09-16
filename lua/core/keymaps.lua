@@ -343,7 +343,7 @@ map({ "n", "x" }, "<Leader>8", tabswitch(vim.cmd.tabnext, 8))
 map({ "n", "x" }, "<Leader>9", tabswitch(vim.cmd.tabnext, 9))
 
 -- Complete line
-map("i", "<C-l>", "<C-x><C-l>")
+-- map("i", "<C-l>", "<C-x><C-l>")
 
 -- Correct misspelled word / mark as correct
 map("i", "<C-g>+", "<Esc>[szg`]a")
