@@ -4,11 +4,11 @@ return {
     ft = "lua",
     opts = {
       library = {
-        "lazy.nvim",
-        "luvit-meta/library",
-        { path = "LazyVim", words = { "LazyVim" } },
         { path = "luvit-meta/library", words = { "vim%.uv" } },
         { path = "wezterm-types", mods = { "wezterm" } },
+        vim.fn.expand "$VIMRUNTIME/lua",
+        vim.fn.expand "$VIMRUNTIME/lua/vim/lsp",
+        vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
       },
     },
   },
