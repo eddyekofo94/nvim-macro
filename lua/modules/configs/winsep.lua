@@ -20,10 +20,9 @@ local opts = {
 
   -- disable if I only have 2 files open
   create_event = function()
-    local Buffer = require "utils.buffer"
     local winsep = require "colorful-winsep"
-
-    if #Buffer.visible_buffers() < 3 then
+    local win_n = require("colorful-winsep.utils").calculate_number_windows()
+    if win_n == 2 then
       winsep.NvimSeparatorDel()
     end
   end,
