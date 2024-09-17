@@ -4,7 +4,7 @@ return {
   --  - yinq - [Y]ank [I]nside [N]ext [']quote
   --  - ci'  - [C]hange [I]nside [']quote
   "echasnovski/mini.ai",
-  event = "BufReadPre",
+  event = "VeryLazy",
   dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
   init = function()
     -- no need to load the plugin, since we only need its queries
