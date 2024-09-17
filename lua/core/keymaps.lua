@@ -327,6 +327,15 @@ local function tabswitch(tab_action, default_count)
     end
   end
 end
+
+map({ "n", "x" }, "<leader>tx", function()
+  Buffer.close_tab()
+end, "Tab close")
+
+-- map({ "n", "x" }, "<leader>tX", function()
+--   Buffer.close_all_other_tabs()
+-- end, "Tab close")
+
 map({ "n", "x" }, "gt", tabswitch(vim.cmd.tabnext))
 map({ "n", "x" }, "gT", tabswitch(vim.cmd.tabprev))
 map({ "n", "x" }, "gy", tabswitch(vim.cmd.tabprev)) -- gT is too hard to press
