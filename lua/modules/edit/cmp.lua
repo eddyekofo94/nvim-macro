@@ -25,7 +25,13 @@ return {
       { "dmitmel/cmp-cmdline-history" },
       { "hrsh7th/cmp-nvim-lsp-document-symbol" },
       { "hrsh7th/cmp-nvim-lsp" },
-      { "saadparwaiz1/cmp_luasnip" },
+      {
+        "saadparwaiz1/cmp_luasnip",
+        dependencies = {
+          "hrsh7th/nvim-cmp",
+          "L3MON4D3/LuaSnip",
+        },
+      },
       { "hrsh7th/cmp-nvim-lsp" },
       { "hrsh7th/cmp-path" },
       { "hrsh7th/cmp-nvim-lsp-signature-help" },
@@ -33,6 +39,8 @@ return {
       { "petertriho/cmp-git", dependencies = { "nvim-lua/plenary.nvim" } },
       {
         "tzachar/cmp-fuzzy-path",
+        build = "fd --version || find --version",
+        event = { "CmdlineEnter", "InsertEnter" },
         dependencies = { "tzachar/fuzzy.nvim" },
       },
       {

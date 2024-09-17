@@ -27,6 +27,7 @@ return {
       { "<leader>T", group = "TODO" },
       { "<leader>v", group = "Focus" },
       { "<leader>g", group = "Git" },
+      { "<leader>gw", group = "Git Worktrees" },
       { "<leader>f1", hidden = true }, -- hide this keymap
       { "<leader>w", proxy = "<c-w>", group = "windows" }, -- proxy to window mappings
       {

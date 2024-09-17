@@ -6,6 +6,8 @@ return {
       library = {
         "lazy.nvim",
         "luvit-meta/library",
+        { path = "LazyVim", words = { "LazyVim" } },
+        { path = "luvit-meta/library", words = { "vim%.uv" } },
         { path = "wezterm-types", mods = { "wezterm" } },
       },
     },

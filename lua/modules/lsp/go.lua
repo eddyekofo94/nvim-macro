@@ -71,14 +71,7 @@ return {
       --    vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>F", "<cmd>lua vim.lsp.buf.formatting()<CR>", {noremap=true, silent=true})
       -- end
       -- to setup a table of codelens
-      diagnostic = { -- set diagnostic to false to disable vim.diagnostic setup
-        hdlr = true, -- hook lsp diag handler
-        underline = true,
-        -- virtual text setup
-        virtual_text = { space = 0, prefix = "■" },
-        signs = true,
-        update_in_insert = false,
-      },
+      diagnostic = false,
       -- virtual text setup
       lsp_document_formatting = true,
       -- set to true: use gopls to format
