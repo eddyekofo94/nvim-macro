@@ -218,10 +218,15 @@ return {
                 },
               },
             },
+            colorscheme = {
+              enable_preview = true,
+              ignore_builtins = true,
+            },
             buffers = {
-              sort_mru = false,
+              sort_mru = true,
               ignore_current_buffer = true,
               theme = "dropdown",
+              select_current = false,
               mappings = {
                 i = {
                   ["<C-e>"] = actions.delete_buffer,

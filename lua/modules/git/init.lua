@@ -18,7 +18,14 @@ return {
     },
     dependencies = "nvim-lua/plenary.nvim",
     config = function()
-      require("diffview").setup()
+      require("diffview").setup {
+        default = {
+          disable_diagnostics = true, -- Temporarily disable diagnostics for diff buffers while in the view.
+        },
+        merge_tool = {
+          disable_diagnostics = true, -- Temporarily disable diagnostics for diff buffers while in the view.
+        },
+      }
     end,
   },
   {

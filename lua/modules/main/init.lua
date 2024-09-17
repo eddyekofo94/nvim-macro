@@ -309,7 +309,18 @@ return {
     "max397574/better-escape.nvim",
     event = "InsertEnter",
     config = function()
-      require("better_escape").setup()
+      require("better_escape").setup {
+        mappings = {
+          i = {
+            j = {
+              -- These can all also be functions
+              k = "",
+              j = "<Esc>",
+            },
+          },
+          t = {},
+        },
+      }
     end,
   },
   {

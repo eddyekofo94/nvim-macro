@@ -18,6 +18,24 @@ function M.delete_url_match(win)
   vim.w[win].highlighturl_enabled = false
 end
 
+--- Trigger a Personal Nvim user event
+---@param event string|vim.api.keyset_exec_autocmds The event pattern or full autocmd options (pattern always prepended with "Astro")
+---@param instant boolean? Whether or not to execute instantly or schedule
+function M.event(event, instant)
+  if type(event) == "string" then
+    event = { pattern = event }
+  end
+  event = M.extend_tbl({ modeline = false }, event)
+  event.pattern = "Personal" .. event.pattern
+  if instant then
+    vim.api.nvim_exec_autocmds("User", event)
+  else
+    vim.schedule(function()
+      vim.api.nvim_exec_autocmds("User", event)
+    end)
+  end
+end
+
 --- Add syntax matching rules for highlighting URLs/URIs
 ---@param win integer? the window id to remove url highlighting in (default: current window)
 function M.set_url_match(win)

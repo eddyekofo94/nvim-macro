@@ -579,6 +579,7 @@ keymap("n", "<Leader>f<", fzf.lsp_incoming_calls)
 keymap("n", "<Leader>f>", fzf.lsp_outgoing_calls)
 keymap("n", "<Leader>fr", fzf.lsp_references)
 keymap("n", "<Leader>fR", fzf.lsp_finder)
+keymap("n", "<Leader>ft", fzf.tabs, "[F]zf [t]abs")
 
 local _lsp_workspace_symbol = vim.lsp.buf.workspace_symbol
 
