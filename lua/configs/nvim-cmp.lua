@@ -1,7 +1,64 @@
-local cmp = require('cmp')
-local luasnip = require('luasnip')
-local tabout = require('plugin.tabout')
-local icons_local = require('utils.static').icons
+local cmp = require "cmp"
+local cmp_core = require "cmp.core"
+local luasnip = require "luasnip"
+local tabout = require "plugin.tabout"
+local lspkind = require "lspkind"
+local icons = require("utils.static").icons
+
+---Hack: `nvim_lsp` and `nvim_lsp_signature_help` source still use
+---deprecated `vim.lsp.buf_get_clients()`, which is slower due to
+---the deprecation and version check in that function. Overwrite
+---it using `vim.lsp.get_clients()` to improve performance.
+---@diagnostic disable-next-line: duplicate-set-field
+function vim.lsp.buf_get_clients(bufnr)
+  return vim.lsp.get_clients { buffer = bufnr }
+end
+
+---@type string?
+local last_key
+
+lspkind.init {
+  preset = "codicons",
+}
+
+vim.on_key(function(k)
+  last_key = k
+end)
+
+---@type integer
+local last_changed = 0
+local _cmp_on_change = cmp_core.on_change
+
+---Improves performance when inserting in large files
+---@diagnostic disable-next-line: duplicate-set-field
+function cmp_core.on_change(self, trigger_event)
+  -- Don't know why but inserting spaces/tabs causes higher latency than other
+  -- keys, e.g. when holding down 's' the interval between keystrokes is less
+  -- than 32ms (80 repeats/s keyboard), but when holding spaces/tabs the
+  -- interval increases to 100ms, guess is is due ot some other plugins that
+  -- triggers on spaces/tabs
+  -- Spaces/tabs are not useful in triggering completions in insert mode but can
+  -- be useful in command-line autocompletion, so ignore them only when not in
+  -- command-line mode
+  if (last_key == " " or last_key == "\t") and string.sub(vim.fn.mode(), 1, 1) ~= "c" then
+    return
+  end
+
+  local now = vim.uv.now()
+  local fast_typing = now - last_changed < 32
+  last_changed = now
+
+  if not fast_typing or trigger_event ~= "TextChanged" or cmp.visible() then
+    _cmp_on_change(self, trigger_event)
+    return
+  end
+
+  vim.defer_fn(function()
+    if last_changed == now then
+      _cmp_on_change(self, trigger_event)
+    end
+  end, 200)
+end
 
 ---Choose the closer destination between two destinations
 ---@param dest1 number[]?
@@ -17,10 +74,8 @@ local function choose_closer(dest1, dest2)
 
   local current_pos = vim.api.nvim_win_get_cursor(0)
   local line_width = vim.api.nvim_win_get_width(0)
-  local dist1 = math.abs(dest1[2] - current_pos[2])
-    + math.abs(dest1[1] - current_pos[1]) * line_width
-  local dist2 = math.abs(dest2[2] - current_pos[2])
-    + math.abs(dest2[1] - current_pos[1]) * line_width
+  local dist1 = math.abs(dest1[2] - current_pos[2]) + math.abs(dest1[1] - current_pos[1]) * line_width
+  local dist2 = math.abs(dest2[2] - current_pos[2]) + math.abs(dest2[1] - current_pos[1]) * line_width
   if dist1 <= dist2 then
     return dest1
   else
@@ -94,12 +149,7 @@ local function node_find_parent(node)
   local prev = node.parent.snippet and node.parent.snippet.prev.prev
   while prev do
     local range_start_prev, range_end_prev = prev:get_buf_position()
-    if
-      range_contains(
-        { range_start_prev, range_end_prev },
-        { range_start, range_end }
-      )
-    then
+    if range_contains({ range_start_prev, range_end_prev }, { range_start, range_end }) then
       return prev
     end
     prev = prev.parent.snippet and prev.parent.snippet.prev.prev
@@ -126,122 +176,58 @@ local function jump_to_closer(snip_dest, tabout_dest, direction)
     return false
   end
   if vim.deep_equal(dest, tabout_dest) then
-    tabout.do_key(direction == 1 and '<Tab>' or '<S-Tab>')
+    tabout.jump(direction)
   else
     luasnip.jump(direction)
   end
   return true
 end
 
----Filter out unwanted entries
----@param entry cmp.Entry
----@param _ cmp.Context ignored
----@return boolean
-local function entry_filter(entry, _)
-  return not vim.tbl_contains({
-    'No matches found',
-    'Searching...',
-    'Workspace loading',
-  }, entry.completion_item.label)
-end
-
----Filter out unwanted entries for fuzzy_path source
----@param entry cmp.Entry
----@param context cmp.Context
-local function entry_filter_fuzzy_path(entry, context)
-  return entry_filter(entry, context)
-    -- Don't show fuzzy-path entries in markdown/tex mathzone
-    and not (
-      vim.g.loaded_vimtex == 1
-      and (vim.bo.ft == 'markdown' or vim.bo.ft == 'tex')
-      and vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
-    )
-end
-
 ---Options for fuzzy_path source
 local fuzzy_path_option = {
   fd_cmd = {
-    'fd',
-    '-p',
-    '-H',
-    '-L',
-    '-td',
-    '-tf',
-    '-tl',
-    '-d4',
-    '--mount',
-    '-c=never',
-    '-E=*$*',
-    '-E=*%*',
-    '-E=*.bkp',
-    '-E=*.bz2',
-    '-E=*.db',
-    '-E=*.directory',
-    '-E=*.dll',
-    '-E=*.doc',
-    '-E=*.docx',
-    '-E=*.drawio',
-    '-E=*.gif',
-    '-E=*.git/',
-    '-E=*.gz',
-    '-E=*.ico',
-    '-E=*.iso',
-    '-E=*.jar',
-    '-E=*.jpeg',
-    '-E=*.jpg',
-    '-E=*.mp3',
-    '-E=*.mp4',
-    '-E=*.o',
-    '-E=*.otf',
-    '-E=*.out',
-    '-E=*.pdf',
-    '-E=*.pickle',
-    '-E=*.png',
-    '-E=*.ppt',
-    '-E=*.pptx',
-    '-E=*.pyc',
-    '-E=*.rar',
-    '-E=*.so',
-    '-E=*.svg',
-    '-E=*.tar',
-    '-E=*.ttf',
-    '-E=*.venv/',
-    '-E=*.xls',
-    '-E=*.xlsx',
-    '-E=*.zip',
-    '-E=*Cache*/',
-    '-E=*\\~',
-    '-E=*cache*/',
-    '-E=.*Cache*/',
-    '-E=.*cache*/',
-    '-E=.*wine/',
-    '-E=.cargo/',
-    '-E=.conda/',
-    '-E=.dot/',
-    '-E=.fonts/',
-    '-E=.ipython/',
-    '-E=.java/',
-    '-E=.jupyter/',
-    '-E=.luarocks/',
-    '-E=.mozilla/',
-    '-E=.npm/',
-    '-E=.nvm/',
-    '-E=.steam*/',
-    '-E=.thunderbird/',
-    '-E=.tmp/',
-    '-E=__pycache__/',
-    '-E=dosdevices/',
-    '-E=events.out.tfevents.*',
-    '-E=node_modules/',
-    '-E=vendor/',
-    '-E=venv/',
+    vim.fn.executable "fd" == 1 and "fd" or "fdfind",
+    "-p",
+    "-H",
+    "-L",
+    "-td",
+    "-tf",
+    "-tl",
+    "--mount",
+    "-c=never",
+    "-E=*.git/",
+    "-E=*.venv/",
+    "-E=*Cache*/",
+    "-E=*cache*/",
+    "-E=.*Cache*/",
+    "-E=.*cache*/",
+    "-E=.*wine/",
+    "-E=.cargo/",
+    "-E=.conda/",
+    "-E=.dot/",
+    "-E=.fonts/",
+    "-E=.ipython/",
+    "-E=.java/",
+    "-E=.jupyter/",
+    "-E=.luarocks/",
+    "-E=.mozilla/",
+    "-E=.npm/",
+    "-E=.nvm/",
+    "-E=.steam*/",
+    "-E=.thunderbird/",
+    "-E=.tmp/",
+    "-E=__pycache__/",
+    "-E=dosdevices/",
+    "-E=node_modules/",
+    "-E=vendor/",
+    "-E=venv/",
   },
 }
 
-local icon_dot = vim.trim(icons_local.DotLarge)
-local icon_calc = icons_local.Calculator
-local icon_folder = icons_local.Folder
-local icon_file = icons_local.File
+local icon_dot = icons.DotLarge
+local icon_calc = icons.Calculator
+local icon_folder = icons.Folder
+local icon_file = icons.File
 local compltype_path = {
   dir = true,
   file = true,
@@ -290,60 +276,79 @@ local formatting_style = {
   end,
 }
 ---@return integer[] buffer numbers
-local function source_buf_get_bufnrs()
-  return vim.b.large_file and {} or { vim.api.nvim_get_current_buf() }
+local function get_bufnrs()
+  return vim.b.bigfile and {} or { vim.api.nvim_get_current_buf() }
 end
 
----@diagnostic disable missing-fields
-cmp.setup({
+local fuzzy_path_ok, fuzzy_path_comparator = pcall(require, "cmp_fuzzy_path.compare")
+
+if not fuzzy_path_ok then
+  fuzzy_path_comparator = function() end
+end
+
+cmp.setup {
   enabled = function()
-    return not vim.b.large_file
+    local buftype = vim.api.nvim_get_option_value("buftype", { buf = 0 })
+    if buftype == "prompt" or buftype == "acwrite" or vim.b.bigfile then
+      return false
+    end
+
+    -- disable completion in comments
+    local context = require "cmp.config.context"
+    -- keep command mode completion enabled when cursor is in a comment.
+    if vim.api.nvim_get_mode().mode == "c" then
+      return true
+    else
+      return not context.in_treesitter_capture "comment" and not context.in_syntax_group "Comment"
+    end
   end,
+  performance = {
+    async_budget = 64,
+    max_view_entries = 64,
+  },
   formatting = {
-    fields = { 'kind', 'abbr', 'menu' },
+    fields = { "kind", "abbr", "menu" },
     format = function(entry, cmp_item)
+      local kind = lspkind.cmp_format { mode = "symbol_text", maxwidth = 50 }(entry, cmp_item)
+      local strings = vim.split(kind.kind, "%s", { trimempty = true })
+      kind.kind = " " .. (strings[1] or "") .. " "
+      kind.menu = "    [" .. (strings[2] or "") .. "]"
+
       local compltype = vim.fn.getcmdcompltype()
       local complpath = compltype_path[compltype]
-      -- Fix cmp path completion not escaping special characters
-      -- (e.g. `#`, spaces) in cmdline,
-      if complpath then
-        local path_escaped = vim.fn.fnameescape(cmp_item.word)
-        cmp_item.word = path_escaped
-        cmp_item.abbr = path_escaped
-      end
+
       -- Use special icons for file / directory completions
-      if cmp_item.kind == 'File' or cmp_item.kind == 'Folder' or complpath then
-        if cmp_item.word:match('/$') then -- Directories
+      if cmp_item.kind == "File" or cmp_item.kind == "Folder" or complpath then
+        if string.sub(cmp_item.word, #cmp_item.word) == "/" then -- Directories
           cmp_item.kind = icon_folder
-          cmp_item.kind_hl_group = 'CmpItemKindFolder'
+          cmp_item.kind_hl_group = "CmpItemKindFolder"
         else -- Files
-          local devicons_ok, devicons = pcall(require, 'nvim-web-devicons')
+          local icon = icon_file
+          local icon_hl = "CmpItemKindFile"
+          local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
           if devicons_ok then
-            local icon, icon_hl = devicons.get_icon(
+            icon, icon_hl = devicons.get_icon(
               vim.fs.basename(cmp_item.word),
-              vim.fn.fnamemodify(cmp_item.word, ':e'),
+              vim.fn.fnamemodify(cmp_item.word, ":e"),
               { default = true }
             )
-            cmp_item.kind = icon and icon .. ' ' or icon_file
-            cmp_item.kind_hl_group = icon_hl or 'CmpItemKindFile'
+            icon = icon and icon .. " "
           end
+          cmp_item.kind = icon or icon_file
+          cmp_item.kind_hl_group = icon_hl or "CmpItemKindFile"
         end
-      else -- Use special icons for cmdline / calc completions
-        ---@type table<string, string> override icons with `entry.source.name`
-        local icon_override = {
-          cmdline = icon_dot,
-          calc = icon_calc,
-        }
-        cmp_item.kind = icon_override[entry.source.name]
-          or icons_local[cmp_item.kind]
-          or ''
+        -- else -- Use special icons for some completions
+        --   cmp_item.kind = entry.source.name == "cmdline" and icon_dot
+        --     or entry.source.name == "calc" and icon_calc
+        --     or icons[cmp_item.kind]
+        --     or ""
       end
       ---@param field string
       ---@param min_width integer
       ---@param max_width integer
       ---@return nil
       local function clamp(field, min_width, max_width)
-        if not cmp_item[field] or not type(cmp_item) == 'string' then
+        if not cmp_item[field] or not type(cmp_item) == "string" then
           return
         end
         -- In case that min_width > max_width
@@ -355,82 +360,46 @@ cmp.setup({
         if field_width > max_width then
           local former_width = math.floor(max_width * 0.6)
           local latter_width = math.max(0, max_width - former_width - 1)
-          cmp_item[field] = string.format(
-            '%s…%s',
-            field_str:sub(1, former_width),
-            field_str:sub(-latter_width)
-          )
+          cmp_item[field] = string.format("%s…%s", field_str:sub(1, former_width), field_str:sub(-latter_width))
         elseif field_width < min_width then
-          cmp_item[field] = string.format('%-' .. min_width .. 's', field_str)
+          cmp_item[field] = string.format("%-" .. min_width .. "s", field_str)
         end
       end
-      clamp('abbr', vim.go.pw, math.max(60, math.ceil(vim.o.columns * 0.4)))
-      clamp('menu', 0, math.max(16, math.ceil(vim.o.columns * 0.2)))
-      -- clamp(formatting_style.format())
+      clamp("abbr", vim.go.pw, math.max(60, math.ceil(vim.o.columns * 0.4)))
+      clamp("menu", 0, math.max(16, math.ceil(vim.o.columns * 0.2)))
+
+      -- append source name to menu
+      if entry.completion_item.detail ~= nil and entry.completion_item.detail ~= "" then
+        kind.menu = kind.menu .. "    (" .. entry.completion_item.detail .. ")"
+      end
+
       return cmp_item
     end,
   },
   snippet = {
     expand = function(args)
-      require('luasnip').lsp_expand(args.body)
+      require("luasnip").lsp_expand(args.body)
     end,
   },
   mapping = {
-    ['<C-Space>'] = cmp.mapping({
-      i = cmp.mapping.complete(),
-      c = function(
-        _ --[[fallback]]
-      )
-        if cmp.visible() then
-          if not cmp.confirm({ select = true }) then
-            return
-          end
-        else
-          cmp.complete()
+    ["<S-Tab>"] = {
+      ["c"] = function()
+        if tabout.get_jump_pos(-1) then
+          tabout.jump(-1)
+          return
         end
-      end,
-    }),
-    ['<CR>'] = cmp.mapping.confirm({
-      i = function(fallback)
-        if cmp.visible() and cmp.get_active_entry() then
-          cmp.confirm({
-            -- For Copilot -- INFO: not using this (yet)
-            behavior = cmp.ConfirmBehavior.Insert,
-            -- Only when explicitly selected
-            select = false,
-          })
-        else
-          -- fallback()
-          cmp.confirm({
-            -- For Copilot -- INFO: not using this (yet)
-            behavior = cmp.ConfirmBehavior.Insert,
-            -- Only when explicitly selected
-            select = false,
-          })
-        end
-      end,
-      s = cmp.mapping.confirm({ select = true }),
-      c = cmp.mapping.confirm({
-        behavior = cmp.ConfirmBehavior.Replace,
-        select = true,
-      }),
-      -- behavior = cmp.ConfirmBehavior.Insert,
-      -- select = true,
-    }),
-    ['<S-Tab>'] = {
-      ['c'] = function()
         if cmp.visible() then
           cmp.select_prev_item()
         else
           cmp.complete()
         end
       end,
-      ['i'] = function(fallback)
+      ["i"] = function(fallback)
         if luasnip.locally_jumpable(-1) then
           local prev = luasnip.jump_destination(-1)
           local _, snip_dest_end = prev:get_buf_position()
           snip_dest_end[1] = snip_dest_end[1] + 1 -- (1, 0) indexed
-          local tabout_dest = tabout.get_jump_pos('<S-Tab>')
+          local tabout_dest = tabout.get_jump_pos(-1)
           if not jump_to_closer(snip_dest_end, tabout_dest, -1) then
             fallback()
           end
@@ -439,27 +408,25 @@ cmp.setup({
         end
       end,
     },
-    ['<Tab>'] = {
-      ['c'] = function()
+    ["<Tab>"] = {
+      ["c"] = function()
+        if tabout.get_jump_pos(1) then
+          tabout.jump(1)
+          return
+        end
         if cmp.visible() then
           cmp.select_next_item()
         else
           cmp.complete()
         end
       end,
-      ['i'] = function(fallback)
+      ["i"] = function(fallback)
         if luasnip.expandable() then
           luasnip.expand()
         elseif luasnip.locally_jumpable(1) then
           local buf = vim.api.nvim_get_current_buf()
-          local line = vim.api.nvim_get_current_line()
           local cursor = vim.api.nvim_win_get_cursor(0)
           local current = luasnip.session.current_nodes[buf]
-          -- Insert literal tab/spaces if cursor is at the start of the line
-          if line:sub(1, cursor[2]):match('^%s*$') then
-            vim.api.nvim_feedkeys('\t', 'n', false)
-            return
-          end
           if node_has_length(current) then
             if
               current.next_choice
@@ -474,9 +441,9 @@ cmp.setup({
           else -- node has zero length
             local parent = node_find_parent(current)
             local range = parent and { parent:get_buf_position() }
-            local tabout_dest = tabout.get_jump_pos('<Tab>')
+            local tabout_dest = tabout.get_jump_pos(1)
             if tabout_dest and range and in_range(range, tabout_dest) then
-              tabout.do_key('<Tab>')
+              tabout.jump(1)
             else
               luasnip.jump(1)
             end
@@ -486,9 +453,9 @@ cmp.setup({
         end
       end,
     },
-    ['<C-k>'] = {
-      ['c'] = cmp.mapping.select_prev_item(),
-      ['i'] = function()
+    ["<C-p>"] = {
+      ["c"] = cmp.mapping.select_prev_item(),
+      ["i"] = function()
         if cmp.visible() then
           cmp.select_prev_item()
         elseif luasnip.choice_active() then
@@ -498,9 +465,9 @@ cmp.setup({
         end
       end,
     },
-    ['<C-j>'] = {
-      ['c'] = cmp.mapping.select_next_item(),
-      ['i'] = function()
+    ["<C-n>"] = {
+      ["c"] = cmp.mapping.select_next_item(),
+      ["i"] = function()
         if cmp.visible() then
           cmp.select_next_item()
         elseif luasnip.choice_active() then
@@ -510,65 +477,64 @@ cmp.setup({
         end
       end,
     },
-    ['<C-j>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
-    ['<C-k>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
-    ['<PageDown>'] = cmp.mapping(
-      cmp.mapping.select_next_item({
+    ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
+    ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
+    ["<PageDown>"] = cmp.mapping(
+      cmp.mapping.select_next_item {
         count = vim.o.pumheight ~= 0 and math.ceil(vim.o.pumheight / 2) or 8,
-      }),
-      { 'i', 'c' }
+      },
+      { "i", "c" }
     ),
-    ['<PageUp>'] = cmp.mapping(
-      cmp.mapping.select_prev_item({
+    ["<PageUp>"] = cmp.mapping(
+      cmp.mapping.select_prev_item {
         count = vim.o.pumheight ~= 0 and math.ceil(vim.o.pumheight / 2) or 8,
-      }),
-      { 'i', 'c' }
+      },
+      { "i", "c" }
     ),
-    ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-    ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
-    ['<C-e>'] = cmp.mapping(function(fallback)
+    ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
+    ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+    ["<C-e>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.abort()
       else
         fallback()
       end
-    end, { 'i', 'c' }),
-    ['<C-y>'] = cmp.mapping(
-      cmp.mapping.confirm({
+    end, { "i", "c" }),
+    ["<C-y>"] = cmp.mapping(
+      cmp.mapping.confirm {
         behavior = cmp.ConfirmBehavior.Replace,
         select = false,
-      }),
-      { 'i', 'c' }
+      },
+      { "i", "c" }
     ),
   },
   sources = {
-    { name = 'luasnip', max_item_count = 3 },
-    { name = 'nvim_lsp_signature_help' },
-    { name = 'copilot' },
+    { name = "luasnip", max_item_count = 3 },
+    { name = "nvim_lsp_signature_help" },
+    { name = "nvim_lsp", max_item_count = 20 },
     {
-      name = 'nvim_lsp',
-      max_item_count = 20,
-      -- Suppress LSP completion when workspace is not ready yet
-      entry_filter = entry_filter,
-    },
-    {
-      name = 'buffer',
+      name = "buffer",
       max_item_count = 8,
       option = {
-        get_bufnrs = source_buf_get_bufnrs,
+        get_bufnrs = get_bufnrs,
       },
     },
     {
-      name = 'fuzzy_path',
-      entry_filter = entry_filter_fuzzy_path,
+      name = "fuzzy_path",
       option = fuzzy_path_option,
+      -- Don't show fuzzy-path entries in markdown/tex mathzone
+      entry_filter = function()
+        return vim.g.loaded_vimtex ~= 1
+          or vim.bo.ft ~= "markdown" and vim.bo.ft ~= "tex"
+          or vim.api.nvim_eval "vimtex#syntax#in_mathzone()" ~= 1
+      end,
     },
-    { name = 'calc' },
+    { name = "calc" },
   },
   sorting = {
     ---@type table[]|function[]
     comparators = {
-      require('cmp_fuzzy_path.compare'),
+      fuzzy_path_comparator,
       cmp.config.compare.kind,
       cmp.config.compare.locality,
       cmp.config.compare.recently_used,
@@ -581,86 +547,70 @@ cmp.setup({
     documentation = {
       max_width = 80,
       max_height = 20,
+      border = "solid",
     },
   },
-  performance = {
-    max_view_entries = 64,
-  },
-})
+}
 
 -- Use buffer source for `/`.
-cmp.setup.cmdline('/', {
+cmp.setup.cmdline("/", {
   enabled = true,
   sources = {
     {
-      name = 'buffer',
+      name = "buffer",
       option = {
-        get_bufnrs = source_buf_get_bufnrs,
+        get_bufnrs = get_bufnrs,
       },
     },
   },
 })
-cmp.setup.cmdline('?', {
+cmp.setup.cmdline("?", {
   enabled = true,
   sources = {
     {
-      name = 'buffer',
+      name = "buffer",
       option = {
-        get_bufnrs = source_buf_get_bufnrs,
+        get_bufnrs = get_bufnrs,
       },
     },
   },
 })
 -- Use cmdline & path source for ':'.
-cmp.setup.cmdline(':', {
+cmp.setup.cmdline(":", {
   enabled = true,
   sources = {
     {
-      name = 'fuzzy_path',
+      name = "fuzzy_path",
       group_index = 1,
-      entry_filter = entry_filter_fuzzy_path,
       option = fuzzy_path_option,
     },
     {
-      name = 'cmdline',
+      name = "cmdline",
       option = {
         ignore_cmds = {},
       },
       group_index = 2,
-    },
-  },
-})
--- Complete vim.ui.input()
-cmp.setup.cmdline('@', {
-  enabled = true,
-  sources = {
-    {
-      name = 'fuzzy_path',
-      group_index = 1,
-      entry_filter = entry_filter_fuzzy_path,
-      option = fuzzy_path_option,
-    },
-    {
-      name = 'cmdline',
-      group_index = 2,
-      option = {
-        ignore_cmds = {},
-      },
-    },
-    {
-      name = 'buffer',
-      group_index = 3,
-      option = {
-        get_bufnrs = source_buf_get_bufnrs,
-      },
     },
   },
 })
 
+cmp.setup.filetype({ "NeogitCommitMessage", "TelescopePrompt" }, {
+  sources = {},
+})
+
+-- cmp does not work with cmdline with type other than `:`, '/', and '?', e.g.
+-- it does not respect the completion option of `input()`/`vim.ui.input()`, see
+-- https://github.com/hrsh7th/nvim-cmp/issues/1690
+-- https://github.com/hrsh7th/nvim-cmp/discussions/1073
+cmp.setup.cmdline("@", { enabled = false })
+cmp.setup.cmdline(">", { enabled = false })
+cmp.setup.cmdline("-", { enabled = false })
+cmp.setup.cmdline("=", { enabled = false })
+
 -- Completion in DAP buffers
-cmp.setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
+cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
   enabled = true,
   sources = {
-    { name = 'dap' },
+    { name = "dap" },
   },
 })

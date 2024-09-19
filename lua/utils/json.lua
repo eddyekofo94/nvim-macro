@@ -25,4 +25,3 @@ function M.write(path, tbl)
 end
 
 return M
-

@@ -1,14 +1,14 @@
 local M = {}
-local un = require('snippets.utils.nodes')
-local us = require('snippets.utils.snips')
-local conds = require('snippets.utils.conds')
+local un = require('utils.snippets.nodes')
+local us = require('utils.snippets.snips')
+local conds = require('utils.snippets.conds')
 local ls = require('luasnip')
 local t = ls.text_node
 local i = ls.insert_node
 local l = require('luasnip.extras').lambda
 local dl = require('luasnip.extras').dynamic_lambda
 
-M.math = require('snippets.shared.math')
+M.math = require('snippets.tex.math')
 
 M.format = {
   us.sn({
@@ -51,6 +51,25 @@ M.markers = {
         * conds.after_pattern('%*'),
     },
   }, { t('*'), i(0), t('*') }),
+  us.msn({
+    common = { desc = 'Code block' },
+    { trig = 'cb' },
+    { trig = 'cdb' },
+  }, {
+    t('```'),
+    i(1),
+    t({ '', '' }),
+    i(0),
+    t({ '', '```' }),
+  }),
+  us.sn({
+    trig = 'cd',
+    desc = 'Inline code',
+  }, {
+    t('`'),
+    i(1),
+    t('`'),
+  }),
 }
 
 M.titles = {

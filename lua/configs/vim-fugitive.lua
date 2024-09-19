@@ -23,7 +23,10 @@ local groupid = vim.api.nvim_create_augroup('FugitiveSettings', {})
 vim.api.nvim_create_autocmd('User', {
   pattern = 'FugitiveIndex',
   group = groupid,
-  command = 'nmap <buffer> <Tab> =| xmap <buffer> <Tab> =',
+  callback = function(info)
+    vim.keymap.set({ 'n', 'x' }, 'S', 's', { buffer = info.buf, remap = true })
+    vim.keymap.set({ 'n', 'x' }, 'x', 'X', { buffer = info.buf, remap = true })
+  end,
 })
 
 vim.api.nvim_create_autocmd('User', {
@@ -45,5 +48,34 @@ vim.api.nvim_create_autocmd('User', {
         vim.cmd.buffer(vim.g.fugitive_prevbuf)
       end
     end, { buffer = true })
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  desc = 'Set buffer-local options for fugitive buffers.',
+  group = groupid,
+  pattern = 'fugitive',
+  callback = function()
+    vim.opt_local.winbar = nil
+    vim.opt_local.signcolumn = 'no'
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  desc = 'Set buffer-local options for fugitive blame buffers.',
+  group = groupid,
+  pattern = 'fugitiveblame',
+  callback = function()
+    local win_alt = vim.fn.win_getid(vim.fn.winnr('#'))
+    vim.opt_local.winbar = vim.api.nvim_win_is_valid(win_alt)
+        and vim.wo[win_alt].winbar ~= ''
+        and ' '
+      or ''
+
+    vim.opt_local.number = false
+    vim.opt_local.signcolumn = 'no'
+    vim.opt_local.relativenumber = false
   end,
 })

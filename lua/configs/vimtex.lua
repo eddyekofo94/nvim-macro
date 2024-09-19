@@ -1,16 +1,21 @@
+if not vim.g.modern_ui then
+  vim.g.vimtex_syntax_conceal_disable = true
+end
+
 vim.g.vimtex_format_enabled = 1
 vim.g.vimtex_imaps_enabled = 0
 vim.g.vimtex_mappings_prefix = '<LocalLeader>t'
 vim.g.vimtex_quickfix_ignore_filters = {
+  [[Warning]],
+  [[Overfull]],
   [[Font shape `.*' undefined]],
-  [[Package fontspec Warning]],
 }
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'tex', 'markdown', 'mkd' },
+  pattern = { 'tex', 'markdown' },
   group = vim.api.nvim_create_augroup('VimTexFileTypeInit', {}),
   callback = function(info)
-    if info.match == 'markdown' or info.match == 'mkd' then
+    if info.match == 'markdown' then
       vim.api.nvim_eval('vimtex#init()')
       vim.api.nvim_eval('vimtex#text_obj#init_buffer()')
       vim.bo[info.buf].formatexpr = ''

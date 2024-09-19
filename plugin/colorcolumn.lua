@@ -1,5 +1,7 @@
 local hl = require('utils.hl')
 
+local C_NORMAL, C_CC, C_ERROR
+
 ---Get background color in hex
 ---@param hlgroup_name string
 ---@param field string 'foreground' or 'background'
@@ -15,8 +17,19 @@ local function get_hl_hex(hlgroup_name, field, fallback)
   -- e.g. when winhl=ColorColumn:FooBar, nvim will return the attributes of
   -- FooBar instead of ColorColumn with link = false, but return the
   -- attributes of ColorColumn with link = true
-  local attr_val = vim.api.nvim_get_hl(0, { name = hlgroup_name })[field]
-  return attr_val and hl.dec2hex(attr_val) or fallback
+  -- EDIT: solved by manually traversing the hlgroup, see implementation
+  -- of `utils.hl.get()`
+  local attr_val =
+    hl.get(0, { name = hlgroup_name, winhl_link = false })[field]
+  return attr_val and hl.dec2hex(attr_val, 6) or fallback
+end
+
+---Update base colors: bg color of Normal & ColorColumn, and fg of Error
+---@return nil
+local function update_hl_hex()
+  C_NORMAL = get_hl_hex('Normal', 'bg')
+  C_CC = get_hl_hex('ColorColumn', 'bg')
+  C_ERROR = get_hl_hex('Error', 'fg', '#FF0000')
 end
 
 ---Resolve the colorcolumn value
@@ -41,87 +54,104 @@ local function cc_resolve(cc)
 end
 
 ---Hide colorcolumn
----@param winid integer window handler
+---@param winid integer? window handler
 local function cc_conceal(winid)
-  winid = winid or 0
-  local new_winhl = (
-    vim.wo[winid].winhl:gsub('ColorColumn:[^,]*', '') .. ',ColorColumn:'
-  ):gsub(',*$', ''):gsub('^,*', ''):gsub(',+', ',')
-  if new_winhl ~= vim.wo[winid].winhl then
-    vim.wo[winid].winhl = new_winhl
-  end
+  vim.api.nvim_win_call(winid or 0, function()
+    vim.opt_local.winhl:append({ ColorColumn = '' })
+  end)
 end
 
 ---Show colorcolumn
----@param winid integer window handler
+---@param winid integer? window handler
 local function cc_show(winid)
+  vim.api.nvim_win_call(winid or 0, function()
+    vim.opt_local.winhl:append({ ColorColumn = '_ColorColumn' })
+  end)
+end
+
+local cc_bg = nil
+local cc_link = nil
+
+---Update colorcolumn highlight or conceal it
+---@param winid integer? handler, default 0
+---@return nil
+local function cc_update(winid)
   winid = winid or 0
-  local new_winhl = (
-    vim.wo[winid].winhl:gsub('ColorColumn:[^,]*', '')
-    .. ',ColorColumn:_ColorColumn'
-  ):gsub(',*$', ''):gsub('^,*', ''):gsub(',+', ',')
-  if new_winhl ~= vim.wo[winid].winhl then
-    vim.wo[winid].winhl = new_winhl
+  local cc = cc_resolve(vim.wo[winid].cc)
+  if not cc then
+    cc_conceal(winid)
+    return
   end
+
+  -- Fix 'E976: using Blob as a String' after select a snippet
+  -- entry from LSP server using omnifunc `<C-x><C-o>`
+  ---@diagnostic disable-next-line: param-type-mismatch
+  local length = vim.fn.strdisplaywidth(vim.fn.getline('.'))
+  local thresh = math.floor(0.75 * cc)
+  if length < thresh then
+    cc_conceal(winid)
+    return
+  end
+
+  -- Show blended color when len < cc
+  local show_warning = length >= cc
+  if vim.go.termguicolors then
+    if not C_CC or not C_NORMAL or not C_ERROR then
+      update_hl_hex()
+    end
+    local new_cc_color = show_warning and hl.cblend(C_ERROR, C_NORMAL, 0.4).dec
+      or hl.cblend(C_CC, C_NORMAL, (length - thresh) / (cc - thresh)).dec
+    if new_cc_color ~= cc_bg then
+      cc_bg = new_cc_color
+      vim.api.nvim_set_hl(0, '_ColorColumn', { bg = cc_bg })
+    end
+  else
+    local link = show_warning and 'Error' or 'ColorColumn'
+    if cc_link ~= link then
+      cc_link = link
+      vim.api.nvim_set_hl(0, '_ColorColumn', { link = cc_link })
+    end
+  end
+  cc_show(winid)
 end
 
 ---Conceal colorcolumn in each window
-local function cc_init()
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    cc_conceal(win)
-  end
+for _, win in ipairs(vim.api.nvim_list_wins()) do
+  cc_conceal(win)
 end
 
 ---Create autocmds for concealing / showing colorcolumn
-local function cc_autocmd()
-  local id = vim.api.nvim_create_augroup('AutoColorColumn', {})
-  vim.api.nvim_create_autocmd({ 'InsertLeave', 'WinLeave' }, {
-    group = id,
-    callback = function()
-      if vim.fn.win_gettype() == '' then
-        cc_conceal(0)
-      end
-    end,
-  })
-  vim.api.nvim_create_autocmd({ 'CursorMovedI', 'InsertEnter' }, {
-    group = id,
-    callback = function()
-      local cc = cc_resolve(vim.wo.cc)
-      if not cc or vim.fn.win_gettype() ~= '' then
-        cc_conceal(0)
-        return
-      end
+local id = vim.api.nvim_create_augroup('AutoColorColumn', {})
+vim.api.nvim_create_autocmd({ 'InsertLeave', 'WinLeave' }, {
+  desc = 'Conceal colorcolumn when leaving insert mode or window.',
+  group = id,
+  callback = function()
+    cc_conceal(0)
+  end,
+})
 
-      -- Fix 'E976: using Blob as a String' after select a snippet
-      -- entry from LSP server using omnifunc (<C-x><C-o>)
-      local length = vim.fn.strdisplaywidth(vim.fn.getline('.'))
-      local thresh = math.floor(0.75 * cc)
-      if length < thresh then
-        cc_conceal(0)
-        return
-      end
+vim.api.nvim_create_autocmd('ColorScheme', {
+  desc = 'Update base colors.',
+  group = id,
+  callback = update_hl_hex,
+})
 
-      -- Show blended color when len < cc
-      local normal_bg = get_hl_hex('Normal', 'bg')
-      local colorcolumn_bg = get_hl_hex('ColorColumn', 'bg')
-      if length < cc then
-        vim.api.nvim_set_hl(0, '_ColorColumn', {
-          bg = hl.cblend(
-            colorcolumn_bg,
-            normal_bg,
-            (length - thresh) / (cc - thresh)
-          ).dec,
-        })
-      else -- Show error color when length >= cc
-        local warning_color = get_hl_hex('Error', 'fg', '#FF0000')
-        vim.api.nvim_set_hl(0, '_ColorColumn', {
-          bg = hl.cblend(warning_color, normal_bg, 0.4).dec,
-        })
-      end
-      cc_show(0)
-    end,
-  })
-end
+vim.api.nvim_create_autocmd({ 'BufWinEnter', 'ColorScheme' }, {
+  desc = 'Update colorcolumn color.',
+  group = id,
+  callback = function()
+    if vim.fn.mode():find('^[icRss\x13]') then
+      cc_update(0)
+    else
+      cc_conceal(0)
+    end
+  end,
+})
 
-cc_init()
-cc_autocmd()
+vim.api.nvim_create_autocmd({ 'CursorMovedI', 'InsertEnter' }, {
+  desc = 'Update colorcolumn color in insert mode.',
+  group = id,
+  callback = function()
+    cc_update(0)
+  end,
+})

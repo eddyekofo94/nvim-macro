@@ -1,10 +1,12 @@
 local M = {}
-local un = require('snippets.utils.nodes')
-local us = require('snippets.utils.snips')
+local un = require('utils.snippets.nodes')
+local us = require('utils.snippets.snips')
 local ls = require('luasnip')
 local t = ls.text_node
 local i = ls.insert_node
 local c = ls.choice_node
+
+M.c = require('snippets.c').syntax
 
 M.snippets = {
   -- Macros

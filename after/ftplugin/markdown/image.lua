@@ -28,9 +28,9 @@ local function get_image_name()
 end
 
 ---Insert a link for the image
----@param fname string filename of the image
 ---@param path string path to the image
-local function insert_link(fname, path)
+---@param fname string filename of the image
+local function insert_link(path, fname)
   cmd('silent! lcd ' .. fn.expand('%:p:h'))
   local link = string.format(
     '![%s](%s)',
@@ -52,7 +52,7 @@ local function insert_image()
   local fname = title:gsub('%s+', '_'):lower() .. '.drawio.png'
   local path = vim.fs.joinpath(
     fn.expand('%:p:h') --[[@as string]],
-    'pic',
+    'img',
     fn.expand('%:t:r')
   )
   make_image_dir(path)
@@ -60,16 +60,17 @@ local function insert_image()
     'cp',
     vim.fs.joinpath(
       fn.stdpath('config') --[[@as string]],
+      'after',
       'ftplugin',
       'markdown',
-      'reousrces',
+      'resources',
       'blank.drawio.png'
     ),
     vim.fs.joinpath(path, fname),
   })
 
   -- insert link
-  insert_link(fname, path)
+  insert_link(path, fname)
 
   -- copy file path to system clipboard
   os.execute('echo "' .. path .. '" | xclip -sel clip')
@@ -99,27 +100,64 @@ local function insert_image()
   )
 end
 
+local clipboard_commands = {
+  wayland = {
+    exec = 'wl-paste',
+    check = 'wl-paste --list-types',
+    paste = 'wl-paste --no-newline --type image/png > %s',
+  },
+  x11 = {
+    exec = 'xclip',
+    check = 'xclip -selection clipboard -o -t TARGETS',
+    paste = 'xclip -selection clipboard -o -t image/png > %s',
+  },
+}
+clipboard_commands.tty = clipboard_commands.x11
+
 ---Paste an iamge from system clipboard
 local function paste_image()
-  local command = 'xclip -selection clipboard -o -t TARGETS'
-  local target_atoms = io.popen(command):lines()
-  if not target_atoms then
-    return
+  if not vim.env.XDG_SESSION_TYPE then
+    return vim.notify(
+      '[markdown-image] XDG_SESSION_TYPE is not set',
+      vim.log.levels.ERROR
+    )
   end
-  local atoms_list = {}
-  for atom in target_atoms do
-    table.insert(atoms_list, atom)
+
+  local command = clipboard_commands[vim.env.XDG_SESSION_TYPE]
+  if not command then
+    return vim.notify(
+      string.format(
+        '[markdown-image] XDG_SESSION_TYPE is not supported: %s',
+        vim.env.XDG_SESSION_TYPE
+      ),
+      vim.log.levels.ERROR
+    )
   end
-  if not vim.tbl_contains(atoms_list, 'image/png') then
-    return -- no image in clipboard
+
+  if vim.fn.executable(command.exec) == 0 then
+    return vim.notify(
+      string.format(
+        '[markdown-image] clipboard utility %s is not installed',
+        command.exec
+      ),
+      vim.log.levels.ERROR
+    )
+  end
+
+  local outputs = {}
+  for output in io.popen(command.check):lines() do
+    table.insert(outputs, output)
+  end
+
+  if not vim.tbl_contains(outputs, 'image/png') then
+    return vim.notify(
+      '[markdown-image] clipboard does not contain image',
+      vim.log.levels.WARN
+    )
   end
 
   -- Make directory for the image
-  local path = vim.fs.joinpath(
-    fn.expand('%:p:h') --[[@as string]],
-    'pic',
-    fn.expand('%:t:r')
-  )
+  local path = vim.fs.joinpath(fn.expand('%:p:h'), 'img', fn.expand('%:t:r'))
   make_image_dir(path)
 
   -- Get image name
@@ -130,13 +168,13 @@ local function paste_image()
 
   -- Save image to file
   os.execute(
-    'xclip -selection clipboard -o -t image/png > "'
-      .. vim.fs.joinpath(path, title .. '.png')
-      .. '"'
+    command.paste:format(
+      vim.fn.fnameescape(vim.fs.joinpath(path, title .. '.png'))
+    )
   )
 
   -- Insert link
-  insert_link(title .. '.png', path)
+  insert_link(path, title .. '.png')
 end
 
 api.nvim_buf_create_user_command(0, 'MarkdownInsertImage', insert_image, {

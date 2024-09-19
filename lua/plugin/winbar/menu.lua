@@ -5,7 +5,7 @@ local configs = require('plugin.winbar.configs')
 
 ---Lookup table for winbar menus
 ---@type table<integer, winbar_menu_t>
-_G.winbar.menus = {}
+_G._winbar.menus = {}
 
 ---@class winbar_menu_hl_info_t
 ---@field start integer byte-indexed, 0-indexed, start inclusive
@@ -237,7 +237,7 @@ function winbar_menu_t:del()
     self.buf = nil
   end
   if self.win then
-    _G.winbar.menus[self.win] = nil
+    _G._winbar.menus[self.win] = nil
   end
 end
 
@@ -299,10 +299,8 @@ function winbar_menu_t:click_at(pos, min_width, n_clicks, button, modifiers)
   self.clicked_at = pos
   vim.api.nvim_win_set_cursor(self.win, pos)
   local component = self:get_component_at(pos)
-  if component then
-    if component.on_click then
-      component:on_click(min_width, n_clicks, button, modifiers)
-    end
+  if component and component.on_click then
+    component:on_click(min_width, n_clicks, button, modifiers)
   end
 end
 
@@ -420,10 +418,10 @@ function winbar_menu_t:make_buf()
   vim.bo[self.buf].ft = 'winbar_menu'
 
   -- Set buffer-local keymaps
-  -- Default modes: normal and visual
+  -- Default modes: normal
   for key, mapping in pairs(configs.opts.menu.keymaps) do
     if type(mapping) == 'function' or type(mapping) == 'string' then
-      vim.keymap.set({ 'x', 'n' }, key, mapping, { buffer = self.buf })
+      vim.keymap.set('n', key, mapping, { buffer = self.buf })
     elseif type(mapping) == 'table' then
       for mode, rhs in pairs(mapping) do
         vim.keymap.set(mode, key, rhs, { buffer = self.buf })
@@ -433,6 +431,7 @@ function winbar_menu_t:make_buf()
 
   -- Set buffer-local autocmds
   vim.api.nvim_create_autocmd('WinClosed', {
+    nested = true,
     group = groupid,
     buffer = self.buf,
     callback = function()
@@ -489,6 +488,7 @@ function winbar_menu_t:open_win()
   self.win = vim.api.nvim_open_win(self.buf, true, self._win_configs)
   vim.wo[self.win].scrolloff = 0
   vim.wo[self.win].sidescrolloff = 0
+  vim.wo[self.win].winfixbuf = true
   vim.wo[self.win].winhl = table.concat({
     'NormalFloat:WinBarMenuNormalFloat',
     'FloatBorder:WinBarMenuFloatBorder',
@@ -610,7 +610,7 @@ function winbar_menu_t:open(opts)
   end
   self:override(opts)
 
-  self.prev_menu = _G.winbar.menus[self.prev_win]
+  self.prev_menu = _G._winbar.menus[self.prev_win]
   if self.prev_menu then
     -- if the prev menu has an existing sub-menu, close the sub-menu first
     if self.prev_menu.sub_menu then
@@ -622,7 +622,7 @@ function winbar_menu_t:open(opts)
   self:eval_win_configs()
   self:make_buf()
   self:open_win()
-  _G.winbar.menus[self.win] = self
+  _G._winbar.menus[self.win] = self
   -- Initialize cursor position
   if self._win_configs.focusable ~= false then
     if self.prev_cursor then
@@ -657,8 +657,11 @@ function winbar_menu_t:close(restore_view)
     if vim.api.nvim_win_is_valid(self.win) then
       vim.api.nvim_win_close(self.win, true)
     end
-    _G.winbar.menus[self.win] = nil
+    _G._winbar.menus[self.win] = nil
     self.win = nil
+  end
+  if self.scrollbar then
+    self:close_scrollbar()
   end
   -- Finish preview
   if configs.opts.menu.preview then
@@ -671,9 +674,6 @@ function winbar_menu_t:close(restore_view)
       self.prev_menu:preview_symbol_at(self.prev_menu.prev_cursor)
     end
   end
-  if self.scrollbar then
-    self:close_scrollbar()
-  end
 end
 
 ---Preview the symbol at the given position
@@ -685,7 +685,7 @@ function winbar_menu_t:preview_symbol_at(pos, look_ahead)
     return
   end
   local component = self:get_component_at(pos, look_ahead)
-  if not component or component == self.symbol_previewed then
+  if not component then
     return
   end
   component:preview(self.symbol_previewed and self.symbol_previewed.view)

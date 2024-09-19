@@ -40,7 +40,7 @@ dapui.setup({
   },
   mappings = {
     -- Use a table to apply multiple mappings
-    expand = { '<CR>', '<Tab>', 'za' },
+    expand = { '<CR>', '=', 'za' },
     open = { 'o', 'zo' },
     remove = { 'dd', 'x' },
     edit = { 's', 'cc' },

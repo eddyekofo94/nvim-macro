@@ -46,14 +46,6 @@ local function get_current_col()
   return fn.mode() == 'c' and fn.getcmdpos() or col('.')
 end
 
----Get character relative to cursor
----@param offset number from cursor
----@return string character
-local function get_char(offset)
-  local idx = get_current_col() + offset
-  return get_current_line():sub(idx, idx)
-end
-
 ---Get word after cursor
 ---@param str string? content of the line, default to current line
 ---@param colnr integer? column number, default to current column
@@ -106,11 +98,95 @@ local function start_of_line()
   return get_current_col() == 1
 end
 
----Check if cursor is at the middle of the line
----@return boolean
-local function mid_of_line()
-  local current_col = get_current_col()
-  return current_col > 1 and current_col <= #get_current_line()
+---Callback function for small delete, e.g. `<C-w>`, `<M-BS>`, `<M-d>`, `<C-k>`,
+---`<C-u>`, etc keymaps; sets the small delete register '-' properly, should be
+---used with `{ expr = true }`
+---@param text_deleted string
+---@param forward boolean
+local function small_del(text_deleted, forward)
+  -- Lock to prevent next deletion before current deletion action completes.
+  -- If we don't set this lock we might get and save wrong (old) cursor position
+  -- in CmdlineChanged/TextChangedI callbacks, which will cause the '-' register
+  -- to be reset undesirably.
+  if vim.g._rl_del_lock or text_deleted == '' then
+    return ''
+  end
+  vim.g._rl_del_lock = true
+
+  local in_cmdline = vim.fn.mode() == 'c'
+  -- We want to concat the deleted text in the '-' register if we are deleting
+  -- 'continuously'. In insert mode, 'continuously' means that, after previous
+  -- deletion, ther is no changes in the buffer and the cursor stays in the
+  -- same position; in cmdline mode, this means we are editing the same command
+  -- line (both type and contents) and the cursor poistion is the same after
+  -- previous deletion.
+  -- In ohter cases, we reset the '-' register with the new deleted text.
+  local reset = not (
+    in_cmdline
+      and fn.getcmdline() == vim.g._rl_cmd
+      and fn.getcmdtype() == vim.g._rl_cmd_type
+      and vim.deep_equal(vim.g._rl_cmd_pos, fn.getcmdpos())
+    or not in_cmdline
+      and vim.b.changedtick == vim.b._rl_changedtick
+      and vim.deep_equal(vim.b._rl_del_pos, fn.getcurpos())
+  )
+  local reg_contents = reset and '' or fn.getreg('-')
+  local reg_new_contents = forward and reg_contents .. text_deleted
+    or text_deleted .. reg_contents
+  fn.setreg('-', reg_new_contents)
+
+  -- Record the cursor position after deleting the text
+  if in_cmdline then
+    vim.api.nvim_create_autocmd('CmdlineChanged', {
+      once = true,
+      callback = function()
+        vim.schedule(function()
+          vim.g._rl_cmd = fn.getcmdline()
+          vim.g._rl_cmd_pos = fn.getcmdpos()
+          vim.g._rl_cmd_type = fn.getcmdtype()
+          vim.g._rl_del_lock = nil
+        end)
+        return true
+      end,
+    })
+  else
+    vim.api.nvim_create_autocmd('TextChangedI', {
+      once = true,
+      callback = function()
+        vim.b._rl_del_pos = fn.getcurpos()
+        vim.b._rl_changedtick = vim.b.changedtick
+        vim.g._rl_del_lock = nil
+        return true
+      end,
+    })
+  end
+
+  -- Set 'sts' and 'sw' to 1 temporarily to avoid removing multiple chars at
+  -- once on one `<BS>`
+  if not forward and not in_cmdline then
+    vim.b._rl_sts = vim.bo.sts
+    vim.b._rl_sw = vim.bo.sw
+    vim.bo.sts = 1
+    vim.bo.sw = 1
+    vim.api.nvim_create_autocmd('TextChangedI', {
+      once = true,
+      callback = function()
+        if vim.b._rl_sts and vim.b._rl_sw then
+          vim.bo.sts = vim.b._rl_sts
+          vim.bo.sw = vim.b._rl_sw
+          vim.b._rl_sts = nil
+          vim.b._rl_sw = nil
+        end
+        return true
+      end,
+    })
+  end
+
+  -- Use `<C-g>u` to start a new change for each word deletion
+  return (
+    (in_cmdline and '' or '<C-g>u')
+    .. string.rep(forward and '<Del>' or '<BS>', #text_deleted)
+  )
 end
 
 ---Set up key mappings
@@ -120,18 +196,78 @@ function M.setup()
   end
   vim.g.loaded_readline = true
 
-  map('!', '<C-a>', '<Home>')
-  map('!', '<C-e>', '<End>')
   map('!', '<C-d>', '<Del>')
   map('c', '<C-b>', '<Left>')
   map('c', '<C-f>', '<Right>')
-  map('c', '<C-_>', '<C-f>')
-  map('!', '<C-BS>', '<C-w>')
-  map('!', '<M-BS>', '<C-w>')
-  map('!', '<M-Del>', '<C-w>')
 
-  map('!', '<C-y>', 'pumvisible() ? "<C-y>" : "<C-r>-"', { expr = true })
-  map('c', '<C-k>', '<C-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>')
+  map('!', '<C-BS>', '<C-w>', { remap = true })
+  map('!', '<M-BS>', '<C-w>', { remap = true })
+  map('!', '<M-Del>', '<C-w>', { remap = true })
+  map('!', '<C-w>', function()
+    return small_del(
+      start_of_line() and not first_line() and '\n' or get_word_before(),
+      false
+    )
+  end, { expr = true })
+
+  map('!', '<M-d>', function()
+    return small_del(
+      end_of_line() and not last_line() and '\n' or get_word_after(),
+      true
+    )
+  end, { expr = true })
+
+  map('!', '<C-k>', function()
+    return small_del(
+      end_of_line() and not last_line() and '\n'
+        or get_current_line():sub(get_current_col()),
+      true
+    )
+  end, { expr = true })
+
+  map('!', '<C-u>', function()
+    local line_before = get_current_line():sub(1, get_current_col() - 1)
+    return small_del(
+      start_of_line() and not first_line() and '\n'
+        or line_before:match('%S') and line_before:gsub('^%s*', '')
+        or line_before,
+      false
+    )
+  end, { expr = true })
+
+  map('c', '<C-y>', '<C-r>-')
+  map('i', '<C-y>', function()
+    if fn.pumvisible() == 1 then
+      api.nvim_feedkeys(vim.keycode('<C-y>'), 'n', false)
+      return
+    end
+
+    local linenr = line('.')
+    local colnr = col('.')
+    local current_line = api.nvim_get_current_line()
+    local lines = vim.split(fn.getreg('-'), '\n')
+    lines[1] = current_line:sub(1, colnr - 1) .. lines[1]
+    local target_cursor = { linenr + #lines - 1, #lines[#lines] }
+    lines[#lines] = lines[#lines] .. current_line:sub(colnr)
+
+    api.nvim_feedkeys(vim.keycode('<C-g>u'), 'n', false)
+    api.nvim_buf_set_lines(0, linenr - 1, linenr, false, lines)
+    api.nvim_win_set_cursor(0, target_cursor)
+  end)
+
+  map('!', '<C-a>', function()
+    local current_line = get_current_line()
+    return '<Home>'
+      .. (
+        current_line:sub(1, get_current_col() - 1):match('%S')
+          and string.rep('<Right>', #current_line:match('^%s*'))
+        or ''
+      )
+  end, { expr = true })
+
+  map('!', '<C-e>', function()
+    return fn.pumvisible() == 1 and '<C-e>' or '<End>'
+  end, { expr = true })
 
   map('i', '<C-b>', function()
     if first_line() and start_of_line() then
@@ -139,52 +275,14 @@ function M.setup()
     end
     return start_of_line() and '<Up><End>' or '<Left>'
   end, { expr = true })
+
   map('i', '<C-f>', function()
     if last_line() and end_of_line() then
       return '<Ignore>'
     end
     return end_of_line() and '<Down><Home>' or '<Right>'
   end, { expr = true })
-  map('i', '<C-k>', function()
-    return '<C-g>u'
-      .. (end_of_line() and '<Del>' or '<Cmd>normal! D<CR><Right>')
-  end, { expr = true })
-  map('!', '<C-t>', function()
-    if fn.getcmdtype():match('[?/]') then
-      return '<C-t>'
-    end
-    if start_of_line() and not first_line() then
-      local char_under_cur = get_char(0)
-      if char_under_cur ~= '' then
-        return '<Del><Up><End>' .. char_under_cur .. '<Down><Home>'
-      else
-        local lnum = line('.')
-        local prev_line = fn.getline(lnum - 1) --[[@as string]]
-        local char_end_of_prev_line = prev_line:sub(-1)
-        if char_end_of_prev_line ~= '' then
-          return '<Up><End><BS><Down><Home>' .. char_end_of_prev_line
-        end
-        return ''
-      end
-    end
-    if end_of_line() then
-      local char_before = get_char(-1)
-      if get_char(-2) ~= '' or fn.mode() == 'c' then
-        return '<BS><Left>' .. char_before .. '<End>'
-      else
-        return '<BS><Up><End>' .. char_before .. '<Down><End>'
-      end
-    end
-    if mid_of_line() then
-      return '<BS><Right>' .. get_char(-1)
-    end
-  end, { expr = true })
-  map('!', '<C-u>', function()
-    if not start_of_line() then
-      fn.setreg('-', get_current_line():sub(1, get_current_col() - 1))
-    end
-    return fn.mode() == 'c' and '<C-u>' or '<C-g>u<C-u>'
-  end, { expr = true })
+
   map('!', '<M-b>', function()
     local word_before = get_word_before()
     if not str_isempty(word_before) or fn.mode() == 'c' then
@@ -199,6 +297,7 @@ function M.setup()
       .. string.rep('<Up>', current_linenr - target_linenr)
       .. string.rep('<Left>', #get_word_before(line_str, #line_str))
   end, { expr = true })
+
   map('!', '<M-f>', function()
     local word_after = get_word_after()
     if not str_isempty(word_after) or fn.mode() == 'c' then
@@ -212,10 +311,6 @@ function M.setup()
     return (current_linenr == target_linenr and '' or '<Home>')
       .. string.rep('<Down>', target_linenr - current_linenr)
       .. string.rep('<Right>', #get_word_after(line_str, 1))
-  end, { expr = true })
-  map('!', '<M-d>', function()
-    return (fn.mode() == 'c' and '' or '<C-g>u')
-      .. string.rep('<Del>', #get_word_after())
   end, { expr = true })
 end
 

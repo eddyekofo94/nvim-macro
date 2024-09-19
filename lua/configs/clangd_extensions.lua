@@ -1,40 +1,27 @@
 local icons = require('utils.static').icons
-local default_config = require('configs.lsp-server-configs.shared.default')
 
 require('clangd_extensions').setup({
-  server = default_config,
-  extensions = {
-    autoSetHints = false,
-    inlay_hints = {
-      only_current_line = true,
-      highlight = 'LspInlayHint',
+  ast = {
+    role_icons = {
+      ['type'] = icons.Type,
+      ['declaration'] = icons.Function,
+      ['expression'] = icons.Snippet,
+      ['specifier'] = icons.Specifier,
+      ['statement'] = icons.Statement,
+      ['template argument'] = icons.TypeParameter,
     },
-    ast = {
-      role_icons = {
-        ['type'] = icons.Type,
-        ['declaration'] = icons.Function,
-        ['expression'] = icons.Snippet,
-        ['specifier'] = icons.Specifier,
-        ['statement'] = icons.Statement,
-        ['template argument'] = icons.TypeParameter,
-      },
-      kind_icons = {
-        ['Compound'] = icons.Namespace,
-        ['Recovery'] = icons.DiagnosticSignError,
-        ['TranslationUnit'] = icons.Unit,
-        ['PackExpansion'] = icons.Ellipsis,
-        ['TemplateTypeParm'] = icons.TypeParameter,
-        ['TemplateTemplateParm'] = icons.TypeParameter,
-        ['TemplateParamObject'] = icons.TypeParameter,
-      },
-    },
-    memory_usage = {
-      border = 'solid',
-    },
-    symbol_info = {
-      border = 'solid',
+    kind_icons = {
+      ['Compound'] = icons.Namespace,
+      ['Recovery'] = icons.DiagnosticSignError,
+      ['TranslationUnit'] = icons.Unit,
+      ['PackExpansion'] = icons.Ellipsis,
+      ['TemplateTypeParm'] = icons.TypeParameter,
+      ['TemplateTemplateParm'] = icons.TypeParameter,
+      ['TemplateParamObject'] = icons.TypeParameter,
     },
   },
+  memory_usage = { border = 'solid' },
+  symbol_info = { border = 'solid' },
 })
 
 -- Insert comparator in nvim-cmp's comparators list

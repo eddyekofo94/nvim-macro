@@ -3,14 +3,15 @@ if vim.g.loaded_coplilot then
 end
 vim.g.loaded_coplilot = true
 
-local copilot = require('copilot')
-local copilot_client = require('copilot.client')
-local suggestion = require('copilot.suggestion')
-local utils = require('utils')
+local copilot = require "copilot"
+local copilot_client = require "copilot.client"
+local suggestion = require "copilot.suggestion"
+local utils = require "utils"
 
-copilot.setup({
+copilot.setup {
   suggestion = {
     auto_trigger = true,
+    debounce = 500,
     keymap = {
       accept = false,
     },
@@ -19,10 +20,10 @@ copilot.setup({
     markdown = true,
     help = true,
   },
-})
+}
 
 vim.defer_fn(function()
-  utils.keymap.amend('i', '<C-f>', function(fallback)
+  utils.keymap.keymaps.amend("i", "<C-f>", function(fallback)
     if suggestion.is_visible() then
       suggestion.accept()
     else
@@ -38,7 +39,7 @@ local _buf_attach = copilot_client.buf_attach
 ---@return nil
 ---@diagnostic disable-next-line: duplicate-set-field
 function copilot_client.buf_attach(force)
-  if vim.b.large_file and not force then
+  if vim.b.bigfile and not force then
     return
   end
   return _buf_attach(force)

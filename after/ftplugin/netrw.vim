@@ -1,4 +1,4 @@
-setlocal bufhidden=wipe
+setlocal bufhidden=hide
 setlocal buftype=nofile
 setlocal nobuflisted
 setlocal nolist

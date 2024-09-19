@@ -27,6 +27,7 @@ local utils = require('plugin.winbar.utils')
 ---@field swapped table<string, true>? swapped fields of the symbol
 ---@field cache table caches string representation, length, etc. for the symbol
 ---@field opts winbar_symbol_opts_t? options passed to `winbar_symbol_t:new()` when the symbols is created
+---@field data table? any other relavent data
 local winbar_symbol_t = {}
 
 function winbar_symbol_t:__index(k)
@@ -222,14 +223,17 @@ function winbar_symbol_t:cat(plain)
     self.cache.plain_str = self.icon .. self.name
     return self.cache.plain_str
   end
-  local icon_highlighted = utils.stl.hl(self.icon, self.icon_hl)
-  local name_highlighted = utils.stl.hl(self.name, self.name_hl)
+  -- Escape `%` characters to prevent unintended statusline evaluation
+  local icon_escaped = self.icon:gsub('%%', '%%%%')
+  local name_escaped = self.name:gsub('%%', '%%%%')
+  local icon_highlighted = utils.stl.hl(icon_escaped, self.icon_hl)
+  local name_highlighted = utils.stl.hl(name_escaped, self.name_hl)
   self.cache.decorated_str = self.on_click
       and self.bar_idx
       and utils.stl.make_clickable(
         icon_highlighted .. name_highlighted,
         string.format(
-          'v:lua.winbar.callbacks.buf%s.win%s.fn%s',
+          'v:lua._winbar.callbacks.buf%s.win%s.fn%s',
           self.bar.buf,
           self.bar.win,
           self.callback_idx
@@ -392,8 +396,8 @@ end
 ---Delete a winbar instance
 ---@return nil
 function winbar_t:del()
-  _G.winbar.bars[self.buf][self.win] = nil
-  _G.winbar.callbacks['buf' .. self.buf]['win' .. self.win] = nil
+  _G._winbar.bars[self.buf][self.win] = nil
+  _G._winbar.callbacks['buf' .. self.buf]['win' .. self.win] = nil
   for _, component in ipairs(self.components) do
     component:del()
   end
@@ -519,6 +523,17 @@ function winbar_t:update()
   local request_time = vim.uv.now()
   self.last_update_request_time = request_time
   vim.defer_fn(function()
+    -- Cancel current update if
+    -- 1. another update request is sent within the update interval
+    -- 2. is inside pick mode
+    -- 3. is executing a macro
+    if
+      self.last_update_request_time ~= request_time
+      or self.in_pick_mode
+      or vim.fn.reg_executing() ~= ''
+    then
+      return
+    end
     if
       not self.win
       or not self.buf
@@ -528,30 +543,12 @@ function winbar_t:update()
       self:del()
       return
     end
-    if
-      -- Cancel current update if another update request is sent within
-      -- the update interval
-      (
-        self.last_update_request_time
-        -- Compare the last update request time and time when the current
-        -- update request was made to make sure that there is a new update
-        -- request after the current one if we are going to cancel the current
-        -- one
-        and self.last_update_request_time > request_time
-        and vim.uv.now() - self.last_update_request_time
-          < configs.opts.general.update_interval
-      )
-      or vim.fn.reg_executing() ~= ''
-      or self.in_pick_mode
-    then
-      return
-    end
     local cursor = vim.api.nvim_win_get_cursor(self.win)
     for _, component in ipairs(self.components) do
       component:del()
     end
     self.components = {}
-    _G.winbar.callbacks['buf' .. self.buf]['win' .. self.win] = {}
+    _G._winbar.callbacks['buf' .. self.buf]['win' .. self.win] = {}
     for _, source in ipairs(self.sources) do
       local symbols = source.get_symbols(self.buf, self.win, cursor)
       for _, symbol in ipairs(symbols) do
@@ -566,7 +563,7 @@ function winbar_t:update()
           ---@param button string mouse button used
           ---@param modifiers string modifiers used
           ---@return nil
-          _G.winbar.callbacks['buf' .. self.buf]['win' .. self.win]['fn' .. symbol.callback_idx] = function(
+          _G._winbar.callbacks['buf' .. self.buf]['win' .. self.win]['fn' .. symbol.callback_idx] = function(
             min_width,
             n_clicks,
             button,

@@ -3,14 +3,14 @@
 -- Author:       Bekaboo <kankefengjing@gmail.com>
 -- Maintainer:   Bekaboo <kankefengjing@gmail.com>
 -- License:      GPL-3.0
--- Last Updated: Fri 15 Dec 2023 01:56:54 PM CST
+-- Last Updated: Sat Jan 20 03:12:58 PM CST 2024
 
--- Clear hlgroups and set colors_name {{{
-vim.cmd.hi('clear')
-vim.g.colors_name = 'cockatoo'
--- }}}
+-- Clear hlgroups and set colors_name
+vim.cmd.hi "clear"
+vim.g.colors_name = "cockatoo"
 
--- Palette {{{
+
+-- Palette 
 -- stylua: ignore start
 local c_yellow
 local c_earth
@@ -131,9 +131,9 @@ else
   c_smoke_blend    = '#e4e4e2'
 end
 -- stylua: ignore end
--- }}}
 
--- Set terminal colors {{{
+
+-- Set terminal colors 
 -- stylua: ignore start
 if vim.go.bg == 'dark' then
   vim.g.terminal_color_0  = c_ocean
@@ -170,11 +170,11 @@ else
   vim.g.terminal_color_14 = c_aqua
   vim.g.terminal_color_15 = c_pigeon
 end
--- }}}
 
--- Highlight groups {{{1
+
+-- Highlight groups 
 local hlgroups = {
-  -- Common {{{2
+  -- Common 
   Normal = { fg = c_smoke, bg = c_jeans },
   NormalFloat = { fg = c_smoke, bg = c_ocean },
   NormalNC = { link = 'Normal' },
@@ -241,9 +241,9 @@ local hlgroups = {
   WinSeparator = { link = 'VertSplit' },
   WinBar = { fg = c_smoke },
   WinBarNC = { fg = c_pigeon },
-  -- }}}2
+  
 
-  -- Syntax {{{2
+  -- Syntax 
   Comment = { fg = c_steel },
   Constant = { fg = c_ochre },
   String = { fg = c_turquoise },
@@ -288,98 +288,98 @@ local hlgroups = {
   Ignore = { fg = c_iron },
   Error = { fg = c_scarlet },
   Todo = { fg = c_black, bg = c_beige, bold = true },
-  -- }}}2
+  
 
-  -- Treesitter syntax {{{2
-  ['@field'] = { link = 'Field' },
+  -- Treesitter syntax 
+  ['@variable.member'] = { link = 'Field' },
   ['@property'] = { link = 'Field' },
   ['@annotation'] = { link = 'Operator' },
   ['@comment'] = { link = 'Comment' },
   ['@none'] = { link = 'None' },
-  ['@preproc'] = { link = 'PreProc' },
-  ['@define'] = { link = 'Define' },
+  ['@keyword.directive'] = { link = 'PreProc' },
+  ['@keyword.directive.define'] = { link = 'Define' },
   ['@operator'] = { link = 'Operator' },
   ['@punctuation.delimiter'] = { link = 'Delimiter' },
   ['@punctuation.bracket'] = { link = 'Bracket' },
-  ['@punctuation.special'] = { link = 'Delimiter' },
+  ['@markup.list'] = { link = 'Delimiter' },
   ['@string'] = { link = 'String' },
-  ['@string.regex'] = { link = 'String' },
+  ['@string.regexp'] = { link = 'String' },
   ['@string.escape'] = { link = 'SpecialChar' },
-  ['@string.special'] = { link = 'SpecialChar' },
+  ['@markup.link.label'] = { link = 'SpecialChar' },
   ['@character'] = { link = 'Character' },
   ['@character.special'] = { link = 'SpecialChar' },
   ['@boolean'] = { link = 'Boolean' },
   ['@number'] = { link = 'Number' },
-  ['@float'] = { link = 'Float' },
+  ['@number.float'] = { link = 'Float' },
   ['@function'] = { link = 'Function' },
   ['@function.call'] = { link = 'Function' },
   ['@function.builtin'] = { link = 'Special' },
   ['@function.macro'] = { link = 'Macro' },
-  ['@method'] = { link = 'Function' },
-  ['@method.call'] = { link = 'Function' },
+  ['@function.method'] = { link = 'Function' },
+  ['@function.method.call'] = { link = 'Function' },
   ['@constructor'] = { link = 'Function' },
-  ['@parameter'] = { link = 'Parameter' },
+  ['@variable.parameter'] = { link = 'Parameter' },
   ['@keyword'] = { link = 'Keyword' },
   ['@keyword.function'] = { link = 'Keyword' },
   ['@keyword.return'] = { link = 'Keyword' },
-  ['@conditional'] = { link = 'Conditional' },
-  ['@repeat'] = { link = 'Repeat' },
-  ['@debug'] = { link = 'Debug' },
+  ['@keyword.conditional'] = { link = 'Conditional' },
+  ['@keyword.repeat'] = { link = 'Repeat' },
+  ['@keyword.debug'] = { link = 'Debug' },
   ['@label'] = { link = 'Keyword' },
-  ['@include'] = { link = 'Include' },
-  ['@exception'] = { link = 'Exception' },
+  ['@keyword.import'] = { link = 'Include' },
+  ['@keyword.exception'] = { link = 'Exception' },
   ['@type'] = { link = 'Type' },
   ['@type.Builtin'] = { link = 'Type' },
   ['@type.qualifier'] = { link = 'Type' },
   ['@type.definition'] = { link = 'Typedef' },
-  ['@storageclass'] = { link = 'StorageClass' },
+  ['@keyword.storage'] = { link = 'StorageClass' },
   ['@attribute'] = { link = 'Label' },
   ['@variable'] = { link = 'Identifier' },
   ['@variable.Builtin'] = { link = 'Builtin' },
   ['@constant'] = { link = 'Constant' },
   ['@constant.Builtin'] = { link = 'Constant' },
   ['@constant.macro'] = { link = 'Macro' },
-  ['@namespace'] = { link = 'Namespace' },
-  ['@symbol'] = { link = 'Identifier' },
-  ['@text'] = { link = 'String' },
-  ['@text.title'] = { link = 'Title' },
-  ['@text.literal'] = { link = 'String' },
-  ['@text.uri'] = { link = 'htmlLink' },
-  ['@text.math'] = { link = 'Special' },
-  ['@text.environment'] = { link = 'Macro' },
-  ['@text.environment.name'] = { link = 'Type' },
-  ['@text.reference'] = { link = 'Constant' },
-  ['@text.title.1.markdown'] = { link = 'markdownH1' },
-  ['@text.title.2.markdown'] = { link = 'markdownH2' },
-  ['@text.title.3.markdown'] = { link = 'markdownH3' },
-  ['@text.title.4.markdown'] = { link = 'markdownH4' },
-  ['@text.title.5.markdown'] = { link = 'markdownH5' },
-  ['@text.title.6.markdown'] = { link = 'markdownH6' },
-  ['@text.title.1.marker.markdown'] = { link = 'markdownH1Delimiter' },
-  ['@text.title.2.marker.markdown'] = { link = 'markdownH2Delimiter' },
-  ['@text.title.3.marker.markdown'] = { link = 'markdownH3Delimiter' },
-  ['@text.title.4.marker.markdown'] = { link = 'markdownH4Delimiter' },
-  ['@text.title.5.marker.markdown'] = { link = 'markdownH5Delimiter' },
-  ['@text.title.6.marker.markdown'] = { link = 'markdownH6Delimiter' },
-  ['@text.todo'] = { link = 'Todo' },
-  ['@text.todo.unchecked'] = { link = 'Todo' },
-  ['@text.todo.checked'] = { link = 'Done' },
-  ['@text.note'] = { link = 'SpecialComment' },
-  ['@text.warning'] = { link = 'WarningMsg' },
-  ['@text.danger'] = { link = 'ErrorMsg' },
-  ['@text.diff.add'] = { link = 'DiffAdded' },
-  ['@text.diff.delete'] = { link = 'DiffRemoved' },
+  ['@module'] = { link = 'Namespace' },
+  ['@markup.link.label.symbol'] = { link = 'Identifier' },
+  ['@markup'] = { link = 'String' },
+  ['@markup.heading'] = { link = 'Title' },
+  ['@markup.raw'] = { link = 'String' },
+  ['@markup.link.url'] = { link = 'htmlLink' },
+  ['@markup.math'] = { link = 'Special' },
+  ['@markup.environment'] = { link = 'Macro' },
+  ['@markup.environment.name'] = { link = 'Type' },
+  ['@markup.link'] = { link = 'Constant' },
+  ['@markup.heading.1.markdown'] = { link = 'markdownH1' },
+  ['@markup.heading.2.markdown'] = { link = 'markdownH2' },
+  ['@markup.heading.3.markdown'] = { link = 'markdownH3' },
+  ['@markup.heading.4.markdown'] = { link = 'markdownH4' },
+  ['@markup.heading.5.markdown'] = { link = 'markdownH5' },
+  ['@markup.heading.6.markdown'] = { link = 'markdownH6' },
+  ['@markup.heading.1.marker.markdown'] = { link = 'markdownH1Delimiter' },
+  ['@markup.heading.2.marker.markdown'] = { link = 'markdownH2Delimiter' },
+  ['@markup.heading.3.marker.markdown'] = { link = 'markdownH3Delimiter' },
+  ['@markup.heading.4.marker.markdown'] = { link = 'markdownH4Delimiter' },
+  ['@markup.heading.5.marker.markdown'] = { link = 'markdownH5Delimiter' },
+  ['@markup.heading.6.marker.markdown'] = { link = 'markdownH6Delimiter' },
+  ['@comment.todo'] = { link = 'Todo' },
+  ['@comment.todo.unchecked'] = { link = 'Todo' },
+  ['@comment.todo.checked'] = { link = 'Done' },
+  ['@comment.info'] = { link = 'SpecialComment' },
+  ['@comment.warning'] = { link = 'WarningMsg' },
+  ['@comment.error'] = { link = 'ErrorMsg' },
+  ['@diff.plug'] = { link = 'DiffAdded' },
+  ['@diff.minus'] = { link = 'DiffRemoved' },
   ['@tag'] = { link = 'Tag' },
   ['@tag.attribute'] = { link = 'Identifier' },
   ['@tag.delimiter'] = { link = 'Delimiter' },
-  ['@text.strong'] = { bold = true },
-  ['@text.strike'] = { strikethrough = true },
-  ['@text.emphasis'] = { fg = c_beige, bold = true, italic = true, },
-  ['@text.underline'] = { underline = true },
+  ['@markup.strong'] = { bold = true },
+  ['@markup.strike'] = { strikethrough = true },
+  ['@markup.emphasis'] = { fg = c_beige, bold = true, italic = true, },
+  ['@markup.underline'] = { underline = true },
   ['@keyword.operator'] = { link = 'Operator' },
-  -- }}}2
+  
 
-  -- LSP semantic {{{2
+  -- LSP semantic 
   ['@lsp.type.enum'] = { link = 'Type' },
   ['@lsp.type.type'] = { link = 'Type' },
   ['@lsp.type.class'] = { link = 'Structure' },
@@ -400,18 +400,17 @@ local hlgroups = {
   ['@lsp.typemod.function.defaultLibrary'] = { link = 'Special' },
   ['@lsp.typemod.variable.defaultLibrary'] = { link = 'Builtin' },
   ['@lsp.typemod.variable.global'] = { link = 'Identifier' },
-  -- }}}2
+  
 
-  -- LSP {{{2
+  -- LSP 
   LspReferenceText = { link = 'Identifier' },
   LspReferenceRead = { link = 'LspReferenceText' },
   LspReferenceWrite = { link = 'LspReferenceText' },
   LspSignatureActiveParameter = { link = 'IncSearch' },
   LspInfoBorder = { link = 'FloatBorder' },
-  LspInlayHint = { link = 'DiagnosticVirtualTextHint' },
-  -- }}}2
+  
 
-  -- Diagnostic {{{2
+  -- Diagnostic 
   DiagnosticOk = { fg = c_tea },
   DiagnosticError = { fg = c_wine },
   DiagnosticWarn = { fg = c_earth },
@@ -437,9 +436,14 @@ local hlgroups = {
   DiagnosticSignWarn = { link = 'DiagnosticWarn' },
   DiagnosticSignInfo = { link = 'DiagnosticInfo' },
   DiagnosticSignHint = { link = 'DiagnosticHint' },
-  -- }}}2
+  DiagnosticUnnecessary = {
+    fg = c_steel,
+    sp = c_pigeon,
+    undercurl = true,
+  },
+  
 
-  -- Filetype {{{2
+  -- Filetype 
   -- HTML
   htmlArg = { fg = c_pigeon },
   htmlBold = { bold = true },
@@ -497,9 +501,9 @@ local hlgroups = {
   manReference = { link = 'htmlLink' },
   manSectionHeading = { link = 'manBold' },
   manUnderline = { fg = c_cerulean },
-  -- }}}2
+  
 
-  -- Plugins {{{2
+  -- Plugins 
   -- netrw
   netrwClassify = { link = 'Directory' },
 
@@ -736,22 +740,9 @@ local hlgroups = {
   StatusLineHeader = { fg = c_jeans, bg = c_pigeon },
   StatusLineHeaderModified = { fg = c_jeans, bg = c_ochre },
 
-  -- glance.nvim
-  GlanceBorderTop = { link = 'WinSeparator' },
-  GlancePreviewBorderBottom = { link = 'GlanceBorderTop' },
-  GlanceListBorderBottom = { link = 'GlanceBorderTop' },
-  GlanceFoldIcon = { link = 'Comment' },
-  GlanceListCount = { fg = c_jeans, bg = c_pigeon },
-  GlanceListCursorLine = { bg = c_deepsea },
-  GlanceListNormal = { bg = c_deepsea },
-  GlanceListMatch = { bg = c_thunder, bold = true },
-  GlancePreviewNormal = { link = 'Pmenu' },
-  GlanceWinBarFilename = { fg = c_pigeon, bg = c_deepsea, bold = true },
-  GlanceWinBarFilepath = { fg = c_pigeon, bg = c_deepsea },
-  GlanceWinBarTitle = { fg = c_pigeon, bg = c_deepsea, bold = true },
-  -- }}}2
+  
 
-  -- Extra {{{2
+  -- Extra 
   Yellow = { fg = c_yellow },
   Earth = { fg = c_earth },
   Orange = { fg = c_orange },
@@ -779,14 +770,13 @@ local hlgroups = {
   Ocean = { fg = c_ocean },
   Space = { fg = c_space },
   Black = { fg = c_black },
-  -- }}}2
+  
 }
--- }}}1
 
--- Set highlight groups {{{1
+
+-- Set highlight groups 
 for hlgroup_name, hlgroup_attr in pairs(hlgroups) do
   vim.api.nvim_set_hl(0, hlgroup_name, hlgroup_attr)
 end
--- }}}1
 
 -- vim:ts=2:sw=2:sts=2:fdm=marker:fdl=0

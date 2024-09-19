@@ -1,6 +1,6 @@
 local M = {}
 
----Returns whether the current buffer has treesitter enabled
+---Returns whether treesitter is active in `buf`
 ---@param buf integer? default: current buffer
 ---@return boolean
 function M.is_active(buf)
@@ -8,7 +8,7 @@ function M.is_active(buf)
   if not vim.api.nvim_buf_is_valid(buf) then
     return false
   end
-  local ok = pcall(vim.treesitter.get_parser, buf, vim.b[buf].ft)
+  local ok = pcall(vim.treesitter.get_parser, buf, vim.bo[buf].ft)
   return ok and true or false
 end
 

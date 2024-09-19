@@ -37,7 +37,7 @@ require('nvim-web-devicons').setup({
       cterm_color = '166',
       icon = vim.trim(icons.Pdf),
       name = 'Pdf',
-    }
+    },
   },
   override_by_extension = {
     asm = {
@@ -47,6 +47,12 @@ require('nvim-web-devicons').setup({
       name = 'Assembly',
     },
     s = {
+      color = '#d65050',
+      cterm_color = '167',
+      icon = vim.trim(icons.Assembly),
+      name = 'S',
+    },
+    S = {
       color = '#d65050',
       cterm_color = '167',
       icon = vim.trim(icons.Assembly),
@@ -117,6 +123,12 @@ require('nvim-web-devicons').setup({
       cterm_color = '74',
       icon = vim.trim(icons.Markdown),
       name = 'Markdown',
+    },
+    tar = {
+      color = '#e84d31',
+      cterm_color = '166',
+      icon = vim.trim(icons.Zip),
+      name = 'Tar',
     },
     zip = {
       color = '#e84d31',
@@ -213,6 +225,24 @@ require('nvim-web-devicons').setup({
       cterm_color = '166',
       icon = vim.trim(icons.Ipynb),
       name = 'Ipynb',
+    },
+    ppt = {
+      icon = '󰈧',
+      color = '#cb4a32',
+      cterm_color = '160',
+      name = 'Ppt',
+    },
+    pptx = {
+      icon = '󰈧',
+      color = '#cb4a32',
+      cterm_color = '160',
+      name = 'Pptx',
+    },
+    xcu = {
+      icon = '󰗀',
+      color = '#975122',
+      cterm_color = '130',
+      name = 'Xcu',
     },
   },
   override_by_filename = {

@@ -7,25 +7,22 @@ M.opts = {
   general = {
     ---@type boolean|fun(buf: integer, win: integer): boolean
     enable = function(buf, win)
-      local bufname = vim.api.nvim_buf_get_name(buf)
-      return bufname ~= ''
-        and vim.uv.fs_stat(bufname) ~= nil
-        and vim.bo[buf].buftype == ''
-        and vim.bo[buf].filetype ~= 'gitcommit'
-        and vim.bo[buf].filetype ~= 'gitrebase'
-        and vim.fn.win_gettype(win) == ''
-        and not vim.wo[win].diff
+      return not vim.w[win].winbar_no_attach
+        and not vim.b[buf].winbar_no_attach
         and vim.wo[win].winbar == ''
+        and vim.fn.win_gettype(win) == ''
+        and utils.treesitter.is_active(buf)
     end,
     attach_events = {
+      'BufEnter',
       'BufWinEnter',
       'BufWritePost',
     },
     -- Wait for a short time before updating the winbar, if another update
     -- request is received within this time, the previous request will be
     -- cancelled, this improves the performance when the user is holding
-    -- down a key (e.g. 'j') to scroll the window, default to 0 ms
-    update_interval = 0,
+    -- down a key (e.g. 'j') to scroll the window
+    update_interval = 32,
     update_events = {
       win = {
         'CursorMoved',
@@ -51,7 +48,7 @@ M.opts = {
     },
     ui = {
       bar = {
-        separator = icons.ui.AngleRight,
+        separator = vim.g.no_nf and ' > ' or icons.ui.AngleRight,
         extends = vim.opt.listchars:get().extends
           or vim.trim(icons.ui.Ellipsis),
       },
@@ -98,21 +95,15 @@ M.opts = {
   bar = {
     hover = true,
     ---@type winbar_source_t[]|fun(buf: integer, win: integer): winbar_source_t[]
-    sources = function(buf, _)
+    sources = function(buf)
       local sources = require('plugin.winbar.sources')
-      if vim.bo[buf].ft == 'markdown' then
-        return {
-          sources.path,
-          sources.markdown,
+      return vim.bo[buf].ft == 'markdown' and { sources.markdown }
+        or {
+          utils.source.fallback({
+            sources.lsp,
+            sources.treesitter,
+          }),
         }
-      end
-      return {
-        sources.path,
-        utils.source.fallback({
-          sources.lsp,
-          sources.treesitter,
-        }),
-      }
     end,
     padding = {
       left = 1,
@@ -140,6 +131,12 @@ M.opts = {
     },
     ---@type table<string, string|function|table<string, string|function>>
     keymaps = {
+      ['q'] = function()
+        local menu = utils.menu.get_current()
+        if menu then
+          menu:close()
+        end
+      end,
       ['<LeftMouse>'] = function()
         local menu = utils.menu.get_current()
         if not menu then
@@ -269,7 +266,7 @@ M.opts = {
     treesitter = {
       -- Lua pattern used to extract a short name from the node text
       name_pattern = '[#~%*%w%._%->!@:]+%s*'
-        .. string.rep('[#~%*%w%._%->!@:]*', 3, '%s*'),
+        .. string.rep('[#~%*%w%._%->!@:]*', 4, '%s*'),
       -- The order matters! The first match is used as the type
       -- of the treesitter symbol and used to show the icon
       -- Types listed below must have corresponding icons
@@ -300,7 +297,6 @@ M.opts = {
         'if_statement',
         'interface',
         'keyword',
-        'list',
         'macro',
         'method',
         'module',
@@ -328,8 +324,9 @@ M.opts = {
         'field',
         'identifier',
         'object',
-        'statement',
         'text',
+        -- 'list',
+        -- 'statement',
       },
     },
     lsp = {
