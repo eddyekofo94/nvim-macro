@@ -87,12 +87,14 @@ return {
   event = "VeryLazy",
   dependencies = {
     "williamboman/mason.nvim",
-    "stevearc/conform.nvim",
     {
+      --  BUG: 2024-09-25 - This is not working
       "zapling/mason-conform.nvim",
+      enabled = false,
       config = function()
         require("mason-conform").setup {
-          ignore_install = { "prettier", "beautysh", "stylua" }, -- List of formatters to ignore during install
+          -- ignore_install = { "prettier", "beautysh", "stylua" }, -- List of formatters to ignore during install
+          auto_install = { "stylua" },
         }
       end,
     },

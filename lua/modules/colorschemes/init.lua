@@ -1,6 +1,7 @@
 return {
   { import = "modules.colorschemes.lackluster" },
   { import = "modules.colorschemes.catppuccin" },
+  { import = "modules.colorschemes.catppuccin_material" },
   { import = "modules.colorschemes.styler" },
   {
     "p00f/alabaster.nvim",
