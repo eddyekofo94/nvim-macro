@@ -434,9 +434,9 @@ local set_all_hl = function()
   highlights = extend_tbl(highlights, hl_groups)
   local colorscheme = vim.g.colors_name
 
-  if not string.find(colorscheme, "catppuccin") then
-    highlights = extend_tbl(hl_groups, nv_chad_hl)
-  end
+  -- if not string.find(colorscheme, "catppuccin") then
+  highlights = extend_tbl(hl_groups, nv_chad_hl)
+  -- end
 
   if string.find(colorscheme, "zen") then
     highlights = extend_tbl(highlights, {

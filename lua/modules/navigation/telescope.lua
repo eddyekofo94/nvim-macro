@@ -46,6 +46,14 @@ return {
         dependencies = { "nvim-telescope/telescope.nvim" },
       },
       {
+        "tingey21/telescope-colorscheme-persist.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim" },
+        lazy = false,
+        config = function()
+          require("telescope-colorscheme-persist").setup {}
+        end,
+      },
+      {
         "nvim-telescope/telescope-file-browser.nvim",
         dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
       },

@@ -21,6 +21,7 @@ local opts = {
     sh = {
       {
         "beautysh",
+        "shellcheck",
         "shfmt",
       },
     },
@@ -29,7 +30,7 @@ local opts = {
     ["*"] = { "codespell" },
     -- Use the "_" filetype to run formatters on filetypes that don't
     -- have other formatters configured.
-    -- ["_"] = { "trim_whitespace" },
+    ["_"] = { "trim_whitespace", "trim_newlines", "squeeze_blanks" },
   },
 
   -- If this is set, Conform will run the formatter on save.
@@ -84,6 +85,18 @@ local opts = {
 return {
   "stevearc/conform.nvim",
   event = "VeryLazy",
+  dependencies = {
+    "williamboman/mason.nvim",
+    "stevearc/conform.nvim",
+    {
+      "zapling/mason-conform.nvim",
+      config = function()
+        require("mason-conform").setup {
+          ignore_install = { "prettier", "beautysh", "stylua" }, -- List of formatters to ignore during install
+        }
+      end,
+    },
+  },
   init = function()
     vim.o.formatexpr = "v:lua.require('conform').formatexpr()"
   end,
