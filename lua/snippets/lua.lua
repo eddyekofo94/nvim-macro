@@ -384,6 +384,17 @@ M.nvim = {
     i(2),
     t ")",
   }),
+  us.msn({
+    { trig = "conf" },
+    { trig = "cfg" },
+  }, {
+    t "config",
+    t " = ",
+    t { "function()", "" },
+    un.body(2, 1),
+    i(1),
+    t { "", "end," },
+  }),
   us.msn(
     {
       { trig = "pck" },

@@ -1,14 +1,41 @@
 return {
   { import = "modules.colorschemes.lackluster" },
   { import = "modules.colorschemes.catppuccin" },
+  { import = "modules.colorschemes.catppuccin_material" },
   { import = "modules.colorschemes.styler" },
+  {
+    "p00f/alabaster.nvim",
+    opts = {},
+    config = function() end,
+  },
+  {
+    "nyoom-engineering/oxocarbon.nvim",
+    config = function()
+      vim.opt.background = "dark" -- set this to dark or light
+      vim.cmd.colorscheme "oxocarbon"
+    end,
+  },
   { "sainnhe/everforest" },
   { "sainnhe/gruvbox-material" },
   { "projekt0n/github-nvim-theme" },
   { "EdenEast/nightfox.nvim" },
+  { "oneslash/helix-nvim", version = "*" },
   { "sainnhe/edge" },
+  {
+    "yorumicolors/yorumi.nvim",
+    config = function()
+      vim.cmd.colorscheme "yorumi"
+    end,
+  },
   { "blazkowolf/gruber-darker.nvim" },
-
+  {
+    "danwlker/primeppuccin",
+    enabled = false,
+    priority = 1000,
+    config = function()
+      vim.cmd [[colorscheme catppuccin]]
+    end,
+  },
   {
     "f-person/auto-dark-mode.nvim",
     enabled = true,
@@ -117,14 +144,14 @@ return {
             MiniIconsPurple = { fg = cp.mauve },
             MiniIconsRed = { fg = cp.red },
             MiniIconsYellow = { fg = cp.yellow },
-            --
+
             -- MiniStatuslineModeCommand = { fg = C.base, bg = C.peach, style = { "bold" } },
             MiniStatuslineModeInsert = { fg = "NONE", bg = cp.white, bold = true, reverse = true },
             MiniStatuslineModeNormal = { fg = cp.mantle, bg = cp.blue, style = { "bold" } },
             MiniStatuslineModeOther = { fg = cp.base, bg = cp.teal, style = { "bold" } },
             MiniStatuslineModeReplace = { fg = cp.base, bg = cp.red, style = { "bold" } },
             MiniStatuslineModeVisual = { fg = cp.base, bg = cp.mauve, style = { "bold" } },
-            --
+
             -- MiniTrailspace = { bg = C.red },
           },
         },
@@ -141,8 +168,8 @@ return {
           textfsm = true,
         },
       }
-      vim.g.tundra_biome = "jungle" -- 'arctic' or 'jungle' or 'alpine'
       vim.opt.background = "dark"
+      vim.g.tundra_biome = "jungle" -- 'arctic' or 'jungle' or 'alpine'
       vim.cmd "colorscheme tundra"
     end,
   },
