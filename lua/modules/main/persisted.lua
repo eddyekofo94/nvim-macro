@@ -1,7 +1,7 @@
 return {
   "olimorris/persisted.nvim",
   lazy = false,
-  enabled = false,
+  enabled = true,
   config = function()
     require("persisted").setup {
       silent = true, -- silent nvim message when sourcing session file

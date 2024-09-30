@@ -6,7 +6,7 @@ end
 return {
   "echasnovski/mini.sessions",
   lazy = false,
-  enabled = true,
+  enabled = false,
   priority = 100,
   event = "VimEnter",
   keys = {
