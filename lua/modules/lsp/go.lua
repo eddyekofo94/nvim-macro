@@ -16,7 +16,7 @@ return {
     local go_cfg = require "go"
 
     -- INFO: don't know if this is working :(
-    lmap("cf", "<cmd>lua require('go.format').goimport()<CR>", { desc = "Format" })
+    lmap("cf", "<cmd>lua require('go.format').goimports()<CR>", { desc = "Format" })
     lmap("cTt", "<cmd>GoAddTest<CR>", "Add unit test for current function")
 
     -- lmap("cTA", "<cmd>GoTestsAll<CR>", "Generate all tests for all functions/methods in current file")
@@ -27,7 +27,7 @@ return {
     vim.api.nvim_create_autocmd("BufWritePre", {
       pattern = "go",
       callback = function()
-        require("go.format").goimport()
+        require("go.format").goimports()
       end,
       group = format_sync_grp,
     })
@@ -46,7 +46,7 @@ return {
       disable_defaults = false, -- true|false when true set false to all boolean settings and replace all table
       -- settings with {}
       go = "go", -- go command, can be go[default] or go1.18beta1
-      goimport = "gopls", -- goimport command, can be gopls[default] or goimport
+      goimports = "gopls", -- goimport command, can be gopls[default] or goimport
       fillstruct = "gopls", -- can be nil (use fillstruct, slower) and gopls
       gofmt = "gofumpt", --gofmt cmd,
       max_line_len = 128, -- max line length in golines format, Target maximum line length for golines
