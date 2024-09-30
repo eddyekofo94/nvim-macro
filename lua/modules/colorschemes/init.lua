@@ -3,6 +3,7 @@ return {
   { import = "modules.colorschemes.catppuccin" },
   { import = "modules.colorschemes.catppuccin_material" },
   { import = "modules.colorschemes.styler" },
+  { import = "modules.colorschemes.nordic" },
   {
     "p00f/alabaster.nvim",
     opts = {},
@@ -86,6 +87,32 @@ return {
     end,
   },
   -- Lazy
+  {
+    "eldritch-theme/eldritch.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+  },
+  {
+    "projekt0n/caret.nvim",
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function()
+      require("caret").setup {
+        -- ...
+      }
+
+      vim.cmd "colorscheme caret"
+    end,
+  },
+  {
+    "aliqyan-21/darkvoid.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("darkvoid").setup()
+    end,
+  },
   {
     "vague2k/vague.nvim",
     init = function()
