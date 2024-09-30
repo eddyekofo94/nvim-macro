@@ -325,7 +325,7 @@ cmp.setup {
   window = {
     completion = cmp.config.window.bordered {
       border = border,
-      winhighlight = "FloatBorder:CmpBorder,Normal:CmpPmenu,CursorLine:CmpSel,Search:None",
+      winhighlight = "CmpPmenu:NormalSpecial,CursorLine:CmpSel,Search:None",
       col_offset = -3,
       side_padding = 0,
       scrolloff = vim.go.scrolloff,
