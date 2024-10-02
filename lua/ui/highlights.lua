@@ -18,7 +18,10 @@ local float = { fg = blended, bg = "NONE" }
 local hl_groups = {
   -- UI
   WinSeparator = { link = "LineNr" },
-  OverLength = { bg = "#840000" },
+
+  -- NormalSpecial = { link = "ZenBg" },
+
+  OverLength = { fg = "NONE", bg = "#840000" },
   FloatBorder = { fg = "LineNr", bg = "NONE" },
   NvimSeparator = { link = "Error" },
   HighlightedYankRegion = {

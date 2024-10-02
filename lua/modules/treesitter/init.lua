@@ -24,7 +24,7 @@ return {
       end)
     end,
     dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
+      { "nvim-treesitter/nvim-treesitter-textobjects", priority = 1000, event = "BufWinEnter" },
       "JoosepAlviste/nvim-ts-context-commentstring",
       "RRethy/nvim-treesitter-endwise",
       {

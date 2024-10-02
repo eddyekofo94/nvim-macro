@@ -1,7 +1,3 @@
-if vim.env.NVIM_NO3RD then
-  return
-end
-
 local utils = require "utils"
 local icons = utils.static.icons
 local conf_path = vim.fn.stdpath "config" --[[@as string]]

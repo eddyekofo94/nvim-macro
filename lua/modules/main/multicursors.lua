@@ -1,6 +1,7 @@
 return {
   {
     "smoka7/multicursors.nvim",
+    enabled = true,
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
       "smoka7/hydra.nvim",
@@ -8,7 +9,7 @@ return {
     cmd = { "MCstart", "MCvisual", "MCclear", "MCpattern", "MCvisualPattern", "MCunderCursor" },
     -- stylua: ignore
     keys = {
-      { mode = { "v", "n" }, "<leader>M", "<cmd>MCstart<cr>", desc = "Multicursor" },
+      { mode = { "v", "n" }, "<leader>mc", "<cmd>MCstart<cr>", desc = "Multicursor" },
     },
     opts = {
       hint_config = {

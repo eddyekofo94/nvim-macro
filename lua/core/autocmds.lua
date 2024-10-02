@@ -295,14 +295,14 @@ augroup("SpecialBufHl", {
         end
         vim.opt_local.winhl:append {
           Normal = "NormalSpecial",
-          -- FloatBorder = "NormalSpecial",
+          FloatBorder = "NormalSpecial",
           EndOfBuffer = "NormalSpecial",
         }
       end)
     end,
   },
 }, {
-  { "UIEnter", "ColorScheme", "OptionSet" },
+  { "UIEnter", "ColorScheme", "OptionSet", "WinEnter" },
   {
     desc = "Set special buffer normal hl.",
     callback = function(info)
@@ -310,7 +310,6 @@ augroup("SpecialBufHl", {
         return
       end
       local hl = require "utils.hl"
-      -- local blended = hl.blend("Normal", "CursorLine")
       local blended = hl.blend("Normal", "NormalFloat")
       hl.set_default(0, "NormalSpecial", blended)
       hl.set_default(0, "EndOfBuffer", blended)

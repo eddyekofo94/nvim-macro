@@ -116,7 +116,6 @@ end
 
 -- @author kikito
 -- @see https://codereview.stackexchange.com/questions/268130/get-list-of-buffers-from-current-neovim-instance
--- currently not used
 function M.get_listed_buffers()
   local buffers = {}
   local len = 0
