@@ -4,6 +4,7 @@ return {
   { import = "modules.colorschemes.catppuccin_material" },
   { import = "modules.colorschemes.styler" },
   { import = "modules.colorschemes.nordic" },
+  { import = "modules.colorschemes.poimandres" },
   {
     "p00f/alabaster.nvim",
     opts = {},

@@ -21,6 +21,8 @@ local hl_groups = {
 
   -- NormalSpecial = { link = "ZenBg" },
 
+  EndOfBuffer = { fg = get_hl("Normal", "bg") }, -- INFO: buffer
+
   OverLength = { fg = "NONE", bg = "#840000" },
   FloatBorder = { fg = "LineNr", bg = "NONE" },
   NvimSeparator = { link = "Error" },
